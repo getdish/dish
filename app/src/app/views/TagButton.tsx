@@ -154,6 +154,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     <HStack
       spacing={fontSize * 0.5}
       borderRadius={8}
+      backgroundColor={theme.backgroundColorSecondary}
       alignItems="center"
       paddingHorizontal={isSmall ? 2 : 8}
       paddingVertical={isSmall ? 3 : 5}
@@ -196,7 +197,9 @@ const TagButtonInner = (props: TagButtonProps) => {
             }}
           />
         ) : (
-          <Text>{icon}</Text>
+          <Text fontSize={12} marginRight={-2}>
+            {icon}
+          </Text>
         )
       ) : null}
 
@@ -204,7 +207,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         <Text
           ellipse
           fontSize={fontSize}
-          fontWeight={fontWeight || '500'}
+          fontWeight={fontWeight || '400'}
           lineHeight={isSmall ? 22 : 26}
           color={color || theme.color}
           // borderBottomColor={theme.backgroundColor}
@@ -228,10 +231,30 @@ const TagButtonInner = (props: TagButtonProps) => {
       {!hideRating && typeof rating !== 'undefined' && (
         <>
           {ratingStyle === 'pie' && (
-            <VStack position="relative" opacity={floating ? 1 : 0.7}>
-              <Text color={theme.color} fontSize={13} fontWeight="300" letterSpacing={-0.5}>
-                {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
-              </Text>
+            <VStack position="relative">
+              {rating * 10 < 30 ? (
+                <Text fontSize={16}>😡</Text>
+              ) : rating * 10 > 90 ? (
+                <Text fontSize={16}>💎</Text>
+              ) : (
+                <VStack
+                  position="relative"
+                  backgroundColor={theme.backgroundColorQuartenary}
+                  borderRadius={100}
+                  width={pieSize}
+                  height={pieSize}
+                  transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
+                  // borderWidth={1}
+                  borderColor={theme.backgroundColorAlt}
+                  opacity={floating ? 1 : 0.7}
+                >
+                  <Pie
+                    size={pieSize}
+                    percent={rating * 10}
+                    color={floating ? `#fff` : theme.color}
+                  />
+                </VStack>
+              )}
             </VStack>
           )}
 

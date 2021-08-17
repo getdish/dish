@@ -67,16 +67,18 @@ const RestaurantTagsRowContent = memo(
             : tag.score
         ).map((tag, index) => {
           return (
-            <TagButton
-              key={`${index}${tag.name}`}
-              marginBottom={props.spacing ?? 5}
-              marginRight={props.spacingHorizontal ?? 0}
-              replaceSearch
-              size={size ?? 'sm'}
-              {...tag}
-              votable
-              restaurantSlug={restaurantSlug}
-            />
+            <React.Fragment key={`${index}${tag.name}`}>
+              <TagButton
+                marginBottom={props.spacing ?? 5}
+                marginRight={props.spacingHorizontal ?? 0}
+                replaceSearch
+                size={size ?? 'sm'}
+                {...tag}
+                votable
+                restaurantSlug={restaurantSlug}
+              />
+              <Spacer />
+            </React.Fragment>
           )
         })}
       </>

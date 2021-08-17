@@ -52,9 +52,9 @@ const darkBase = {
   backgroundColorTransluscent: 'rgba(0,0,0,0.1)',
   backgroundColorTransluscentHover: 'rgba(0,0,0,0.2)',
   backgroundColorTransparent: 'rgba(25,25,25,0)',
-  borderColor: '#353535',
-  borderColorHover: '#353535',
-  cardBackgroundColor: '#353535',
+  borderColor: '#222222',
+  borderColorHover: '#111111',
+  cardBackgroundColor: '#323232',
   color: '#fefefe',
   colorAlt: '#ffffff',
   colorSecondary: '#dddddd',
@@ -62,7 +62,7 @@ const darkBase = {
   colorQuartenary: '#999999',
   mapBackground: '#151515',
   shadowColor: `rgba(0,0,0,0.4)`,
-  shadowColorLighter: `rgba(0,0,0,0.2)`,
+  shadowColorLighter: `rgba(0,0,0,0.15)`,
 }
 
 const dark = {

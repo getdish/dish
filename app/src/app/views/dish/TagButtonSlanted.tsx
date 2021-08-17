@@ -121,7 +121,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
 
           <Text
             className="ease-in-out-fast"
-            fontWeight={bold ? '800' : '500'}
+            fontWeight={bold ? '800' : '700'}
             color={bold ? theme.color : isActive ? theme.color : theme.colorSecondary}
             opacity={0.8}
             fontSize={fontSize}

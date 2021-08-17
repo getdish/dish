@@ -442,6 +442,7 @@ const RestaurantListItemContent = memo(
               }}
             >
               <SmallButton
+                marginRight={-2}
                 borderRadius={0}
                 tooltip={`Rating Breakdown (${totalReviews} reviews)`}
                 icon={
@@ -456,7 +457,9 @@ const RestaurantListItemContent = memo(
             </Link>
 
             <Suspense fallback={<Spacer size={44} />}>
-              <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
+              <VStack marginRight={-2}>
+                <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
+              </VStack>
             </Suspense>
 
             <Suspense fallback={<Spacer size={44} />}>

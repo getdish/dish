@@ -27,6 +27,7 @@ import { FeedCard } from './FeedCard'
 import { getListPhoto } from './getListPhoto'
 import { HomeFeedProps } from './HomeFeedProps'
 import { homePageStore } from './homePageStore'
+import { getListColor } from './list/listColors'
 
 export const HomePageFeed = memo(
   graphql(
@@ -270,15 +271,15 @@ export const HomePageFeed = memo(
             <Grid itemMinWidth={cardFrameWidthLg}>
               {trendingLists.map((list, i) => {
                 // getListColor(list?.color) ?? '#999'
-                const color = getColorsForName(list?.name || '').altPastelColor
+                const color = getListColor(list?.color) ?? '#999999'
                 const numItems = list.restaurants_aggregate().aggregate?.count() ?? 0
                 return (
                   <VStack
-                    paddingHorizontal={5}
+                    paddingHorizontal={2}
                     alignItems="center"
                     flex={1}
                     key={i}
-                    marginBottom={26}
+                    marginBottom={10}
                   >
                     <ListCardFrame
                       chromeless
@@ -306,15 +307,22 @@ export const HomePageFeed = memo(
 
               {trendingLists.length < 8 &&
                 [...new Array(8 - trendingLists.length)].map((_, index) => (
-                  <VStack alignItems="center" flex={1} key={index} marginBottom={20}>
+                  <VStack
+                    paddingHorizontal={2}
+                    alignItems="center"
+                    flex={1}
+                    key={index}
+                    marginBottom={10}
+                  >
                     <Link
+                      promptLogin
                       name="list"
                       params={{
                         userSlug: 'me',
                         slug: 'create',
                       }}
                     >
-                      <FeedCard chromeless size="lg" flat>
+                      <FeedCard flexible chromeless size="lg" flat>
                         <Plus color="#eeeeee" />
                       </FeedCard>
                     </Link>
