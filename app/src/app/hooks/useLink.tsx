@@ -113,7 +113,10 @@ const getNormalizeLinkProps = (
     ...linkProps,
     // get latest on mouseenter, lets you update tags without re-rendering every link
     onMouseEnter(e) {
-      const next = getNormalizedLink(props)
+      const next = getNormalizedLink({
+        ...props,
+        debug: true,
+      })
       if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
         forceUpdate()
       }
@@ -153,6 +156,8 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
       state: homeStore.currentState,
       tags,
     })
+
+    nextState['debug'] = props['debug']
 
     return {
       ...(nextState && getNavigateItemForState(nextState)),

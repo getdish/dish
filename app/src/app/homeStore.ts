@@ -441,10 +441,14 @@ class HomeStore extends Store {
           // to support that
           if (item.name !== 'homeRegion') {
             console.warn('replace with diff type ⚠️⚠️⚠️⚠️')
+            next.id = `${Math.round(Math.random() * 1000000000000)}`
+          } else {
+            next.id = this.currentState.id
           }
+        } else {
+          // ensure same id
+          next.id = this.currentState.id
         }
-        // ensure same id
-        next.id = this.currentState.id
       }
 
       this.updateHomeState('handleRouteChange', next)

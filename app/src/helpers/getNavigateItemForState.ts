@@ -1,5 +1,6 @@
 import { isLngLatParam, urlSerializers } from '../app/home/search/urlSerializers'
 import { homeStore } from '../app/homeStore'
+import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
 import { SPLIT_TAG } from '../constants/SPLIT_TAG'
 import { NavigateItem, SearchRouteParams, router } from '../router'
@@ -8,30 +9,40 @@ import { getActiveTags } from './getActiveTags'
 import { isHomeState, isSearchState } from './homeStateHelpers'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
-export const getNavigateItemForState = (state: HomeStateTagNavigable): NavigateItem => {
-  if (!state) {
+export const getNavigateItemForState = (inState: HomeStateTagNavigable): NavigateItem => {
+  if (!inState) {
     throw new Error(`provide currentState at least`)
   }
 
   const curHomeStateType = homeStore.currentState.type
 
   // only handle "special" states here (home/search)
-  if (!isHomeState(state) && !isSearchState(state)) {
+  if (!isHomeState(inState) && !isSearchState(inState)) {
     return {
-      name: state.type,
+      name: inState.type,
       params: router.curPage.params,
     }
   }
 
-  const params = getParamsForState(state)
   const curState = homeStore.currentState
+  const state = {
+    ...inState,
+    region:
+      inState.region ??
+      curState['region'] ??
+      homeStore.lastHomeOrSearchState.region ??
+      initialHomeState.region,
+  }
+
+  const params = getParamsForState(state)
   const name = getNameForState(state)
   const isChangingType = name !== curHomeStateType
   // for now we change the region into a lng_lat, but that shouldn't create a new state
-  const isGeo = isLngLatParam(params.region || '')
+
+  const isGeo = isLngLatParam(state.region)
   // nullish region = replacing to geo-coordinates
   const isChangingRegion = state.region && state.region !== curState['region']
-  const replace = isGeo ? true : !isChangingType && !isChangingRegion
+  const replace = isGeo ? true : isChangingType || isChangingRegion ? false : true
 
   return {
     name,
