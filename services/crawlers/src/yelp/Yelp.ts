@@ -409,7 +409,7 @@ export class Yelp extends WorkerJob {
     )[0]?.props
     let photoTotal = (photoGrid.mediaCount as number) ?? 0
     this.log(`getNextScrapes photoTotal ${photoTotal}`)
-    if (photoTotal > 31 && process.env.DISH_ENV == 'test') {
+    if (photoTotal > 31 && process.env.NODE_ENV == 'test') {
       photoTotal = 31
     }
     const bizId = scrape.id_from_source
@@ -489,7 +489,7 @@ export class Yelp extends WorkerJob {
     await scrapeMergeData(id, { reviews })
     this.log(`${this.current_biz_path}, got review page ${page} with ${data.length} reviews`)
 
-    if (process.env.DISH_ENV == 'test') {
+    if (process.env.NODE_ENV == 'test') {
       this.log('Exiting review loop early in test mode')
       return
     }
