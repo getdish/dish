@@ -1,4 +1,8 @@
 declare module "@dish/worker" {
+    export const DEBUG_LEVEL: number;
+}
+
+declare module "@dish/worker" {
     export class Loggable {
         #private;
         get logName(): string | undefined;
@@ -82,9 +86,5 @@ declare module "@dish/worker" {
     }
     export function getBullQueue(name: string, config?: {}): BullQueue.Queue<any>;
     export function onBullQueueReady(queue: Queue): Promise<void>;
-}
-
-declare module "@dish/worker" {
-    export const DEBUG_LEVEL: number;
 }
 //# sourceMappingURL=types.d.ts.map
