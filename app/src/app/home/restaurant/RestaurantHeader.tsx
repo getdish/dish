@@ -208,15 +208,14 @@ const RestaurantHeaderContent = memo(
                       </>
                     </HStack>
 
-                    <HStack maxWidth={300} overflow="hidden" minWidth={900} y={-3}>
-                      <RestaurantTagsRow
-                        exclude={['dish']}
-                        restaurantSlug={restaurantSlug}
-                        restaurantId={restaurantId}
-                        spacing={10}
-                        max={8}
-                      />
-                    </HStack>
+                    <RestaurantTagsRow
+                      maxLines={2}
+                      exclude={['dish']}
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurantId}
+                      spacing={10}
+                      maxItems={8}
+                    />
 
                     {afterAddress}
                   </VStack>

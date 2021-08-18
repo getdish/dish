@@ -4,8 +4,6 @@ import React, { memo, useEffect } from 'react'
 import {
   AbsoluteVStack,
   BlurView,
-  Spacer,
-  Theme,
   VStack,
   isTouchDevice,
   prevent,
@@ -14,11 +12,8 @@ import {
   useTheme,
 } from 'snackui'
 
-import { drawerWidthMax, isWeb, searchBarHeight, zIndexAutocomplete } from '../constants/constants'
-import { AutocompleteItem } from '../helpers/createAutocomplete'
-import { AutocompleteItemView } from './AutocompleteItemView'
-import { AutocompleteStore, AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
-import { usePageFinishedLoading } from './usePageFinishedLoading'
+import { drawerWidthMax, searchBarHeight, zIndexAutocomplete } from '../constants/constants'
+import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
 import { CloseButton } from './views/CloseButton'
 import { ContentParentStore, ContentScrollView } from './views/ContentScrollView'
 
@@ -136,54 +131,3 @@ const hideAutocompletes = (e) => {
   e.stopPropagation()
   autocompletesStore.setVisible(false)
 }
-
-export type AutocompleteSelectCb = (result: AutocompleteItem, index: number) => void
-
-export const AutocompleteResults = memo(
-  ({
-    target,
-    prefixResults = [],
-    onSelect,
-  }: {
-    target: AutocompleteTarget
-    prefixResults?: any[]
-    onSelect: AutocompleteSelectCb
-    emptyResults?: AutocompleteItem[]
-  }) => {
-    const autocompleteStore = useStore(AutocompleteStore, { target })
-    const activeIndex = autocompleteStore.index
-    const ogResults = autocompleteStore.results
-    const results = [...prefixResults, ...ogResults]
-    const loaded = usePageFinishedLoading()
-    const media = useMedia()
-
-    if (!loaded) {
-      return null
-    }
-
-    return (
-      <>
-        {results.map((result, index) => {
-          const isActive = !isWeb ? index === 0 : activeIndex === index
-          return (
-            <React.Fragment key={`${result.id}${index}`}>
-              <Theme name={isActive ? 'active' : 'dark'}>
-                <AutocompleteItemView
-                  target={target}
-                  index={index}
-                  result={result}
-                  onSelect={onSelect}
-                  isActive={isActive}
-                />
-              </Theme>
-              <Spacer size={1} />
-            </React.Fragment>
-          )
-        })}
-
-        {/* on small screens add */}
-        <VStack height={media.pointerCoarse ? 300 : 0} />
-      </>
-    )
-  }
-)

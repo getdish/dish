@@ -8,7 +8,7 @@ import { titleHeight } from '../../../constants/titleHeight'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { useLastHomeState } from '../../homeStore'
 import { useSafeArea } from '../../hooks/useSafeArea'
-import { HomeLenseBar } from '../../views/HomeLenseBar'
+import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { SearchPageFilterBar } from './SearchPageFilterBar'
 
 const InverseRoundedEdge = () => {
@@ -92,7 +92,7 @@ const SearchPageNavBarContent = memo(() => {
         {state && (
           <HStack width="100%" alignItems="center" justifyContent="space-between" height="100%">
             <HStack height="100%" alignItems="center" justifyContent="center">
-              <HomeLenseBar activeTags={state.activeTags} />
+              <LenseButtonBar activeTags={state.activeTags} />
             </HStack>
 
             <VStack flex={1} />

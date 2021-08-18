@@ -11,28 +11,29 @@ type TagRowProps = {
   restaurantSlug: string
   showMore?: boolean
   size?: TagButtonProps['size']
+  maxLines?: number
   divider?: any
   tags?: TagButtonTagProps[]
   containerProps?: StackProps
   restaurantId?: string
   spacing?: number
   spacingHorizontal?: number
-  max?: number
+  maxItems?: number
   exclude?: QueryRestaurantTagsProps['exclude']
 }
 
 export const RestaurantTagsRow = (props: TagRowProps) => {
-  const height = 50 * (props.size === 'lg' ? 1.2 : props.size === 'sm' ? 0.65 : 1)
+  const rowHeight = 50 * (props.size === 'lg' ? 1.2 : props.size === 'sm' ? 0.65 : 1)
   return (
     <HStack
       marginBottom={typeof props.spacing === 'number' ? -props.spacing : 0}
-      maxHeight={height}
+      maxHeight={rowHeight * (props.maxLines ?? 1)}
       maxWidth="100%"
       overflow="hidden"
       flexWrap="wrap"
     >
       {/* may jump up a bit on load */}
-      <Suspense fallback={<VStack height={height} />}>
+      <Suspense fallback={<VStack height={rowHeight} />}>
         <RestaurantTagsRowContent {...props} />
       </Suspense>
     </HStack>
@@ -49,14 +50,16 @@ const RestaurantTagsRowContent = memo(
     if (props.tags) {
       tags = props.tags.map(getTagButtonProps)
     } else {
-      tags = queryRestaurantTags({ restaurantSlug, limit: props.max, exclude: props.exclude }).map(
-        selectRishDishViewSimple
-      )
+      tags = queryRestaurantTags({
+        restaurantSlug,
+        limit: props.maxItems,
+        exclude: props.exclude,
+      }).map(selectRishDishViewSimple)
     }
     if (showMore) {
       tags = tags.slice(0, 2)
     }
-    tags = tags.slice(0, props.max ?? Infinity)
+    tags = tags.slice(0, props.maxItems ?? Infinity)
     return (
       <>
         {sortBy(tags, (tag) =>
@@ -71,6 +74,7 @@ const RestaurantTagsRowContent = memo(
               <TagButton
                 marginBottom={props.spacing ?? 5}
                 marginRight={props.spacingHorizontal ?? 0}
+                bordered
                 replaceSearch
                 size={size}
                 {...tag}

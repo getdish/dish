@@ -3,7 +3,7 @@ import { Plus } from '@dish/react-feather'
 import React, { useState } from 'react'
 import { Box, Popover } from 'snackui'
 
-import { HomeLenseBar } from '../../views/HomeLenseBar'
+import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { LinkButton } from '../../views/LinkButton'
 
 export const RestaurantAddTagButton = ({ restaurant }: { restaurant: Restaurant }) => {
@@ -14,7 +14,7 @@ export const RestaurantAddTagButton = ({ restaurant }: { restaurant: Restaurant 
       onChangeOpen={setIsOpen}
       contents={
         <Box>
-          <HomeLenseBar />
+          <LenseButtonBar />
         </Box>
       }
     >

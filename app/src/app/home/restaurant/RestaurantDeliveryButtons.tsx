@@ -71,8 +71,8 @@ const RestaurantDeliveryButton = ({
               accessibilityLabel={name}
               source={{ uri: image }}
               style={{
-                width: showLabels ? 20 : 24,
-                height: showLabels ? 20 : 24,
+                width: showLabels ? 16 : 24,
+                height: showLabels ? 16 : 24,
                 marginHorizontal: showLabels ? -2 : -6,
                 marginVertical: -6,
                 borderRadius: 40,

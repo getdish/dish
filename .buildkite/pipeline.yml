@@ -106,7 +106,7 @@ steps:
   # tests
 
   - label: "prepush images to registry"
-    if: build.branch == "production"
+    if: build.branch == "master"
     key: push-images
     # note this trick means it runs before the wait
     depends_on: test-images
@@ -144,7 +144,7 @@ steps:
   - wait
 
   - label: "deploy"
-    if: build.branch == "production"
+    if: build.branch == "master"
     timeout_in_minutes: 10
     depends_on:
       - tests
@@ -156,7 +156,7 @@ steps:
   - wait
 
   - label: "done"
-    if: build.branch == "production"
+    if: build.branch == "master"
     command: "./dsh deploy_done_notify"
     env:
       DOCKER_CLEAN: true

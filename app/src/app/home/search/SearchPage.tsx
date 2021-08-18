@@ -382,13 +382,15 @@ const useActiveTagSlugs = (props: SearchProps) => {
 
 const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
   const drawerWidth = useAppDrawerWidth()
-  const searchStore = useSearchPageStore()
+  const searchPageStore = useSearchPageStore()
   const activeTagSlugs = useActiveTagSlugs(props)
-  const { status } = searchStore
+  const { status } = searchPageStore
 
-  let results = searchStore.results
+  let results = searchPageStore.results
 
-  if (searchStore.status === 'loading') {
+  console.log('got status', searchPageStore.status)
+
+  if (searchPageStore.status === 'loading') {
     results = loadingResults
   }
 
