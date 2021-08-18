@@ -172,7 +172,7 @@ services:
       - 'postgres'
       - 'redis'
       - 'hooks'
-    
+
   search:
     image: registry.dishapp.com/dish-search${DISH_IMAGE_TAG}
     build:
@@ -254,7 +254,7 @@ services:
       - DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
     depends_on:
       - 'postgres'
-    
+
   site:
     image: registry.dishapp.com/dish-site${DISH_IMAGE_TAG}
     build:
@@ -292,7 +292,7 @@ services:
       IMGPROXY_ALLOW_ORIGIN: dishapp.com
       IMGPROXY_ALLOWED_SOURCES: https://dish-images.sfo2.digitaloceanspaces.com/,https://d3h1lg3ksw6i6b.cloudfront.net/
       # 10MB max
-      IMGPROXY_MAX_SRC_FILE_SIZE: 10,485,760 
+      IMGPROXY_MAX_SRC_FILE_SIZE: 10,485,760
     deploy:
       replicas: 1
       update_config:
@@ -340,7 +340,7 @@ services:
     environment:
       <<: *dish-env
       DISH_DEBUG: 1
-      
+
   umami:
     image: ghcr.io/mikecao/umami:postgresql-latest
     networks:
@@ -389,9 +389,9 @@ services:
         - traefik.http.routers.pg-admin-https.tls.certresolver=le
         - traefik.http.routers.pg-admin-https.middlewares=admin-auth
         - traefik.http.services.pg-admin.loadbalancer.server.port=80
-          
+
   # non public facing
-  
+
   bert:
     image: registry.dishapp.com/dish-bert${DISH_IMAGE_TAG}
     networks:
@@ -403,7 +403,7 @@ services:
       - 8888:8080
     deploy:
       replicas: ${DOCKER_REPLICAS:-1}
-  
+
   image-quality:
     image: registry.dishapp.com/dish-image-quality${DISH_IMAGE_TAG}
     networks:
@@ -539,5 +539,5 @@ volumes:
     acme:
 
 networks:
-  traefik-public: 
+  traefik-public:
     external: true

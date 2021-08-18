@@ -1,7 +1,7 @@
 import '@dish/common'
 
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
-import { WorkerJob, fetchBrowserJSON } from '@dish/worker'
+import { WorkerJob } from '@dish/worker'
 import * as acorn from 'acorn'
 import axios from 'axios'
 import { JobOptions, QueueOptions } from 'bull'

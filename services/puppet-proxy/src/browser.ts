@@ -38,7 +38,7 @@ function getProxyURL(full: string, useAWS = false) {
       const proxyURI = uri.replace('//www.', '//')
       for (const key in awsProxies) {
         if (proxyURI.startsWith(key)) {
-          console.log('Using aws proxy', key, uri)
+          console.log('Using AWS proxy', key, uri)
           uri = proxyURI.replace(key, awsProxies[key])
           return null
         }

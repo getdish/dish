@@ -48,7 +48,10 @@ function sync_to() {
   echo " ⬆️  syncing . to $host:/app"
   rsync \
     -avPq --force \
-    --exclude-from="$(git -C . ls-files --exclude-standard -oi --directory > /tmp/excludes; echo /tmp/excludes)" \
+    --exclude-from="$(
+      git -C . ls-files --exclude-standard -oi --directory >/tmp/excludes
+      echo /tmp/excludes
+    )" \
     --exclude='- .git' \
     -e "ssh -o StrictHostKeyChecking=no -i $key" . "root@$host:/app"
   echo "synced"

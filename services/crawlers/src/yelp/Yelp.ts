@@ -4,13 +4,13 @@ import { sleep } from '@dish/async'
 import { sentryMessage } from '@dish/common'
 import { Restaurant, ZeroUUID, query, resolved } from '@dish/graph'
 import { decode } from '@dish/helpers-node'
-import { ProxiedRequests, WorkerJob, fetchBrowserHTML, fetchBrowserScriptData } from '@dish/worker'
+import { ProxiedRequests, WorkerJob, fetchBrowserScriptData } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { DISH_DEBUG } from '../constants'
-import { YelpDetailPageData, YelpPhotosData, YelpScrapeData } from '../fixtures/fixtures'
+import { YelpDetailPageData, YelpScrapeData } from '../fixtures/fixtures'
 import {
   Scrape,
   ScrapeData,
@@ -32,6 +32,7 @@ const yelpAPI = new ProxiedRequests(YELP_DOMAIN, process.env.YELP_AWS_PROXY || Y
   headers: {
     'X-My-X-Forwarded-For': 'www.yelp.com',
   },
+  timeout: null,
 })
 
 const yelpAPIMobile = new ProxiedRequests(
@@ -41,6 +42,7 @@ const yelpAPIMobile = new ProxiedRequests(
     headers: {
       'X-My-X-Forwarded-For': 'm.yelp.com',
     },
+    timeout: null,
   }
 )
 
@@ -125,15 +127,15 @@ export class Yelp extends WorkerJob {
     // prettier-ignore
     const searchUrl = `/search_suggest/v2/prefetch?loc=${encodeURIComponent(city)}&loc_name_param=loc&is_new_loc=&prefix=${encodeURIComponent(name)}&is_initial_prefetch=`
     this.log(`Searching for restaurant ${YELP_DOMAIN + searchUrl}`)
-    const res = await yelpAPI.getJSON(searchUrl)
-    const suggestions = res?.response?.flatMap((x) => x.suggestions)
+    const res: any = await yelpAPI.getJSON(searchUrl)
+    const suggestions = res?.response?.flatMap((x: any) => x.suggestions)
     if (!suggestions) {
       throw new Error(`No response: ${JSON.stringify(res || null)}`)
     }
     const yelpUrl = rest.sources?.yelp?.url
     const street = decode(addrs.slice(0, addrs.length - 2).join(', ')).toLowerCase()
     this.log('check for match', yelpUrl, street, JSON.stringify(suggestions))
-    const found = suggestions.find((x) => {
+    const found = suggestions.find((x: any) => {
       if (yelpUrl) {
         return yelpUrl.includes(x.redirect_url)
       }
@@ -199,7 +201,7 @@ export class Yelp extends WorkerJob {
       return []
     }
     const componentsList = response.searchPageProps.mainContentComponentsListProps ?? []
-    const pagination = componentsList.find((x) => x.type === 'pagination')
+    const pagination = componentsList.find((x: any) => x.type === 'pagination')
 
     if (!pagination) {
       this.log('no pagination', componentsList)
@@ -213,7 +215,7 @@ export class Yelp extends WorkerJob {
       throw new Error('Nothing in `response.searchPageProps.searchResultsProps.searchResults`')
     }
 
-    const validResults = componentsList.filter((data) => {
+    const validResults = componentsList.filter((data: any) => {
       if (data?.props?.text?.includes('Sponsored Results')) {
         return false
       }
@@ -252,7 +254,10 @@ export class Yelp extends WorkerJob {
     }
 
     if (!toCrawl.length) {
-      console.log('none found!', validResults.map((x) => x?.searchResultBusiness?.name).join(', '))
+      console.log(
+        'none found!',
+        validResults.map((x: any) => x?.searchResultBusiness?.name).join(', ')
+      )
       return
     }
 
@@ -273,7 +278,7 @@ export class Yelp extends WorkerJob {
 
     if (pagination && !found_the_one) {
       // yelp returns results per page in weird location here, use that or fallback to 10
-      const perPage = componentsList.find((x) => x?.props?.resultsPerPage) ?? 10
+      const perPage = componentsList.find((x: any) => x?.props?.resultsPerPage) ?? 10
       const next_page = start + perPage
       if (next_page <= pagination.totalResults) {
         await this.runOnWorker('getRestaurants', [
@@ -321,7 +326,7 @@ export class Yelp extends WorkerJob {
     }
     // lets use mobile!
     bizUrl = bizUrl.replace('www.', 'm.')
-    console.log('bizUrl', bizUrl)
+    this.log('bizUrl', bizUrl)
     const bizUrlParsed = url.parse(bizUrl, true)
     await this.runOnWorker('getEmbeddedJSONData', [id, bizUrlParsed.path, data.bizId])
   }
@@ -358,7 +363,7 @@ export class Yelp extends WorkerJob {
 
     const jsonByType = ldjsonsIn
       .filter(Boolean)
-      .find((x) => x['@type'] === 'Restaurant' || x['@type'] === 'LocalBusiness')
+      .find((x: any) => x['@type'] === 'Restaurant' || x['@type'] === 'LocalBusiness')
     const json: YelpDetailPageData['json'] | null = jsonByType || ldjsonsIn[1] || null
 
     if (!json) {
@@ -426,7 +431,7 @@ export class Yelp extends WorkerJob {
   async getPhotos(id: string, slug: string, photoTotal: number) {
     const PER_PAGE = 30
     const pagesTotal = Math.ceil(photoTotal / PER_PAGE)
-    const pages = [...new Array(pagesTotal).fill(0)].map((_, i) => i)
+    let pages = [...new Array(pagesTotal).fill(0)].map((_, i) => i)
     this.log(`getPhotos pages ${pages.join(', ')}`)
     for (const page of pages) {
       await this.runOnWorker('getPhotoPage', [id, slug, page * PER_PAGE, page])
@@ -443,7 +448,7 @@ export class Yelp extends WorkerJob {
     const url = `${YELP_DOMAIN}/biz_photos/${slug}?start=${start}`
     this.log(`getting photo page ${url}`)
     //'/biz_photos/' + bizId + '/get_photos' + '?start=' + start + '&dir=b'
-    const response = await fetchBrowserScriptData(url, ['[data-photo-id]'])
+    const response: any = await fetchBrowserScriptData(url, ['[data-photo-id]'])
     const items = response.flat()
 
     const data: { url: string; caption: string }[] = []
@@ -477,11 +482,12 @@ export class Yelp extends WorkerJob {
     const PER_PAGE = 20
     const page = start / PER_PAGE
     const url = '/biz/' + bizId + '/review_feed?rl=en&sort_by=relevance_desc&q=&start=' + start
-    const response = await yelpAPI.getJSON(url, {
+    const response: any = await yelpAPI.getJSON(url, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'X-Requested-By-React': 'true',
       },
+      timeout: null,
     })
     const data = response.reviews
     let reviews: ScrapeData = {}

@@ -19,7 +19,7 @@ export class ProxiedRequests {
   constructor(
     public domain: string,
     public aws_proxy: string,
-    public config: Opts = {},
+    public config: Opts = { timeout: null },
     public start_with_aws = false
   ) {}
 
@@ -31,6 +31,7 @@ export class ProxiedRequests {
         return await fetchBrowserJSON(url)
       } catch (err) {
         console.warn('Error with browser fetch, fall back to proxies', err)
+        return
       }
     }
     return await this.get(uri, props).then((x) => x.json() as Promise<{ [key: string]: any }>)
@@ -51,7 +52,7 @@ export class ProxiedRequests {
     return await this.get(uri, props).then((x) => x.text())
   }
 
-  async get(uri: string, props: Opts = {}) {
+  async get(uri: string, props: Opts = { timeout: null }) {
     const config = _.merge(this.config, props, {
       headers: {
         'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
