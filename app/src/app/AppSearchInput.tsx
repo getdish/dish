@@ -38,7 +38,7 @@ const placeholders = [
   'dosa',
   'onigiri',
   'banh mi',
-  'barbeque',
+  'bbq',
   'ceasar salad',
   'sushi',
   'sisig',
@@ -256,9 +256,9 @@ export const AppSearchInput = memo(() => {
 const SearchInputIcon = memo(({ color }: { color: string }) => {
   const media = useMedia()
   const isHomeLoading = useHomeStoreSelector((x) => x.loading)
-  const search = useSearchPageStore()
-  const isOnSearch = useIsRouteActive('search')
-  const loading = isHomeLoading || (isOnSearch && search.status === 'loading')
+  // const search = useSearchPageStore()
+  // const isOnSearch = useIsRouteActive('search')
+  const loading = isHomeLoading
   return (
     <VStack width={16} marginLeft={0} scale={loading ? 1.2 : 1}>
       <TouchableOpacity onPress={focusSearchInput}>
