@@ -2,10 +2,12 @@ import { isEqual } from '@dish/fast-compare'
 
 import { isLngLatParam } from '../app/home/search/urlSerializers'
 import { regionPositions } from '../app/home/search/useLocationFromRoute'
+import { homeStore } from '../app/homeStore'
 import { initialHomeState } from '../constants/initialHomeState'
 import { HomeStateItem, HomeStateNav, HomeStateTagNavigable } from '../types/homeTypes'
 import { allTags, allTagsNameToSlug, tagNameKey } from './allTags'
 import { getActiveTagSlugs } from './getActiveTagSlugs'
+import { isHomeState, isSearchState } from './homeStateHelpers'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
 const ensureUnique = new Set(['lense', 'country', 'dish'])
@@ -74,7 +76,8 @@ export const getNextHomeState = (navState: HomeStateNav): HomeStateItem => {
   const activeTags = Object.fromEntries([...existing].map((slug) => [slug, true]))
 
   // if they've moved off the region, set it to geo-coordinates
-  const region = isOffRegion(state) ? false : state.region
+  const regionState = homeStore.lastHomeOrSearchState
+  const region = isOffRegion(regionState) ? false : state.region
 
   const nextState = {
     id: state.id,
