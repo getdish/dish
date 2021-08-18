@@ -3,12 +3,16 @@ import {
   Review,
   client,
   globalTagId,
+  mutate,
   order_by,
   query,
+  resolved,
   reviewDelete,
+  reviewFindOne,
   reviewUpsert,
   review_bool_exp,
   review_constraint,
+  review_update_column,
   setCache,
   useRefetch,
 } from '@dish/graph'
@@ -39,8 +43,6 @@ export type ReviewWithTag = Pick<
     type: string
   }
 }
-
-type ReviewTypes = 'vote' | 'favorite' | 'comment'
 
 export const isTagReview = (r: DeepPartial<Review>) => !!r.tag_id && r.tag_id !== globalTagId
 
@@ -144,33 +146,65 @@ export const useUserReviewsQuery = (where: review_bool_exp) => {
       if (userStore.promptLogin()) {
         return false
       }
-      const user = userStore.user!
+      const user = userStore.user
+      if (!user) return
       try {
         const next = {
-          rating: 0,
           ...review,
           user_id: user.id,
         }
-        const response = reviewUpsert([next], review_constraint.review_pkey)
-        // const response = await mutate((mutation) => {
-        //   return mutation.insert_review({
-        //     objects: [next],
-        //     on_conflict: {
-        //       constraint: review_constraint.review_pkey,
-        //       update_columns: [review_update_column.favorited],
-        //     },
-        //   })?.affected_rows
-        // })
-        if (!response) {
-          console.error('response', response)
-          Toast.show('Error saving')
-          return false
+        // hacky workaround for upsert not working via gqty
+        try {
+          const response = await mutate((mutation) => {
+            return mutation.insert_review({
+              objects: [
+                {
+                  rating: 0,
+                  ...next,
+                } as any,
+              ],
+              on_conflict: {
+                constraint: review_constraint.review_type_user_id_list_id_key,
+                update_columns: [review_update_column.favorited],
+              },
+            })?.affected_rows
+          })
+          console.log('response', response)
+          if (!response) {
+            console.error('response', response)
+            Toast.error('Error saving')
+            return false
+          }
+        } catch (err) {
+          console.log('aught err', err)
+          if (err.message?.includes('Uniqueness violation')) {
+            const existing = await reviewFindOne(next)
+            if (!existing) {
+              Toast.error('Error saving')
+              return
+            }
+            const response = await mutate((mutation) => {
+              return mutation.update_review({
+                where: {
+                  id: {
+                    _eq: existing.id,
+                  },
+                },
+                _set: next,
+              })?.affected_rows
+            })
+            if (!response) {
+              console.error('response', response)
+              Toast.error('Error saving')
+              return false
+            }
+          }
         }
         Toast.show(`Saved`)
         refetch(reviewsQuery)
       } catch (err) {
         console.error('error', err)
-        Toast.show('Error saving')
+        Toast.error('Error saving')
         return false
       }
     },

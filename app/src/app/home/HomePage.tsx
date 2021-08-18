@@ -237,17 +237,7 @@ const HomePageContent = (props: Props) => {
 
           <PageContentWithFooter>
             {/* TODO pass isActive once gqty supports skeleton loading */}
-            {loaded ? (
-              <HomePageFeed
-                isActive={isActive}
-                item={state}
-                regionName={regionName}
-                region={region}
-                {...position}
-              />
-            ) : (
-              <LoadingItems />
-            )}
+            {loaded ? <HomePageFeed region={state.region} /> : <LoadingItems />}
           </PageContentWithFooter>
         </ContentScrollView>
       </VStack>
