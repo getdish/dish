@@ -6,9 +6,9 @@ import { Hoverable, VStack } from 'snackui'
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
 import { getListPhoto } from '../../home/getListPhoto'
-import { FavoriteButton } from '../FavoriteButton'
+import { ListFavoriteButton } from '../../home/restaurant/ListFavoriteButton'
 import { Link } from '../Link'
-import { useList, useListFavorite } from './useList'
+import { useList } from './useList'
 
 export type ListCardProps = ListIDProps &
   FeedCardProps & {
@@ -21,20 +21,6 @@ export type ListIDProps = {
   slug: string
   userSlug: string
 }
-
-// omg why is there two diff versinos of this
-const ListFavoriteButton = graphql((props: ListIDProps) => {
-  const { isFavorited, toggleFavorite, reviewsCount } = useListFavorite(props)
-  return (
-    <FavoriteButton
-      backgroundColor="transparent"
-      isFavorite={isFavorited}
-      onToggle={toggleFavorite}
-    >
-      {`${reviewsCount}`}
-    </FavoriteButton>
-  )
-})
 
 export const ListCard = graphql((props: ListCardProps) => {
   const { list } = useList(props)
@@ -70,7 +56,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         {!props.size?.endsWith('xs') && (
           <VStack x={-5}>
             <Suspense fallback={null}>
-              <ListFavoriteButton {...props} />
+              <ListFavoriteButton slug={props.slug} />
             </Suspense>
           </VStack>
         )}

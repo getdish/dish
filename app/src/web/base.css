@@ -1,11 +1,5 @@
-/* tmp bugfix until i can figure out why tis excluded... */
+/* tmp bugfix until i can figure out why tis excluded in prod... */
 ._paRi-14px{padding-right:14px;}
-
-/* 
-div {
-  word-break: break-word;
-  hyphens: auto;
-} */
 
 html,
 body {
@@ -458,10 +452,6 @@ input:-webkit-autofill:active {
 
 .nobreak {
   white-space: nowrap;
-}
-
-body > div {
-  pointer-events: none;
 }
 
 .scale-hover {

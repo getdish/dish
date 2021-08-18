@@ -2,19 +2,10 @@ import { RestaurantSearchItem, graphql, order_by, query, search } from '@dish/gr
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import React, { memo, useEffect, useState } from 'react'
-import {
-  AbsoluteVStack,
-  Grid,
-  HStack,
-  LoadingItems,
-  Spacer,
-  VStack,
-  useDebounceEffect,
-} from 'snackui'
+import { AbsoluteVStack, Grid, HStack, Spacer, VStack, useDebounceEffect } from 'snackui'
 
 import { cardFrameWidthLg } from '../../constants/constants'
 import { tagLenses } from '../../constants/localTags'
-import { getColorsForName } from '../../helpers/getColorsForName'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
 import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
@@ -25,15 +16,12 @@ import { ListCardFrame } from '../views/list/ListCard'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { FeedCard } from './FeedCard'
 import { getListPhoto } from './getListPhoto'
-import { HomeFeedProps } from './HomeFeedProps'
 import { homePageStore } from './homePageStore'
 import { getListColor } from './list/listColors'
 
 export const HomePageFeed = memo(
   graphql(
-    (props: HomeFeedProps) => {
-      const { isActive, regionName, item } = props
-
+    ({ region }: { region: string }) => {
       // const [hovered, setHovered] = useState<null | MapHoveredRestaurant>(null)
       // useDebounceEffect(
       //   () => {
@@ -69,7 +57,7 @@ export const HomePageFeed = memo(
       const tagLists = query.list({
         where: {
           region: {
-            _eq: item.region,
+            _eq: region,
           },
           tags: {
             tag: {
@@ -89,7 +77,7 @@ export const HomePageFeed = memo(
         },
         where: {
           region: {
-            _eq: item.region,
+            _eq: region,
           },
         },
         order_by: [{ updated_at: order_by.asc }],
@@ -98,21 +86,25 @@ export const HomePageFeed = memo(
 
       const [lenseRestaurants, setLenseRestaurants] = useState<RestaurantSearchItem[]>([])
 
-      console.warn('TODO link to hover lense button etc', lenseRestaurants)
+      // console.warn('TODO link to hover lense button etc', lenseRestaurants)
 
-      useEffect(() => {
-        const { currentState } = homeStore
-        search({
-          center: currentState.center!,
-          span: currentState.span!,
-          query: '',
-          limit: 20,
-          main_tag: 'lenses__gems',
-        }).then((res) => {
-          console.warn('res', res)
-          setLenseRestaurants(res.restaurants || [])
-        })
-      }, [])
+      useDebounceEffect(
+        () => {
+          const { currentState } = homeStore
+          search({
+            center: currentState.center!,
+            span: currentState.span!,
+            query: '',
+            limit: 20,
+            main_tag: 'lenses__gems',
+          }).then((res) => {
+            console.warn('res', res)
+            setLenseRestaurants(res.restaurants || [])
+          })
+        },
+        100,
+        []
+      )
 
       const lenseLists = []
       // query.list({

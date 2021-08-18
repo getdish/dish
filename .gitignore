@@ -1,3 +1,6 @@
+etc/docker/canary.json
+etc/docker/features.json
+
 types.d.ts.map
 **/_
 **/types/**/*.d.ts

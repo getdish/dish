@@ -70,8 +70,6 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
       })
     : null
   const review = reviewQ?.[0]
-  const reviewId = review?.id
-  const getId = useGet(reviewId)
   const isFavoritedCurrent = review?.favorited ?? false
 
   useEffect(() => {
@@ -83,7 +81,6 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
       return false
     }
     const favorited = !isFavorited
-    const id = getId()
     const next = {
       user_id: userId,
       type: 'favorite',
@@ -91,15 +88,11 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
       favorited,
     }
     setIsFavorited(favorited)
-    if (!id) {
-      await reviewInsert([next])
-    } else {
-      const response = await reviewUpsert([next], review_constraint.review_type_user_id_list_id_key)
-      if (!response) {
-        console.error('response', response)
-        Toast.show('Error saving')
-        return false
-      }
+    const response = await reviewUpsert([next], review_constraint.review_type_user_id_list_id_key)
+    if (!response) {
+      console.error('response', response)
+      Toast.show('Error saving')
+      return false
     }
     // fixes slow speed bug
     client.cache = {}
