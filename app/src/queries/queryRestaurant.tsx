@@ -1,4 +1,4 @@
-import { RestaurantQuery, order_by, query, restaurant } from '@dish/graph'
+import { RestaurantQuery, query, restaurant } from '@dish/graph'
 
 export const queryRestaurant = (slug: string, _query = query) => {
   if (typeof slug !== 'string') {

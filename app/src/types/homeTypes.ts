@@ -1,5 +1,4 @@
 import { MapPosition } from '@dish/graph'
-import { MultiPolygon, Polygon } from '@turf/helpers'
 
 import { NavigableTag } from './tagTypes'
 
