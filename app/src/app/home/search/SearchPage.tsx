@@ -40,6 +40,7 @@ import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMap'
 import { homeStore, useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
+import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { RootPortalItem } from '../../Portal'
@@ -162,9 +163,12 @@ const SearchPageContent = memo(function SearchPageContent(
   // SEARCH
   //
   const searchKey = JSON.stringify([props.isActive, item.activeTags, item.searchQuery, item.id])
+  const wasActive = useLastValue(props.isActive)
 
   useEffect(() => {
     if (!props.isActive) return
+    // this should fix going back to search results triggering search
+    if (!wasActive) return
     searchPageStore.runSearch({})
   }, [searchKey])
 
