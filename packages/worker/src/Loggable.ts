@@ -1,4 +1,4 @@
-import { DEBUG_LEVEL } from '@dish/worker'
+import { DEBUG_LEVEL } from './constants'
 
 export class Loggable {
   #start_time!: [number, number]
