@@ -7,12 +7,12 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { Arrow } from './Arrow'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
-import { searchPageStore } from './SearchPageStore'
+import { getSearchPageStore } from './SearchPageStore'
 
 export const SearchPageScoring = memo(() => {
   const curProps = useContext(SearchPagePropsContext)!
   const theme = useTheme()
-  const meta = searchPageStore.meta
+  const meta = getSearchPageStore()?.meta
   const activeTags = getActiveTags(curProps.item)
   const weights = activeTags.map((tag) => {
     return !meta

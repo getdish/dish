@@ -1,11 +1,9 @@
-import { sleep } from '@dish/async'
-import { isSafari } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
-import { debounce, isSafeInteger, throttle } from 'lodash'
+import { debounce } from 'lodash'
 
 import { inputClearSelection, inputGetNode, inputIsTextSelected } from '../helpers/input'
 import { autocompletesStore } from './AutocompletesStore'
-import { searchPageStore } from './home/search/SearchPageStore'
+import { getSearchPageStore } from './home/search/SearchPageStore'
 
 export class InputStore extends Store<{ name: 'location' | 'search' }> {
   node: HTMLInputElement | null = null
@@ -29,7 +27,8 @@ export class InputStore extends Store<{ name: 'location' | 'search' }> {
     if (autocompletesStore.visible) {
       autocompletesStore.activeStore?.move(num)
     } else {
-      searchPageStore.setIndex(searchPageStore.index + num, 'key')
+      const searchPageStore = getSearchPageStore()
+      searchPageStore?.setIndex(searchPageStore.index + num, 'key')
     }
   }
 

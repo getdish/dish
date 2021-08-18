@@ -9,7 +9,7 @@ import {
   search,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Store, createStore, useStoreInstance } from '@dish/use-store'
+import { Store, createStore, createUseStore, useStoreInstance } from '@dish/use-store'
 
 import { initialPosition } from '../../../constants/initialHomeState'
 import { allTags } from '../../../helpers/allTags'
@@ -20,15 +20,20 @@ import { homeStore } from '../../homeStore'
 
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
-class SearchPageStore extends Store {
+class SearchPageStore extends Store<{ id: string }> {
   index = -1
   event: ActiveEvent = null
-  status: 'loading' | 'complete' = 'complete'
+  status: 'loading' | 'complete' = 'loading'
   results: RestaurantSearchItem[] = []
   meta: HomeMeta | null = null
   searchPosition = initialPosition
   searchRegion = false
+  children = null
   private lastSearchArgs: RestaurantSearchArgs | null = null
+
+  setChildren(next: any) {
+    this.children = next
+  }
 
   setIndex(index: number, event: ActiveEvent) {
     this.index = Math.min(Math.max(-1, index), this.max)
@@ -164,8 +169,8 @@ class SearchPageStore extends Store {
   }
 }
 
-export const searchPageStore = createStore(SearchPageStore)
-export const useSearchPageStore = (debug?: boolean) => useStoreInstance(searchPageStore, debug)
+// export const searchPageStore = createStore(SearchPageStore)
+export const useSearchPageStore = createUseStore(SearchPageStore)
 
 // used to help prevent duplicate searches on slight diff in map move
 const roundLngLat = (val: LngLat): LngLat => {
@@ -174,4 +179,19 @@ const roundLngLat = (val: LngLat): LngLat => {
     lng: Math.round(val.lng * 100000) / 100000,
     lat: Math.round(val.lat * 100000) / 100000,
   }
+}
+
+const initial = createStore(SearchPageStore, { id: '000' })
+let current = initial
+
+export function setStore(next: SearchPageStore) {
+  current = next
+}
+
+export function getSearchPageStore() {
+  return current
+}
+
+export function resetResults() {
+  current.resetResults()
 }

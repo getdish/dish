@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { Store, createStore, reaction, useStoreInstanceSelector } from '@dish/use-store'
+import { createStore, reaction } from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -53,13 +53,15 @@ import { ITEM_HEIGHT, RestaurantListItem } from '../restaurant/RestaurantListIte
 import { SearchHeader } from './SearchHeader'
 import { SearchPageNavBar } from './SearchPageNavBar'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
-import { searchPageStore, useSearchPageStore } from './SearchPageStore'
+import { getSearchPageStore, setStore, useSearchPageStore } from './SearchPageStore'
 import { SearchProps } from './SearchProps'
-import { searchResultsStore } from './searchResultsStore'
 import { useLocationFromRoute } from './useLocationFromRoute'
 
 export default memo(function SearchPage(props: SearchProps) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
+  const searchPageStore = useSearchPageStore({
+    id: props.item.id,
+  })
   const { title } = getTitleForState(state, {
     lowerCase: true,
   })
@@ -69,11 +71,10 @@ export default memo(function SearchPage(props: SearchProps) {
     router.curPage.name !== 'search'
   )
 
-  useEffect(() => {
-    return () => {
-      searchPageStore.resetResults()
-    }
-  }, [])
+  useLayoutEffect(() => {
+    if (!props.isActive) return
+    setStore(searchPageStore)
+  }, [props.isActive])
 
   useEffect(() => {
     let id = 0
@@ -125,14 +126,18 @@ const SearchPageContent = memo(function SearchPageContent(
   const { item } = props
   const location = useLocationFromRoute(props.route)
   const tags = useTagsFromRoute(props.route)
-  const searchStore = useSearchPageStore()
+  const searchPageStore = useSearchPageStore(
+    {
+      id: props.item.id,
+    }
+    // {
+    //   debug: true,
+    // }
+  )
   const searchState = useHomeStateById<HomeStateItemSearch>(item.id)
-  const {
-    center = homeStore.lastHomeOrSearchState.center!,
-    span = homeStore.lastHomeOrSearchState.span!,
-  } = searchState
-  const { results, searchRegion, status } = searchStore
-  // const isLoading = status === 'loading'
+  const { center, span } = searchState
+  const { results, searchRegion, status } = searchPageStore
+  const isLoading = status === 'loading'
 
   usePageLoadEffect(props, ({ item, isRefreshing }) => {
     if (isRefreshing && props.isActive) {
@@ -162,7 +167,16 @@ const SearchPageContent = memo(function SearchPageContent(
   //
   // SEARCH
   //
-  const searchKey = JSON.stringify([props.isActive, item.activeTags, item.searchQuery, item.id])
+
+  const searchKey = JSON.stringify([
+    center,
+    span,
+    props.isActive,
+    item.activeTags,
+    item.searchQuery,
+    item.id,
+  ])
+
   const wasActive = useLastValue(props.isActive)
 
   useEffect(() => {
@@ -174,7 +188,7 @@ const SearchPageContent = memo(function SearchPageContent(
 
   useSetAppMap({
     isActive: props.isActive,
-    results: results,
+    results,
     showRank: true,
     hideRegions: !searchRegion,
     center,
@@ -182,63 +196,6 @@ const SearchPageContent = memo(function SearchPageContent(
     // TODO? once we have region toggle
     // region: location.data?.region?.name,
   })
-
-  // ... in Map.tsx the fitBounds that runs
-  // in some cases comes from `center/span` above which are
-  // estimates of the final bounds basically, we can't get that
-  // from mapbox (no `map.getFinalBoundsFor(bounds)`)
-  // instead of doing complicated things in Map, once center changes,
-  // the *next* movement
-  // from map we can safely ignore! because it will almost always change
-  // worst case is not bad: we miss a movement, but they can just touch
-  // map again and it will show "re-search in area button"
-  // useEffect(() => {
-  //   let runs = 0
-  //   const dispose = reaction(
-  //     appMapStore,
-  //     (x) => x.nextPosition,
-  //     function setSearchPosition(x) {
-  //       searchPageStore.setSearchPosition(x)
-  //       runs++
-  //       if (runs > 1) {
-  //         dispose()
-  //       }
-  //     }
-  //   )
-  //   return dispose
-  // }, [props.item.id, center])
-
-  // disabled for now, too easy to regress
-  // // sync mapStore.selected to activeIndex in results
-  // if (isWeb) {
-  //   useEffect(() => {
-  // should i try without reaction2? that couldve been causing weridness?
-  //     return reaction2(() => {
-  //       const { searchPosition, status } = searchPageStore
-  //       const { nextPosition, isOnRegion } = appMapStore
-  //       if (status === 'loading') return
-  //       if (isOnRegion) {
-  //         return
-  //       }
-  //       return series([
-  //         () => sleep(600),
-  //         () => {
-  //           const props = getProps()
-  //           if (!props.isActive) return
-  //           // not on region, set to coordinates
-  //           const { center, span } = searchPosition
-  //           const pos = [center.lat, center.lng, span.lat, span.lng].map(
-  //             (x) => Math.round(x * 1000) / 1000
-  //           )
-  //           console.warn('should set', pos.join('_'))
-  //           // router.setParams({
-  //           //   region: pos.join('_'),
-  //           // })
-  //         },
-  //       ])
-  //     })
-  //   }, [])
-  // }
 
   useEffect(() => {
     if (!tags.data) return
@@ -253,7 +210,7 @@ const SearchPageContent = memo(function SearchPageContent(
       (x) => x.selected,
       function mapSelectedToSearchPageSetIndex(selected) {
         if (!selected) return
-        const restaurants = searchStore.results
+        const restaurants = searchPageStore.results
         const index = restaurants.findIndex((x) => x.id === selected.id)
         if (index < 0) return
         return series([
@@ -271,7 +228,7 @@ const SearchPageContent = memo(function SearchPageContent(
       <VStack
         flex={1}
         overflow="hidden"
-        // opacity={isLoading ? 0.5 : 1}
+        opacity={isLoading ? 0.75 : 1}
         width="100%"
         // in case something weird happens, prevents RecyclerListView from complaining
         minWidth={10}
@@ -333,6 +290,292 @@ const useActiveTagSlugs = (props: SearchProps) => {
   }, [props.item.activeTags])
 }
 
+const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
+  const drawerWidth = useAppDrawerWidth()
+  const searchPageStore = useSearchPageStore({
+    id: props.item.id,
+  })
+  const activeTagSlugs = useActiveTagSlugs(props)
+  const { status } = searchPageStore
+
+  let results = searchPageStore.results
+
+  if (searchPageStore.status === 'loading') {
+    results = loadingResults
+  }
+
+  const dataProvider = useMemo(() => {
+    return new DataProvider((r1, r2) => {
+      return r1.id !== r2.id
+    }).cloneWithRows(results)
+  }, [results])
+
+  const layoutProvider = useMemo(() => {
+    return new LayoutProvider(
+      (index) => {
+        return 'listitem'
+      },
+      (type, dim) => {
+        dim.width = drawerWidth
+        dim.height = ITEM_HEIGHT
+      }
+    )
+  }, [drawerWidth])
+
+  const rowRenderer = useCallback(
+    (
+      type: string | number,
+      data: RestaurantSearchItem,
+      index: number
+      // extendedState?: object
+    ) => {
+      if (data.isPlaceholder) {
+        return <LoadingItem size="lg" />
+      }
+      return (
+        <RestaurantListItem
+          curLocInfo={props.item.curLocInfo ?? null}
+          restaurantId={data.id}
+          restaurantSlug={data.slug}
+          rank={index + 1}
+          activeTagSlugs={activeTagSlugs}
+          meta={data.meta}
+        />
+      )
+    },
+    [activeTagSlugs]
+  )
+
+  if (status !== 'loading' && results.length === 0) {
+    return <SearchEmptyResults />
+  }
+
+  return (
+    <>
+      <RecyclerListView
+        style={listStyle}
+        canChangeSize
+        externalScrollView={SearchPageScrollView as any}
+        scrollViewProps={{
+          id: props.item.id,
+        }}
+        renderAheadOffset={ITEM_HEIGHT * (isWeb ? 8 : 12)}
+        rowRenderer={rowRenderer}
+        dataProvider={dataProvider}
+        layoutProvider={layoutProvider}
+        deterministic
+      />
+    </>
+  )
+})
+
+const SearchEmptyResults = () => {
+  return (
+    <>
+      <SearchHeader />
+      <VStack paddingVertical={100} alignItems="center" spacing>
+        <Paragraph fontSize={22}>No results</Paragraph>
+        <Text fontSize={32}>😞</Text>
+      </VStack>
+    </>
+  )
+}
+
+const listStyle = {
+  flex: 1,
+  width: '100%',
+  minWidth: 300,
+  minHeight: 1,
+  height: '100%',
+}
+
+type SearchPageScrollViewProps = ScrollViewProps & {
+  onSizeChanged: (props?: LayoutRectangle) => void
+  id: string
+}
+
+const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
+  ({ children, onSizeChanged, id, ...props }, ref) => {
+    const scrollRef = useRef<ScrollView>()
+    const searchPageStore = getSearchPageStore()
+
+    useEffect(() => {
+      return reaction(
+        searchPageStore,
+        (x) => [x.index, x.event] as const,
+        function searchPageIndexToSCroll([index, event]) {
+          if (event === 'pin' || event === 'key') {
+            scrollRef.current?.scrollTo({
+              x: 0,
+              y: ITEM_HEIGHT * index,
+              animated: true,
+            })
+          }
+        }
+      )
+    }, [])
+
+    const scrollToTopHandler = useCallback(() => {
+      scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+    }, [])
+
+    const layoutProps = useLayout({
+      stateless: true,
+      onLayout: (x) => {
+        onSizeChanged?.(x.nativeEvent.layout)
+      },
+    })
+
+    useEffect(() => {
+      searchPageStore.setChildren(children)
+    }, [searchPageStore.results])
+
+    // memo is important here, keeps scroll from stopping on ios safari
+    return useMemo(() => {
+      return (
+        <View style={{ flexGrow: 1 }} {...layoutProps}>
+          <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
+            <PageContentWithFooter>
+              <SearchHeader />
+              <SearchContent id={id} />
+              <SearchFooter id={id} />
+            </PageContentWithFooter>
+          </ContentScrollView>
+        </View>
+      )
+    }, [])
+  }
+)
+
+const SearchContent = memo(({ id }: { id: string }) => {
+  const { children } = useSearchPageStore({
+    id,
+  })
+  return (
+    <VStack position="relative">
+      <Suspense fallback={null}>{children}</Suspense>
+    </VStack>
+  )
+})
+
+const SearchFooter = memo(({ scrollToTop, id }: { scrollToTop: Function; id: string }) => {
+  const { results } = useSearchPageStore({
+    id,
+  })
+  return (
+    <VStack alignItems="center" justifyContent="center" minHeight={300} width="100%">
+      <Button
+        alignSelf="center"
+        borderRadius={1000}
+        onPress={() => {
+          scrollToTop()
+        }}
+      >
+        <ArrowUp />
+      </Button>
+      <Spacer size={40} />
+      <Paragraph opacity={0.5}>Showing {results.length} results</Paragraph>
+    </VStack>
+  )
+})
+
+const SearchLoading = (props: StackProps) => {
+  return (
+    <VStack flex={1} width="100%" minHeight={300} {...props}>
+      <LoadingItem />
+    </VStack>
+  )
+}
+
+function useTagsFromRoute(route: HistoryItem<'search'>) {
+  const key = `tags-${Object.entries(route)
+    .map((x) => x.join(','))
+    .join(',')}`
+  return useQueryLoud(key, () => getFullTagsFromRoute(route), {
+    suspense: false,
+  })
+}
+
+// ... in Map.tsx the fitBounds that runs
+// in some cases comes from `center/span` above which are
+// estimates of the final bounds basically, we can't get that
+// from mapbox (no `map.getFinalBoundsFor(bounds)`)
+// instead of doing complicated things in Map, once center changes,
+// the *next* movement
+// from map we can safely ignore! because it will almost always change
+// worst case is not bad: we miss a movement, but they can just touch
+// map again and it will show "re-search in area button"
+// useEffect(() => {
+//   let runs = 0
+//   const dispose = reaction(
+//     appMapStore,
+//     (x) => x.nextPosition,
+//     function setSearchPosition(x) {
+//       searchPageStore.setSearchPosition(x)
+//       runs++
+//       if (runs > 1) {
+//         dispose()
+//       }
+//     }
+//   )
+//   return dispose
+// }, [props.item.id, center])
+
+// disabled for now, too easy to regress
+// // sync mapStore.selected to activeIndex in results
+// if (isWeb) {
+//   useEffect(() => {
+// should i try without reaction2? that couldve been causing weridness?
+//     return reaction2(() => {
+//       const { searchPosition, status } = searchPageStore
+//       const { nextPosition, isOnRegion } = appMapStore
+//       if (status === 'loading') return
+//       if (isOnRegion) {
+//         return
+//       }
+//       return series([
+//         () => sleep(600),
+//         () => {
+//           const props = getProps()
+//           if (!props.isActive) return
+//           // not on region, set to coordinates
+//           const { center, span } = searchPosition
+//           const pos = [center.lat, center.lng, span.lat, span.lng].map(
+//             (x) => Math.round(x * 1000) / 1000
+//           )
+//           console.warn('should set', pos.join('_'))
+//           // router.setParams({
+//           //   region: pos.join('_'),
+//           // })
+//         },
+//       ])
+//     })
+//   }, [])
+// }
+
+// import is broken maybe i have too recent react-native version?
+// i think the proxies break it, Element type invalid expected
+// return (
+//   <FlatList
+//     ListHeaderComponent={SearchHeader}
+//     ListFooterComponent={SearchFooter}
+//     removeClippedSubviews
+//     initialNumToRender={Math.ceil(getWindowHeight() / ITEM_HEIGHT)}
+//     data={results}
+//     renderItem={({ item, index }) => (
+//       <RestaurantListItem
+//         curLocInfo={props.item.curLocInfo ?? null}
+//         restaurantId={item.id}
+//         restaurantSlug={item.slug}
+//         rank={index + 1}
+//         activeTagSlugs={activeTagSlugs}
+//         meta={item.meta}
+//       />
+//     )}
+//     keyExtractor={(item) => item.id}
+//   />
+// )
+
 // // web was feeling slow with recyclerlistview:
 // // https://github.com/Flipkart/recyclerlistview/issues/601
 // const SearchResultsSimpleScroll = memo((props: Props) => {
@@ -383,248 +626,3 @@ const useActiveTagSlugs = (props: SearchProps) => {
 //     </ScrollView>
 //   )
 // })
-
-const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
-  const drawerWidth = useAppDrawerWidth()
-  const searchPageStore = useSearchPageStore()
-  const activeTagSlugs = useActiveTagSlugs(props)
-  const { status } = searchPageStore
-
-  let results = searchPageStore.results
-
-  console.log('got status', searchPageStore.status)
-
-  if (searchPageStore.status === 'loading') {
-    results = loadingResults
-  }
-
-  const dataProvider = useMemo(() => {
-    return new DataProvider((r1, r2) => {
-      return r1.id !== r2.id
-    }).cloneWithRows(results)
-  }, [results])
-
-  const layoutProvider = useMemo(() => {
-    return new LayoutProvider(
-      (index) => {
-        return 'listitem'
-      },
-      (type, dim) => {
-        dim.width = drawerWidth
-        dim.height = ITEM_HEIGHT
-      }
-    )
-  }, [drawerWidth])
-
-  const rowRenderer = useCallback(
-    (
-      type: string | number,
-      data: RestaurantSearchItem,
-      index: number
-      // extendedState?: object
-    ) => {
-      if (data.isPlaceholder) {
-        return <LoadingItem size="lg" />
-      }
-      return (
-        <RestaurantListItem
-          curLocInfo={props.item.curLocInfo ?? null}
-          restaurantId={data.id}
-          restaurantSlug={data.slug}
-          rank={index + 1}
-          activeTagSlugs={activeTagSlugs}
-          meta={data.meta}
-        />
-      )
-    },
-    [activeTagSlugs]
-  )
-
-  useEffect(() => {
-    const searchResultsPositions: Record<string, number> = {}
-    results.forEach((v, index) => {
-      searchResultsPositions[v.id] = index + 1
-    })
-    searchResultsStore.setRestaurantPositions(searchResultsPositions)
-  }, [results])
-
-  if (status !== 'loading' && results.length === 0) {
-    return <SearchEmptyResults />
-  }
-
-  // import is broken maybe i have too recent react-native version?
-  // i think the proxies break it, Element type invalid expected
-  // return (
-  //   <FlatList
-  //     ListHeaderComponent={SearchHeader}
-  //     ListFooterComponent={SearchFooter}
-  //     removeClippedSubviews
-  //     initialNumToRender={Math.ceil(getWindowHeight() / ITEM_HEIGHT)}
-  //     data={results}
-  //     renderItem={({ item, index }) => (
-  //       <RestaurantListItem
-  //         curLocInfo={props.item.curLocInfo ?? null}
-  //         restaurantId={item.id}
-  //         restaurantSlug={item.slug}
-  //         rank={index + 1}
-  //         activeTagSlugs={activeTagSlugs}
-  //         meta={item.meta}
-  //       />
-  //     )}
-  //     keyExtractor={(item) => item.id}
-  //   />
-  // )
-
-  return (
-    <>
-      <RecyclerListView
-        style={listStyle}
-        canChangeSize
-        externalScrollView={SearchPageScrollView as any}
-        renderAheadOffset={ITEM_HEIGHT * (isWeb ? 8 : 100)}
-        rowRenderer={rowRenderer}
-        dataProvider={dataProvider}
-        layoutProvider={layoutProvider}
-        deterministic
-      />
-    </>
-  )
-})
-
-const SearchEmptyResults = () => {
-  return (
-    <>
-      <SearchHeader />
-      <VStack paddingVertical={100} alignItems="center" spacing>
-        <Paragraph fontSize={22}>Nothing found</Paragraph>
-        <Text fontSize={32}>😞</Text>
-      </VStack>
-    </>
-  )
-}
-
-const listStyle = {
-  flex: 1,
-  width: '100%',
-  minWidth: 300,
-  minHeight: 1,
-  height: '100%',
-}
-
-type SearchPageScrollViewProps = ScrollViewProps & {
-  onSizeChanged: (props?: LayoutRectangle) => void
-}
-
-class SearchPageChildrenStore extends Store {
-  children = null
-
-  setChildren(next: any) {
-    this.children = next
-  }
-}
-const searchPageChildrenStore = createStore(SearchPageChildrenStore)
-
-const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
-  ({ children, onSizeChanged, ...props }, ref) => {
-    const scrollRef = useRef<ScrollView>()
-
-    useEffect(() => {
-      return reaction(
-        searchPageStore,
-        (x) => [x.index, x.event] as const,
-        function searchPageIndexToSCroll([index, event]) {
-          if (event === 'pin' || event === 'key') {
-            scrollRef.current?.scrollTo({
-              x: 0,
-              y: ITEM_HEIGHT * index,
-              animated: true,
-            })
-          }
-        }
-      )
-    }, [])
-
-    const scrollToTopHandler = useCallback(() => {
-      scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
-    }, [])
-
-    const layoutProps = useLayout({
-      stateless: true,
-      onLayout: (x) => {
-        onSizeChanged?.(x.nativeEvent.layout)
-      },
-    })
-
-    useLayoutEffect(() => {
-      searchPageChildrenStore.setChildren(children)
-    }, [children])
-
-    useEffect(() => {
-      return () => {
-        searchPageChildrenStore.setChildren(null)
-      }
-    }, [])
-
-    // memo is important here, keeps scroll from stopping on ios safari
-    return useMemo(() => {
-      return (
-        <View style={{ flex: 1 }} {...layoutProps}>
-          <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
-            <PageContentWithFooter>
-              <SearchHeader />
-              <SearchContent />
-              <Suspense fallback={null}>
-                <SearchFooter scrollToTop={scrollToTopHandler} />
-              </Suspense>
-            </PageContentWithFooter>
-          </ContentScrollView>
-        </View>
-      )
-    }, [])
-  }
-)
-
-const SearchContent = memo(() => {
-  const children = useStoreInstanceSelector(searchPageChildrenStore, (x) => x.children)
-  return (
-    <VStack position="relative" flex={10} minHeight={600}>
-      <Suspense fallback={null}>{children}</Suspense>
-    </VStack>
-  )
-})
-
-const SearchFooter = memo(({ scrollToTop }: { scrollToTop: Function }) => {
-  const numResults = useStoreInstanceSelector(searchPageStore, (x) => x.results.length)
-  return (
-    <VStack alignItems="center" justifyContent="center" minHeight={300} width="100%">
-      <Button
-        alignSelf="center"
-        borderRadius={1000}
-        onPress={() => {
-          scrollToTop()
-        }}
-      >
-        <ArrowUp />
-      </Button>
-      <Spacer size={40} />
-      <Paragraph opacity={0.5}>Showing {numResults} results</Paragraph>
-    </VStack>
-  )
-})
-
-const SearchLoading = (props: StackProps) => {
-  return (
-    <VStack flex={1} width="100%" minHeight={300} {...props}>
-      <LoadingItem />
-    </VStack>
-  )
-}
-
-function useTagsFromRoute(route: HistoryItem<'search'>) {
-  const key = `tags-${Object.entries(route)
-    .map((x) => x.join(','))
-    .join(',')}`
-  return useQueryLoud(key, () => getFullTagsFromRoute(route), {
-    suspense: false,
-  })
-}

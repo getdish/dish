@@ -3,7 +3,7 @@ import { VStack } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
 import { HomeActiveTagsRecord } from '../../types/homeTypes'
-import { searchPageStore } from '../home/search/SearchPageStore'
+import { resetResults } from '../home/search/SearchPageStore'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
 export const LenseButtonBar = memo(
@@ -39,7 +39,7 @@ export const LenseButtonBar = memo(
                 backgroundColor={props.backgroundColor}
                 onPress={(e) => {
                   e.stopPropagation()
-                  searchPageStore.resetResults()
+                  resetResults()
                   setActive({
                     [lense.slug]: true,
                   })

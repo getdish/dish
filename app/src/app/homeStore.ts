@@ -1,5 +1,3 @@
-import { isEqual } from '@dish/fast-compare'
-import { assert, handleAssertionError, stringify } from '@dish/helpers'
 import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import _, { clamp, findLast } from 'lodash'
@@ -8,7 +6,6 @@ import { Keyboard } from 'react-native'
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
 import { addTagsToCache, allTags } from '../helpers/allTags'
-import { ensureLenseTag } from '../helpers/ensureLenseTag'
 import { getActiveTags } from '../helpers/getActiveTags'
 import { getBreadcrumbs, isBreadcrumbState } from '../helpers/getBreadcrumbs'
 import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
@@ -25,12 +22,10 @@ import {
   HomeStateItemHome,
   HomeStateItemSearch,
   HomeStateNav,
-  HomeStateTagNavigable,
   HomeStatesByType,
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
 import { appMapStore } from './AppMap'
-import { searchPageStore } from './home/search/SearchPageStore'
 
 class HomeStore extends Store {
   searchBarTagIndex = 0
@@ -323,7 +318,6 @@ class HomeStore extends Store {
       }
 
       case 'search': {
-        searchPageStore.resetResults()
         const prev = findLastHomeOrSearch(this.states)
         if (!prev) {
           throw new Error('unreachable')
