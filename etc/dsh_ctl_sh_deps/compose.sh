@@ -35,11 +35,16 @@ function compose_up_subset() {
   if [ "$DOCKER_NO_RECREATE" != "true" ]; then
     flags="--remove-orphans --force-recreate"
   fi
-  echo "docker-compose up $flags $extra $services ($POSTGRES_DB $TIMESCALE_HOST $TIMESCALE_PORT_INTERNAL)"
+  env="($POSTGRES_DB $TIMESCALE_HOST $TIMESCALE_PORT_INTERNAL)"
+  echo "docker-compose up $flags $extra $services $env"
+  dc="docker-compose -f $PROJECT_ROOT/docker-compose.yml"
+  if [ ! -z "$DEV_USER" ]; then
+    dc="$dc -f $PROJECT_ROOT/docker-compose.dev.yml"
+  fi
   if [ -z "$extra" ]; then
-    docker-compose up $flags $services
+    $dc up $flags $services
   else
-    docker-compose up $flags "$extra" $services
+    $dc up $flags "$extra" $services
   fi
   printf "\n\n\n"
 }

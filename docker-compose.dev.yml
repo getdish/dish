@@ -1,0 +1,4 @@
+services:
+  puppet-proxy:
+    volumes:
+      - ./services/puppet-proxy/dist:/dist
