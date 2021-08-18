@@ -10,7 +10,6 @@ import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewH
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { Arrow } from './Arrow'
-import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPageListsRow } from './SearchPageListsRow'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
@@ -49,20 +48,26 @@ export const SearchHeader = memo(() => {
                     height={28}
                     fontWeight="700"
                     fontSize={title.length < 20 ? 27 : 24}
+                    {...(media.sm && {
+                      fontSize: title.length < 20 ? 24 : 18,
+                    })}
                     lineHeight={28}
                   >
                     {title}
                   </Text>
                   {!!subTitle && (
-                    <Text
-                      color={rgbString(lenseColor)}
-                      opacity={0.8}
-                      className="nobreak"
-                      fontSize={20}
-                      fontWeight="300"
-                    >
-                      {subTitle}
-                    </Text>
+                    <>
+                      <Spacer size="xs" />
+                      <Text
+                        color={rgbString(lenseColor)}
+                        opacity={0.8}
+                        className="nobreak"
+                        fontSize={title.length < 25 ? 20 : 16}
+                        fontWeight="300"
+                      >
+                        {subTitle}
+                      </Text>
+                    </>
                   )}
                 </VStack>
               </VStack>

@@ -8,7 +8,7 @@ import { PageFooter } from './PageFooter'
 export const PageContentWithFooter = ({ children }: { children?: any }) => {
   return (
     <>
-      <VStack minHeight={getWindowHeight() * 1 - searchBarHeight}>
+      <VStack minHeight={Math.min(250, getWindowHeight() * 1 - searchBarHeight)}>
         <Suspense
           fallback={
             <>

@@ -11,7 +11,6 @@ import {
   Circle,
   HStack,
   Hoverable,
-  InteractiveContainer,
   LoadingItem,
   LoadingItemsSmall,
   Spacer,
@@ -43,7 +42,7 @@ import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVot
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
-import { searchPageStore } from '../search/SearchPageStore'
+import { getSearchPageStore } from '../search/SearchPageStore'
 import { SkewedCardCarousel } from '../SimpleCard'
 import { EditRestaurantTagsButton } from './EditRestaurantTagsButton'
 import { RankView } from './RankView'
@@ -181,7 +180,7 @@ const RestaurantListItemContent = memo(
     }, [restaurant.name])
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-    const isActive = useStoreInstanceSelector(searchPageStore, (x) => x.index === rank - 1)
+    const isActive = useStoreInstanceSelector(getSearchPageStore(), (x) => x.index === rank - 1)
     const [isExpanded, setIsExpanded] = useState(false)
 
     const contentSideProps: StackProps = {
@@ -380,7 +379,7 @@ const RestaurantListItemContent = memo(
               }}
               fullHeight
               restaurantSlug={restaurantSlug}
-              maxLines={flexibleHeight ? 1000 : 2}
+              maxLines={flexibleHeight ? 2000 : 2}
             />
             {flexibleHeight ? <VStack flex={1} /> : null}
           </VStack>

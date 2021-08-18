@@ -1,12 +1,21 @@
 // @ts-ignore
-import { startTransition, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
 import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
 import { isEqualSubsetShallow } from './isEqualShallow'
-import { ADD_TRACKER, SHOULD_DEBUG, Store, StoreTracker, TRACK, TRIGGER_UPDATE } from './Store'
+import {
+  ADD_TRACKER,
+  SHOULD_DEBUG,
+  Store,
+  StoreTracker,
+  TRACK,
+  TRIGGER_UPDATE,
+  disableTracking,
+  setDisableStoreTracking,
+} from './Store'
 // @ts-ignore
 // prettier-ignore
 // import { unstable_createMutableSource as createMutableSource, unstable_useMutableSource as useMutableSource } from 'react'
@@ -41,6 +50,10 @@ export function useStore<A extends Store<B>, B>(
 ): A {
   const selectorCb = useCallback(options.selector || idFn, [])
   const selector = options.selector ? selectorCb : options.selector
+
+  if (options.debug) {
+    useDebugStoreComponent(StoreKlass)
+  }
 
   // if (options.once) {
   //   const key = props ? getKey(props) : ''
@@ -110,11 +123,11 @@ export function createUseStore<Props, Store>(
 ) {
   return function <Res, C extends Selector<Store, Res>>(
     props?: Props,
-    selector?: C
+    options?: UseStoreOptions
     // super hacky workaround for now, ts is unknown to me tbh
   ): C extends Selector<any, infer B> ? (B extends Object ? B : Store) : Store {
     // @ts-expect-error
-    return useStore(StoreKlass, props, { selector })
+    return useStore(StoreKlass, props, options)
   }
 }
 
@@ -295,7 +308,10 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
     useCallback(
       (store) => {
         const keys = curInternal.firstRun ? info.stateKeys : [...curInternal.tracked]
+        // dont track during selector
+        setDisableStoreTracking(store, true)
         const snap = selector(store, keys)
+        setDisableStoreTracking(store, false)
         if (isEqualSubsetShallow(snap, internal.current!.last)) {
           return internal.current!.last
         }
@@ -491,9 +507,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
       if (key in wrappedActions) {
         return wrappedActions[key]
       }
-
-      // avoid tracking internal stuff
-      if (key === '_trackers' || key === '_listeners' || key === '$$typeof') {
+      if (passThroughKeys[key]) {
         return Reflect.get(storeInstance, key)
       }
 
@@ -504,6 +518,9 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         if (key === UNWRAP_STORE_INFO) {
           return storeInfo
         }
+        return Reflect.get(storeInstance, key)
+      }
+      if (disableTracking.get(storeInstance)) {
         return Reflect.get(storeInstance, key)
       }
       // non-actions
@@ -520,6 +537,11 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
 
         if (key in getters) {
           if (!gettersState.isGetting) {
+            if (process.env.NODE_ENV === 'development') {
+              if (DebugStores.has(constr)) {
+                console.log('useStore TRACKING', key)
+              }
+            }
             storeInstance[TRACK](key)
           }
           if (getCache.has(key)) {
@@ -550,6 +572,11 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         }
 
         if (!gettersState.isGetting) {
+          if (process.env.NODE_ENV === 'development') {
+            if (DebugStores.has(constr)) {
+              console.log('useStore TRACKING', key)
+            }
+          }
           storeInstance[TRACK](key)
         }
       }
@@ -598,4 +625,11 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
   }
 
   return proxiedStore
+}
+
+const passThroughKeys = {
+  _trackers: true,
+  $$typeof: true,
+  _listeners: true,
+  _enableTracking: true,
 }

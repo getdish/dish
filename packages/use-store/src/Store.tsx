@@ -1,6 +1,7 @@
 // @ts-ignore
 import { startTransition } from 'react'
 
+import { UNWRAP_PROXY } from './constants'
 import { shouldDebug } from './useStoreDebug'
 
 export const TRIGGER_UPDATE = Symbol()
@@ -15,6 +16,13 @@ export type StoreTracker = {
   component?: any
   firstRun: boolean
   last?: any
+}
+
+export const disableTracking = new WeakMap()
+
+export const setDisableStoreTracking = (storeInstance: any, val: boolean) => {
+  const store = storeInstance[UNWRAP_PROXY] ?? storeInstance
+  disableTracking.set(store, val)
 }
 
 export class Store<Props extends Object | null = null> {

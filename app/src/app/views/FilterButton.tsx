@@ -5,7 +5,7 @@ import { VStack, useTheme, useThemeName } from 'snackui'
 import { tagDisplayNames } from '../../constants/tagMeta'
 import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
-import { searchPageStore } from '../home/search/SearchPageStore'
+import { resetResults } from '../home/search/SearchPageStore'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 import { Link } from './Link'
 import { SmallButton, SmallButtonProps } from './SmallButton'
@@ -65,7 +65,7 @@ export const FilterButton = ({
           ...rest.textProps,
         }}
         onPress={() => {
-          searchPageStore.resetResults()
+          resetResults()
           setIsActive((x) => !x)
         }}
       >

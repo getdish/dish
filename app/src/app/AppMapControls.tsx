@@ -8,7 +8,7 @@ import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { useIsRouteActive } from '../router'
 import * as AppMapStore from './AppMap'
-import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
+import { getSearchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { useSafeArea } from './hooks/useSafeArea'
 import { pagesStore } from './pagesStore'
@@ -92,31 +92,33 @@ export const AppMapControls = memo(() => {
   )
 })
 
-const ToggleRegionButton = memo(() => {
-  const { searchRegion, toggleSearchRegion } = useSearchPageStore()
-  const isOnSearch = useIsRouteActive('search')
-  if (!isOnSearch) {
-    return null
-  }
-  return (
-    <OverlayLinkButton onPress={toggleSearchRegion}>
-      <HStack pointerEvents="none" alignItems="center" spacing="sm">
-        <Text userSelect="none" fontSize={12}>
-          Area
-        </Text>
-        <VStack scale={0.8}>
-          <Switch value={!searchRegion} />
-        </VStack>
-        <Text userSelect="none" fontSize={12}>
-          All
-        </Text>
-      </HStack>
-    </OverlayLinkButton>
-  )
-})
+// const ToggleRegionButton = memo(() => {
+//   const { searchRegion, toggleSearchRegion } = useSearchPageStore()
+//   const isOnSearch = useIsRouteActive('search')
+//   if (!isOnSearch) {
+//     return null
+//   }
+//   return (
+//     <OverlayLinkButton onPress={toggleSearchRegion}>
+//       <HStack pointerEvents="none" alignItems="center" spacing="sm">
+//         <Text userSelect="none" fontSize={12}>
+//           Area
+//         </Text>
+//         <VStack scale={0.8}>
+//           <Switch value={!searchRegion} />
+//         </VStack>
+//         <Text userSelect="none" fontSize={12}>
+//           All
+//         </Text>
+//       </HStack>
+//     </OverlayLinkButton>
+//   )
+// })
 
 function useShowSearchHere() {
   return useSelector(() => {
+    const searchPageStore = getSearchPageStore()
+    if (!searchPageStore) return
     const isOnSearch = homeStore.currentStateType === 'search'
     const sp = searchPageStore.searchPosition
     const { center, span } = AppMapStore.appMapStore.nextPosition

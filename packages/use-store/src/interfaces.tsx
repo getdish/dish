@@ -2,6 +2,7 @@ export type Selector<A = unknown, B = unknown> = (x: A) => B
 
 export type UseStoreSelector<Store, Res> = (store: Store) => Res
 export type UseStoreOptions<Store = any, SelectorRes = any> = {
+  debug?: boolean
   selector?: UseStoreSelector<Store, SelectorRes>
   once?: boolean
 }

@@ -10,7 +10,7 @@ import { isWeb, searchBarHeight } from '../constants/constants'
 import { isTouchDevice } from '../constants/platforms'
 import { isWebIOS } from '../helpers/isIOS'
 import { filterToNavigable } from '../helpers/tagHelpers'
-import { router, useIsRouteActive } from '../router'
+import { router } from '../router'
 import { AppSearchInputTagsRow } from './AppSearchInputTagsRow'
 import {
   AutocompleteStore,
@@ -18,7 +18,7 @@ import {
   autocompletesStore,
 } from './AutocompletesStore'
 import { drawerStore } from './drawerStore'
-import { searchPageStore, useSearchPageStore } from './home/search/SearchPageStore'
+import { getSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore, useHomeStoreSelector } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
@@ -371,7 +371,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
         // TODO move this to top-down approach
         // inputStore.setValue(e.target.value)
         // and have SearchPage useEffect() listen to inputStore.value
-        searchPageStore.runSearch({
+        getStore()?.runSearch({
           searchQuery: e.target.value,
           force: true,
         })

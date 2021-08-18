@@ -182,7 +182,7 @@ for (const [index, name] of colorNames.entries()) {
     backgroundColorQuartenary: colors.color500,
     backgroundColorTransluscent: `${colors.color800}99`,
     backgroundColorTransluscentHover: `${colors.color800}ee`,
-    borderColor: colors.color500,
+    borderColor: colors.color600,
     backgroundColorAlt: colors.color200,
   }
 }
