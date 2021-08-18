@@ -8,7 +8,7 @@ import {
   RestaurantSearchItem,
   search,
 } from '@dish/graph'
-import { isPresent, stringify } from '@dish/helpers'
+import { isPresent } from '@dish/helpers'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 
 import { initialPosition } from '../../../constants/initialHomeState'

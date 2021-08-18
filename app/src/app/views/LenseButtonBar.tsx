@@ -1,11 +1,12 @@
-import React, { memo, useEffect, useState } from 'react'
-import { VStack, useDebounce } from 'snackui'
+import React, { memo, useLayoutEffect, useState } from 'react'
+import { VStack } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
 import { HomeActiveTagsRecord } from '../../types/homeTypes'
+import { searchPageStore } from '../home/search/SearchPageStore'
 import { LenseButton, LenseButtonSize } from './LenseButton'
 
-export const HomeLenseBar = memo(
+export const LenseButtonBar = memo(
   (props: {
     activeTags?: HomeActiveTagsRecord
     size?: LenseButtonSize
@@ -14,7 +15,7 @@ export const HomeLenseBar = memo(
   }) => {
     const [active, setActive] = useState<HomeActiveTagsRecord>({})
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       setActive(props.activeTags || {})
     }, [props.activeTags])
 
@@ -38,6 +39,7 @@ export const HomeLenseBar = memo(
                 backgroundColor={props.backgroundColor}
                 onPress={(e) => {
                   e.stopPropagation()
+                  searchPageStore.resetResults()
                   setActive({
                     [lense.slug]: true,
                   })

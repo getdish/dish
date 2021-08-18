@@ -229,7 +229,7 @@ const RestaurantListItemContent = memo(
           restaurantId={restaurantId}
           spacing={0}
           spacingHorizontal={0}
-          max={4}
+          maxItems={4}
         />
       </Suspense>
     )
@@ -433,39 +433,39 @@ const RestaurantListItemContent = memo(
             </Button>
           )}
 
-          <InteractiveContainer>
-            <Link
-              name="restaurant"
-              params={{
-                slug: props.restaurantSlug,
-                section: 'reviews',
-              }}
+          {/* <InteractiveContainer> */}
+          <Link
+            name="restaurant"
+            params={{
+              slug: props.restaurantSlug,
+              section: 'reviews',
+            }}
+          >
+            <SmallButton
+              marginRight={-2}
+              borderRadius={0}
+              tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+              icon={
+                <MessageSquare
+                  size={16}
+                  color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                />
+              }
             >
-              <SmallButton
-                marginRight={-2}
-                borderRadius={0}
-                tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                icon={
-                  <MessageSquare
-                    size={16}
-                    color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                  />
-                }
-              >
-                {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-              </SmallButton>
-            </Link>
+              {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+            </SmallButton>
+          </Link>
 
-            <Suspense fallback={<Spacer size={44} />}>
-              <VStack marginRight={-2}>
-                <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
-              </VStack>
-            </Suspense>
+          <Suspense fallback={<Spacer size={44} />}>
+            <VStack marginRight={-2}>
+              <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
+            </VStack>
+          </Suspense>
 
-            <Suspense fallback={<Spacer size={44} />}>
-              <RestaurantAddToListButton borderRadius={0} restaurantSlug={restaurantSlug} noLabel />
-            </Suspense>
-          </InteractiveContainer>
+          <Suspense fallback={<Spacer size={44} />}>
+            <RestaurantAddToListButton borderRadius={0} restaurantSlug={restaurantSlug} noLabel />
+          </Suspense>
+          {/* </InteractiveContainer> */}
 
           {!!price_range && (
             <>
@@ -494,14 +494,14 @@ const RestaurantListItemContent = memo(
           )}
 
           <Suspense fallback={null}>
-            <RestaurantDeliveryButtons label="" restaurantSlug={restaurantSlug} />
+            <RestaurantDeliveryButtons showLabels restaurantSlug={restaurantSlug} />
           </Suspense>
 
           {tagsRowContent}
         </HStack>
 
         {/* bottom spacing */}
-        <Spacer height={10} />
+        <Spacer size={10} />
       </VStack>
     )
   })

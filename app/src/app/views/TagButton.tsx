@@ -81,6 +81,8 @@ export type TagButtonProps = StackProps &
     hideRating?: boolean
     hideRank?: boolean
     ratingStyle?: 'points' | 'pie'
+    transparent?: boolean
+    bordered?: boolean
   }
 
 const typeColors = {
@@ -113,6 +115,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     noColor,
     floating,
     closable,
+    bordered,
     onClose,
     replaceSearch,
     votable,
@@ -133,6 +136,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     hideRating,
     hideRank,
     ratingStyle = 'pie',
+    transparent,
     ...rest
   } = props
 
@@ -155,9 +159,23 @@ const TagButtonInner = (props: TagButtonProps) => {
       spacing={fontSize * 0.5}
       borderRadius={8}
       backgroundColor={theme.backgroundColor}
+      borderWidth={1}
+      borderColor={bordered ? theme.borderColor : 'transparent'}
       hoverStyle={{
         backgroundColor: theme.backgroundColorSecondary,
       }}
+      pressStyle={{
+        backgroundColor: theme.backgroundColorTertiary,
+      }}
+      {...(transparent && {
+        backgroundColor: 'transparent',
+        hoverStyle: {
+          backgroundColor: 'transparent',
+        },
+        pressStyle: {
+          backgroundColor: 'transparent',
+        },
+      })}
       alignItems="center"
       paddingHorizontal={isSmall ? 5 : 12}
       paddingVertical={isSmall ? 3 : 5}
@@ -235,8 +253,8 @@ const TagButtonInner = (props: TagButtonProps) => {
         <>
           {ratingStyle === 'pie' && (
             <VStack position="relative">
-              {rating * 10 < 30 ? (
-                <Text fontSize={16}>😡</Text>
+              {rating * 10 < 25 ? (
+                <Text fontSize={16}>😕</Text>
               ) : rating * 10 > 90 ? (
                 <Text fontSize={16}>💎</Text>
               ) : (

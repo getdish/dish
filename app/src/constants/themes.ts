@@ -163,7 +163,7 @@ for (const [index, name] of colorNames.entries()) {
     backgroundColorQuartenary: colors.color200,
     backgroundColorTransluscent: `${colors.color25}55`,
     backgroundColorTransluscentHover: `${colors.color25}33`,
-    borderColor: colors.altPastelColor,
+    borderColor: colors.color100,
     backgroundColorAlt: colors.color200,
   }
   const darkName = `${name}-dark`

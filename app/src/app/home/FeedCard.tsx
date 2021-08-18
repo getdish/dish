@@ -50,7 +50,7 @@ export const FeedCard = ({
                 <TagButton
                   key={tag.slug}
                   onlyIcon={tags.length > 1 && tag.type === 'lense'}
-                  backgroundColor="transparent"
+                  transparent
                   size={emphasizeTag ? 'lg' : 'md'}
                   fontWeight={emphasizeTag ? '300' : '700'}
                   color={colorString}

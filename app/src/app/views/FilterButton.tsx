@@ -52,7 +52,7 @@ export const FilterButton = ({
         icon={iconElement ? <VStack opacity={0.45}>{iconElement}</VStack> : null}
         {...rest}
         zIndex={100 - index + (isActive ? 1 : 0)}
-        borderWidth={0}
+        // borderWidth={0}
         backgroundColor={isActive ? color : theme.backgroundColorSecondary}
         hoverStyle={{
           backgroundColor: isActive ? color : theme.backgroundColorTertiary,

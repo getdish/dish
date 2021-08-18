@@ -11,7 +11,7 @@ export type LenseButtonSize = 'md' | 'lg' | 'xl'
 
 export const LenseButton = ({
   lense,
-  isActive: isActiveParent,
+  isActive,
   minimal,
   size = 'md',
   backgroundColor,
@@ -24,7 +24,6 @@ export const LenseButton = ({
   size?: LenseButtonSize
   onPress?: (e: any) => any
 }) => {
-  const [isActive, setIsActive] = useState(isActiveParent)
   const media = useMedia()
   const lenseColorLight = rgbString(lense.rgb, media.sm ? 0.6 : 0.4)
   const lenseColorDark = rgbString(lense.rgb.map((x) => x * 1.2))
@@ -40,10 +39,6 @@ export const LenseButton = ({
   const isLong = name.length > 4
   const theme = useTheme()
 
-  useEffect(() => {
-    setIsActive(isActiveParent)
-  }, [isActiveParent])
-
   return (
     <Pressable onPress={onPress}>
       <Link tag={lense} replace asyncClick disallowDisableWhenActive>
@@ -53,7 +48,6 @@ export const LenseButton = ({
           justifyContent="center"
           width={scaledWidth}
           height={scaledSize}
-          onPress={() => setIsActive((x) => !x)}
           backgroundColor={bg}
           borderRadius={100}
           marginRight={10}

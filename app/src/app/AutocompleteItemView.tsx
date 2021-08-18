@@ -5,7 +5,7 @@ import { HStack, Spacer, Text, VStack, useDebounce, useTheme } from 'snackui'
 
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { rgbString } from '../helpers/rgb'
-import { AutocompleteSelectCb } from './AutocompleteFrame'
+import { AutocompleteSelectCb } from './AutocompleteResults'
 import { ShowAutocomplete, autocompletesStore } from './AutocompletesStore'
 import { CircleButton } from './home/restaurant/CircleButton'
 import { useCurrentLenseColor } from './hooks/useCurrentLenseColor'
@@ -70,6 +70,7 @@ export const AutocompleteItemView = memo(
         justifyContent="flex-start"
         minHeight={46}
         backgroundColor={isActive ? themeColor : 'transparent'}
+        borderRadius={0}
         hoverStyle={{
           backgroundColor: isActive ? themeColor : theme.backgroundColorDarker,
         }}
@@ -96,7 +97,7 @@ export const AutocompleteItemView = memo(
         <HStack alignItems="center" width="100%">
           <VStack overflow="hidden" flex={1}>
             <HStack width="100%" marginVertical={-3} flex={1} alignItems="center">
-              <Text fontWeight="700" ellipse color={theme.color} fontSize={20} lineHeight={26}>
+              <Text fontWeight="700" ellipse color={theme.color} fontSize={20} lineHeight={30}>
                 {!!result.namePrefix && (
                   <>
                     <Text fontWeight="300">{result.namePrefix}</Text>{' '}
