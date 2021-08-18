@@ -16,6 +16,13 @@ import { aroundCoords, decodeEntities, geocode } from '../utils'
 
 const TRIPADVISOR_DOMAIN = 'https://www.tripadvisor.com/'
 const TRIPADVISOR_PROXY = process.env.TRIPADVISOR_PROXY || TRIPADVISOR_DOMAIN
+const AXIOS_HEADERS = {
+  'X-Requested-With': 'XMLHttpRequest',
+  'X-My-X-Forwarded-For': 'www.tripadvisor.com',
+  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0',
+  'Accept-Language': 'en-GB,en;q=0.5',
+  'accept-encoding': 'deflate, gzip, zstd',
+}
 
 const removeStartSlash = (x: string) => (x.startsWith('/') ? x.slice(1) : x)
 
@@ -61,9 +68,7 @@ export class Tripadvisor extends WorkerJob {
     const coords = `&mc=${lat},${lon}`
     const uri = TRIPADVISOR_PROXY + base + dimensions + coords
     const response = await axios.get(uri, {
-      headers: {
-        'X-My-X-Forwarded-For': 'www.tripadvisor.com',
-      },
+      headers: AXIOS_HEADERS,
     })
     const data = response.data
     if (!data?.restaurants) {
@@ -145,7 +150,7 @@ export class Tripadvisor extends WorkerJob {
   // parallelism is overcomplicating, so i turned it off here
   async saveReviews(scrape_id: string, pageNum: number, pup: Puppeteer) {
     const page = pup.page
-    if (process.env.DISH_ENV == 'test' && pageNum > 1) {
+    if (process.env.NODE_ENV == 'test' && pageNum > 1) {
       console.log('TEST MODE, finishing past page 1')
       return
     }
@@ -265,10 +270,7 @@ export class Tripadvisor extends WorkerJob {
       `DynamicPlacementAjax?detail=${this.detail_id}` +
       `&albumViewMode=hero&placementRollUps=responsive-photo-viewer&metaReferer=Restaurant_Review&offset=${offset}`
     const html = await axios.get(TRIPADVISOR_PROXY + path, {
-      headers: {
-        'X-My-X-Forwarded-For': 'www.tripadvisor.com',
-        'X-Requested-With': 'XMLHttpRequest',
-      },
+      headers: AXIOS_HEADERS,
     })
     if (typeof html.data !== 'string') {
       console.log('error data', html.data)
