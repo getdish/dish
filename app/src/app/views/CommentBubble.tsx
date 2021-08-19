@@ -22,6 +22,7 @@ import { ensureFlexText } from '../home/restaurant/ensureFlexText'
 import { UserAvatar } from '../home/user/UserAvatar'
 import { CloseButton } from './CloseButton'
 import { Link } from './Link'
+import { Middot } from './Middot'
 import { PaneControlButtons } from './PaneControlButtons'
 
 type CommentBubbleProps = Omit<StackProps, 'children'> & {
@@ -324,9 +325,3 @@ function CommentBubbleContents({
     </VStack>
   )
 }
-
-const Middot = () => (
-  <Paragraph opacity={0.5} size="sm">
-    &middot;
-  </Paragraph>
-)

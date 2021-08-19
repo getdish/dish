@@ -25,21 +25,20 @@ export const RestaurantAddToListButton = ({
           <RestaurantAddToListModal slug={restaurantSlug} onDismiss={() => setShowModal(false)} />
         </Suspense>
       )}
-      <Tooltip contents="Add to list">
-        <SmallButton
-          elevation={floating ? 1 : 0}
-          borderRadius={100}
-          icon={<Plus color={theme.color} size={16} />}
-          onPress={() => {
-            if (!userStore.promptLogin()) {
-              setShowModal(true)
-            }
-          }}
-          {...props}
-        >
-          {noLabel ? null : 'List'}
-        </SmallButton>
-      </Tooltip>
+      <SmallButton
+        tooltip="Add to list"
+        elevation={floating ? 1 : 0}
+        borderRadius={100}
+        icon={<Plus color={theme.color} size={16} />}
+        onPress={() => {
+          if (!userStore.promptLogin()) {
+            setShowModal(true)
+          }
+        }}
+        {...props}
+      >
+        {noLabel ? null : 'List'}
+      </SmallButton>
     </>
   )
 }
