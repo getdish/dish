@@ -1,15 +1,26 @@
 import React from 'react'
 import { Image } from 'react-native'
-import { AbsoluteVStack, Divider, Paragraph, Spacer, VStack } from 'snackui'
+import {
+  AbsoluteVStack,
+  Divider,
+  Paragraph,
+  Spacer,
+  Theme,
+  UnorderedList,
+  UnorderedListItem,
+  VStack,
+} from 'snackui'
 
 import dontPanic from '../../../assets/dont-panic.svg'
 import { tagLenses } from '../../../constants/localTags'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { TagLine } from '../../TagLine'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 import { LogoColor } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
+import { IntroText } from '../blog/IntroText'
 import { StackItemProps } from '../HomeStackView'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 
@@ -43,71 +54,26 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
           </VStack>
 
           <VStack paddingHorizontal="5%" spacing="xl">
-            <Paragraph size="xxl">
-              A Hitchhiker's Guide to our galaxy. Too many hole-in-the-walls have great food and
-              ⭐️⭐️⭐️ stars. Good
-              <LinkButton
-                theme="yellow"
-                {...inlineButton}
-                tags={[
-                  {
-                    name: 'Banh Xeo',
-                    slug: 'vietnamese__banh-xeo',
-                    type: 'dish',
-                  },
-                ]}
-              >
-                bánh xèo
-              </LinkButton>
-              or{' '}
-              <LinkButton
-                tags={[
-                  {
-                    name: 'Birria Taco',
-                    slug: 'mexican__birria-taco',
-                    type: 'dish',
-                  },
-                ]}
-                {...inlineButton}
-                theme="orange"
-              >
-                birria taco
-              </LinkButton>{' '}
-              should be a snap. Know how you have your favorite nights out, places to walk, . Search
-              delivery apps have sketchy reviews and fake popups to boot.
-            </Paragraph>
+            <Theme name="yellow">
+              <Paragraph size="xl">
+                <Link href="">We're launching a blockchain and DAO, join our discord</Link>
+              </Paragraph>
+            </Theme>
 
             <Paragraph size="xl">
-              What you want when{' '}
-              <LinkButton
-                theme="green"
-                {...inlineButton}
-                tags={[
-                  tagLenses.find((x) => x.slug === 'lenses__veg')!,
-                  { name: 'price-low', type: 'filter' },
-                ]}
-              >
-                going vegetarian on a budget
-              </LinkButton>{' '}
-              vs meeting for a{' '}
-              <LinkButton
-                tags={[
-                  { name: 'Date', type: 'lense' },
-                  { name: 'price-high', type: 'filter' },
-                ]}
-                {...inlineButton}
-                theme="blue"
-              >
-                date night 🌃
-              </LinkButton>{' '}
-              don't really into into five stars, and often five stars hides what you care about.
-              Dish solves this in a few ways:
+              Dish is in early beta, it's aim is to be a nicer guide to the world:
             </Paragraph>
 
-            <Paragraph size="xl">
-              Vote on top lists in each area across any tags, plus make your own for yourself or
-              others.
-            </Paragraph>
+            <UnorderedList>
+              <UnorderedListItem size="xl">
+                Aggregated reviews - like RottenTomatoes for food
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">
+                Searches every delivery service at once
+              </UnorderedListItem>
+              <UnorderedListItem size="xl">Pays in crypto for contributions</UnorderedListItem>
+              <UnorderedListItem size="xl">Regional and group-based governance</UnorderedListItem>
+            </UnorderedList>
 
             <Spacer />
             <Divider />

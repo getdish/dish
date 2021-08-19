@@ -81,7 +81,7 @@ export const useLink = (
           element,
           {
             onClick: onPress,
-            className: `display-contents cursor-pointer ${props.className ?? ''}`,
+            className: `a-link display-contents cursor-pointer ${props.className ?? ''}`,
             target: props.target,
             ...(element === 'a' &&
               href && {
@@ -113,10 +113,7 @@ const getNormalizeLinkProps = (
     ...linkProps,
     // get latest on mouseenter, lets you update tags without re-rendering every link
     onMouseEnter(e) {
-      const next = getNormalizedLink({
-        ...props,
-        debug: true,
-      })
+      const next = getNormalizedLink(props)
       if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
         forceUpdate()
       }
