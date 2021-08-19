@@ -16,6 +16,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     'react/no-unescaped-entities': 'off',
+    'react/prop-types': 'off',
     'react/display-name': 'off',
     'import/default': 'off',
     'import/no-named-as-default-member': 'off',

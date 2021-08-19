@@ -50,9 +50,9 @@ export const zIndexGallery = 500
 
 export const cardFrameBorderRadius = 16
 export const cardFrameWidth = 170
-export const cardFrameHeight = 240
+export const cardFrameHeight = 220
 export const cardFrameWidthLg = 180
-export const cardFrameHeightLg = 260
+export const cardFrameHeightLg = 240
 export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.9)
 export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.8)
 

@@ -142,6 +142,8 @@ export const HomePageFeed = memo(
         [allRestaurants.map((x) => x.id).join('')]
       )
 
+      const numAddButtons = Math.max(1, 10 - trendingLists.length)
+
       return (
         <>
           <HStack position="relative">
@@ -255,7 +257,7 @@ export const HomePageFeed = memo(
                 </ContentScrollViewHorizontal>
               </HStack> */}
 
-          <VStack paddingHorizontal={16} position="relative">
+          <VStack paddingHorizontal={10} position="relative">
             <AbsoluteVStack zIndex={100} top={-15} left={10}>
               <SlantedTitle size="xs">Playlists</SlantedTitle>
             </AbsoluteVStack>
@@ -266,13 +268,8 @@ export const HomePageFeed = memo(
                 const color = getListColor(list?.color) ?? '#999999'
                 const numItems = list.restaurants_aggregate().aggregate?.count() ?? 0
                 return (
-                  <VStack
-                    paddingHorizontal={2}
-                    alignItems="center"
-                    flex={1}
-                    key={i}
-                    marginBottom={10}
-                  >
+                  <HStack alignItems="center" flexShrink={0} key={i} marginBottom={10}>
+                    <Spacer size="xs" />
                     <ListCardFrame
                       chromeless
                       hoverEffect="background"
@@ -293,13 +290,14 @@ export const HomePageFeed = memo(
                       }
                       photo={getListPhoto(list)}
                     />
-                  </VStack>
+                    <Spacer size="xs" />
+                  </HStack>
                 )
               })}
 
-              {trendingLists.length < 8 &&
-                [...new Array(8 - trendingLists.length)].map((_, index) => (
-                  <VStack
+              {[...new Array(numAddButtons)].map((_, index) =>
+                index > 6 ? null : (
+                  <HStack
                     paddingHorizontal={2}
                     alignItems="center"
                     flex={1}
@@ -318,8 +316,9 @@ export const HomePageFeed = memo(
                         <Plus color="#eeeeee" />
                       </FeedCard>
                     </Link>
-                  </VStack>
-                ))}
+                  </HStack>
+                )
+              )}
             </Grid>
           </VStack>
         </>

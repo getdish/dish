@@ -140,7 +140,8 @@ export const CardFrame = ({
         },
       })}
       {...(floating && {
-        shadowColor: theme.shadowColorLighter,
+        shadowColor: theme.backgroundColor,
+        shadowOpacity: 0.033,
         shadowRadius: 0,
         shadowOffset: { height: 3, width: 3 },
       })}
@@ -150,7 +151,9 @@ export const CardFrame = ({
         },
       })}
       {...(flexible && {
-        width: '100%',
+        minWidth: 'auto',
+        width: 'auto',
+        flexGrow: 1,
       })}
     >
       {/* background */}

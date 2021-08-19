@@ -35,7 +35,12 @@ export function Link<Name extends DRouteName = DRouteName>(
   const { wrapWithLinkElement } = useLink(allProps)
   return wrapWithLinkElement(
     !!Object.keys(textProps).length || isStringChild(children) ? (
-      <Text color={brandColor} display={display as any} {...textProps}>
+      <Text
+        textDecorationLine="underline"
+        color={brandColor}
+        display={display as any}
+        {...textProps}
+      >
         {children}
       </Text>
     ) : (
