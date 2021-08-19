@@ -1,4 +1,5 @@
 import { ReviewQuery, graphql, order_by, query } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { useRouterSelector } from '@dish/router'
 import React, { Suspense, memo } from 'react'
@@ -88,6 +89,23 @@ const UserPageContent = graphql(
       },
       order_by: [{ created_at: order_by.desc }],
     })
+
+    const favoriteLists = user
+      .reviews({
+        limit: 10,
+        where: {
+          list_id: {
+            _neq: null,
+          },
+          favorited: {
+            _eq: true,
+          },
+        },
+        order_by: [{ authored_at: order_by.desc }],
+      })
+      .flatMap((review) => review.list)
+      .filter(isPresent)
+
     // not doing this nested until hasura fixes:
     // https://github.com/hasura/graphql-engine/issues/5745
     const reviews = query.review({
@@ -257,6 +275,29 @@ const UserPageContent = graphql(
                         colored
                         // zIndex={1000 - i}
                         size="lg"
+                        floating
+                        key={list.slug || i}
+                        userSlug={list.user?.username ?? ''}
+                        slug={list.slug || ''}
+                      />
+                    )
+                  })}
+                </CardCarousel>
+              </VStack>
+            )}
+
+            {!pane && !!favoriteLists.length && (
+              <VStack position="relative">
+                <AbsoluteVStack zIndex={100} top={-15} left={10}>
+                  <SlantedTitle size="xs">Favorited</SlantedTitle>
+                </AbsoluteVStack>
+                <CardCarousel>
+                  {favoriteLists.map((list, i) => {
+                    return (
+                      <ListCard
+                        colored
+                        // zIndex={1000 - i}
+                        // size="lg"
                         floating
                         key={list.slug || i}
                         userSlug={list.user?.username ?? ''}
