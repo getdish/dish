@@ -169,6 +169,11 @@ export async function update<T extends WithID<ModelType>>(
   if (!object.id) {
     throw new Error(`Must have ID to update`)
   }
+  // this seems bad? sometimes you want to set something to null
+  // but breaks lots of tests if removed
+  for (const key of Object.keys(object)) {
+    if (object[key] == null) delete object[key]
+  }
   opts.keys = opts.keys || Object.keys(generatedSchema[table + '_set_input'])
   try {
     const [resolved] = await resolvedMutationWithFields(() => {
