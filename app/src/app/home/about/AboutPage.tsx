@@ -17,6 +17,7 @@ import { TagLine } from '../../TagLine'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { LogoColor } from '../../views/Logo'
+import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
@@ -59,15 +60,24 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
             <LogoColor scale={2} />
           </VStack>
 
-          <VStack paddingHorizontal="5%" spacing="xl">
+          <VStack paddingHorizontal="5%" spacing="xxl">
+            <Paragraph fontWeight="800" size={5} sizeLineHeight={0.66}>
+              The hitchikers guide to our galaxy.
+            </Paragraph>
+
             <Paragraph size="xxl">
               Dish is your pocket guide to the world. We aggregate amazing ratings, and are building
-              a sub-communities platform for curation.{' '}
+              a community-of-communities platform for better curation and trusted curators on a map.{' '}
+            </Paragraph>
+
+            <Paragraph size="xxl">
               <Link href="https://discord.gg/f4u9hgmf">
                 We're launching on ethereum and forming a DAO, join our discord
               </Link>
               .
             </Paragraph>
+
+            <SmallTitle divider="center">How Dish Works</SmallTitle>
 
             <UnorderedList>
               <UnorderedListItem sizeLineHeight={1.05} size="xl">
