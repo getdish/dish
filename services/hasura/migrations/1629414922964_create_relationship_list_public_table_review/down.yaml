@@ -1,0 +1,6 @@
+- type: drop_relationship
+  args:
+    relationship: list
+    table:
+      name: review
+      schema: public

@@ -359,6 +359,7 @@ export interface list_bool_exp {
   created_at?: Maybe<timestamptz_comparison_exp>
   description?: Maybe<String_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
+  image?: Maybe<String_comparison_exp>
   list_reviews?: Maybe<review_bool_exp>
   location?: Maybe<geometry_comparison_exp>
   name?: Maybe<String_comparison_exp>
@@ -393,6 +394,7 @@ export interface list_insert_input {
   created_at?: Maybe<Scalars['timestamptz']>
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
+  image?: Maybe<Scalars['String']>
   list_reviews?: Maybe<review_arr_rel_insert_input>
   location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
@@ -413,6 +415,7 @@ export interface list_max_order_by {
   created_at?: Maybe<order_by>
   description?: Maybe<order_by>
   id?: Maybe<order_by>
+  image?: Maybe<order_by>
   name?: Maybe<order_by>
   region?: Maybe<order_by>
   slug?: Maybe<order_by>
@@ -427,6 +430,7 @@ export interface list_min_order_by {
   created_at?: Maybe<order_by>
   description?: Maybe<order_by>
   id?: Maybe<order_by>
+  image?: Maybe<order_by>
   name?: Maybe<order_by>
   region?: Maybe<order_by>
   slug?: Maybe<order_by>
@@ -454,6 +458,7 @@ export interface list_order_by {
   created_at?: Maybe<order_by>
   description?: Maybe<order_by>
   id?: Maybe<order_by>
+  image?: Maybe<order_by>
   list_reviews_aggregate?: Maybe<review_aggregate_order_by>
   location?: Maybe<order_by>
   name?: Maybe<order_by>
@@ -884,6 +889,8 @@ export enum list_select_column {
   /** column name */
   id = 'id',
   /** column name */
+  image = 'image',
+  /** column name */
   location = 'location',
   /** column name */
   name = 'name',
@@ -907,6 +914,7 @@ export interface list_set_input {
   created_at?: Maybe<Scalars['timestamptz']>
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
+  image?: Maybe<Scalars['String']>
   location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
   public?: Maybe<Scalars['Boolean']>
@@ -1071,6 +1079,8 @@ export enum list_update_column {
   description = 'description',
   /** column name */
   id = 'id',
+  /** column name */
+  image = 'image',
   /** column name */
   location = 'location',
   /** column name */
@@ -2941,6 +2951,7 @@ export interface review_bool_exp {
   categories?: Maybe<jsonb_comparison_exp>
   favorited?: Maybe<Boolean_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
+  list?: Maybe<list_bool_exp>
   list_id?: Maybe<uuid_comparison_exp>
   location?: Maybe<geometry_comparison_exp>
   native_data_unique_key?: Maybe<String_comparison_exp>
@@ -3001,6 +3012,7 @@ export interface review_insert_input {
   categories?: Maybe<Scalars['jsonb']>
   favorited?: Maybe<Scalars['Boolean']>
   id?: Maybe<Scalars['uuid']>
+  list?: Maybe<list_obj_rel_insert_input>
   list_id?: Maybe<Scalars['uuid']>
   location?: Maybe<Scalars['geometry']>
   native_data_unique_key?: Maybe<Scalars['String']>
@@ -3075,6 +3087,7 @@ export interface review_order_by {
   categories?: Maybe<order_by>
   favorited?: Maybe<order_by>
   id?: Maybe<order_by>
+  list?: Maybe<list_order_by>
   list_id?: Maybe<order_by>
   location?: Maybe<order_by>
   native_data_unique_key?: Maybe<order_by>
@@ -6557,6 +6570,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz!' },
     description: { __type: 'String' },
     id: { __type: 'uuid!' },
+    image: { __type: 'String' },
     list_reviews: {
       __type: '[review!]!',
       __args: {
@@ -6677,6 +6691,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz_comparison_exp' },
     description: { __type: 'String_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
+    image: { __type: 'String_comparison_exp' },
     list_reviews: { __type: 'review_bool_exp' },
     location: { __type: 'geometry_comparison_exp' },
     name: { __type: 'String_comparison_exp' },
@@ -6696,6 +6711,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
+    image: { __type: 'String' },
     list_reviews: { __type: 'review_arr_rel_insert_input' },
     location: { __type: 'geometry' },
     name: { __type: 'String' },
@@ -6715,6 +6731,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
+    image: { __type: 'String' },
     name: { __type: 'String' },
     region: { __type: 'String' },
     slug: { __type: 'String' },
@@ -6727,6 +6744,7 @@ export const generatedSchema = {
     created_at: { __type: 'order_by' },
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    image: { __type: 'order_by' },
     name: { __type: 'order_by' },
     region: { __type: 'order_by' },
     slug: { __type: 'order_by' },
@@ -6740,6 +6758,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
+    image: { __type: 'String' },
     name: { __type: 'String' },
     region: { __type: 'String' },
     slug: { __type: 'String' },
@@ -6752,6 +6771,7 @@ export const generatedSchema = {
     created_at: { __type: 'order_by' },
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    image: { __type: 'order_by' },
     name: { __type: 'order_by' },
     region: { __type: 'order_by' },
     slug: { __type: 'order_by' },
@@ -6778,6 +6798,7 @@ export const generatedSchema = {
     created_at: { __type: 'order_by' },
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    image: { __type: 'order_by' },
     list_reviews_aggregate: { __type: 'review_aggregate_order_by' },
     location: { __type: 'order_by' },
     name: { __type: 'order_by' },
@@ -7199,6 +7220,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     id: { __type: 'uuid' },
+    image: { __type: 'String' },
     location: { __type: 'geometry' },
     name: { __type: 'String' },
     public: { __type: 'Boolean' },
@@ -9106,6 +9128,7 @@ export const generatedSchema = {
     categories: { __type: 'jsonb' },
     favorited: { __type: 'Boolean' },
     id: { __type: 'uuid!' },
+    list: { __type: 'list' },
     list_id: { __type: 'uuid' },
     location: { __type: 'geometry' },
     native_data_unique_key: { __type: 'String' },
@@ -9194,6 +9217,7 @@ export const generatedSchema = {
     categories: { __type: 'jsonb_comparison_exp' },
     favorited: { __type: 'Boolean_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
+    list: { __type: 'list_bool_exp' },
     list_id: { __type: 'uuid_comparison_exp' },
     location: { __type: 'geometry_comparison_exp' },
     native_data_unique_key: { __type: 'String_comparison_exp' },
@@ -9221,6 +9245,7 @@ export const generatedSchema = {
     categories: { __type: 'jsonb' },
     favorited: { __type: 'Boolean' },
     id: { __type: 'uuid' },
+    list: { __type: 'list_obj_rel_insert_input' },
     list_id: { __type: 'uuid' },
     location: { __type: 'geometry' },
     native_data_unique_key: { __type: 'String' },
@@ -9324,6 +9349,7 @@ export const generatedSchema = {
     categories: { __type: 'order_by' },
     favorited: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    list: { __type: 'list_order_by' },
     list_id: { __type: 'order_by' },
     location: { __type: 'order_by' },
     native_data_unique_key: { __type: 'order_by' },
@@ -12093,6 +12119,7 @@ export interface list {
   created_at: ScalarsEnums['timestamptz']
   description?: Maybe<ScalarsEnums['String']>
   id: ScalarsEnums['uuid']
+  image?: Maybe<ScalarsEnums['String']>
   /**
    * An array relationship
    */
@@ -12305,6 +12332,7 @@ export interface list_max_fields {
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   description?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
+  image?: Maybe<ScalarsEnums['String']>
   name?: Maybe<ScalarsEnums['String']>
   region?: Maybe<ScalarsEnums['String']>
   slug?: Maybe<ScalarsEnums['String']>
@@ -12322,6 +12350,7 @@ export interface list_min_fields {
   created_at?: Maybe<ScalarsEnums['timestamptz']>
   description?: Maybe<ScalarsEnums['String']>
   id?: Maybe<ScalarsEnums['uuid']>
+  image?: Maybe<ScalarsEnums['String']>
   name?: Maybe<ScalarsEnums['String']>
   region?: Maybe<ScalarsEnums['String']>
   slug?: Maybe<ScalarsEnums['String']>
@@ -14343,6 +14372,10 @@ export interface review {
   categories?: Maybe<ScalarsEnums['jsonb']>
   favorited?: Maybe<ScalarsEnums['Boolean']>
   id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
+  list?: Maybe<list>
   list_id?: Maybe<ScalarsEnums['uuid']>
   location?: Maybe<ScalarsEnums['geometry']>
   native_data_unique_key?: Maybe<ScalarsEnums['String']>
