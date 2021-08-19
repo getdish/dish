@@ -723,7 +723,18 @@ const ListPageTitle = ({
   const len = list.name?.length ?? 16
   const color = getListColor(list.color)
   const textColor = listTheme === 'minimal' ? color : isLight ? '#000' : '#fff'
-  const titleSize = len < 12 ? 'xxxl' : len < 16 ? 'xxl' : len < 24 ? 'xl' : len < 30 ? 'lg' : 'md'
+  const titleSize =
+    len < 12
+      ? 'xxxl'
+      : len < 16
+      ? 'xxl'
+      : len < 24
+      ? 'xl'
+      : len < 30
+      ? 'lg'
+      : len < 60
+      ? 'md'
+      : 'sm'
   const titleContents = isEditing ? (
     <Input
       fontSize={20}
@@ -787,6 +798,7 @@ const ListPageTitle = ({
 
               <VStack position="relative" alignSelf="center">
                 <SlantedTitle
+                  maxWidth={450}
                   marginTop={-5}
                   backgroundColor={color}
                   alignSelf="center"

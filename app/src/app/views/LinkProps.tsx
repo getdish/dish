@@ -17,6 +17,7 @@ export type LinkProps<A, B> = LinkSharedProps &
     // @ts-ignore
     params?: B
     tagName?: string
+    underline?: boolean
   }
 
 export type LinkSharedProps = Pick<

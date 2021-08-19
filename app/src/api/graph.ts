@@ -1,5 +1,5 @@
 import { route, useRouteBodyParser } from '@dish/api'
-import { GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
+import { DISH_DEBUG, GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Request } from 'express'
 import {
@@ -104,13 +104,20 @@ const fetchFromGraph = async (req: Request, body?: any) => {
   } as any
   const start = Date.now()
   try {
+    const reqBody = body ?? req.body
+    if (DISH_DEBUG > 1) {
+      console.log(' fetchFromGraph body', JSON.stringify(reqBody))
+    }
     const hasuraRes = await fetchLog(GRAPH_API_INTERNAL, {
       method: 'POST',
       headers,
-      body: body ?? req.body,
+      body: reqBody,
     })
     const val = await hasuraRes.json()
     console.log(` [graph] fetch(): ${Date.now() - start}ms`, val)
+    if (DISH_DEBUG > 1) {
+      console.log(JSON.stringify(val, null, 2))
+    }
     return val
   } catch (err) {
     console.log(' [graph] fetch() error', err.message)

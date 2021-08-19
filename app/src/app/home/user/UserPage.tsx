@@ -196,8 +196,8 @@ const UserHeader = memo(
                 <UserAvatar avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
               </VStack>
               <VStack flex={1}>
-                <Text color={theme.color} fontSize={38} fontWeight="700" paddingRight={30}>
-                  {user.username ?? 'no-name'}
+                <Text color={theme.color} fontSize={22} fontWeight="700" paddingRight={30}>
+                  {user.name ?? user.username ?? 'no-name'}
                 </Text>
                 <Spacer size={4} />
                 <HStack>

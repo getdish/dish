@@ -5,13 +5,16 @@ import {
   Review,
   User,
   query,
+  refetch,
   resolved,
+  setCache,
   userEdit,
   userFetchSimple,
 } from '@dish/graph'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { Toast } from 'snackui'
 
+import { queryUser, queryUserQuery } from '../queries/queryUser'
 import { router } from '../router'
 import { appMenuStore } from './AppMenuStore'
 
@@ -133,6 +136,7 @@ class UserStore extends Store {
         ...user,
         has_onboarded: true,
       }
+      setCache(queryUserQuery(user.username), this.user as any)
       Toast.success(`Updated`)
       return true
     }
@@ -158,6 +162,7 @@ class UserStore extends Store {
             })
             .map((u) => ({
               id: u.id,
+              name: u.name,
               username: u.username,
               avatar: u.avatar,
               about: u.about,

@@ -6,23 +6,28 @@ import { ensureUserOnRoute, secureRoute } from './_user'
 export default secureRoute('user', async (req, res) => {
   await useRouteBodyParser(req, res, { json: { limit: 2048 } })
   const user = await ensureUserOnRoute(req)
-  const { about, location, charIndex } = req.body
-  user.has_onboarded = true
-  user.email = user.email ?? 'default@dishapp.com'
-  if (about !== null) user.about = about
-  if (location !== null) user.location = location
-  if (charIndex !== null) user.charIndex = charIndex
+  const { about, location, charIndex, name } = req.body
+  const nextUser = {
+    ...user,
+    has_onboarded: true,
+    email: user.email ?? 'default@dishapp.com',
+    name: name ?? user.name,
+    about: about ?? user.about,
+    location: location ?? user.location,
+    charIndex: charIndex ?? user.charIndex,
+  }
   try {
-    await userUpdate(user)
+    const newUser = await userUpdate(nextUser)
     const val: EditUserResponse = {
-      email: user.email,
-      has_onboarded: user.has_onboarded,
-      about: user.about ?? '',
-      location: user.location ?? 'nowhere',
+      email: newUser.email ?? '',
+      has_onboarded: newUser.has_onboarded ?? false,
+      about: newUser.about ?? '',
+      location: newUser.location ?? 'nowhere',
       charIndex: charIndex,
-      username: user.username!,
+      username: newUser.username!,
+      name: newUser.name ?? '',
     }
-    res.status(200).json(val)
+    res.json(val)
   } catch (e) {
     res.status(409).json({ error: e.message })
     return

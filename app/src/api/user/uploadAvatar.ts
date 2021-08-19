@@ -1,9 +1,8 @@
 import path from 'path'
 
-import { runMiddleware } from '@dish/api'
+import { runMiddleware, useRouteBodyParser } from '@dish/api'
 import { userUpdate } from '@dish/graph'
 import AWS from 'aws-sdk'
-import { Request, Response } from 'express'
 import multer from 'multer'
 import multerS3 from 'multer-s3'
 import { v4 } from 'uuid'
@@ -45,6 +44,7 @@ s3.listBuckets(async (err, data) => {
 const upload = multer({
   storage: multerS3({
     s3,
+
     bucket: BUCKET_NAME,
     acl: 'public-read',
     contentType: multerS3.AUTO_CONTENT_TYPE,
@@ -56,6 +56,7 @@ const upload = multer({
 }).array('avatar', 1)
 
 export default secureRoute('user', async (req, res) => {
+  await useRouteBodyParser(req, res, { raw: { limit: '4MB' } })
   await runMiddleware(req, res, upload)
 
   const user = await getUserFromRoute(req)

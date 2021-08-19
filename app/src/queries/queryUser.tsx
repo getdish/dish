@@ -1,6 +1,6 @@
 import { query } from '@dish/graph'
 
-export const queryUser = (username: string) => {
+export const queryUserQuery = (username: string) => {
   return query.user({
     where: {
       username: {
@@ -8,5 +8,9 @@ export const queryUser = (username: string) => {
       },
     },
     limit: 1,
-  })[0]
+  })
+}
+
+export const queryUser = (username: string) => {
+  return queryUserQuery(username)[0]
 }

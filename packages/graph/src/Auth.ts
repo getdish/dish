@@ -6,6 +6,7 @@ import { HAS_LOGGED_IN_BEFORE, LOGIN_KEY, getAuthHeaders } from './getAuth'
 // TODO next gen!! remove all cruft!!
 
 export type EditUserProps = {
+  name: string
   username: string
   about?: string
   location?: string
@@ -19,6 +20,7 @@ export type EditUserResponse = {
   location: string
   charIndex: number
   username: string
+  name: string
 }
 
 export async function userEdit(user: EditUserProps): Promise<EditUserResponse | null> {

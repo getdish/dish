@@ -199,9 +199,10 @@ function CommentBubbleContents({
 
       <Spacer size="lg" />
 
-      <HStack alignItems="center" spacing>
+      <HStack pointerEvents="auto" alignItems="center" spacing>
         {!!name && (
           <Link
+            underline
             name="user"
             params={{ username: name }}
             pointerEvents="auto"

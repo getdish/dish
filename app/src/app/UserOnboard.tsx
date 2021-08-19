@@ -1,7 +1,8 @@
 import { Auth, graphql, useRefetch } from '@dish/graph'
 import React, { useEffect, useRef, useState } from 'react'
-import { HStack, Input, Paragraph, Spacer, Text, TextArea, Toast, VStack } from 'snackui'
+import { HStack, Input, Paragraph, Spacer, Text, TextArea, Theme, Toast, VStack } from 'snackui'
 
+import { isWeb } from '../constants/constants'
 import { queryUser } from '../queries/queryUser'
 import { characters } from './home/user/characters'
 import { UserAvatar } from './home/user/UserAvatar'
@@ -15,10 +16,11 @@ export const UserOnboard = graphql(
     const userStore = useUserStore()
     const imageFormRef = useRef(null)
     const formState = useRef({
-      about: '',
-      location: '',
+      name: userStore.user?.name ?? '',
+      about: userStore.user?.about ?? '',
+      location: userStore.user?.location ?? '',
     })
-    const [charIndex, setCharIndex] = useState(0)
+    const [charIndex, setCharIndex] = useState(userStore.user?.charIndex ?? 0)
     const username = userStore.user?.username ?? ''
     const user = queryUser(username)
     const inputAvatar = useRef<HTMLInputElement>(null)
@@ -41,7 +43,7 @@ export const UserOnboard = graphql(
             Toast.error('Error saving  image!')
           }
         } catch (err) {
-          Toast.show('Error saving image')
+          Toast.show(`Error saving image: ${err.message.slice(0, 100)}...`)
         }
       }
 
@@ -73,28 +75,54 @@ export const UserOnboard = graphql(
             </VStack>
           )}
 
+          <Spacer />
+
           <HStack position="relative" alignItems="center" justifyContent="center">
             <UserAvatar avatar={user.avatar ?? ''} charIndex={charIndex} />
-            <form
-              id="userform"
-              ref={imageFormRef}
-              style={{
-                maxWidth: 100,
-              }}
-            >
-              <input type="hidden" name="username" value={username} />
-              <label htmlFor="file">Upload a file</label>
-              <input
-                ref={inputAvatar}
-                type="file"
-                name="avatar"
+            <Spacer />
+            {isWeb && (
+              <form
+                id="userform"
+                ref={imageFormRef}
                 style={{
-                  fontSize: 18,
-                  padding: 10,
+                  maxWidth: 150,
                 }}
-              />
-            </form>
+              >
+                <input type="hidden" name="username" value={username} />
+                <label htmlFor="input-avatar">
+                  <Paragraph ellipse>Upload avatar</Paragraph>
+                </label>
+                <input
+                  ref={inputAvatar}
+                  id="input-avatar"
+                  type="file"
+                  accept="image/png, image/jpeg, image/gif"
+                  name="avatar"
+                  // this fixes wont open bug for some reason...
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    fontSize: 18,
+                    maxWidth: 120,
+                    padding: 10,
+                  }}
+                />
+              </form>
+            )}
           </HStack>
+
+          <Spacer />
+
+          <Input
+            color="#fff"
+            placeholder="Full Name (Optional)..."
+            fontSize={16}
+            defaultValue={formState.current.name}
+            width="100%"
+            onChangeText={(text) => {
+              console.log('changing name to be', text)
+              formState.current.name = text
+            }}
+          />
 
           <Spacer />
 
@@ -128,20 +156,24 @@ export const UserOnboard = graphql(
           </HStack>
 
           <Spacer />
+
           <TextArea
             color="#fff"
             placeholder="Optional description for your profile..."
             fontSize={16}
             width="100%"
+            defaultValue={formState.current.about}
             onChangeText={(text) => {
               formState.current.about = text
             }}
           />
+
           <Input
             color="#fff"
             placeholder="Location..."
             fontSize={16}
             width="100%"
+            defaultValue={formState.current.location}
             onChangeText={(text) => {
               formState.current.location = text
             }}
@@ -157,15 +189,14 @@ export const UserOnboard = graphql(
             onPress={async () => {
               Toast.show('Saving...')
               await userStore.edit({
+                ...formState.current,
                 username,
                 charIndex,
-                about: formState.current.about,
-                location: formState.current.location,
               })
               onFinish?.()
             }}
           >
-            Done!
+            Save!
           </SmallButton>
         </VStack>
       </>

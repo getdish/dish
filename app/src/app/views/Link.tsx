@@ -23,6 +23,7 @@ export function Link<Name extends DRouteName = DRouteName>(
     name,
     params,
     replace,
+    underline,
     target,
     tags,
     tag,
@@ -38,7 +39,7 @@ export function Link<Name extends DRouteName = DRouteName>(
   return wrapWithLinkElement(
     !!Object.keys(textProps).length || isStringChild(children) ? (
       <Text
-        textDecorationLine={isInParagraph ? 'underline' : 'none'}
+        textDecorationLine={isInParagraph || underline ? 'underline' : 'none'}
         color={theme.colorAlt}
         display={display as any}
         {...(isInParagraph && {

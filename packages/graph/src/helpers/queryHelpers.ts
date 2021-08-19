@@ -25,6 +25,7 @@ import {
 } from '../helpers/queryResolvers'
 import { ModelName, ModelType, WithID } from '../types'
 import { isMutatableField, isMutatableRelation } from './isMutatableField'
+import { DISH_DEBUG } from '..'
 
 type scaleUid = Scalars['uuid']
 
@@ -162,19 +163,19 @@ export async function update<T extends WithID<ModelType>>(
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = prepareData(table, [objectIn], '_set_input')
+  if (process.env.NODE_ENV === 'development') {
+    console.log('update() prepared object', object, 'from', objectIn)
+  }
   if (!object.id) {
     throw new Error(`Must have ID to update`)
-  }
-  // this seems bad? sometimes you want to set something to null
-  for (const key of Object.keys(object)) {
-    if (object[key] == null) delete object[key]
   }
   opts.keys = opts.keys || Object.keys(generatedSchema[table + '_set_input'])
   try {
     const [resolved] = await resolvedMutationWithFields(() => {
+      const next = omit(object, 'id')
       const res = mutation[action]({
         where: { id: { _eq: object.id } },
-        _set: omit(object, 'id'),
+        _set: next,
       })
       // if (opts.query && res) {
       //   assignSelections(opts.query, res)
@@ -221,18 +222,21 @@ export async function deleteByIDs(table: string, ids: scaleUid[]): Promise<void>
   })
 }
 
-function removeReadOnlyProperties<T>(table: string, objects: T[]): T[] {
+function removeReadOnlyProperties<T extends Object>(table: string, objects: T[]): T[] {
   return objects.map((cur) => {
-    return Object.keys(cur).reduce((acc, key) => {
-      const fieldName = key
+    const res: T = {} as any
+    for (const key in cur) {
       const schemaType = generatedSchema[table][key]['__type']
       const { pureType: typeName } = parseSchemaType(schemaType)
-      // const field = schema[table].fields[key]
-      if (isMutatableField(fieldName, typeName)) {
-        acc[key] = cur[key]
+      if (isMutatableField(key, typeName)) {
+        res[key] = cur[key]
+      } else {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('excluding read-only key', key, typeName)
+        }
       }
-      return acc
-    }, {} as T)
+    }
+    return res
   })
 }
 
@@ -254,13 +258,14 @@ function formatRelationData<T>(
 ) {
   return objects.map((cur) => {
     return Object.keys(cur).reduce((acc, key) => {
-      // const hasArgs = !!generatedSchema[table][key]['__args']
       const schemaType = generatedSchema[table][key]['__type']
-      const { pureType: typeName, isArray, isNullable, nullableItems } = parseSchemaType(schemaType)
+      const { pureType: typeName, isArray } = parseSchemaType(schemaType)
       const inputKeys = Object.keys(generatedSchema[table + inputType])
       const fieldName = key
 
-      if (!inputKeys.includes(fieldName)) return acc
+      if (!inputKeys.includes(fieldName)) {
+        return acc
+      }
 
       if (isMutatableRelation(fieldName, typeName)) {
         let relation_table: string
@@ -325,7 +330,7 @@ function deJSONStringify(object: {}, key: string, value: any) {
 
 export function updateableColumns(table: string, object: any) {
   if (!object || object.length == 0) return []
-  let columns: string[] = []
+  const columns: string[] = []
   let candidates: string[] = []
   if (!Array.isArray(object)) {
     candidates = Object.keys(object)
@@ -337,7 +342,13 @@ export function updateableColumns(table: string, object: any) {
       const schemaType = generatedSchema[table][key]['__type']
       const { pureType: typeName } = parseSchemaType(schemaType)
       const fieldName = key
-      if (!isMutatableRelation(fieldName, typeName)) columns.push(key)
+      if (!isMutatableRelation(fieldName, typeName)) {
+        columns.push(key)
+      } else {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('excluding mutable relation key', key)
+        }
+      }
     } catch (err) {
       console.error(err)
     }
