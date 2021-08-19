@@ -12,28 +12,35 @@ import {
 } from 'snackui'
 
 import dontPanic from '../../../assets/dont-panic.svg'
-import { tagLenses } from '../../../constants/localTags'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { TagLine } from '../../TagLine'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
-import { LinkButton } from '../../views/LinkButton'
 import { LogoColor } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
-import { IntroText } from '../blog/IntroText'
 import { StackItemProps } from '../HomeStackView'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 
-const inlineButton = {
-  borderRadius: 10,
-  paddingHorizontal: 10,
-  paddingVertical: 2,
-  position: 'relative',
-  display: 'inline-flex',
-} as const
+// const inlineButton = {
+//   borderRadius: 10,
+//   paddingHorizontal: 10,
+//   paddingVertical: 2,
+//   position: 'relative',
+//   display: 'inline-flex',
+// } as const
 
 export default function AboutPage({ item, isActive }: StackItemProps<HomeStateItemAbout>) {
   useSnapToFullscreenOnMount()
+
+  // would be cute but we need to modify it to show anything not just restaurants
+  // useSetAppMap({
+  //   isActive,
+  //   results: [
+  //     {
+
+  //     }
+  //   ]
+  // })
 
   return (
     <StackDrawer closable title="About Dish">
@@ -50,29 +57,32 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
           >
             <Spacer size="xl" />
             <LogoColor scale={2} />
-            <TagLine />
           </VStack>
 
           <VStack paddingHorizontal="5%" spacing="xl">
-            <Theme name="yellow">
-              <Paragraph size="xl">
-                <Link href="">We're launching a blockchain and DAO, join our discord</Link>
-              </Paragraph>
-            </Theme>
-
-            <Paragraph size="xl">
-              Dish is in early beta, it's aim is to be a nicer guide to the world:
+            <Paragraph size="xxl">
+              Dish is your pocket guide to the world. We aggregate amazing ratings, and are building
+              a sub-communities platform for curation.{' '}
+              <Link href="https://discord.gg/f4u9hgmf">
+                We're launching on ethereum and forming a DAO, join our discord
+              </Link>
+              .
             </Paragraph>
 
             <UnorderedList>
-              <UnorderedListItem size="xl">
-                Aggregated reviews - like RottenTomatoes for food
+              <UnorderedListItem sizeLineHeight={1.05} size="xl">
+                Aggregates reviews across everything: Michelin, TripAdvisor, The Infatuation, Yelp,
+                Google, DoorDash, GrubHub and more - like RottenTomatoes for food
               </UnorderedListItem>
-              <UnorderedListItem size="xl">
+              <UnorderedListItem sizeLineHeight={1.05} size="xl">
                 Searches every delivery service at once
               </UnorderedListItem>
-              <UnorderedListItem size="xl">Pays in crypto for contributions</UnorderedListItem>
-              <UnorderedListItem size="xl">Regional and group-based governance</UnorderedListItem>
+              <UnorderedListItem sizeLineHeight={1.05} size="xl">
+                Pays in crypto for contributions
+              </UnorderedListItem>
+              <UnorderedListItem sizeLineHeight={1.05} size="xl">
+                Regional and group-based governance
+              </UnorderedListItem>
             </UnorderedList>
 
             <Spacer />
