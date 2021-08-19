@@ -11,6 +11,7 @@ import {
   Circle,
   HStack,
   Hoverable,
+  InteractiveContainer,
   LoadingItem,
   LoadingItemsSmall,
   Spacer,
@@ -432,39 +433,39 @@ const RestaurantListItemContent = memo(
             </Button>
           )}
 
-          {/* <InteractiveContainer> */}
-          <Link
-            name="restaurant"
-            params={{
-              slug: props.restaurantSlug,
-              section: 'reviews',
-            }}
-          >
-            <SmallButton
-              marginRight={-2}
-              borderRadius={0}
-              tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-              icon={
-                <MessageSquare
-                  size={16}
-                  color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                />
-              }
+          <InteractiveContainer borderColor="transparent">
+            <Link
+              name="restaurant"
+              params={{
+                slug: props.restaurantSlug,
+                section: 'reviews',
+              }}
             >
-              {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-            </SmallButton>
-          </Link>
+              <SmallButton
+                marginRight={-2}
+                borderRadius={0}
+                tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                icon={
+                  <MessageSquare
+                    size={16}
+                    color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                  />
+                }
+              >
+                {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+              </SmallButton>
+            </Link>
 
-          <Suspense fallback={<Spacer size={44} />}>
-            <VStack marginRight={-2}>
-              <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
-            </VStack>
-          </Suspense>
+            <Suspense fallback={<Spacer size={44} />}>
+              <VStack marginRight={-2}>
+                <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
+              </VStack>
+            </Suspense>
 
-          <Suspense fallback={<Spacer size={44} />}>
-            <RestaurantAddToListButton borderRadius={0} restaurantSlug={restaurantSlug} noLabel />
-          </Suspense>
-          {/* </InteractiveContainer> */}
+            <Suspense fallback={<Spacer size={44} />}>
+              <RestaurantAddToListButton borderRadius={0} restaurantSlug={restaurantSlug} noLabel />
+            </Suspense>
+          </InteractiveContainer>
 
           {!!price_range && (
             <>

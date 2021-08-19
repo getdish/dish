@@ -21,7 +21,9 @@
 
 # inbox
 
-- 
+- directions:
+    - making lists more into articles
+    - adding any type of item to the map
 
 - duplicate image check, i beleive i started on this by adding a hash function that we could check against but didnt finish
 

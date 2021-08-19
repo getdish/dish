@@ -1,8 +1,8 @@
 import { RoutesTable } from '@dish/router'
-import React from 'react'
-import { Text } from 'snackui'
+import React, { useContext } from 'react'
+import { ParagraphContext, Text, useTheme } from 'snackui'
 
-import { brandColor } from '../../constants/colors'
+import { brandColor, red400 } from '../../constants/colors'
 import { isStringChild } from '../../helpers/isStringChild'
 import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
@@ -33,12 +33,20 @@ export function Link<Name extends DRouteName = DRouteName>(
     ...textProps
   } = allProps
   const { wrapWithLinkElement } = useLink(allProps)
+  const theme = useTheme()
+  const isInParagraph = useContext(ParagraphContext)
   return wrapWithLinkElement(
     !!Object.keys(textProps).length || isStringChild(children) ? (
       <Text
-        textDecorationLine="underline"
-        color={brandColor}
+        textDecorationLine={isInParagraph ? 'underline' : 'none'}
+        color={theme.colorAlt}
         display={display as any}
+        {...(isInParagraph && {
+          color: red400,
+          hoverStyle: {
+            color: `${red400}99`,
+          },
+        })}
         {...textProps}
       >
         {children}
