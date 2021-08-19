@@ -1,5 +1,5 @@
 import { jsonRoute } from '@dish/api'
-import { User, userUpdate } from '@dish/graph'
+import { User, getUserName, userUpdate } from '@dish/graph'
 import { v4 } from 'uuid'
 
 import { send } from '../_mailer'
@@ -39,7 +39,7 @@ async function sendPasswordResetEmail(user: User, token: string) {
     user.email,
     'Dish: Password reset',
     `
-  Dear ${user.username},
+  Dear ${getUserName(user)},
 
   Please follow this link to reset your password:
 

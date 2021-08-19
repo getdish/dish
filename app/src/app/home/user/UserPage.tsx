@@ -1,18 +1,15 @@
-import { ReviewQuery, graphql, order_by, query, useQuery } from '@dish/graph'
+import { ReviewQuery, graphql, order_by, query } from '@dish/graph'
 import { Plus } from '@dish/react-feather'
 import { useRouterSelector } from '@dish/router'
 import React, { Suspense, memo } from 'react'
 import {
   AbsoluteVStack,
-  Button,
   Divider,
   HStack,
-  InteractiveContainer,
   LoadingItem,
   LoadingItems,
   Paragraph,
   Spacer,
-  Text,
   VStack,
   useTheme,
 } from 'snackui'
@@ -249,7 +246,7 @@ const UserPageContent = graphql(
             )}
 
             {!pane && !!lists.length && (
-              <VStack paddingHorizontal={10} position="relative">
+              <VStack position="relative">
                 <AbsoluteVStack zIndex={100} top={-15} left={10}>
                   <SlantedTitle size="xs">Playlists</SlantedTitle>
                 </AbsoluteVStack>
@@ -257,6 +254,7 @@ const UserPageContent = graphql(
                   {lists.map((list, i) => {
                     return (
                       <ListCard
+                        colored
                         // zIndex={1000 - i}
                         size="lg"
                         floating
@@ -355,6 +353,9 @@ const UserHeader = memo(
           </VStack>
         </VStack>
       )
+    },
+    {
+      suspense: false,
     }
   )
 )

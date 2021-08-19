@@ -6,6 +6,7 @@ import { Hoverable, VStack } from 'snackui'
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
 import { getListPhoto } from '../../home/getListPhoto'
+import { getListColor } from '../../home/list/listColors'
 import { ListFavoriteButton } from '../../home/restaurant/ListFavoriteButton'
 import { Link } from '../Link'
 import { useList } from './useList'
@@ -15,6 +16,7 @@ export type ListCardProps = ListIDProps &
     numItems?: number
     onHover?: (is: boolean) => any
     floating?: boolean
+    colored?: boolean
   }
 
 export type ListIDProps = {
@@ -24,10 +26,14 @@ export type ListIDProps = {
 
 export const ListCard = graphql((props: ListCardProps) => {
   const { list } = useList(props)
+  const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
+  const listColor = getListColor(list?.color)
   return (
     <ListCardFrame
+      title={list?.name ?? ''}
+      numItems={numItems}
+      author={` by ${list?.user?.username ?? ''}`}
       {...props}
-      title={list?.name}
       tags={
         props.size === 'xs'
           ? []
@@ -37,6 +43,12 @@ export const ListCard = graphql((props: ListCardProps) => {
               .filter(isPresent)
       }
       photo={getListPhoto(list)}
+      {...(props.colored && {
+        color: listColor,
+        backgroundColor: `${listColor}55`,
+        chromeless: true,
+        flat: true,
+      })}
     />
   )
 })

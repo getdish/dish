@@ -1,7 +1,7 @@
 import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo } from 'react'
-import { HStack, Popover, Spacer, Theme, Tooltip, useMedia } from 'snackui'
+import React, { memo } from 'react'
+import { HStack, Popover, Theme, Tooltip, useMedia } from 'snackui'
 
 import { useRouterCurPage } from '../router'
 import { AppMenuContents } from './AppMenuContents'

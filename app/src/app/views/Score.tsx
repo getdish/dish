@@ -13,7 +13,7 @@ import { ProgressRing } from '../home/ProgressRing'
 import { useUserStore } from '../userStore'
 import { VoteButton } from './VoteButton'
 
-type Props = StackProps & {
+export type ScoreProps = StackProps & {
   votable?: boolean
   score: number
   showVoteOnHover?: boolean
@@ -41,7 +41,7 @@ export const Score = memo(
     setVote,
     size,
     ...props
-  }: Props) => {
+  }: ScoreProps) => {
     const userStore = useUserStore()
     const voteButtonColor = subtle ? '#ccc' : '#999'
     const scale = size === 'sm' ? 0.5 : 1

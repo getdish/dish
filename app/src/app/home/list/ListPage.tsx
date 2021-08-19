@@ -775,9 +775,10 @@ const ListPageTitle = ({
               paddingHorizontal={25}
             >
               <Spacer size={84} />
-              <Title width="100%" size="xxxl" color={textColor}>
+              <Title maxWidth={620} width="100%" size="xxxl" color={textColor}>
                 {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
               </Title>
+              <Spacer size="lg" />
             </VStack>
           )}
 

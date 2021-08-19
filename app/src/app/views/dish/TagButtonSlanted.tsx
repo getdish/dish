@@ -7,7 +7,7 @@ import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { Image } from '../Image'
 import { Link } from '../Link'
 import { TextSuperScript } from '../TextSuperScript'
-import { DishUpvoteDownvote } from './DishUpvoteDownvote'
+import { DishScore } from './DishScore'
 import { SearchTagButton } from './SearchTagButton'
 
 export type TagButtonSlantedProps = Partial<DishTagItem> & {
@@ -135,7 +135,7 @@ const DishButtonContent = (props: TagButtonSlantedProps) => {
 
           {typeof score !== 'undefined' && (
             <>
-              <DishUpvoteDownvote
+              <DishScore
                 size="sm"
                 slug={slug || ''}
                 score={score}

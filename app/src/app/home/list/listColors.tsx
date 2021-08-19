@@ -3,7 +3,7 @@ import * as Colors from '../../../constants/colors'
 export const listColors = [...Colors.colors300, ...Colors.colors400, ...Colors.colors500]
 
 export function getListColor(index?: number | null) {
-  return listColors[index ?? 0]
+  return listColors[index ?? 0] ?? Colors.grey
 }
 
 export function randomListColor() {

@@ -36,7 +36,7 @@ export const AppMenuButtonFloating = memo(() => {
           // https://github.com/facebook/react-native/issues/26892
           onPressOut={appMenu.hide}
         > */}
-        <AppMenuContents flex={1} hideUserMenu={appMenu.hide} />
+        {appMenu.isVisible && <AppMenuContents flex={1} hideUserMenu={appMenu.hide} />}
         {/* </TouchableWithoutFeedback> */}
         <PaneControlButtons>
           <CloseButton onPress={appMenu.hide} />
