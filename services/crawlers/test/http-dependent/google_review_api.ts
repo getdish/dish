@@ -22,7 +22,10 @@ test('Gets and persists a restaurant', async (t) => {
   t.assert(restaurant)
   if (!restaurant) throw new Error('No restaurant in google_review_api test')
   const gra = new GoogleReviewAPI()
-  await gra.getRestaurant(restaurant.id)
+  const is_found = await gra.getRestaurant(restaurant.id)
+  if (!is_found) {
+    throw new Error("GoogleReviewAPI couldn't find restaurant")
+  }
   const scrape = await scrapeFindOneBySourceID('google_review_api', ID)
   t.assert(scrape)
   if (!scrape) throw new Error('No scrape')

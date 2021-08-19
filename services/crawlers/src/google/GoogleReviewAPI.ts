@@ -64,10 +64,11 @@ export class GoogleReviewAPI extends WorkerJob {
       throw new Error('GoogleReviewAPI: No restaurant found for ID:' + id)
     }
     if (!restaurant.geocoder_id) {
-      sentryMessage('GoogleReviewAPI: restaurant.geocoder_id is empty', {
+      const message = 'GoogleReviewAPI: restaurant.geocoder_id is empty'
+      sentryMessage(message, {
         data: { restaurant_id: id },
       })
-      return
+      return false
     }
     let allData: any[] = []
     let page = 0
@@ -90,6 +91,7 @@ export class GoogleReviewAPI extends WorkerJob {
       }
     }
     await this.saveRestaurant(restaurant, allData)
+    return true
   }
 
   // https://www.google.com/async/reviewSort?async=feature_id:0x0:0x97168583de68f09e,start_index:10,sort_by:newestFirst,review_source:Google,_fmt:html
