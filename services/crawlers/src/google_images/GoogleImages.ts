@@ -4,7 +4,6 @@ import {
   PhotoXref,
   TagWithId,
   ZeroUUID,
-  photo_xref_constraint,
   restaurantFindOne,
   restaurantUpsert,
   tagGetAllCuisinesWithDishes,
@@ -16,7 +15,6 @@ import { JobOptions, QueueOptions } from 'bull'
 
 import {
   bestPhotosForTag,
-  photoXrefFindAll,
   photoXrefUpsert,
   updatePhotoQualityAndCategories,
   uploadToDO,

@@ -22,8 +22,8 @@ test.beforeEach(async () => {
   await tagUpsert([tag])
 })
 
-// can be re-enabled, needs to test locally though its trying to test on prod
-// TODO skip not sure why it regressed, need to re-enable
+// The response format of Google Image search has changed, shouldn't be too hard to fix.
+// But remember this isn't a critical crawler, it's just for finding *default* tag images.
 test.skip('Finds and save images for a dish', async (t) => {
   let images = new GoogleImages()
   images.max_images = 1

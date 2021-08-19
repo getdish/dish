@@ -1,13 +1,30 @@
-function psql_postgres() {
-  PGPASSWORD="$POSTGRES_PASSWORD" log_command psql -d "$POSTGRES_DB" -U "$POSTGRES_USER" -p "$POSTGRES_PORT" -h "$POSTGRES_HOST"
+function psql_main() {
+  if command -v pgcli &>/dev/null; then
+    command="pgcli"
+  else
+    command="psql"
+  fi
+  PGPASSWORD="$POSTGRES_PASSWORD" log_command $command \
+    -d "$POSTGRES_DB" \
+    -U "$POSTGRES_USER" \
+    -p "$POSTGRES_PORT" \
+    -h "$POSTGRES_HOST"
 }
 
 function psql_timescale() {
+  if command -v pgcli &>/dev/null; then
+    command="pgcli"
+  else
+    command="psql"
+  fi
   port=$TIMESCALE_PORT_INTERNAL
   if [ "$TIMESCALE_HOST" = "localhost" ]; then
     port=$TIMESCALE_PORT
   fi
-  PGPASSWORD="$TIMESCALE_PASSWORD" log_command psql -d "$TIMESCALE_DB" -U "$TIMESCALE_USER" -p "$port" -h "$TIMESCALE_HOST"
+  PGPASSWORD="$TIMESCALE_PASSWORD" log_command $command \
+    -U "$TIMESCALE_USER" \
+    -p "$port" \
+    -h "$TIMESCALE_HOST"
 }
 
 function migrate_umami() {

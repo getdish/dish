@@ -45,7 +45,15 @@ function get_latest_scrape_backup() {
 function restore_postgres_tmp_backup() {
   # docker run registry.dishapp.com/dish-postgres &
   dump_file="${1:-/tmp/latest_dish_backup.dump}"
-  PGPASSWORD=$POSTGRES_PASSWORD pg_restore -j 6 --no-owner --role="$POSTGRES_USER" -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -p "$POSTGRES_PORT" -d "$POSTGRES_DB" "$dump_file"
+  PGPASSWORD=$POSTGRES_PASSWORD pg_restore \
+    -j 6 \
+    --no-owner \
+    --role="$POSTGRES_USER" \
+    -h "$POSTGRES_HOST" \
+    -U "$POSTGRES_USER" \
+    -p "$POSTGRES_PORT" \
+    -d "$POSTGRES_DB" \
+    "$dump_file"
 }
 
 function restore_latest_main_backup() {
@@ -57,7 +65,14 @@ function restore_latest_main_backup() {
 
 function restore_timescale_tmp_backup() {
   dump_file="/tmp/latest_scrape_backup.dump"
-  PGPASSWORD=$TIMESCALE_PASSWORD pg_restore -j 6 --no-owner --role="$TIMESCALE_USER" -h "$TIMESCALE_HOST" -U "$TIMESCALE_USER" -p "$TIMESCALE_PORT" -d "$TIMESCALE_DB" "$dump_file"
+  PGPASSWORD=$TIMESCALE_PASSWORD pg_restore \
+    -j 6 \
+    --no-owner \
+    --role="$TIMESCALE_USER" \
+    -h "$TIMESCALE_HOST" \
+    -U "$TIMESCALE_USER" \
+    -p "$TIMESCALE_PORT" \
+    -d "$TIMESCALE_DB" "$dump_file"
 }
 
 function restore_latest_scrapes_backup() {
@@ -82,5 +97,7 @@ function grafana_backup() {
 function rsync_server_backup() {
   echo "backing up..."
   ionice -c2 -n7 \
-    rsync -aAXv / --exclude={"/var/data/docker/*","/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} de1257@de1257.rsync.net:backup
+    rsync -aAXv / \
+    --exclude={ "/var/data/docker/*", "/dev/*","/proc/*", "/sys/*", "/tmp/*", "/run/*", "/mnt/*", "/media/*", "/lost+found" \
+    } de1257@de1257.rsync.net:backup
 }
