@@ -28,6 +28,7 @@ import { ListCard } from '../../views/list/ListCard'
 import { Middot } from '../../views/Middot'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
+import { Review } from '../../views/Review'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 import { SmallTitle } from '../../views/SmallTitle'
@@ -40,7 +41,7 @@ import { CardCarousel } from './CardCarousel'
 import { characters } from './characters'
 import { UserAvatar } from './UserAvatar'
 
-type UserPane = 'vote' | 'review' | ''
+type UserPane = 'vote' | 'review' | '' | 'favorite'
 
 export default function UserPageContainer(props: StackItemProps<HomeStateItemUser>) {
   const pane = useRouterSelector((x) =>
@@ -113,17 +114,22 @@ const UserPageContent = graphql(
         username: {
           _eq: username,
         },
-        restaurant_id: {
-          _is_null: false,
-        },
+        ...(pane === 'favorite' && {
+          favorited: {
+            _eq: true,
+          },
+        }),
         ...(pane === 'review' && {
+          restaurant_id: {
+            _is_null: false,
+          },
           text: { _neq: '' },
         }),
         ...(pane === 'vote' && {
           text: { _eq: '' },
         }),
       },
-      limit: !pane ? 10 : 30,
+      limit: !pane ? 10 : 40,
       order_by: [{ updated_at: order_by.desc }],
     })
 
@@ -192,7 +198,7 @@ const UserPageContent = graphql(
 
           <Spacer />
 
-          <HStack spacing justifyContent="center">
+          <HStack spacing="sm" justifyContent="center">
             <SmallButton
               textProps={{
                 fontWeight: '800',
@@ -202,7 +208,7 @@ const UserPageContent = graphql(
                 setPane()
               }}
             >
-              Recently
+              Profile
             </SmallButton>
             <SmallButton
               textProps={{
@@ -213,7 +219,18 @@ const UserPageContent = graphql(
                 setPane('review')
               }}
             >
-              Reviews
+              Reviews ({reviewsCount})
+            </SmallButton>
+            <SmallButton
+              textProps={{
+                fontWeight: '800',
+              }}
+              theme={pane === 'favorite' ? 'active' : null}
+              onPress={() => {
+                setPane('favorite')
+              }}
+            >
+              Favorites
             </SmallButton>
             <SmallButton
               textProps={{
@@ -234,18 +251,18 @@ const UserPageContent = graphql(
             <Divider />
             <Spacer />
             <HStack spacing alignItems="center" justifyContent="center">
-              <Paragraph size="xl" fontWeight="700">
+              <Paragraph size="lg" fontWeight="700">
                 {characters[user.charIndex ?? 0] ?? '👻'}
               </Paragraph>
-              <Paragraph size="xl" opacity={0.5}>
+              <Paragraph size="lg" opacity={0.5}>
                 {pluralize(votesCount, 'vote')}
               </Paragraph>
               <Middot />
-              <Paragraph size="xl" opacity={0.5}>
+              <Paragraph size="lg" opacity={0.5}>
                 {pluralize(reviewsCount, 'review')}
               </Paragraph>
               <Middot />
-              <Paragraph size="xl" opacity={0.5}>
+              <Paragraph size="lg" opacity={0.5}>
                 {pluralize(favoritesCount, 'favorite')}
               </Paragraph>
             </HStack>
@@ -289,7 +306,7 @@ const UserPageContent = graphql(
             {!pane && !!favoriteLists.length && (
               <VStack position="relative">
                 <AbsoluteVStack zIndex={100} top={-15} left={10}>
-                  <SlantedTitle size="xs">Favorited</SlantedTitle>
+                  <SlantedTitle size="xs">Favorite playlists</SlantedTitle>
                 </AbsoluteVStack>
                 <CardCarousel>
                   {favoriteLists.map((list, i) => {
@@ -320,7 +337,7 @@ const UserPageContent = graphql(
                 <VStack paddingVertical={25}>
                   {!hasReviews && <Paragraph padding={30}>None yet...</Paragraph>}
                   {hasReviews &&
-                    reviews.map(({ id }) => <RestaurantReview key={id} reviewId={id} />)}
+                    reviews.map((review, i) => <Review key={`${i}${review.id}`} review={review} />)}
                 </VStack>
               </Suspense>
             </VStack>
