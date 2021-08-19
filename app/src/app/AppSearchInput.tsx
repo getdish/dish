@@ -18,7 +18,7 @@ import {
   autocompletesStore,
 } from './AutocompletesStore'
 import { drawerStore } from './drawerStore'
-import { getSearchPageStore } from './home/search/SearchPageStore'
+import { getSearchPageStore, runSearch } from './home/search/SearchPageStore'
 import { homeStore, useHomeStoreSelector } from './homeStore'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
@@ -371,7 +371,7 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
         // TODO move this to top-down approach
         // inputStore.setValue(e.target.value)
         // and have SearchPage useEffect() listen to inputStore.value
-        getStore()?.runSearch({
+        runSearch({
           searchQuery: e.target.value,
           force: true,
         })

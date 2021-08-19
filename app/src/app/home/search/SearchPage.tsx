@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { createStore, reaction } from '@dish/use-store'
+import { reaction } from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -438,7 +438,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <PageContentWithFooter>
               <SearchHeader />
               <SearchContent id={id} />
-              <SearchFooter id={id} />
+              <SearchFooter scrollToTop={scrollToTopHandler} id={id} />
             </PageContentWithFooter>
           </ContentScrollView>
         </View>

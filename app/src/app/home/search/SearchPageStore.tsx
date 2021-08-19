@@ -20,6 +20,11 @@ import { homeStore } from '../../homeStore'
 
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
+type RunSearchProps = {
+  searchQuery?: string
+  force?: boolean
+}
+
 class SearchPageStore extends Store<{ id: string }> {
   index = -1
   event: ActiveEvent = null
@@ -68,10 +73,7 @@ class SearchPageStore extends Store<{ id: string }> {
   async runSearch({
     searchQuery = homeStore.lastHomeOrSearchState?.searchQuery ?? '',
     force,
-  }: {
-    searchQuery?: string
-    force?: boolean
-  }) {
+  }: RunSearchProps) {
     const wasSearching = this.isSearching
     const state = homeStore.lastHomeOrSearchState
     if (!state) {
@@ -194,4 +196,8 @@ export function getSearchPageStore() {
 
 export function resetResults() {
   current.resetResults()
+}
+
+export const runSearch = (props: RunSearchProps) => {
+  current.runSearch(props)
 }
