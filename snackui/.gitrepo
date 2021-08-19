@@ -2,7 +2,8 @@
 ; if you need to fix snackui:push
 ; then just change the parent = 
 ; to some earlier SHA ideally the one you last synced
-; but can be a bit before
+; which you can find searchging git log for:
+;          "git subrepo push snackui"
 ;
 ;
 ; DO NOT EDIT (unless you know what you are doing)
@@ -14,6 +15,6 @@
 	remote = git@github.com:snackui/snackui.git
 	branch = master
 	commit = 98074a865a7ef93ed8b32807da3b608b3437998b
-	parent = 5be3e5e82aeebe74c8a24326649ab8efb045d314
+	parent = a664bfb1dd850328ee5a4e2cac2bcbab64bd2a89
 	method = merge
 	cmdver = 0.4.3
