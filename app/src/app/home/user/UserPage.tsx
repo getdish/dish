@@ -18,6 +18,7 @@ import {
 } from 'snackui'
 
 import { getTimeFormat } from '../../../helpers/getTimeFormat'
+import { pluralize } from '../../../helpers/pluralize'
 import { queryUser } from '../../../queries/queryUser'
 import { router } from '../../../router'
 import { HomeStateItemUser } from '../../../types/homeTypes'
@@ -38,6 +39,7 @@ import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { CardCarousel } from './CardCarousel'
+import { characters } from './characters'
 import { UserAvatar } from './UserAvatar'
 
 type UserPane = 'vote' | 'review' | ''
@@ -121,6 +123,41 @@ const UserPageContent = graphql(
       results: reviews.map(getReviewRestuarants).filter((x) => x.id),
     })
 
+    const favoritesCount =
+      user
+        .reviews_aggregate({
+          where: {
+            favorited: {
+              _eq: true,
+            },
+          },
+        })
+        .aggregate?.count({}) ?? 0
+
+    const votesCount =
+      user
+        .reviews_aggregate({
+          where: {
+            text: { _eq: '' },
+            restaurant_id: {
+              _is_null: false,
+            },
+          },
+        })
+        .aggregate?.count({}) ?? 0
+
+    const reviewsCount =
+      user
+        .reviews_aggregate({
+          where: {
+            text: { _neq: '' },
+            restaurant_id: {
+              _is_null: false,
+            },
+          },
+        })
+        .aggregate?.count({}) ?? 0
+
     if (!user) {
       return <NotFoundPage />
     }
@@ -138,54 +175,80 @@ const UserPageContent = graphql(
             <UserHeader {...props} />
           </Suspense>
 
-          <VStack flex={1} minWidth={20} />
-
           <Spacer />
 
-          <HStack justifyContent="center">
-            <InteractiveContainer>
-              <SmallButton
-                borderRadius={0}
-                borderWidth={0}
-                theme={!pane ? 'active' : null}
-                onPress={() => {
-                  setPane()
-                }}
-              >
-                Recently
-              </SmallButton>
-              <SmallButton
-                borderRadius={0}
-                borderWidth={0}
-                theme={pane === 'review' ? 'active' : null}
-                onPress={() => {
-                  setPane('review')
-                }}
-              >
-                Reviews
-              </SmallButton>
-              <SmallButton
-                borderRadius={0}
-                borderWidth={0}
-                theme={pane === 'vote' ? 'active' : null}
-                onPress={() => {
-                  setPane('vote')
-                }}
-              >
-                Votes
-              </SmallButton>
-            </InteractiveContainer>
+          <HStack spacing justifyContent="center">
+            <SmallButton
+              textProps={{
+                fontWeight: '800',
+              }}
+              theme={!pane ? 'active' : null}
+              onPress={() => {
+                setPane()
+              }}
+            >
+              Recently
+            </SmallButton>
+            <SmallButton
+              textProps={{
+                fontWeight: '800',
+              }}
+              theme={pane === 'review' ? 'active' : null}
+              onPress={() => {
+                setPane('review')
+              }}
+            >
+              Reviews
+            </SmallButton>
+            <SmallButton
+              textProps={{
+                fontWeight: '800',
+              }}
+              theme={pane === 'vote' ? 'active' : null}
+              onPress={() => {
+                setPane('vote')
+              }}
+            >
+              Votes
+            </SmallButton>
           </HStack>
 
+          <Spacer size="lg" />
+
+          <VStack>
+            <Divider />
+            <Spacer />
+            <HStack spacing alignItems="center" justifyContent="center">
+              <Paragraph size="xl" fontWeight="700">
+                {characters[user.charIndex ?? 0] ?? '👻'}
+              </Paragraph>
+              <Paragraph size="xl" opacity={0.5}>
+                {pluralize(votesCount, 'vote')}
+              </Paragraph>
+              <Middot />
+              <Paragraph size="xl" opacity={0.5}>
+                {pluralize(reviewsCount, 'review')}
+              </Paragraph>
+              <Middot />
+              <Paragraph size="xl" opacity={0.5}>
+                {pluralize(favoritesCount, 'favorite')}
+              </Paragraph>
+            </HStack>
+            <Spacer />
+            <Divider />
+          </VStack>
+
+          <Spacer size="lg" />
+
           <VStack spacing="lg" paddingVertical={20}>
-            {!!user.about && (
+            {!pane && !!user.about && (
               <VStack>
                 <SmallTitle>About</SmallTitle>
                 <Paragraph size="lg">{user.about}</Paragraph>
               </VStack>
             )}
 
-            {!!lists.length && (
+            {!pane && !!lists.length && (
               <VStack paddingHorizontal={10} position="relative">
                 <AbsoluteVStack zIndex={100} top={-15} left={10}>
                   <SlantedTitle size="xs">Playlists</SlantedTitle>
@@ -289,8 +352,6 @@ const UserHeader = memo(
             <Spacer />
 
             <Divider />
-
-            <Spacer />
           </VStack>
         </VStack>
       )
