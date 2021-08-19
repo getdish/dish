@@ -5,7 +5,6 @@ import {
   Review,
   User,
   query,
-  refetch,
   resolved,
   setCache,
   userEdit,
@@ -14,11 +13,13 @@ import {
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { Toast } from 'snackui'
 
-import { queryUser, queryUserQuery } from '../queries/queryUser'
+import { queryUserQuery } from '../queries/queryUser'
 import { router } from '../router'
 import { appMenuStore } from './AppMenuStore'
 
 type ThemeName = 'dark' | 'light'
+
+const hasLoggedInBefore = !!localStorage.getItem('has-logged-in')
 
 class UserStore extends Store {
   user: Partial<User> | null = null
@@ -26,6 +27,10 @@ class UserStore extends Store {
   messages: string[] = []
   allVotes: { [id: string]: Review } = {}
   theme: ThemeName | null = null
+
+  get hasLoggedInBefore() {
+    return hasLoggedInBefore
+  }
 
   get isLoggedIn() {
     return !!this.user

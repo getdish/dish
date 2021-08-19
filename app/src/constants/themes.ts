@@ -47,14 +47,18 @@ const error: MyTheme = {
 }
 
 const darkBase = {
+  backgroundColor: '#262626',
+  backgroundColorSecondary: '#353535',
+  backgroundColorTertiary: '#444444',
+  backgroundColorQuartenary: '#454545',
   backgroundColorAlt: blue600,
   backgroundColorDarker: '#161616',
   backgroundColorTransluscent: 'rgba(0,0,0,0.1)',
   backgroundColorTransluscentHover: 'rgba(0,0,0,0.2)',
   backgroundColorTransparent: 'rgba(25,25,25,0)',
-  borderColor: '#222222',
-  borderColorHover: '#111111',
-  cardBackgroundColor: '#323232',
+  borderColor: '#333333',
+  borderColorHover: '#383838',
+  cardBackgroundColor: '#292929',
   color: '#fefefe',
   colorAlt: '#ffffff',
   colorSecondary: '#dddddd',
@@ -69,10 +73,6 @@ const dark = {
   name: 'dark',
   ...baseTheme,
   ...darkBase,
-  backgroundColor: '#272727',
-  backgroundColorSecondary: '#353535',
-  backgroundColorTertiary: '#444444',
-  backgroundColorQuartenary: '#454545',
 }
 
 const darkTranslucent: MyTheme = {

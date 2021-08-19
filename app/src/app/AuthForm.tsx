@@ -1,3 +1,4 @@
+import { Auth } from '@dish/graph'
 import React, { memo, useEffect, useState } from 'react'
 import {
   Button,
@@ -19,7 +20,7 @@ import { Link } from './views/Link'
 import { SignInAppleButton } from './views/SignInAppleButton'
 import { SmallTitle } from './views/SmallTitle'
 
-type AuthFormProps = {
+type AuthFormPageProps = {
   autoFocus?: boolean
   setFormPage: Function
 }
@@ -27,11 +28,13 @@ type AuthFormProps = {
 const pages = ['login', 'register', 'forgotPassword', 'passwordReset']
 
 export const AuthForm = memo(
-  ({ onDidLogin, autoFocus }: { onDidLogin?: Function; autoFocus?: boolean }) => {
+  ({ onDidLogin, ...rest }: { onDidLogin?: Function; autoFocus?: boolean }) => {
     const userStore = useUserStore()
     const isLoggedIn = userStore.isLoggedIn
     const curPageName = useRouterCurPage().name
-    const [formPage, setFormPage] = useState(pages.find((x) => x === curPageName) ?? 'signup')
+    const curPageFromRoute = pages.find((x) => x === curPageName)
+    const initFormPage = curPageFromRoute ?? (Auth.hasEverLoggedIn ? 'login' : 'signup')
+    const [formPage, setFormPage] = useState(initFormPage)
 
     useEffect(() => {
       if (isLoggedIn) {
@@ -45,16 +48,16 @@ export const AuthForm = memo(
 
     function getContent() {
       if (formPage === 'login') {
-        return <LoginForm autoFocus={autoFocus} setFormPage={setFormPage} />
+        return <LoginForm {...rest} setFormPage={setFormPage} />
       }
       if (formPage === 'signup') {
-        return <SignupForm autoFocus={autoFocus} setFormPage={setFormPage} />
+        return <SignupForm {...rest} setFormPage={setFormPage} />
       }
       if (formPage === 'forgotPassword') {
-        return <ForgotPassword setFormPage={setFormPage} />
+        return <ForgotPassword {...rest} setFormPage={setFormPage} />
       }
       if (formPage === 'passwordReset') {
-        return <PasswordReset setFormPage={setFormPage} />
+        return <PasswordReset {...rest} setFormPage={setFormPage} />
       }
     }
 
@@ -113,7 +116,7 @@ export const AuthForm = memo(
   }
 )
 
-const PasswordReset = ({ autoFocus }: AuthFormProps) => {
+const PasswordReset = ({ autoFocus }: AuthFormPageProps) => {
   const { onChange, onSubmit, isSubmitting, control, errors, watch, isSuccess, errorMessage } =
     useFormAction({
       name: 'passwordReset',
@@ -169,7 +172,7 @@ const PasswordReset = ({ autoFocus }: AuthFormProps) => {
   )
 }
 
-const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
+const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
   const { onChange, onSubmit, control, errors, isSuccess, isSubmitting, errorMessage } =
     useFormAction({
       name: 'forgotPassword',
@@ -214,7 +217,7 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormProps) => {
   )
 }
 
-const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
+const LoginForm = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
   const { onChange, onSubmit, control, errors, isSuccess, isSubmitting, errorMessage } =
     useFormAction({
       name: 'login',
@@ -266,7 +269,7 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormProps) => {
   )
 }
 
-const SignupForm = ({ autoFocus }: AuthFormProps) => {
+const SignupForm = ({ autoFocus }: AuthFormPageProps) => {
   const { onChange, onSubmit, control, errors, isSubmitting, errorMessage } = useFormAction({
     name: 'register',
     initialValues: {

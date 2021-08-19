@@ -12,7 +12,7 @@ import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { homeStore } from '../homeStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
-import { ListCardFrame } from '../views/list/ListCard'
+import { ListCard, ListCardFrame } from '../views/list/ListCard'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { FeedCard } from './FeedCard'
 import { getListPhoto } from './getListPhoto'
@@ -264,31 +264,15 @@ export const HomePageFeed = memo(
 
             <Grid itemMinWidth={cardFrameWidthLg}>
               {trendingLists.map((list, i) => {
-                // getListColor(list?.color) ?? '#999'
-                const color = getListColor(list?.color) ?? '#999999'
-                const numItems = list.restaurants_aggregate().aggregate?.count() ?? 0
                 return (
                   <HStack alignItems="center" flexShrink={0} key={i} marginBottom={10}>
                     <Spacer size="xs" />
-                    <ListCardFrame
-                      chromeless
-                      hoverEffect="background"
-                      flexible
-                      author={` by ${list?.user?.username ?? ''}`}
-                      numItems={numItems}
-                      size="lg"
-                      backgroundColor={`${color}25`}
-                      flat
-                      title={list?.name ?? ''}
+                    <ListCard
                       userSlug={list.user?.username ?? ''}
                       slug={list?.slug ?? ''}
-                      tags={
-                        list
-                          ?.tags({ limit: 2 })
-                          ?.map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
-                          .filter(isPresent) ?? []
-                      }
-                      photo={getListPhoto(list)}
+                      size="lg"
+                      colored
+                      flexible
                     />
                     <Spacer size="xs" />
                   </HStack>

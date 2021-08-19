@@ -13,12 +13,14 @@ export type FeedCardProps = CardProps & {
   tags?: DishTagItem[]
   title?: string | JSX.Element | null
   emphasizeTag?: boolean
+  color?: string
 }
 
 export const FeedCard = ({
   title,
   author,
   tags = [],
+  color,
   size = 'sm',
   children,
   numItems,
@@ -26,8 +28,7 @@ export const FeedCard = ({
 }: FeedCardProps) => {
   const { chromeless, emphasizeTag, flat } = cardProps
   const theme = useTheme()
-  const color = tags[0]?.rgb ?? [200, 150, 150]
-  const colorString = rgbString(color)
+  const colorString = color || rgbString(tags[0]?.rgb ?? [200, 150, 150])
   const longTitle = typeof title === 'string' && title.length > 15 ? true : false
   return (
     <Card

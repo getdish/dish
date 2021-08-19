@@ -1,30 +1,17 @@
 import { supportsTouchWeb } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
-import { StyleSheet } from 'react-native'
-import {
-  AbsoluteVStack,
-  Box,
-  LinearGradient,
-  StackProps,
-  Text,
-  VStack,
-  isTouchDevice,
-  prevent,
-  useThemeName,
-} from 'snackui'
+import { AbsoluteVStack, Box, StackProps, Text, VStack, prevent, useThemeName } from 'snackui'
 
 import { cardFrameBorderRadius, isWeb } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { NavigableTag } from '../../../types/tagTypes'
-import { FeedCard } from '../../home/FeedCard'
 import { SimpleCard } from '../../home/SimpleCard'
-import { ColoredCircle } from '../ColoredCircle'
 import { Image } from '../Image'
 import { Link } from '../Link'
-import { DishUpvoteDownvote } from './DishUpvoteDownvote'
+import { DishScore } from './DishScore'
 import { SearchTagButton } from './SearchTagButton'
 
 // avoid too many different image sizes
@@ -127,12 +114,12 @@ const DishViewContent = (props: DishViewProps) => {
         {showVote && !!slug && (
           <AbsoluteVStack zIndex={1000000} top={0} left={0} y={-6} x={-6}>
             <Suspense fallback={null}>
-              <DishUpvoteDownvote
+              <DishScore
                 shadowed
                 size="sm"
                 subtle={isWeb && !supportsTouchWeb}
                 slug={slug}
-                score={score}
+                score={score || 0}
                 rating={rating}
                 {...(restaurantId &&
                   restaurantSlug && {
