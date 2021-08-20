@@ -84,7 +84,7 @@ export class WorkerJob extends Loggable {
       await this.addJob(queue, job, run_now)
     }
     this.log(`Adding job to worker (${this.constructor.name}):`, job, config)
-    await queue.add(job, config)
+    await queue.add(this.constructor.name, job, config)
   }
 
   private async manageRepeatable(queue: Queue, job: JobData, config: JobOptions) {
