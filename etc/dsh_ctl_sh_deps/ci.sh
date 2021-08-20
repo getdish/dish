@@ -106,13 +106,6 @@ function run_integration_tests() {
   popd
 }
 
-function migrate_all() {
-  wait_until_services_ready
-  migrate_hasura
-  migrate_timescale
-  migrate_umami
-}
-
 function docker_login() {
   docker login registry.dishapp.com -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN" || echo "login exit 1 but it succeeds sometimes?"
 }
@@ -169,8 +162,11 @@ function wait_until_services_ready() {
     echo "Timed out waiting for Timescale container to start"
     exit 1
   fi
-  echo "TODO re-enable once certs fixed"
-  # echo "Waiting for app to finish starting"
+}
+
+function wait_until_app_ready() {
+  echo "Waiting for app to finish starting"
+  # could use this later, separate
   # if ! timeout --preserve-status 15 bash -c wait_until_dish_app_ready; then
   #   echo "Timed out waiting for dish container to start"
   #   exit 1

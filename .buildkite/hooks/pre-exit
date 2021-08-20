@@ -43,9 +43,9 @@ fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "--- docker-compose logs"
-  echo "Showing tail 100 lines (see all in $(pwd)/compose.log)..."
-  echo "..."
   docker-compose logs | tail -n 100
+  echo "Showing tail 100 lines. To see all: dsh shell h1 && cat $(pwd)/compose.log"
+  echo "..."
   docker-compose logs --tail 6000 > ./compose.log
   # cat ./*.log || true
 fi
