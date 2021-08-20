@@ -30,6 +30,7 @@ export const FeedCard = ({
   const theme = useTheme()
   const colorString = color || rgbString(tags[0]?.rgb ?? [200, 150, 150])
   const longTitle = typeof title === 'string' && title.length > 15 ? true : false
+
   return (
     <Card
       className="hover-parent"
@@ -46,6 +47,7 @@ export const FeedCard = ({
               scale={emphasizeTag ? 1.075 : 0.75}
               x={emphasizeTag ? -5 : 0}
               y={emphasizeTag ? 5 : 0}
+              pointerEvents="auto"
             >
               {tags.map((tag) => (
                 <TagButton

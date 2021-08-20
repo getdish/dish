@@ -709,15 +709,15 @@ export const cancelUpdateRegion = () => {
   // updateRegionFaster.cancel()
 }
 
-export const useSetAppMap = (
-  props: MapOpts & {
-    center?: MapPosition['center'] | null
-    span?: MapPosition['span'] | null
-    results?: RestaurantOnlyIdsPartial[]
-    isActive: boolean
-    region?: string | null
-  }
-) => {
+export type UseSetAppMapProps = MapOpts & {
+  center?: MapPosition['center'] | null
+  span?: MapPosition['span'] | null
+  results?: RestaurantOnlyIdsPartial[]
+  isActive: boolean
+  region?: string | null
+}
+
+export const useSetAppMap = (props: UseSetAppMapProps) => {
   const {
     results,
     showRank,

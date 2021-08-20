@@ -3,6 +3,8 @@ import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   HStack,
+  Hoverable,
+  HoverableProps,
   LinearGradient,
   Paragraph,
   Spacer,
@@ -23,19 +25,20 @@ import { ColorShades, getColorsForColor, getColorsForName } from '../../../helpe
 import { CardFrame, CardFrameProps } from '../../views/CardFrame'
 import { Image } from '../../views/Image'
 
-export type CardProps = CardFrameProps & {
-  below?: ((colors: ColorShades) => any) | JSX.Element | string | null
-  outside?: ((colors: ColorShades) => any) | JSX.Element | string | null
-  photo?: string | JSX.Element | null
-  title?: string | JSX.Element | null
-  subTitle?: string | null
-  hideInfo?: boolean
-  isBehind?: boolean
-  dimImage?: boolean
-  padTitleSide?: boolean
-  colorsKey?: string
-  afterTitle?: any
-}
+export type CardProps = CardFrameProps &
+  HoverableProps & {
+    below?: ((colors: ColorShades) => any) | JSX.Element | string | null
+    outside?: ((colors: ColorShades) => any) | JSX.Element | string | null
+    photo?: string | JSX.Element | null
+    title?: string | JSX.Element | null
+    subTitle?: string | null
+    hideInfo?: boolean
+    isBehind?: boolean
+    dimImage?: boolean
+    padTitleSide?: boolean
+    colorsKey?: string
+    afterTitle?: any
+  }
 
 const widths = {
   xs: 250,
@@ -76,10 +79,14 @@ export function Card(props: CardProps) {
     isBehind,
     dimImage,
     afterTitle,
+    onHoverIn,
+    onHoverMove,
+    onHoverOut,
     size = 'md',
     ...cardFrameProps
   } = props
   const { backgroundColor } = props
+  const hoverable = !!(onHoverIn || onHoverMove || onHoverOut)
   const colors = backgroundColor
     ? getColorsForColor(backgroundColor)
     : typeof title === 'string'
@@ -105,7 +112,7 @@ export function Card(props: CardProps) {
   const fontSize = Math.round(baseFontSize * scales[size])
   const theme = useTheme()
 
-  return (
+  const content = (
     <CardFrame size={size} {...cardFrameProps}>
       {!!photo && (
         <AbsoluteVStack
@@ -216,6 +223,16 @@ export function Card(props: CardProps) {
       </VStack>
     </CardFrame>
   )
+
+  if (hoverable) {
+    return (
+      <Hoverable onHoverIn={onHoverIn} onHoverOut={onHoverOut} onHoverMove={onHoverMove}>
+        {content}
+      </Hoverable>
+    )
+  }
+
+  return content
 }
 
 export const CardOverlay = (props: { children: any; flat?: boolean }) => {
