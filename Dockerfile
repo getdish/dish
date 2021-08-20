@@ -44,6 +44,7 @@ COPY services/hooks services/hooks
 COPY services/worker services/worker
 COPY app app
 COPY snackui snackui
+COPY dsh dsh
 COPY etc/dsh_ctl_sh_deps etc/dsh_ctl_sh_deps
 
 # remove all tests even node modules
