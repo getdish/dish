@@ -63,8 +63,8 @@ export default memo(function HomePage(props: Props) {
   )
 })
 
-// happens once on first load
-let hasMovedToInitialRegion = false
+// // happens once on first load
+// let hasMovedToInitialRegion = false
 
 const HomePageContent = (props: Props) => {
   const { isActive, item } = props
@@ -75,19 +75,10 @@ const HomePageContent = (props: Props) => {
     enabled,
     suspense: true,
   })
-  const [position, setPosition] = useState<MapPosition>(initialPosition)
+  // const [position, setPosition] = useState<MapPosition>(initialPosition)
   const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
   const { results } = useStoreInstance(homePageStore)
-
-  useSetAppMap({
-    isActive: props.isActive,
-    fitToResults: false,
-    results,
-    center: state.center,
-    span: state.span,
-    region: state.region,
-  })
 
   // region based effects
   useEffect(() => {
@@ -101,7 +92,7 @@ const HomePageContent = (props: Props) => {
     if (!region) return
     // move initially to url region - this seems non-ideal state should just drive map
     // if (!hasMovedToInitialRegion) {
-    hasMovedToInitialRegion = true
+    // hasMovedToInitialRegion = true
     homeStore.updateCurrentState('HomePage region initial move effect', {
       center: region.center,
       span: region.span,
@@ -191,10 +182,16 @@ const HomePageContent = (props: Props) => {
     )
   }, [regionColors.color, regionName])
 
-  const [loaded, setLoaded] = useState(false)
-  useEffect(() => {
-    props.isActive && setLoaded(true)
-  }, [props.isActive])
+  const wasEverActive = useLastValueWhen(() => props.isActive, !props.isActive)
+
+  const homePageFeedProps = {
+    isActive: props.isActive,
+    fitToResults: false,
+    results,
+    center: state.center,
+    span: state.span,
+    region: state.region,
+  }
 
   return (
     <>
@@ -237,7 +234,7 @@ const HomePageContent = (props: Props) => {
 
           <PageContentWithFooter>
             {/* TODO pass isActive once gqty supports skeleton loading */}
-            {loaded ? <HomePageFeed region={state.region} /> : <LoadingItems />}
+            {wasEverActive ? <HomePageFeed {...homePageFeedProps} /> : <LoadingItems />}
           </PageContentWithFooter>
         </ContentScrollView>
       </VStack>

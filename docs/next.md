@@ -21,6 +21,8 @@
 
 # inbox
 
+- getting search into graph will make a much better homepage possible and easier caching
+
 - directions:
     - making lists more into articles
     - adding any type of item to the map
