@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/node'
 // export * from '@dish/common-web'
 
 Sentry.init({
-  dsn: 'https://e87d54b2bd5c4bec9d82304e2d4b71d1@o600766.ingest.sentry.io/5744061',
+  dsn: 'https://1aee4aedff484d8a9d6c71439693321e@o968082.ingest.sentry.io/5919483',
   release: process.env.REACT_APP_COMMIT_HASH || process.env.COMMIT_HASH || 'unreleased',
   environment: process.env.DISH_ENV || 'development',
 })
