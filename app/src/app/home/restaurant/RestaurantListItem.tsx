@@ -88,7 +88,7 @@ type RestaurantListItemProps = {
  * for logged in calls, we often need to user restaurant_id
  */
 
-const setHoveredSlow = debounce(appMapStore.setHovered, 300)
+const setHoveredSlow = debounce(appMapStore.setHovered, 400)
 
 export const RestaurantListItem = (props: RestaurantListItemProps) => {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -97,34 +97,13 @@ export const RestaurantListItem = (props: RestaurantListItemProps) => {
   }, [])
   const handleScroll = isLoaded ? undefined : handleScrollMemo
 
-  const contentInner = (
+  return (
     <Suspense fallback={<LoadingItem size="lg" />}>
       <ContentScrollViewHorizontal onScroll={handleScroll} scrollEventThrottle={100}>
         <RestaurantListItemContent isLoaded={isLoaded} {...props} />
       </ContentScrollViewHorizontal>
     </Suspense>
   )
-
-  if (isWeb && !isTouchDevice) {
-    return (
-      <Hoverable
-        onHoverIn={() => {
-          setHoveredSlow({
-            id: props.restaurantId,
-            slug: props.restaurantSlug,
-            via: 'list',
-          })
-        }}
-        onHoverOut={() => {
-          setHoveredSlow.cancel()
-        }}
-      >
-        {contentInner}
-      </Hoverable>
-    )
-  }
-
-  return contentInner
 }
 
 const excludeTags: QueryRestaurantTagsProps['exclude'] = ['dish']
@@ -235,274 +214,305 @@ const RestaurantListItemContent = memo(
     )
 
     return (
-      <VStack
-        className="ease-in-out-slow hover-faded-in-parent"
-        alignItems="flex-start"
-        justifyContent="flex-start"
-        minHeight={ITEM_HEIGHT}
-        {...(!flexibleHeight && {
-          maxHeight: ITEM_HEIGHT,
-        })}
-        flex={1}
-        // turn this off breaks something? but hides the rest of title hover?
-        // overflow="hidden"
-        // prevent jitter/layout moving until loaded
-        display={restaurant.name === null ? 'none' : 'flex'}
-        position="relative"
-        {...(isExpanded && {
-          transform: [{ translateX: 300 }],
-        })}
+      <Hoverable
+        onHoverIn={() => {
+          setHoveredSlow({
+            id: props.restaurantId,
+            slug: props.restaurantSlug,
+            via: 'list',
+          })
+        }}
+        onHoverOut={() => {
+          setHoveredSlow.cancel()
+        }}
       >
-        {/* expanded content */}
-        {meta && isExpanded && (
-          <AbsoluteVStack
-            backgroundColor={theme.backgroundColorDarker}
-            width={300 - 40}
-            x={-320}
-            height="100%"
-            padding={20}
-            overflow="hidden"
-          >
-            <SlantedTitle alignSelf="center">Breakdown</SlantedTitle>
-            <Spacer />
-            <Suspense fallback={<LoadingItemsSmall />}>
-              <RestaurantListItemScoreBreakdown {...props} meta={meta} />
-            </Suspense>
-          </AbsoluteVStack>
-        )}
-
-        {/* border left */}
-        <AbsoluteVStack
-          top={0}
-          bottom={0}
-          zIndex={-1}
-          width={18}
-          left={-13}
-          backgroundColor={isActive ? brandColor : 'transparent'}
-          borderTopRightRadius={8}
-          borderBottomRightRadius={8}
-        />
-
-        {/* vote button and score */}
-        <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
-          {above}
-          {!hideRate && (
-            <RestaurantUpVoteDownVote
-              rounded
-              score={score}
-              restaurantSlug={restaurantSlug}
-              activeTagSlugs={activeTagSlugs}
-              onClickPoints={toggleSetExpanded}
-            />
-          )}
-        </AbsoluteVStack>
-
-        {/* ROW: TITLE */}
         <VStack
-          hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
-          width={950}
+          className="ease-in-out-slow hover-faded-in-parent"
+          alignItems="flex-start"
+          justifyContent="flex-start"
+          minHeight={ITEM_HEIGHT}
+          {...(!flexibleHeight && {
+            maxHeight: ITEM_HEIGHT,
+          })}
+          flex={1}
+          // turn this off breaks something? but hides the rest of title hover?
+          // overflow="hidden"
+          // prevent jitter/layout moving until loaded
+          display={restaurant.name === null ? 'none' : 'flex'}
           position="relative"
+          {...(isExpanded && {
+            transform: [{ translateX: 300 }],
+          })}
         >
-          {/* LINK */}
-          <Link tagName="div" name="restaurant" params={{ slug: restaurantSlug }} zIndex={2}>
-            <HStack
-              paddingLeft={hideRate ? 10 : 64}
-              paddingTop={15}
-              position="relative"
-              alignItems="center"
+          {/* expanded content */}
+          {meta && isExpanded && (
+            <AbsoluteVStack
+              backgroundColor={theme.backgroundColorDarker}
+              width={300 - 40}
+              x={-320}
+              height="100%"
+              padding={20}
+              overflow="hidden"
             >
-              <AbsoluteVStack x={-28} y={3} zIndex={-1}>
-                <RankView rank={rank} />
-              </AbsoluteVStack>
+              <SlantedTitle alignSelf="center">Breakdown</SlantedTitle>
+              <Spacer />
+              <Suspense fallback={<LoadingItemsSmall />}>
+                <RestaurantListItemScoreBreakdown {...props} meta={meta} />
+              </Suspense>
+            </AbsoluteVStack>
+          )}
 
-              <Spacer size="xs" />
+          {/* border left */}
+          <AbsoluteVStack
+            top={0}
+            bottom={0}
+            zIndex={-1}
+            width={18}
+            left={-13}
+            backgroundColor={isActive ? brandColor : 'transparent'}
+            borderTopRightRadius={8}
+            borderBottomRightRadius={8}
+          />
 
-              {/* SECOND LINK WITH actual <a /> */}
-              <Link name="restaurant" params={{ slug: restaurantSlug }}>
+          {/* vote button and score */}
+          <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
+            {above}
+            {!hideRate && (
+              <RestaurantUpVoteDownVote
+                rounded
+                score={score}
+                restaurantSlug={restaurantSlug}
+                activeTagSlugs={activeTagSlugs}
+                onClickPoints={toggleSetExpanded}
+              />
+            )}
+          </AbsoluteVStack>
+
+          {/* ROW: TITLE */}
+
+          <Hoverable
+            onHoverIn={() => {
+              setHoveredSlow({
+                id: props.restaurantId,
+                slug: props.restaurantSlug,
+                via: 'list',
+              })
+            }}
+            onHoverOut={() => {
+              setHoveredSlow.cancel()
+            }}
+          >
+            <VStack
+              hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
+              width={950}
+              position="relative"
+            >
+              {/* LINK */}
+              <Link tagName="div" name="restaurant" params={{ slug: restaurantSlug }} zIndex={2}>
                 <HStack
-                  paddingHorizontal={8}
-                  borderRadius={8}
+                  paddingLeft={hideRate ? 10 : 64}
+                  paddingTop={15}
+                  position="relative"
                   alignItems="center"
-                  marginVertical={-5}
-                  maxWidth={contentSideProps.maxWidth}
-                  hoverStyle={{
-                    backgroundColor: theme.backgroundColorSecondary,
-                  }}
                 >
-                  <Text
-                    fontSize={titleFontSize}
-                    lineHeight={titleHeight}
-                    height={titleHeight}
-                    color={theme.color}
-                    fontWeight="400"
-                    letterSpacing={-0.25}
-                    paddingHorizontal={1} // prevents clipping due to letter-spacing
-                    ellipse
-                  >
-                    {restaurantName}
-                  </Text>
+                  <AbsoluteVStack x={-28} y={3} zIndex={-1}>
+                    <RankView rank={rank} />
+                  </AbsoluteVStack>
+
+                  <Spacer size="xs" />
+
+                  {/* SECOND LINK WITH actual <a /> */}
+                  <Link name="restaurant" params={{ slug: restaurantSlug }}>
+                    <HStack
+                      paddingHorizontal={8}
+                      borderRadius={8}
+                      alignItems="center"
+                      marginVertical={-5}
+                      maxWidth={contentSideProps.maxWidth}
+                      hoverStyle={{
+                        backgroundColor: theme.backgroundColorSecondary,
+                      }}
+                    >
+                      <Text
+                        fontSize={titleFontSize}
+                        lineHeight={titleHeight}
+                        height={titleHeight}
+                        color={theme.color}
+                        fontWeight="400"
+                        letterSpacing={-0.25}
+                        paddingHorizontal={1} // prevents clipping due to letter-spacing
+                        ellipse
+                      >
+                        {restaurantName}
+                      </Text>
+                    </HStack>
+                  </Link>
                 </HStack>
               </Link>
-            </HStack>
-          </Link>
 
-          <Spacer size="md" />
-        </VStack>
+              <Spacer size="md" />
+            </VStack>
+          </Hoverable>
 
-        {/* CENTER CONTENT AREA */}
-        {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
-        <HStack
-          y={-10}
-          pointerEvents="none"
-          zIndex={10}
-          paddingLeft={hideRate ? 0 : 65}
-          paddingRight={10}
-          flex={1}
-          maxHeight={flexibleHeight ? 1000 : 66}
-        >
-          <VStack
-            {...contentSideProps}
-            className="fix-safari-shrink-height"
-            justifyContent="center"
+          {/* ROW: CENTER CONTENT AREA */}
+          {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
+          <HStack
+            y={-10}
+            pointerEvents="none"
+            zIndex={10}
+            paddingLeft={hideRate ? 0 : 65}
+            paddingRight={10}
             flex={1}
-            zIndex={100}
+            maxHeight={flexibleHeight ? 1000 : 66}
           >
-            {/* ROW: OVERVIEW */}
-            <RestaurantOverview
-              isDishBot
-              isEditingDescription={state.editing}
-              text={state.description}
-              onEditCancel={() => {
-                setState((prev) => ({ ...prev, editing: false }))
-              }}
-              onEditDescription={(description) => {
-                setState((prev) => ({ ...prev, description }))
-              }}
-              fullHeight
-              restaurantSlug={restaurantSlug}
-              maxLines={flexibleHeight ? 2000 : 2}
-            />
-            {flexibleHeight ? <VStack flex={1} /> : null}
-          </VStack>
-
-          {/* PEEK / TAGS (RIGHT SIDE) */}
-          {/* margin top: negative the titles second row height */}
-          <Suspense fallback={null}>
-            <RestaurantPeekDishes
-              restaurantSlug={props.restaurantSlug}
-              restaurantId={props.restaurantId}
-              activeTagSlugs={activeTagSlugs}
-              tagSlugs={dishSlugs}
-              editable={editableDishes}
-              onChangeTags={handleChangeDishes}
-              size={dishSize}
-              isLoaded={isLoaded}
-            />
-          </Suspense>
-        </HStack>
-
-        {/* BOTTOM ROW */}
-
-        <HStack
-          paddingLeft={20}
-          height={46}
-          className="safari-fix-overflow"
-          position="relative"
-          alignItems="center"
-          width="100%"
-          overflow="hidden"
-          spacing
-        >
-          {beforeBottomRow}
-
-          {!!editableDescription && !state.editing && (
-            <Button onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
-              Edit Description
-            </Button>
-          )}
-
-          {!!editableDescription && state.editing && (
-            <Button
-              theme="action"
-              onPress={() => {
-                setState((prev) => ({ ...prev, editing: false }))
-                onChangeDescription?.(state.description ?? '')
-              }}
+            <VStack
+              {...contentSideProps}
+              className="fix-safari-shrink-height"
+              justifyContent="center"
+              flex={1}
+              zIndex={100}
             >
-              Save
-            </Button>
-          )}
+              {/* ROW: OVERVIEW */}
+              <RestaurantOverview
+                isDishBot
+                isEditingDescription={state.editing}
+                text={state.description}
+                onEditCancel={() => {
+                  setState((prev) => ({ ...prev, editing: false }))
+                }}
+                onEditDescription={(description) => {
+                  setState((prev) => ({ ...prev, description }))
+                }}
+                fullHeight
+                restaurantSlug={restaurantSlug}
+                maxLines={flexibleHeight ? 2000 : 2}
+              />
+              {flexibleHeight ? <VStack flex={1} /> : null}
+            </VStack>
 
-          <InteractiveContainer borderColor="transparent">
-            <Link
-              name="restaurant"
-              params={{
-                slug: props.restaurantSlug,
-                section: 'reviews',
-              }}
-            >
-              <SmallButton
-                marginRight={-2}
-                borderRadius={0}
-                tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                icon={
-                  <MessageSquare
-                    size={16}
-                    color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                  />
-                }
+            {/* PEEK / TAGS (RIGHT SIDE) */}
+            {/* margin top: negative the titles second row height */}
+            <Suspense fallback={null}>
+              <RestaurantPeekDishes
+                restaurantSlug={props.restaurantSlug}
+                restaurantId={props.restaurantId}
+                activeTagSlugs={activeTagSlugs}
+                tagSlugs={dishSlugs}
+                editable={editableDishes}
+                onChangeTags={handleChangeDishes}
+                size={dishSize}
+                isLoaded={isLoaded}
+              />
+            </Suspense>
+          </HStack>
+
+          {/* ROW: BOTTOM ROW */}
+
+          <HStack
+            paddingLeft={20}
+            height={46}
+            className="safari-fix-overflow"
+            position="relative"
+            alignItems="center"
+            width="100%"
+            overflow="hidden"
+            spacing
+          >
+            {beforeBottomRow}
+
+            {!!editableDescription && !state.editing && (
+              <Button onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
+                Edit Description
+              </Button>
+            )}
+
+            {!!editableDescription && state.editing && (
+              <Button
+                theme="action"
+                onPress={() => {
+                  setState((prev) => ({ ...prev, editing: false }))
+                  onChangeDescription?.(state.description ?? '')
+                }}
               >
-                {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-              </SmallButton>
-            </Link>
+                Save
+              </Button>
+            )}
 
-            <Suspense fallback={<Spacer size={44} />}>
-              <VStack marginRight={-2}>
-                <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
-              </VStack>
-            </Suspense>
-
-            <Suspense fallback={<Spacer size={44} />}>
-              <RestaurantAddToListButton borderRadius={0} restaurantSlug={restaurantSlug} noLabel />
-            </Suspense>
-          </InteractiveContainer>
-
-          {!!price_range && (
-            <>
-              <Text fontSize={14} fontWeight="700" color={theme.colorTertiary}>
-                {price_range}
-              </Text>
-            </>
-          )}
-
-          {!!open.isOpen && (
-            <>
-              <Circle size={8} backgroundColor={green} />
-            </>
-          )}
-
-          {!!open.text && (
-            <>
-              <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                <SmallButton textProps={{ opacity: 0.6 }}>{open.nextTime || '~~'}</SmallButton>
+            <InteractiveContainer borderColor="transparent">
+              <Link
+                name="restaurant"
+                params={{
+                  slug: props.restaurantSlug,
+                  section: 'reviews',
+                }}
+              >
+                <SmallButton
+                  marginRight={-2}
+                  borderRadius={0}
+                  tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                  icon={
+                    <MessageSquare
+                      size={16}
+                      color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                    />
+                  }
+                >
+                  {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                </SmallButton>
               </Link>
-            </>
-          )}
 
-          {!!restaurant.address && (
-            <RestaurantAddress size="xs" curLocInfo={curLocInfo!} address={restaurant.address} />
-          )}
+              <Suspense fallback={<Spacer size={44} />}>
+                <VStack marginRight={-2}>
+                  <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
+                </VStack>
+              </Suspense>
 
-          <Suspense fallback={null}>
-            <RestaurantDeliveryButtons showLabels restaurantSlug={restaurantSlug} />
-          </Suspense>
+              <Suspense fallback={<Spacer size={44} />}>
+                <RestaurantAddToListButton
+                  borderRadius={0}
+                  restaurantSlug={restaurantSlug}
+                  noLabel
+                />
+              </Suspense>
+            </InteractiveContainer>
 
-          {tagsRowContent}
-        </HStack>
+            {!!price_range && (
+              <>
+                <Text fontSize={14} fontWeight="700" color={theme.colorTertiary}>
+                  {price_range}
+                </Text>
+              </>
+            )}
 
-        {/* bottom spacing */}
-        <Spacer size={10} />
-      </VStack>
+            {!!open.isOpen && (
+              <>
+                <Circle size={8} backgroundColor={green} />
+              </>
+            )}
+
+            {!!open.text && (
+              <>
+                <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                  <SmallButton textProps={{ opacity: 0.6 }}>{open.nextTime || '~~'}</SmallButton>
+                </Link>
+              </>
+            )}
+
+            {!!restaurant.address && (
+              <RestaurantAddress size="xs" curLocInfo={curLocInfo!} address={restaurant.address} />
+            )}
+
+            <Suspense fallback={null}>
+              <RestaurantDeliveryButtons showLabels restaurantSlug={restaurantSlug} />
+            </Suspense>
+
+            {tagsRowContent}
+          </HStack>
+
+          {/* bottom spacing */}
+          <Spacer size={10} />
+        </VStack>
+      </Hoverable>
     )
   })
 )

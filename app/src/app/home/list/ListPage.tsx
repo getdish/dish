@@ -14,7 +14,7 @@ import {
 } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
-import React, { Suspense, useEffect, useRef, useState } from 'react'
+import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
 import { Switch } from 'react-native'
 import {
   Box,
@@ -295,415 +295,427 @@ const listThemes = {
   1: ListTheme.minimal,
 } as const
 
-const ListPageContent = graphql((props: Props) => {
-  // const themeName = useThemeName()
-  // const theme = useTheme()
-  const user = useUserStore()
-  const isMyList = props.item.userSlug === slugify(user.user?.username)
-  const isEditing = props.item.state === 'edit'
-  const [showAddModal, setShowAddModal] = useState(false)
-  const draft = useRef<Partial<List>>({})
-  const refetch = useRefetch()
-  const { list, isFavorited, toggleFavorite, reviewsCount } = useListFavorite({
-    slug: props.item.slug,
-  })
-  const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999999')
-  const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
-  const [restaurants, restaurantActions] = useListRestaurants(list)
-  const region = useRegionQuery(props.item.region)
-
-  // TESTING
-  const listThemeIndex = (list?.color ?? 0) > 10 ? 0 : 1 // list.theme
-  const listTheme = listThemes[listThemeIndex]
-
-  useSnapToFullscreenOnMount()
-
-  useEffect(() => {
-    if (!props.isActive) return
-    homeStore.updateCurrentState<HomeStateItemList>('ListPage.color', {
-      color,
-    })
-  }, [props.isActive, color])
-
-  useEffect(() => {
-    if (isEditing) {
-      router.setRouteAlert({
-        condition: () => true,
-        message: `Cancel editing list and lose edits?`,
+const ListPageContent = memo(
+  graphql(
+    (props: Props) => {
+      // const themeName = useThemeName()
+      // const theme = useTheme()
+      const user = useUserStore()
+      const isMyList = props.item.userSlug === slugify(user.user?.username)
+      const isEditing = props.item.state === 'edit'
+      const [showAddModal, setShowAddModal] = useState(false)
+      const draft = useRef<Partial<List>>({})
+      const refetch = useRefetch()
+      const { list, isFavorited, toggleFavorite, reviewsCount } = useListFavorite({
+        slug: props.item.slug,
       })
-      return () => {
-        router.setRouteAlert(null)
+      const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999999')
+      const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
+      const [restaurants, restaurantActions] = useListRestaurants(list)
+      const region = useRegionQuery(props.item.region)
+
+      // TESTING
+      const listThemeIndex = (list?.color ?? 0) > 10 ? 0 : 1 // list.theme
+      const listTheme = listThemes[listThemeIndex]
+
+      useSnapToFullscreenOnMount()
+
+      useEffect(() => {
+        if (!props.isActive) return
+        homeStore.updateCurrentState<HomeStateItemList>('ListPage.color', {
+          color,
+        })
+      }, [props.isActive, color])
+
+      useEffect(() => {
+        if (isEditing) {
+          router.setRouteAlert({
+            condition: () => true,
+            message: `Cancel editing list and lose edits?`,
+          })
+          return () => {
+            router.setRouteAlert(null)
+          }
+        }
+      }, [isEditing])
+
+      useSetAppMap({
+        hideRegions: true,
+        isActive: props.isActive,
+        results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
+        showRank: true,
+        zoomOnHover: true,
+        fitToResults: true,
+      })
+
+      if (!list) {
+        return (
+          <StackDrawer closable title={`404`}>
+            <Text>not found 😭</Text>
+          </StackDrawer>
+        )
       }
-    }
-  }, [isEditing])
 
-  useSetAppMap({
-    hideRegions: true,
-    isActive: props.isActive,
-    results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
-    showRank: true,
-    zoomOnHover: true,
-    fitToResults: true,
-  })
+      const username = list.user?.name ?? list.user?.username ?? ''
 
-  if (!list) {
-    return (
-      <StackDrawer closable title={`404`}>
-        <Text>not found 😭</Text>
-      </StackDrawer>
-    )
-  }
+      const tagButtons = list
+        .tags({ limit: 10 })
+        .map((x) => x.tag!)
+        .map((tag, i) => {
+          return <TagButton key={tag?.slug ?? i} size="sm" {...getTagButtonProps(tag)} />
+        })
 
-  const username = list.user?.name ?? list.user?.username ?? ''
+      const isLight = typeof list.color === 'number' ? lightBackgrounds.has(list.color) : false
 
-  const tagButtons = list
-    .tags({ limit: 10 })
-    .map((x) => x.tag!)
-    .map((tag, i) => {
-      return <TagButton key={tag?.slug ?? i} size="sm" {...getTagButtonProps(tag)} />
-    })
-
-  const isLight = typeof list.color === 'number' ? lightBackgrounds.has(list.color) : false
-
-  // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
-  return (
-    <>
-      <StackDrawer closable>
-        <PageHead isActive={props.isActive}>{`${username}'s ${list.name}${
-          region.data?.name ? `in ${region.data.name}` : ''
-        }`}</PageHead>
-        {props.isActive && isMyList && (
-          <BottomFloatingArea>
-            <Button
-              pointerEvents="auto"
-              theme="active"
-              borderRadius={100}
-              width={50}
-              height={50}
-              alignItems="center"
-              justifyContent="center"
-              elevation={2}
-              noTextWrap
-              onPress={() => {
-                setShowAddModal(true)
-              }}
-            >
-              <Plus size={32} color="#fff" />
-            </Button>
-            <VStack pointerEvents="none" flex={1} />
-          </BottomFloatingArea>
-        )}
-
-        {isMyList && (
-          <Modal
-            visible={showAddModal}
-            onDismiss={() => setShowAddModal(false)}
-            width={380}
-            maxHeight={480}
-            minHeight={480}
-          >
-            {showAddModal && (
-              <>
-                <PaneControlButtons>
-                  <CloseButton onPress={() => setShowAddModal(false)} />
-                </PaneControlButtons>
-                <Suspense fallback={null}>
-                  <ListAddRestuarant
-                    listSlug={props.item.slug}
-                    onAdd={({ id }) => {
-                      restaurantActions.add(id)
-                    }}
-                  />
-                </Suspense>
-              </>
+      // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
+      return (
+        <>
+          <StackDrawer closable>
+            <PageHead isActive={props.isActive}>{`${username}'s ${list.name}${
+              region.data?.name ? `in ${region.data.name}` : ''
+            }`}</PageHead>
+            {props.isActive && isMyList && (
+              <BottomFloatingArea>
+                <Button
+                  pointerEvents="auto"
+                  theme="active"
+                  borderRadius={100}
+                  width={50}
+                  height={50}
+                  alignItems="center"
+                  justifyContent="center"
+                  elevation={2}
+                  noTextWrap
+                  onPress={() => {
+                    setShowAddModal(true)
+                  }}
+                >
+                  <Plus size={32} color="#fff" />
+                </Button>
+                <VStack pointerEvents="none" flex={1} />
+              </BottomFloatingArea>
             )}
-          </Modal>
-        )}
-
-        <ContentScrollView id="list">
-          <PageContentWithFooter>
-            <PaneControlButtonsLeft>
-              <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
-                {reviewsCount}
-              </FavoriteButton>
-
-              {!isEditing && isMyList && (
-                <SmallButton elevation={1} alignSelf="center" onPress={() => setIsEditing(true)}>
-                  Edit
-                </SmallButton>
-              )}
-
-              {isEditing && (
-                <>
-                  <SmallButton
-                    theme="active"
-                    elevation={1}
-                    onPress={async () => {
-                      router.setRouteAlert(null)
-                      setIsEditing(false)
-                      await listUpdate(
-                        {
-                          id: list.id,
-                          ...draft.current,
-                          ...(color !== '#999' && {
-                            color: listColors.indexOf(color),
-                          }),
-                          public: isPublic,
-                        },
-                        {
-                          query: list,
-                        }
-                      )
-                      await refetch(list)
-                      Toast.show('Saved')
-                    }}
-                  >
-                    Save
-                  </SmallButton>
-                  <Spacer size="sm" />
-                  <VStack
-                    opacity={0.8}
-                    hoverStyle={{
-                      opacity: 1,
-                    }}
-                    onPress={() => {
-                      setIsEditing(false)
-                    }}
-                  >
-                    <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
-                  </VStack>
-                  <Spacer size="lg" />
-                </>
-              )}
-            </PaneControlButtonsLeft>
-
-            {/* overflow clip prevention with marginVerticals here */}
-            <VStack position="relative" marginHorizontal={-20}>
-              <ListPageTitle
-                listTheme={listTheme}
-                isLight={isLight}
-                locationName={region.data?.name ?? props.item.region}
-                list={list}
-                isEditing={isEditing}
-                draft={draft}
-              />
-            </VStack>
 
             {isMyList && (
-              <>
-                {isEditing && (
-                  <HStack spacing alignItems="center" justifyContent="center">
-                    <Paragraph>Color:</Paragraph>
-
-                    <ColorPicker colors={listColors} color={color} onChange={setColor} />
-
-                    <Paragraph>Theme:</Paragraph>
-                    <InteractiveContainer>
-                      <Button
-                        borderRadius={0}
-                        onPress={() => {
-                          list.theme = 0
+              <Modal
+                visible={showAddModal}
+                onDismiss={() => setShowAddModal(false)}
+                width={380}
+                maxHeight={480}
+                minHeight={480}
+              >
+                {showAddModal && (
+                  <>
+                    <PaneControlButtons>
+                      <CloseButton onPress={() => setShowAddModal(false)} />
+                    </PaneControlButtons>
+                    <Suspense fallback={null}>
+                      <ListAddRestuarant
+                        listSlug={props.item.slug}
+                        onAdd={({ id }) => {
+                          restaurantActions.add(id)
                         }}
-                        active={listTheme === 'modern'}
-                      >
-                        Modern
-                      </Button>
-                      <Button
-                        borderRadius={0}
-                        onPress={() => {
-                          list.theme = 1
-                        }}
-                        active={listTheme === 'minimal'}
-                      >
-                        Minimal
-                      </Button>
-                    </InteractiveContainer>
-
-                    <Paragraph>Public:</Paragraph>
-                    <Switch value={isPublic} onValueChange={setPublic} />
-
-                    <SmallButton
-                      tooltip="Delete"
-                      icon={<Trash size={16} />}
-                      onPress={async () => {
-                        assertPresent(list.id, 'no list id')
-                        if (confirm('Permanently delete this list?')) {
-                          await mutate((mutation) => {
-                            return mutation.delete_list({
-                              where: {
-                                id: {
-                                  _eq: list.id,
-                                },
-                              },
-                            })?.__typename
-                          })
-                          Toast.show('Deleted list')
-                          router.navigate({
-                            name: 'home',
-                          })
-                        }
-                      }}
-                    />
-                  </HStack>
+                      />
+                    </Suspense>
+                  </>
                 )}
-              </>
+              </Modal>
             )}
 
-            {!!(list.description || isEditing) && (
-              <>
-                <CommentBubble
-                  chromeless={listTheme === 'minimal'}
-                  paddingHorizontal={20}
-                  date={list.created_at}
-                  after={
+            <ContentScrollView id="list">
+              <PageContentWithFooter>
+                <PaneControlButtonsLeft>
+                  <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
+                    {reviewsCount}
+                  </FavoriteButton>
+
+                  {!isEditing && isMyList && (
+                    <SmallButton
+                      elevation={1}
+                      alignSelf="center"
+                      onPress={() => setIsEditing(true)}
+                    >
+                      Edit
+                    </SmallButton>
+                  )}
+
+                  {isEditing && (
                     <>
-                      {!!tagButtons.length && (
-                        <HStack spacing justifyContent="center">
-                          {tagButtons}
-                        </HStack>
-                      )}
+                      <SmallButton
+                        theme="active"
+                        elevation={1}
+                        onPress={async () => {
+                          router.setRouteAlert(null)
+                          setIsEditing(false)
+                          await listUpdate(
+                            {
+                              id: list.id,
+                              ...draft.current,
+                              ...(color !== '#999' && {
+                                color: listColors.indexOf(color),
+                              }),
+                              public: isPublic,
+                            },
+                            {
+                              query: list,
+                            }
+                          )
+                          await refetch(list)
+                          Toast.show('Saved')
+                        }}
+                      >
+                        Save
+                      </SmallButton>
+                      <Spacer size="sm" />
+                      <VStack
+                        opacity={0.8}
+                        hoverStyle={{
+                          opacity: 1,
+                        }}
+                        onPress={() => {
+                          setIsEditing(false)
+                        }}
+                      >
+                        <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
+                      </VStack>
+                      <Spacer size="lg" />
                     </>
-                  }
-                  avatar={{ image: list.user?.avatar || '', charIndex: list.user?.charIndex || 0 }}
-                  name={list.user?.username ?? ''}
-                >
-                  {isEditing ? (
-                    <Input
-                      placeholder="Description..."
-                      multiline
-                      numberOfLines={7}
-                      lineHeight={30}
-                      width="100%"
-                      fontSize={20}
-                      marginVertical={-12}
-                      marginHorizontal={-8}
-                      defaultValue={list.description ?? ''}
-                      onChangeText={(val) => {
-                        draft.current.description = val
-                      }}
-                    />
-                  ) : (
-                    (() => {
-                      const items = list.description?.split('\n\n') ?? []
-                      return (
-                        <>
-                          {items.map((x, i) => {
-                            return (
-                              <Paragraph
-                                paddingBottom={i < items.length - 1 ? 26 : 0}
-                                key={i}
-                                sizeLineHeight={1.1}
-                                size={i == 0 ? 'lg' : 'md'}
-                              >
-                                {x}
-                              </Paragraph>
-                            )
-                          })}
-                        </>
-                      )
-                    })()
                   )}
-                </CommentBubble>
-                <Spacer size="xl" />
-              </>
-            )}
+                </PaneControlButtonsLeft>
 
-            <VStack minHeight={300}>
-              {!restaurants.length && (
-                <VStack
-                  padding={20}
-                  margin={20}
-                  borderWidth={1}
-                  borderColor="rgba(100,100,100,0.1)"
-                  borderRadius={10}
-                >
-                  <Paragraph fontWeight="800">Nothing added to this list, yet.</Paragraph>
-                  {isMyList && (
-                    <Paragraph>
-                      Use the blue (+) button at the bottom. You can also add from any search page
-                      results.
-                    </Paragraph>
-                  )}
+                {/* overflow clip prevention with marginVerticals here */}
+                <VStack position="relative" marginHorizontal={-20}>
+                  <ListPageTitle
+                    listTheme={listTheme}
+                    isLight={isLight}
+                    locationName={region.data?.name ?? props.item.region}
+                    list={list}
+                    isEditing={isEditing}
+                    draft={draft}
+                  />
                 </VStack>
-              )}
 
-              {restaurants.map(
-                ({ restaurantId, restaurant, comment, dishSlugs, position }, index) => {
-                  if (!restaurant.slug) {
-                    return null
-                  }
-                  return (
-                    <React.Fragment key={restaurant.slug}>
-                      <HStack position="relative">
-                        {isEditing && (
-                          <VStack
-                            alignItems="center"
-                            spacing
-                            paddingHorizontal={10}
-                            paddingVertical={20}
+                {isMyList && (
+                  <>
+                    {isEditing && (
+                      <HStack spacing alignItems="center" justifyContent="center">
+                        <Paragraph>Color:</Paragraph>
+
+                        <ColorPicker colors={listColors} color={color} onChange={setColor} />
+
+                        <Paragraph>Theme:</Paragraph>
+                        <InteractiveContainer>
+                          <Button
+                            borderRadius={0}
+                            onPress={() => {
+                              list.theme = 0
+                            }}
+                            active={listTheme === 'modern'}
                           >
-                            <CircleButton
-                              backgroundColor={red400}
-                              width={40}
-                              height={40}
-                              onPress={() => {
-                                restaurantActions.delete(restaurantId)
-                              }}
-                            >
-                              <X size={20} color="#fff" />
-                            </CircleButton>
+                            Modern
+                          </Button>
+                          <Button
+                            borderRadius={0}
+                            onPress={() => {
+                              list.theme = 1
+                            }}
+                            active={listTheme === 'minimal'}
+                          >
+                            Minimal
+                          </Button>
+                        </InteractiveContainer>
 
-                            <Score
-                              votable
-                              upTooltip="Move up"
-                              downTooltip="Move down"
-                              score={index + 1}
-                              setVote={async (vote) => {
-                                restaurantActions.promote(vote === 1 ? index : index + 1)
-                              }}
-                            />
-                          </VStack>
-                        )}
-                        <RestaurantListItem
-                          dishSize="lg"
-                          curLocInfo={props.item.curLocInfo ?? null}
-                          restaurantId={restaurantId}
-                          restaurantSlug={restaurant.slug}
-                          rank={index + 1}
-                          description={comment}
-                          hideTagRow
-                          hideRate
-                          flexibleHeight
-                          dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                          editableDishes={isEditing}
-                          onChangeDishes={async (dishes) => {
-                            console.log('should change dishes', dishes)
-                            await restaurantActions.setDishes(restaurantId, dishes)
-                            Toast.success(`Updated dishes`)
-                          }}
-                          editableDescription={isEditing}
-                          onChangeDescription={async (next) => {
-                            await restaurantActions.setComment(restaurantId, next)
-                            Toast.success('Updated description')
-                          }}
-                          editablePosition={isEditing}
-                          onChangePosition={(next) => {
-                            console.log('should change position', next)
+                        <Paragraph>Public:</Paragraph>
+                        <Switch value={isPublic} onValueChange={setPublic} />
+
+                        <SmallButton
+                          tooltip="Delete"
+                          icon={<Trash size={16} />}
+                          onPress={async () => {
+                            assertPresent(list.id, 'no list id')
+                            if (confirm('Permanently delete this list?')) {
+                              await mutate((mutation) => {
+                                return mutation.delete_list({
+                                  where: {
+                                    id: {
+                                      _eq: list.id,
+                                    },
+                                  },
+                                })?.__typename
+                              })
+                              Toast.show('Deleted list')
+                              router.navigate({
+                                name: 'home',
+                              })
+                            }
                           }}
                         />
                       </HStack>
-                      <Spacer />
-                    </React.Fragment>
-                  )
-                }
-              )}
-            </VStack>
-          </PageContentWithFooter>
-        </ContentScrollView>
-      </StackDrawer>
-    </>
+                    )}
+                  </>
+                )}
+
+                {!!(list.description || isEditing) && (
+                  <>
+                    <CommentBubble
+                      chromeless={listTheme === 'minimal'}
+                      paddingHorizontal={20}
+                      date={list.created_at}
+                      after={
+                        <>
+                          {!!tagButtons.length && (
+                            <HStack spacing justifyContent="center">
+                              {tagButtons}
+                            </HStack>
+                          )}
+                        </>
+                      }
+                      avatar={{
+                        image: list.user?.avatar || '',
+                        charIndex: list.user?.charIndex || 0,
+                      }}
+                      name={list.user?.username ?? ''}
+                    >
+                      {isEditing ? (
+                        <Input
+                          placeholder="Description..."
+                          multiline
+                          numberOfLines={7}
+                          lineHeight={30}
+                          width="100%"
+                          fontSize={20}
+                          marginVertical={-12}
+                          marginHorizontal={-8}
+                          defaultValue={list.description ?? ''}
+                          onChangeText={(val) => {
+                            draft.current.description = val
+                          }}
+                        />
+                      ) : (
+                        (() => {
+                          const items = list.description?.split('\n\n') ?? []
+                          return (
+                            <>
+                              {items.map((x, i) => {
+                                return (
+                                  <Paragraph
+                                    paddingBottom={i < items.length - 1 ? 26 : 0}
+                                    key={i}
+                                    sizeLineHeight={1.1}
+                                    size={i == 0 ? 'lg' : 'md'}
+                                  >
+                                    {x}
+                                  </Paragraph>
+                                )
+                              })}
+                            </>
+                          )
+                        })()
+                      )}
+                    </CommentBubble>
+                    <Spacer size="xl" />
+                  </>
+                )}
+
+                <VStack minHeight={300}>
+                  {!restaurants.length && (
+                    <VStack
+                      padding={20}
+                      margin={20}
+                      borderWidth={1}
+                      borderColor="rgba(100,100,100,0.1)"
+                      borderRadius={10}
+                    >
+                      <Paragraph fontWeight="800">Nothing added to this list, yet.</Paragraph>
+                      {isMyList && (
+                        <Paragraph>
+                          Use the blue (+) button at the bottom. You can also add from any search
+                          page results.
+                        </Paragraph>
+                      )}
+                    </VStack>
+                  )}
+
+                  {restaurants.map(
+                    ({ restaurantId, restaurant, comment, dishSlugs, position }, index) => {
+                      if (!restaurant.slug) {
+                        return null
+                      }
+                      return (
+                        <React.Fragment key={restaurant.slug}>
+                          <HStack position="relative">
+                            {isEditing && (
+                              <VStack
+                                alignItems="center"
+                                spacing
+                                paddingHorizontal={10}
+                                paddingVertical={20}
+                              >
+                                <CircleButton
+                                  backgroundColor={red400}
+                                  width={40}
+                                  height={40}
+                                  onPress={() => {
+                                    restaurantActions.delete(restaurantId)
+                                  }}
+                                >
+                                  <X size={20} color="#fff" />
+                                </CircleButton>
+
+                                <Score
+                                  votable
+                                  upTooltip="Move up"
+                                  downTooltip="Move down"
+                                  score={index + 1}
+                                  setVote={async (vote) => {
+                                    restaurantActions.promote(vote === 1 ? index : index + 1)
+                                  }}
+                                />
+                              </VStack>
+                            )}
+                            <RestaurantListItem
+                              dishSize="lg"
+                              curLocInfo={props.item.curLocInfo ?? null}
+                              restaurantId={restaurantId}
+                              restaurantSlug={restaurant.slug}
+                              rank={index + 1}
+                              description={comment}
+                              hideTagRow
+                              hideRate
+                              flexibleHeight
+                              dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                              editableDishes={isEditing}
+                              onChangeDishes={async (dishes) => {
+                                console.log('should change dishes', dishes)
+                                await restaurantActions.setDishes(restaurantId, dishes)
+                                Toast.success(`Updated dishes`)
+                              }}
+                              editableDescription={isEditing}
+                              onChangeDescription={async (next) => {
+                                await restaurantActions.setComment(restaurantId, next)
+                                Toast.success('Updated description')
+                              }}
+                              editablePosition={isEditing}
+                              onChangePosition={(next) => {
+                                console.log('should change position', next)
+                              }}
+                            />
+                          </HStack>
+                          <Spacer />
+                        </React.Fragment>
+                      )
+                    }
+                  )}
+                </VStack>
+              </PageContentWithFooter>
+            </ContentScrollView>
+          </StackDrawer>
+        </>
+      )
+    },
+    { suspense: false }
   )
-})
+)
 
 const ListPageTitle = ({
   isLight,
