@@ -1,3 +1,14 @@
+function migrate_all() {
+  wait_until_services_ready
+  echo "services ready"
+  migrate_hasura
+  echo "migrated hasura"
+  migrate_timescale
+  echo "migrated timescale"
+  migrate_umami
+  echo "migrated umami"
+}
+
 function psql_main() {
   if command -v pgcli &>/dev/null; then
     command="pgcli"
@@ -9,6 +20,7 @@ function psql_main() {
     -U "$POSTGRES_USER" \
     -p "$POSTGRES_PORT" \
     -h "$POSTGRES_HOST"
+  PGPASSWORD="$POSTGRES_PASSWORD" log_command psql -d "$POSTGRES_DB" -U "$POSTGRES_USER" -p "$POSTGRES_PORT" -h "$POSTGRES_HOST"
 }
 
 function psql_timescale() {
@@ -47,7 +59,7 @@ function hasura_admin() {
 function migrate_hasura() {
   echo "migrating hasura"
   if ! [ -x "$(command -v hasura)" ]; then
-    curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+    curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v1.3.3 bash
   fi
   echo "migrating db $POSTGRES_DB"
   pushd "$PROJECT_ROOT/services/hasura"
