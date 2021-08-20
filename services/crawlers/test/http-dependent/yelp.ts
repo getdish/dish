@@ -1,14 +1,16 @@
+import { deleteAllBy } from '@dish/graph'
 import test from 'ava'
 
 import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 import { Yelp, YelpScrape } from '../../src/yelp/Yelp'
 
-// Flour + Water bizId
+const name = 'Flour + Water'
 const BIZ_ID = 'qs7FgJ-UXgpbAMass0Oojg'
 
 test.beforeEach(async () => {
   console.log('deleting scrape', BIZ_ID)
   await deleteAllScrapesBySourceID(BIZ_ID)
+  await deleteAllBy('restaurant', 'name', name)
 })
 
 test('Gets and persists a restaurant', async (t) => {
@@ -19,7 +21,7 @@ test('Gets and persists a restaurant', async (t) => {
     bottom_left: [37.758865, -122.412175],
     start: 0,
     onlyRestaurant: {
-      name: 'Flour + Water',
+      name,
       address: '2401 Harrison St',
       telephone: '(415) 826-7000',
     },

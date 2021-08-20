@@ -1,16 +1,18 @@
+import { deleteAllBy } from '@dish/graph'
 import test from 'ava'
 
 import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 import { UberEats } from '../../src/ubereats/UberEats'
 
+const title = "Empanada Mama - Hell's Kitchen"
 const ID = '03b6b762-fc01-4547-a81f-87bb7af42c6a'
 
 test.beforeEach(async () => {
   await deleteAllScrapesBySourceID(ID)
+  await deleteAllBy('restaurant', 'name', title)
 })
 
 test('gets and persists a restaurant and its dishes', async (t) => {
-  const title = "Empanada Mama - Hell's Kitchen"
   const ue = new UberEats()
   await ue.getRestaurant(ID)
   const scrape = await scrapeFindOneBySourceID('ubereats', ID)
