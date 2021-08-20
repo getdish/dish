@@ -1,5 +1,7 @@
 import '@dish/helpers/polyfill-node'
 
+import { Server } from 'http'
+
 import { createBullBoard } from '@bull-board/api'
 import { BullAdapter } from '@bull-board/api/bullAdapter'
 import { ExpressAdapter } from '@bull-board/express'
@@ -10,10 +12,17 @@ import express from 'express'
 
 import { klass_map } from './job_processor'
 
+let dashboard_server: Server
+const queues = createQueues()
+
 // for dev it should quit background jobs better
-const cleanExit = (e) => {
-  console.log('clean exit', e)
-  process.exit(0)
+const cleanExit = (e: any) => {
+  console.log('exiting cleanly...', e)
+  dashboard_server.close()
+  queues.map(({ queue }) => {
+    queue.close()
+  })
+  console.log('...exiting')
 }
 process.on('SIGINT', cleanExit) // catch ctrl-c
 process.on('SIGTERM', cleanExit) // catch kill
@@ -27,8 +36,6 @@ type Queue = {
   name: string
   queue: Bull.Queue<any>
 }
-
-const queues = createQueues()
 
 function clearJobs(filter?: string[]) {
   console.log('clearing all jobs')
@@ -64,13 +71,13 @@ async function main() {
 function startDashboard(queues: Queue[]) {
   return new Promise<void>((res) => {
     const serverAdapter = new ExpressAdapter()
-    const board = createBullBoard({
+    const bull_dashboard_app = express()
+    createBullBoard({
       serverAdapter,
       queues: queues.map((x) => new BullAdapter(x.queue as any)),
     })
 
-    const app = express()
-    app.post('/clear', (req, res) => {
+    bull_dashboard_app.post('/clear', (req, res) => {
       const queueHeader = `${req.headers['queues'] ?? ''}`.trim()
       if (queueHeader === 'all') {
         clearJobs()
@@ -79,8 +86,8 @@ function startDashboard(queues: Queue[]) {
       }
       res.send(200)
     })
-    app.use('/', serverAdapter.getRouter())
-    app.listen(3434, () => {
+    bull_dashboard_app.use('/', serverAdapter.getRouter())
+    dashboard_server = bull_dashboard_app.listen(3434, () => {
       console.log('listening on', 3434)
       res()
     })
