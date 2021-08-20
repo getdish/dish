@@ -61,6 +61,7 @@ function migrate_hasura() {
   if ! [ -x "$(command -v hasura)" ]; then
     curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v1.3.3 bash
   fi
+  hasura version
   echo "migrating db $POSTGRES_DB"
   pushd "$PROJECT_ROOT/services/hasura"
   echo "hasura migrate $HASURA_ENDPOINT"

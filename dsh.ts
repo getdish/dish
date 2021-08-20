@@ -1,16 +1,12 @@
 #!/usr/bin/env zx
 
-import { exec } from 'child_process'
+import { ExecOptions, exec } from 'child_process'
 import { readdir } from 'fs/promises'
-import { ExecOptions } from 'node:child_process'
-import { basename } from 'node:path'
-import { dirname, join, resolve } from 'path'
-import { Transform } from 'stream'
+import { basename, dirname, resolve } from 'path'
 
 import fsExtra from 'fs-extra'
-import { $, cd } from 'zx'
 
-const { readFile, readJSON } = fsExtra
+const { readJSON } = fsExtra
 
 async function getFiles(
   dir: string,
@@ -73,25 +69,25 @@ async function getTestablePackageJsons() {
   })
 }
 
-async function getDockerfilePaths() {
-  return await getFiles('.', {
-    excludeDir: /node_modules|data/,
-    filter: /Dockerfile$/,
-  })
-}
+// async function getDockerfilePaths() {
+//   return await getFiles('.', {
+//     excludeDir: /node_modules|data/,
+//     filter: /Dockerfile$/,
+//   })
+// }
 
-async function getLocalComposeImages() {
-  const paths = await getDockerfilePaths()
-  return (
-    await Promise.allSettled(
-      paths.map((p) =>
-        readFile(join(dirname(p), 'Dockerfile'), 'utf8').then((x) =>
-          x?.includes('registry.dishapp.com') ? p : null
-        )
-      )
-    )
-  ).flatMap((x) => (x.status === 'fulfilled' && x.value ? x.value : []))
-}
+// async function getLocalComposeImages() {
+//   const paths = await getDockerfilePaths()
+//   return (
+//     await Promise.allSettled(
+//       paths.map((p) =>
+//         readFile(join(dirname(p), 'Dockerfile'), 'utf8').then((x) =>
+//           x?.includes('registry.dishapp.com') ? p : null
+//         )
+//       )
+//     )
+//   ).flatMap((x) => (x.status === 'fulfilled' && x.value ? x.value : []))
+// }
 
 const isParallelizableTestPackageJson = (x) => {
   return !!x.contents.tests?.parallel
@@ -100,13 +96,18 @@ const isParallelizableTestPackageJson = (x) => {
 async function execPromise(command: string, opts?: ExecOptions & { prefix?: string }) {
   return await new Promise((res, rej) => {
     exec(command, opts, (err, stdout, stderr) => {
+      let out = ''
+      out += `\n\n--- [test] ${opts?.cwd ?? '.'}: ${command}\n`
+      if (stderr) {
+        out += `Error stderr running ${command} in ${opts?.cwd ?? ''}:` + '\n' + stderr + '\n'
+      }
       if (err) {
-        console.log('Error running', command, err, stdout, stderr)
+        out += `Error running: ${err}`
+        console.error(out)
         return rej(err)
       }
-      console.log('Finished command', command)
       if (stdout) {
-        console.log(
+        out += `stdout: ${
           opts?.prefix
             ? stdout
                 .toString()
@@ -114,11 +115,12 @@ async function execPromise(command: string, opts?: ExecOptions & { prefix?: stri
                 .map((x) => opts.prefix + x)
                 .join('\n')
             : stdout
-        )
+        }`
       }
       if (stderr) {
-        console.log(`Error stderr running ${command} in ${opts?.cwd ?? ''}:`, '\n', stderr)
+        out += `stderr: ${stderr}\n`
       }
+      console.log(out)
       res(stdout)
     })
   })
@@ -137,12 +139,12 @@ async function runAllTests() {
     const dir = dirname(path)
     const name = basename(dir)
     try {
-      console.log(`\n\n🏃‍♀️ testing ${name} in ${dir}`)
+      console.log(`\n\n🏃‍♀️ Run test ${name} in dir ${dir}`)
       await execPromise(`npm test`, {
         cwd: dir,
         prefix: `${name.padStart(16)}: `,
       })
-      console.log('Finished test', name)
+      console.log(' END test: ', name, '\n\n')
       // this was buggy, not outputting errors and pipes didnt work right
       // $.verbose = false
       // cd(dir)
