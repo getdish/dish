@@ -5,6 +5,7 @@ import { Auth } from '../Auth'
 import { GRAPH_API, isManualDebugMode } from '../constants'
 import { getAuthHeaders } from '../getAuth'
 import { GeneratedSchema, generatedSchema, scalarsEnumsHash } from './schema.generated'
+import { DISH_DEBUG } from '..'
 
 export * from './schema.generated'
 
@@ -70,7 +71,12 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     console.log(` [gqty] =>`, JSON.stringify(json, null, 2))
   }
   if (json.errors) {
-    console.error(` [gqty] errors ${JSON.stringify(json.errors, null, 2)}`)
+    const message = ` [gqty] errors ${JSON.stringify(json.errors, null, 2)}`
+    console.error()
+    // in test mode bail on first error
+    if (process.env.NODE_ENV === 'test') {
+      throw new Error(message)
+    }
   }
   return json
 }
