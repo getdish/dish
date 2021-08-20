@@ -328,6 +328,7 @@ export class Yelp extends WorkerJob {
     bizUrl = bizUrl.replace('www.', 'm.')
     this.log('bizUrl', bizUrl)
     const bizUrlParsed = url.parse(bizUrl, true)
+    this.log(`RUN_WITHOUT_WORKER=${process.env.RUN_WITHOUT_WORKER}`)
     await this.runOnWorker('getEmbeddedJSONData', [id, bizUrlParsed.path, data.bizId])
   }
 

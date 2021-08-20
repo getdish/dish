@@ -16,9 +16,11 @@ if [ "$DEV_USER" = "tom@tombh.co.uk" ]; then
   DISH_ENV=development
   IS_LOCAL=1
   DISH_DEBUG=${DISH_DEBUG:-"0"}
+  RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
 fi
 
 if [ "$DEV_USER" = "natewienert@gmail.com" ]; then
+  RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
   DISH_DEBUG=${DISH_DEBUG:-"2"}
 fi
 
@@ -27,6 +29,7 @@ DISH_ENV="${DISH_ENV:-production}"
 ENV_FILE=".env.$DISH_ENV"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 export DISH_DEBUG
+export RUN_WITHOUT_WORKER
 export LOCAL_HOST=${LOCALHOST:-"localhost"}
 export PROJECT_ROOT=$SCRIPT_DIR
 export DOCKER_CONFIG="$PROJECT_ROOT/etc/docker"
