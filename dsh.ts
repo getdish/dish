@@ -93,29 +93,20 @@ const isParallelizableTestPackageJson = (x) => {
   return !!x.contents.tests?.parallel
 }
 
-async function execPromise(command: string, opts?: ExecOptions & { prefix?: string }) {
+async function execPromise(command: string, opts?: ExecOptions) {
   return await new Promise((res, rej) => {
     exec(command, opts, (err, stdout, stderr) => {
       let out = ''
       out += `\n\n--- [test] ${opts?.cwd ?? '.'}: ${command}\n`
-      if (stderr) {
-        out += `Error stderr running ${command} in ${opts?.cwd ?? ''}:` + '\n' + stderr + '\n'
+      if (stderr && stderr !== stdout) {
+        out += `stderr (running ${command} in ${opts?.cwd ?? ''}):` + '\n' + stderr + '\n'
       }
       if (err) {
-        out += `Error running: ${err}`
-        console.error(out)
+        out += `Error running: ${err}\n`
         return rej(err)
       }
       if (stdout) {
-        out += `stdout: ${
-          opts?.prefix
-            ? stdout
-                .toString()
-                .split('\n')
-                .map((x) => opts.prefix + x)
-                .join('\n')
-            : stdout
-        }`
+        out += `stdout: ${stdout}\n`
       }
       if (stderr) {
         out += `stderr: ${stderr}\n`
@@ -142,7 +133,6 @@ async function runAllTests() {
       console.log(`\n\n🏃‍♀️ Run test ${name} in dir ${dir}`)
       await execPromise(`npm test`, {
         cwd: dir,
-        prefix: `${name.padStart(16)}: `,
       })
       console.log(' END test: ', name, '\n\n')
       // this was buggy, not outputting errors and pipes didnt work right

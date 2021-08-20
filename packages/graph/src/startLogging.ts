@@ -16,8 +16,12 @@ export function startLogging(verbose = false) {
     if (isSafari) {
       console.log('Disable gqty logging as it doesnt collapse')
     } else {
-      import('@gqty/logger').then(({ createLogger }) => {
-        const Logger = createLogger(client, { stringifyJSON: false })
+      import('@gqty/logger').then((gqtyLogger) => {
+        if (!gqtyLogger?.createLogger) {
+          console.log('no logger', gqtyLogger)
+          return
+        }
+        const Logger = gqtyLogger.createLogger(client, { stringifyJSON: false })
         Logger.start()
       })
     }

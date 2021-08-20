@@ -48,7 +48,6 @@
     "tags:generate": "../dsh dish_app_generate_tags"
   },
   "dependencies": {
-    "@babel/cli": "^7.13.0",
     "@babel/core": "^7.13.8",
     "@dish/api": "*",
     "@dish/async": "*",
