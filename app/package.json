@@ -76,7 +76,7 @@
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-mapbox-gl/maps": "^8.2.1",
     "@sendgrid/mail": "7.4.0",
-    "@sentry/react-native": "^2.4.2",
+    "@sentry/react-native": "^2.6.2",
     "@turf/bbox": "^6.3.0",
     "@turf/center": "^6.3.0",
     "@turf/helpers": "6.3.0",

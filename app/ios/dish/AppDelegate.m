@@ -47,13 +47,16 @@
   self.moduleRegistryAdapter = [[UMModuleRegistryAdapter alloc] initWithModuleRegistryProvider:[[UMModuleRegistryProvider alloc] init]];
   self.launchOptions = launchOptions;
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  #ifdef DEBUG
-    [self initializeReactNativeApp];
-  #else
+  
+//#ifdef DEBUG
+//    [self initializeReactNativeApp];
+//  #else
 //    EXUpdatesAppController *controller = [EXUpdatesAppController sharedInstance];
-    controller.delegate = self;
-    [controller startAndShowLaunchScreen:self.window];
-  #endif
+//    controller.delegate = self;
+//    [controller startAndShowLaunchScreen:self.window];
+//  #endif
+  
+  [self initializeReactNativeApp];
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
 

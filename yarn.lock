@@ -1944,7 +1944,7 @@ __metadata:
     "@react-native-community/geolocation": ^2.0.2
     "@react-native-mapbox-gl/maps": ^8.2.1
     "@sendgrid/mail": 7.4.0
-    "@sentry/react-native": ^2.4.2
+    "@sentry/react-native": ^2.6.2
     "@snackui/babel-plugin": "*"
     "@turf/bbox": ^6.3.0
     "@turf/center": ^6.3.0
@@ -5336,9 +5336,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/react-native@npm:^2.4.2":
-  version: 2.6.1
-  resolution: "@sentry/react-native@npm:2.6.1"
+"@sentry/react-native@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "@sentry/react-native@npm:2.6.2"
   dependencies:
     "@sentry/browser": 6.7.1
     "@sentry/core": 6.7.1
@@ -5352,7 +5352,7 @@ __metadata:
   peerDependencies:
     react: ">=16.4.1"
     react-native: ">=0.56.0"
-  checksum: 88a45008a11ba1612d067932290ef3ada3ae23ed1cb9cd4747658d84a07d3481387326705f1b52c15ecac9e77bee85d7095254e6d6212a84a9dc85af7b67fb13
+  checksum: 187d2426a35501432688f31031bb0d7af1869270d521230a555203da01a16b6da15fc2e24eb167cfb10391da4c08e68f48382d2f82709d21a7c3c6d03b91ce9c
   languageName: node
   linkType: hard
 

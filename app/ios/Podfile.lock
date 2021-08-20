@@ -337,7 +337,7 @@ PODS:
     - Mapbox-iOS-SDK (~> 6.3)
     - React
     - React-Core
-  - react-native-safe-area-context (3.1.9):
+  - react-native-safe-area-context (3.2.0):
     - React-Core
   - React-perflogger (0.64.2)
   - React-RCTActionSheet (0.64.2):
@@ -403,7 +403,7 @@ PODS:
     - React-cxxreact (= 0.64.2)
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
-  - RNFastImage (8.3.4):
+  - RNFastImage (8.3.7):
     - React-Core
     - SDWebImage (~> 5.8)
     - SDWebImageWebPCoder (~> 0.6.1)
@@ -438,9 +438,9 @@ PODS:
     - React-RCTVibration
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSentry (2.4.2):
+  - RNSentry (2.6.2):
     - React-Core
-    - Sentry (= 6.1.4)
+    - Sentry (= 7.1.4)
   - RNSVG (12.1.1):
     - React
   - SDWebImage (5.11.1):
@@ -449,9 +449,9 @@ PODS:
   - SDWebImageWebPCoder (0.6.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.7)
-  - Sentry (6.1.4):
-    - Sentry/Core (= 6.1.4)
-  - Sentry/Core (6.1.4)
+  - Sentry (7.1.4):
+    - Sentry/Core (= 7.1.4)
+  - Sentry/Core (7.1.4)
   - UMAppLoader (1.4.0)
   - UMBarCodeScannerInterface (5.4.0)
   - UMCameraInterface (5.4.0)
@@ -475,18 +475,18 @@ PODS:
 
 DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
-  - EXApplication (from `../node_modules/expo-application/ios`)
-  - EXConstants (from `../node_modules/expo-constants/ios`)
-  - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
-  - EXFileSystem (from `../node_modules/expo-file-system/ios`)
-  - EXFont (from `../node_modules/expo-font/ios`)
-  - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
-  - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
-  - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
-  - EXPermissions (from `../node_modules/expo-permissions/ios`)
-  - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
-  - EXScreenOrientation (from `../node_modules/expo-screen-orientation/ios`)
-  - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
+  - "EXApplication (from `../node_modules/@dish/app/node_modules/expo-application/ios`)"
+  - "EXConstants (from `../node_modules/@dish/app/node_modules/expo-constants/ios`)"
+  - "EXErrorRecovery (from `../node_modules/@dish/app/node_modules/expo-error-recovery/ios`)"
+  - "EXFileSystem (from `../node_modules/@dish/app/node_modules/expo-file-system/ios`)"
+  - "EXFont (from `../node_modules/@dish/app/node_modules/expo-font/ios`)"
+  - "EXImageLoader (from `../node_modules/@dish/app/node_modules/expo-image-loader/ios`)"
+  - "EXKeepAwake (from `../node_modules/@dish/app/node_modules/expo-keep-awake/ios`)"
+  - "EXLinearGradient (from `../node_modules/@dish/app/node_modules/expo-linear-gradient/ios`)"
+  - "EXPermissions (from `../node_modules/@dish/app/node_modules/expo-permissions/ios`)"
+  - "ExpoModulesCore (from `../node_modules/@dish/app/node_modules/expo-modules-core/ios`)"
+  - "EXScreenOrientation (from `../node_modules/@dish/app/node_modules/expo-screen-orientation/ios`)"
+  - "EXSplashScreen (from `../node_modules/@dish/app/node_modules/expo-splash-screen/ios`)"
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - Flipper (~> 0.75.1)
@@ -546,19 +546,19 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
-  - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
+  - "UMAppLoader (from `../node_modules/@dish/app/node_modules/unimodules-app-loader/ios`)"
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
-  - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
-  - UMConstantsInterface (from `../node_modules/unimodules-constants-interface/ios`)
-  - "UMCore (from `../node_modules/@unimodules/core/ios`)"
-  - UMFaceDetectorInterface (from `../node_modules/unimodules-face-detector-interface/ios`)
-  - UMFileSystemInterface (from `../node_modules/unimodules-file-system-interface/ios`)
-  - UMFontInterface (from `../node_modules/unimodules-font-interface/ios`)
-  - UMImageLoaderInterface (from `../node_modules/unimodules-image-loader-interface/ios`)
-  - UMPermissionsInterface (from `../node_modules/unimodules-permissions-interface/ios`)
-  - "UMReactNativeAdapter (from `../node_modules/@unimodules/react-native-adapter/ios`)"
-  - UMSensorsInterface (from `../node_modules/unimodules-sensors-interface/ios`)
-  - UMTaskManagerInterface (from `../node_modules/unimodules-task-manager-interface/ios`)
+  - "UMCameraInterface (from `../node_modules/@dish/app/node_modules/unimodules-camera-interface/ios`)"
+  - "UMConstantsInterface (from `../node_modules/@dish/app/node_modules/unimodules-constants-interface/ios`)"
+  - "UMCore (from `../node_modules/@dish/app/node_modules/@unimodules/core/ios`)"
+  - "UMFaceDetectorInterface (from `../node_modules/@dish/app/node_modules/unimodules-face-detector-interface/ios`)"
+  - "UMFileSystemInterface (from `../node_modules/@dish/app/node_modules/unimodules-file-system-interface/ios`)"
+  - "UMFontInterface (from `../node_modules/@dish/app/node_modules/unimodules-font-interface/ios`)"
+  - "UMImageLoaderInterface (from `../node_modules/@dish/app/node_modules/unimodules-image-loader-interface/ios`)"
+  - "UMPermissionsInterface (from `../node_modules/@dish/app/node_modules/unimodules-permissions-interface/ios`)"
+  - "UMReactNativeAdapter (from `../node_modules/@dish/app/node_modules/@unimodules/react-native-adapter/ios`)"
+  - "UMSensorsInterface (from `../node_modules/@dish/app/node_modules/unimodules-sensors-interface/ios`)"
+  - "UMTaskManagerInterface (from `../node_modules/@dish/app/node_modules/unimodules-task-manager-interface/ios`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -587,29 +587,29 @@ EXTERNAL SOURCES:
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXApplication:
-    :path: "../node_modules/expo-application/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-application/ios"
   EXConstants:
-    :path: "../node_modules/expo-constants/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-constants/ios"
   EXErrorRecovery:
-    :path: "../node_modules/expo-error-recovery/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-error-recovery/ios"
   EXFileSystem:
-    :path: "../node_modules/expo-file-system/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-file-system/ios"
   EXFont:
-    :path: "../node_modules/expo-font/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-font/ios"
   EXImageLoader:
-    :path: "../node_modules/expo-image-loader/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-image-loader/ios"
   EXKeepAwake:
-    :path: "../node_modules/expo-keep-awake/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-keep-awake/ios"
   EXLinearGradient:
-    :path: "../node_modules/expo-linear-gradient/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-linear-gradient/ios"
   EXPermissions:
-    :path: "../node_modules/expo-permissions/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-permissions/ios"
   ExpoModulesCore:
-    :path: "../node_modules/expo-modules-core/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-modules-core/ios"
   EXScreenOrientation:
-    :path: "../node_modules/expo-screen-orientation/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-screen-orientation/ios"
   EXSplashScreen:
-    :path: "../node_modules/expo-splash-screen/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-splash-screen/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -681,31 +681,31 @@ EXTERNAL SOURCES:
   RNSVG:
     :path: "../node_modules/react-native-svg"
   UMAppLoader:
-    :path: "../node_modules/unimodules-app-loader/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-app-loader/ios"
   UMBarCodeScannerInterface:
     :path: "../node_modules/unimodules-barcode-scanner-interface/ios"
   UMCameraInterface:
-    :path: "../node_modules/unimodules-camera-interface/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-camera-interface/ios"
   UMConstantsInterface:
-    :path: "../node_modules/unimodules-constants-interface/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-constants-interface/ios"
   UMCore:
-    :path: "../node_modules/@unimodules/core/ios"
+    :path: "../node_modules/@dish/app/node_modules/@unimodules/core/ios"
   UMFaceDetectorInterface:
-    :path: "../node_modules/unimodules-face-detector-interface/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-face-detector-interface/ios"
   UMFileSystemInterface:
-    :path: "../node_modules/unimodules-file-system-interface/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-file-system-interface/ios"
   UMFontInterface:
-    :path: "../node_modules/unimodules-font-interface/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-font-interface/ios"
   UMImageLoaderInterface:
-    :path: "../node_modules/unimodules-image-loader-interface/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-image-loader-interface/ios"
   UMPermissionsInterface:
-    :path: "../node_modules/unimodules-permissions-interface/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-permissions-interface/ios"
   UMReactNativeAdapter:
-    :path: "../node_modules/@unimodules/react-native-adapter/ios"
+    :path: "../node_modules/@dish/app/node_modules/@unimodules/react-native-adapter/ios"
   UMSensorsInterface:
-    :path: "../node_modules/unimodules-sensors-interface/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-sensors-interface/ios"
   UMTaskManagerInterface:
-    :path: "../node_modules/unimodules-task-manager-interface/ios"
+    :path: "../node_modules/@dish/app/node_modules/unimodules-task-manager-interface/ios"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -755,7 +755,7 @@ SPEC CHECKSUMS:
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-mapbox-gl: 8cdd3bc47a3acd3c1a5c4cff5fd48b6a0e385dfc
-  react-native-safe-area-context: b6e0e284002381d2ff29fa4fff42b4d8282e3c94
+  react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
   React-RCTAnimation: 6a2e76ab50c6f25b428d81b76a5a45351c4d77aa
@@ -768,14 +768,14 @@ SPEC CHECKSUMS:
   React-RCTVibration: 24600e3b1aaa77126989bc58b6747509a1ba14f3
   React-runtimeexecutor: a9904c6d0218fb9f8b19d6dd88607225927668f9
   ReactCommon: 149906e01aa51142707a10665185db879898e966
-  RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
+  RNFastImage: a7384db75df352500261e8e8f1ac2026def26102
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
-  RNSentry: e86fb2e2fec0365644f4b582938bf66be515acce
+  RNSentry: 68644ef607b780551cc555f084869764f2566652
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
-  Sentry: 9d055e2de30a77685e86b219acf02e59b82091fc
+  Sentry: 1d3eb1a25f8c5333c88dd5603904a6d461cd9fcf
   UMAppLoader: 92d044af52626af3d81a69796ad666fc7a9a7d78
   UMBarCodeScannerInterface: 3f6c1b09ef4b867ce752b8c0b3893bcf9cd85f32
   UMCameraInterface: d516032121192fee9a6c93bdfff0bb2cc7282796
