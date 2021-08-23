@@ -21,7 +21,7 @@ if (isSSR) {
 
 if (process.env.TARGET === 'native') {
   global['matchMedia'] = require('snackui').matchMedia
-  window['matchMedia'] = require('snackui').matchMedia
+  window['matchMedia'] = global['matchMedia']
 
   if (process.env.NODE_ENV === 'development') {
     console.log('⬇️ ⬇️ ⬇️ set debugger here for repl on stuff')
@@ -35,14 +35,16 @@ if (process.env.TARGET === 'native') {
   }
 }
 
-global['stores'] = UseStore.allStores
-global['$'] = UseStore.allStores
-global['useStore'] = UseStore
-// @ts-ignore
-global['React'] = React
-global['gqty'] = gqty
-global['map'] = window['map'] // defined in Map
-global['mapHelpers'] = window['mapHelpers'] // defined in Map
+if (process.env.NODE_ENV === 'development') {
+  global['stores'] = UseStore.allStores
+  global['$'] = UseStore.allStores
+  global['useStore'] = UseStore
+  // @ts-ignore
+  global['React'] = React
+  global['gqty'] = gqty
+  global['map'] = window['map'] // defined in Map
+  global['mapHelpers'] = window['mapHelpers'] // defined in Map
+}
 
 if (typeof global !== 'undefined') {
   global['requestIdleCallback'] = global['requestIdleCallback'] || setTimeout
