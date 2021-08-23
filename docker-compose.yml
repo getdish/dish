@@ -469,6 +469,8 @@ services:
     build:
       context: ./services/redis
       dockerfile: ./Dockerfile
+    volumes:
+      - ${REDIS_DB_DIR?err}:/data
     ports:
       - ${REDIS_PORT:-6379}:6379
 
