@@ -1,5 +1,5 @@
 import { SEARCH_DOMAIN } from '../constants'
-import { HomeMeta, RestaurantOnlyIds, RestaurantSearchArgs, TopCuisine } from '../typesExtra'
+import { HomeMeta, RestaurantOnlyIds, RestaurantSearchArgs } from '../typesExtra'
 
 export type RestaurantItemMeta = {
   effective_score: number
@@ -49,7 +49,6 @@ export async function search({
     'main_tag=' + main_tag,
   ]
   const url = SEARCH_DOMAIN + '/search?' + params.join('&')
-  console.log('search', url)
   const result = await fetch(url).then((res) => res.json())
   return result
 }

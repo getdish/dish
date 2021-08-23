@@ -71,11 +71,18 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     console.log(` [gqty] =>`, JSON.stringify(json, null, 2))
   }
   if (json.errors) {
-    const message = ` [gqty] errors ${JSON.stringify(json.errors, null, 2)}`
-    console.error()
+    let message = ` [gqty] errors ${JSON.stringify(json.errors, null, 2)}`
+
+    if (process.env.NODE_ENV !== 'production') {
+      // prettier-ignore
+      message += `\nvia query: ${JSON.stringify({ query, variables }, null, 2)}`
+    }
+
     // in test mode bail on first error
     if (process.env.NODE_ENV === 'test') {
       throw new Error(message)
+    } else {
+      console.error(message)
     }
   }
   return json
