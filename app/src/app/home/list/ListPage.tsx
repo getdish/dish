@@ -534,6 +534,7 @@ const ListPageContent = memo(
                           onPress={async () => {
                             assertPresent(list.id, 'no list id')
                             if (confirm('Permanently delete this list?')) {
+                              router.setRouteAlert(null)
                               await mutate((mutation) => {
                                 return mutation.delete_list({
                                   where: {

@@ -155,6 +155,7 @@ class SearchPageStore extends Store<{ id: string }> {
     if (!res) {
       console.log('no res', res)
       this.status = 'complete'
+      this.results = []
       return
     }
     // only update searchkey once finished

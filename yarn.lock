@@ -6407,21 +6407,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:17.0.6":
-  version: 17.0.6
-  resolution: "@types/react-dom@npm:17.0.6"
+"@types/react-dom@npm:^16.9.8":
+  version: 16.9.14
+  resolution: "@types/react-dom@npm:16.9.14"
   dependencies:
-    "@types/react": "*"
-  checksum: cc167c24a77cef2be8dcabd1bbe8b95c0d713b943b2f1c8a1468c8009c50daad51a46859a217a8383b89bb4ea499937d405699ce8db164f70c871f9d22d703f0
+    "@types/react": ^16
+  checksum: 68a4ee88f7a56cdbfbca24b1936b9aa5dad8b40ffbf1f047ddf990454aec6e0c9da2a01c9ae87045e95236602061646c90d02f01281533e14f1970687873030f
   languageName: node
   linkType: hard
 
-"@types/react-native@npm:0.64.2":
-  version: 0.64.2
-  resolution: "@types/react-native@npm:0.64.2"
+"@types/react-native@npm:*, @types/react-native@npm:^0.64.2":
+  version: 0.64.13
+  resolution: "@types/react-native@npm:0.64.13"
   dependencies:
     "@types/react": "*"
-  checksum: bd8b49b955a9dd541b556f948a1b04912f91e9415c43d0d8003d55946eb03566f87fe9c3bb375d1e10367721cdca52e1a5ca5478563e90b91bc7f930ecfdbb5d
+  checksum: 3e53cc7d31d5b3a134871bcc6a0c61c10caecc90f5b2d691fd8f8a480f145395098924146a05a4eb7d1a1ddaa516becdc600cdf1d50a6443e4324f94ec2e987e
+  languageName: node
+  linkType: hard
+
+"@types/react-native@npm:^0.62.12":
+  version: 0.62.18
+  resolution: "@types/react-native@npm:0.62.18"
+  dependencies:
+    "@types/react": "*"
+  checksum: 0771a77366c9a59a47ab7f0fc4997b971b074c958ba467a3e609911c81c7435e97d2f4403f199bafd499a1d5e7fb34ee271b0dc09f61141650cb6f0f70b99670
   languageName: node
   linkType: hard
 
@@ -6434,14 +6443,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.9":
-  version: 17.0.9
-  resolution: "@types/react@npm:17.0.9"
+"@types/react@npm:*, @types/react@npm:^17.0.19":
+  version: 17.0.19
+  resolution: "@types/react@npm:17.0.19"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: c626e3ca42b6173b0617102af6c1c8c6068f69fafeba51f5d614962cabaf98a5706295081941ece93da04117268cb0aad471be87e76dde7e0d5f79a46280c586
+  checksum: d5af52623dd863e5a9f64eb72979f19c21e03012e25ee93adc93f664ed7976e81b654128dc653b225ad5ba2aaae24e0febe37face272bb051d6289e23ed7177d
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^16, @types/react@npm:^16.9.35, @types/react@npm:^16.9.44":
+  version: 16.14.14
+  resolution: "@types/react@npm:16.14.14"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: 8b3e543bcde1f244246dff0a73ef604880514799a9e8c0d1371d3ac79f0b6b1e5aef27fa28a5bb66991e28662764bc40bff926de07762e8d5ff480bb372dc1de
   languageName: node
   linkType: hard
 
@@ -10809,6 +10829,7 @@ __metadata:
     "@types/express-http-proxy": ^1.6.1
     "@types/fs-extra": ^9.0.11
     "@types/node": ^14.14.12
+    "@types/react": ^17.0.19
     "@types/react-native": ^0.64.2
     "@typescript-eslint/eslint-plugin": ^4.29.2
     "@typescript-eslint/parser": ^4.29.2
