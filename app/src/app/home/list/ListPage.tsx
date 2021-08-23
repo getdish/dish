@@ -545,9 +545,7 @@ const ListPageContent = memo(
                                 })?.__typename
                               })
                               Toast.show('Deleted list')
-                              router.navigate({
-                                name: 'home',
-                              })
+                              homeStore.popBack()
                             }
                           }}
                         />
