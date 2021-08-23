@@ -1,5 +1,5 @@
 // @ts-ignore
-import { startTransition } from 'react'
+// import { startTransition } from 'react'
 
 import { UNWRAP_PROXY } from './constants'
 import { shouldDebug } from './useStoreDebug'
@@ -39,9 +39,10 @@ export class Store<Props extends Object | null = null> {
   }
 
   [TRIGGER_UPDATE]() {
-    startTransition(() => {
-      this._listeners.forEach((cb) => cb())
-    })
+    // this can't be wholesale...
+    // startTransition(() => {
+    this._listeners.forEach((cb) => cb())
+    // })
   }
 
   [ADD_TRACKER](tracker: StoreTracker) {
