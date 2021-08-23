@@ -1,10 +1,13 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
-export const useLastValue = (a: any) => {
-  const last = useRef(a)
-  return useMemo(() => {
-    const val = last.current
-    last.current = a
-    return val
-  }, [a])
+export const useLastValue = (val: any) => {
+  const ref = useRef()
+
+  useEffect(() => {
+    return () => {
+      ref.current = val
+    }
+  }, [val])
+
+  return ref
 }

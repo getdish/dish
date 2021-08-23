@@ -172,6 +172,7 @@ const SearchPageContent = memo(function SearchPageContent(
     if (!props.isActive) return
     // this should fix going back to search results triggering search
     if (!wasActive) return
+    console.log('searchpage run search', props.isActive, wasActive, props)
     searchPageStore.runSearch({})
   }, [searchKey])
 
