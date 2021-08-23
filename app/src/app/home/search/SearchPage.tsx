@@ -126,27 +126,16 @@ const SearchPageContent = memo(function SearchPageContent(
   const { item } = props
   const location = useLocationFromRoute(props.route)
   const tags = useTagsFromRoute(props.route)
-  const searchPageStore = useSearchPageStore(
-    {
-      id: props.item.id,
-    }
-    // {
-    //   debug: true,
-    // }
-  )
+  const searchPageStore = useSearchPageStore({
+    id: props.item.id,
+  })
   const searchState = useHomeStateById<HomeStateItemSearch>(item.id)
   const { center, span } = searchState
   const { results, searchRegion, status } = searchPageStore
   const isLoading = status === 'loading'
 
-  usePageLoadEffect(props, ({ item, isRefreshing }) => {
+  usePageLoadEffect(props, ({ isRefreshing }) => {
     if (isRefreshing && props.isActive) {
-      homeStore.updateHomeState(`SearchPage.refresh`, {
-        id: item.id,
-        // set new position span before refreshing search
-        center: appMapStore.nextPosition.center,
-        span: appMapStore.nextPosition.span,
-      })
       searchPageStore.refresh()
     }
   })

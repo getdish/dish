@@ -244,7 +244,10 @@ function getOrCreateStoreInfo(
 
   const store = createProxiedStore(storeInfo)
 
-  allStores[uid] = store
+  // uses more memory when on
+  if (process.env.NODE_ENV === 'development') {
+    allStores[uid] = store
+  }
 
   // if has a mount function call it
   store.mount?.()

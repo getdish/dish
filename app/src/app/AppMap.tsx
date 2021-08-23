@@ -481,6 +481,10 @@ class AppMapStore extends Store {
     this.region = val.region || null
   }
 
+  setPositionToNextPosition() {
+    this.position = this.nextPosition
+  }
+
   // only use this directly if you *dont* want to preserve the map position in history
   // if you want it in history, see homeStore.updateCurrentState('', { center, span })
   // TODO should make this private and have a scarier function exported just for this

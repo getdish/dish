@@ -59,6 +59,13 @@ class SearchPageStore extends Store<{ id: string }> {
   }
 
   refresh() {
+    appMapStore.setPositionToNextPosition()
+    homeStore.updateHomeState(`SearchPage.refresh`, {
+      id: this.props.id,
+      // set new position span before refreshing search
+      center: appMapStore.nextPosition.center,
+      span: appMapStore.nextPosition.span,
+    })
     this.results = []
     this.runSearch({ force: true })
   }
@@ -81,10 +88,10 @@ class SearchPageStore extends Store<{ id: string }> {
       return
     }
     const tags = state ? getActiveTags(state) : []
-    const center = appMapStore.nextPosition.center
-    const span = appMapStore.nextPosition.span
+    const center = appMapStore.position.center
+    const span = appMapStore.position.span
     const dishSearchedTag = tags.find((k) => allTags[k.slug!]?.type === 'dish')?.slug
-    let otherTags = tags
+    const otherTags = tags
       .map((tag) => tag.slug?.replace('lenses__', '').replace('filters__', '') ?? '')
       .filter((t) => (dishSearchedTag ? !t.includes(dishSearchedTag) : true))
     const mainTag = dishSearchedTag ?? otherTags[0]
