@@ -96,23 +96,15 @@ const isParallelizableTestPackageJson = (x) => {
 async function execPromise(command: string, opts?: ExecOptions) {
   return await new Promise((res, rej) => {
     exec(command, opts, (err, stdout, stderr) => {
-      let out = ''
-      out += `\n\n--- [test] ${opts?.cwd ?? '.'}: ${command}\n`
+      let out = `${stdout}\n`
       if (stderr && stderr !== stdout) {
-        out += `stderr (running ${command} in ${opts?.cwd ?? ''}):` + '\n' + stderr + '\n'
-      }
-      if (err) {
-        out += `Error running: ${err}\n`
-        return rej(err)
-      }
-      if (stdout) {
-        out += `stdout: ${stdout}\n`
-      }
-      if (stderr) {
         out += `stderr: ${stderr}\n`
       }
-      console.log(out)
-      res(stdout)
+      if (err) {
+        out += `Error in execPromise: ${err.message}\nStack: ${err.stack}\n`
+        return rej(new Error(out))
+      }
+      res(out)
     })
   })
 }
@@ -130,19 +122,24 @@ async function runAllTests() {
     const dir = dirname(path)
     const name = basename(dir)
     try {
-      console.log(`\n\n🏃‍♀️ Run test ${name} in dir ${dir}`)
-      await execPromise(`npm test`, {
+      console.log(`\n\n🏃 run test ${name} in dir ${dir}`)
+      const out = await execPromise(`npm test`, {
         cwd: dir,
       })
-      console.log(' END test: ', name, '\n\n')
+      console.log(`--- [test] ${dir}`)
+      console.log(out)
       // this was buggy, not outputting errors and pipes didnt work right
       // $.verbose = false
       // cd(dir)
       // await $`npm test`.pipe(prefixer)
       // $.verbose = true
     } catch (err) {
-      console.log('Error running tests for', name, 'exit')
+      console.log('--- Error running tests for', name, 'exiting')
+      console.log(err.message)
+      console.log(err.stack)
       process.exit(1)
+    } finally {
+      console.log(' END test: ', name, '\n\n')
     }
   }
 

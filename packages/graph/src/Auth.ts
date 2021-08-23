@@ -56,7 +56,7 @@ export async function userFetchSimple(
     if (response.status == 401) {
       handleLogOut?.()
     }
-    console.error('Auth fetch() error', url, method, response.status, response.statusText)
+    console.log('Auth fetch() error', url, method, response.status, response.statusText)
   }
   return response
 }
@@ -153,7 +153,7 @@ class AuthModel {
       password,
     })
     if (response.status != 201 && response.status != 200) {
-      console.error(`Couldn't login, invalid login or password or missing user`)
+      console.warn(`Couldn't login, invalid login or password or missing user`)
       return [response.status, response.statusText] as const
     }
     const data = await response.json()
@@ -180,7 +180,7 @@ class AuthModel {
       redirectUri: Auth.getRedirectUri(),
     })
     if (response.status != 201 && response.status != 200) {
-      console.error(`Couldn't login apple auth`)
+      console.warn(`Couldn't login apple auth`)
       throw new Error(response.statusText)
     }
     const data = await response.json()

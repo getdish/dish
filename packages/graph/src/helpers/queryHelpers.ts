@@ -25,7 +25,6 @@ import {
 } from '../helpers/queryResolvers'
 import { ModelName, ModelType, WithID } from '../types'
 import { isMutatableField, isMutatableRelation } from './isMutatableField'
-import { DISH_DEBUG } from '..'
 
 type scaleUid = Scalars['uuid']
 
@@ -34,7 +33,7 @@ export function objectToWhere(hash: { [key: string]: any }): any {
   if ('id' in hash) {
     return { where: { id: { _eq: hash.id } } }
   }
-  let where = Object.keys(hash).map((key) => {
+  const where = Object.keys(hash).map((key) => {
     return { [key]: { _eq: hash[key] } }
   })
   return {

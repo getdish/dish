@@ -190,6 +190,7 @@ const SearchPageContent = memo(function SearchPageContent(
     isActive: props.isActive,
     results,
     showRank: true,
+    zoomOnHover: true,
     hideRegions: !searchRegion,
     center,
     span,
