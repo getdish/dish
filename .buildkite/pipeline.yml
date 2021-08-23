@@ -72,9 +72,9 @@ steps:
     depends_on: base
     command: ./dsh compose_build_and_push bert
 
-  - label: ":docker: build gorse"
-    key: gorse
-    command: ./dsh compose_build_and_push gorse
+  # - label: ":docker: build gorse"
+  #   key: gorse
+  #   command: ./dsh compose_build_and_push gorse
 
   - label: "done with test images"
     command: "true"

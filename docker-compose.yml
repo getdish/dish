@@ -509,18 +509,18 @@ services:
     environment:
       <<: *dish-env
 
-  gorse:
-    image: registry.dishapp.com/dish-gorse${DISH_IMAGE_TAG}
-    networks:
-      - default
-    build:
-      context: ./services/gorse
-      dockerfile: ./Dockerfile
-    volumes:
-      - /var/data/gorse:/data
-      - ./services/gorse/config.local.toml:/app/config.toml
-    ports:
-      - 9000:9000
+  # gorse:
+  #   image: registry.dishapp.com/dish-gorse${DISH_IMAGE_TAG}
+  #   networks:
+  #     - default
+  #   build:
+  #     context: ./services/gorse
+  #     dockerfile: ./Dockerfile
+  #   volumes:
+  #     - /var/data/gorse:/data
+  #     - ./services/gorse/config.local.toml:/app/config.toml
+  #   ports:
+  #     - 9000:9000
 
   cron:
     image: registry.dishapp.com/dish-cron${DISH_IMAGE_TAG}

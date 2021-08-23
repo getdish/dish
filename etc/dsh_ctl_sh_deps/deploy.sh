@@ -56,9 +56,9 @@ function deploy_all() {
   deploy_portainer
   deploy_registry
   # let registry come online if necessary
-  sleep 1 && docker_login || sleep 10 || docker_login || exit 1
-  deploy_swarmprom
-  deploy_dish
+  sleep 10 && docker_login || sleep 10 && docker_login || exit 1
+  # deploy_swarmprom
+  deploy_dish_stack
 }
 
 function deploy_dish_stack() {
