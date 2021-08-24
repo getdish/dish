@@ -97,7 +97,7 @@ export const RestaurantAddToListModal = graphql(
                     theme="active"
                     // TODO
                     borderRadius={1000}
-                    icon={<Plus size={16} color="#fff" />}
+                    icon={<Plus size={12} color="#fff" />}
                     onPress={async () => {
                       await mutation({
                         fn: (m) => {
@@ -112,7 +112,9 @@ export const RestaurantAddToListModal = graphql(
                       })
                       Toast.success(`Added!`)
                     }}
-                  />
+                  >
+                    Add
+                  </Button>
                 )}
 
                 {isAdded && (
