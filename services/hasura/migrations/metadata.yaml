@@ -751,6 +751,14 @@ tables:
     schema: public
     name: review
   object_relationships:
+  - name: list
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: list
+        column_mapping:
+          list_id: id
   - name: restaurant
     using:
       foreign_key_constraint_on: restaurant_id

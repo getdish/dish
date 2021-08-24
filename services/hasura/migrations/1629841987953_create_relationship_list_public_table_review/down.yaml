@@ -1,6 +1,6 @@
-- type: drop_relationship
-  args:
+- args:
     relationship: list
     table:
       name: review
       schema: public
+  type: drop_relationship
