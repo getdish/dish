@@ -231,7 +231,7 @@ async function getCachedSelections(
 
   const data = {}
   const aliasToCacheKey: CacheKeys = {}
-  let uncached: SelectionNode[] = []
+  const uncached: SelectionNode[] = []
   let numPartiallyCached = 0
 
   for (const selection of selectionSetIn.selections) {
