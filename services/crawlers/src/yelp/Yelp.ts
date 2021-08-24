@@ -335,6 +335,7 @@ export class Yelp extends WorkerJob {
   async getEmbeddedJSONData(id: string, yelp_path: string, id_from_source: string) {
     this.current_biz_path = yelp_path
     this.log(`getting embedded JSON for: ${yelp_path}`)
+    // @ts-ignore
     const [dynamicIns, ldjsonsIn] = await yelpAPIMobile.getScriptData(yelp_path, [
       'script[data-hypernova-key*="__mobile_site__Biz__dynamic"]',
       'script[type*="application/ld+json"]',
