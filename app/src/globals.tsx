@@ -6,6 +6,8 @@ import { isSSR } from './constants/constants'
 
 Error.stackTraceLimit = Infinity
 
+global['React'] = React
+
 const gqty = {
   query,
   mutation,
@@ -40,7 +42,6 @@ if (process.env.NODE_ENV === 'development') {
   global['$'] = UseStore.allStores
   global['useStore'] = UseStore
   // @ts-ignore
-  global['React'] = React
   global['gqty'] = gqty
   global['map'] = window['map'] // defined in Map
   global['mapHelpers'] = window['mapHelpers'] // defined in Map
