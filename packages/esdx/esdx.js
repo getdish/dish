@@ -22,17 +22,33 @@ async function go({ legacy, skipTypes }) {
       return
     }
     await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
-    const dts = await emitFlatDts({
-      file: 'types.d.ts',
-      internal: '**/*.native',
-      compilerOptions: {
-        declarationMap: true,
-      },
-    })
-    if (dts.diagnostics.length) {
-      console.log(dts.formatDiagnostics())
+    // if its already a single-file we need to handle it diff
+    if (await fs.pathExists('index.d.ts')) {
+      await fs.remove('types.d.ts')
+      await fs.remove('types.d.ts.map')
+      await fs.move('index.d.ts', 'types.d.ts')
+      await fs.move('index.d.ts.map', 'types.d.ts.map')
+      const contents = await fs.readFile('types.d.ts', 'utf8')
+      await fs.writeFile(
+        'types.d.ts',
+        contents.replace(
+          '//# sourceMappingURL=index.d.ts.map',
+          '//# sourceMappingURL=types.d.ts.map'
+        )
+      )
+    } else {
+      const dts = await emitFlatDts({
+        file: 'types.d.ts',
+        internal: '**/*.native',
+        compilerOptions: {
+          declarationMap: true,
+        },
+      })
+      if (dts.diagnostics.length) {
+        console.log(dts.formatDiagnostics())
+      }
+      dts.writeOut('.')
     }
-    dts.writeOut('.')
   }
 
   let files = (await fg(['src/**/*.ts', 'src/**/*.tsx'])).filter((x) => !x.includes('.d.ts'))

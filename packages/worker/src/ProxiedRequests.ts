@@ -37,7 +37,7 @@ export class ProxiedRequests {
     return await this.get(uri, props).then((x) => x.json() as Promise<{ [key: string]: any }>)
   }
 
-  async getScriptData(uri: string, selectors: string[]) {
+  async getScriptData(uri: string, selectors: string[]): Promise<any> {
     return await fetchBrowserScriptData(this.domain + uri, selectors)
   }
 

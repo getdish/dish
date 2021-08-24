@@ -10,6 +10,7 @@ const USE_MEMORY =
   process.env.TARGET === 'node' ||
   typeof document === 'undefined' ||
   navigator?.userAgent.includes('jsdom')
+
 const history = USE_MEMORY ? createMemoryHistory() : createBrowserHistory()
 
 // need them to declare the types here

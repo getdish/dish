@@ -82,6 +82,7 @@ export const yelp: Partial<YelpScrape> = {
   source: 'yelp',
   id_from_source: 'test123',
   data: {
+    yelp_path: '',
     data_from_search_list_item: {
       name: 'Test Name Yelp',
       formattedAddress: '123 Street, Big City, America',

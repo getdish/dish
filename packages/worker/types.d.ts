@@ -20,7 +20,7 @@ declare module "@dish/worker" {
 
 declare module "@dish/worker" {
     import { FetchOptions } from "make-fetch-happen";
-    type Opts = FetchOptions & {
+    type Opts = Partial<FetchOptions> & {
         skipBrowser?: boolean;
     };
     export class ProxiedRequests {
