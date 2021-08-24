@@ -75,7 +75,7 @@ function migrate_hasura() {
     --endpoint "$HASURA_ENDPOINT" \
     --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   popd
-  echo "init functions"
+  echo "hasura init functions"
   pushd "$PROJECT_ROOT/services/hasura"
   cat functions/*.sql |
     PGPASSWORD=$POSTGRES_PASSWORD psql \
@@ -85,6 +85,8 @@ function migrate_hasura() {
       -d "${POSTGRES_DB:-dish}" \
       --single-transaction
   popd
+  echo "hasura migrate status"
+  hasura migrate status --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
 }
 
 function dump_scrape_data_to_s3() {
