@@ -31,6 +31,7 @@ import {
   Title,
   Toast,
   VStack,
+  useForceUpdate,
 } from 'snackui'
 
 import { red400 } from '../../../constants/colors'
@@ -203,8 +204,8 @@ function useListRestaurants(list?: list) {
           assertPresent(userStore.user, 'no user')
           return mutation.insert_list_restaurant_one({
             object: {
-              // negative to go first + space it out
-              position: -items.length * Math.round(1000 * Math.random()),
+              // space it out
+              position: items.length * Math.round((1000 - items.length) * Math.random()),
               list_id: listId,
               restaurant_id: id,
               user_id: userStore.user.id,
@@ -314,9 +315,14 @@ const ListPageContent = memo(
       const [restaurants, restaurantActions] = useListRestaurants(list)
       const region = useRegionQuery(props.item.region)
 
-      // TESTING
-      const listThemeIndex = (list?.color ?? 0) > 10 ? 0 : 1 // list.theme
+      const listThemeIndex = list.theme ?? 0
+      const forceUpdate = useForceUpdate()
       const listTheme = listThemes[listThemeIndex]
+
+      const setTheme = (val: number) => {
+        list.theme = val
+        forceUpdate()
+      }
 
       useSnapToFullscreenOnMount()
 
@@ -483,46 +489,40 @@ const ListPageContent = memo(
                   )}
                 </PaneControlButtonsLeft>
 
-                {/* overflow clip prevention with marginVerticals here */}
-                <VStack position="relative" marginHorizontal={-20}>
-                  <ListPageTitle
-                    listTheme={listTheme}
-                    isLight={isLight}
-                    locationName={region.data?.name ?? props.item.region}
-                    list={list}
-                    isEditing={isEditing}
-                    draft={draft}
-                  />
-                </VStack>
-
                 {isMyList && (
                   <>
                     {isEditing && (
-                      <HStack spacing alignItems="center" justifyContent="center">
+                      <HStack paddingTop={60} spacing alignItems="center" justifyContent="center">
                         <Paragraph>Color:</Paragraph>
 
                         <ColorPicker colors={listColors} color={color} onChange={setColor} />
 
-                        <Paragraph>Theme:</Paragraph>
-                        <InteractiveContainer>
-                          <Button
-                            borderRadius={0}
+                        <InteractiveContainer alignItems="center">
+                          <Paragraph
                             onPress={() => {
-                              list.theme = 0
+                              setTheme(0)
                             }}
-                            active={listTheme === 'modern'}
+                            paddingVertical={6}
+                            paddingHorizontal={12}
                           >
                             Modern
-                          </Button>
-                          <Button
-                            borderRadius={0}
-                            onPress={() => {
-                              list.theme = 1
+                          </Paragraph>
+                          <Switch
+                            value={list.theme === 1}
+                            onValueChange={(isOn) => {
+                              console.log('?')
+                              setTheme(isOn ? 1 : 0)
                             }}
-                            active={listTheme === 'minimal'}
+                          />
+                          <Paragraph
+                            onPress={() => {
+                              setTheme(1)
+                            }}
+                            paddingVertical={6}
+                            paddingHorizontal={12}
                           >
                             Minimal
-                          </Button>
+                          </Paragraph>
                         </InteractiveContainer>
 
                         <Paragraph>Public:</Paragraph>
@@ -553,6 +553,18 @@ const ListPageContent = memo(
                     )}
                   </>
                 )}
+
+                {/* overflow clip prevention with marginVerticals here */}
+                <VStack position="relative" marginHorizontal={-20}>
+                  <ListPageTitle
+                    listTheme={listTheme}
+                    isLight={isLight}
+                    locationName={region.data?.name ?? props.item.region}
+                    list={list}
+                    isEditing={isEditing}
+                    draft={draft}
+                  />
+                </VStack>
 
                 {!!(list.description || isEditing) && (
                   <>
@@ -626,12 +638,6 @@ const ListPageContent = memo(
                       borderRadius={10}
                     >
                       <Paragraph fontWeight="800">Nothing added to this list, yet.</Paragraph>
-                      {isMyList && (
-                        <Paragraph>
-                          Use the blue (+) button at the bottom. You can also add from any search
-                          page results.
-                        </Paragraph>
-                      )}
                     </VStack>
                   )}
 
@@ -704,6 +710,25 @@ const ListPageContent = memo(
                         </React.Fragment>
                       )
                     }
+                  )}
+
+                  {isMyList && (
+                    <HStack paddingHorizontal={20}>
+                      <Button
+                        onPress={() => {
+                          setShowAddModal(true)
+                        }}
+                        icon={<Plus size={16} color="rgba(150,150,150,0.8)" />}
+                        paddingVertical={20}
+                        paddingHorizontal={30}
+                        textProps={{
+                          fontSize: 18,
+                          fontWeight: '700',
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </HStack>
                   )}
                 </VStack>
               </PageContentWithFooter>
