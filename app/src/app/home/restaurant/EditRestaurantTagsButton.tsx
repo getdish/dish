@@ -59,7 +59,7 @@ export const EditRestaurantTagsButton = graphql(
           limit: 1,
         })[0]
       })
-      return sortBy(items, (x) => slugs.indexOf(x.tag.slug ?? ''))
+      return sortBy(items, (x) => slugs.indexOf(x?.tag?.slug ?? ''))
     })()
 
     const restDishes = restaurant.tags({
@@ -79,9 +79,10 @@ export const EditRestaurantTagsButton = graphql(
       setSlugs(tagSlugs)
     }, [JSON.stringify(tagSlugs)])
 
-    function getDishItem(dish: restaurant_tag, before: any = null, after: any = null) {
+    function getDishItem(dish?: restaurant_tag, before: any = null, after: any = null) {
+      if (!dish) return null
       return (
-        <HStack key={dish.tag.slug} spacing padding={5} alignItems="center">
+        <HStack key={dish.tag?.slug} spacing padding={5} alignItems="center">
           {before}
           {!!dish.photos ? (
             <Image
@@ -91,7 +92,7 @@ export const EditRestaurantTagsButton = graphql(
           ) : (
             <Circle backgroundColor="rgba(150,150,150,0.29)" size={40} />
           )}
-          <Title>{dish.tag.name}</Title>
+          <Title>{dish.tag?.name}</Title>
           <VStack flex={1} />
           {after}
         </HStack>
@@ -168,7 +169,7 @@ export const EditRestaurantTagsButton = graphql(
               <Spacer />
 
               {restDishes.map((dish) => {
-                dish.tag.slug
+                dish.tag?.slug
                 return getDishItem(
                   dish,
                   <VStack
