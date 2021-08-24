@@ -19,6 +19,7 @@ import { PageHead } from '../../views/PageHead'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { PageContentWithFooter } from '../PageContentWithFooter'
+import { getSearchPageStore } from '../search/SearchPageStore'
 import { RestaurantDishRow } from './RestaurantDishRow'
 import { RestaurantHeader } from './RestaurantHeader'
 import { RestaurantLists } from './RestaurantLists'
@@ -69,6 +70,11 @@ const RestaurantPage = memo(
       const [reviewsSection, setReviewsSection] = useState<View | HTMLElement | null>(null)
       const [dishesSection, setDishesSection] = useState<View | null>(null)
 
+      // preload from search
+      const restaurantFromSearch = getSearchPageStore().results.find(
+        (x) => x.slug === item.restaurantSlug
+      )
+
       const position = useMemo(() => {
         return {
           center: {
@@ -91,7 +97,7 @@ const RestaurantPage = memo(
         results: [
           {
             slug: restaurantSlug,
-            id: restaurant?.id,
+            id: restaurantFromSearch?.id ?? restaurant?.id,
           },
         ],
         ...position,
