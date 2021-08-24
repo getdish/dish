@@ -18,13 +18,11 @@ import {
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { isHermes } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
-import { appMenuStore } from './AppMenuStore'
 import { appStore } from './AppStore'
 import { AuthForm } from './AuthForm'
+import { MenuLinkButton } from './MenuLinkButton'
 import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
-import { LinkButton } from './views/LinkButton'
-import { LinkButtonProps } from './views/LinkProps'
 import { LogoColor } from './views/Logo'
 
 export const AppMenuContents = memo(
@@ -172,18 +170,3 @@ export const AppMenuContents = memo(
     )
   }
 )
-
-const MenuLinkButton = (props: LinkButtonProps) => {
-  return (
-    <LinkButton
-      width="100%"
-      paddingVertical={16}
-      paddingHorizontal={16}
-      borderRadius={0}
-      backgroundColor="transparent"
-      justifyContent="flex-start"
-      onPressOut={appMenuStore.hide}
-      {...props}
-    />
-  )
-}

@@ -70,6 +70,7 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
+    "@types/react": "17.0.19",
     "react": "18.0.0-alpha-568dc3532",
     "react-dom": "18.0.0-alpha-568dc3532",
     "react-refresh": "0.11.0-alpha-568dc3532",
