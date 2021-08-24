@@ -43,12 +43,11 @@ function compose_up_subset() {
   if [ -z "$services" ]; then
     echo "⚠️ no services specified"
   fi
+  echo "$dc up $flags $extra $services"
   if [ -z "$extra" ]; then
-    echo "$dc $flags $services"
-    $dc $flags $services
+    $dc up $flags $services
   else
-    echo "$dc $flags $extra $services"
-    $dc $flags "$extra" $services
+    $dc up $flags $extra $services
   fi
   printf "\n\n\n"
 }

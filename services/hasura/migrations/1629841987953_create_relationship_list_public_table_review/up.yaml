@@ -1,5 +1,4 @@
-- type: create_object_relationship
-  args:
+- args:
     name: list
     table:
       name: review
@@ -11,3 +10,4 @@
         remote_table:
           name: list
           schema: public
+  type: create_object_relationship
