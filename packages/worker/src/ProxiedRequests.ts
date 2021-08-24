@@ -11,7 +11,7 @@ if (!process.env.LUMINATI_PROXY_HOST || !process.env.STORMPROXY_HOSTS) {
   })
 }
 
-type Opts = FetchOptions & {
+type Opts = Partial<FetchOptions> & {
   skipBrowser?: boolean
 }
 
@@ -98,7 +98,7 @@ export class ProxiedRequests {
       // setLuminatiResidentialProxy()
     }
 
-    let tried: any[] = []
+    const tried: any[] = []
 
     while (true) {
       const url = base + uri
@@ -115,6 +115,7 @@ export class ProxiedRequests {
       try {
         const tm = sleep(8000).then(() => 'failed')
         console.log('ProxiedRequests.get', url)
+        // @ts-ignore
         const res = await Promise.race([fetch(url, options), tm])
         if (res === 'failed') {
           throw new Error(`ProxiedRequests.get Timed out`)

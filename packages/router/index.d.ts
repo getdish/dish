@@ -104,4 +104,3 @@ export declare type NavigateItem<RT extends RoutesTable = any, Items extends Nav
     data?: RouteData;
 };
 export {};
-//# sourceMappingURL=index.d.ts.map

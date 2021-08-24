@@ -13,6 +13,7 @@ import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantRatingView } from '../RestaurantRatingView'
+import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
@@ -64,6 +65,12 @@ const RestaurantHeaderContent = memo(
       const content = (
         <>
           <PaneControlButtonsLeft>
+            <Suspense fallback={null}>
+              <RestaurantAddCommentButton
+                restaurantId={restaurantId}
+                restaurantSlug={restaurantSlug}
+              />
+            </Suspense>
             <Suspense fallback={null}>
               <RestaurantAddToListButton floating restaurantSlug={restaurantSlug} />
             </Suspense>
@@ -208,6 +215,8 @@ const RestaurantHeaderContent = memo(
                       </>
                     </HStack>
 
+                    <Spacer size="sm" />
+
                     <RestaurantTagsRow
                       maxLines={2}
                       exclude={['dish']}
@@ -216,6 +225,8 @@ const RestaurantHeaderContent = memo(
                       spacing={10}
                       maxItems={8}
                     />
+
+                    <Spacer size="sm" />
 
                     {afterAddress}
                   </VStack>

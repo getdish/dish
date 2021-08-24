@@ -140,15 +140,15 @@ export const Score = memo(
             })}
           >
             <AbsoluteVStack fullscreen alignItems="center" justifyContent="center">
-              <Paragraph fontSize={fontSize} fontWeight="700" letterSpacing={-1}>
+              <Paragraph fontSize={fontSize} fontWeight="300" letterSpacing={-1}>
                 {numberFormat(score, 'sm')}
               </Paragraph>
             </AbsoluteVStack>
             <ProgressRing
-              size={Math.round(sizePx + 3)}
+              size={Math.round(sizePx)}
               color={colors.color400}
               percent={rating * 10}
-              width={sizePx * 0.06}
+              width={sizePx * 0.05}
             />
           </VStack>
         )}

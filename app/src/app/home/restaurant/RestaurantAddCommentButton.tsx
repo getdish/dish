@@ -1,6 +1,7 @@
 import { graphql } from '@dish/graph'
 import { Edit } from '@dish/react-feather'
 import React from 'react'
+import { Theme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
@@ -22,21 +23,23 @@ export const RestaurantAddCommentButton = graphql(
   }) => {
     const { review } = useUserReviewCommentQuery(restaurantId)
     return (
-      <Link name="restaurantReview" params={{ slug: restaurantSlug || '' }}>
-        <SmallButton
-          tooltip="Add comment"
-          pressStyle={{
-            opacity: 0.6,
-          }}
-          textProps={{
-            fontWeight: '800',
-          }}
-          icon={<Edit color={isWeb ? 'var(--color)' : '#000'} size={size ?? 16} />}
-          {...props}
-        >
-          {hideLabel ? null : !!review?.text ? 'Edit' : 'Add your review'}
-        </SmallButton>
-      </Link>
+      <Theme name="active">
+        <Link name="restaurantReview" params={{ slug: restaurantSlug || '' }}>
+          <SmallButton
+            tooltip="Add comment"
+            pressStyle={{
+              opacity: 0.6,
+            }}
+            textProps={{
+              fontWeight: '800',
+            }}
+            icon={<Edit color={isWeb ? 'var(--color)' : '#000'} size={size ?? 16} />}
+            {...props}
+          >
+            {hideLabel ? null : !!review?.text ? 'Edit' : 'Review'}
+          </SmallButton>
+        </Link>
+      </Theme>
     )
   }
 )

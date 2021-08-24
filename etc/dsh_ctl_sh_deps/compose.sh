@@ -66,7 +66,7 @@ function compose_up() {
   if [ "$DISH_ENV" = "test" ]; then
     echo "in env test cleanup old services first"
     for service in $services; do
-      docker-compose rm --force "$service" || true
+      docker-compose rm --force "$service" > /dev/null || true
     done
   fi
   compose_up_subset "$services" "$@"

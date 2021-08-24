@@ -2,6 +2,7 @@ import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
 import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
 import React, { memo } from 'react'
 import {
+  AbsoluteVStack,
   HStack,
   StackProps,
   Text,
@@ -20,6 +21,7 @@ import { getTagSlug } from '../../helpers/getTagSlug'
 import { RGB } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
+import { SearchTagButton } from './dish/SearchTagButton'
 import { Image } from './Image'
 import { Link } from './Link'
 import { Pie } from './Pie'
@@ -59,6 +61,7 @@ export const getTagButtonProps = (
 
 export type TagButtonProps = StackProps &
   Omit<TagButtonTagProps, 'rgb'> & {
+    noLink?: boolean
     theme?: ThemeName
     rgb?: RGB | null
     slug?: string
@@ -73,7 +76,6 @@ export type TagButtonProps = StackProps &
     subtleIcon?: boolean
     fontSize?: TextProps['fontSize']
     fontWeight?: TextProps['fontWeight']
-    noColor?: boolean
     replace?: boolean
     replaceSearch?: boolean
     after?: any
@@ -83,6 +85,8 @@ export type TagButtonProps = StackProps &
     ratingStyle?: 'points' | 'pie'
     transparent?: boolean
     bordered?: boolean
+    isActive?: boolean
+    showSearchButton?: boolean
   }
 
 const typeColors = {
@@ -112,7 +116,6 @@ const TagButtonInner = (props: TagButtonProps) => {
     size,
     slug,
     rating,
-    noColor,
     floating,
     closable,
     bordered,
@@ -128,15 +131,16 @@ const TagButtonInner = (props: TagButtonProps) => {
     score,
     subtleIcon,
     hideIcon,
+    isActive,
     after,
+    showSearchButton,
     replace,
-    onPress,
-    hoverStyle,
     restaurantSlug,
     hideRating,
     hideRank,
     ratingStyle = 'pie',
     transparent,
+    noLink,
     ...rest
   } = props
 
@@ -154,8 +158,9 @@ const TagButtonInner = (props: TagButtonProps) => {
   const pieSize = size === 'sm' ? 16 : 20
   const showRank = !hideRank && !!rank
 
-  const contents = (
+  let contents = (
     <HStack
+      className="hover-parent"
       spacing={fontSize * 0.5}
       borderRadius={8}
       backgroundColor={theme.backgroundColor}
@@ -174,6 +179,12 @@ const TagButtonInner = (props: TagButtonProps) => {
         },
         pressStyle: {
           backgroundColor: 'transparent',
+        },
+      })}
+      {...(isActive && {
+        backgroundColor: theme.cardBackgroundColor,
+        hoverStyle: {
+          backgroundColor: theme.cardBackgroundColor,
         },
       })}
       alignItems="center"
@@ -322,25 +333,42 @@ const TagButtonInner = (props: TagButtonProps) => {
           <X size={13} color={theme.color} />
         </VStack>
       )}
+
+      {isWeb && showSearchButton && !!slug && (
+        <AbsoluteVStack
+          className="hover-100-opacity-child"
+          opacity={0}
+          bottom={-10}
+          right={-10}
+          scale={0.7}
+          hoverStyle={{ scale: 0.75 }}
+        >
+          <SearchTagButton tag={{ type: 'dish', slug }} backgroundColor="#fff" color="#000" />
+        </AbsoluteVStack>
+      )}
     </HStack>
   )
 
-  return (
-    <Link
-      {...(onPress && {
-        onPress,
-      })}
-      {...(slug && {
-        tag: { slug },
-      })}
-      replace={replace}
-      replaceSearch={replaceSearch}
-      asyncClick
-      stopPropagation
-    >
-      {contents}
-    </Link>
-  )
+  if (!noLink) {
+    contents = (
+      <Link
+        {...(restaurantSlug
+          ? {
+              name: 'restaurant',
+              params: {
+                slug: restaurantSlug,
+                section: 'reviews',
+                sectionSlug: slug,
+              },
+            }
+          : null)}
+      >
+        {contents}
+      </Link>
+    )
+  }
+
+  return contents
 }
 
 const TagButtonVote = graphql(

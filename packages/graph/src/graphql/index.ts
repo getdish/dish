@@ -71,7 +71,7 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     console.log(` [gqty] =>`, JSON.stringify(json, null, 2))
   }
   if (json.errors) {
-    let message = ` [gqty] errors ${JSON.stringify(json.errors, null, 2)}`
+    let message = ` [gqty] error ${GRAPH_API}\n${JSON.stringify(json.errors, null, 2)}`
 
     if (process.env.NODE_ENV !== 'production') {
       // prettier-ignore
