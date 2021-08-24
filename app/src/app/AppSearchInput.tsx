@@ -39,7 +39,7 @@ const placeholders = [
   'onigiri',
   'banh mi',
   'bbq',
-  'ceasar salad',
+  'caesar salad',
   'sushi',
   'sisig',
   'szechuan',

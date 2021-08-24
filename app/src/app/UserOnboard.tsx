@@ -188,12 +188,12 @@ export const UserOnboard = graphql(
             alignSelf="center"
             onPress={async () => {
               Toast.show('Saving...')
+              onFinish?.()
               await userStore.edit({
                 ...formState.current,
                 username,
                 charIndex,
               })
-              onFinish?.()
             }}
           >
             Save!

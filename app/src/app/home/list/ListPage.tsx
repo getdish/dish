@@ -315,7 +315,7 @@ const ListPageContent = memo(
       const [restaurants, restaurantActions] = useListRestaurants(list)
       const region = useRegionQuery(props.item.region)
 
-      const listThemeIndex = list.theme ?? 0
+      const listThemeIndex = 1
       const forceUpdate = useForceUpdate()
       const listTheme = listThemes[listThemeIndex]
 
@@ -811,7 +811,13 @@ const ListPageTitle = ({
               paddingHorizontal={25}
             >
               <Spacer size={84} />
-              <Title maxWidth={620} width="100%" size="xxxl" color={textColor}>
+              <Title
+                maxWidth={620}
+                width="100%"
+                size="xxxxl"
+                sizeLineHeight={0.85}
+                color={textColor}
+              >
                 {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
               </Title>
               <Spacer size="lg" />
