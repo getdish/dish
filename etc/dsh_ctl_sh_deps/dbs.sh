@@ -53,7 +53,9 @@ function migrate_timescale() {
 }
 
 function hasura_admin() {
-  (cd services/hasura && hasura console --endpoint "http://localhost:$HASURA_PORT" --admin-secret=$HASURA_GRAPHQL_ADMIN_SECRET)
+  pushd services/hasura
+  hasura console --endpoint "http://localhost:$HASURA_PORT" --admin-secret="$HASURA_GRAPHQL_ADMIN_SECRET"
+  popd
 }
 
 function migrate_hasura() {
@@ -61,19 +63,14 @@ function migrate_hasura() {
   if ! [ -x "$(command -v hasura)" ]; then
     curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v1.3.3 bash
   fi
+  echo "hasura version"
   hasura version
-  echo "migrating db $POSTGRES_DB"
+  echo "POSTGRES_DB $POSTGRES_DB"
   echo "hasura migrate $HASURA_ENDPOINT"
   pushd "$PROJECT_ROOT/services/hasura"
-    hasura --skip-update-check \
-      migrate apply \
-      --endpoint "$HASURA_ENDPOINT" \
-      --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+    hasura --skip-update-check migrate apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
     echo "hasura metadata"
-    hasura --skip-update-check \
-      metadata apply \
-      --endpoint "$HASURA_ENDPOINT" \
-      --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+    hasura --skip-update-check metadata apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   popd
 
   echo "hasura init functions"
@@ -87,7 +84,7 @@ function migrate_hasura() {
         -d "${POSTGRES_DB:-dish}" \
         --single-transaction
     echo "hasura migrate status"
-    hasura migrate status --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+    hasura --skip-update-check migrate status --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   popd
 }
 

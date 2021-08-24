@@ -46,6 +46,7 @@
     "build:js": "JS_ONLY=1 yarn build",
     "build:docker": "./dsh buildkit_build_local",
     "watch": "npm-run-all --parallel check:ts:watch build:ts:watch",
+    "watch:js": "JS_ONLY=1 yarn build:ts:watch",
     "build:refs": "typescript-monorepo-toolkit inject-refs .",
     "test": "KEEP_ALIVE=0 DISH_ENV=test ./dsh run_dsh",
     "test:dev": "IS_LOCAL=1 yarn test",

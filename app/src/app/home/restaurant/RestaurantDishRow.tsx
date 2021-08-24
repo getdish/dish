@@ -2,16 +2,15 @@ import { graphql } from '@dish/graph'
 import { partition } from 'lodash'
 import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Pressable } from 'react-native'
-import { HStack, LoadingItem, Spacer, Theme, VStack } from 'snackui'
+import { HStack, LoadingItem, Spacer, VStack } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'
 import { DishTagItemSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
-import { TagButtonSlanted } from '../../views/dish/TagButtonSlanted'
 import { ScalingPressable } from '../../views/ScalingPressable'
+import { TagButton } from '../../views/TagButton'
 
 const withIndex = (fn) => {
   let index = 0
@@ -86,12 +85,12 @@ export const RestaurantDishRowContent = memo(
                   },
                 })}
               >
-                <TagButtonSlanted
+                <TagButton
                   isActive={isSelected}
                   noLink
                   restaurantSlug={restaurantSlug}
-                  restaurantId={restaurantId}
                   showSearchButton
+                  votable
                   {...dish}
                 />
               </Pressable>
@@ -104,6 +103,8 @@ export const RestaurantDishRowContent = memo(
         <ContentScrollViewHorizontal
           onScroll={handleScroll}
           style={{
+            zIndex: 10,
+            position: 'relative',
             marginHorizontal: -20,
           }}
         >
@@ -115,7 +116,7 @@ export const RestaurantDishRowContent = memo(
                     onSelect?.('')
                   }}
                 >
-                  <TagButtonSlanted noLink bold name="Dishes" isActive={selected === ''} />
+                  <TagButton noLink name="Dishes" isActive={selected === ''} />
                 </ScalingPressable>
                 {getDishRow(dishGroups[0])}
               </HStack>

@@ -1,8 +1,8 @@
-import { graphql, query, refetch, reviewAnalyze } from '@dish/graph'
+import { graphql, query, refetch } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { ScrollView, TextInput } from 'react-native'
-import { HStack, LoadingItems, Modal, Spacer, Text, VStack, useDebounceEffect } from 'snackui'
+import { ScrollView } from 'react-native'
+import { HStack, Input, LoadingItems, Modal, Spacer, Text, VStack } from 'snackui'
 
 import { red } from '../../../constants/colors'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
@@ -107,25 +107,25 @@ export const RestaurantReviewCommentForm = memo(
     const [restaurant] = queryRestaurant(restaurantSlug)
     const dishTags = getRestaurantDishes({ restaurant })
 
-    useDebounceEffect(
-      () => {
-        let isMounted = true
+    // useDebounceEffect(
+    //   () => {
+    //     let isMounted = true
 
-        reviewAnalyze({
-          text: reviewText,
-          restaurantId,
-        }).then((res) => {
-          console.log('got', res)
-          // getStore(TagVoteStore)
-        })
+    //     reviewAnalyze({
+    //       text: reviewText,
+    //       restaurantId,
+    //     }).then((res) => {
+    //       console.log('got', res)
+    //       // getStore(TagVoteStore)
+    //     })
 
-        return () => {
-          isMounted = false
-        }
-      },
-      3000,
-      [reviewText]
-    )
+    //     return () => {
+    //       isMounted = false
+    //     }
+    //   },
+    //   3000,
+    //   [reviewText]
+    // )
 
     useEffect(() => {
       if (review?.text) {
@@ -147,7 +147,7 @@ export const RestaurantReviewCommentForm = memo(
             charIndex: user.charIndex || 0,
           }}
           text={
-            <TextInput
+            <Input
               value={reviewText}
               onChange={(e) => {
                 // @ts-ignore
@@ -163,16 +163,6 @@ export const RestaurantReviewCommentForm = memo(
               multiline
               numberOfLines={5}
               placeholder="A note, a tip, a whole review, it's up to you."
-              style={{
-                borderWidth: 1,
-                borderColor: '#ddd',
-                borderRadius: 10,
-                minHeight: height,
-                lineHeight: 22,
-                fontSize: 16,
-                width: '100%',
-                padding: 15,
-              }}
             />
           }
           after={

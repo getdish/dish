@@ -440,7 +440,7 @@ async function getImageCategory(
       const parsedUrl = new URL(url)
       const filename = basename(parsedUrl.pathname)
       formdata.append('image', data, filename)
-      const response = await fetch(IMAGE_CATEGORY_API, {
+      const response: any = await fetch(IMAGE_CATEGORY_API, {
         method: 'POST',
         body: formdata,
       }).then((res) => res.json())
@@ -462,7 +462,7 @@ async function getImageQuality(
   urls: string[]
 ): Promise<{ mean_score_prediction: number; image_id: string }[]> {
   const IMAGE_QUALITY_API = `${process.env.IMAGE_QUALITY_ENDPOINT}/prediction`
-  const qualityResponse = await fetch(IMAGE_QUALITY_API, {
+  const qualityResponse: any = await fetch(IMAGE_QUALITY_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

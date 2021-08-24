@@ -603,19 +603,23 @@ mark {
   display: none;
 }
 
-.hover-parent:hover .hover-100-opacity-child {
+.hover-parent:hover .hover-100-opacity-child,
+.hover-parent .hover-100-opacity-child:hover {
   opacity: 1;
 }
 
-.hover-parent:hover .hover-75-opacity-child {
+.hover-parent:hover .hover-75-opacity-child,
+.hover-parent .hover-75-opacity-child:hover {
   opacity: 0.75;
 }
 
-.hover-parent:hover .hover-50-opacity-child {
+.hover-parent:hover .hover-50-opacity-child,
+.hover-parent .hover-50-opacity-child:hover {
   opacity: 0.5;
 }
 
-.hover-parent:hover .hover-0-opacity-child {
+.hover-parent:hover .hover-0-opacity-child,
+.hover-parent .hover-0-opacity-child:hover {
   opacity: 0.5;
 }
 

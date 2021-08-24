@@ -5,6 +5,7 @@ import { startLogging } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
 import { loadableReady } from '@loadable/component'
 import React from 'react'
+// @ts-ignore
 import { createRoot, hydrate, render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 

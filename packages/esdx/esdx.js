@@ -6,10 +6,7 @@ const { build } = require('esbuild')
 const fg = require('fast-glob')
 const { emitFlatDts } = require('rollup-plugin-flat-dts/api')
 
-const legacy = process.argv.includes('legacy')
-const skipTypes = process.argv.includes('skip-types')
-
-async function go() {
+async function go({ legacy, skipTypes }) {
   const x = Date.now()
 
   if (process.env.NO_CLEAN) {
@@ -77,7 +74,12 @@ async function go() {
   }
 }
 
-go()
+exports.go = go
 
-process.on('uncaughtException', console.log.bind(console))
-process.on('unhandledRejection', console.log.bind(console))
+if (!process.env.DISABLE_AUTORUN) {
+  process.on('uncaughtException', console.log.bind(console))
+  process.on('unhandledRejection', console.log.bind(console))
+  const legacy = process.argv.includes('legacy')
+  const skipTypes = process.argv.includes('skip-types')
+  go({ legacy, skipTypes })
+}

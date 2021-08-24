@@ -479,7 +479,7 @@ export class Yelp extends WorkerJob {
     this.log(`got photo page ${page} with ${data.length} photos`)
   }
 
-  async getReviews(id: string, bizId: string, start: number = 0) {
+  async getReviews(id: string, bizId: string, start = 0) {
     const PER_PAGE = 20
     const page = start / PER_PAGE
     const url = '/biz/' + bizId + '/review_feed?rl=en&sort_by=relevance_desc&q=&start=' + start
