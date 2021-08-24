@@ -815,7 +815,7 @@ const ListPageTitle = ({
                 maxWidth={620}
                 width="100%"
                 size="xxxxl"
-                sizeLineHeight={0.85}
+                sizeLineHeight={0.75}
                 color={textColor}
               >
                 {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
