@@ -1,17 +1,19 @@
 import { slugify } from '@dish/graph'
 import { ArrowUp, ChevronLeft, MapPin, Plus, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo } from 'react'
-import { TouchableOpacity } from 'react-native'
-import { HStack, Spacer, VStack, useMedia } from 'snackui'
+import React, { Suspense, memo, useState } from 'react'
+import { GestureResponderEvent, TouchableOpacity } from 'react-native'
+import { Box, HStack, Popover, Spacer, Theme, VStack, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
+import { getWindowHeight } from '../helpers/getWindow'
 import { AppMenuButton } from './AppMenuButton'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { autocompletesStore } from './AutocompletesStore'
 import { homeStore, useHomeStoreSelector } from './homeStore'
+import { MenuLinkButton } from './MenuLinkButton'
 import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
 import { DishLogoButton } from './views/DishLogoButton'
@@ -147,16 +149,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
           )}
 
           <VStack>
-            <AppMenuLinkButton
-              promptLogin
-              Icon={Plus}
-              tooltip="Create playlist"
-              name="list"
-              params={{
-                userSlug: slugify(userStore.user?.username ?? 'me'),
-                slug: 'create',
-              }}
-            />
+            <AppActionButton />
           </VStack>
 
           <Suspense fallback={null}>
@@ -167,6 +160,55 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
     </HStack>
   )
 })
+
+const AppActionButton = () => {
+  const [visible, setVisible] = useState(false)
+  return (
+    <Popover
+      position="bottom"
+      isOpen={visible}
+      noArrow
+      onChangeOpen={setVisible}
+      contents={
+        <Theme name="dark">
+          <AppActionButtonContents hide={() => setVisible(false)} />
+        </Theme>
+      }
+      mountImmediately
+    >
+      <AppMenuLinkButton onPress={() => setVisible((x) => !x)} Icon={Plus} tooltip="Create" />
+    </Popover>
+  )
+}
+
+const AppActionButtonContents = ({ hide }: { hide?: (e: GestureResponderEvent) => any }) => {
+  const { user } = useUserStore()
+  return (
+    <Box
+      maxHeight={Math.max(350, getWindowHeight() - searchBarHeight - 30)}
+      padding={0}
+      alignItems="stretch"
+      pointerEvents="auto"
+      minWidth={240}
+    >
+      {/* safari y={} fix overflow */}
+      <VStack overflow="hidden" borderRadius={12} y={0.01}>
+        <MenuLinkButton
+          promptLogin
+          name="list"
+          params={{
+            userSlug: slugify(user?.username ?? 'me'),
+            slug: 'create',
+          }}
+          onPressOut={hide}
+        >
+          Create Playlist
+        </MenuLinkButton>
+      </VStack>
+    </Box>
+  )
+}
+
 const SearchBarActionButton = memo(() => {
   const upRoute = useHomeStoreSelector((x) => x.upRoute)
   const isOnHome = useHomeStoreSelector((x) => x.currentStateType === 'home')
