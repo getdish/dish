@@ -63,30 +63,32 @@ function migrate_hasura() {
   fi
   hasura version
   echo "migrating db $POSTGRES_DB"
-  pushd "$PROJECT_ROOT/services/hasura"
   echo "hasura migrate $HASURA_ENDPOINT"
-  hasura --skip-update-check \
-    migrate apply \
-    --endpoint "$HASURA_ENDPOINT" \
-    --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
-  echo "hasura metadata"
-  hasura --skip-update-check \
-    metadata apply \
-    --endpoint "$HASURA_ENDPOINT" \
-    --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
-  popd
-  echo "hasura init functions"
   pushd "$PROJECT_ROOT/services/hasura"
-  cat functions/*.sql |
-    PGPASSWORD=$POSTGRES_PASSWORD psql \
-      -p "$POSTGRES_PORT" \
-      -h "$POSTGRES_HOST" \
-      -U "${POSTGRES_USER:-postgres}" \
-      -d "${POSTGRES_DB:-dish}" \
-      --single-transaction
+    hasura --skip-update-check \
+      migrate apply \
+      --endpoint "$HASURA_ENDPOINT" \
+      --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+    echo "hasura metadata"
+    hasura --skip-update-check \
+      metadata apply \
+      --endpoint "$HASURA_ENDPOINT" \
+      --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   popd
-  echo "hasura migrate status"
-  hasura migrate status --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+
+  echo "hasura init functions"
+
+  pushd "$PROJECT_ROOT/services/hasura"
+    cat functions/*.sql |
+      PGPASSWORD=$POSTGRES_PASSWORD psql \
+        -p "$POSTGRES_PORT" \
+        -h "$POSTGRES_HOST" \
+        -U "${POSTGRES_USER:-postgres}" \
+        -d "${POSTGRES_DB:-dish}" \
+        --single-transaction
+    echo "hasura migrate status"
+    hasura migrate status --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+  popd
 }
 
 function dump_scrape_data_to_s3() {
