@@ -154,20 +154,17 @@ const HomePageContent = (props: Props) => {
             <HStack alignItems="center" paddingVertical={media.sm ? 10 : 15} paddingHorizontal={10}>
               <Link onPress={() => autocompletesStore.setTarget('location')}>
                 <SlantedTitle
-                  backgroundColor={regionColors.color}
-                  color="#fff"
-                  minWidth={100}
-                  fontWeight="900"
+                  color={regionColors.color}
                   size={
                     regionName.length > 24
-                      ? 'xxs'
+                      ? 'xxxs'
                       : regionName.length > 17
-                      ? 'xs'
+                      ? 'xxs'
                       : regionName.length > 14
-                      ? 'sm'
+                      ? 'xs'
                       : regionName.length > 8
-                      ? 'md'
-                      : 'lg'
+                      ? 'sm'
+                      : 'md'
                   }
                 >
                   {regionName}

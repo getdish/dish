@@ -7,13 +7,13 @@ import { isWeb } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
 import { appMapStore } from './AppMap'
 import { inputTextStyles } from './AppSearchInput'
-import { InputTagButton } from './AppSearchInputTagsRow'
 import { autocompleteLocationStore, autocompletesStore } from './AutocompletesStore'
-import { useHomeStore, useHomeStoreSelector } from './homeStore'
+import { useHomeStoreSelector } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
 import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
+import { InputTagButton } from './InputTagButton'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { setLocation } from './setLocation'
 import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
@@ -71,8 +71,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
   }, [])
 
   const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore)(view), [])
-  // const region = useHomeStoreSelector(x => x.currentState['region'])
-  const locationName = useHomeStoreSelector((x) => x.currentState.curLocName)
+  const showLocationTag = !inputStore.isFocused && !!curLocName
 
   return (
     // needs overflow hidden or else search box expands past edge on media.sm
@@ -87,6 +86,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
           onPressOut={() => {
             autocompletesStore.setTarget('location')
           }}
+          flexWrap="nowrap"
         >
           <AbsoluteVStack
             top={0}
@@ -98,18 +98,28 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
           >
             <MapPin color={color} size={18} opacity={0.35} />
           </AbsoluteVStack>
+
           {isTouchDevice && <SearchInputNativeDragFix name="location" />}
-          {locationName && (
-            <AbsoluteHStack fullscreen>
-              <InputTagButton width={100} height={40} name="Test">
-                helo
-              </InputTagButton>
+
+          {showLocationTag && (
+            <AbsoluteHStack
+              alignItems="center"
+              justifyContent="center"
+              pointerEvents="none"
+              top={0}
+              left={28}
+              bottom={0}
+              zIndex={100}
+            >
+              <InputTagButton noLink>{curLocName}</InputTagButton>
             </AbsoluteHStack>
           )}
+
           <TextInput
+            selectTextOnFocus
             ref={setInputNode}
-            value={inputStore.value ?? ''}
-            placeholder={curLocName ?? '...'}
+            value={showLocationTag ? '' : inputStore.value ?? ''}
+            // placeholder={curLocName ?? '...'}
             onFocus={() => {
               inputStore.setIsFocused(true)
             }}

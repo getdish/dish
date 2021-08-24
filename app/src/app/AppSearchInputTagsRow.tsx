@@ -1,14 +1,15 @@
 import { fullyIdle } from '@dish/async'
 import React, { memo } from 'react'
-import { Button, ButtonProps, HStack, Theme, useTheme, useThemeName } from 'snackui'
+import { HStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { getTagSlug } from '../helpers/getTagSlug'
 import { focusSearchInput, setAvoidNextAutocompleteShowOnFocus } from './AppSearchInput'
 import { useHomeStore } from './homeStore'
-import { TagButton, TagButtonProps, getTagButtonProps } from './views/TagButton'
+import { InputTagButton } from './InputTagButton'
+import { getTagButtonProps } from './views/TagButton'
 
-export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement | null }) => {
+export const AppSearchInputTagsRow = memo(() => {
   const home = useHomeStore()
   const tags = home.searchBarTags
   // const themeName = useThemeName()
@@ -42,36 +43,3 @@ export const AppSearchInputTagsRow = memo(({ input }: { input: HTMLInputElement 
     </>
   )
 })
-
-// TODO these two are manually in sync, this...
-
-export const InputTagButton = (props: TagButtonProps & { isActive?: boolean }) => {
-  const theme = useTheme()
-  return (
-    <TagButton
-      theme="light"
-      size="lg"
-      closable
-      subtleIcon
-      color="#111"
-      backgroundColor="#fff"
-      hoverStyle={{
-        backgroundColor: '#ffffffee',
-      }}
-      pressStyle={{
-        backgroundColor: '#ffffff99',
-      }}
-      // shadowRadius={8}
-      elevation={1}
-      hideRating
-      hideRank
-      {...(props.isActive && {
-        backgroundColor: theme.backgroundColor,
-        hoverStyle: {
-          backgroundColor: theme.backgroundColor,
-        },
-      })}
-      {...props}
-    />
-  )
-}

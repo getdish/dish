@@ -141,15 +141,11 @@ const TagButtonInner = (props: TagButtonProps) => {
     ratingStyle = 'pie',
     transparent,
     noLink,
+    children,
     ...rest
   } = props
 
   const theme = useTheme()
-
-  if (!slug) {
-    return null
-  }
-
   const isSmall = size === 'sm'
   const scale = isSmall ? 0.85 : size == 'lg' ? 1.1 : 1
   const fontSize = fontSizeProp ? fontSizeProp : Math.round(15 * scale)
@@ -188,7 +184,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         },
       })}
       alignItems="center"
-      paddingHorizontal={isSmall ? 5 : 12}
+      paddingHorizontal={isSmall ? 5 : 10}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
       {...rest}
@@ -229,7 +225,7 @@ const TagButtonInner = (props: TagButtonProps) => {
             }}
           />
         ) : (
-          <Text fontSize={12} marginRight={-2}>
+          <Text fontSize={12} marginRight={-2} marginLeft={isSmall ? 2 : 5}>
             {icon}
           </Text>
         )
@@ -259,6 +255,8 @@ const TagButtonInner = (props: TagButtonProps) => {
           {tagDisplayName(name)}
         </Text>
       )}
+
+      {children}
 
       {!hideRating && typeof rating !== 'undefined' && (
         <>
@@ -300,9 +298,9 @@ const TagButtonInner = (props: TagButtonProps) => {
         </>
       )}
 
-      {!!votable && !!props.restaurantSlug && (
+      {!!slug && !!votable && !!props.restaurantSlug && (
         <TagButtonVote
-          key={getTagSlug(props.slug) + props.restaurantSlug}
+          key={getTagSlug(slug) + props.restaurantSlug}
           {...props}
           color={theme.color}
           scale={scale}
@@ -326,6 +324,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           position="relative"
           width={isWeb ? 26 : 40}
           height={isWeb ? 26 : 40}
+          marginRight={-3}
           alignItems="center"
           justifyContent="center"
           alignSelf="center"

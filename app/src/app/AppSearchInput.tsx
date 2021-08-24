@@ -165,7 +165,7 @@ export const AppSearchInput = memo(() => {
           }}
         >
           <HStack alignSelf="center" alignItems="center" minWidth="100%" height={innerHeight}>
-            <AppSearchInputTagsRow input={input} />
+            <AppSearchInputTagsRow />
             <HStack
               height={innerHeight}
               maxWidth="100%"
