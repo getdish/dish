@@ -251,7 +251,7 @@ describe('basic tests', () => {
       fireEvent.click(getCurrentByTitle('changeAlt'))
     })
     // new react fires a couple more
-    expect(renderCount).toEqual(2)
+    expect(renderCount).toEqual(4)
   })
 
   it('only re-renders tracked properties (selectors + singleton)', async () => {
