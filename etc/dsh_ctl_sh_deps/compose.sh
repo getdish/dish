@@ -35,22 +35,27 @@ function compose_up_subset() {
   if [ "$DOCKER_NO_RECREATE" != "true" ]; then
     flags="--remove-orphans --force-recreate"
   fi
-  env="($POSTGRES_DB $TIMESCALE_HOST $TIMESCALE_PORT_INTERNAL)"
-  echo "docker-compose up $flags $extra $services $env"
+  echo "compose_up_subset $flags $extra $services"
   dc="docker-compose -f $PROJECT_ROOT/docker-compose.yml"
   if [ ! -z "$DEV_USER" ]; then
     dc="$dc -f $PROJECT_ROOT/docker-compose.dev.yml"
   fi
+  if [ -z "$services" ]; then
+    echo "⚠️ no services specified"
+  fi
   if [ -z "$extra" ]; then
-    $dc up $flags $services
+    echo "$dc $flags $services"
+    $dc $flags $services
   else
-    $dc up $flags "$extra" $services
+    echo "$dc $flags $extra $services"
+    $dc $flags "$extra" $services
   fi
   printf "\n\n\n"
 }
 
 function compose_up() {
   services_list="$COMPOSE_EXCLUDE${COMPOSE_EXCLUDE_EXTRA:-}"
+  echo "compose_up services_list: $services_list"
   services=$(
     docker-compose config --services 2>/dev/null |
       grep -E -v "$services_list" |
