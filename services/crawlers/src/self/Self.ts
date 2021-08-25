@@ -204,11 +204,11 @@ export class Self extends WorkerJob {
       const scrape = await latestScrapeForRestaurant(this.restaurant, source)
       if (scrape) {
         at_least_one = true
+        if (DISH_DEBUG > 1) {
+          this.log(`Found scrape for ${source} with data`, scrape?.data)
+        }
       }
       this[source] = scrape
-      if (DISH_DEBUG > 1) {
-        this.log(`Found scrape for ${source} with data`, scrape?.data)
-      }
     }
     if (!at_least_one) {
       throw new Error('No scrapes found for restaurant')
@@ -285,7 +285,7 @@ export class Self extends WorkerJob {
   }
 
   noteAvailableSources() {
-    this.available_sources = Object.keys(this.restaurant.sources)
+    this.available_sources = Object.keys(this.restaurant.sources || {})
   }
 
   async doTags() {
