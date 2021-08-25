@@ -24,10 +24,15 @@ import { isPresent } from '@dish/helpers'
 import { Database } from '@dish/helpers-node'
 import FormData from 'form-data'
 import { selectFields } from 'gqty'
-import { chunk, difference, uniqBy } from 'lodash'
+import { chunk, clone, difference, uniqBy } from 'lodash'
 import fetch, { Response } from 'node-fetch'
 
 import { DISH_DEBUG } from './constants'
+
+type ImageQualityResponse = Promise<{ mean_score_prediction: number; image_id: string }[]>
+
+export let __uploadToDOSpaces__count = 0
+export let __assessNewPhotos__count = 0
 
 const PhotoBaseQueryHelpers = createQueryHelpersFor<PhotoBase>('photo')
 const PhotoXrefQueryHelpers = createQueryHelpersFor<PhotoXref>('photo_xref')
@@ -51,9 +56,31 @@ export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 
 export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
   if (photosOg.length == 0) return
-  const photos = await ensureValidPhotos(normalizePhotos(photosOg))
+  let photos = await ensureValidPhotos(normalizePhotos(photosOg))
+  photos = ensurePhotosAreUniqueKeyAble(photos)
+  photos = uniqBy(photos, (el) => [el.tag_id, el.restaurant_id, el.photo?.url].join())
+  photos = archiveURLInOrigin(photos)
   await photoXrefUpsert(photos)
   await postUpsert(photos)
+}
+
+function archiveURLInOrigin(photos: Partial<PhotoXref>[]) {
+  photos.map((p) => {
+    if (!p.photo || !p.photo.url) throw 'Photo must have URL'
+    p.photo.origin = clone(p.photo?.url)
+    delete p.photo.url
+  })
+  return photos
+}
+
+function ensurePhotosAreUniqueKeyAble(photos: Partial<PhotoXref>[]) {
+  if (photos[0].restaurant_id && !photos[0].tag_id) {
+    photos.map((p) => (p.tag_id = ZeroUUID))
+  }
+  if (photos[0].tag_id && !photos[0].restaurant_id) {
+    photos.map((p) => (p.restaurant_id = ZeroUUID))
+  }
+  return photos
 }
 
 // ensure they are valid image urls otherwise other steps fail
@@ -106,15 +133,13 @@ function normalizePhotos(photos: Partial<PhotoXref>[]) {
 }
 
 async function postUpsert(photos: Partial<PhotoXref>[]) {
-  if (process.env.NODE_ENV != 'test') {
-    await uploadToDO(photos)
-  }
+  await uploadToDO(photos)
   await updatePhotoQualityAndCategories(photos)
 }
 
 export async function uploadToDO(photos: Partial<PhotoXref>[]) {
   const not_uploaded = await findNotUploadedPhotos(photos)
-  if (!not_uploaded) return
+  if (not_uploaded.length == 0) return
   const uploaded = await uploadToDOSpaces(not_uploaded)
   const updated = uploaded.map((p) => {
     if (!p.photo) throw new Error('uploadToDO() No photo!?')
@@ -360,6 +385,8 @@ const IMAGE_QUALITY_API_BATCH_SIZE = 10
 
 async function assessNewPhotos(unassessed_photos: string[]) {
   let assessed: Partial<PhotoBase>[] = []
+  if (unassessed_photos.length == 0) return
+  __assessNewPhotos__count += 1
   for (const batch of chunk(unassessed_photos, IMAGE_QUALITY_API_BATCH_SIZE)) {
     assessed.push(...(await assessPhoto(batch)))
   }
@@ -550,6 +577,7 @@ async function findNotUploadedPhotos(photos: Partial<PhotoXref>[]) {
 }
 
 async function uploadToDOSpaces(photos: PhotoXref[]) {
+  __uploadToDOSpaces__count += 1
   const DO_SPACES_UPLOAD_BATCH_SIZE = 50
   let uploaded: PhotoXref[] = []
   for (const batch of chunk(photos, DO_SPACES_UPLOAD_BATCH_SIZE)) {
@@ -684,7 +712,7 @@ export async function uploadHeroImage(url: string, restaurant_id: uuid) {
         restaurant_id,
         tag_id: globalTagId,
         type: 'hero',
-        photo,
+        photo_id: photo.id,
       },
     ])
   }

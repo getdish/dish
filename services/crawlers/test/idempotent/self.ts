@@ -12,7 +12,7 @@ import {
   tagInsert,
   tagUpsert,
 } from '@dish/graph'
-import { Database, reviewFindAllForRestaurant } from '@dish/helpers-node'
+import { Database, hashFromURLResource, reviewFindAllForRestaurant } from '@dish/helpers-node'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 import sinon from 'sinon'
 
@@ -28,7 +28,12 @@ import {
   yelp,
 } from '../../src/fixtures/fixtures'
 import { GoogleGeocoder } from '../../src/google/GoogleGeocoder'
-import { bestPhotosForRestaurant } from '../../src/photo-helpers'
+import {
+  DO_BASE,
+  __assessNewPhotos__count,
+  __uploadToDOSpaces__count,
+  bestPhotosForRestaurant,
+} from '../../src/photo-helpers'
 import { deleteAllTestScrapes, scrapeInsert } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
 import { GEM_UIID } from '../../src/self/Tagging'
@@ -132,6 +137,8 @@ test.beforeEach(async (t) => {
 
 test('Merging', async (t) => {
   const self = new Self()
+  t.is(__uploadToDOSpaces__count, 0)
+  t.is(__assessNewPhotos__count, 0)
   await self.mergeAll(t.context.restaurant.id)
   const updated = await restaurantFindOneWithTags({
     id: t.context.restaurant.id,
@@ -149,8 +156,9 @@ test('Merging', async (t) => {
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Tripadvisor Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Mexican'), true)
   t.is(updated.tags.map((i) => i.tag.name).includes('Test Pizza'), true)
-  t.assert(updated.photos?.[0].includes('https://i.imgur.com'))
-  t.assert(updated.photos?.[1].includes('https://i.imgur.com'))
+  t.assert(updated.photos?.[0].includes(DO_BASE))
+  t.assert(updated.photos?.[1].includes(DO_BASE))
+  t.assert(updated.photos?.[2].includes(DO_BASE))
   t.is(updated.rating, 4.11)
   t.deepEqual(updated.rating_factors as any, {
     food: 5,
@@ -176,6 +184,13 @@ test('Merging', async (t) => {
       rating: 2.5,
     },
   })
+
+  // Check that photo work isn't repeated
+  t.is(__uploadToDOSpaces__count, 1)
+  t.is(__assessNewPhotos__count, 1)
+  await self.mergeAll(t.context.restaurant.id)
+  t.is(__uploadToDOSpaces__count, 1)
+  t.is(__assessNewPhotos__count, 1)
 })
 
 test('Merging dishes', async (t) => {
@@ -415,9 +430,19 @@ test('Find photos of dishes', async (t) => {
   const tag2 = updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
   t.is(updated.tags.length, 3)
   t.is(tag1.tag.name, existing_tag1.name)
-  t.deepEqual(tag1.photos, ['https://i.imgur.com/92a8cNI.jpg'])
+  const photo1 = tag1.photos[0]
+  t.assert(photo1.includes(DO_BASE))
+  t.is(
+    await hashFromURLResource(photo1),
+    'f5461fb879799420c8e50b89cd83d9e41d3152600bec561615128cb145bf6ba4'
+  )
   t.is(tag2.tag.name, existing_tag2.name)
-  t.deepEqual(tag2.photos, ['https://i.imgur.com/N6YtgRI.jpeg'])
+  const photo2 = tag2.photos[0]
+  t.assert(photo2.includes(DO_BASE))
+  t.is(
+    await hashFromURLResource(tag2.photos[0]),
+    '24ca44b8bd74d9b25aaf9916b2111fc9ac3c6dacb76522b31ca7c514e04ad2b4'
+  )
 })
 
 test('Identifying country tags', async (t) => {

@@ -46,6 +46,7 @@ declare module "@dish/helpers-node" {
     export function cleanReviewText(text: string | null | undefined): string;
     export function dedupeReviews(reviews: Review[]): import("@dish/graph").FlatResolvedModel<import("@dish/graph").ReviewQuery>[];
     export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]): A[];
+    export function hashFromURLResource(url: string): Promise<any>;
 }
 
 declare module "@dish/helpers-node" {

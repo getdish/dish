@@ -11,6 +11,8 @@ import {
   reviewUpsert,
   review_constraint,
 } from '@dish/graph'
+import axios from 'axios'
+import sha256 from 'crypto-js/sha256'
 import { selectFields } from 'gqty'
 import { decode } from 'html-entities'
 import { chunk, uniqBy } from 'lodash'
@@ -199,4 +201,11 @@ export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]) {
   return uniqBy(sentiments, (x) => {
     return x.tag_id + x.sentence
   })
+}
+
+export async function hashFromURLResource(url: string) {
+  const response = await axios.get(url, { responseType: 'arraybuffer' })
+  const buffer = Buffer.from(response.data, 'binary').toString('base64')
+  const hash = sha256(buffer).toString()
+  return hash
 }
