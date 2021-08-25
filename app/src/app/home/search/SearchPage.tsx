@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { reaction } from '@dish/use-store'
+import { Store, reaction, useStore } from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -389,10 +389,18 @@ type SearchPageScrollViewProps = ScrollViewProps & {
   id: string
 }
 
+class SearchPageChildrenStore extends Store<{ id: string }> {
+  children = null
+  setChildren(next: any) {
+    this.children = next
+  }
+}
+
 const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, id, ...props }, ref) => {
     const scrollRef = useRef<ScrollView>()
     const searchPageStore = getSearchPageStore()
+    const searchPageChildrenStore = useStore(SearchPageChildrenStore, { id })
 
     useEffect(() => {
       return reaction(
@@ -421,9 +429,15 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
     }, [])
 
+    useLayoutEffect(() => {
+      searchPageChildrenStore.setChildren(children)
+    }, [children])
+
     useEffect(() => {
-      searchPageStore.setChildren(children)
-    }, [searchPageStore.results])
+      return () => {
+        searchPageChildrenStore.setChildren(null)
+      }
+    }, [])
 
     // memo is important here, keeps scroll from stopping on ios safari
     // return useMemo(() => {
@@ -471,9 +485,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
 )
 
 const SearchContent = memo(({ id }: { id: string }) => {
-  const { children } = useSearchPageStore({
-    id,
-  })
+  const { children } = useStore(SearchPageChildrenStore, { id })
   return (
     <VStack position="relative">
       <Suspense fallback={null}>{children}</Suspense>
