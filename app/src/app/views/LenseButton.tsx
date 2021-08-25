@@ -49,6 +49,9 @@ export const LenseButton = ({
           width={scaledWidth}
           height={scaledSize}
           backgroundColor={bg}
+          hoverStyle={{
+            backgroundColor: theme.backgroundColorSecondary,
+          }}
           borderRadius={100}
           marginRight={10}
           scale={isActive ? 1.3 : 1.1}
