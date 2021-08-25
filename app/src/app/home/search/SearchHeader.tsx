@@ -39,7 +39,7 @@ export const SearchHeader = memo(() => {
           <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
           <HStack position="relative">
             <VStack zIndex={10} x={-10}>
-              <VStack paddingLeft={25} paddingRight={25} paddingVertical={12} marginBottom={-3}>
+              <VStack paddingHorizontal={16} paddingVertical={8} marginBottom={-3}>
                 <VStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 0 : 20}>
                   <Text
                     color={theme.color}
@@ -53,7 +53,7 @@ export const SearchHeader = memo(() => {
                     })}
                     lineHeight={28}
                   >
-                    {title}
+                    {title.trim()}
                   </Text>
                   {!!subTitle && (
                     <>
@@ -65,7 +65,7 @@ export const SearchHeader = memo(() => {
                         fontSize={title.length < 25 ? 20 : 16}
                         fontWeight="300"
                       >
-                        {subTitle}
+                        {subTitle.trim()}
                       </Text>
                     </>
                   )}
@@ -94,8 +94,7 @@ export const SearchHeader = memo(() => {
       <Suspense fallback={null}>
         <SearchPageResultsInfoBox state={curProps.item} />
       </Suspense>
-
-      <Spacer />
+      <Spacer size="sm" />
     </>
   )
 })

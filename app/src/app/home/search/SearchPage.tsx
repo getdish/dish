@@ -221,12 +221,12 @@ const SearchPageContent = memo(function SearchPageContent(
   return (
     <Suspense fallback={<SearchLoading />}>
       <VStack
-        height="100%"
+        flex={1}
         overflow="hidden"
-        opacity={isLoading ? 0.75 : 1}
+        opacity={isLoading ? 0.5 : 1}
         width="100%"
         // in case something weird happens, prevents RecyclerListView from complaining
-        minWidth={300}
+        minWidth={10}
       >
         <SearchPagePropsContext.Provider value={props}>
           {/* for web, disabled for now */}
@@ -410,6 +410,13 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       )
     }, [])
 
+    const layoutProps = useLayout({
+      stateless: true,
+      onLayout: (x) => {
+        onSizeChanged?.(x.nativeEvent.layout)
+      },
+    })
+
     const scrollToTopHandler = useCallback(() => {
       scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
     }, [])
@@ -419,22 +426,47 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     }, [searchPageStore.results])
 
     // memo is important here, keeps scroll from stopping on ios safari
-    return useMemo(() => {
-      return (
-        <View
-          style={{ width: '100%', height: '100%', overflow: 'hidden' }}
-          onLayout={(x) => onSizeChanged?.(x.nativeEvent.layout)}
-        >
-          <ContentScrollView {...props} id="search" ref={combineRefs(ref, scrollRef) as any}>
-            <PageContentWithFooter>
-              <SearchHeader />
-              <SearchContent id={id} />
-              <SearchFooter scrollToTop={scrollToTopHandler} id={id} />
-            </PageContentWithFooter>
-          </ContentScrollView>
-        </View>
-      )
-    }, [])
+    // return useMemo(() => {
+    //   return (
+    //     <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
+    //       <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
+    //         <PageContentWithFooter>
+    //           <SearchHeader />
+    //           <SearchContent id={id} />
+    //           <Suspense fallback={null}>
+    //             <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
+    //           </Suspense>
+    //         </PageContentWithFooter>
+    //       </ContentScrollView>
+    //     </View>
+    //   )
+    // }, [])
+
+    // return (
+    //   <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
+    //     <ScrollView ref={combineRefs(ref, scrollRef) as any} {...props}>
+    //       <SearchHeader />
+    //       <SearchContent id={id} />
+    //       <Suspense fallback={null}>
+    //         <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
+    //       </Suspense>
+    //     </ScrollView>
+    //   </View>
+    // )
+
+    return (
+      <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
+        <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
+          <PageContentWithFooter>
+            <SearchHeader />
+            <SearchContent id={id} />
+            <Suspense fallback={null}>
+              <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
+            </Suspense>
+          </PageContentWithFooter>
+        </ContentScrollView>
+      </View>
+    )
   }
 )
 

@@ -67,7 +67,7 @@ export const StackDrawer = ({
           // keep this nested, fix-overflow hides box-shadow otherwise
           className="safari-fix-overflow"
           position="relative"
-          flex={1}
+          flexGrow={1}
           flexShrink={1}
           borderRadius={drawerBorderRadius}
           maxWidth={media.sm ? '100%' : drawerWidthMax}
@@ -83,10 +83,9 @@ export const StackDrawer = ({
     </>
   )
 }
-const { width } = Dimensions.get('screen')
 
-const SWIPE_THRESHOLD = 0.25 * width
-
+// const { width } = Dimensions.get('screen')
+// const SWIPE_THRESHOLD = 0.25 * width
 // function useTinderCards(deck) {
 //   const [data, setData] = useState(deck)
 
