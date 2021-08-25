@@ -1,5 +1,5 @@
 import React from 'react'
-import { AbsoluteHStack, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteHStack, Paragraph, Text, VStack, useTheme } from 'snackui'
 
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { rgbString } from '../../helpers/rgb'
@@ -27,7 +27,6 @@ export const FeedCard = ({
   ...cardProps
 }: FeedCardProps) => {
   const { chromeless, emphasizeTag, flat } = cardProps
-  const theme = useTheme()
   const colorString = color || rgbString(tags[0]?.rgb ?? [200, 150, 150])
   const longTitle = typeof title === 'string' && title.length > 15 ? true : false
 
@@ -66,11 +65,12 @@ export const FeedCard = ({
 
             <VStack flex={1} />
 
-            <VStack spacing={size}>
+            <VStack overflow="hidden" spacing={size}>
               <Text
                 letterSpacing={-0.5}
                 className="hover-100-opacity-child"
                 fontWeight={emphasizeTag ? '400' : '700'}
+                numberOfLines={2}
                 fontSize={
                   emphasizeTag
                     ? size === 'sm' || size.endsWith('xs')
@@ -89,10 +89,14 @@ export const FeedCard = ({
                 {title}
               </Text>
               {!!(author || typeof numItems !== 'undefined') && (
-                <Text color={theme.color} fontWeight="300" marginTop={8} opacity={0.5}>
+                <Paragraph
+                  size={size === 'xxs' || size === 'xs' || size === 'sm' ? 'sm' : 'md'}
+                  fontWeight="300"
+                  opacity={0.5}
+                >
                   {numItems ? <>{`${numItems}`} &middot; </> : ''}
                   {author ?? ''}
-                </Text>
+                </Paragraph>
               )}
             </VStack>
           </CardOverlay>

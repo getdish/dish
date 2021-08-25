@@ -140,9 +140,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           scrollStore.setIsAtTop(true)
         }
         // safari desktop wants this
-        if (scrollStore.lock === 'vertical') {
-          scrollStore.setLock('none')
-        }
+        // if (scrollStore.lock === 'vertical') {
+        //   scrollStore.setLock('none')
+        // }
         // DONT LOCK HERE WILL INTERFERE WITH VERTICAL SCROLL PULL DOWN
       } else {
         if (scrollStore.isAtTop) {
@@ -162,7 +162,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
         if (!isTouchDevice) {
           finish.current = setTimeout(() => {
             scrollStore.setLock('none')
-          }, THROTTLE_SCROLL * 1.1)
+          }, THROTTLE_SCROLL * 2)
         }
       }
     }
@@ -201,7 +201,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           removeClippedSubviews
           ref={combineRefs(scrollRef, ref)}
           {...props}
-          scrollEventThrottle={15}
+          scrollEventThrottle={40}
           onScroll={(e) => {
             // calls the recyclerview scroll
             props.onScroll?.(e)

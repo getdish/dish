@@ -13,7 +13,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
-import { LayoutRectangle, ScrollView, ScrollViewProps, View } from 'react-native'
+import { LayoutRectangle, ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import {
   AbsoluteVStack,
@@ -217,12 +217,12 @@ const SearchPageContent = memo(function SearchPageContent(
   return (
     <Suspense fallback={<SearchLoading />}>
       <VStack
-        flex={1}
+        height="100%"
         overflow="hidden"
         opacity={isLoading ? 0.75 : 1}
         width="100%"
         // in case something weird happens, prevents RecyclerListView from complaining
-        minWidth={10}
+        minWidth={300}
       >
         <SearchPagePropsContext.Provider value={props}>
           {/* for web, disabled for now */}
@@ -342,21 +342,19 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
   }
 
   return (
-    <>
-      <RecyclerListView
-        style={listStyle}
-        canChangeSize
-        externalScrollView={SearchPageScrollView as any}
-        scrollViewProps={{
-          id: props.item.id,
-        }}
-        renderAheadOffset={ITEM_HEIGHT * (isWeb ? 8 : 12)}
-        rowRenderer={rowRenderer}
-        dataProvider={dataProvider}
-        layoutProvider={layoutProvider}
-        deterministic
-      />
-    </>
+    <RecyclerListView
+      style={sheet.listStyle}
+      canChangeSize
+      externalScrollView={SearchPageScrollView as any}
+      scrollViewProps={{
+        id: props.item.id,
+      }}
+      renderAheadOffset={ITEM_HEIGHT * (isWeb ? 8 : 12)}
+      rowRenderer={rowRenderer}
+      dataProvider={dataProvider}
+      layoutProvider={layoutProvider}
+      deterministic
+    />
   )
 })
 
@@ -372,13 +370,15 @@ const SearchEmptyResults = () => {
   )
 }
 
-const listStyle = {
-  flex: 1,
-  width: '100%',
-  minWidth: 300,
-  minHeight: 1,
-  height: '100%',
-}
+const sheet = StyleSheet.create({
+  listStyle: {
+    width: '100%',
+    minWidth: 300,
+    minHeight: 1,
+    height: '100%',
+    maxHeight: '100%',
+  },
+})
 
 type SearchPageScrollViewProps = ScrollViewProps & {
   onSizeChanged: (props?: LayoutRectangle) => void
@@ -424,7 +424,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     // memo is important here, keeps scroll from stopping on ios safari
     return useMemo(() => {
       return (
-        <View style={{ flexGrow: 1 }} {...layoutProps}>
+        <View style={{ width: '100%', height: '100%', overflow: 'hidden' }} {...layoutProps}>
           <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
             <PageContentWithFooter>
               <SearchHeader />

@@ -41,7 +41,6 @@ export const StackDrawer = ({
         position="absolute"
         left={media.sm ? 0 : 'auto'}
         right={media.sm ? 0 : 0}
-        flex={1}
         maxHeight="100%"
         height="100%"
         minHeight="100%"
