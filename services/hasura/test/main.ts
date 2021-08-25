@@ -30,10 +30,11 @@ const getRestaurantSimple = async (rname: string) => {
           limit: 1,
         }) ?? []
       if (result) {
-        const { id, name, address, rating } = result
+        const { id, name, slug, address, rating } = result
         return {
           id,
           name,
+          slug,
           address,
           rating,
         }
@@ -121,4 +122,19 @@ test('Contributor can edit restaurants', async (t) => {
   await updateRestaurantSimple(restaurant)
   const r2 = await getRestaurantSimple('test')
   t.is(r2.rating, 5)
+})
+
+test('Slug creation', async (t) => {
+  const name = 'test SLUGGY slugs! :D'
+  await restaurantInsert([
+    {
+      name,
+      location: {
+        type: 'Point',
+        coordinates: [50, 0],
+      },
+    },
+  ])
+  const restaurant = await getRestaurantSimple(name)
+  t.is(restaurant.slug, 'test-sluggy-slugs-d')
 })
