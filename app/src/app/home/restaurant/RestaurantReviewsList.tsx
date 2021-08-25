@@ -4,7 +4,7 @@ import { AbsoluteVStack, Grid, HStack, Spacer, Text, Theme, VStack } from 'snack
 
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { RestaurantAddCommentButton } from './RestaurantAddCommentButton'
+import { RestaurantAddCommentButton } from './RestaurantAddCommentReviewButton'
 import { RestaurantReview } from './RestaurantReview'
 
 export const RestaurantReviewsList = memo(
