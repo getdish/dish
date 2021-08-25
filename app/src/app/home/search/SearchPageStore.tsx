@@ -33,12 +33,7 @@ class SearchPageStore extends Store<{ id: string }> {
   meta: HomeMeta | null = null
   searchPosition = initialPosition
   searchRegion = false
-  children = null
   private lastSearchArgs: RestaurantSearchArgs | null = null
-
-  setChildren(next: any) {
-    this.children = next
-  }
 
   setIndex(index: number, event: ActiveEvent) {
     this.index = Math.min(Math.max(-1, index), this.max)
