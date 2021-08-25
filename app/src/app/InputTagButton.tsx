@@ -12,7 +12,7 @@ export const InputTagButton = (props: TagButtonProps & { isActive?: boolean }) =
       size="lg"
       closable
       subtleIcon
-      color="#111"
+      color="#222"
       backgroundColor="#fff"
       hoverStyle={{
         backgroundColor: '#ffffffee',

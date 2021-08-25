@@ -54,6 +54,8 @@ export const SearchPageListsRow = memo(
                 key={i}
                 slug={list.slug ?? ''}
                 userSlug={list.user?.username ?? ''}
+                flat
+                colored
                 // region={list.region ?? ''}
               />
             )

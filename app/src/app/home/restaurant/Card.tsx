@@ -249,7 +249,7 @@ export const CardOverlay = (props: { children: any; flat?: boolean }) => {
           style={StyleSheet.absoluteFill}
         />
       )}
-      <VStack flex={1} paddingHorizontal={14} paddingVertical={16} zIndex={10}>
+      <VStack overflow="hidden" flex={1} paddingHorizontal={14} paddingVertical={16} zIndex={10}>
         {props.children}
       </VStack>
     </AbsoluteVStack>
