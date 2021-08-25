@@ -30,6 +30,7 @@ export const RestaurantAddCommentButton = graphql(
             pressStyle={{
               opacity: 0.6,
             }}
+            elevation={1}
             textProps={{
               fontWeight: '800',
             }}

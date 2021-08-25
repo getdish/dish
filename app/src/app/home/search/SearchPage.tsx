@@ -86,6 +86,10 @@ export default memo(function SearchPage(props: SearchProps) {
         if (homeStore.currentState.id !== props.item.id) {
           return
         }
+        if (homeStore.currentState.curLocName) {
+          console.warn('no need for info rn we have a region')
+          return
+        }
         // react to current position
         appMapStore.currentPosition
         const next = await appMapStore.getCurrentLocationInfo()
@@ -349,7 +353,7 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
       scrollViewProps={{
         id: props.item.id,
       }}
-      renderAheadOffset={ITEM_HEIGHT * (isWeb ? 8 : 12)}
+      renderAheadOffset={ITEM_HEIGHT * (isWeb ? 5 : 8)}
       rowRenderer={rowRenderer}
       dataProvider={dataProvider}
       layoutProvider={layoutProvider}
@@ -374,7 +378,7 @@ const sheet = StyleSheet.create({
   listStyle: {
     width: '100%',
     minWidth: 300,
-    minHeight: 1,
+    minHeight: 100,
     height: '100%',
     maxHeight: '100%',
   },
@@ -410,13 +414,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
     }, [])
 
-    const layoutProps = useLayout({
-      stateless: true,
-      onLayout: (x) => {
-        onSizeChanged?.(x.nativeEvent.layout)
-      },
-    })
-
     useEffect(() => {
       searchPageStore.setChildren(children)
     }, [searchPageStore.results])
@@ -424,8 +421,11 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     // memo is important here, keeps scroll from stopping on ios safari
     return useMemo(() => {
       return (
-        <View style={{ width: '100%', height: '100%', overflow: 'hidden' }} {...layoutProps}>
-          <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
+        <View
+          style={{ width: '100%', height: '100%', overflow: 'hidden' }}
+          onLayout={(x) => onSizeChanged?.(x.nativeEvent.layout)}
+        >
+          <ContentScrollView {...props} id="search" ref={combineRefs(ref, scrollRef) as any}>
             <PageContentWithFooter>
               <SearchHeader />
               <SearchContent id={id} />

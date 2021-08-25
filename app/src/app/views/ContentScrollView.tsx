@@ -138,6 +138,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       if (isAtTop) {
         if (!scrollStore.isAtTop) {
           scrollStore.setIsAtTop(true)
+          scrollStore.setLock('none')
         }
         // safari desktop wants this
         // if (scrollStore.lock === 'vertical') {
@@ -201,7 +202,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           removeClippedSubviews
           ref={combineRefs(scrollRef, ref)}
           {...props}
-          scrollEventThrottle={40}
+          scrollEventThrottle={16}
           onScroll={(e) => {
             // calls the recyclerview scroll
             props.onScroll?.(e)
@@ -212,8 +213,11 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
             if (state.current!.lastYs) {
               state.current!.lastYs = null
             }
-            const hasBeenAWhile = Date.now() - lastUpdate.current > THROTTLE_SCROLL
-            if (atTop !== isScrollAtTop.get(id) || hasBeenAWhile) {
+            const isChangingTopIsAtTop = atTop !== isScrollAtTop.get(id)
+            const hasBeenAWhile =
+              isChangingTopIsAtTop || Date.now() - lastUpdate.current > THROTTLE_SCROLL
+            const shouldUpdate = isChangingTopIsAtTop || hasBeenAWhile
+            if (shouldUpdate) {
               lastUpdate.current = Date.now()
               doUpdate(y, e)
             }
