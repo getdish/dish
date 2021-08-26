@@ -111,7 +111,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
               bottom={0}
               zIndex={100}
             >
-              <InputTagButton noLink>{curLocName}</InputTagButton>
+              <InputTagButton noLink name={curLocName} />
             </AbsoluteHStack>
           )}
 
