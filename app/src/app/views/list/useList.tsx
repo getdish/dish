@@ -1,4 +1,4 @@
-import { client, reviewUpsert, review_constraint } from '@dish/graph'
+import { client, reviewUpsert, review_constraint, useRefetch } from '@dish/graph'
 import { useEffect, useState } from 'react'
 import { Toast } from 'snackui'
 
@@ -28,7 +28,9 @@ export const useList = ({ slug }: ListIDProps) => {
 }
 
 export const useListFavorite = ({ slug }: { slug: string }) => {
-  const [list] = slug ? queryList(slug) : []
+  const doRefetch = useRefetch()
+  const listQuery = slug ? queryList(slug) : []
+  const list = listQuery[0]
   const listId = list?.id
   const { user } = useUserStore()
   const userId = user?.id
@@ -44,7 +46,7 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
       })
       .aggregate?.count() || 0
   const reviewsCount = reviewsCountOG + (isFavorited ? 1 : 0)
-  const reviewQ = userId
+  const reviewQuery = userId
     ? list?.list_reviews({
         where: {
           type: {
@@ -59,7 +61,7 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
         },
       })
     : null
-  const review = reviewQ?.[0]
+  const review = reviewQuery?.[0]
   const isFavoritedCurrent = review?.favorited ?? false
 
   useEffect(() => {
@@ -90,5 +92,10 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
     Toast.show(`Saved`)
   }
 
-  return { list, isFavorited, toggleFavorite, reviewsCount }
+  const refetch = () => {
+    doRefetch(listQuery)
+    doRefetch(reviewQuery)
+  }
+
+  return { refetch, list, isFavorited, toggleFavorite, reviewsCount }
 }

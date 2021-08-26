@@ -1,5 +1,5 @@
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
-import { clamp, debounce } from 'lodash'
+import { clamp } from 'lodash'
 import { useEffect } from 'react'
 import { Keyboard } from 'react-native'
 
@@ -92,11 +92,11 @@ export const useAppAutocompleteEffects = () => {
     const handleShow = () => {
       // handleHide.cancel()
     }
-    Keyboard.addListener('keyboardWillHide', handleHide)
-    Keyboard.addListener('keyboardWillShow', handleShow)
+    const remove = Keyboard.addListener('keyboardWillHide', handleHide)
+    const remove2 = Keyboard.addListener('keyboardWillShow', handleShow)
     return () => {
-      Keyboard.removeListener('keyboardWillHide', handleHide)
-      Keyboard.removeListener('keyboardWillShow', handleShow)
+      remove.remove()
+      remove2.remove()
     }
   }, [])
 

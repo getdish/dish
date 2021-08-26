@@ -1,6 +1,7 @@
 import { LngLat } from '../types/homeTypes'
 
 type Base = {
+  id?: string
   icon?: string
   name: string
   description?: string
@@ -35,9 +36,8 @@ export function createAutocomplete<A extends Base = any>(
 ): A & AutocompleteItemFull {
   return {
     id:
-      item['slug'] ??
-      (item['center'] ? JSON.stringify(item['center']) : null) ??
-      `${Math.random()}`,
+      item['id'] ?? (item['center'] ? JSON.stringify(item['center']) : null) ?? `${Math.random()}`,
+    slug: item['slug'],
     is: 'autocomplete',
     ...item,
     type: item.type as any,

@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import { graphql, query, resolved } from '@dish/graph'
+import { graphql, query, resolved, useRefetch } from '@dish/graph'
 import { Loader } from '@dish/react-feather'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ScrollView } from 'react-native'
@@ -12,14 +12,15 @@ import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getFuzzyMatchQuery } from '../../../helpers/getFuzzyMatchQuery'
 import { searchRestaurants } from '../../../helpers/searchRestaurants'
 import { queryList } from '../../../queries/queryList'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { appMapStore } from '../../AppMap'
 import { AutocompleteItemView } from '../../AutocompleteItemView'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const ListAddRestuarant = graphql(
-  ({ onAdd, listSlug }: { onAdd: (r: { id: string }) => any; listSlug: string }) => {
-    const [list] = queryList(listSlug)
+  ({ onAdd, listSlug }: { onAdd: (id: string) => any; listSlug: string }) => {
+    const refetch = useRefetch()
+    const listQuery = queryList(listSlug)
+    const list = listQuery[0]
     const listRegion = list.region
     const region = useRegionQuery(listRegion)
     const bbox = region.data?.bbox
@@ -28,12 +29,19 @@ export const ListAddRestuarant = graphql(
     const [results, setResults] = useState<AutocompleteItemFull[]>([])
     const [searchQuery, setQuery] = useState('')
 
+    const allAddedIds = list.restaurants({ limit: 200 }).map((x) => ({
+      id: x.restaurant.id,
+      slug: x.restaurant.slug,
+    }))
+
+    console.log('allAddedIds', allAddedIds)
+
     useEffect(() => {
       const dispose = series([
         () => {
           setIsSearching(true)
         },
-        () => sleep(300),
+        () => sleep(250),
         async () => {
           if (bbox) {
             // search in region
@@ -75,22 +83,25 @@ export const ListAddRestuarant = graphql(
 
     const resultsItems = useMemo(() => {
       return results.map((result, index) => {
+        const onAddCb = async () => {
+          const id = result.id
+          console.log('what the fuck', result)
+          await onAdd(id)
+          refetch(listQuery)
+        }
         return (
           <AutocompleteItemView
             preventNavigate
             hideIcon
             key={result.id ?? index}
             hideBackground
-            onSelect={() => {}}
+            onSelect={onAddCb}
             target="search"
             showAddButton
             index={index}
             result={result}
-            onAdd={async () => {
-              const slug = result.id
-              const id = await resolved(() => queryRestaurant(slug)[0]?.id)
-              onAdd({ id })
-            }}
+            onAdd={onAddCb}
+            isAdded={allAddedIds.some((x) => x.id === result.id)}
           />
         )
       })

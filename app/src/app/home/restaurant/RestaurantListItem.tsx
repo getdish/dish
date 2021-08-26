@@ -71,8 +71,6 @@ type RestaurantListItemProps = {
   description?: string | null
   editableDescription?: boolean
   onChangeDescription?: (next: string) => void
-  editablePosition?: boolean
-  onChangePosition?: (next: number) => void
   dishSlugs?: string[]
   editableDishes?: boolean
   onChangeDishes?: (slugs: string[]) => void
@@ -136,8 +134,6 @@ const RestaurantListItemContent = memo(
       onChangeDishes,
       onChangeDescription,
       editableDescription,
-      onChangePosition,
-      editablePosition,
     } = props
     const media = useMedia()
     const [restaurant] = queryRestaurant(restaurantSlug)
@@ -194,7 +190,8 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 1
         : 1
-    const titleFontSize = Math.round((media.sm ? 20 : 23) * titleFontScale)
+    const titleFontSize =
+      Math.round((media.sm ? 20 : 23) * titleFontScale) * (hideDescription ? 0.8 : 1)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
@@ -216,6 +213,8 @@ const RestaurantListItemContent = memo(
         />
       </Suspense>
     )
+
+    const shouldShowOneLine = hideDescription && !description && !state.editing
 
     return (
       <Hoverable
@@ -248,9 +247,10 @@ const RestaurantListItemContent = memo(
           {...(isExpanded && {
             transform: [{ translateX: 300 }],
           })}
-          {...(hideDescription && {
+          {...(shouldShowOneLine && {
             flexDirection: 'row',
             alignItems: 'center',
+            paddingVertical: 5,
           })}
         >
           {/* expanded content */}
@@ -314,13 +314,19 @@ const RestaurantListItemContent = memo(
             <VStack
               hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
               width={950}
-              {...(hideDescription && {
+              {...(shouldShowOneLine && {
                 width: 'auto',
               })}
               position="relative"
             >
               {/* LINK */}
-              <Link tagName="div" name="restaurant" params={{ slug: restaurantSlug }} zIndex={2}>
+              <Link
+                flex={1}
+                tagName="div"
+                name="restaurant"
+                params={{ slug: restaurantSlug }}
+                zIndex={2}
+              >
                 <HStack
                   paddingLeft={hideRate ? 10 : 64}
                   paddingTop={15}
@@ -333,16 +339,16 @@ const RestaurantListItemContent = memo(
 
                   <Spacer size="xs" />
 
-                  {hideDescription && (
+                  {shouldShowOneLine && (
                     <Image
-                      source={{ uri: getImageUrl(restaurant.image ?? '', 62, 62) }}
+                      source={{ uri: getImageUrl(restaurant.image ?? '', 42, 42) }}
                       style={{
                         marginVertical: -15,
                         marginRight: 2,
                         marginLeft: 8,
-                        width: 62,
-                        height: 62,
-                        borderRadius: 62,
+                        width: 42,
+                        height: 42,
+                        borderRadius: 42,
                       }}
                     />
                   )}
@@ -358,6 +364,10 @@ const RestaurantListItemContent = memo(
                       hoverStyle={{
                         backgroundColor: theme.backgroundColorSecondary,
                       }}
+                      {...(shouldShowOneLine && {
+                        width: 200,
+                        overflow: 'hidden',
+                      })}
                     >
                       <Text
                         fontSize={titleFontSize}
@@ -382,7 +392,7 @@ const RestaurantListItemContent = memo(
 
           {/* ROW: CENTER CONTENT AREA */}
           {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
-          {!hideDescription && (
+          {!shouldShowOneLine && (
             <HStack
               y={-10}
               pointerEvents="none"
@@ -449,9 +459,7 @@ const RestaurantListItemContent = memo(
             {beforeBottomRow}
 
             {!!editableDescription && !state.editing && (
-              <Button onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
-                Edit Description
-              </Button>
+              <Button onPress={() => setState((prev) => ({ ...prev, editing: true }))}>Edit</Button>
             )}
 
             {!!editableDescription && state.editing && (
@@ -538,7 +546,7 @@ const RestaurantListItemContent = memo(
           </HStack>
 
           {/* bottom spacing */}
-          <Spacer size={10} />
+          {!hideDescription && <Spacer size={10} />}
         </VStack>
       </Hoverable>
     )

@@ -35,7 +35,6 @@
     "bull": "^3.22.8",
     "cheerio": "^1.0.0-rc.5",
     "chrono-node": "^2.1.6",
-    "crypto-js": "^4.1.1",
     "csv-parse": "^4.9.0",
     "fast-levenshtein": "^3.0.0",
     "form-data": "^4.0.0",

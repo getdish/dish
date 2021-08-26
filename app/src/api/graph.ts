@@ -125,6 +125,8 @@ const fetchFromGraph = async (req: Request, body?: any) => {
   }
 }
 
+const baseTables = ['list', 'user', 'restaurant', 'review']
+
 const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheResponse | null> => {
   if (avoidCache) {
     return null
@@ -142,7 +144,7 @@ const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheRespons
   if (operation.operation === 'mutation') {
     // brute force
     // TODO can make this better, also can make this happen in a throttled way (also in a worker)
-    const names = operation.selectionSet.selections
+    let names = operation.selectionSet.selections
       .map((x) => (x.kind === 'Field' ? x.name.value : null))
       .filter(isPresent)
       .map((x) =>
@@ -151,7 +153,19 @@ const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheRespons
           .replace('update_', '')
           .replace('upsert_', '')
           .replace('delete_', '')
+          .replace('_by_pk', '')
       )
+
+    // ensure parent table clears too
+    for (const baseName of baseTables) {
+      if (names.some((x) => x !== baseName && x.startsWith(baseName))) {
+        names.push(baseName)
+      }
+    }
+
+    // ensure one of each
+    names = [...new Set(names)]
+
     console.log(' [mutation] clearing cache for', names)
     for (const name of names) {
       const pattern = `*${name}*`
