@@ -9,6 +9,7 @@ import {
   menuItemsUpsertMerge,
   restaurantUpdate,
   restaurantUpsertManyTags,
+  tagUpsert,
 } from '@dish/graph'
 import { Database } from '@dish/helpers-node'
 import { DEBUG_LEVEL, WorkerJob } from '@dish/worker'
@@ -51,7 +52,7 @@ import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
 import { RestaurantBaseScore } from './RestaurantBaseScore'
 import { RestaurantRatings } from './RestaurantRatings'
 import { RestaurantTagScores } from './RestaurantTagScores'
-import { Tagging } from './Tagging'
+import { GEM_UIID, Tagging } from './Tagging'
 import { updateAllRestaurantGeocoderIDs, updateGeocoderID } from './update_all_geocoder_ids'
 
 process.on('unhandledRejection', (reason, promise) => {
@@ -232,7 +233,25 @@ export class Self extends WorkerJob {
     }
   }
 
+  async seed() {
+    await tagUpsert([
+      {
+        name: 'Gem',
+        slug: 'lenses__gems',
+        alternates: ['notable'],
+        type: 'lense',
+        id: GEM_UIID,
+      },
+      {
+        name: 'Unique',
+        slug: 'lenses__unique',
+        type: 'lense',
+      },
+    ])
+  }
+
   async preMerge(restaurant: RestaurantWithId) {
+    await this.seed()
     this.main_db = Database.main_db
     this._debugDaemon()
     this.restaurant = restaurant

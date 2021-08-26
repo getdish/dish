@@ -36,7 +36,6 @@ import {
 } from '../../src/photo-helpers'
 import { deleteAllTestScrapes, scrapeInsert } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
-import { GEM_UIID } from '../../src/self/Tagging'
 import { restaurantFindOneWithTagsSQL } from '../../src/utils'
 import { breakdown } from '../restaurant_base_breakdown'
 
@@ -76,25 +75,6 @@ async function reset(t: ExecutionContext<Context>) {
       return scrapeInsert(s)
     })
   )
-  // const parent = await tagUpsert([
-  //   {
-  //     name: 'Lenses'
-  //   }
-  // ])
-  const inserted = await tagUpsert([
-    {
-      name: 'Gem',
-      slug: 'lenses__gems',
-      alternates: ['notable'],
-      type: 'lense',
-      id: GEM_UIID,
-    },
-    {
-      name: 'Unique',
-      slug: 'lenses__unique',
-      type: 'lense',
-    },
-  ])
 }
 
 async function addTags(
