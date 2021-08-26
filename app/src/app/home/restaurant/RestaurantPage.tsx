@@ -92,7 +92,7 @@ const RestaurantPage = memo(
 
       useSetAppMap({
         hideRegions: true,
-        zoomOnHover: true,
+        zoomOnHover: false,
         isActive: props.isActive,
         results: [
           {
@@ -145,7 +145,6 @@ const RestaurantPage = memo(
 
       const themeName = useThemeName()
       const headerThemeName = themeName === 'dark' ? `${colors.name}-dark` : `${colors.name}-light`
-      console.log('headerThemeName', headerThemeName)
 
       if (!restaurant) {
         return <NotFoundPage />

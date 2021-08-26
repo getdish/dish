@@ -721,6 +721,11 @@ export type UseSetAppMapProps = MapOpts & {
   region?: string | null
 }
 
+const setToPosition = (position: Partial<AppMapPosition>) => {
+  homeStore.updateCurrentState('useSetAppMap.position', position)
+  appMapStore.setPosition(position)
+}
+
 export const useSetAppMap = (props: UseSetAppMapProps) => {
   const {
     results,
@@ -738,14 +743,7 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
     if (!isActive) return
     if (!center || !span) return
     if (fitToResults) return
-    homeStore.updateCurrentState('useSetAppMap.position', {
-      center,
-      span,
-    })
-    appMapStore.setPosition({
-      center,
-      span,
-    })
+    setToPosition({ center, span, via: 'useSetAppMap' })
   }, [fitToResults, isActive, center?.lat, center?.lng, span?.lat, span?.lng])
 
   useEffect(() => {
@@ -836,7 +834,7 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
               center,
               span,
             }
-            appMapStore.setPosition({
+            setToPosition({
               via: 'results',
               ...position,
             })

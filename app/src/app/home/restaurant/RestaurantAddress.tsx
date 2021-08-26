@@ -1,15 +1,13 @@
 import { ExternalLink, MapPin } from '@dish/react-feather'
 import React from 'react'
-import { HStack, Spacer, Text, useMedia, useTheme } from 'snackui'
+import { useMedia, useTheme } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 
 export const RestaurantAddress = ({
-  color = 'rgba(125,125,125,1)',
   address,
   curLocInfo,
   size = 'xs',
@@ -17,23 +15,26 @@ export const RestaurantAddress = ({
   size: AddressSize
   address: string
   curLocInfo: GeocodePlace | null
-  color?: string
 }) => {
   const media = useMedia()
   const theme = useTheme()
   return (
     <Link href={`https://www.google.com/maps/search/?q=${encodeURIComponent(address)}`}>
       <SmallButton
-        tooltip={size === 'xs' ? getAddressText(curLocInfo, address, 'lg') : null}
+        tooltip={
+          size.endsWith('xs') || size === 'sm' ? getAddressText(curLocInfo, address, 'lg') : null
+        }
         backgroundColor="transparent"
-        icon={<MapPin color={theme.color} size={10} style={{ opacity: 0.5 }} />}
+        icon={
+          <MapPin color={theme.color} size={size === 'xxs' ? 16 : 10} style={{ opacity: 0.5 }} />
+        }
         iconAfter={<ExternalLink style={{ opacity: 0.5 }} color={theme.color} size={10} />}
         textProps={{
           maxWidth: media.sm ? 100 : 140,
           opacity: 0.65,
         }}
       >
-        {getAddressText(curLocInfo, address, size)}
+        {size !== 'xxs' && getAddressText(curLocInfo, address, size)}
       </SmallButton>
     </Link>
   )

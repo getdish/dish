@@ -1,7 +1,8 @@
 import { order_by, photo, useLazyQuery, useQuery, useTransactionQuery } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { ChevronLeft, ChevronRight } from '@dish/react-feather'
-import { isPlainObject, orderBy, uniqBy } from 'lodash'
+import { selectFields } from 'gqty'
+import { last, orderBy, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { AbsoluteVStack, HStack, LoadingItems, VStack, useWindowSize } from 'snackui'
@@ -10,7 +11,7 @@ import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getWindowHeight, getWindowWidth } from '../../../helpers/getWindow'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { router, useIsRouteActive, useRoute } from '../../../router'
+import { router, useIsRouteActive } from '../../../router'
 import { Image } from '../../views/Image'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 
@@ -34,7 +35,10 @@ export default memo(function GalleryPage() {
         <StackViewCloseButton />
       </AbsoluteVStack>
       <Suspense fallback={<LoadingItems />}>
-        <GalleryLightbox restaurantSlug={route.params.restaurantSlug} />
+        <GalleryLightbox
+          restaurantSlug={route.params.restaurantSlug}
+          index={route.params.offset ?? 0}
+        />
       </Suspense>
     </AbsoluteVStack>
   )
@@ -42,271 +46,273 @@ export default memo(function GalleryPage() {
 
 const ThumbnailSize = 150
 
-export const GalleryLightbox = ({
-  restaurantSlug,
-  index: defaultIndex = 0,
-}: {
-  restaurantSlug: string
-  index?: number
-}) => {
-  const [activeImage, setActiveImage] = useState<{
-    index: number
-    url: string
-  }>(() => {
-    return {
-      url: '',
-      index: defaultIndex,
+export const GalleryLightbox = memo(
+  ({ restaurantSlug, index: defaultIndex = 0 }: { restaurantSlug: string; index?: number }) => {
+    const [activeImage, setActiveImage] = useState<{
+      index: number
+      url: string
+    }>(() => {
+      return {
+        url: '',
+        index: defaultIndex,
+      }
+    })
+    const query = useQuery()
+    const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
+    const [photosListRaw, setPhotosList] = useState<photo[]>(() => [])
+    const [hasLoadedFirstImage, setHasLoadedFirstImage] = useState(false)
+    const [restaurant] = queryRestaurant(restaurantSlug)
+    if (!restaurant) {
+      return null
     }
-  })
-  const query = useQuery()
-  const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
-  const [photosListRaw, setPhotosList] = useState<photo[]>(() => [])
-  const [hasLoadedFirstImage, setHasLoadedFirstImage] = useState(false)
-  const [restaurant] = queryRestaurant(restaurantSlug)
-  if (!restaurant) {
-    return null
-  }
-  const heroImage = restaurant.image
-    ? ({
-        url: restaurant.image,
-        quality: 100,
-      } as photo)
-    : null
+    const heroImage = restaurant.image
+      ? ({
+          url: restaurant.image,
+          quality: 100,
+        } as photo)
+      : null
 
-  const photosList = useMemo(() => {
-    return heroImage ? [heroImage, ...photosListRaw] : photosListRaw
-  }, [restaurant.image, photosListRaw])
+    const photosList = useMemo(() => {
+      return heroImage ? [heroImage, ...photosListRaw] : photosListRaw
+    }, [restaurant.image, photosListRaw])
 
-  // ??
-  restaurant.id
+    // ??
+    restaurant.id
 
-  useTransactionQuery(
-    () => {
-      const photoTable = restaurant.photo_table({
-        limit: pagination.limit,
-        offset: 0,
-        order_by: [
-          {
-            photo: {
-              quality: order_by.desc,
-            },
-          },
-        ],
-      })
-      return photoTable
-        .map((v) => {
-          v.photo.id
-          v.photo.url
-          v.photo.quality
-          return v.photo
-        })
-        .filter(isPresent)
-    },
-    {
-      onCompleted(data) {
-        const bound = (x = 0) => Math.min(2000, Math.round(x / 500) * 500)
-        setPhotosList(
-          // @ts-ignore
-          uniqBy(data, (v) => getImageUrl(v.url, bound(getWindowWidth()), bound(getWindowHeight())))
-        )
-      },
-    }
-  )
-
-  const { data: hasMore } = useTransactionQuery(
-    (_query, { pagination, restaurant_id }) => {
-      return (
-        // @ts-ignore
-        (query
-          .photo_xref_aggregate({
-            where: {
-              restaurant_id: {
-                _eq: restaurant_id,
+    useTransactionQuery(
+      () => {
+        const photoTable = restaurant.photo_table({
+          limit: pagination.limit,
+          offset: 0,
+          order_by: [
+            {
+              photo: {
+                quality: order_by.desc,
               },
             },
-            ...pagination,
-          })
-          .aggregate.count() ?? 0) > 0
-      )
-    },
-    {
-      variables: { pagination, restaurant_id: restaurant.id },
-    }
-  )
-
-  let [fetchMore, { isLoading: isFetchingMore }] = useLazyQuery(
-    (_query, { limit, offset }: typeof pagination) => {
-      const photo_table = restaurant.photo_table({
-        limit,
-        offset,
-        order_by: [
-          {
-            photo: {
-              quality: order_by.desc,
-            },
-          },
-        ],
-      })
-      return photo_table.map(({ photo }) => {
-        photo.id
-        photo.url
-        photo.quality
-        return photo
-      })
-    },
-    {
-      onCompleted(data) {
-        setPhotosList((prev) =>
-          orderBy(
-            uniqBy([...prev, ...data], (v) => v.url),
-            (v) => v.quality,
-            'desc'
+          ],
+        })
+        return photoTable
+          .map((v) => selectFields(v.photo, ['id', 'url', 'quality']))
+          .filter(isPresent)
+      },
+      {
+        onCompleted(data) {
+          const bound = (x = 0) => Math.min(2000, Math.round(x / 500) * 500)
+          setPhotosList(
+            uniqBy(data, (v) =>
+              // @ts-ignore
+              getImageUrl(v.url, bound(getWindowWidth()), bound(getWindowHeight()))
+            )
           )
+        },
+      }
+    )
+
+    const { data: hasMore } = useTransactionQuery(
+      (_query, { pagination, restaurant_id }) => {
+        return (
+          (query
+            .photo_xref_aggregate({
+              where: {
+                restaurant_id: {
+                  _eq: restaurant_id,
+                },
+              },
+              ...pagination,
+            })
+            ?.aggregate?.count() ?? 0) > 0
         )
       },
-    }
-  )
+      {
+        variables: { pagination, restaurant_id: restaurant.id },
+      }
+    )
 
-  const activeIndex = activeImage.index
-
-  useEffect(() => {
-    if (photosList[activeIndex]?.url) {
-      setActiveImage({
-        url: photosList[activeIndex].url ?? '',
-        index: activeIndex,
-      })
-    }
-  }, [activeIndex, setActiveImage, photosList])
-
-  const { setLeftImage, setRightImage } = useMemo(
-    () => ({
-      setLeftImage() {
-        setActiveImage((prevActive) => {
-          const currentIndex = prevActive.index
-          const newIndex = currentIndex - 1 < 0 ? photosList.length - 1 : currentIndex - 1
-          if (photosList[newIndex]?.url) {
-            return {
-              url: photosList[newIndex].url ?? '',
-              index: newIndex,
-            }
-          }
-          return prevActive
+    const [fetchMore, state] = useLazyQuery(
+      (_query, { limit, offset }: typeof pagination) => {
+        const photo_table = restaurant.photo_table({
+          limit,
+          offset,
+          order_by: [
+            {
+              photo: {
+                quality: order_by.desc,
+              },
+            },
+          ],
+        })
+        return photo_table.map(({ photo }) => {
+          photo.id
+          photo.url
+          photo.quality
+          return photo
         })
       },
-      setRightImage() {
-        setActiveImage((prevActive) => {
-          const currentIndex = prevActive.index
-          const newIndex = currentIndex + 1 >= photosList.length - 1 ? 0 : currentIndex + 1
-          if (photosList[newIndex]?.url) {
-            return {
-              url: photosList[newIndex].url ?? '',
-              index: newIndex,
-            }
-          }
-          return prevActive
-        })
-      },
-    }),
-    [photosList]
-  )
+      {
+        onCompleted(data) {
+          console.log('loaded', data)
+          setPhotosList((prev) =>
+            orderBy(
+              uniqBy([...prev, ...data], (v) => v.url),
+              (v) => v.quality,
+              'desc'
+            )
+          )
+        },
+      }
+    )
 
-  if (isWeb) {
+    let { isLoading } = state
+
+    const activeIndex = activeImage.index
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('👀 GalleryPage', { isLoading, activeIndex, photosList, activeImage, state })
+    }
+
+    // fallback ensure always a photo
+    const photo = photosList[activeIndex] ?? last(photosList)
+
     useEffect(() => {
-      const handleKeyPress = (e: KeyboardEvent) => {
-        switch (e.key) {
-          case 'ArrowLeft':
-            e.preventDefault()
-            setLeftImage()
-            break
-          case 'ArrowRight':
-            e.preventDefault()
-            setRightImage()
-            break
-        }
+      if (photo?.url) {
+        setActiveImage({
+          url: photo.url ?? '',
+          index: activeIndex,
+        })
       }
-      console.log('add event listener for gallery')
-      window.addEventListener('keyup', handleKeyPress, true)
-      return () => {
-        window.removeEventListener('keyup', handleKeyPress, true)
-      }
-    }, [setLeftImage, setRightImage])
-  }
+    }, [activeIndex, photosList])
 
-  return (
-    <>
-      <HStack flex={1}>
-        <VStack
-          onPress={setLeftImage}
-          cursor="pointer"
-          zIndex={100}
-          paddingHorizontal={10}
-          pointerEvents="auto"
-          justifyContent="center"
-        >
-          <ChevronLeft color="#fff" size={30} />
-        </VStack>
-        <VStack alignItems="center" justifyContent="center" flex={1} marginVertical={3}>
-          {!!activeImage.url && (
-            <Image
-              source={{ uri: activeImage.url }}
-              style={{
-                width: '100%',
-                maxWidth: '95%',
-                height: `100%`,
+    const { setLeftImage, setRightImage } = useMemo(
+      () => ({
+        setLeftImage() {
+          setActiveImage((prevActive) => {
+            const currentIndex = prevActive.index
+            const newIndex = currentIndex - 1 < 0 ? photosList.length - 1 : currentIndex - 1
+            if (photosList[newIndex]?.url) {
+              return {
+                url: photosList[newIndex].url ?? '',
+                index: newIndex,
+              }
+            }
+            return prevActive
+          })
+        },
+        setRightImage() {
+          setActiveImage((prevActive) => {
+            const currentIndex = prevActive.index
+            const newIndex = currentIndex + 1 >= photosList.length - 1 ? 0 : currentIndex + 1
+            if (photosList[newIndex]?.url) {
+              return {
+                url: photosList[newIndex].url ?? '',
+                index: newIndex,
+              }
+            }
+            return prevActive
+          })
+        },
+      }),
+      [photosList]
+    )
+
+    if (isWeb) {
+      useEffect(() => {
+        const handleKeyPress = (e: KeyboardEvent) => {
+          switch (e.key) {
+            case 'ArrowLeft':
+              e.preventDefault()
+              setLeftImage()
+              break
+            case 'ArrowRight':
+              e.preventDefault()
+              setRightImage()
+              break
+          }
+        }
+        console.log('add event listener for gallery')
+        window.addEventListener('keyup', handleKeyPress, true)
+        return () => {
+          window.removeEventListener('keyup', handleKeyPress, true)
+        }
+      }, [setLeftImage, setRightImage])
+    }
+
+    return (
+      <>
+        <HStack flex={1}>
+          <VStack
+            onPress={setLeftImage}
+            cursor="pointer"
+            zIndex={100}
+            paddingHorizontal={10}
+            pointerEvents="auto"
+            justifyContent="center"
+          >
+            <ChevronLeft color="#fff" size={30} />
+          </VStack>
+          <VStack alignItems="center" justifyContent="center" flex={1} marginVertical={3}>
+            {!!activeImage.url && (
+              <Image
+                source={{ uri: activeImage.url }}
+                style={{
+                  width: '100%',
+                  maxWidth: '95%',
+                  height: `100%`,
+                }}
+                onLoad={() => {
+                  setHasLoadedFirstImage(true)
+                }}
+                resizeMode="contain"
+              />
+            )}
+          </VStack>
+          <VStack
+            onPress={setRightImage}
+            justifyContent="center"
+            cursor="pointer"
+            pointerEvents="auto"
+            zIndex={100}
+            paddingHorizontal={10}
+          >
+            <ChevronRight color="#fff" size={30} />
+          </VStack>
+        </HStack>
+
+        <VStack height={ThumbnailSize}>
+          {hasLoadedFirstImage && (
+            <GalleryLightboxPhotosList
+              photos={photosList}
+              onPhotoPress={(photo, index) => {
+                setActiveImage({
+                  url: photo.url ?? '',
+                  index,
+                })
               }}
-              onLoad={() => {
-                setHasLoadedFirstImage(true)
+              onFetchMore={() => {
+                if (hasMore && !isLoading) {
+                  isLoading = true
+                  fetchMore({
+                    args: pagination,
+                  })
+                    .then((data) => {
+                      setPagination({
+                        limit: pagination.limit,
+                        offset: pagination.offset + data.length,
+                      })
+                    })
+                    .catch(console.error)
+                } else {
+                  // No more photos left
+                }
               }}
-              resizeMode="contain"
+              activeImage={activeImage}
             />
           )}
         </VStack>
-        <VStack
-          onPress={setRightImage}
-          justifyContent="center"
-          cursor="pointer"
-          pointerEvents="auto"
-          zIndex={100}
-          paddingHorizontal={10}
-        >
-          <ChevronRight color="#fff" size={30} />
-        </VStack>
-      </HStack>
-
-      <VStack height={ThumbnailSize}>
-        {hasLoadedFirstImage && (
-          <GalleryLightboxPhotosList
-            photos={photosList}
-            onPhotoPress={(photo, index) => {
-              setActiveImage({
-                url: photo.url ?? '',
-                index,
-              })
-            }}
-            onFetchMore={() => {
-              if (hasMore && !isFetchingMore) {
-                isFetchingMore = true
-                fetchMore({
-                  args: pagination,
-                })
-                  .then((data) => {
-                    setPagination({
-                      limit: pagination.limit,
-                      offset: pagination.offset + data.length,
-                    })
-                  })
-                  .catch(console.error)
-              } else {
-                // No more photos left
-              }
-            }}
-            activeImage={activeImage}
-          />
-        )}
-      </VStack>
-    </>
-  )
-}
+      </>
+    )
+  }
+)
 
 const GalleryLightboxPhotosList = ({
   photos,

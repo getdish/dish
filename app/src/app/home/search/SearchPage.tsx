@@ -26,6 +26,7 @@ import {
   Text,
   VStack,
   combineRefs,
+  useDebounceEffect,
   useLayout,
   useMedia,
 } from 'snackui'
@@ -172,13 +173,17 @@ const SearchPageContent = memo(function SearchPageContent(
 
   const wasActive = useLastValue(props.isActive)
 
-  useEffect(() => {
-    if (!props.isActive) return
-    // this should fix going back to search results triggering search
-    if (!wasActive) return
-    console.log('searchpage run search', props.isActive, wasActive, props)
-    searchPageStore.runSearch({})
-  }, [searchKey])
+  useDebounceEffect(
+    () => {
+      if (!props.isActive) return
+      // this should fix going back to search results triggering search
+      if (!wasActive) return
+      console.log('searchpage run search', props.isActive, wasActive, props)
+      searchPageStore.runSearch({})
+    },
+    100,
+    [searchKey]
+  )
 
   useSetAppMap({
     isActive: props.isActive,

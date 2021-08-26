@@ -21,29 +21,43 @@ const baseTheme = {
   colorAlt: blue,
 }
 
-const active: MyTheme = {
-  name: 'active',
-  ...baseTheme,
-  color: '#ffffff',
-  colorSecondary: '#ffffff',
-  backgroundColor: blue,
-  backgroundColorSecondary: blue,
-  backgroundColorTertiary: `${blue}99`,
-  backgroundColorQuartenary: `${blue}77`,
-  backgroundColorTransluscent: `${blue}55`,
-  borderColor: blue,
-  borderColorHover: blue,
+const lightBase = {
+  colorAlt: blue,
+  // restaurantitem header + loading effects want this to be off white
+  backgroundColorTransluscent: '#e2e2e222',
+  backgroundColorTransluscentHover: '#e2e2e233',
+  backgroundColorDarker: '#f6f6f6',
+  backgroundColorAlt: blue200,
+  borderColor: '#f2f2f2',
+  borderColorHover: '#eeeeee',
+  color: '#111111',
+  colorSecondary: '#444444',
+  colorTertiary: '#777777',
+  colorQuartenary: '#aaaaaa',
+  cardBackgroundColor: '#ffffff',
+  backgroundColorTransparent: 'rgba(255,255,255,0)',
+  shadowColor: `rgba(0,0,0,0.1)`,
+  shadowColorLighter: `rgba(0,0,0,0.05)`,
 }
 
-const error: MyTheme = {
-  name: 'error',
+const light: MyTheme = {
+  name: 'light',
   ...baseTheme,
-  backgroundColor: 'rgb(245, 38, 102)',
-  backgroundColorSecondary: 'rgb(245, 38, 102)',
-  backgroundColorTertiary: 'rgba(245, 38, 102, 0.85)',
-  backgroundColorQuartenary: 'rgba(245, 38, 102, 0.7)',
-  borderColor: 'rgb(205, 28, 92)',
-  borderColorHover: 'rgb(205, 28, 92)',
+  ...lightBase,
+  backgroundColor: '#ffffff',
+  backgroundColorSecondary: '#f2f2f2',
+  backgroundColorTertiary: '#e9e9e9',
+  backgroundColorQuartenary: '#d9d9d9',
+}
+
+const lightTranslucent: MyTheme = {
+  name: 'lightTranslucent',
+  ...baseTheme,
+  ...lightBase,
+  backgroundColor: 'rgba(255,255,255,0.75)',
+  backgroundColorSecondary: 'rgba(250,250,250,0.6)',
+  backgroundColorTertiary: 'rgba(240,240,240,0.4)',
+  backgroundColorQuartenary: 'rgba(240,240,240,0.3)',
 }
 
 const darkBase = {
@@ -85,43 +99,29 @@ const darkTranslucent: MyTheme = {
   backgroundColorQuartenary: 'rgba(75,75,75,0.3)',
 }
 
-const lightBase = {
-  colorAlt: blue,
-  // restaurantitem header wants this to be off white
-  backgroundColorTransluscent: '#f2f2f222',
-  backgroundColorTransluscentHover: '#f2f2f233',
-  backgroundColorDarker: '#f6f6f6',
-  backgroundColorAlt: blue200,
-  borderColor: '#f2f2f2',
-  borderColorHover: '#eeeeee',
-  color: '#111111',
-  colorSecondary: '#444444',
-  colorTertiary: '#777777',
-  colorQuartenary: '#aaaaaa',
-  cardBackgroundColor: '#ffffff',
-  backgroundColorTransparent: 'rgba(255,255,255,0)',
-  shadowColor: `rgba(0,0,0,0.1)`,
-  shadowColorLighter: `rgba(0,0,0,0.05)`,
+const active: MyTheme = {
+  name: 'active',
+  ...baseTheme,
+  color: '#ffffff',
+  colorSecondary: '#ffffff',
+  backgroundColor: blue,
+  backgroundColorSecondary: blue,
+  backgroundColorTertiary: `${blue}99`,
+  backgroundColorQuartenary: `${blue}77`,
+  backgroundColorTransluscent: `${blue}55`,
+  borderColor: blue,
+  borderColorHover: blue,
 }
 
-const light: MyTheme = {
-  name: 'light',
+const error: MyTheme = {
+  name: 'error',
   ...baseTheme,
-  ...lightBase,
-  backgroundColor: '#ffffff',
-  backgroundColorSecondary: '#f2f2f2',
-  backgroundColorTertiary: '#e9e9e9',
-  backgroundColorQuartenary: '#d9d9d9',
-}
-
-const lightTranslucent: MyTheme = {
-  name: 'lightTranslucent',
-  ...baseTheme,
-  ...lightBase,
-  backgroundColor: 'rgba(255,255,255,0.75)',
-  backgroundColorSecondary: 'rgba(250,250,250,0.6)',
-  backgroundColorTertiary: 'rgba(240,240,240,0.4)',
-  backgroundColorQuartenary: 'rgba(240,240,240,0.3)',
+  backgroundColor: 'rgb(245, 38, 102)',
+  backgroundColorSecondary: 'rgb(245, 38, 102)',
+  backgroundColorTertiary: 'rgba(245, 38, 102, 0.85)',
+  backgroundColorQuartenary: 'rgba(245, 38, 102, 0.7)',
+  borderColor: 'rgb(205, 28, 92)',
+  borderColorHover: 'rgb(205, 28, 92)',
 }
 
 const colorThemes: { [key: string]: MyTheme } = {}

@@ -1,7 +1,7 @@
 import { LngLat } from '@dish/graph'
 
 export type AppMapPosition = {
-  via: 'home' | 'click' | 'hover' | 'init' | 'results'
+  via: 'home' | 'click' | 'hover' | 'init' | 'results' | 'useSetAppMap'
   center: LngLat
   span: LngLat
   at: number

@@ -1,9 +1,10 @@
 import { series, sleep } from '@dish/async'
 import { graphql, query, resolved, useRefetch } from '@dish/graph'
 import { Loader } from '@dish/react-feather'
+import { debounce } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { Input, Text, VStack, useTheme } from 'snackui'
+import { Input, Spacer, Text, VStack, useDebounce, useTheme } from 'snackui'
 
 import { blue } from '../../../constants/colors'
 import { AutocompleteItemFull } from '../../../helpers/createAutocomplete'
@@ -12,9 +13,47 @@ import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getFuzzyMatchQuery } from '../../../helpers/getFuzzyMatchQuery'
 import { searchRestaurants } from '../../../helpers/searchRestaurants'
 import { queryList } from '../../../queries/queryList'
+import { RegionApiResponse } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMap'
 import { AutocompleteItemView } from '../../AutocompleteItemView'
 import { SlantedTitle } from '../../views/SlantedTitle'
+
+const searchRestaurantsInBBox = async (bbox: RegionApiResponse['bbox'], searchQuery: string) => {
+  return await resolved(() => {
+    return query
+      .restaurant({
+        where: {
+          location: {
+            _st_within: bbox,
+          },
+          name: {
+            _ilike: getFuzzyMatchQuery(searchQuery),
+          },
+        },
+        limit: 20,
+      })
+      .map(createRestaurantAutocomplete)
+  })
+}
+
+const searchRestaurantsNearby = async (searchQuery: string) => {
+  const { center, span } = appMapStore.nextPosition
+  const closeSpan = {
+    lng: Math.max(0.1, span.lng),
+    lat: Math.max(0.1, span.lat),
+  }
+  const close = await resolved(() => searchRestaurants(searchQuery, center, closeSpan))
+  const further =
+    close.length < 5
+      ? await resolved(() =>
+          searchRestaurants(searchQuery, center, {
+            lng: closeSpan.lng * 2.5,
+            lat: closeSpan.lat * 2.5,
+          })
+        )
+      : []
+  return [...(close || []), ...(further || [])]
+}
 
 export const ListAddRestuarant = graphql(
   ({ onAdd, listSlug }: { onAdd: (id: string) => any; listSlug: string }) => {
@@ -28,13 +67,14 @@ export const ListAddRestuarant = graphql(
     const [isSearching, setIsSearching] = useState(false)
     const [results, setResults] = useState<AutocompleteItemFull[]>([])
     const [searchQuery, setQuery] = useState('')
+    const [addedState, setAddedState] = useState({})
 
-    const allAddedIds = list.restaurants({ limit: 200 }).map((x) => ({
-      id: x.restaurant.id,
-      slug: x.restaurant.slug,
-    }))
+    const added = {
+      ...Object.fromEntries(list.restaurants({ limit: 300 }).map((x) => [x.restaurant.id, true])),
+      ...addedState,
+    }
 
-    console.log('allAddedIds', allAddedIds)
+    console.log('added', added, addedState)
 
     useEffect(() => {
       const dispose = series([
@@ -42,35 +82,13 @@ export const ListAddRestuarant = graphql(
           setIsSearching(true)
         },
         () => sleep(250),
-        async () => {
-          if (bbox) {
-            // search in region
-            // TODO can allow a bit outside the region
-            return await resolved(() => {
-              return query
-                .restaurant({
-                  where: {
-                    location: {
-                      _st_within: bbox,
-                    },
-                    name: {
-                      _ilike: getFuzzyMatchQuery(searchQuery),
-                    },
-                  },
-                  limit: 20,
-                })
-                .map(createRestaurantAutocomplete)
-            })
-          } else {
-            const { center, span } = appMapStore.nextPosition
-            return searchRestaurants(searchQuery, center, {
-              lng: Math.max(0.1, span.lng),
-              lat: Math.max(0.1, span.lat),
-            })
-          }
-        },
-        (restaurants) => {
-          setResults(restaurants)
+        () =>
+          Promise.all([
+            bbox ? searchRestaurantsInBBox(bbox, searchQuery) : null,
+            searchRestaurantsNearby(searchQuery),
+          ]),
+        ([boxRes = [], nearbyRes = []]) => {
+          setResults([...boxRes, ...nearbyRes])
           setIsSearching(false)
         },
       ])
@@ -81,31 +99,19 @@ export const ListAddRestuarant = graphql(
       }
     }, [searchQuery, bbox])
 
-    const resultsItems = useMemo(() => {
-      return results.map((result, index) => {
-        const onAddCb = async () => {
-          const id = result.id
-          console.log('what the fuck', result)
-          await onAdd(id)
-          refetch(listQuery)
+    const onAddCb = debounce(async (result: any, index: number) => {
+      const id = result.id
+      setAddedState((x) => {
+        const res = {
+          ...x,
+          [id]: !added[id],
         }
-        return (
-          <AutocompleteItemView
-            preventNavigate
-            hideIcon
-            key={result.id ?? index}
-            hideBackground
-            onSelect={onAddCb}
-            target="search"
-            showAddButton
-            index={index}
-            result={result}
-            onAdd={onAddCb}
-            isAdded={allAddedIds.some((x) => x.id === result.id)}
-          />
-        )
+        console.log('res', index, result.id, res)
+        return res
       })
-    }, [results])
+      await onAdd(id)
+      refetch(listQuery)
+    }, 16)
 
     return (
       <VStack width="100%" height="100%" flex={1}>
@@ -119,6 +125,7 @@ export const ListAddRestuarant = graphql(
             placeholder="Search restaurants..."
             onChangeText={setQuery}
           />
+          <Spacer size="sm" />
         </VStack>
         <ScrollView style={{ width: '100%', flex: 1 }}>
           <VStack>
@@ -130,7 +137,23 @@ export const ListAddRestuarant = graphql(
             {!isSearching && (
               <>
                 {!results.length && <Text>No results found, try zooming map out</Text>}
-                {resultsItems}
+                {results.map((result, index) => {
+                  return (
+                    <AutocompleteItemView
+                      preventNavigate
+                      hideIcon
+                      key={result.id ?? index}
+                      hideBackground
+                      onSelect={() => onAddCb(result, index)}
+                      target="search"
+                      showAddButton
+                      index={index}
+                      result={result}
+                      onAdd={() => onAddCb(result, index)}
+                      isAdded={added[result.id]}
+                    />
+                  )
+                })}
               </>
             )}
           </VStack>

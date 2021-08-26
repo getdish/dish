@@ -142,7 +142,7 @@ export const roundLngLat = (ll: LngLat): LngLat => {
 export const hasMovedAtLeast = (
   current: { center: LngLat; span: LngLat },
   next: { center: LngLat; span: LngLat },
-  distance: number = 0.01
+  distance: number = 0.005
 ) => {
   const d1 = abs(next.center.lng - current.center.lng)
   const d2 = abs(next.center.lat - current.center.lat)

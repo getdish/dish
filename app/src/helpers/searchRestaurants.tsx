@@ -8,7 +8,8 @@ export function searchRestaurants(
   searchQuery: string,
   center: LngLat,
   span: LngLat,
-  cuisine?: string
+  cuisine?: string,
+  expandRadius = 0
 ) {
   const search = (whereCondition: any) => {
     return query.restaurant({
@@ -17,7 +18,7 @@ export function searchRestaurants(
         location: {
           _st_d_within: {
             // search outside current bounds a bit
-            distance: Math.max(span.lng, span.lat) * 6,
+            distance: Math.max(span.lng, span.lat) * 6 * expandRadius,
             from: {
               type: 'Point',
               coordinates: [center.lng, center.lat],

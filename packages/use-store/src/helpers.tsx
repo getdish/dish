@@ -45,7 +45,7 @@ export function getKey(props: Object) {
     if (v && typeof v === 'object') {
       s += getKey(v)
     } else {
-      s += `-${key}-${v}`
+      s += `.${key}:${v}`
     }
   }
   return s
