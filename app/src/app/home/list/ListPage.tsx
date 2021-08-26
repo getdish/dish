@@ -561,15 +561,15 @@ const ListPageContent = memo(
                               </VStack>
                             )}
                             <RestaurantListItem
-                              hideDescription={listTheme === 'modern'}
+                              hideDescription={listTheme === 'modern' || (!comment && !isEditing)}
                               dishSize="lg"
                               curLocInfo={props.item.curLocInfo ?? null}
                               restaurantId={restaurantId}
                               restaurantSlug={restaurant.slug}
                               rank={index + 1}
                               description={comment}
-                              hideTagRow
-                              hideRate
+                              hideTagRow={listTheme === 'minimal'}
+                              hideRate={listTheme === 'minimal'}
                               flexibleHeight
                               dishSlugs={dishSlugs.length ? dishSlugs : undefined}
                               editableDishes={isEditing}
@@ -697,8 +697,8 @@ const ListPageTitle = ({
               <Title
                 maxWidth={620}
                 width="100%"
-                size="xxxxl"
-                sizeLineHeight={0.75}
+                size="xxxl"
+                sizeLineHeight={0.72}
                 color={textColor}
               >
                 {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
