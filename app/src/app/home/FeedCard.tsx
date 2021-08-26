@@ -24,6 +24,7 @@ export const FeedCard = ({
   size = 'sm',
   children,
   numItems,
+  outside,
   ...cardProps
 }: FeedCardProps) => {
   const { chromeless, emphasizeTag, flat } = cardProps
@@ -39,6 +40,7 @@ export const FeedCard = ({
       size={size}
       outside={
         <>
+          {outside}
           <CardOverlay flat={chromeless || flat}>
             <AbsoluteHStack
               top={0}

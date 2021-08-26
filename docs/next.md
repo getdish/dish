@@ -21,6 +21,8 @@
 
 # inbox
 
+- auto create lists on voting will flesh out profiles
+
 - getting search into graph will make a much better homepage possible and easier caching
 
 - directions:

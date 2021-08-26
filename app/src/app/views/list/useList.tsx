@@ -1,16 +1,6 @@
-import {
-  client,
-  globalTagId,
-  query,
-  refetch,
-  resolved,
-  review,
-  reviewInsert,
-  reviewUpsert,
-  review_constraint,
-} from '@dish/graph'
+import { client, reviewUpsert, review_constraint } from '@dish/graph'
 import { useEffect, useState } from 'react'
-import { Toast, useGet } from 'snackui'
+import { Toast } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { queryList } from '../../../queries/queryList'
