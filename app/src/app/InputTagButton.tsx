@@ -11,7 +11,7 @@ export const InputTagButton = (props: TagButtonProps & { isActive?: boolean }) =
     // makes x visible in dark mode
     <Theme name="light">
       <TagButton
-        size="md"
+        size="sm"
         closable
         subtleIcon
         color="#222"
@@ -22,7 +22,6 @@ export const InputTagButton = (props: TagButtonProps & { isActive?: boolean }) =
         pressStyle={{
           backgroundColor: '#ffffff99',
         }}
-        // shadowRadius={8}
         elevation={1}
         hideRating
         hideRank

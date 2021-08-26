@@ -42,7 +42,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
       <VStack
         opacity={1}
         pointerEvents={media.xs ? 'none' : 'auto'}
-        y={media.xs ? -3 : -2}
+        y={media.xs ? -3 : -4}
         {...(media.xs && {
           opacity: 0,
         })}

@@ -4,6 +4,7 @@ import React, { memo } from 'react'
 import {
   AbsoluteVStack,
   HStack,
+  Spacer,
   StackProps,
   Text,
   TextProps,
@@ -147,12 +148,54 @@ const TagButtonInner = (props: TagButtonProps) => {
 
   const theme = useTheme()
   const isSmall = size === 'sm'
-  const scale = isSmall ? 0.85 : size == 'lg' ? 1.1 : 1
+  const scale = isSmall ? 0.9 : size == 'lg' ? 1.1 : 1
   const fontSize = fontSizeProp ? fontSizeProp : Math.round(15 * scale)
   const smallerFontSize: any = typeof fontSize === 'number' ? Math.round(fontSize * 0.85) : fontSize
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
   const pieSize = size === 'sm' ? 16 : 20
   const showRank = !hideRank && !!rank
+
+  const rankElement = !onlyIcon && showRank && rank && rank < 100 && (
+    <>
+      <Text fontSize={11} fontWeight="300" opacity={0.5}>
+        #
+      </Text>
+      <Text
+        fontSize={smallerFontSize}
+        alignContent="center"
+        justifyContent="center"
+        alignItems="center"
+        display="flex"
+        color={theme.color}
+        letterSpacing={-1}
+        marginRight={-3}
+        opacity={0.8}
+      >
+        {rank}
+      </Text>
+    </>
+  )
+
+  const iconElement = hideIcon ? (
+    <>&nbsp;</>
+  ) : !!icon ? (
+    icon.startsWith('http') ? (
+      <Image
+        source={{ uri: icon }}
+        style={{
+          width: fontSize,
+          height: fontSize,
+          borderRadius: 1000,
+          display: isWeb ? ('inline-flex' as any) : 'flex',
+          marginVertical: -2,
+        }}
+      />
+    ) : (
+      <Text fontSize={12} marginRight={-2} marginLeft={isSmall ? 2 : 5}>
+        {icon}
+      </Text>
+    )
+  ) : null
 
   let contents = (
     <HStack
@@ -184,59 +227,23 @@ const TagButtonInner = (props: TagButtonProps) => {
         },
       })}
       alignItems="center"
+      justifyContent="center"
       paddingHorizontal={isSmall ? 5 : 10}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
       {...rest}
     >
-      {!onlyIcon && showRank && rank && rank < 100 && (
-        <>
-          <Text fontSize={11} fontWeight="300" opacity={0.5}>
-            #
-          </Text>
-          <Text
-            fontSize={smallerFontSize}
-            alignContent="center"
-            justifyContent="center"
-            alignItems="center"
-            display="flex"
-            color={theme.color}
-            letterSpacing={-1}
-            marginRight={-3}
-            opacity={0.8}
-          >
-            {rank}
-          </Text>
-        </>
-      )}
+      {!iconElement && !rankElement && <Spacer size="xs" />}
 
-      {hideIcon ? (
-        <>&nbsp;</>
-      ) : !!icon ? (
-        icon.startsWith('http') ? (
-          <Image
-            source={{ uri: icon }}
-            style={{
-              width: fontSize,
-              height: fontSize,
-              borderRadius: 1000,
-              display: isWeb ? ('inline-flex' as any) : 'flex',
-              marginVertical: -2,
-            }}
-          />
-        ) : (
-          <Text fontSize={12} marginRight={-2} marginLeft={isSmall ? 2 : 5}>
-            {icon}
-          </Text>
-        )
-      ) : null}
+      {rankElement}
+      {iconElement}
 
       {!onlyIcon && (
         <Text
           ellipse
           fontSize={fontSize}
           fontWeight={fontWeight || '400'}
-          lineHeight={isSmall ? 22 : 26}
+          lineHeight={isSmall ? 13 : 22}
           color={color || theme.color}
           // borderBottomColor={theme.backgroundColor}
           // borderBottomWidth={floating ? 0 : 1}
@@ -324,7 +331,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           position="relative"
           width={isWeb ? 26 : 40}
           height={isWeb ? 26 : 40}
-          marginRight={-3}
+          marginLeft={-5}
           alignItems="center"
           justifyContent="center"
           alignSelf="center"
