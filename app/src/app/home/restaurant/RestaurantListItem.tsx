@@ -26,6 +26,7 @@ import {
 
 import { brandColor, green } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
+import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
@@ -36,6 +37,7 @@ import { GeocodePlace } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMap'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
+import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
@@ -61,6 +63,7 @@ type RestaurantListItemProps = {
   restaurantId: string
   restaurantSlug: string
   hideRate?: boolean
+  hideDescription?: boolean
   rank: number
   meta?: RestaurantItemMeta
   activeTagSlugs?: string[]
@@ -127,6 +130,7 @@ const RestaurantListItemContent = memo(
       description = null,
       dishSlugs,
       flexibleHeight,
+      hideDescription,
       above,
       editableDishes,
       onChangeDishes,
@@ -230,8 +234,9 @@ const RestaurantListItemContent = memo(
           className="ease-in-out-slow hover-faded-in-parent"
           alignItems="flex-start"
           justifyContent="flex-start"
-          minHeight={ITEM_HEIGHT}
           {...(!flexibleHeight && {
+            height: ITEM_HEIGHT,
+            minHeight: ITEM_HEIGHT,
             maxHeight: ITEM_HEIGHT,
           })}
           flex={1}
@@ -242,6 +247,10 @@ const RestaurantListItemContent = memo(
           position="relative"
           {...(isExpanded && {
             transform: [{ translateX: 300 }],
+          })}
+          {...(hideDescription && {
+            flexDirection: 'row',
+            alignItems: 'center',
           })}
         >
           {/* expanded content */}
@@ -305,6 +314,9 @@ const RestaurantListItemContent = memo(
             <VStack
               hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
               width={950}
+              {...(hideDescription && {
+                width: 'auto',
+              })}
               position="relative"
             >
               {/* LINK */}
@@ -320,6 +332,20 @@ const RestaurantListItemContent = memo(
                   </AbsoluteVStack>
 
                   <Spacer size="xs" />
+
+                  {hideDescription && (
+                    <Image
+                      source={{ uri: getImageUrl(restaurant.image ?? '', 62, 62) }}
+                      style={{
+                        marginVertical: -15,
+                        marginRight: 2,
+                        marginLeft: 8,
+                        width: 62,
+                        height: 62,
+                        borderRadius: 62,
+                      }}
+                    />
+                  )}
 
                   {/* SECOND LINK WITH actual <a /> */}
                   <Link name="restaurant" params={{ slug: restaurantSlug }}>
@@ -356,55 +382,57 @@ const RestaurantListItemContent = memo(
 
           {/* ROW: CENTER CONTENT AREA */}
           {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
-          <HStack
-            y={-10}
-            pointerEvents="none"
-            zIndex={10}
-            paddingLeft={hideRate ? 0 : 65}
-            paddingRight={10}
-            flex={1}
-            maxHeight={flexibleHeight ? 1000 : 66}
-          >
-            <VStack
-              {...contentSideProps}
-              className="fix-safari-shrink-height"
-              justifyContent="center"
+          {!hideDescription && (
+            <HStack
+              y={-10}
+              pointerEvents="none"
+              zIndex={10}
+              paddingLeft={hideRate ? 0 : 65}
+              paddingRight={10}
               flex={1}
-              zIndex={100}
+              maxHeight={flexibleHeight ? 1000 : 66}
             >
-              {/* ROW: OVERVIEW */}
-              <RestaurantOverview
-                isDishBot
-                isEditingDescription={state.editing}
-                text={state.description}
-                onEditCancel={() => {
-                  setState((prev) => ({ ...prev, editing: false }))
-                }}
-                onEditDescription={(description) => {
-                  setState((prev) => ({ ...prev, description }))
-                }}
-                fullHeight
-                restaurantSlug={restaurantSlug}
-                maxLines={flexibleHeight ? 2000 : 2}
-              />
-              {flexibleHeight ? <VStack flex={1} /> : null}
-            </VStack>
+              <VStack
+                {...contentSideProps}
+                className="fix-safari-shrink-height"
+                justifyContent="center"
+                flex={1}
+                zIndex={100}
+              >
+                {/* ROW: OVERVIEW */}
+                <RestaurantOverview
+                  isDishBot
+                  isEditingDescription={state.editing}
+                  text={state.description}
+                  onEditCancel={() => {
+                    setState((prev) => ({ ...prev, editing: false }))
+                  }}
+                  onEditDescription={(description) => {
+                    setState((prev) => ({ ...prev, description }))
+                  }}
+                  fullHeight
+                  restaurantSlug={restaurantSlug}
+                  maxLines={flexibleHeight ? 2000 : 2}
+                />
+                {flexibleHeight ? <VStack flex={1} /> : null}
+              </VStack>
 
-            {/* PEEK / TAGS (RIGHT SIDE) */}
-            {/* margin top: negative the titles second row height */}
-            <Suspense fallback={null}>
-              <RestaurantPeekDishes
-                restaurantSlug={props.restaurantSlug}
-                restaurantId={props.restaurantId}
-                activeTagSlugs={activeTagSlugs}
-                tagSlugs={dishSlugs}
-                editable={editableDishes}
-                onChangeTags={handleChangeDishes}
-                size={dishSize}
-                isLoaded={isLoaded}
-              />
-            </Suspense>
-          </HStack>
+              {/* PEEK / TAGS (RIGHT SIDE) */}
+              {/* margin top: negative the titles second row height */}
+              <Suspense fallback={null}>
+                <RestaurantPeekDishes
+                  restaurantSlug={props.restaurantSlug}
+                  restaurantId={props.restaurantId}
+                  activeTagSlugs={activeTagSlugs}
+                  tagSlugs={dishSlugs}
+                  editable={editableDishes}
+                  onChangeTags={handleChangeDishes}
+                  size={dishSize}
+                  isLoaded={isLoaded}
+                />
+              </Suspense>
+            </HStack>
+          )}
 
           {/* ROW: BOTTOM ROW */}
 

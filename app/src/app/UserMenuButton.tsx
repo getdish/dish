@@ -14,7 +14,7 @@ export const UserMenuButton = () => {
   }
 
   return (
-    <Tooltip contents="Profile">
+    <Tooltip contents={user.username ?? 'Profile'}>
       <LinkButton
         backgroundColor="transparent"
         position="relative"

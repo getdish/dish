@@ -38,6 +38,7 @@ export const ListCard = graphql((props: ListCardProps) => {
       numItems={numItems}
       author={` by ${list?.user?.username ?? ''}`}
       {...props}
+      theme={(list?.theme || 0) === 0 ? 'modern' : 'minimal'}
       tags={
         props.size === 'xs'
           ? []
@@ -59,7 +60,7 @@ export const ListCard = graphql((props: ListCardProps) => {
 
 export const ListCardFrame = graphql((props: ListCardProps) => {
   const [hidden, setHidden] = useState(false)
-  const { slug, userSlug, onHover, outside, deletable, onDelete, ...feedCardProps } = props
+  const { slug, userSlug, onHover, outside, deletable, onDelete, theme, ...feedCardProps } = props
   const userStore = useUserStore()
 
   if (hidden) {
@@ -75,6 +76,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
       })}
     >
       <FeedCard
+        theme={theme}
         outside={
           <>
             {outside}

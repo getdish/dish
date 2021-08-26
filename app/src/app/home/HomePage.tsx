@@ -190,6 +190,8 @@ const HomePageContent = (props: Props) => {
     region: state.region,
   }
 
+  // {/* TODO pass isActive once gqty supports skeleton loading */}
+
   return (
     <>
       <PageHead isActive={props.isActive}>Dish - Uniquely Great Food</PageHead>
@@ -230,8 +232,7 @@ const HomePageContent = (props: Props) => {
           {homeHeaderContent}
 
           <PageContentWithFooter>
-            {/* TODO pass isActive once gqty supports skeleton loading */}
-            {wasEverActive ? <HomePageFeed {...homePageFeedProps} /> : <LoadingItems />}
+            {wasEverActive && <HomePageFeed {...homePageFeedProps} />}
           </PageContentWithFooter>
         </ContentScrollView>
       </VStack>
