@@ -112,9 +112,10 @@ export class WorkerJob extends Loggable {
     if (process.env.RUN_WITHOUT_WORKER == 'true') {
       return await this.run(fn, args)
     }
-    const queue = getBullQueue('BigJobs')
+    const name = 'BigJobs'
+    const queue = getBullQueue(name)
     console.log('Adding self crawl job', job_data)
-    const job = await queue.add(job_data, { attempts: 1 })
+    const job = await queue.add(name, job_data, { attempts: 1 })
     await queue.close()
     return job
   }
