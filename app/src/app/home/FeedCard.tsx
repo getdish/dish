@@ -3,6 +3,7 @@ import { AbsoluteHStack, Paragraph, Text, VStack, useTheme } from 'snackui'
 
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { rgbString } from '../../helpers/rgb'
+import { SlantedTitle } from '../views/SlantedTitle'
 import { TagButton } from '../views/TagButton'
 import { Card, CardOverlay, CardProps } from './restaurant/Card'
 
@@ -14,6 +15,7 @@ export type FeedCardProps = CardProps & {
   title?: string | JSX.Element | null
   emphasizeTag?: boolean
   color?: string
+  theme?: 'modern' | 'minimal'
 }
 
 export const FeedCard = ({
@@ -25,11 +27,27 @@ export const FeedCard = ({
   children,
   numItems,
   outside,
+  theme = 'modern',
   ...cardProps
 }: FeedCardProps) => {
+  const isMinimal = theme === 'minimal'
   const { chromeless, emphasizeTag, flat } = cardProps
   const colorString = color || rgbString(tags[0]?.rgb ?? [200, 150, 150])
   const longTitle = typeof title === 'string' && title.length > 15 ? true : false
+
+  const fontSize = Math.round(
+    emphasizeTag
+      ? size === 'sm' || size.endsWith('xs')
+        ? 12
+        : longTitle
+        ? 12
+        : 18
+      : size === 'sm' || size.endsWith('xs')
+      ? 15
+      : longTitle
+      ? 22
+      : 28
+  )
 
   return (
     <Card
@@ -68,28 +86,31 @@ export const FeedCard = ({
             <VStack flex={1} />
 
             <VStack overflow="hidden" spacing={size}>
-              <Text
-                letterSpacing={-0.5}
-                className="hover-100-opacity-child"
-                fontWeight={emphasizeTag ? '400' : '700'}
-                numberOfLines={2}
-                fontSize={
-                  emphasizeTag
-                    ? size === 'sm' || size.endsWith('xs')
-                      ? 12
-                      : longTitle
-                      ? 12
-                      : 18
-                    : size === 'sm' || size.endsWith('xs')
-                    ? 15
-                    : longTitle
-                    ? 22
-                    : 28
-                }
-                color={colorString}
-              >
-                {title}
-              </Text>
+              {isMinimal ? (
+                <Text
+                  letterSpacing={-0.5}
+                  className="hover-100-opacity-child"
+                  fontWeight={emphasizeTag ? '200' : '300'}
+                  opacity={0.9}
+                  fontSize={fontSize * 1.1}
+                  color={colorString}
+                >
+                  {title}
+                </Text>
+              ) : (
+                <Text
+                  letterSpacing={-0.5}
+                  className="hover-100-opacity-child"
+                  fontWeight={emphasizeTag ? '400' : '700'}
+                  numberOfLines={2}
+                  opacity={0.9}
+                  fontSize={fontSize * 0.8}
+                  color={colorString}
+                >
+                  {title}
+                </Text>
+              )}
+
               {!!(author || typeof numItems !== 'undefined') && (
                 <Paragraph
                   size={size === 'xxs' || size === 'xs' || size === 'sm' ? 'sm' : 'md'}

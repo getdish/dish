@@ -162,6 +162,7 @@ const listThemes = {
 const ListPageContent = memo(
   graphql(
     (props: Props) => {
+      const refetch = useRefetch()
       // const themeName = useThemeName()
       // const theme = useTheme()
       const user = useUserStore()
@@ -169,7 +170,6 @@ const ListPageContent = memo(
       const isEditing = props.item.state === 'edit'
       const [showAddModal, setShowAddModal] = useState(false)
       const draft = useRef<Partial<List>>({})
-      const refetch = useRefetch()
       const { list, isFavorited, toggleFavorite, reviewsCount } = useListFavorite({
         slug: props.item.slug,
       })
@@ -178,13 +178,32 @@ const ListPageContent = memo(
       const [restaurants, restaurantActions] = useListRestaurants(list)
       const region = useRegionQuery(props.item.region)
 
-      const listThemeIndex = 1
+      const listThemeIndex = list.theme ?? 0
       const forceUpdate = useForceUpdate()
       const listTheme = listThemes[listThemeIndex]
 
-      const setTheme = (val: number) => {
+      const setTheme = async (val: number) => {
         list.theme = val
         forceUpdate()
+        const affectedRows = await mutate((mutation) => {
+          return mutation.update_list({
+            where: {
+              id: {
+                _eq: list.id,
+              },
+            },
+            _set: {
+              theme: val,
+            },
+          })?.affected_rows
+        })
+        console.log('affectedRows', affectedRows)
+        if (affectedRows) {
+          Toast.show(`Saved`)
+        } else {
+          Toast.show(`Error saving`)
+        }
+        refetch()
       }
 
       useSnapToFullscreenOnMount()
@@ -542,6 +561,7 @@ const ListPageContent = memo(
                               </VStack>
                             )}
                             <RestaurantListItem
+                              hideDescription={listTheme === 'modern'}
                               dishSize="lg"
                               curLocInfo={props.item.curLocInfo ?? null}
                               restaurantId={restaurantId}
@@ -641,7 +661,7 @@ const ListPageTitle = ({
       width="auto"
       textAlign="center"
       {...(listTheme === 'minimal' && {
-        fontSize: 40,
+        fontSize: 60,
         fontWeight: '400',
         width: '100%',
         textAlign: 'left',

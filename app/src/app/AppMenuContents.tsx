@@ -78,7 +78,7 @@ export const AppMenuContents = memo(
                     username: slugify(user?.username ?? ''),
                   }}
                 >
-                  Profile
+                  {user?.name ?? user?.username ?? ''}
                 </MenuLinkButton>
               )}
 
