@@ -1,6 +1,7 @@
 import { parseSchemaType, selectFields } from 'gqty'
 import { omit } from 'lodash'
 
+import { DISH_DEBUG } from '../constants'
 import {
   Scalars,
   generatedSchema,
@@ -162,7 +163,7 @@ export async function update<T extends WithID<ModelType>>(
 ): Promise<WithID<T>> {
   const action = `update_${table}` as any
   const [object] = prepareData(table, [objectIn], '_set_input')
-  if (process.env.NODE_ENV === 'development') {
+  if (DISH_DEBUG >= 3) {
     console.log('update() prepared object', object, 'from', objectIn)
   }
   if (!object.id) {
