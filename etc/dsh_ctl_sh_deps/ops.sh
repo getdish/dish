@@ -120,7 +120,8 @@ function docker_registry_gc() {
   docker system prune
   clean_dangling
   for id in $(docker ps -aqf "name=registry-proxy" | xargs); do
-    docker exec -it "$id" bin/registry garbage-collect /etc/docker/registry/config.yml
+    docker exec -it "$id" \
+      bin/registry garbage-collect --delete-untagged /etc/docker/registry/config.yml
   done
 }
 
@@ -199,4 +200,9 @@ function hungry_services_tunnels() {
 function hungry_service_tunnel() {
   port=$1
   ssh -N -i etc/keys/server_rsa -L $port:localhost:$port root@$io1_HOST
+}
+
+function worker_cli() {
+  worker=$(docker ps -qf "name=dish_worker" | head -n1)
+  docker exec -it $worker "$@"
 }

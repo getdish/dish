@@ -21,7 +21,8 @@ function start_crawler_for_city() {
 }
 
 function crawl_one() {
-  exec worker "node /app/services/crawlers/dist/one.js $1"
+  slug=$1
+  exec worker "node /app/services/crawlers/dist/one.js $slug"
 }
 
 function crawl_self() {
@@ -86,9 +87,7 @@ function crawl_self_sf_limited_cuisine() {
 }
 
 function redis_command() {
-  kubectl exec \
-    redis-master-0 -n redis -c redis \
-    -- bash -c "echo ${1@Q} | redis-cli"
+  echo ${1@Q} | redis-cli
 }
 
 function redis_cli() {
@@ -103,7 +102,7 @@ function redis_flush_all() {
   redis_command 'FLUSHALL'
 }
 
-function bull_clear() {
+function bull_clear_prod() {
   curl -X POST https://worker.dishapp.com/clear
 }
 
@@ -130,4 +129,10 @@ function crawler_mem_usage() {
     cut -d "" -f2 |
     cut -d "-" -f1 |
     grep sandbox
+}
+
+function yelp_jobs_waiting_count() {
+  curl --silent \
+    'https://worker.dishapp.com/api/queues?Yelp=waiting&page=1' |
+    jq -r '.queues[] | select(.name=="Yelp") | .counts.waiting'
 }
