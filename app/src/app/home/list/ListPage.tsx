@@ -1,14 +1,5 @@
 import { series } from '@dish/async'
-import {
-  List,
-  graphql,
-  list,
-  listInsert,
-  listUpdate,
-  mutate,
-  slugify,
-  useRefetch,
-} from '@dish/graph'
+import { List, graphql, list, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
@@ -162,7 +153,6 @@ const listThemes = {
 const ListPageContent = memo(
   graphql(
     (props: Props) => {
-      const refetch = useRefetch()
       // const themeName = useThemeName()
       // const theme = useTheme()
       const user = useUserStore()
@@ -170,12 +160,15 @@ const ListPageContent = memo(
       const isEditing = props.item.state === 'edit'
       const [showAddModal, setShowAddModal] = useState(false)
       const draft = useRef<Partial<List>>({})
-      const { list, isFavorited, toggleFavorite, reviewsCount } = useListFavorite({
+      const { list, isFavorited, toggleFavorite, reviewsCount, refetch } = useListFavorite({
         slug: props.item.slug,
       })
       const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999999')
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
       const [restaurants, restaurantActions] = useListRestaurants(list)
+
+      console.log('restaurants', restaurants)
+
       const region = useRegionQuery(props.item.region)
 
       const listThemeIndex = list.theme ?? 0
@@ -298,12 +291,7 @@ const ListPageContent = memo(
                       <CloseButton onPress={() => setShowAddModal(false)} />
                     </PaneControlButtons>
                     <Suspense fallback={null}>
-                      <ListAddRestuarant
-                        listSlug={props.item.slug}
-                        onAdd={({ id }) => {
-                          restaurantActions.add(id)
-                        }}
-                      />
+                      <ListAddRestuarant listSlug={props.item.slug} onAdd={restaurantActions.add} />
                     </Suspense>
                   </>
                 )}
@@ -348,7 +336,7 @@ const ListPageContent = memo(
                               query: list,
                             }
                           )
-                          await refetch(list)
+                          refetch()
                           Toast.show('Saved')
                         }}
                       >
@@ -473,7 +461,7 @@ const ListPageContent = memo(
                         <Input
                           placeholder="Description..."
                           multiline
-                          numberOfLines={7}
+                          numberOfLines={4}
                           lineHeight={30}
                           width="100%"
                           fontSize={20}
@@ -531,13 +519,9 @@ const ListPageContent = memo(
                       return (
                         <React.Fragment key={restaurant.slug}>
                           <HStack position="relative">
+                            {/* {userStore.isAdmin && <Text>{restaurant.id}</Text>} */}
                             {isEditing && (
-                              <VStack
-                                alignItems="center"
-                                spacing
-                                paddingHorizontal={10}
-                                paddingVertical={20}
-                              >
+                              <HStack alignItems="center" spacing paddingLeft={10}>
                                 <CircleButton
                                   backgroundColor={red400}
                                   width={40}
@@ -550,15 +534,16 @@ const ListPageContent = memo(
                                 </CircleButton>
 
                                 <Score
+                                  size="sm"
                                   votable
                                   upTooltip="Move up"
                                   downTooltip="Move down"
                                   score={index + 1}
-                                  setVote={async (vote) => {
+                                  setVote={(vote) => {
                                     restaurantActions.promote(vote === 1 ? index : index + 1)
                                   }}
                                 />
-                              </VStack>
+                              </HStack>
                             )}
                             <RestaurantListItem
                               hideDescription={listTheme === 'modern' || (!comment && !isEditing)}
@@ -569,7 +554,7 @@ const ListPageContent = memo(
                               rank={index + 1}
                               description={comment}
                               hideTagRow={listTheme === 'minimal'}
-                              hideRate={listTheme === 'minimal'}
+                              hideRate
                               flexibleHeight
                               dishSlugs={dishSlugs.length ? dishSlugs : undefined}
                               editableDishes={isEditing}
@@ -583,13 +568,9 @@ const ListPageContent = memo(
                                 await restaurantActions.setComment(restaurantId, next)
                                 Toast.success('Updated description')
                               }}
-                              editablePosition={isEditing}
-                              onChangePosition={(next) => {
-                                console.log('should change position', next)
-                              }}
                             />
                           </HStack>
-                          <Spacer />
+                          {/* <Spacer /> */}
                         </React.Fragment>
                       )
                     }

@@ -1,4 +1,13 @@
-import { list, mutate, order_by, query, resolved, useRefetch } from '@dish/graph'
+import {
+  list,
+  list_restaurant_constraint,
+  list_restaurant_update_column,
+  mutate,
+  order_by,
+  query,
+  resolved,
+  useRefetch,
+} from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 
 import { promote } from '../../../helpers/listHelpers'
@@ -13,6 +22,11 @@ export function useListRestaurants(list?: list) {
       order_by: [{ position: order_by.asc }],
     }) ?? []
 
+  console.log(
+    'cur order',
+    list_restaurants.map((x) => x.restaurant.id)
+  )
+
   const items =
     list_restaurants.map((list_restaurant) => {
       const dishQuery = list_restaurant.tags({
@@ -21,6 +35,7 @@ export function useListRestaurants(list?: list) {
       })
       return {
         dishQuery,
+        id: list_restaurant.id,
         restaurantId: list_restaurant.restaurant.id,
         restaurant: list_restaurant.restaurant,
         comment: list_restaurant.comment,
@@ -46,25 +61,38 @@ export function useListRestaurants(list?: list) {
         })?.__typename
       })
     })
-    await refetch(list)
+    await Promise.all([refetch(list), refetch(list_restaurants)])
   }
 
   return [
     items,
     {
       setOrder,
-      add: async (id: string) => {
+      async add(restaurantId: string) {
         await mutate((mutation) => {
           assertPresent(list, 'no list')
           assertPresent(userStore.user, 'no user')
+          const listRestaurant = items.find((x) => x.restaurantId === restaurantId)
           return mutation.insert_list_restaurant_one({
             object: {
-              // space it out
-              position: items.length * Math.round((1000 - items.length) * Math.random()),
+              // space it out (insert at top = -1)
+              position: -items.length * Math.round((1000 - items.length) * Math.random()),
               list_id: listId,
-              restaurant_id: id,
+              restaurant_id: restaurantId,
               user_id: userStore.user.id,
+              ...(listRestaurant && {
+                id: listRestaurant.id,
+              }),
             },
+            ...(listRestaurant && {
+              on_conflict: {
+                constraint: list_restaurant_constraint.list_restaurant_id_key,
+                update_columns: [
+                  list_restaurant_update_column.position,
+                  list_restaurant_update_column.comment,
+                ],
+              },
+            }),
           })?.__typename
         })
         console.log('added, refreshing')
@@ -74,6 +102,7 @@ export function useListRestaurants(list?: list) {
         if (index == 0) return
         const now = items.map((x) => x.restaurant.id as string)
         const next = promote(now, index)
+        console.log('setting order', next)
         await setOrder(next)
       },
       async delete(id: string) {
@@ -137,3 +166,5 @@ export function useListRestaurants(list?: list) {
     },
   ] as const
 }
+
+export type UseListRestaurantsActions = ReturnType<typeof useListRestaurants>[1]

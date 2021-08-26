@@ -1,3 +1,5 @@
+import { createHash } from 'crypto'
+
 import {
   Review,
   ReviewTagSentence,
@@ -12,7 +14,6 @@ import {
   review_constraint,
 } from '@dish/graph'
 import axios from 'axios'
-import sha256 from 'crypto-js/sha256'
 import { selectFields } from 'gqty'
 import { decode } from 'html-entities'
 import { chunk, uniqBy } from 'lodash'
@@ -205,7 +206,7 @@ export function dedupeSentiments<A extends ReviewTagSentence>(sentiments: A[]) {
 
 export async function hashFromURLResource(url: string) {
   const response = await axios.get(url, { responseType: 'arraybuffer' })
-  const buffer = Buffer.from(response.data, 'binary').toString('base64')
-  const hash = sha256(buffer).toString()
+  const urlData = Buffer.from(response.data, 'binary').toString('base64')
+  const hash = createHash('sha256').update(urlData).digest('hex')
   return hash
 }

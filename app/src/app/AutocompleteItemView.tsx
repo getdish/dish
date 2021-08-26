@@ -1,7 +1,7 @@
 import { Plus } from '@dish/react-feather'
 import React, { memo } from 'react'
 import { Image, Keyboard } from 'react-native'
-import { HStack, Spacer, Text, VStack, useDebounce, useTheme } from 'snackui'
+import { HStack, Spacer, Text, Theme, VStack, useDebounce, useTheme } from 'snackui'
 
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { rgbString } from '../helpers/rgb'
@@ -19,6 +19,7 @@ export const AutocompleteItemView = memo(
     showAddButton,
     onAdd,
     hideBackground,
+    isAdded,
     preventNavigate,
     hideIcon,
     isActive,
@@ -32,6 +33,7 @@ export const AutocompleteItemView = memo(
     onSelect: AutocompleteSelectCb
     hideBackground?: boolean
     onAdd?: () => any
+    isAdded?: boolean
     isActive?: boolean
     hideIcon?: boolean
   }) => {
@@ -43,9 +45,11 @@ export const AutocompleteItemView = memo(
       <>
         <VStack flex={1} />
         <VStack padding={8} flexShrink={0}>
-          <CircleButton onPress={onAdd}>
-            <Plus color="#777" size={16} />
-          </CircleButton>
+          <Theme name={isAdded ? 'active' : null}>
+            <CircleButton onPress={onAdd}>
+              <Plus color="#777" size={16} />
+            </CircleButton>
+          </Theme>
         </VStack>
       </>
     ) : null
@@ -74,6 +78,12 @@ export const AutocompleteItemView = memo(
         hoverStyle={{
           backgroundColor: isActive ? themeColor : theme.backgroundColorDarker,
         }}
+        {...(hideBackground && {
+          backgroundColor: 'transparent',
+          hoverStyle: {
+            backgroundColor: 'transparent',
+          },
+        })}
         onPressOut={() => {
           Keyboard.dismiss()
           hideAutocompleteSlow()
