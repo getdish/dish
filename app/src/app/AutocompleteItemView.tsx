@@ -44,10 +44,10 @@ export const AutocompleteItemView = memo(
     const plusButtonEl = showAddButton ? (
       <>
         <VStack flex={1} />
-        <VStack padding={8} flexShrink={0}>
+        <VStack padding={3} flexShrink={0}>
           <Theme name={isAdded ? 'active' : null}>
             <CircleButton onPress={onAdd}>
-              <Plus color="#777" size={16} />
+              <Plus color={isAdded ? '#fff' : theme.colorQuartenary} size={16} />
             </CircleButton>
           </Theme>
         </VStack>
@@ -107,7 +107,7 @@ export const AutocompleteItemView = memo(
         <HStack alignItems="center" width="100%">
           <VStack overflow="hidden" flex={1}>
             <HStack width="100%" marginVertical={-3} flex={1} alignItems="center">
-              <Text fontWeight="700" ellipse color={theme.color} fontSize={20} lineHeight={30}>
+              <Text fontWeight="600" ellipse color={theme.color} fontSize={18} lineHeight={30}>
                 {!!result.namePrefix && (
                   <>
                     <Text fontWeight="300">{result.namePrefix}</Text>{' '}

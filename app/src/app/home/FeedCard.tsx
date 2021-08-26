@@ -88,10 +88,10 @@ export const FeedCard = ({
             <VStack overflow="hidden" spacing={size}>
               {isMinimal ? (
                 <Text
-                  letterSpacing={-0.5}
+                  letterSpacing={-1}
                   className="hover-100-opacity-child"
-                  fontWeight={emphasizeTag ? '200' : '300'}
-                  opacity={0.9}
+                  fontWeight="300"
+                  opacity={1}
                   fontSize={fontSize * 1.1}
                   color={colorString}
                 >
@@ -99,12 +99,12 @@ export const FeedCard = ({
                 </Text>
               ) : (
                 <Text
-                  letterSpacing={-0.5}
+                  letterSpacing={-0.25}
                   className="hover-100-opacity-child"
-                  fontWeight={emphasizeTag ? '400' : '700'}
+                  fontWeight={emphasizeTag ? '500' : '800'}
                   numberOfLines={2}
-                  opacity={0.9}
-                  fontSize={fontSize * 0.8}
+                  opacity={0.65}
+                  fontSize={fontSize * 0.9}
                   color={colorString}
                 >
                   {title}

@@ -1,6 +1,6 @@
 import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import _, { clamp, findLast } from 'lodash'
+import _, { clamp, findLast, reverse } from 'lodash'
 import { Keyboard } from 'react-native'
 
 import { initialHomeState } from '../constants/initialHomeState'
@@ -107,7 +107,12 @@ class HomeStore extends Store {
   }
 
   get states(): HomeStateItem[] {
-    return this.stateIds.map((x) => this.allStates[x])
+    const res = this.stateIds.map((x) => this.allStates[x]).slice(0, this.stateIndex + 1)
+    const last3 = reverse([...res])
+    if (last3.every((x) => x.type === 'list')) {
+      debugger
+    }
+    return res
   }
 
   get currentStateLense(): NavigableTag | null {
@@ -519,17 +524,13 @@ class HomeStore extends Store {
     if (!shouldNav) {
       return false
     }
-
     Keyboard.dismiss()
-
     this.lastNav = Date.now()
-    let curNav = this.lastNav
-
+    const curNav = this.lastNav
     const didNav = await syncStateToRoute(nextState)
     if (curNav !== this.lastNav) {
       return false
     }
-
     return didNav
   }
 

@@ -1,18 +1,15 @@
 import { graphql } from '@dish/graph'
 import { ExternalLink, Link2, PhoneCall } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { useTheme } from 'snackui'
-import { Paragraph } from 'snackui'
-import { Box, HStack, HoverablePopover, Text, VStack } from 'snackui'
+import { Box, HStack, HoverablePopover, Paragraph, VStack, useTheme } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 
-export type AddressSize = 'lg' | 'md' | 'sm' | 'xs'
+export type AddressSize = 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
 
 export const RestaurantAddressLinksRow = memo(
   graphql(
@@ -21,16 +18,14 @@ export const RestaurantAddressLinksRow = memo(
       restaurantSlug,
       size,
       showAddress,
-      showMenu,
     }: {
       curLocInfo?: GeocodePlace | null
       restaurantSlug: string
       size?: AddressSize
       showAddress?: AddressSize
-      showMenu?: boolean
     }) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
-      const fontSize = size == 'lg' ? 16 : 14
+      // const fontSize = size == 'lg' ? 16 : 14
       const iconSize = size === 'lg' ? 18 : 16
       const theme = useTheme()
       const iconColor = theme.color
@@ -41,14 +36,6 @@ export const RestaurantAddressLinksRow = memo(
 
       const linkElements = (
         <HStack alignItems="center" spacing="xs">
-          {/* {showMenu && !!restaurant.website && (
-            <SmallButton
-              backgroundColor="transparent"
-              tooltip="Menu"
-              href={restaurant.website ?? ''}
-              icon={<AlignCenter size={iconSize} />}
-            />
-          )} */}
           {!!restaurant.telephone && (
             <Link href={`tel:${restaurant.telephone}`}>
               <SmallButton
@@ -72,7 +59,7 @@ export const RestaurantAddressLinksRow = memo(
 
       return (
         <VStack>
-          {!!(curLocInfo && showAddress) && (
+          {!!(curLocInfo && showAddress) && size !== 'xs' && (
             <Paragraph color={theme.color} selectable ellipse fontSize={12} maxWidth={240}>
               {getAddressText(
                 curLocInfo,
@@ -82,18 +69,19 @@ export const RestaurantAddressLinksRow = memo(
             </Paragraph>
           )}
 
-          {size === 'sm' && (
-            <HoverablePopover
-              position="right"
-              allowHoverOnContent
-              noArrow
-              contents={<Box padding={10}>{linkElements}</Box>}
-            >
-              <SmallCircleButton>
-                <ExternalLink size={10} color={iconColor} />
-              </SmallCircleButton>
-            </HoverablePopover>
-          )}
+          {size === 'sm' ||
+            (size === 'xs' && (
+              <HoverablePopover
+                position="right"
+                allowHoverOnContent
+                noArrow
+                contents={<Box padding={10}>{linkElements}</Box>}
+              >
+                <SmallCircleButton>
+                  <ExternalLink size={size === 'xs' ? 14 : 10} color={iconColor} />
+                </SmallCircleButton>
+              </HoverablePopover>
+            ))}
 
           {size !== 'sm' && linkElements}
         </VStack>

@@ -20,12 +20,14 @@ import {
   Toast,
   VStack,
   useForceUpdate,
+  useThemeName,
 } from 'snackui'
 
-import { red400 } from '../../../constants/colors'
+import { grey, red400 } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
+import { getWindowHeight } from '../../../helpers/getWindow'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
@@ -137,9 +139,6 @@ const setIsEditing = (val: boolean) => {
   }
 }
 
-// in dark mode maybe thats why i had 11 in here?
-const lightBackgrounds = new Set([0, 4])
-
 enum ListTheme {
   modern = 'modern',
   minimal = 'minimal',
@@ -166,8 +165,6 @@ const ListPageContent = memo(
       const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999999')
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
       const [restaurants, restaurantActions] = useListRestaurants(list)
-
-      console.log('restaurants', restaurants)
 
       const region = useRegionQuery(props.item.region)
 
@@ -246,7 +243,8 @@ const ListPageContent = memo(
           return <TagButton key={tag?.slug ?? i} size="sm" {...getTagButtonProps(tag)} />
         })
 
-      const isLight = typeof list.color === 'number' ? lightBackgrounds.has(list.color) : false
+      // const isLight = typeof list.color === 'number' ? lightBackgrounds.has(list.color) : false
+      const isLight = false
 
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
@@ -255,14 +253,15 @@ const ListPageContent = memo(
             <PageHead isActive={props.isActive}>{`${username}'s ${list.name}${
               region.data?.name ? `in ${region.data.name}` : ''
             }`}</PageHead>
+
             {props.isActive && isMyList && (
               <BottomFloatingArea>
                 <Button
                   pointerEvents="auto"
-                  theme="active"
+                  themeInverse
                   borderRadius={100}
-                  width={50}
-                  height={50}
+                  width={55}
+                  height={55}
                   alignItems="center"
                   justifyContent="center"
                   elevation={2}
@@ -271,7 +270,7 @@ const ListPageContent = memo(
                     setShowAddModal(true)
                   }}
                 >
-                  <Plus size={32} color="#fff" />
+                  <Plus size={42} color="#fff" />
                 </Button>
                 <VStack pointerEvents="none" flex={1} />
               </BottomFloatingArea>
@@ -282,7 +281,8 @@ const ListPageContent = memo(
                 visible={showAddModal}
                 onDismiss={() => setShowAddModal(false)}
                 width={380}
-                maxHeight={480}
+                flex={1}
+                height="90%"
                 minHeight={480}
               >
                 {showAddModal && (
@@ -315,10 +315,16 @@ const ListPageContent = memo(
                     </SmallButton>
                   )}
 
+                  {isMyList && (
+                    <SmallButton elevation={1} onPress={() => setShowAddModal(true)}>
+                      Add
+                    </SmallButton>
+                  )}
+
                   {isEditing && (
                     <>
                       <SmallButton
-                        theme="active"
+                        themeInverse
                         elevation={1}
                         onPress={async () => {
                           router.setRouteAlert(null)
@@ -342,17 +348,20 @@ const ListPageContent = memo(
                       >
                         Save
                       </SmallButton>
-                      <Spacer size="sm" />
+
+                      <Spacer />
+
                       <VStack
                         opacity={0.8}
                         hoverStyle={{
                           opacity: 1,
                         }}
+                        padding={6}
                         onPress={() => {
                           setIsEditing(false)
                         }}
                       >
-                        <X color={isWeb ? 'var(--color)' : '#777'} size={20} />
+                        <X color={grey} size={24} />
                       </VStack>
                       <Spacer size="lg" />
                     </>
@@ -369,6 +378,8 @@ const ListPageContent = memo(
 
                         <InteractiveContainer alignItems="center">
                           <Paragraph
+                            size="sm"
+                            opacity={0.5}
                             onPress={() => {
                               setTheme(0)
                             }}
@@ -385,6 +396,8 @@ const ListPageContent = memo(
                             }}
                           />
                           <Paragraph
+                            size="sm"
+                            opacity={0.5}
                             onPress={() => {
                               setTheme(1)
                             }}
@@ -400,7 +413,7 @@ const ListPageContent = memo(
 
                         <SmallButton
                           tooltip="Delete"
-                          icon={<Trash size={16} />}
+                          icon={<Trash color={red400} size={20} />}
                           onPress={async () => {
                             assertPresent(list.id, 'no list id')
                             if (confirm('Permanently delete this list?')) {
@@ -500,14 +513,8 @@ const ListPageContent = memo(
 
                 <VStack minHeight={300}>
                   {!restaurants.length && (
-                    <VStack
-                      padding={20}
-                      margin={20}
-                      borderWidth={1}
-                      borderColor="rgba(100,100,100,0.1)"
-                      borderRadius={10}
-                    >
-                      <Paragraph fontWeight="800">Nothing added to this list, yet.</Paragraph>
+                    <VStack padding={20} margin={20} borderRadius={10}>
+                      <Paragraph>Nothing on this list, yet.</Paragraph>
                     </VStack>
                   )}
 
@@ -546,7 +553,7 @@ const ListPageContent = memo(
                               </HStack>
                             )}
                             <RestaurantListItem
-                              hideDescription={listTheme === 'modern' || (!comment && !isEditing)}
+                              hideDescription={!comment}
                               dishSize="lg"
                               curLocInfo={props.item.curLocInfo ?? null}
                               restaurantId={restaurantId}
@@ -577,22 +584,24 @@ const ListPageContent = memo(
                   )}
 
                   {isMyList && (
-                    <HStack paddingHorizontal={20}>
-                      <Button
-                        onPress={() => {
-                          setShowAddModal(true)
-                        }}
-                        icon={<Plus size={16} color="rgba(150,150,150,0.8)" />}
-                        paddingVertical={20}
-                        paddingHorizontal={30}
-                        textProps={{
-                          fontSize: 18,
-                          fontWeight: '700',
-                        }}
-                      >
-                        Add
-                      </Button>
-                    </HStack>
+                    <>
+                      <Spacer size="lg" />
+                      <HStack paddingHorizontal={20}>
+                        <Button
+                          onPress={() => {
+                            setShowAddModal(true)
+                          }}
+                          icon={<Plus size={16} color="rgba(150,150,150,0.8)" />}
+                          paddingVertical={16}
+                          paddingHorizontal={28}
+                          textProps={{
+                            fontSize: 18,
+                          }}
+                        >
+                          Add
+                        </Button>
+                      </HStack>
+                    </>
                   )}
                 </VStack>
               </PageContentWithFooter>
@@ -690,7 +699,7 @@ const ListPageTitle = ({
 
           {listTheme === 'modern' && (
             <VStack
-              paddingTop={50}
+              paddingTop={15}
               marginHorizontal="auto"
               alignItems="center"
               justifyContent="center"

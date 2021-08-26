@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { isWeb } from '../../constants/constants'
 import { rgbString } from '../../helpers/rgb'
-import { useIsRouteActive } from '../../router'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 
 export const PageHead = (props: { children: any; isActive: boolean }) => {

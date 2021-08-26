@@ -32,13 +32,14 @@ export const ListCard = graphql((props: ListCardProps) => {
   const { list } = useList(props)
   const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
   const listColor = getListColor(list?.color)
+  const listThemeName = (list?.theme || 0) === 0 ? 'modern' : 'minimal'
   return (
     <ListCardFrame
       title={list?.name ?? ''}
       numItems={numItems}
       author={` by ${list?.user?.username ?? ''}`}
       {...props}
-      theme={(list?.theme || 0) === 0 ? 'modern' : 'minimal'}
+      theme={listThemeName}
       tags={
         props.size === 'xs'
           ? []
@@ -50,7 +51,9 @@ export const ListCard = graphql((props: ListCardProps) => {
       photo={getListPhoto(list)}
       {...(props.colored && {
         color: listColor,
-        backgroundColor: `${listColor}55`,
+        ...(listThemeName === 'modern' && {
+          backgroundColor: `${listColor}55`,
+        }),
         chromeless: true,
         flat: true,
       })}

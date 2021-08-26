@@ -162,7 +162,6 @@ const RestaurantHeaderContent = memo(
                           <HStack marginBottom={10}>
                             <RestaurantAddressLinksRow
                               curLocInfo={state?.curLocInfo ?? null}
-                              showMenu
                               size="lg"
                               restaurantSlug={restaurantSlug}
                             />

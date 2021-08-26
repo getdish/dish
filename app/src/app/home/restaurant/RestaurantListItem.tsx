@@ -19,7 +19,6 @@ import {
   Text,
   VStack,
   getMedia,
-  isTouchDevice,
   useMedia,
   useTheme,
 } from 'snackui'
@@ -93,13 +92,29 @@ const setHoveredSlow = debounce(appMapStore.setHovered, 400)
 
 export const RestaurantListItem = (props: RestaurantListItemProps) => {
   const [isLoaded, setIsLoaded] = useState(false)
+  const theme = useTheme()
   const handleScrollMemo = useCallback(() => {
     setIsLoaded(true)
   }, [])
   const handleScroll = isLoaded ? undefined : handleScrollMemo
 
   return (
-    <Suspense fallback={<LoadingItem size="lg" />}>
+    <Suspense
+      fallback={
+        props.hideDescription ? (
+          <VStack
+            className="shine"
+            height={61}
+            backgroundColor={theme.backgroundColorTransluscent}
+            borderWidth={2}
+            borderColor={theme.backgroundColorTransparent}
+            width="100%"
+          />
+        ) : (
+          <LoadingItem size="lg" />
+        )
+      }
+    >
       <ContentScrollViewHorizontal onScroll={handleScroll} scrollEventThrottle={100}>
         <RestaurantListItemContent isLoaded={isLoaded} {...props} />
       </ContentScrollViewHorizontal>
@@ -165,7 +180,7 @@ const RestaurantListItemContent = memo(
 
     const contentSideProps: StackProps = {
       width: media.sm ? '70%' : '60%',
-      minWidth: media.sm ? (isWeb ? '60vw' : Dimensions.get('window').width * 0.65) : 320,
+      minWidth: media.sm ? (isWeb ? '55vw' : Dimensions.get('window').width * 0.65) : 320,
       maxWidth: Math.min(
         Dimensions.get('window').width * 0.5,
         // flexibleHeight here should really be allowMoreWidth or something
@@ -230,20 +245,20 @@ const RestaurantListItemContent = memo(
         }}
       >
         <VStack
-          className="ease-in-out-slow hover-faded-in-parent"
+          className="hover-faded-in-parent"
           alignItems="flex-start"
           justifyContent="flex-start"
-          {...(!flexibleHeight && {
-            height: ITEM_HEIGHT,
-            minHeight: ITEM_HEIGHT,
-            maxHeight: ITEM_HEIGHT,
-          })}
           flex={1}
           // turn this off breaks something? but hides the rest of title hover?
           // overflow="hidden"
           // prevent jitter/layout moving until loaded
           display={restaurant.name === null ? 'none' : 'flex'}
           position="relative"
+          {...(!flexibleHeight && {
+            height: ITEM_HEIGHT,
+            minHeight: ITEM_HEIGHT,
+            maxHeight: ITEM_HEIGHT,
+          })}
           {...(isExpanded && {
             transform: [{ translateX: 300 }],
           })}
@@ -251,6 +266,9 @@ const RestaurantListItemContent = memo(
             flexDirection: 'row',
             alignItems: 'center',
             paddingVertical: 5,
+            hoverStyle: {
+              backgroundColor: theme.backgroundColorTransluscent,
+            },
           })}
         >
           {/* expanded content */}
@@ -316,6 +334,9 @@ const RestaurantListItemContent = memo(
               width={950}
               {...(shouldShowOneLine && {
                 width: 'auto',
+                hoverStyle: {
+                  backgroundColor: 'transparent',
+                },
               })}
               position="relative"
             >
@@ -363,6 +384,9 @@ const RestaurantListItemContent = memo(
                       maxWidth={contentSideProps.maxWidth}
                       hoverStyle={{
                         backgroundColor: theme.backgroundColorSecondary,
+                      }}
+                      pressStyle={{
+                        backgroundColor: theme.backgroundColorTertiary,
                       }}
                       {...(shouldShowOneLine && {
                         width: 200,
@@ -464,7 +488,7 @@ const RestaurantListItemContent = memo(
 
             {!!editableDescription && state.editing && (
               <Button
-                theme="action"
+                themeInverse
                 onPress={() => {
                   setState((prev) => ({ ...prev, editing: false }))
                   onChangeDescription?.(state.description ?? '')
@@ -535,7 +559,11 @@ const RestaurantListItemContent = memo(
             )}
 
             {!!restaurant.address && (
-              <RestaurantAddress size="xs" curLocInfo={curLocInfo!} address={restaurant.address} />
+              <RestaurantAddress
+                size={hideDescription ? 'xxs' : 'xs'}
+                curLocInfo={curLocInfo!}
+                address={restaurant.address}
+              />
             )}
 
             <Suspense fallback={null}>

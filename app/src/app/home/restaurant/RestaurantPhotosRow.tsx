@@ -141,7 +141,7 @@ export const RestaurantPhotosRowContent = memo(
                       return (
                         <>
                           {(!isEscalated || showEscalated) && (
-                            <Link name="gallery" params={{ restaurantSlug }}>
+                            <Link name="gallery" params={{ restaurantSlug, offset: index }}>
                               <Image
                                 source={{
                                   uri,
