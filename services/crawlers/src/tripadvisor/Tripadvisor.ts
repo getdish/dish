@@ -105,6 +105,7 @@ export class Tripadvisor extends WorkerJob {
     this.log(`Saved photos`)
     await this.saveReviews(scrape_id, 0, pup)
     this.log(`Saved reviews`)
+    this.log('getRestaurant() finished')
   }
 
   async saveRestaurant(data: ScrapeData) {
