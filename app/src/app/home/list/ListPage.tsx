@@ -6,9 +6,6 @@ import {
   listInsert,
   listUpdate,
   mutate,
-  order_by,
-  query,
-  resolved,
   slugify,
   useRefetch,
 } from '@dish/graph'
@@ -38,7 +35,6 @@ import { red400 } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
-import { promote } from '../../../helpers/listHelpers'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
@@ -68,6 +64,7 @@ import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors, randomListColor } from './listColors'
+import { useListRestaurants } from './useListRestaurants'
 
 type Props = StackItemProps<HomeStateItemList>
 
@@ -147,140 +144,6 @@ const setIsEditing = (val: boolean) => {
   if (val === false) {
     router.setRouteAlert(null)
   }
-}
-
-function useListRestaurants(list?: list) {
-  const refetch = useRefetch()
-  const listId = list?.id
-  const list_restaurants =
-    list?.restaurants({
-      limit: 50,
-      order_by: [{ position: order_by.asc }],
-    }) ?? []
-
-  const items =
-    list_restaurants.map((list_restaurant) => {
-      const dishQuery = list_restaurant.tags({
-        limit: 5,
-        order_by: [{ position: order_by.asc }],
-      })
-      return {
-        dishQuery,
-        restaurantId: list_restaurant.restaurant.id,
-        restaurant: list_restaurant.restaurant,
-        comment: list_restaurant.comment,
-        position: list_restaurant.position,
-        dishSlugs: dishQuery.map((listTag) => listTag.restaurant_tag?.tag.slug || ''),
-      }
-    }) ?? []
-
-  async function setOrder(ids: string[]) {
-    await mutate((mutation) => {
-      // seed because it doesnt do it all in one step causing uniqueness violations
-      const seed = Math.floor(Math.random() * 10000)
-      assertPresent(list, 'no list')
-      ids.forEach((rid, position) => {
-        mutation.update_list_restaurant_by_pk({
-          pk_columns: {
-            list_id: listId,
-            restaurant_id: rid,
-          },
-          _set: {
-            position: (position + 1) * seed,
-          },
-        })?.__typename
-      })
-    })
-    await refetch(list)
-  }
-
-  return [
-    items,
-    {
-      setOrder,
-      add: async (id: string) => {
-        await mutate((mutation) => {
-          assertPresent(list, 'no list')
-          assertPresent(userStore.user, 'no user')
-          return mutation.insert_list_restaurant_one({
-            object: {
-              // space it out
-              position: items.length * Math.round((1000 - items.length) * Math.random()),
-              list_id: listId,
-              restaurant_id: id,
-              user_id: userStore.user.id,
-            },
-          })?.__typename
-        })
-        console.log('added, refreshing')
-        await Promise.all([refetch(list), refetch(list_restaurants)])
-      },
-      async promote(index: number) {
-        if (index == 0) return
-        const now = items.map((x) => x.restaurant.id as string)
-        const next = promote(now, index)
-        await setOrder(next)
-      },
-      async delete(id: string) {
-        await mutate((mutation) => {
-          mutation.delete_list_restaurant({
-            where: {
-              restaurant_id: {
-                _eq: id,
-              },
-            },
-          })?.affected_rows
-        })
-        await Promise.all([refetch(list), refetch(list_restaurants)])
-      },
-      async setComment(id: string, comment: string) {
-        await mutate((mutation) => {
-          return mutation.update_list_restaurant_by_pk({
-            pk_columns: {
-              list_id: listId,
-              restaurant_id: id,
-            },
-            _set: {
-              comment,
-            },
-          })?.__typename
-        })
-        await refetch(list)
-      },
-      async setDishes(id: string, dishTags: string[]) {
-        const { dishQuery } = items.find((x) => x.restaurantId === id) ?? {}
-        const rtagids = await resolved(() =>
-          query.restaurant_tag({ where: { tag: { slug: { _in: dishTags } } } }).map((x) => x.id)
-        )
-        await mutate((mutation) => {
-          // immutable style
-          // first delete old ones
-          mutation.delete_list_restaurant_tag({
-            where: {
-              list_restaurant_id: {
-                _eq: id,
-              },
-            },
-          })?.__typename
-          // then add news ones
-          assertPresent(list, 'no list')
-          assertPresent(userStore.user, 'no user')
-          for (const [position, rid] of rtagids.entries()) {
-            mutation.insert_list_restaurant_tag_one({
-              object: {
-                restaurant_tag_id: rid,
-                list_restaurant_id: id,
-                list_id: list.id,
-                user_id: userStore.user.id,
-                position,
-              },
-            })?.__typename
-          }
-        })
-        await refetch(dishQuery)
-      },
-    },
-  ] as const
 }
 
 // in dark mode maybe thats why i had 11 in here?

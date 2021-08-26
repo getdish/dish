@@ -1,4 +1,4 @@
-import { RestaurantOnlyIds, graphql, order_by, query, resolved } from '@dish/graph'
+import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import React, { memo, useCallback, useMemo, useState } from 'react'
@@ -46,6 +46,7 @@ export const HomePageFeed = memo(
   graphql(
     ({ region, ...useSetAppMapProps }: UseSetAppMapProps & { region: string }) => {
       const [hovered, setHovered] = useState<null | RestaurantOnlyIds[]>(null)
+      const refetch = useRefetch()
       const setHoveredDbc = useDebounce(setHovered, 400)
       const setHoverCancel = () => {
         setHoveredDbc.cancel()
@@ -232,10 +233,16 @@ export const HomePageFeed = memo(
               {trendingLists.map((list, i) => {
                 const listSlug = list.slug
                 return (
-                  <HStack alignItems="center" flexShrink={0} key={i} marginBottom={10}>
+                  <HStack
+                    alignItems="center"
+                    flexShrink={0}
+                    key={`${list.id ?? i}`}
+                    marginBottom={10}
+                  >
                     <Spacer size="xs" />
                     <ListCard
                       userSlug={list.user?.username ?? ''}
+                      onDelete={refetch}
                       slug={list?.slug ?? ''}
                       size="lg"
                       colored

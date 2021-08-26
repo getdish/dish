@@ -36,6 +36,11 @@ class UserStore extends Store {
     return !!this.user
   }
 
+  get isAdmin() {
+    // this is ok, we secure things on backend (always)
+    return this.user?.username === 'admin'
+  }
+
   setTheme(theme: ThemeName | null) {
     this.theme = theme
   }
