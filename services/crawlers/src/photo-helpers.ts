@@ -141,7 +141,7 @@ export async function uploadToDO(photos: Partial<PhotoXref>[]) {
   const not_uploaded = await findNotUploadedPhotos(photos)
   if (not_uploaded.length == 0) return
   const uploaded = await uploadToDOSpaces(not_uploaded)
-  const updated = uploaded.map((p) => {
+  const updated = uploaded.map((p: any) => {
     if (!p.photo) throw new Error('uploadToDO() No photo!?')
     return {
       id: p.photo.id,
@@ -325,7 +325,7 @@ export async function bestPhotosForRestaurant(restaurant_id: uuid): Promise<Phot
     ) j1;
   `)
   const agg = result.rows[0].json_agg ?? []
-  const photos = agg.map((p) => {
+  const photos = agg.map((p: any) => {
     p.photo = JSON.parse(p.photo)
     return p
   })
@@ -422,7 +422,7 @@ async function assessPhotoWithoutRetries(urls: string[]) {
     console.log('Fetching Image Quality API batch...', urls.length, 'first:', urls[0])
   }
 
-  const [imageQualities, imageCategories, imageSimilarities] = await Promise.all([
+  const [imageQualities, imageCategories, _] = await Promise.all([
     getImageQuality(urls),
     getImageCategory(urls),
     getImageSimilarity(urls),
@@ -446,13 +446,14 @@ async function assessPhotoWithoutRetries(urls: string[]) {
       categories,
     })
   }
+  console.log(res)
   return res
 }
 
 async function getImageSimilarity(urls: string[]) {
   // TODO
   // use imghash + fast-levenshtein
-  for (const url of urls) {
+  for (const _ of urls) {
   }
 }
 
@@ -472,7 +473,7 @@ async function getImageCategory(
         body: formdata,
       }).then((res) => res.json())
       return {
-        categories: response.labels,
+        categories: (response as any).labels,
         url,
       }
     })
@@ -485,9 +486,7 @@ async function getImageCategory(
   // return res
 }
 
-async function getImageQuality(
-  urls: string[]
-): Promise<{ mean_score_prediction: number; image_id: string }[]> {
+async function getImageQuality(urls: string[]): ImageQualityResponse {
   const IMAGE_QUALITY_API = `${process.env.IMAGE_QUALITY_ENDPOINT}/prediction`
   const qualityResponse: any = await fetch(IMAGE_QUALITY_API, {
     method: 'POST',
@@ -496,7 +495,7 @@ async function getImageQuality(
     },
     body: JSON.stringify(urls),
   })
-  return await qualityResponse.json()
+  return (await qualityResponse.json()) as ImageQualityResponse
 }
 
 function proxyYelpCDN(photo: string) {

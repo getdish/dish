@@ -1,7 +1,7 @@
 import { selectFields } from 'gqty'
 import _, { chunk } from 'lodash'
 
-import { ZeroUUID, globalTagId } from '../constants'
+import { globalTagId } from '../constants'
 import { Maybe, client, order_by, resolved, restaurant } from '../graphql'
 import { createQueryHelpersFor } from '../helpers/queryHelpers'
 import { SelectionOptions, resolvedWithFields } from '../helpers/queryResolvers'

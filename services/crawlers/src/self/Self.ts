@@ -55,7 +55,7 @@ import { RestaurantTagScores } from './RestaurantTagScores'
 import { GEM_UIID, Tagging } from './Tagging'
 import { updateAllRestaurantGeocoderIDs, updateGeocoderID } from './update_all_geocoder_ids'
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason, _) => {
   console.log('unhandled rejection', reason)
   process.exit(1)
 })
@@ -478,7 +478,7 @@ export class Self extends WorkerJob {
     const dayRange = this.restaurant.hours
 
     // flatten
-    const dayData = dayRange.flatMap((dr) => {
+    const dayData = dayRange.flatMap((dr: any) => {
       if (dr.formattedDate.includes('-')) {
         // explode from range Mon-Wed into individual days Mon, Tue, Wed
         const [start, end] = dr.formattedDate.split('-')
@@ -506,7 +506,7 @@ export class Self extends WorkerJob {
     for (const day of dayData) {
       const times = day.formattedTime.split(' - ')
       if (!times || !times.length) continue
-      let [openTime, closeTime] = times.map((x) => x.replace(' ', '').trim().toLowerCase())
+      let [openTime, closeTime] = times.map((x: any) => x.replace(' ', '').trim().toLowerCase())
       const openDay = day.formattedDate
       let closeDay = day.formattedDate
       // if closes in the next day, move the close day up one

@@ -30,7 +30,7 @@ declare module "@dish/worker" {
         start_with_aws: boolean;
         constructor(domain: string, aws_proxy: string, config?: Opts, start_with_aws?: boolean);
         getJSON(uri: string, props?: Opts): Promise<unknown>;
-        getScriptData(uri: string, selectors: string[]): Promise<unknown>;
+        getScriptData(uri: string, selectors: string[]): Promise<any>;
         getText(uri: string, props?: Opts): Promise<any>;
         get(uri: string, props?: Opts): Promise<any>;
         getStormProxyConfig(): {

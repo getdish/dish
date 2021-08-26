@@ -20,7 +20,6 @@ function psql_main() {
     -U "$POSTGRES_USER" \
     -p "$POSTGRES_PORT" \
     -h "$POSTGRES_HOST"
-  PGPASSWORD="$POSTGRES_PASSWORD" log_command psql -d "$POSTGRES_DB" -U "$POSTGRES_USER" -p "$POSTGRES_PORT" -h "$POSTGRES_HOST"
 }
 
 function psql_timescale() {
@@ -68,23 +67,23 @@ function migrate_hasura() {
   echo "POSTGRES_DB $POSTGRES_DB"
   echo "hasura migrate $HASURA_ENDPOINT"
   pushd "$PROJECT_ROOT/services/hasura"
-    hasura --skip-update-check migrate apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
-    echo "hasura metadata"
-    hasura --skip-update-check metadata apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+  hasura --skip-update-check migrate apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+  echo "hasura metadata"
+  hasura --skip-update-check metadata apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   popd
 
   echo "hasura init functions"
 
   pushd "$PROJECT_ROOT/services/hasura"
-    cat functions/*.sql |
-      PGPASSWORD=$POSTGRES_PASSWORD psql \
-        -p "$POSTGRES_PORT" \
-        -h "$POSTGRES_HOST" \
-        -U "${POSTGRES_USER:-postgres}" \
-        -d "${POSTGRES_DB:-dish}" \
-        --single-transaction
-    echo "hasura migrate status"
-    hasura --skip-update-check migrate status --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+  cat functions/*.sql |
+    PGPASSWORD=$POSTGRES_PASSWORD psql \
+      -p "$POSTGRES_PORT" \
+      -h "$POSTGRES_HOST" \
+      -U "${POSTGRES_USER:-postgres}" \
+      -d "${POSTGRES_DB:-dish}" \
+      --single-transaction
+  echo "hasura migrate status"
+  hasura --skip-update-check migrate status --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   popd
 }
 

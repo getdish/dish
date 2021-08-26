@@ -15,7 +15,7 @@ function start_crawler() {
   exec worker "node /app/services/crawlers/_/$1/all.js"
 }
 
-# example: ./dsh start_crawler_for_city yelp  Tucson, Arizona
+# example: ./dsh start_crawler_for_city yelp Tucson, Arizona
 function start_crawler_for_city() {
   exec worker "node /app/services/crawlers/dist/$1/all.js --city \"$2\""
 }

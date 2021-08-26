@@ -325,10 +325,10 @@ test('Finding dishes in the corpus', async (t) => {
   await self.scanCorpus()
   await self.finishTagsEtc()
   const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
-  t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag1.id))
-  t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag2.id))
-  t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag3.id))
-  t.assert(updated?.tags.map((i) => i.tag.id).includes(existing_tag4.id))
+  t.assert(updated?.tags.map((i: any) => i.tag.id).includes(existing_tag1.id))
+  t.assert(updated?.tags.map((i: any) => i.tag.id).includes(existing_tag2.id))
+  t.assert(updated?.tags.map((i: any) => i.tag.id).includes(existing_tag3.id))
+  t.assert(updated?.tags.map((i: any) => i.tag.id).includes(existing_tag4.id))
 })
 
 test('Review naive sentiments', async (t) => {
@@ -347,17 +347,17 @@ test('Review naive sentiments', async (t) => {
   await self.finishTagsEtc()
   reviews = await reviewFindAllForRestaurant(t.context.restaurant.id)
   t.is(reviews.length, 6)
-  const rv1 = reviews.find((rv) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
-  const rv1s1 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 1'))
+  const rv1 = reviews.find((rv: any) => rv.username == 'yelp-FsLRE98uOHkBNzO1Ta5hIw')
+  const rv1s1 = rv1.sentiments.find((s: any) => s.sentence.includes('Test tag existing 1'))
   t.is(rv1s1.naive_sentiment, -3)
-  const rv1s2 = rv1.sentiments.find((s) => s.sentence.includes('Test tag existing 2'))
+  const rv1s2 = rv1.sentiments.find((s: any) => s.sentence.includes('Test tag existing 2'))
   t.is(rv1s2.naive_sentiment, 4)
-  const rv2 = reviews.find((rv) => rv.username == 'tripadvisor-tauser')
-  const rv2s1 = rv2.sentiments.find((s) => s.sentence.includes('Test tag existing 3'))
+  const rv2 = reviews.find((rv: any) => rv.username == 'tripadvisor-tauser')
+  const rv2s1 = rv2.sentiments.find((s: any) => s.sentence.includes('Test tag existing 3'))
   t.is(rv2s1.naive_sentiment, 0)
-  const rv3 = reviews.find((rv) => rv.username == 'tripadvisor-tauser2')
+  const rv3 = reviews.find((rv: any) => rv.username == 'tripadvisor-tauser2')
   t.is(rv3.sentiments.length, 0)
-  const rv4 = reviews.find((rv) => rv.username == 'google-123')
+  const rv4 = reviews.find((rv: any) => rv.username == 'google-123')
   t.is(rv4.rating, 4.5)
 })
 
@@ -406,8 +406,8 @@ test('Find photos of dishes', async (t) => {
   const updated = await restaurantFindOneWithTagsSQL(t.context.restaurant.id)
   t.is(updated?.id, t.context.restaurant.id)
   if (!updated) return
-  const tag1 = updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
-  const tag2 = updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
+  const tag1 = updated.tags.find((i: any) => i.tag.id == existing_tag1.id) || ({} as Tag)
+  const tag2 = updated.tags.find((i: any) => i.tag.id == existing_tag2.id) || ({} as Tag)
   t.is(updated.tags.length, 3)
   t.is(tag1.tag.name, existing_tag1.name)
   const photo1 = tag1.photos[0]
@@ -443,9 +443,9 @@ test('Identifying country tags', async (t) => {
   t.assert(updated, 'not found')
   if (!updated) return
   t.is(updated.tags.length, 7)
-  const tag1 = updated.tags.find((i) => i.tag.id == existing_tag1.id) || ({} as Tag)
-  const tag2 = updated.tags.find((i) => i.tag.id == existing_tag2.id) || ({} as Tag)
-  const tag3 = updated.tags.find((i) => i.tag.name == 'Test Pizza') || ({} as Tag)
+  const tag1 = updated.tags.find((i: any) => i.tag.id == existing_tag1.id) || ({} as Tag)
+  const tag2 = updated.tags.find((i: any) => i.tag.id == existing_tag2.id) || ({} as Tag)
+  const tag3 = updated.tags.find((i: any) => i.tag.name == 'Test Pizza') || ({} as Tag)
   t.is(tag1.tag.name, 'Test Mexican')
   t.is(tag1.tag.type, 'country')
   t.is(tag2.tag.name, 'Test Spanish')
@@ -456,7 +456,7 @@ test('Identifying country tags', async (t) => {
 test('Adding opening hours', async (t) => {
   const dish = new Self()
   await dish.preMerge(t.context.restaurant)
-  const { count, records } = await dish.addHours()
+  const { count } = await dish.addHours()
   t.is(count, 7)
   const openers = await Database.one_query_on_main(`
     SELECT restaurant_id
