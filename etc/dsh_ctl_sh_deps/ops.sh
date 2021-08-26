@@ -13,7 +13,6 @@ function exec() {
   docker exec -it $(docker ps | grep $app | head -n1 | awk '{print $1}') $cmd
 }
 
-
 function logs() {
   docker service logs "$@"
 }
@@ -190,8 +189,9 @@ function clean_dangling() {
 
 function hungry_services_tunnels() {
   echo "Opening tunnels to hungry services on prod..."
-  hungry_service_tunnel 5005 &
-  hungry_service_tunnel 8884 &
+  hungry_service_tunnel 5002 & # Summarizer
+  hungry_service_tunnel 5005 & # Bert
+  hungry_service_tunnel 8884 & # Image recognition
   wait
 }
 
