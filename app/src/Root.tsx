@@ -37,6 +37,7 @@ import { PlatformSpecificProvider } from './app/PlatformSpecificProvider'
 import { RootPortalProvider } from './app/Portal'
 import { useUserStore, userStore } from './app/userStore'
 import { showRadar } from './constants/constants'
+import { initialHomeState } from './constants/initialHomeState'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
@@ -56,16 +57,32 @@ let isStarted = false
 let startPromise
 
 async function start() {
-  if (isStarted) return
+  if (isStarted) {
+    return
+  }
+
   await new Promise<void>((res) => {
     addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
+    userStore.checkForExistingLogin()
+
+    // if coming in fresh, redirect to our initial region
+    if (router.curPage.name === 'home' && !router.curPage.params.region) {
+      router.navigate({
+        name: 'homeRegion',
+        params: {
+          region: initialHomeState.region,
+        },
+        replace: true,
+      })
+    }
+
     router.onRouteChange((item) => {
       homeStore.handleRouteChange(item)
       startPromise = null
       res()
     })
-    userStore.checkForExistingLogin()
   })
+
   isStarted = true
 }
 
@@ -73,6 +90,7 @@ configureThemes(themes)
 configureUseStore({
   logLevel: process.env.LOG_LEVEL ? 'info' : 'error',
 })
+
 if (process.env.NODE_ENV === 'development') {
   configureAssertHelpers({
     onAssertFail: (why) => {
