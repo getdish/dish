@@ -286,13 +286,6 @@ function CommentBubbleContents({
 
         {!!contents && (
           <>
-            {chromeless && (
-              <>
-                <Divider />
-                <Spacer size="lg" />
-              </>
-            )}
-
             {scrollable ? (
               <ScrollView
                 pointerEvents="auto"
@@ -302,13 +295,6 @@ function CommentBubbleContents({
               </ScrollView>
             ) : (
               contents
-            )}
-
-            {chromeless && (
-              <>
-                <Spacer size="lg" />
-                <Divider />
-              </>
             )}
           </>
         )}
