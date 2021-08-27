@@ -449,8 +449,19 @@ const ListPageContent = memo(
                   />
                 </VStack>
 
-                {!!(list.description || isEditing) && (
-                  <>
+                {!!(list.description || isEditing || listTheme === 'minimal') && (
+                  <VStack
+                    marginBottom={10}
+                    {...(listTheme === 'minimal' && {
+                      marginBottom: -20,
+                    })}
+                  >
+                    {/* {chromeless && (
+                        <>
+                          <Divider />
+                          <Spacer size="lg" />
+                        </>
+                      )} */}
                     <CommentBubble
                       chromeless={listTheme === 'minimal'}
                       paddingHorizontal={20}
@@ -507,8 +518,7 @@ const ListPageContent = memo(
                         })()
                       )}
                     </CommentBubble>
-                    <Spacer size="xl" />
-                  </>
+                  </VStack>
                 )}
 
                 <VStack minHeight={300}>

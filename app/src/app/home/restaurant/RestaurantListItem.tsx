@@ -24,9 +24,10 @@ import {
 } from 'snackui'
 
 import { brandColor, green } from '../../../constants/colors'
-import { isWeb } from '../../../constants/constants'
+import { drawerWidthMax, isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
+import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -34,6 +35,7 @@ import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { appMapStore } from '../../AppMap'
+import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 import { Image } from '../../views/Image'
@@ -205,8 +207,11 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 1
         : 1
+
+    const shouldShowOneLine = hideDescription && !description && !state.editing
+
     const titleFontSize =
-      Math.round((media.sm ? 20 : 23) * titleFontScale) * (hideDescription ? 0.8 : 1)
+      Math.round((media.sm ? 20 : 23) * titleFontScale) * (shouldShowOneLine ? 0.8 : 1)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
@@ -229,8 +234,6 @@ const RestaurantListItemContent = memo(
       </Suspense>
     )
 
-    const shouldShowOneLine = hideDescription && !description && !state.editing
-
     return (
       <Hoverable
         onHoverIn={() => {
@@ -248,7 +251,7 @@ const RestaurantListItemContent = memo(
           className="hover-faded-in-parent"
           alignItems="flex-start"
           justifyContent="flex-start"
-          flex={1}
+          flexGrow={1}
           // turn this off breaks something? but hides the rest of title hover?
           // overflow="hidden"
           // prevent jitter/layout moving until loaded
@@ -560,7 +563,7 @@ const RestaurantListItemContent = memo(
 
             {!!restaurant.address && (
               <RestaurantAddress
-                size={hideDescription ? 'xxs' : 'xs'}
+                size={shouldShowOneLine ? 'xxs' : 'xs'}
                 curLocInfo={curLocInfo!}
                 address={restaurant.address}
               />
@@ -574,7 +577,7 @@ const RestaurantListItemContent = memo(
           </HStack>
 
           {/* bottom spacing */}
-          {!hideDescription && <Spacer size={10} />}
+          {!shouldShowOneLine && <Spacer size={10} />}
         </VStack>
       </Hoverable>
     )
