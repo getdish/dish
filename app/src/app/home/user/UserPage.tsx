@@ -281,7 +281,7 @@ const UserPageContent = memo(
             <Spacer />
             <HStack spacing alignItems="center" justifyContent="center">
               <Paragraph size="lg" fontWeight="700">
-                {characters[user.charIndex ?? 0] ?? '👻'}
+                {characters[user.charIndex ?? 0] || '👻'}
               </Paragraph>
               <Paragraph size="lg" opacity={0.5}>
                 {pluralize(votesCount, 'vote')}
@@ -323,7 +323,7 @@ const UserPageContent = memo(
                         size="lg"
                         floating
                         key={list.slug || i}
-                        userSlug={list.user?.username ?? ''}
+                        userSlug={list.user?.username || ''}
                         slug={list.slug || ''}
                       />
                     )
@@ -346,7 +346,7 @@ const UserPageContent = memo(
                         // size="lg"
                         floating
                         key={list.slug || i}
-                        userSlug={list.user?.username ?? ''}
+                        userSlug={list.user?.username || ''}
                         slug={list.slug || ''}
                       />
                     )
@@ -385,7 +385,7 @@ const UserHeader = memo(
       setPane: Function
       pane: UserPane | null
     }) => {
-      const username = item?.username ?? ''
+      const username = item?.username || ''
       const userStore = useUserStore()
       const user = queryUser(username)
       const isOwnProfile = userStore.user?.username === username
@@ -413,7 +413,7 @@ const UserHeader = memo(
               </VStack>
               <VStack flex={1}>
                 <Paragraph size="xxxxl" paddingRight={30}>
-                  {user.name ?? user.username ?? 'no-name'}
+                  {user.name || user.username || 'no-name'}
                 </Paragraph>
                 <Spacer size={4} />
                 <HStack>
