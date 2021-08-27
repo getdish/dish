@@ -1,4 +1,4 @@
-import { ReviewQuery, graphql, order_by, query, useRefetch } from '@dish/graph'
+import { ReviewQuery, graphql, order_by, useQuery, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { useRouterSelector } from '@dish/router'
@@ -12,6 +12,7 @@ import {
   Paragraph,
   Spacer,
   VStack,
+  useLazyEffect,
   useTheme,
 } from 'snackui'
 
@@ -74,22 +75,14 @@ const getReviewRestuarants = (x: ReviewQuery) => {
   }
 }
 
-const UserPageContent = graphql(
+const UserPageContent = memo(
   (props: StackItemProps<HomeStateItemUser> & { pane: UserPane | null; setPane: Function }) => {
     const refetch = useRefetch()
+    const query = useQuery({
+      suspense: false,
+    })
     const { item, isActive, pane, setPane } = props
     const username = item.username
-
-    usePageLoadEffect(props, ({ isRefreshing }) => {
-      if (isRefreshing) {
-        console.warn('testing refetch')
-        refetch()
-      }
-    })
-
-    if (!username) {
-      return null
-    }
 
     const user = queryUser(username)
     const lists = user.lists({
@@ -189,6 +182,31 @@ const UserPageContent = graphql(
           },
         })
         .aggregate?.count({}) ?? 0
+
+    const refetchAll = () => {
+      refetch(user)
+      refetch(lists)
+      refetch(favoriteLists)
+    }
+
+    usePageLoadEffect(props, ({ isRefreshing }) => {
+      if (isRefreshing) {
+        console.warn('testing refetch')
+        refetchAll()
+      }
+    })
+
+    // reload on back
+    useLazyEffect(() => {
+      if (props.isActive) {
+        console.warn('testing refetch')
+        refetchAll()
+      }
+    }, [props.isActive])
+
+    if (!username) {
+      return null
+    }
 
     if (!user) {
       return <NotFoundPage />
@@ -356,9 +374,6 @@ const UserPageContent = graphql(
         </PageContentWithFooter>
       </ContentScrollView>
     )
-  },
-  {
-    suspense: false,
   }
 )
 
