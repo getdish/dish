@@ -453,7 +453,7 @@ const ListPageContent = memo(
                   <VStack
                     marginBottom={10}
                     {...(listTheme === 'minimal' && {
-                      marginBottom: -20,
+                      marginBottom: list.description ? 20 : -20,
                     })}
                   >
                     {/* {chromeless && (
@@ -570,7 +570,6 @@ const ListPageContent = memo(
                               restaurantSlug={restaurant.slug}
                               rank={index + 1}
                               description={comment}
-                              hideTagRow={listTheme === 'minimal'}
                               hideRate
                               flexibleHeight
                               dishSlugs={dishSlugs.length ? dishSlugs : undefined}

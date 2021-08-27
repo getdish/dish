@@ -23,7 +23,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import { brandColor, green } from '../../../constants/colors'
+import { brandColor, green, red } from '../../../constants/colors'
 import { drawerWidthMax, isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
@@ -220,20 +220,6 @@ const RestaurantListItemContent = memo(
       setIsExpanded((x) => !x)
     }, [])
 
-    const tagsRowContent = !hideTagRow && (
-      <Suspense fallback={null}>
-        <RestaurantTagsRow
-          exclude={excludeTags}
-          size="sm"
-          restaurantSlug={restaurantSlug}
-          restaurantId={restaurantId}
-          spacing={0}
-          spacingHorizontal={0}
-          maxItems={4}
-        />
-      </Suspense>
-    )
-
     return (
       <Hoverable
         onHoverIn={() => {
@@ -345,7 +331,7 @@ const RestaurantListItemContent = memo(
             >
               {/* LINK */}
               <Link
-                flex={1}
+                flex={2}
                 tagName="div"
                 name="restaurant"
                 params={{ slug: restaurantSlug }}
@@ -353,7 +339,7 @@ const RestaurantListItemContent = memo(
               >
                 <HStack
                   paddingLeft={hideRate ? 10 : 64}
-                  paddingTop={15}
+                  paddingTop={shouldShowOneLine ? 10 : 15}
                   position="relative"
                   alignItems="center"
                 >
@@ -474,106 +460,137 @@ const RestaurantListItemContent = memo(
           {/* ROW: BOTTOM ROW */}
 
           <HStack
-            paddingLeft={20}
+            position="relative"
             height={46}
             className="safari-fix-overflow"
-            position="relative"
             alignItems="center"
-            width="100%"
-            overflow="hidden"
             spacing
           >
-            {beforeBottomRow}
+            <HStack
+              paddingLeft={20}
+              alignItems="center"
+              overflow="hidden"
+              spacing
+              {...(shouldShowOneLine && {
+                paddingLeft: 0,
+                minWidth: 460,
+                justifyContent: 'flex-start',
+              })}
+            >
+              {beforeBottomRow}
 
-            {!!editableDescription && !state.editing && (
-              <Button onPress={() => setState((prev) => ({ ...prev, editing: true }))}>Edit</Button>
-            )}
+              {!!editableDescription && !state.editing && (
+                <SmallButton onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
+                  Edit
+                </SmallButton>
+              )}
 
-            {!!editableDescription && state.editing && (
-              <Button
-                themeInverse
-                onPress={() => {
-                  setState((prev) => ({ ...prev, editing: false }))
-                  onChangeDescription?.(state.description ?? '')
-                }}
-              >
-                Save
-              </Button>
-            )}
+              {!!restaurant.address && (
+                <RestaurantAddress
+                  size={shouldShowOneLine ? 'xxs' : 'xs'}
+                  curLocInfo={curLocInfo!}
+                  address={restaurant.address}
+                />
+              )}
 
-            <InteractiveContainer borderColor="transparent">
-              <Link
-                name="restaurant"
-                params={{
-                  slug: props.restaurantSlug,
-                  section: 'reviews',
-                }}
-              >
-                <SmallButton
-                  marginRight={-2}
-                  borderRadius={0}
-                  tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                  icon={
-                    <MessageSquare
-                      size={16}
-                      color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                    />
-                  }
+              {!!editableDescription && state.editing && (
+                <Button
+                  themeInverse
+                  onPress={() => {
+                    setState((prev) => ({ ...prev, editing: false }))
+                    onChangeDescription?.(state.description ?? '')
+                  }}
                 >
-                  {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                  Save
+                </Button>
+              )}
+
+              <InteractiveContainer borderColor="transparent">
+                <Link
+                  name="restaurant"
+                  params={{
+                    slug: props.restaurantSlug,
+                    section: 'reviews',
+                  }}
+                >
+                  <SmallButton
+                    marginRight={-2}
+                    borderRadius={0}
+                    tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                    width={90}
+                    icon={
+                      <MessageSquare
+                        style={{
+                          opacity: 0.5,
+                          marginLeft: -8,
+                        }}
+                        size={12}
+                        color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                      />
+                    }
+                  >
+                    {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                  </SmallButton>
+                </Link>
+
+                <Suspense fallback={<Spacer size={44} />}>
+                  <VStack marginRight={-2}>
+                    <RestaurantFavoriteStar
+                      borderRadius={0}
+                      size="md"
+                      restaurantId={restaurantId}
+                    />
+                  </VStack>
+                </Suspense>
+
+                <Suspense fallback={<Spacer size={44} />}>
+                  <RestaurantAddToListButton
+                    borderRadius={0}
+                    restaurantSlug={restaurantSlug}
+                    noLabel
+                  />
+                </Suspense>
+              </InteractiveContainer>
+
+              <Text
+                width={42}
+                textAlign="center"
+                fontSize={14}
+                fontWeight="700"
+                color={theme.colorTertiary}
+              >
+                {price_range ?? '-'}
+              </Text>
+
+              <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
+
+              <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                <SmallButton minWidth={120} textProps={{ opacity: 0.6 }}>
+                  {open.nextTime || '~~'}
                 </SmallButton>
               </Link>
 
-              <Suspense fallback={<Spacer size={44} />}>
-                <VStack marginRight={-2}>
-                  <RestaurantFavoriteStar borderRadius={0} size="md" restaurantId={restaurantId} />
-                </VStack>
-              </Suspense>
-
-              <Suspense fallback={<Spacer size={44} />}>
-                <RestaurantAddToListButton
-                  borderRadius={0}
+              <Suspense fallback={null}>
+                <RestaurantDeliveryButtons
+                  showLabels={!shouldShowOneLine}
                   restaurantSlug={restaurantSlug}
-                  noLabel
                 />
               </Suspense>
-            </InteractiveContainer>
 
-            {!!price_range && (
-              <>
-                <Text fontSize={14} fontWeight="700" color={theme.colorTertiary}>
-                  {price_range}
-                </Text>
-              </>
-            )}
-
-            {!!open.isOpen && (
-              <>
-                <Circle size={8} backgroundColor={green} />
-              </>
-            )}
-
-            {!!open.text && (
-              <>
-                <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                  <SmallButton textProps={{ opacity: 0.6 }}>{open.nextTime || '~~'}</SmallButton>
-                </Link>
-              </>
-            )}
-
-            {!!restaurant.address && (
-              <RestaurantAddress
-                size={shouldShowOneLine ? 'xxs' : 'xs'}
-                curLocInfo={curLocInfo!}
-                address={restaurant.address}
-              />
-            )}
-
-            <Suspense fallback={null}>
-              <RestaurantDeliveryButtons showLabels restaurantSlug={restaurantSlug} />
-            </Suspense>
-
-            {tagsRowContent}
+              {!hideTagRow && (
+                <Suspense fallback={null}>
+                  <RestaurantTagsRow
+                    exclude={excludeTags}
+                    size="sm"
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurantId}
+                    spacing={0}
+                    spacingHorizontal={0}
+                    maxItems={4}
+                  />
+                </Suspense>
+              )}
+            </HStack>
           </HStack>
 
           {/* bottom spacing */}

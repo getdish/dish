@@ -368,6 +368,10 @@ const TagButtonInner = (props: TagButtonProps) => {
               },
             }
           : null)}
+        {...(!rest.onPress &&
+          !!slug && {
+            tag: { slug },
+          })}
       >
         {contents}
       </Link>
