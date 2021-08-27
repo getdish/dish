@@ -57,14 +57,13 @@ export const GalleryLightbox = memo(
         index: defaultIndex,
       }
     })
-    const query = useQuery()
+    const query = useQuery({
+      suspense: false,
+    })
     const [pagination, setPagination] = useState(() => ({ limit: 20, offset: 0 }))
     const [photosListRaw, setPhotosList] = useState<photo[]>(() => [])
     const [hasLoadedFirstImage, setHasLoadedFirstImage] = useState(false)
-    const [restaurant] = queryRestaurant(restaurantSlug)
-    if (!restaurant) {
-      return null
-    }
+    const [restaurant = {} as any] = queryRestaurant(restaurantSlug)
     const heroImage = restaurant.image
       ? ({
           url: restaurant.image,
@@ -93,18 +92,22 @@ export const GalleryLightbox = memo(
           ],
         })
         return photoTable
-          .map((v) => selectFields(v.photo, ['id', 'url', 'quality']))
+          .map(({ photo }) => ({
+            id: photo.id,
+            url: photo.url,
+            quality: photo.quality,
+          }))
           .filter(isPresent)
       },
       {
+        suspense: false,
         onCompleted(data) {
           const bound = (x = 0) => Math.min(2000, Math.round(x / 500) * 500)
-          setPhotosList(
-            uniqBy(data, (v) =>
-              // @ts-ignore
-              getImageUrl(v.url, bound(getWindowWidth()), bound(getWindowHeight()))
-            )
+          const next = uniqBy(data, (v: any) =>
+            getImageUrl(v.url, bound(getWindowWidth()), bound(getWindowHeight()))
           )
+          console.log('got photo_table data', data, next)
+          setPhotosList(next)
         },
       }
     )
@@ -125,6 +128,7 @@ export const GalleryLightbox = memo(
         )
       },
       {
+        suspense: false,
         variables: { pagination, restaurant_id: restaurant.id },
       }
     )
@@ -150,15 +154,17 @@ export const GalleryLightbox = memo(
         })
       },
       {
+        suspense: false,
         onCompleted(data) {
-          console.log('loaded', data)
-          setPhotosList((prev) =>
-            orderBy(
+          setPhotosList((prev) => {
+            const next = orderBy(
               uniqBy([...prev, ...data], (v) => v.url),
               (v) => v.quality,
               'desc'
             )
-          )
+            console.log('loaded', prev, data, next)
+            return next
+          })
         },
       }
     )
@@ -235,6 +241,10 @@ export const GalleryLightbox = memo(
           window.removeEventListener('keyup', handleKeyPress, true)
         }
       }, [setLeftImage, setRightImage])
+    }
+
+    if (!restaurant) {
+      return null
     }
 
     return (
