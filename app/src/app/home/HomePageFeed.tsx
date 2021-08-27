@@ -54,6 +54,7 @@ export const HomePageFeed = memo(
 
       useSetAppMap({
         ...useSetAppMapProps,
+        hideRegions: false,
         results: hovered ?? useSetAppMapProps.results,
       })
 

@@ -1,6 +1,6 @@
-import { MapPosition, slugify } from '@dish/graph'
+import { slugify } from '@dish/graph'
 import { useStore, useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo, useEffect, useMemo, useState } from 'react'
+import React, { Suspense, memo, useEffect, useMemo } from 'react'
 import {
   AbsoluteVStack,
   AnimatedVStack,
@@ -16,17 +16,13 @@ import {
 } from 'snackui'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
-import {
-  getDefaultLocation,
-  initialPosition,
-  setDefaultLocation,
-} from '../../constants/initialHomeState'
+import { getDefaultLocation, setDefaultLocation } from '../../constants/initialHomeState'
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { queryClient } from '../../helpers/queryClient'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { cancelUpdateRegion, useSetAppMap } from '../AppMap'
+import { cancelUpdateRegion } from '../AppMap'
 import { autocompletesStore } from '../AutocompletesStore'
 import { homeStore, useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
