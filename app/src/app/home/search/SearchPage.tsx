@@ -46,6 +46,7 @@ import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { RootPortalItem } from '../../Portal'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { PageHead } from '../../views/PageHead'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeSuspense } from '../HomeSuspense'
@@ -499,6 +500,7 @@ const SearchContent = memo(({ id }: { id: string }) => {
 })
 
 const SearchFooter = memo(({ scrollToTop, id }: { scrollToTop: Function; id: string }) => {
+  const state = useHomeStateById<HomeStateItemSearch>(id)
   const { results } = useSearchPageStore({
     id,
   })
@@ -515,6 +517,10 @@ const SearchFooter = memo(({ scrollToTop, id }: { scrollToTop: Function; id: str
       </Button>
       <Spacer size={40} />
       <Paragraph opacity={0.5}>Showing {results.length} results</Paragraph>
+      <Spacer size={40} />
+      <HStack>
+        <LenseButtonBar activeTags={state.activeTags} />
+      </HStack>
     </VStack>
   )
 })

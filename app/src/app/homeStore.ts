@@ -108,7 +108,7 @@ class HomeStore extends Store {
 
   get states(): HomeStateItem[] {
     const res = this.stateIds.map((x) => this.allStates[x]).slice(0, this.stateIndex + 1)
-    const last3 = reverse([...res])
+    const last3 = reverse([...res]).slice(0, 3)
     if (last3.every((x) => x.type === 'list')) {
       debugger
     }
