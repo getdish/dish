@@ -7,6 +7,7 @@ import {
   isHomeState,
   isListState,
   isRestaurantState,
+  isRoadmapState,
   isSearchState,
   isUserState,
 } from '../../helpers/homeStateHelpers'
@@ -24,6 +25,7 @@ export const HomeStackViewPages = (props: HomeStackViewProps) => {
       {isSearchState(item) && <SearchPage {...props} />}
       {isRestaurantState(item) && <RestaurantPage {...props} />}
       {isAboutState(item) && <AboutPage {...props} />}
+      {isRoadmapState(item) && <RoadmapPage {...props} />}
       {isListState(item) && <ListPage {...props} />}
       {isAccountState(item) && <AccountPage {...props} />}
       <HomeStackViewPagesContents {...props} />
@@ -51,6 +53,13 @@ const UserPage =
   process.env.NODE_ENV === 'development'
     ? require('./user/UserPage').default
     : loadable(() => import('./user/UserPage'))
+
+const RoadmapPage =
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
+    ? require('./roadmap/RoadmapPage').default
+    : loadable(() => import('./roadmap/RoadmapPage'))
 
 const AboutPage =
   process.env.TARGET === 'native' ||

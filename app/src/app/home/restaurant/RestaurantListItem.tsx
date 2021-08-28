@@ -345,35 +345,30 @@ const RestaurantListItemContent = memo(
                   position="relative"
                   alignItems="center"
                 >
-                  <AbsoluteVStack
-                    x={-38}
-                    y={3}
-                    zIndex={-1}
-                    {...(shouldShowOneLine && {
-                      x: -10,
-                    })}
-                    {...(hideRate && {
-                      x: -10,
-                    })}
-                  >
-                    <RankView rank={rank} />
-                  </AbsoluteVStack>
-
-                  <Spacer size="xs" />
-
                   {!media.sm && (
-                    <Image
-                      source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
-                      style={{
-                        marginVertical: -15,
-                        marginRight: 2,
-                        marginLeft: shouldShowOneLine ? 30 : hideRate ? 28 : 0,
-                        width: imgSize,
-                        height: imgSize,
-                        borderRadius: imgSize,
-                      }}
-                    />
+                    <VStack
+                      backgroundColor={theme.backgroundColorSecondary}
+                      borderRadius={1000}
+                      width={imgSize}
+                      height={imgSize}
+                      marginLeft={shouldShowOneLine ? 0 : hideRate ? -20 : -40}
+                      marginVertical={-18}
+                      marginRight={2}
+                      overflow="hidden"
+                    >
+                      <Image
+                        source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
+                        style={{
+                          width: imgSize,
+                          height: imgSize,
+                        }}
+                      />
+                    </VStack>
                   )}
+
+                  <VStack marginRight={-10} y={3} marginLeft={-5}>
+                    <RankView rank={rank} />
+                  </VStack>
 
                   {/* SECOND LINK WITH actual <a /> */}
                   <Link name="restaurant" params={{ slug: restaurantSlug }}>

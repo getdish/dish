@@ -5,6 +5,7 @@ import {
   HomeStateItemHome,
   HomeStateItemList,
   HomeStateItemRestaurant,
+  HomeStateItemRoadmap,
   HomeStateItemSearch,
   HomeStateItemUser,
 } from '../types/homeTypes'
@@ -18,6 +19,7 @@ export const isSearchState = (x?: HSIJustType): x is HomeStateItemSearch => x?.t
 export const isHomeState = (x?: HSIJustType): x is HomeStateItemHome =>
   x?.type === 'home' || x?.type === 'homeRegion'
 export const isListState = (x?: HSIJustType): x is HomeStateItemList => x?.type === 'list'
+export const isRoadmapState = (x?: HSIJustType): x is HomeStateItemRoadmap => x?.type === 'roadmap'
 export const isAccountState = (x?: HSIJustType): x is HomeStateItemList => x?.type === 'account'
 export const isRestaurantState = (x?: HSIJustType): x is HomeStateItemRestaurant =>
   x?.type === 'restaurant'

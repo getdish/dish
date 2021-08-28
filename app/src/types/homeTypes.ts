@@ -10,6 +10,7 @@ export const breadCrumbTypes = {
   about: true,
   blog: true,
   list: true,
+  roadmap: true,
 }
 
 export type GeocodePlace = {
@@ -65,6 +66,7 @@ export type HomeStateItem =
   | HomeStateItemUserEdit
   | HomeStateItemList
   | HomeStateItemAccount
+  | HomeStateItemRoadmap
 
 export type HomeStatesByType = {
   home: HomeStateItemHome
@@ -77,6 +79,7 @@ export type HomeStatesByType = {
   userEdit: HomeStateItemUserEdit
   list: HomeStateItemList
   account: HomeStateItemAccount
+  roadmap: HomeStateItemRoadmap
 }
 
 export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
@@ -125,6 +128,10 @@ export type HomeStateItemHome = HomeStateItemBase & {
   section: string
   center?: LngLat
   span?: LngLat
+}
+
+export type HomeStateItemRoadmap = HomeStateItemBase & {
+  type: 'roadmap'
 }
 
 export type HomeStateItemAccount = HomeStateItemBase & {

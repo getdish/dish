@@ -248,6 +248,7 @@ class HomeStore extends Store {
     }
     if (state) {
       if (val.type && state.type !== val.type) {
+        console.log('error info:', val.type, state.type, val, state)
         throw new Error(`Cant change the type`)
       }
     }
@@ -283,11 +284,6 @@ class HomeStore extends Store {
     const type = item.name
 
     switch (item.name) {
-      case 'account': {
-        nextState = {}
-        break
-      }
-
       // home
       case 'homeRegion':
       case 'home': {
@@ -319,11 +315,6 @@ class HomeStore extends Store {
           region: item.params.region,
           state: item.params.state,
         }
-        break
-      }
-
-      case 'userEdit':
-      case 'about': {
         break
       }
 

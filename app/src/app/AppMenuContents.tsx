@@ -1,5 +1,5 @@
 import { slugify } from '@dish/graph'
-import { HelpCircle, Sun, User } from '@dish/react-feather'
+import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
@@ -85,6 +85,7 @@ export const AppMenuContents = memo(
               <MenuLinkButton
                 promptLogin
                 name="list"
+                icon={<Plus color="#999" size={14} />}
                 params={{
                   userSlug: slugify(user?.username ?? 'me'),
                   slug: 'create',
@@ -94,7 +95,9 @@ export const AppMenuContents = memo(
               </MenuLinkButton>
 
               {isLoggedIn && user?.username === 'admin' && (
-                <MenuLinkButton name="adminTags">Admin</MenuLinkButton>
+                <MenuLinkButton name="adminTags" icon={<Coffee color="#999" size={14} />}>
+                  Admin
+                </MenuLinkButton>
               )}
 
               {isLoggedIn && (
@@ -127,11 +130,6 @@ export const AppMenuContents = memo(
                 {capitalize(userStore.theme ?? 'auto')}
               </MenuLinkButton>
 
-              {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
-              <MenuLinkButton name="about" icon={<HelpCircle color="#999" size={14} />}>
-                About
-              </MenuLinkButton>
-
               {isLoggedIn && (
                 <MenuLinkButton name="account" icon={<User size={14} color="#999" />}>
                   Account
@@ -142,6 +140,7 @@ export const AppMenuContents = memo(
                 <>
                   <Divider />
                   <MenuLinkButton
+                    icon={<LogOut size={14} color="#999" />}
                     onPress={() => {
                       Toast.show(`Logging out...`)
                       setTimeout(logout, 1000)
@@ -168,9 +167,23 @@ export const AppMenuContents = memo(
                 )
               })}
 
-              <Paragraph position="absolute" bottom={0} left={0} opacity={0.05} size="xxs">
-                {isHermes ? 'hermes' : 'jsc'}
-              </Paragraph>
+              <>
+                <Divider />
+                {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
+                <MenuLinkButton name="about" icon={<HelpCircle color="#999" size={14} />}>
+                  About
+                </MenuLinkButton>
+              </>
+
+              <MenuLinkButton promptLogin name="roadmap" icon={<Truck color="#999" size={14} />}>
+                Roadmap
+              </MenuLinkButton>
+
+              {process.env.NODE_ENV === 'development' && (
+                <Paragraph position="absolute" bottom={0} left={0} opacity={0.05} size="xxs">
+                  {isHermes ? 'hermes' : 'jsc'}
+                </Paragraph>
+              )}
             </ScrollView>
           )}
         </VStack>

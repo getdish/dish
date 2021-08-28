@@ -1,6 +1,5 @@
-- [a] [0] load new search in background
 - [c] [0] test on ~10 restaurants
-- [c] [0] recrawl tucson, la, sd, sf
+- [c] [0] recrawl bay area
 - [c] [1] dedupe images
 - [c] [1] tags move to single-primary image (highest quality)
 - [c] [2] closed restaurants detection (i've seen a number of variants)
@@ -15,11 +14,12 @@
 - [m] [3] add apple sign in
 - [m] [3] hover to color map circles in a group
 - [a] [4] opengraph / meta / seo
-- [a] [1] show favorites on map
 
 ---
 
 # inbox
+
+- adding in OSM data for any location
 
 - auto create lists on voting will flesh out profiles
 
@@ -91,7 +91,7 @@ content ideas:
     - michelin starred places
     - "definitive" guides to regions
     - "controversial" lists like "LA hands down beats SF in tacos, here's the comparison"
-    - "informative" lists like "Why Mexican food fails in the bay, and why Asian food rocks" or "3 asian cuisines that are amazing in the bay, 3 that are better in LA" etc
+    - "informative" lists like history on a cuisine, area, technique, "Why Mexican food fails in the bay, and why Asian food rocks" or "3 asian cuisines that are amazing in the bay, 3 that are better in LA" etc
 
   - setting up more automated ways for people to see bounties or payouts for certain types of content. a bounties page essentially for listers to go to and earn some money.
 

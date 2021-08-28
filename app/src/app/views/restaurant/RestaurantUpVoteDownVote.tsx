@@ -4,6 +4,7 @@ import React, { Suspense, memo, useEffect } from 'react'
 import { GestureResponderEvent } from 'react-native'
 import { AbsoluteVStack, HStack, Text, Tooltip, VStack, useTheme } from 'snackui'
 
+import { green400 } from '../../../constants/colors'
 import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { restaurantRatio } from '../../../helpers/restaurantsRatio'
@@ -150,16 +151,17 @@ const RatingWithVotes = memo(
       />
     )
 
-    const fontSize = Math.min(16, sizePx / `${score}`.length) * scale * 1.075
+    const fontSize = Math.min(16, sizePx / `${score}`.length) * scale * 1.15
 
     return (
       <VStack
-        // backgroundColor="green"
         alignItems="center"
         justifyContent="center"
         width={sizePx}
         height={sizePx}
-        className="hello-world"
+        backgroundColor={theme.cardBackgroundColor}
+        elevation={1}
+        borderRadius={100}
       >
         <AbsoluteVStack top={-34}>
           {subtle ? (
@@ -175,11 +177,11 @@ const RatingWithVotes = memo(
             fontSize={fontSize}
             fontWeight="600"
             letterSpacing={-0.5}
-            color={theme.color}
+            color={theme.colorTertiary}
             cursor="default"
             onPress={onClickPoints}
           >
-            {numberFormat(score ?? 0)}
+            {numberFormat(score ?? 0, 'sm')}
           </Text>
           {display === 'ratio' && (
             <TextSuperScript marginRight={-fontSize * 0.4} fontSize={fontSize * 0.6}>
