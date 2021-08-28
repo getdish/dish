@@ -4636,23 +4636,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pmmmwh/react-refresh-webpack-plugin@npm:^0.4.3":
-  version: 0.4.3
-  resolution: "@pmmmwh/react-refresh-webpack-plugin@npm:0.4.3"
+"@pmmmwh/react-refresh-webpack-plugin@npm:0.5.0-rc.5":
+  version: 0.5.0-rc.5
+  resolution: "@pmmmwh/react-refresh-webpack-plugin@npm:0.5.0-rc.5"
   dependencies:
     ansi-html: ^0.0.7
+    core-js-pure: ^3.8.1
     error-stack-parser: ^2.0.6
-    html-entities: ^1.2.1
-    native-url: ^0.2.6
-    schema-utils: ^2.6.5
+    html-entities: ^2.1.0
+    loader-utils: ^2.0.0
+    schema-utils: ^3.0.0
     source-map: ^0.7.3
   peerDependencies:
-    "@types/webpack": 4.x
-    react-refresh: ">=0.8.3 <0.10.0"
+    "@types/webpack": 4.x || 5.x
+    react-refresh: ^0.10.0
     sockjs-client: ^1.4.0
-    type-fest: ^0.13.1
+    type-fest: 1.x
     webpack: ">=4.43.0 <6.0.0"
-    webpack-dev-server: 3.x
+    webpack-dev-server: 3.x || >=4.0.0-beta.0
     webpack-hot-middleware: 2.x
     webpack-plugin-serve: 0.x || 1.x
   peerDependenciesMeta:
@@ -4668,7 +4669,7 @@ __metadata:
       optional: true
     webpack-plugin-serve:
       optional: true
-  checksum: 36a7b0c63f0aabde856a2b43f3f3bfa7919920afa67b4fbcf7d4980b286c7c11e34ada13654d81bf30c3d3e2c12a5b9eef6c15e21a200003b8030809d3ddd6c6
+  checksum: 20ae9deb2c96bef1319feea972ecbe4fdd6e16823d9bfcc9581bd7957cd058739d553b123eef9df03c3f50309b9386c0d80e177a9211c2e3be787a2c42a2a385
   languageName: node
   linkType: hard
 
@@ -5569,7 +5570,7 @@ __metadata:
     react-test-renderer: ^17.0.1
     style-loader: ^2.0.0
     typescript: ^4.2.2
-    webpack: ^5.37.0
+    webpack: ^5.51.1
   peerDependencies:
     react-native-web: "*"
   languageName: unknown
@@ -7080,6 +7081,15 @@ __metadata:
   dependencies:
     "@types/estree": 0.0.46
   checksum: 6bb2564fcd773deb3db032be2c07e240e3c16b77f9499ee62b06849ce270add57e4bbff3ff1c93a86982f54971fd5307e76018e9512840a4e81683e74bd4485c
+  languageName: node
+  linkType: hard
+
+"acorn-import-assertions@npm:^1.7.6":
+  version: 1.7.6
+  resolution: "acorn-import-assertions@npm:1.7.6"
+  peerDependencies:
+    acorn: ^8
+  checksum: bc8a1585abd70ebfb3a6b3112f5e3974fee3ac598230f916a3857f0ad4fa7e72197be532c49d1feeb83678ef264f34bee9bf1934dfb2f276d88468134a51fa9f
   languageName: node
   linkType: hard
 
@@ -9855,6 +9865,13 @@ __metadata:
   version: 3.16.0
   resolution: "core-js-pure@npm:3.16.0"
   checksum: 8d48180af8ea2e78cbe51237bbec32b21d1c34f6f6c0d96b3e28ef192b67f5dcaf985e0db82bba9534376f267e6d2799bf92ac67841dadcaf7a5a8e899bb52df
+  languageName: node
+  linkType: hard
+
+"core-js-pure@npm:^3.8.1":
+  version: 3.16.3
+  resolution: "core-js-pure@npm:3.16.3"
+  checksum: 15be550ffb1eed2a60c9e4ac72620ccf66c11da696597cdcbc4ad874d70fd2c5a1bfe40fea8ce09fb3ee2d8efcfd98de1bf8404209a170f769d9a4f309644197
   languageName: node
   linkType: hard
 
@@ -13762,14 +13779,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-entities@npm:^1.2.0, html-entities@npm:^1.2.1":
+"html-entities@npm:^1.2.0":
   version: 1.4.0
   resolution: "html-entities@npm:1.4.0"
   checksum: 4b73ffb9eead200f99146e4fbe70acb0af2fea136901a131fc3a782e9ef876a7cbb07dec303ca1f8804232b812249dbf3643a270c9c524852065d9224a8dcdd0
   languageName: node
   linkType: hard
 
-"html-entities@npm:^2.1.1":
+"html-entities@npm:^2.1.0, html-entities@npm:^2.1.1":
   version: 2.3.2
   resolution: "html-entities@npm:2.3.2"
   checksum: 522d8d202df301ff51b517a379e642023ed5c81ea9fb5674ffad88cff386165733d00b6089d5c2fcc644e44777d6072017b6216d8fa40f271d3610420d00a886
@@ -18409,15 +18426,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"native-url@npm:^0.2.6":
-  version: 0.2.6
-  resolution: "native-url@npm:0.2.6"
-  dependencies:
-    querystring: ^0.2.0
-  checksum: d56a67b32e635c4944985f551a9976dfe609a3947810791c50f5c37cff1d9dd5fe040184989d104be8752582b79dc4e726f2a9c075d691ecce86b31ae9387f1b
-  languageName: node
-  linkType: hard
-
 "natural-compare@npm:^1.4.0":
   version: 1.4.0
   resolution: "natural-compare@npm:1.4.0"
@@ -21345,10 +21353,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-refresh@npm:0.11.0-alpha-568dc3532":
-  version: 0.11.0-alpha-568dc3532
-  resolution: "react-refresh@npm:0.11.0-alpha-568dc3532"
-  checksum: ea91d3afc5176252e47383f7852d4d15ddbddb7441265e26ff78c9efd494f4cdcf610dcfa13e3bcc9dfdd2a7cba0cc6776d07e31a9e8e7f7c6f7eb47db8a2fcf
+"react-refresh@npm:0.11.0-alpha-8723e772b-20210826":
+  version: 0.11.0-alpha-8723e772b-20210826
+  resolution: "react-refresh@npm:0.11.0-alpha-8723e772b-20210826"
+  checksum: 7d1b3f3cd31e36f7bd1e31fad6ca2ffd7023c9aa8a1d92887ac3ed9c517c85a58455923ea01d4f3b42a5e73cd72f232c502d23475e8a1d8e569b982917c413c3
   languageName: node
   linkType: hard
 
@@ -25759,16 +25767,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-sources@npm:^3.1.1":
-  version: 3.1.2
-  resolution: "webpack-sources@npm:3.1.2"
-  checksum: cd82fa91d2ce7da68c00479c99d518e3c896472902d2e920d48e14c03f7a4aafacedf58ee06648cf76de6a34f5ba3c6d2d764371006bf5e3faaa6415f470dd66
+"webpack-sources@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "webpack-sources@npm:3.2.0"
+  checksum: 8f1d686bd6aab2eda330579a07e14803cb2e01415f5a603697402aea3c36e98c1d2731167c3e97e50170cf1b0214cf8ef945fc639b100d1e3b67c023feb35716
   languageName: node
   linkType: hard
 
-"webpack@npm:5.47.1":
-  version: 5.47.1
-  resolution: "webpack@npm:5.47.1"
+"webpack@npm:5.51.1":
+  version: 5.51.1
+  resolution: "webpack@npm:5.51.1"
   dependencies:
     "@types/eslint-scope": ^3.7.0
     "@types/estree": ^0.0.50
@@ -25776,6 +25784,7 @@ __metadata:
     "@webassemblyjs/wasm-edit": 1.11.1
     "@webassemblyjs/wasm-parser": 1.11.1
     acorn: ^8.4.1
+    acorn-import-assertions: ^1.7.6
     browserslist: ^4.14.5
     chrome-trace-event: ^1.0.2
     enhanced-resolve: ^5.8.0
@@ -25792,13 +25801,13 @@ __metadata:
     tapable: ^2.1.1
     terser-webpack-plugin: ^5.1.3
     watchpack: ^2.2.0
-    webpack-sources: ^3.1.1
+    webpack-sources: ^3.2.0
   peerDependenciesMeta:
     webpack-cli:
       optional: true
   bin:
     webpack: bin/webpack.js
-  checksum: 31c6da004cab5ca17dc2ddec49fa9be141542645f979a83b860b75f530b4193e2eeff2ba9d81e89fa471626fc7d13b4c7ec4723beb5829ac7132ed79de7916f9
+  checksum: 20060bc197a5e690f12e453e86bd89da5b91626a2032efa907122fe541fedc688b1d573e9f92f7b66f15c609808653e158408ebf7c94783723dfbf4ac894a4a7
   languageName: node
   linkType: hard
 

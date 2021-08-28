@@ -13,7 +13,6 @@ test.beforeEach(async () => {
 })
 
 test('Creating a user', async (t) => {
-  console.log('...')
   const [status] = await Auth.register('test', 'test@test.com', 'password')
   t.is(status, 201)
 })

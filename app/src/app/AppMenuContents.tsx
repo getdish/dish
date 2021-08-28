@@ -1,5 +1,5 @@
 import { slugify } from '@dish/graph'
-import { Sun } from '@dish/react-feather'
+import { HelpCircle, Sun, User } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
@@ -104,7 +104,7 @@ export const AppMenuContents = memo(
               )}
 
               <MenuLinkButton
-                iconAfter={<Sun color="rgba(150,150,150,0.5)" size={16} />}
+                icon={<Sun color="#999" size={14} />}
                 onPress={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
@@ -128,7 +128,15 @@ export const AppMenuContents = memo(
               </MenuLinkButton>
 
               {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
-              <MenuLinkButton name="about">About</MenuLinkButton>
+              <MenuLinkButton name="about" icon={<HelpCircle color="#999" size={14} />}>
+                About
+              </MenuLinkButton>
+
+              {isLoggedIn && (
+                <MenuLinkButton name="account" icon={<User size={14} color="#999" />}>
+                  Account
+                </MenuLinkButton>
+              )}
 
               {isLoggedIn && (
                 <>

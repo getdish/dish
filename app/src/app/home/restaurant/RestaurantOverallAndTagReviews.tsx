@@ -185,7 +185,7 @@ const Content = memo(
 
                           <Spacer size="lg" />
 
-                          <VStack position="relative" flex={1}>
+                          <VStack overflow="hidden" position="relative" flex={1} maxWidth="100%">
                             <Paragraph
                               sizeLineHeight={0.9}
                               maxHeight={height - 100}
@@ -210,7 +210,7 @@ const Content = memo(
                               )}
                             </Paragraph>
 
-                            <AbsoluteVStack zIndex={10} bottom={0} left={0} height={20} right={0}>
+                            <AbsoluteVStack zIndex={10} bottom={0} left={0} height={50} right={0}>
                               <LinearGradient
                                 colors={[
                                   `${theme.cardBackgroundColor}00`,

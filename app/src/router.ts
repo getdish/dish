@@ -34,6 +34,7 @@ export const routes = {
   privacy: new Route<{ pane: string }>('/privacy'),
   about: new Route<{ pane: string }>('/about'),
   blog: new Route<{ slug: string }>('/blog/:slug?'),
+  account: new Route('/account'),
   restaurantReview: new Route<{ slug: string }>('/restaurant/:slug/review'),
   restaurantHours: new Route<{ slug: string }>('/restaurant/:slug/hours'),
   restaurant: new Route<{

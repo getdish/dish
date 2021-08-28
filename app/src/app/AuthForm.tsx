@@ -22,18 +22,27 @@ import { SmallTitle } from './views/SmallTitle'
 
 type AuthFormPageProps = {
   autoFocus?: boolean
-  setFormPage: Function
+  setFormPage?: Function
 }
 
-const pages = ['login', 'register', 'forgotPassword', 'passwordReset']
+const pages = ['login', 'register', 'forgotPassword', 'passwordReset'] as const
 
 export const AuthForm = memo(
-  ({ onDidLogin, ...rest }: { onDidLogin?: Function; autoFocus?: boolean }) => {
+  ({
+    onDidLogin,
+    formPage: propFormPage,
+    ...rest
+  }: {
+    onDidLogin?: Function
+    autoFocus?: boolean
+    formPage?: string
+  }) => {
     const userStore = useUserStore()
     const isLoggedIn = userStore.isLoggedIn
     const curPageName = useRouterCurPage().name
     const curPageFromRoute = pages.find((x) => x === curPageName)
-    const initFormPage = curPageFromRoute ?? (Auth.hasEverLoggedIn ? 'login' : 'signup')
+    const initFormPage =
+      propFormPage ?? curPageFromRoute ?? (Auth.hasEverLoggedIn ? 'login' : 'signup')
     const [formPage, setFormPage] = useState(initFormPage)
 
     useEffect(() => {
@@ -116,7 +125,7 @@ export const AuthForm = memo(
   }
 )
 
-const PasswordReset = ({ autoFocus }: AuthFormPageProps) => {
+export const PasswordReset = ({ autoFocus }: AuthFormPageProps) => {
   const { onChange, onSubmit, isSubmitting, control, errors, watch, isSuccess, errorMessage } =
     useFormAction({
       name: 'passwordReset',
@@ -138,10 +147,8 @@ const PasswordReset = ({ autoFocus }: AuthFormPageProps) => {
       successText="Your password has been reset, you can now login"
       errorText={errorMessage}
     >
-      <VStack alignItems="center">
-        <Title>Reset Password</Title>
-        <Text>Enter your new password:</Text>
-      </VStack>
+      <Title>Reset Password</Title>
+      <Paragraph opacity={0.5}>Enter your new password:</Paragraph>
       <ValidatedInput
         control={control}
         autoFocus={autoFocus}
@@ -172,7 +179,7 @@ const PasswordReset = ({ autoFocus }: AuthFormPageProps) => {
   )
 }
 
-const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
+export const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
   const { onChange, onSubmit, control, errors, isSuccess, isSubmitting, errorMessage } =
     useFormAction({
       name: 'forgotPassword',
@@ -192,7 +199,7 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
       after={
         <HStack alignSelf="flex-end">
           <Text fontSize={14}>
-            <Link onClick={(e) => setFormPage('login')}>Back to login</Link>{' '}
+            <Link onClick={() => setFormPage?.('login')}>Back to login</Link>{' '}
           </Text>
         </HStack>
       }
@@ -217,7 +224,7 @@ const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
   )
 }
 
-const LoginForm = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
+export const LoginForm = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
   const { onChange, onSubmit, control, errors, isSuccess, isSubmitting, errorMessage } =
     useFormAction({
       name: 'login',
@@ -235,7 +242,7 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
       submitText="Go"
       errorText={errorMessage}
       after={
-        <Link alignSelf="flex-end" fontSize={14} onClick={(e) => setFormPage('forgotPassword')}>
+        <Link alignSelf="flex-end" fontSize={14} onClick={(e) => setFormPage?.('forgotPassword')}>
           Forgot password?
         </Link>
       }
@@ -269,7 +276,7 @@ const LoginForm = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
   )
 }
 
-const SignupForm = ({ autoFocus }: AuthFormPageProps) => {
+export const SignupForm = ({ autoFocus }: AuthFormPageProps) => {
   const { onChange, onSubmit, control, errors, isSubmitting, errorMessage } = useFormAction({
     name: 'register',
     initialValues: {

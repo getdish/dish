@@ -206,6 +206,10 @@ const ListPageContent = memo(
       }, [props.isActive, color])
 
       useEffect(() => {
+        if (!props.isActive) {
+          router.setRouteAlert(null)
+          return
+        }
         if (isEditing) {
           router.setRouteAlert({
             condition: () => true,
@@ -215,7 +219,7 @@ const ListPageContent = memo(
             router.setRouteAlert(null)
           }
         }
-      }, [isEditing])
+      }, [props.isActive, isEditing])
 
       useSetAppMap({
         hideRegions: true,
@@ -270,7 +274,7 @@ const ListPageContent = memo(
                     setShowAddModal(true)
                   }}
                 >
-                  <Plus size={42} color="#fff" />
+                  <Plus size={42} color="#777" />
                 </Button>
                 <VStack pointerEvents="none" flex={1} />
               </BottomFloatingArea>
@@ -453,7 +457,7 @@ const ListPageContent = memo(
                   <VStack
                     marginBottom={10}
                     {...(listTheme === 'minimal' && {
-                      marginBottom: list.description ? 20 : -20,
+                      marginBottom: isEditing ? 20 : list.description ? 20 : -20,
                     })}
                   >
                     {/* {chromeless && (
@@ -483,9 +487,9 @@ const ListPageContent = memo(
                     >
                       {isEditing ? (
                         <Input
-                          placeholder="Description..."
+                          placeholder="..."
                           multiline
-                          numberOfLines={4}
+                          numberOfLines={3}
                           lineHeight={30}
                           width="100%"
                           fontSize={20}

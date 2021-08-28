@@ -283,6 +283,11 @@ class HomeStore extends Store {
     const type = item.name
 
     switch (item.name) {
+      case 'account': {
+        nextState = {}
+        break
+      }
+
       // home
       case 'homeRegion':
       case 'home': {
