@@ -14,9 +14,9 @@ export const routes = {
   userEdit: new Route('/edit-profile'),
   gallery: new Route<{
     restaurantSlug: string
-    tagSlug?: string
+    // tagSlug?: string
     offset?: number
-  }>('/gallery/:restaurantSlug/:tagSlug?/:offset?'),
+  }>('/gallery/:restaurantSlug/:offset?'),
 
   list: new Route<{
     slug: string

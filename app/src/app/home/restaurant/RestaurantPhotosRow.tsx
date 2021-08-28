@@ -1,5 +1,4 @@
-import { graphql, order_by } from '@dish/graph'
-import { isPresent } from '@dish/helpers'
+import { graphql } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
 import { HStack, Spacing, Text, VStack, useConstant, useTheme } from 'snackui'
 
@@ -10,12 +9,12 @@ import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 import { SimpleCard, SkewedCardCarousel } from '../SimpleCard'
+import { useRestaurantPhotos } from './useRestaurantPhotos'
 
 type Props = {
   escalating?: boolean
   showEscalated?: boolean
   restaurantSlug: string
-  onIsAtStart?: (x: boolean) => void
   width: number
   height: number
   spacing?: Spacing
@@ -40,38 +39,10 @@ export const RestaurantPhotosRow = (props: Props) => {
 
 export const RestaurantPhotosRowContent = memo(
   graphql(
-    ({
-      escalating,
-      showEscalated,
-      restaurantSlug,
-      onIsAtStart,
-      width,
-      height,
-      spacing,
-      floating,
-    }: Props) => {
+    ({ escalating, showEscalated, restaurantSlug, width, height, spacing, floating }: Props) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
-      if (!restaurant) {
-        return null
-      }
-      // const mainPhoto = restaurant.image
-      const otherPhotos = restaurant
-        .photo_table({
-          limit: 6,
-          order_by: [
-            {
-              photo: {
-                quality: order_by.desc,
-              },
-            },
-          ],
-        })
-        .map((x) => x.photo.url)
-        .filter(isPresent)
-
-      const photos = otherPhotos //mainPhoto ? [mainPhoto, ...otherPhotos] : otherPhotos
       const initialWidth = useConstant(() => width)
-
+      const { photos } = useRestaurantPhotos(restaurant)
       const photosData = photos.map((url, index) => {
         const photoHeight = escalating ? (index < 2 ? height : 500) : height
         const isEscalated = escalating && index >= 3
@@ -85,9 +56,13 @@ export const RestaurantPhotosRowContent = memo(
       const theme = useTheme()
       // console.log('photosData', JSON.stringify(photosData, null, 2))
 
+      if (!restaurant) {
+        return null
+      }
+
       return (
         // an attempt to get native to scroll but not working
-        <HStack minWidth={fullWidth}>
+        <HStack spacing={spacing} minWidth={fullWidth}>
           {!photos.length && (
             <HStack backgroundColor={bgLight}>
               <Text>No photos!</Text>

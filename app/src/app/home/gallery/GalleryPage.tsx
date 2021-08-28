@@ -1,7 +1,6 @@
 import { order_by, photo, useLazyQuery, useQuery, useTransactionQuery } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { ChevronLeft, ChevronRight } from '@dish/react-feather'
-import { selectFields } from 'gqty'
 import { last, orderBy, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
@@ -14,6 +13,7 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { router, useIsRouteActive } from '../../../router'
 import { Image } from '../../views/Image'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
+import { useRestaurantPhotos } from '../restaurant/useRestaurantPhotos'
 
 export default memo(function GalleryPage() {
   const isActive = useIsRouteActive('gallery')
@@ -37,7 +37,7 @@ export default memo(function GalleryPage() {
       <Suspense fallback={<LoadingItems />}>
         <GalleryLightbox
           restaurantSlug={route.params.restaurantSlug}
-          index={route.params.offset ?? 0}
+          index={route.params.offset ? +route.params.offset : 0}
         />
       </Suspense>
     </AbsoluteVStack>
@@ -64,16 +64,10 @@ export const GalleryLightbox = memo(
     const [photosListRaw, setPhotosList] = useState<photo[]>(() => [])
     const [hasLoadedFirstImage, setHasLoadedFirstImage] = useState(false)
     const [restaurant = {} as any] = queryRestaurant(restaurantSlug)
-    const heroImage = restaurant.image
-      ? ({
-          url: restaurant.image,
-          quality: 100,
-        } as photo)
-      : null
-
+    const { hero } = useRestaurantPhotos(restaurant)
     const photosList = useMemo(() => {
-      return heroImage ? [heroImage, ...photosListRaw] : photosListRaw
-    }, [restaurant.image, photosListRaw])
+      return hero ? [{ url: hero, quality: 100, id: '00' }, ...photosListRaw] : photosListRaw
+    }, [hero, restaurant.image, photosListRaw])
 
     // ??
     restaurant.id
@@ -159,10 +153,9 @@ export const GalleryLightbox = memo(
           setPhotosList((prev) => {
             const next = orderBy(
               uniqBy([...prev, ...data], (v) => v.url),
-              (v) => v.quality,
+              (v) => v.id,
               'desc'
             )
-            console.log('loaded', prev, data, next)
             return next
           })
         },

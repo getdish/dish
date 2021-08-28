@@ -31,10 +31,6 @@
 
 - duplicate image check, i beleive i started on this by adding a hash function that we could check against but didnt finish
 
-- login/signup forms need a upgrade runthrough:
-  - default to login if they have a cookie showing they've been logged in before
-  - if they autocomplete the signup form, we can either move them to login or at least copy the values into login
-
 - lists need a way to change the slug since we auto-generate it first. it should probably just do it one time, so need to track that in db (or some other way?).
 
 - show little map markers with color/rating/(sometimes emoji)
@@ -46,6 +42,8 @@
 - may want lists to have inline mentions in the body, or integrate the visual of listpage into the body (would also make a good listcard)
 
 - location search show current region + parent region as an icon
+
+- restaurant.regions
 
 - list.region => list.regions with insert hook to set using restaurants to power home showing more results
 

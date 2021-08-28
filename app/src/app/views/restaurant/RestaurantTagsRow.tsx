@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { sortBy } from 'lodash'
+import { sortBy, uniqBy } from 'lodash'
 import React, { Suspense, memo } from 'react'
 import { HStack, Spacer, StackProps, VStack } from 'snackui'
 
@@ -59,7 +59,7 @@ const RestaurantTagsRowContent = memo(
     if (showMore) {
       tags = tags.slice(0, 2)
     }
-    tags = tags.slice(0, props.maxItems ?? Infinity)
+    tags = uniqBy(tags.slice(0, props.maxItems ?? Infinity), (x) => x.slug)
     return (
       <>
         {sortBy(tags, (tag) =>
