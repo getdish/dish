@@ -53,7 +53,7 @@ export const RestaurantOverview = memo(
       .slice(0, 3)
       .map((x) => x?.sentence)
       .join(' ')
-    const summary = text || restaurant.summary || headlines || 'No overview :('
+    const summary = text || restaurant.summary || headlines || ''
     const scale = size === 'lg' ? 1.1 : 1
     const extra = size === 'lg' ? 2 : 1
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)

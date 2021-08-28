@@ -3,6 +3,7 @@ import React from 'react'
 
 import {
   isAboutState,
+  isAccountState,
   isHomeState,
   isListState,
   isRestaurantState,
@@ -24,6 +25,7 @@ export const HomeStackViewPages = (props: HomeStackViewProps) => {
       {isRestaurantState(item) && <RestaurantPage {...props} />}
       {isAboutState(item) && <AboutPage {...props} />}
       {isListState(item) && <ListPage {...props} />}
+      {isAccountState(item) && <AccountPage {...props} />}
       <HomeStackViewPagesContents {...props} />
     </HomeSuspense>
   )
@@ -63,3 +65,10 @@ const ListPage =
   process.env.NODE_ENV === 'development'
     ? require('./list/ListPage').default
     : loadable(() => import('./list/ListPage'))
+
+const AccountPage =
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
+    ? require('./account/AccountPage').default
+    : loadable(() => import('./account/AccountPage'))

@@ -16,10 +16,10 @@ export const SentimentText = ({
   const color = sentiment > 0 ? green200 : sentiment < 0 ? red200 : grey
   return (
     <HStack
-      paddingHorizontal={4 * scale}
+      paddingHorizontal={6 * scale}
       borderRadius={6 * scale}
       alignItems="center"
-      backgroundColor={theme.backgroundColorDarker}
+      backgroundColor={theme.backgroundColorSecondary}
     >
       {!!children && (
         <>

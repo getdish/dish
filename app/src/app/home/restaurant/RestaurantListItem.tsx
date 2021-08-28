@@ -220,6 +220,8 @@ const RestaurantListItemContent = memo(
       setIsExpanded((x) => !x)
     }, [])
 
+    const imgSize = shouldShowOneLine ? 44 : 58
+
     return (
       <Hoverable
         onHoverIn={() => {
@@ -343,22 +345,32 @@ const RestaurantListItemContent = memo(
                   position="relative"
                   alignItems="center"
                 >
-                  <AbsoluteVStack x={-28} y={3} zIndex={-1}>
+                  <AbsoluteVStack
+                    x={-38}
+                    y={3}
+                    zIndex={-1}
+                    {...(shouldShowOneLine && {
+                      x: -10,
+                    })}
+                    {...(hideRate && {
+                      x: -10,
+                    })}
+                  >
                     <RankView rank={rank} />
                   </AbsoluteVStack>
 
                   <Spacer size="xs" />
 
-                  {shouldShowOneLine && (
+                  {!media.sm && (
                     <Image
-                      source={{ uri: getImageUrl(restaurant.image ?? '', 42, 42) }}
+                      source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
                       style={{
                         marginVertical: -15,
                         marginRight: 2,
-                        marginLeft: 8,
-                        width: 42,
-                        height: 42,
-                        borderRadius: 42,
+                        marginLeft: shouldShowOneLine ? 30 : hideRate ? 28 : 0,
+                        width: imgSize,
+                        height: imgSize,
+                        borderRadius: imgSize,
                       }}
                     />
                   )}

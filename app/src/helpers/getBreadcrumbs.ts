@@ -1,14 +1,5 @@
-import { HomeStateItem } from '../types/homeTypes'
+import { HomeStateItem, breadCrumbTypes } from '../types/homeTypes'
 import { isHomeState, isSearchState } from './homeStateHelpers'
-
-const breadCrumbTypes = {
-  search: true,
-  user: true,
-  restaurant: true,
-  about: true,
-  blog: true,
-  list: true,
-}
 
 export const isBreadcrumbState = (type: HomeStateItem['type']) => {
   return breadCrumbTypes[type]
@@ -17,7 +8,7 @@ export const isBreadcrumbState = (type: HomeStateItem['type']) => {
 const MAX_CRUMBS = 3 //isTouchDevice && isWeb ? 3 : 5
 
 export const getBreadcrumbs = (states: HomeStateItem[]) => {
-  let res: HomeStateItem[] = []
+  const res: HomeStateItem[] = []
   const statesBackwards = [...states].reverse()
   for (const cur of statesBackwards) {
     if (res.length === MAX_CRUMBS) {

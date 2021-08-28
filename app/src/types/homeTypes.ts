@@ -2,6 +2,16 @@ import { MapPosition } from '@dish/graph'
 
 import { NavigableTag } from './tagTypes'
 
+export const breadCrumbTypes = {
+  search: true,
+  account: true,
+  user: true,
+  restaurant: true,
+  about: true,
+  blog: true,
+  list: true,
+}
+
 export type GeocodePlace = {
   type:
     | 'place'
@@ -54,6 +64,7 @@ export type HomeStateItem =
   | HomeStateItemBlog
   | HomeStateItemUserEdit
   | HomeStateItemList
+  | HomeStateItemAccount
 
 export type HomeStatesByType = {
   home: HomeStateItemHome
@@ -65,6 +76,7 @@ export type HomeStatesByType = {
   blog: HomeStateItemBlog
   userEdit: HomeStateItemUserEdit
   list: HomeStateItemList
+  account: HomeStateItemAccount
 }
 
 export type HomeStateTagNavigable = Partial<HomeStateItemBase> & {
@@ -113,6 +125,10 @@ export type HomeStateItemHome = HomeStateItemBase & {
   section: string
   center?: LngLat
   span?: LngLat
+}
+
+export type HomeStateItemAccount = HomeStateItemBase & {
+  type: 'account'
 }
 
 export type HomeStateItemBlog = HomeStateItemBase & {

@@ -1,6 +1,6 @@
 import { Auth, graphql, useRefetch } from '@dish/graph'
 import React, { useEffect, useRef, useState } from 'react'
-import { HStack, Input, Paragraph, Spacer, Text, TextArea, Theme, Toast, VStack } from 'snackui'
+import { HStack, Input, Paragraph, Spacer, Text, TextArea, Toast, VStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { queryUser } from '../queries/queryUser'

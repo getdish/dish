@@ -122,7 +122,8 @@ export const ListAddRestuarant = graphql(
           <Input
             backgroundColor={theme.backgroundColorSecondary}
             marginHorizontal={20}
-            placeholder="Search restaurants..."
+            placeholder="Add restaurants..."
+            autoFocus
             onChangeText={setQuery}
           />
           <Spacer size="sm" />
