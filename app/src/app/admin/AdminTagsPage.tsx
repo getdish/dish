@@ -18,7 +18,6 @@ import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
 import { HStack, LoadingItems, Text, Toast, VStack, useDebounce, useDebounceValue } from 'snackui'
 
-import { emojiRegex } from '../../helpers/emojiRegex'
 import { queryTag } from '../../queries/queryTag'
 import { useQueryPaginated } from '../hooks/useQueryPaginated'
 import { PaginationNav } from '../views/PaginationNav'
@@ -446,6 +445,8 @@ const parseJSONB = (x: any) => {
   }
   return x
 }
+
+const emojiRegex = /\p{Emoji}/u
 
 const setTagNameAndIcon = (tag: Tag, text: string) => {
   if (emojiRegex.test(text)) {
