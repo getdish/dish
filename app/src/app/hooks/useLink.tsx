@@ -1,6 +1,7 @@
 import { series, sleep } from '@dish/async'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
+import { Pressable } from 'react-native'
 import { TouchableOpacity, useForceUpdate } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
@@ -11,11 +12,9 @@ import { filterToNavigable } from '../../helpers/tagHelpers'
 import { NavigateItem, router } from '../../router'
 import { homeStore } from '../homeStore'
 import { userStore } from '../userStore'
-import { LinkButtonProps, LinkSharedProps } from '../views/LinkProps'
+import { LinkButtonProps, LinkProps, LinkSharedProps } from '../views/LinkProps'
 
-export const useLink = (
-  props: LinkSharedProps & { name?: any; params?: any; tagName?: string }
-) => {
+export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
   const forceUpdate = useForceUpdate()
   const linkProps = getNormalizeLinkProps(props as any, forceUpdate)
   const cancel = useRef<Function | null>(null)
@@ -81,6 +80,7 @@ export const useLink = (
           element,
           {
             onClick: onPress,
+            style: styleProps,
             className: `a-link display-contents cursor-pointer ${props.className ?? ''}`,
             target: props.target,
             ...(element === 'a' &&
@@ -94,9 +94,13 @@ export const useLink = (
       }
       // return children
       return (
-        <TouchableOpacity onStartShouldSetResponderCapture={() => true} onPress={onPress}>
+        <Pressable
+          style={styleProps}
+          onStartShouldSetResponderCapture={() => true}
+          onPress={onPress}
+        >
           {children}
-        </TouchableOpacity>
+        </Pressable>
       )
     },
   }

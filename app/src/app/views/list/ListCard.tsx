@@ -72,6 +72,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
 
   const contents = (
     <Link
+      width="100%"
       asyncClick
       {...(!!(slug && userSlug) && {
         name: 'list',
