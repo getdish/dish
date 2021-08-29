@@ -29,16 +29,18 @@ import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClientProvider } from 'react-query'
-import { AbsoluteVStack, ThemeProvider, Toast, configureThemes } from 'snackui'
+import { AbsoluteVStack, Paragraph, ThemeProvider, Toast, configureThemes } from 'snackui'
 
 import { App } from './app/App'
 import { homeStore } from './app/homeStore'
+import { useSafeArea } from './app/hooks/useSafeArea'
 import { PlatformSpecificProvider } from './app/PlatformSpecificProvider'
 import { RootPortalProvider } from './app/Portal'
 import { useUserStore, userStore } from './app/userStore'
 import { showRadar } from './constants/constants'
 import { initialHomeState } from './constants/initialHomeState'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
+import { isHermes } from './constants/platforms'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
 import { queryClient } from './helpers/queryClient'
@@ -118,6 +120,23 @@ export function RootSuspenseLoad(props: any) {
   return <Suspense fallback={null}>{props.children}</Suspense>
 }
 
+const DebugHUD = () => {
+  const safeArea = useSafeArea()
+  return (
+    <Paragraph
+      position="absolute"
+      bottom={safeArea.bottom + 5}
+      right={safeArea.right + 5}
+      backgroundColor="#fff"
+      color="#000"
+      opacity={0.2}
+      size="xxs"
+    >
+      {isHermes ? 'hermes' : 'jsc'}
+    </Paragraph>
+  )
+}
+
 export function Root() {
   const [isLoaded, setIsLoaded] = useState(false)
   const userStore = useUserStore()
@@ -145,6 +164,8 @@ export function Root() {
                 <Suspense fallback={null}>
                   {!isLoaded && <AppLoading />}
                   {isLoaded ? <App /> : null}
+
+                  {process.env.NODE_ENV === 'development' && <DebugHUD />}
                 </Suspense>
                 <RootPortalProvider />
               </QueryClientProvider>

@@ -1,22 +1,11 @@
 import { slugify } from '@dish/graph'
 import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@dish/react-feather'
 import { capitalize } from 'lodash'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useState } from 'react'
 import { ScrollView } from 'react-native'
-import {
-  AbsoluteVStack,
-  Box,
-  BoxProps,
-  Divider,
-  Paragraph,
-  Spacer,
-  Toast,
-  VStack,
-  useDebounceEffect,
-} from 'snackui'
+import { Box, BoxProps, Divider, Spacer, Toast, VStack, useDebounceEffect } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
-import { isHermes } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
 import { appStore } from './AppStore'
 import { AuthForm } from './AuthForm'
@@ -178,12 +167,6 @@ export const AppMenuContents = memo(
               <MenuLinkButton promptLogin name="roadmap" icon={<Truck color="#999" size={14} />}>
                 Roadmap
               </MenuLinkButton>
-
-              {process.env.NODE_ENV === 'development' && (
-                <Paragraph position="absolute" bottom={0} left={0} opacity={0.05} size="xxs">
-                  {isHermes ? 'hermes' : 'jsc'}
-                </Paragraph>
-              )}
             </ScrollView>
           )}
         </VStack>
