@@ -1,11 +1,13 @@
 // import { StatusBar } from 'expo-status-bar'
-import React, { Suspense, useState } from 'react'
+import React, { Suspense } from 'react'
 import { LogBox } from 'react-native'
-import { AbsoluteVStack, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, useTheme } from 'snackui'
 
+import AppMap from './AppMap'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
 import GalleryPage from './home/gallery/GalleryPage'
+import { Home } from './home/Home'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
 import { Route } from './Route'
@@ -14,7 +16,6 @@ LogBox.ignoreAllLogs(true)
 
 export function App() {
   const theme = useTheme()
-  const [x, set] = useState('')
 
   return (
     <>
@@ -23,25 +24,10 @@ export function App() {
       <AbsoluteVStack fullscreen backgroundColor={theme.mapBackground}>
         <Suspense fallback={null}>
           {/* keep indent  */}
-          {/* <AppMap /> */}
+          <AppMap />
         </Suspense>
 
-        <VStack
-          alignItems="center"
-          justifyContent="center"
-          margin="auto"
-          width={300}
-          height={300}
-          backgroundColor="red"
-          onPress={() => set('hi')}
-          pointerEvents="auto"
-        >
-          <Text fontSize={20} color="#fff">
-            {x || 'not pressed?'}
-          </Text>
-        </VStack>
-
-        {/* <Home /> */}
+        <Home />
 
         <AppMenuButtonFloating />
 
