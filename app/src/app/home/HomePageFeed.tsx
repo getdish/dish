@@ -272,6 +272,7 @@ export const HomePageFeed = memo(
                     <Link
                       promptLogin
                       name="list"
+                      width="100%"
                       params={{
                         userSlug: 'me',
                         slug: 'create',
