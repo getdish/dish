@@ -1914,7 +1914,7 @@ __metadata:
     "@nandorojo/anchor": ^0.2.2
     "@react-native-community/blur": ^3.6.0
     "@react-native-community/geolocation": ^2.0.2
-    "@react-native-mapbox-gl/maps": ^8.2.1
+    "@react-native-mapbox-gl/maps": ^8.3.0
     "@sendgrid/mail": 7.4.0
     "@sentry/react-native": ^2.6.2
     "@snackui/babel-plugin": "*"
@@ -2551,7 +2551,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/config-plugins@npm:2.0.4, @expo/config-plugins@npm:^2.0.2":
+"@expo/config-plugins@npm:2.0.4":
   version: 2.0.4
   resolution: "@expo/config-plugins@npm:2.0.4"
   dependencies:
@@ -2609,6 +2609,28 @@ __metadata:
     xcode: ^3.0.1
     xml2js: ^0.4.23
   checksum: 89d41a78c82b29b76c8be9fc4e120acf878f231f17d050c61d20d4f6638fcd5fc7267ce245ac981aef762403d085f24e6fb2bc6f561e767439d3c462dc5a6f12
+  languageName: node
+  linkType: hard
+
+"@expo/config-plugins@npm:^3.0.2":
+  version: 3.1.0
+  resolution: "@expo/config-plugins@npm:3.1.0"
+  dependencies:
+    "@expo/config-types": ^42.0.0
+    "@expo/json-file": 8.2.33
+    "@expo/plist": 0.0.14
+    chalk: ^4.1.2
+    debug: ^4.3.1
+    find-up: ~5.0.0
+    fs-extra: 9.0.0
+    getenv: ^1.0.0
+    glob: 7.1.6
+    resolve-from: ^5.0.0
+    semver: ^7.3.5
+    slash: ^3.0.0
+    xcode: ^3.0.1
+    xml2js: ^0.4.23
+  checksum: 2b995975cf55a66676efca6efe344dfb5d09255c196bd9c2cb3d21a9864ee85f83baf9ad3d773300f90c43572e17a975e01fce39b033c23fa6977d0b17ce3890
   languageName: node
   linkType: hard
 
@@ -2860,6 +2882,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/json-file@npm:8.2.33":
+  version: 8.2.33
+  resolution: "@expo/json-file@npm:8.2.33"
+  dependencies:
+    "@babel/code-frame": ~7.10.4
+    json5: ^1.0.1
+    write-file-atomic: ^2.3.0
+  checksum: 1817fd116ca3ccf7f7b6b37de679b2a5afd009c25ffd7a2179cec116d5d64ce0c465ddee79a271c98c7bf37b42cee8d75e02a9f4b3b6151c30848c4126757f46
+  languageName: node
+  linkType: hard
+
 "@expo/match-media@npm:^0.1.0":
   version: 0.1.0
   resolution: "@expo/match-media@npm:0.1.0"
@@ -2910,6 +2943,17 @@ __metadata:
     xmlbuilder: ^14.0.0
     xmldom: ~0.5.0
   checksum: 02f6ab2f8abee70ac62761773f15b3dacc6a4ca230374bc889472fded54ed37c9de54d17fddbedb8834589fb0f5d8834110f617829e926360f6ca2833b617445
+  languageName: node
+  linkType: hard
+
+"@expo/plist@npm:0.0.14":
+  version: 0.0.14
+  resolution: "@expo/plist@npm:0.0.14"
+  dependencies:
+    "@xmldom/xmldom": ~0.7.0
+    base64-js: ^1.2.3
+    xmlbuilder: ^14.0.0
+  checksum: 9bfd1fe9912166dc7de0c3af250c1c5262374a64fec8fed6b392934edbbec92c424fffd143bcb17f6655682e2e50c2112592fbdb13d1c32da86182662a78ba0e
   languageName: node
   linkType: hard
 
@@ -5092,11 +5136,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-mapbox-gl/maps@npm:^8.2.1":
-  version: 8.2.1
-  resolution: "@react-native-mapbox-gl/maps@npm:8.2.1"
+"@react-native-mapbox-gl/maps@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "@react-native-mapbox-gl/maps@npm:8.3.0"
   dependencies:
-    "@expo/config-plugins": ^2.0.2
+    "@expo/config-plugins": ^3.0.2
     "@mapbox/geo-viewport": ">= 0.4.0"
     "@turf/along": ">= 4.0.0 <7.0.0"
     "@turf/distance": ">= 4.0.0 <7.0.0"
@@ -5109,7 +5153,7 @@ __metadata:
     prop-types: ">=15.5.8"
     react: ">=16.6.1"
     react-native: ">=0.59.9"
-  checksum: 7e35f79e1a1bc8aaa2ea69cfc419e2e718e90927dd29db6d6505591b5aaf33ad464271574641b0b4dc33da8d094b9e6725427632d11b0c5a5344c016e6e0f3da
+  checksum: bc63c01c5383d3a9cdf1811a6cf51050a80a61949dec9129dd650a4771087ce46b779f7316c1c282c24ab37399bc29f786ecb7c8219897fe258aeec99967a05b
   languageName: node
   linkType: hard
 
@@ -6966,6 +7010,13 @@ __metadata:
   peerDependencies:
     react: ^16 || ^17
   checksum: f068794511b58d8d7481e39e03c9b84311652bda4c2aa6b7bc0da722866855a68fb7856a75901123641f72f2f9d56df5275faa44280e5a35eca1c5e226c7536a
+  languageName: node
+  linkType: hard
+
+"@xmldom/xmldom@npm:~0.7.0":
+  version: 0.7.3
+  resolution: "@xmldom/xmldom@npm:0.7.3"
+  checksum: 37c9aeac7847b6ac79193c0ac8e1109db0018778a38fd45fd15ccd92b0b5ea85b5ef4f0c1d35e87563735bde78b1c52f02f61dfe77f80e3d7bfc2ed2fdb617ae
   languageName: node
   linkType: hard
 
@@ -8968,7 +9019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1":
+"chalk@npm:^4.0.0, chalk@npm:^4.1.0, chalk@npm:^4.1.1, chalk@npm:^4.1.2":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
   dependencies:

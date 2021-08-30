@@ -479,9 +479,9 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
           <PageContentWithFooter>
             <SearchHeader />
-            <SearchContent id={id} />
+            {/* <SearchContent id={id} /> */}
             <Suspense fallback={null}>
-              <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
+              {/* <SearchFooter id={id} scrollToTop={scrollToTopHandler} /> */}
             </Suspense>
           </PageContentWithFooter>
         </ContentScrollView>

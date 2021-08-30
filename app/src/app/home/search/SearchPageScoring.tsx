@@ -1,6 +1,6 @@
 import { sortBy } from 'lodash'
 import React, { memo, useContext } from 'react'
-import { AbsoluteVStack, HStack, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, HStack, Paragraph, Text, VStack, useTheme } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -80,7 +80,7 @@ export const SearchPageScoring = memo(() => {
                 key={tag.slug ?? index}
                 size="sm"
                 {...getTagButtonProps(tag)}
-                after={`${pct}%`}
+                after={<Paragraph size="xxs">{`${pct}%`}</Paragraph>}
               />
             )
           })}
