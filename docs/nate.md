@@ -10,3 +10,15 @@
 - mobile
 - should we do a mobile web mode that is just flat / no drawer,
     - may actually save time in not too long run?
+
+
+---
+
+- move react-query to react-fetch@latest
+
+
+---
+
+ideas around "what would make for really interesting data-focused articles?" eg analyzing cuisine trends over time, showing a lot of points across larger areas, and more.
+
+similary, split out other types of articles and see what overlaps

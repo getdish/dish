@@ -10,6 +10,7 @@ import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewH
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { Arrow } from './Arrow'
+import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPageListsRow } from './SearchPageListsRow'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
@@ -20,11 +21,6 @@ export const SearchHeader = memo(() => {
   const media = useMedia()
   const curProps = useContext(SearchPagePropsContext)!
 
-  if (!curProps) {
-    console.warn('no search props')
-    return null
-  }
-
   const { title, subTitle } = getTitleForState(curProps.item, {
     lowerCase: true,
   })
@@ -32,6 +28,12 @@ export const SearchHeader = memo(() => {
   const lenseTag = getActiveTags(curProps.item).find((x) => x.type === 'lense') ?? tagLenses[0]
   const lenseColor = lenseTag.rgb
   const theme = useTheme()
+
+  if (!curProps) {
+    console.warn('no search props')
+    return null
+  }
+
   return (
     <>
       <ContentScrollViewHorizontalFitted width={width} setWidth={setWidthDebounce}>
@@ -82,7 +84,7 @@ export const SearchHeader = memo(() => {
                 </AbsoluteVStack>
               </VStack>
 
-              {/* <SearchForkListButton size="sm" /> */}
+              <SearchForkListButton size="sm" />
 
               <Suspense fallback={null}>
                 <SearchPageListsRow />
@@ -92,7 +94,7 @@ export const SearchHeader = memo(() => {
         </VStack>
       </ContentScrollViewHorizontalFitted>
       <Suspense fallback={null}>
-        <SearchPageResultsInfoBox state={curProps.item} />
+        {/* <SearchPageResultsInfoBox state={curProps.item} /> */}
       </Suspense>
       <Spacer size="sm" />
     </>

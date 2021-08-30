@@ -307,17 +307,17 @@ PODS:
     - React
   - react-native-geolocation (2.0.2):
     - React
-  - react-native-mapbox-gl (8.2.1):
+  - react-native-mapbox-gl (8.3.0):
     - Mapbox-iOS-SDK (~> 6.3)
     - React
     - React-Core
-    - react-native-mapbox-gl/DynamicLibrary (= 8.2.1)
-    - react-native-mapbox-gl/StaticLibraryFixer (= 8.2.1)
-  - react-native-mapbox-gl/DynamicLibrary (8.2.1):
+    - react-native-mapbox-gl/DynamicLibrary (= 8.3.0)
+    - react-native-mapbox-gl/StaticLibraryFixer (= 8.3.0)
+  - react-native-mapbox-gl/DynamicLibrary (8.3.0):
     - Mapbox-iOS-SDK (~> 6.3)
     - React
     - React-Core
-  - react-native-mapbox-gl/StaticLibraryFixer (8.2.1):
+  - react-native-mapbox-gl/StaticLibraryFixer (8.3.0):
     - Mapbox-iOS-SDK (~> 6.3)
     - React
     - React-Core
@@ -733,7 +733,7 @@ SPEC CHECKSUMS:
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
   react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
-  react-native-mapbox-gl: 8cdd3bc47a3acd3c1a5c4cff5fd48b6a0e385dfc
+  react-native-mapbox-gl: 5bfbdb80cea9af34c5b2ccef84d322b182f2481a
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5

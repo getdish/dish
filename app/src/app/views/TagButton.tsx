@@ -176,10 +176,8 @@ const TagButtonInner = (props: TagButtonProps) => {
     </>
   )
 
-  const iconElement = hideIcon ? (
-    <>&nbsp;</>
-  ) : !!icon ? (
-    icon.startsWith('http') ? (
+  const iconElement =
+    hideIcon || !icon ? null : icon.startsWith('http') ? (
       <Image
         source={{ uri: icon }}
         style={{
@@ -195,7 +193,6 @@ const TagButtonInner = (props: TagButtonProps) => {
         {icon}
       </Text>
     )
-  ) : null
 
   let contents = (
     <HStack
