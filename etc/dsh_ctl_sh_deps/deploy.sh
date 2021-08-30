@@ -58,10 +58,10 @@ function deploy_all() {
   # let registry come online if necessary
   sleep 10 && docker_login || sleep 10 && docker_login || exit 1
   # deploy_swarmprom
-  deploy_dish_stack
+  deploy_dish
 }
 
-function deploy_dish_stack() {
+function deploy_dish_stack_bootstrap() {
   docker stack deploy --with-registry-auth --prune -c docker-compose.yml dish
 }
 
