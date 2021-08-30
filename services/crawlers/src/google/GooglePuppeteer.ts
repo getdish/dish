@@ -1,7 +1,7 @@
 import '@dish/common'
 
 import { sentryException } from '@dish/common'
-import { Restaurant, globalTagId, restaurantFindBatch } from '@dish/graph'
+import { DISH_DEBUG, Restaurant, globalTagId, restaurantFindBatch } from '@dish/graph'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
 import { Tabletojson } from 'tabletojson'
@@ -181,7 +181,7 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
         await this.puppeteer.getElementText('.uxOu9-sTGRBb-T3yXSc span')
       ).trim()
     } catch (err) {
-      if (process.env.DEBUG) {
+      if (DISH_DEBUG >= 2) {
         console.log('error page content is', await this.puppeteer.page.content())
       } else {
         console.log('likely no synopsis, set DEBUG=1 to see html')

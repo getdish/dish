@@ -46,6 +46,7 @@ export const sentryException = (
   } = {}
 ) => {
   if (process.env.DISH_ENV != 'production') {
+    console.log("Sentry caught exception: ")
     logger(error)
     return
   }

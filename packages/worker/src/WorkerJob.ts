@@ -26,14 +26,11 @@ export class WorkerJob extends Loggable {
   }
 
   async runOnWorker(fn: string, args?: any[], specific_config: JobOptions = {}) {
-    if (this.run_all_on_main) {
-      await this.run(fn, args)
-      return
-    }
-    this.log('runOnWorker', fn)
-    if (process.env.RUN_WITHOUT_WORKER == 'true') {
+    if (this.run_all_on_main || process.env.RUN_WITHOUT_WORKER == 'true') {
+      this.log('worker job on main thread', fn)
       return await this.run(fn, args)
     }
+    this.log('adding job to worker', fn)
     const job: JobData = {
       className: this.constructor.name,
       fn,
