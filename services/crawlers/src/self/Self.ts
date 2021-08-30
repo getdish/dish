@@ -825,6 +825,30 @@ export class Self extends WorkerJob {
     return Object.keys(data).flatMap((key) => data[key])
   }
 
+  getPaginatedDataNumberedKeys(data: any, type: 'photos' | 'reviews') {
+    let items: any[] = []
+    let page = 0
+    let key: string | undefined
+    if (!data) {
+      return []
+    }
+    while (true) {
+      const base = type + 'p' + page
+      const variations = [base, base.replace('reviews', 'review')]
+      key = variations.find((i) => data.hasOwnProperty(i))
+      if (key) {
+        items = items.concat(data[key])
+      } else {
+        // Allow scrapers to start their pages on both 0 and 1
+        if (page > 0) {
+          break
+        }
+      }
+      page++
+    }
+    return items
+  }
+
   getRatingFactors() {
     const factors = scrapeGetData(this.tripadvisor, (x) => x.overview.rating.ratingQuestions, [])
     this.restaurant.rating_factors = {

@@ -23,6 +23,7 @@ test('Gets and persists a restaurant', async (t) => {
   })
   t.is(scrape.data.overview.contact.phone, '+1 415-826-7000')
   t.assert(scrape.data.photos?.length > 50)
-  const reviews = scrape.data.reviews
-  t.assert(Object.keys(reviews).some((k) => reviews[k].length > 9))
+  t.assert(scrape.data.reviewsp0.length > 5)
+  t.assert(scrape.data.reviewsp1.length > 5)
+  t.assert(scrape.data.reviewsp2.length > 5)
 })

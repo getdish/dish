@@ -420,7 +420,7 @@ export class Tagging extends Loggable {
     if (!data) {
       return reviews
     }
-    const tripadvisor_reviews = this.crawler.getPaginatedData(data.reviews)
+    const tripadvisor_reviews = this.crawler.getPaginatedDataNumberedKeys(data, 'reviews')
     for (const tripadvisor_review of tripadvisor_reviews) {
       if (!tripadvisor_review.username || tripadvisor_review.username == '') {
         sentryMessage('TRIPADVISOR: Review has no username', { data: tripadvisor_review })

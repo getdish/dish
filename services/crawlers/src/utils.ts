@@ -1,5 +1,7 @@
 import '@dish/common'
 
+import util from 'util'
+
 import { Restaurant, settingGet, settingSet } from '@dish/graph'
 import { Database } from '@dish/helpers-node'
 import axios from 'axios'
@@ -7,6 +9,8 @@ import _ from 'lodash'
 import moment, { Moment } from 'moment'
 
 import { isGoogleGeocoderID } from './google/GoogleGeocoder'
+
+const exec = util.promisify(require('child_process').exec)
 
 const HEREMAPS_API_TOKEN = process.env.HEREMAPS_API_TOKEN
 
@@ -353,4 +357,10 @@ export function decodeEntities(encodedString) {
       var num = parseInt(numStr, 10)
       return String.fromCharCode(num)
     })
+}
+
+export async function curl_cli(url: string, args: string = '') {
+  const command = `curl '${url}' ${args}`
+  const { stdout, stderr } = await exec(command, { maxBuffer: 1024 * 3000 })
+  return stdout
 }

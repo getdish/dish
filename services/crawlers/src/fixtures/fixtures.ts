@@ -228,34 +228,32 @@ export const tripadvisor = {
     },
     photos: ['https://i.imgur.com/udwFNWI.jpeg'],
     photos_with_captions: [{ url: 'https://i.imgur.com/udwFNWI.jpeg', caption: 'Test tag' }],
-    reviews: {
-      'dishpage-0': [
-        {
-          text: 'Test tag existing 3 was ok. Vegan',
-          rating: 5,
-          username: 'tauser',
-          date: 'July 23, 2019',
-        },
-        {
-          text: 'No tags in here',
-          rating: 5,
-          username: 'tauser2',
-          date: 'July 23, 2019',
-        },
-        {
-          text: 'Notable Testpho was delicious',
-          rating: 5,
-          username: 'tauser3',
-          date: 'July 23, 2020',
-        },
-        {
-          text: 'Test tag was good. Test tag was amazing. Test tag was delicious',
-          rating: 1,
-          username: 'tauser4',
-          date: 'July 23, 2020',
-        },
-      ],
-    },
+    reviewsp0: [
+      {
+        text: 'Test tag existing 3 was ok. Vegan',
+        rating: 5,
+        username: 'tauser',
+        date: 'July 23, 2019',
+      },
+      {
+        text: 'No tags in here',
+        rating: 5,
+        username: 'tauser2',
+        date: 'July 23, 2019',
+      },
+      {
+        text: 'Notable Testpho was delicious',
+        rating: 5,
+        username: 'tauser3',
+        date: 'July 23, 2020',
+      },
+      {
+        text: 'Test tag was good. Test tag was amazing. Test tag was delicious',
+        rating: 1,
+        username: 'tauser4',
+        date: 'July 23, 2020',
+      },
+    ],
   },
 }
 
