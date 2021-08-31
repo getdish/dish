@@ -1,20 +1,20 @@
 import { graphql } from '@dish/graph'
 import { sortBy, uniqBy } from 'lodash'
 import React, { Suspense, memo } from 'react'
-import { HStack, Spacer, StackProps, VStack } from 'snackui'
+import { HStack, Spacer, VStack } from 'snackui'
 
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { QueryRestaurantTagsProps, queryRestaurantTags } from '../../../queries/queryRestaurantTags'
 import { TagButton, TagButtonProps, TagButtonTagProps, getTagButtonProps } from '../TagButton'
 
 type TagRowProps = {
+  tagButtonProps?: TagButtonProps
   restaurantSlug: string
   showMore?: boolean
   size?: TagButtonProps['size']
   maxLines?: number
   divider?: any
   tags?: TagButtonTagProps[]
-  containerProps?: StackProps
   restaurantId?: string
   spacing?: number
   spacingHorizontal?: number
@@ -81,6 +81,7 @@ const RestaurantTagsRowContent = memo(
                 size={size}
                 {...tag}
                 restaurantSlug={restaurantSlug}
+                {...props.tagButtonProps}
               />
               <Spacer />
             </React.Fragment>

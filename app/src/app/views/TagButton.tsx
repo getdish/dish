@@ -157,7 +157,7 @@ const TagButtonInner = (props: TagButtonProps) => {
 
   const rankElement = !onlyIcon && showRank && rank && rank < 100 && (
     <>
-      <Text fontSize={11} fontWeight="300" opacity={0.5}>
+      <Text color={theme.color} fontSize={11} fontWeight="300" opacity={0.5}>
         #
       </Text>
       <Text
@@ -197,6 +197,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   let contents = (
     <HStack
       className="hover-parent"
+      position="relative"
       spacing={fontSize * 0.5}
       borderRadius={8}
       backgroundColor={theme.backgroundColor}
@@ -230,8 +231,6 @@ const TagButtonInner = (props: TagButtonProps) => {
       height={isSmall ? 32 : 38}
       {...rest}
     >
-      {!iconElement && !rankElement && <Spacer size="xs" />}
-
       {rankElement}
       {iconElement}
 
@@ -265,7 +264,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       {!hideRating && typeof rating !== 'undefined' && (
         <>
           {ratingStyle === 'pie' && (
-            <VStack position="relative">
+            <VStack marginVertical={-2} position="relative">
               {rating * 10 < 25 ? (
                 <Text fontSize={16}>😕</Text>
               ) : rating * 10 > 90 ? (

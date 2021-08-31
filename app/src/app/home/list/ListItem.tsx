@@ -141,16 +141,6 @@ const ListItemContent = memo(
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
     const isActive = useStoreInstanceSelector(getSearchPageStore(), (x) => x.index === rank - 1)
 
-    const contentSideProps: StackProps = {
-      width: media.sm ? '70%' : '60%',
-      minWidth: media.sm ? (isWeb ? '55vw' : Dimensions.get('window').width * 0.65) : 320,
-      maxWidth: Math.min(
-        Dimensions.get('window').width * 0.5,
-        // flexibleHeight here should really be allowMoreWidth or something
-        media.sm ? 360 : flexibleHeight ? 560 : 480
-      ),
-    }
-
     const handleChangeDishes = useCallback(onChangeDishes as any, [])
     const open = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
@@ -211,6 +201,7 @@ const ListItemContent = memo(
           {/* first column */}
 
           <VStack
+            className="ok-test-123"
             backgroundColor={theme.backgroundColorSecondary}
             width={imgSize}
             height={imgSize}
@@ -257,7 +248,6 @@ const ListItemContent = memo(
                         borderRadius={8}
                         alignItems="center"
                         marginVertical={-5}
-                        maxWidth={contentSideProps.maxWidth}
                         hoverStyle={{
                           backgroundColor: theme.backgroundColorSecondary,
                         }}
@@ -402,7 +392,7 @@ const ListItemContent = memo(
                       _is_null: false,
                     },
                   },
-                  limit: 2,
+                  limit: 1,
                   order_by: [{ updated_at: order_by.asc }],
                 })
                 .map((review) => (
@@ -417,20 +407,20 @@ const ListItemContent = memo(
                 ))}
             </VStack>
 
-            <Spacer />
-
             {!hideTagRow && (
               <>
-                <Spacer size="xxl" />
+                <Spacer size="lg" />
                 <Suspense fallback={null}>
                   <RestaurantTagsRow
                     exclude={excludeTags}
-                    size="sm"
                     restaurantSlug={restaurantSlug}
                     restaurantId={restaurantId}
                     spacing={0}
                     spacingHorizontal={0}
                     maxItems={4}
+                    tagButtonProps={{
+                      borderWidth: 0,
+                    }}
                   />
                 </Suspense>
               </>
