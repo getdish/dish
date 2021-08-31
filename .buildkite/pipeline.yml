@@ -141,6 +141,14 @@ steps:
   # - label: "run integration test"
   #   command: "./dsh run_integration_tests"
 
+  - label: "run worker integration tests"
+    key: worker-integration-tests
+    timeout_in_minutes: 1
+    command: "./dsh test_worker_crawler_integration"
+    depends_on: test-setup
+    env:
+      DISH_DEBUG: 2
+
   - wait
 
   - label: "deploy"
