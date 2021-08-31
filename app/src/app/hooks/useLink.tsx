@@ -35,8 +35,12 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
       e.stopPropagation()
     }
 
-    if (props.promptLogin && userStore.promptLogin()) {
+    const shouldPrevent = props.promptLogin ? userStore.promptLogin() : false
+    console.warn('click once', props.promptLogin, props, shouldPrevent)
+
+    if (shouldPrevent) {
       e.preventDefault()
+      e.stopPropagation()
       return
     }
 
@@ -61,11 +65,11 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
         () => sleep(20),
         () => {
           cancel.current = null
-          doNavigate(navItem, newLinkProps, props, e)
+          onPressCallback(navItem, newLinkProps, props, e)
         },
       ])
     } else {
-      doNavigate(navItem, newLinkProps, props, e)
+      onPressCallback(navItem, newLinkProps, props, e)
     }
   }
 
@@ -176,10 +180,12 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
   return props
 }
 
-function doNavigate(navItem: any, linkProps: any, props: any, e: any) {
+function onPressCallback(navItem: any, linkProps: any, props: any, e: any) {
   if (linkProps.onPress || props.onClick) {
     e.navigate = () => router.navigate(navItem)
-    props.onClick?.(e!)
+    if (props.onClick !== linkProps.onPress) {
+      props.onClick?.(e!)
+    }
     linkProps.onPress?.(e)
   } else {
     if (!props.preventNavigate && !!navItem.name) {

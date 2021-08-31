@@ -6,7 +6,8 @@ import {
   mutate,
   order_by,
   query,
-  resolved,
+  refetch,
+  review,
   reviewDelete,
   reviewFindOne,
   review_bool_exp,
@@ -59,65 +60,103 @@ export const useCurrentUserQuery = () => {
   )
 }
 
-export const useUserReviewCommentQuery = (
-  restaurantSlug: string,
-  {
-    onUpsert,
-    onDelete,
-  }: {
-    onUpsert?: () => void
-    onDelete?: () => void
-  } = {}
-) => {
-  const [user] = useCurrentUserQuery()
-  const { reviews, refetch, upsert, reviewsQuery } = useUserReviewsQuery(
-    {
+export const useUserReviewQuery = (restaurantSlug: string) => {
+  return query.review({
+    where: {
+      text: {
+        _neq: '',
+      },
       restaurant: {
         slug: {
           _eq: restaurantSlug,
         },
       },
-      type: { _eq: 'comment' },
     },
-    {
-      limit: 1,
-    }
-  )
-  const review = reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
+    limit: 1,
+  })
+}
+
+export const getUserReviewQueryMutations = ({
+  restaurantId,
+  reviewQuery,
+}: {
+  restaurantId?: string
+  reviewQuery?: review[] | null
+}) => {
+  const review = reviewQuery?.[0]
+  const user = useUserStore().user
+
+  // ensure we select id for update/deletion gqty
+  review?.id
+  review?.list_id
+  review?.restaurant_id
+  review?.tag_id
+
   return {
-    user,
-    review,
-    reviewsQuery,
-    async upsertReview(review: Partial<Review>) {
-      const restaurantId = await resolved(
-        () => query.restaurant({ where: { slug: { _eq: restaurantSlug } } })[0]?.id
-      )
-      if (!restaurantId) {
-        Toast.error('no restaurant')
+    async upsertReview(review: Partial<review>) {
+      if (!restaurantId || !user) {
+        Toast.error('no restaurant / user')
         return
       }
-      const result = await upsert({
-        type: 'comment',
-        ...review,
-        restaurant_id: restaurantId,
-      })
-      setCache(reviewsQuery, result?.[0])
-      onUpsert?.()
+      const result = await upsertUserReview(
+        {
+          ...review,
+          user_id: user.id,
+          restaurant_id: restaurantId,
+        },
+        reviewQuery
+      )
       return result
     },
     async deleteReview() {
-      Toast.show(`Deleting...`)
-      await reviewDelete({
-        id: review.id,
-      })
-      if (reviewsQuery) {
-        setCache(reviewsQuery, null)
+      if (review) {
+        return await deleteUserReview(review, reviewQuery)
       }
-      onDelete?.()
-      Toast.show(`Deleted!`)
-      refetch(reviewsQuery)
     },
   }
+}
+
+export async function upsertUserReview(review: Partial<review>, reviewQuery: any) {
+  const result = await upsertUserReviewFn({
+    type: review.type || 'comment',
+    id: review.id,
+    text: review.text,
+    vote: review.vote,
+    favorited: review.favorited,
+    rating: review.rating,
+    list_id: review.list_id,
+    restaurant_id: review.restaurant_id,
+    tag_id: review.tag_id,
+    username: userStore.user?.username ?? review.username,
+  })
+  if (result === false) {
+    // prompted login
+    return
+  }
+  if (!result) {
+    console.error('no result for', result)
+    Toast.error(`Couldn't save`)
+    return
+  }
+  Toast.show(`Saved!`)
+  if (reviewQuery) {
+    console.warn('setting cache', review)
+    setCache(reviewQuery, [review])
+    // refetch(reviewQuery)
+  }
+  return result
+}
+
+export async function deleteUserReview(review: { id: string }, reviewQuery: any[] | null) {
+  Toast.show(`Deleting...`)
+  await reviewDelete({
+    id: review.id,
+  })
+  if (reviewQuery) {
+    setCache(reviewQuery, null)
+  }
+  Toast.show(`Deleted!`)
+  refetch(reviewQuery)
 }
 
 export const useUserReviewsQuery = (where: review_bool_exp, rest: any = null) => {
@@ -169,82 +208,87 @@ export const useUserReviewsQuery = (where: review_bool_exp, rest: any = null) =>
     reviews,
     reviewsQuery,
     refetch,
-    async upsert(
-      review: Partial<Review> & {
-        // require type
-        type: Review['type']
-      }
-    ) {
-      if (userStore.promptLogin()) {
-        return false
-      }
-      const user = userStore.user
-      if (!user) return
-      try {
-        const next = {
-          ...review,
-          user_id: user.id,
-        }
-        // hacky workaround for upsert not working via gqty
-        try {
-          const response = await mutate((mutation) => {
-            return mutation.insert_review({
-              objects: [
-                {
-                  rating: 0,
-                  ...next,
-                } as any,
-              ],
-              on_conflict: {
-                constraint: review_constraint.review_type_user_id_list_id_key,
-                update_columns: [review_update_column.favorited],
-              },
-            })?.affected_rows
-          })
-          console.log('response', response)
-          if (!response) {
-            console.error('response', response)
-            Toast.error('Error saving')
-            return false
-          }
-        } catch (err) {
-          console.log('aught err', err)
-          if (err.message?.includes('Uniqueness violation')) {
-            const existing = await reviewFindOne(next)
-            if (!existing) {
-              Toast.error('Error saving')
-              return
-            }
-            const response = await mutate((mutation) => {
-              return mutation.update_review({
-                where: {
-                  id: {
-                    _eq: existing.id,
-                  },
-                },
-                _set: next,
-              })?.affected_rows
-            })
-            if (!response) {
-              console.error('response', response)
-              Toast.error('Error saving')
-              return false
-            }
-          }
-        }
-        Toast.show(`Saved`)
-        refetch(reviewsQuery)
-      } catch (err) {
-        console.error('error', err)
-        Toast.error('Error saving')
-        return false
-      }
+    upsert: async (review: UpdateableReview) => {
+      const res = await upsertUserReviewFn(review)
+      refetch(reviewsQuery)
+      return res
     },
   }
 }
 
+type UpdateableReview = Partial<review> & {
+  // require type
+  type: Review['type']
+}
+
+export async function upsertUserReviewFn(review: UpdateableReview) {
+  if (userStore.promptLogin()) {
+    return false
+  }
+  const user = userStore.user
+  if (!user) return
+  try {
+    const next = {
+      ...review,
+      user_id: user.id,
+    }
+    // hacky workaround for upsert not working via gqty
+    try {
+      const response = await mutate((mutation) => {
+        return mutation.insert_review({
+          objects: [
+            {
+              rating: 0,
+              ...next,
+            } as any,
+          ],
+          on_conflict: {
+            constraint: review_constraint.review_type_user_id_list_id_key,
+            update_columns: Object.keys(review_update_column) as any,
+          },
+        })?.affected_rows
+      })
+      if (!response) {
+        console.error('response', response)
+        Toast.error('Error saving')
+        return false
+      }
+      return response
+    } catch (err) {
+      console.log('aught err', err)
+      if (err.message?.includes('Uniqueness violation')) {
+        const existing = await reviewFindOne(next)
+        if (!existing) {
+          Toast.error('Error saving')
+          return
+        }
+        const response = await mutate((mutation) => {
+          return mutation.update_review({
+            where: {
+              id: {
+                _eq: existing.id,
+              },
+            },
+            _set: next,
+          })?.affected_rows
+        })
+        if (!response) {
+          console.error('response', response)
+          Toast.error('Error saving')
+          return false
+        }
+      }
+    }
+    Toast.show(`Saved`)
+  } catch (err) {
+    console.error('error', err)
+    Toast.error('Error saving')
+    return false
+  }
+}
+
 export const useUserFavoriteQuery = (where: review_bool_exp) => {
-  const { reviewsQuery, reviews, upsert, refetch, userId } = useUserReviewsQuery(where)
+  const { reviewsQuery, reviews, upsert } = useUserReviewsQuery(where)
   const review = reviews.find(
     (x) =>
       x.tag_id === where.tag_id?._eq ||

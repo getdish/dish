@@ -1,6 +1,6 @@
 import { graphql, mutate, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import React, { Suspense, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import { AbsoluteVStack, Hoverable, Toast, VStack } from 'snackui'
 
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
@@ -11,6 +11,7 @@ import { ListFavoriteButton } from '../../home/restaurant/ListFavoriteButton'
 import { useUserStore } from '../../userStore'
 import { CloseButton } from '../CloseButton'
 import { Link } from '../Link'
+import { SuspenseFallback } from '../SuspenseFallback'
 import { useList } from './useList'
 
 export type ListCardProps = ListIDProps &
@@ -27,7 +28,15 @@ export type ListIDProps = {
   userSlug: string
 }
 
-export const ListCard = graphql((props: ListCardProps) => {
+export const ListCard = memo((props: ListCardProps) => {
+  return (
+    <SuspenseFallback>
+      <ListCardContent {...props} />
+    </SuspenseFallback>
+  )
+})
+
+const ListCardContent = graphql((props: ListCardProps) => {
   const { list } = useList(props)
   const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
   const listColor = getListColor(list?.color)

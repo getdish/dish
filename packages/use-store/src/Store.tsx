@@ -28,6 +28,7 @@ export const setDisableStoreTracking = (storeInstance: any, val: boolean) => {
 export class Store<Props extends Object | null = null> {
   private _listeners = new Set<Function>()
   private _trackers = new Set<StoreTracker>()
+  _version = 0
 
   constructor(public props: Props) {}
 
@@ -39,6 +40,7 @@ export class Store<Props extends Object | null = null> {
   }
 
   [TRIGGER_UPDATE]() {
+    this._version = (this._version + 1) % Number.MAX_SAFE_INTEGER
     // this can't be wholesale...
     // startTransition(() => {
     this._listeners.forEach((cb) => cb())

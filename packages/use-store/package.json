@@ -17,7 +17,8 @@
   "dependencies": {
     "lodash": "^4.17.21",
     "react": "*",
-    "react-dom": "*"
+    "react-dom": "*",
+    "use-sync-external-store": "^0.0.0-experimental-45898dacb2-20210828"
   },
   "devDependencies": {
     "@dish/esdx": "*",

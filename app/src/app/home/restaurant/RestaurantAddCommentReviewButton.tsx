@@ -4,7 +4,7 @@ import React from 'react'
 import { Theme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
-import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
+import { useUserReviewQuery } from '../../hooks/useUserReview'
 import { Link } from '../../views/Link'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 
@@ -19,7 +19,7 @@ export const RestaurantAddCommentButton = graphql(
     hideLabel?: boolean
     restaurantSlug: string
   }) => {
-    const { review } = useUserReviewCommentQuery(restaurantSlug)
+    const [review] = useUserReviewQuery(restaurantSlug)
     return (
       <Theme name="active">
         <Link name="restaurantReview" params={{ slug: restaurantSlug || '' }}>

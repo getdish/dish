@@ -279,7 +279,15 @@ export const HomePageFeed = memo(
                       }}
                     >
                       <FeedCard flexible chromeless size="lg" flat>
-                        <Plus color="#eeeeee" />
+                        <AbsoluteVStack
+                          opacity={0.26}
+                          hoverStyle={{ opacity: 1 }}
+                          fullscreen
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Plus color="#eeeeee" />
+                        </AbsoluteVStack>
                       </FeedCard>
                     </Link>
                   </HStack>

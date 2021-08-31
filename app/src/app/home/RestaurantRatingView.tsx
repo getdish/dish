@@ -1,8 +1,7 @@
-import { graphql } from '@dish/graph'
+import { graphql, restaurant } from '@dish/graph'
 import React from 'react'
 import { AbsoluteHStack, BlurView, Box, HStack, HoverablePopover, VStack, useTheme } from 'snackui'
 
-import { queryRestaurant } from '../../queries/queryRestaurant'
 import { suspense } from '../hoc/suspense'
 import { ratingCount } from './ratingCount'
 import { RatingView } from './RatingView'
@@ -10,19 +9,18 @@ import { RatingView } from './RatingView'
 export const RestaurantRatingView = suspense(
   graphql(
     ({
-      slug,
+      restaurant,
       size = 32,
       floating,
       hoverable,
       showBreakdown,
     }: {
       hoverable?: boolean
-      slug: string
+      restaurant?: restaurant
       size?: number
       floating?: boolean
       showBreakdown?: boolean
     }) => {
-      const [restaurant] = queryRestaurant(slug)
       if (!restaurant) {
         return null
       }

@@ -135,7 +135,10 @@ export function createWebpackConfig({
             // }),
           ]
         : [],
-      devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+      // eval-cheap-module-source-map (original lines)
+      // eval-cheap-source-map (transformed lines)
+      // eval-nosources-cheap-source-map (transformed lines)
+      devtool: isProduction ? 'source-map' : 'eval',
       entry: {
         main:
           polyFillPath || isSSR
@@ -337,10 +340,10 @@ export function createWebpackConfig({
         isSSR && new LoadablePlugin(),
 
         // slim down unused react-native-web modules
-        new Webpack.NormalModuleReplacementPlugin(
-          /react-native-web.*Virtualized(Section)?List.*/,
-          require.resolve('@dish/proxy-worm')
-        ),
+        // new Webpack.NormalModuleReplacementPlugin(
+        //   /react-native-web.*Virtualized(Section)?List.*/,
+        //   require.resolve('@dish/proxy-worm')
+        // ),
 
         new Webpack.DefinePlugin(defines),
 

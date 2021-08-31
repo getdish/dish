@@ -19,7 +19,7 @@ import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
-import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
+import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 
 type RestaurantHeaderProps = {
@@ -72,7 +72,7 @@ const RestaurantHeaderContent = memo(
               <RestaurantAddToListButton floating restaurantSlug={restaurantSlug} />
             </Suspense>
             <Suspense fallback={null}>
-              <RestaurantFavoriteStar floating size="lg" restaurantId={restaurantId} />
+              <RestaurantFavoriteButton floating size="lg" restaurantSlug={restaurantSlug} />
             </Suspense>
           </PaneControlButtonsLeft>
           <VStack
@@ -220,6 +220,11 @@ const RestaurantHeaderContent = memo(
                       restaurantId={restaurantId}
                       spacing={10}
                       maxItems={8}
+                      tagButtonProps={{
+                        hideRank: false,
+                        hideRating: false,
+                        votable: true,
+                      }}
                     />
 
                     <Spacer size="sm" />

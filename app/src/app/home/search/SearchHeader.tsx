@@ -42,7 +42,7 @@ export const SearchHeader = memo(() => {
           <HStack position="relative">
             <VStack zIndex={10} x={-10}>
               <VStack paddingHorizontal={16} paddingVertical={8} marginBottom={-3}>
-                <VStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 0 : 20}>
+                <VStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 15 : 20}>
                   <Text
                     color={theme.color}
                     marginTop={-4}

@@ -14,8 +14,6 @@ export type StoreInfo<A = any> = {
   storeInstance: any
   getters: { [key: string]: any }
   actions: any
-  getVersion(): number
-  triggerUpdate(): void
   stateKeys: string[]
   gettersState: {
     getCache: Map<string, any>

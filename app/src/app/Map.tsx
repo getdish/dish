@@ -161,6 +161,7 @@ export default function Map(props: MapProps) {
   useEffect(() => {
     if (!mapNode.current) return
     const isDark = themeName === 'dark'
+
     const map = new mapboxgl.Map({
       container: mapNode.current,
       style: props.style,
@@ -198,12 +199,15 @@ export default function Map(props: MapProps) {
     const cancels = new Set<Function>()
 
     let isMouseDown = false
-    let lastUpdate = null
+    let lastUpdate: MapRegionEvent | null = null
 
     function updateOnSelectRegion() {
       if (!curRegion || isMouseDown) return
       if (!isEqual(lastUpdate, curRegion)) {
         getProps().onSelectRegion?.(curRegion)
+        if (curRegion) {
+          lastUpdate = curRegion
+        }
         curRegion = null
       } else {
         console.log('is same')

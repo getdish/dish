@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { AbsoluteVStack, StackProps, VStack, prevent, useMedia, useTheme } from 'snackui'
 
-import { bgLight } from '../../constants/colors'
-
 // TODO snackui advanced extraction case
 
 export const VoteButton = ({

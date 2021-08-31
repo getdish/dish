@@ -50,7 +50,7 @@ import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
-import { RestaurantFavoriteStar } from './RestaurantFavoriteButton'
+import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { useTotalReviews } from './useTotalReviews'
 
 export const ITEM_HEIGHT = 180
@@ -506,10 +506,10 @@ const RestaurantListItemContent = memo(
 
                 <Suspense fallback={<Spacer size={44} />}>
                   <VStack marginRight={-2}>
-                    <RestaurantFavoriteStar
+                    <RestaurantFavoriteButton
                       borderRadius={0}
                       size="md"
-                      restaurantId={restaurantId}
+                      restaurantSlug={restaurantSlug}
                     />
                   </VStack>
                 </Suspense>
@@ -561,6 +561,8 @@ const RestaurantListItemContent = memo(
                     tagButtonProps={{
                       votable: true,
                       borderWidth: 0,
+                      hideRating: false,
+                      backgroundColor: 'transparent',
                     }}
                   />
                 </Suspense>

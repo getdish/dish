@@ -98,7 +98,7 @@ export const Review = memo(
           </Text>
         }
         date={review.updated_at}
-        belowContent={review.vote ? <SentimentText sentiment={review.vote} /> : null}
+        // belowContent={review.vote ? <SentimentText sentiment={review.vote} /> : null}
         afterName={meta}
         avatar={{
           image: review.user?.avatar ?? '',

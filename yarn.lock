@@ -2376,6 +2376,7 @@ __metadata:
     lodash: ^4.17.21
     react: "*"
     react-dom: "*"
+    use-sync-external-store: ^0.0.0-experimental-45898dacb2-20210828
   languageName: unknown
   linkType: soft
 
@@ -21198,16 +21199,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:18.0.0-alpha-568dc3532":
-  version: 18.0.0-alpha-568dc3532
-  resolution: "react-dom@npm:18.0.0-alpha-568dc3532"
+"react-dom@npm:18.0.0-alpha-67f38366a-20210830":
+  version: 18.0.0-alpha-67f38366a-20210830
+  resolution: "react-dom@npm:18.0.0-alpha-67f38366a-20210830"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-    scheduler: 0.21.0-alpha-568dc3532
+    scheduler: 0.21.0-alpha-67f38366a-20210830
   peerDependencies:
-    react: 18.0.0-alpha-568dc3532
-  checksum: dbe910e09679b9b20da332398813e04df67ac9c3eda5f050745fd91587cf691c929624e1d6681fc543ac8faffdf1b4aa1f5f01e4411cdf2bf21f8978b6a408d8
+    react: 18.0.0-alpha-67f38366a-20210830
+  checksum: bf2f6100993f58886682175f9fa86dc94dbce5429b1af4ce519d278716bfe4d2d17f675c198e06b3bcccde5a90614bd42b40cf66796eeda32b7ece2cff1e4d82
   languageName: node
   linkType: hard
 
@@ -21525,10 +21526,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-refresh@npm:0.11.0-alpha-8723e772b-20210826":
-  version: 0.11.0-alpha-8723e772b-20210826
-  resolution: "react-refresh@npm:0.11.0-alpha-8723e772b-20210826"
-  checksum: 7d1b3f3cd31e36f7bd1e31fad6ca2ffd7023c9aa8a1d92887ac3ed9c517c85a58455923ea01d4f3b42a5e73cd72f232c502d23475e8a1d8e569b982917c413c3
+"react-refresh@npm:0.11.0-alpha-67f38366a-20210830":
+  version: 0.11.0-alpha-67f38366a-20210830
+  resolution: "react-refresh@npm:0.11.0-alpha-67f38366a-20210830"
+  checksum: e0f4f38bfff150533b824a86608f71ddd88cafa5c261a8fd667545394b5415f0b69d385d4f9d3f7e81067765eda3f96ecdb6494a72b7204ad6a30f046d1324c5
   languageName: node
   linkType: hard
 
@@ -21648,13 +21649,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.0.0-alpha-568dc3532":
-  version: 18.0.0-alpha-568dc3532
-  resolution: "react@npm:18.0.0-alpha-568dc3532"
+"react@npm:18.0.0-alpha-67f38366a-20210830":
+  version: 18.0.0-alpha-67f38366a-20210830
+  resolution: "react@npm:18.0.0-alpha-67f38366a-20210830"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 260a2d9e73408b10b304a43c334995f51ede299255d960ae68c439b616cced0d7bdcb2c3cd79042bbc017242158df9918bf5b6482b0d046ac7948eaa5e9a1511
+  checksum: b0a2fd313d5e9a0eaac28af1adcffd157cc4b5f5e21c41574fbe1ca128ec2a8ba173595ce7d697d6c695c13d795ff6f99afaf70dbe813438608c24f47e5ce323
   languageName: node
   linkType: hard
 
@@ -22567,13 +22568,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:0.21.0-alpha-568dc3532":
-  version: 0.21.0-alpha-568dc3532
-  resolution: "scheduler@npm:0.21.0-alpha-568dc3532"
+"scheduler@npm:0.21.0-alpha-67f38366a-20210830":
+  version: 0.21.0-alpha-67f38366a-20210830
+  resolution: "scheduler@npm:0.21.0-alpha-67f38366a-20210830"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 55f81d8fcae281edb399c9c6bd851f56704a2116b33ada01fbc6dcf8382f18afc5f63eb5ca764db8bcc918441b7751fc3f81892507ea11e0cbca1df74d8de0bf
+  checksum: 7a2c484ebbce1018c7239e99eee4852856a50ade64f31b840c30278cb926fd6b4f63f47cda215a67defe1d039571c0517a29457fdf5ba5fe68b4895eae1dcb7a
   languageName: node
   linkType: hard
 
@@ -25606,6 +25607,15 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0
   checksum: 96e64977a573244fd11350a3141b2cf57fb72dd9dd902f387c8a0a565d0a948bc81588bd7378c6ef6defc0d1119f37f73aac4a7a287c8443abd444bd4e7bbea8
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^0.0.0-experimental-45898dacb2-20210828":
+  version: 0.0.0-experimental-67f38366a-20210830
+  resolution: "use-sync-external-store@npm:0.0.0-experimental-67f38366a-20210830"
+  peerDependencies:
+    react: 0.0.0-experimental-67f38366a-20210830
+  checksum: aa42de3b86f4bce4cce46a16a0916b834eead48579036734feb50a8430783c0352a286c2f60e20e558f5d8e133b9ebd21eddc81261903a2d564aeffeaa055cd7
   languageName: node
   linkType: hard
 
