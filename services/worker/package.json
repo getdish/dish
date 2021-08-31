@@ -25,6 +25,7 @@
     "bull": "^3.22.8",
     "bull-board": "^2.1.2",
     "express": "^4.17.1",
+    "nodemon": "^2.0.12",
     "react": "^17.0.1"
   },
   "devDependencies": {

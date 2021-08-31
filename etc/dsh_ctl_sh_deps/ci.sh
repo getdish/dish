@@ -100,7 +100,7 @@ function run_all_tests_in_compose_retry() {
 function run_integration_tests() {
   echo "Running Test Cafe end-to-end browser-based tests..."
   pushd app
-    docker run -d --net=host --name "app-integration-tests-$BUILDKITE_BUILD_NUMBER" "$DISH_REGISTRY/app"
+  docker run -d --net=host --name "app-integration-tests-$BUILDKITE_BUILD_NUMBER" "$DISH_REGISTRY/app"
   sleep 5
   ./test/testcafe.sh
   popd
@@ -111,14 +111,14 @@ function docker_login() {
 }
 
 function run_dsh() {
-  esbuild ./dsh.ts  --target=node15 --format=esm --outdir=node_modules/.cache --out-extension:.js=.mjs &> /dev/null
+  esbuild ./dsh.ts --target=node15 --format=esm --outdir=node_modules/.cache --out-extension:.js=.mjs &>/dev/null
   node ./node_modules/.bin/zx ./node_modules/.cache/dsh.mjs
 }
 
 function wait_until_hasura_ready() {
   echo "Waiting for Hasura to start ($HASURA_ENDPOINT)..."
-  until [ $(curl -L $HASURA_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ];
-    do sleep 0.1
+  until [ $(curl -L $HASURA_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]; do
+    sleep 0.1
   done
   echo "Hasura is up"
 }
@@ -126,8 +126,8 @@ export -f wait_until_hasura_ready
 
 function wait_until_postgres_ready() {
   echo "Waiting for Postgres to start ($POSTGRES_ENDPOINT)..."
-  until [ $(curl -L $POSTGRES_ENDPOINT -o /dev/null -w '%{http_code}\n' -s) == "000" ];
-    do sleep 0.1;
+  until [ $(curl -L $POSTGRES_ENDPOINT -o /dev/null -w '%{http_code}\n' -s) == "000" ]; do
+    sleep 0.1
   done
   echo "Postgres is up"
 }
@@ -135,8 +135,8 @@ export -f wait_until_postgres_ready
 
 function wait_until_timescale_ready() {
   echo "Waiting for Timescale to start ($TIMESCALE_ENDPOINT)..."
-  until [ $(curl -L $TIMESCALE_ENDPOINT -o /dev/null -w '%{http_code}\n' -s) == "000" ];
-    do sleep 0.1;
+  until [ $(curl -L $TIMESCALE_ENDPOINT -o /dev/null -w '%{http_code}\n' -s) == "000" ]; do
+    sleep 0.1
   done
   echo "Timescale is up"
 }
@@ -144,8 +144,8 @@ export -f wait_until_timescale_ready
 
 function wait_until_dish_app_ready() {
   echo "Waiting for dish to start ($DISH_ENDPOINT)..."
-  until [ $(curl -L $DISH_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ];
-    do sleep 0.1;
+  until [ $(curl -L $DISH_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]; do
+    sleep 0.1
   done
   echo "dish is up"
 }
