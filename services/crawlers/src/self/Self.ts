@@ -9,6 +9,7 @@ import {
   menuItemsUpsertMerge,
   restaurantUpdate,
   restaurantUpsertManyTags,
+  tagFindOne,
   tagUpsert,
 } from '@dish/graph'
 import { Database } from '@dish/helpers-node'
@@ -234,6 +235,12 @@ export class Self extends WorkerJob {
   }
 
   async seed() {
+    // Some strange conflict or duplication or something weird happens
+    // if we don't check first. Then is it really an upsert?
+    const gem = await tagFindOne({ id: GEM_UIID })
+    if (gem) {
+      return
+    }
     await tagUpsert([
       {
         name: 'Gem',
