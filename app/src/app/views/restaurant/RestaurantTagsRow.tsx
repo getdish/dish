@@ -76,9 +76,10 @@ const RestaurantTagsRowContent = memo(
                 marginRight={props.spacingHorizontal ?? 0}
                 bordered
                 replaceSearch
+                hideRating
+                hideRank
                 size={size}
                 {...tag}
-                votable
                 restaurantSlug={restaurantSlug}
               />
               <Spacer />

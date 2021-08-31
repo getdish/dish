@@ -40,7 +40,9 @@ export function Link<Name extends DRouteName = DRouteName>(
   return wrapWithLinkElement(
     isStringChild(children) ? (
       <Text
-        textDecorationLine={isInParagraph || underline ? 'underline' : 'none'}
+        textDecorationLine={
+          underline === false ? 'none' : isInParagraph || underline ? 'underline' : 'none'
+        }
         color={theme.colorAlt}
         display={display as any}
         {...(isInParagraph && {

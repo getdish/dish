@@ -3,18 +3,19 @@ import React from 'react'
 import { useMedia, useTheme } from 'snackui'
 
 import { GeocodePlace } from '../../../types/homeTypes'
+import { homeStore } from '../../homeStore'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 
 export const RestaurantAddress = ({
   address,
-  curLocInfo,
+  curLocInfo = homeStore.currentState.curLocInfo,
   size = 'xs',
 }: {
   size: AddressSize
   address: string
-  curLocInfo: GeocodePlace | null
+  curLocInfo?: GeocodePlace | null
 }) => {
   const media = useMedia()
   const theme = useTheme()
@@ -22,7 +23,9 @@ export const RestaurantAddress = ({
     <Link href={`https://www.google.com/maps/search/?q=${encodeURIComponent(address)}`}>
       <SmallButton
         tooltip={
-          size.endsWith('xs') || size === 'sm' ? getAddressText(curLocInfo, address, 'lg') : null
+          size.endsWith('xs') || size === 'sm'
+            ? getAddressText(curLocInfo || null, address, 'lg')
+            : null
         }
         backgroundColor="transparent"
         icon={
@@ -34,7 +37,7 @@ export const RestaurantAddress = ({
           opacity: 0.65,
         }}
       >
-        {size !== 'xxs' && getAddressText(curLocInfo, address, size)}
+        {size !== 'xxs' && getAddressText(curLocInfo || null, address, size)}
       </SmallButton>
     </Link>
   )

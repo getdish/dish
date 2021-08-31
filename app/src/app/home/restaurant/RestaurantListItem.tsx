@@ -2,7 +2,6 @@ import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import { useStoreInstanceSelector } from '@dish/use-store'
-import { debounce } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 import {
@@ -10,7 +9,6 @@ import {
   Button,
   Circle,
   HStack,
-  Hoverable,
   InteractiveContainer,
   LoadingItem,
   LoadingItemsSmall,
@@ -24,18 +22,15 @@ import {
 } from 'snackui'
 
 import { brandColor, green, red } from '../../../constants/colors'
-import { drawerWidthMax, isWeb } from '../../../constants/constants'
+import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
-import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { GeocodePlace } from '../../../types/homeTypes'
-import { appMapStore } from '../../AppMap'
-import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { DishView } from '../../views/dish/DishView'
 import { Image } from '../../views/Image'
@@ -49,6 +44,7 @@ import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { getSearchPageStore } from '../search/SearchPageStore'
 import { SkewedCardCarousel } from '../SimpleCard'
 import { EditRestaurantTagsButton } from './EditRestaurantTagsButton'
+import { HoverToZoom } from './HoverToZoom'
 import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddToListButton } from './RestaurantAddToListButton'
@@ -81,16 +77,6 @@ type RestaurantListItemProps = {
   beforeBottomRow?: any
   dishSize?: 'md' | 'lg'
 }
-
-/**
- * NOTE
- *
- * use slug for anything NOT logged in
- *
- * for logged in calls, we often need to user restaurant_id
- */
-
-const setHoveredSlow = debounce(appMapStore.setHovered, 400)
 
 export const RestaurantListItem = (props: RestaurantListItemProps) => {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -223,18 +209,7 @@ const RestaurantListItemContent = memo(
     const imgSize = shouldShowOneLine ? 44 : 58
 
     return (
-      <Hoverable
-        onHoverIn={() => {
-          setHoveredSlow({
-            id: props.restaurantId,
-            slug: props.restaurantSlug,
-            via: 'list',
-          })
-        }}
-        onHoverOut={() => {
-          setHoveredSlow.cancel()
-        }}
-      >
+      <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}>
         <VStack
           className="hover-faded-in-parent"
           alignItems="flex-start"
@@ -308,18 +283,7 @@ const RestaurantListItemContent = memo(
 
           {/* ROW: TITLE */}
 
-          <Hoverable
-            onHoverIn={() => {
-              setHoveredSlow({
-                id: props.restaurantId,
-                slug: props.restaurantSlug,
-                via: 'list',
-              })
-            }}
-            onHoverOut={() => {
-              setHoveredSlow.cancel()
-            }}
-          >
+          <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}>
             <VStack
               hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
               width={950}
@@ -408,7 +372,7 @@ const RestaurantListItemContent = memo(
 
               <Spacer size="md" />
             </VStack>
-          </Hoverable>
+          </HoverToZoom>
 
           {/* ROW: CENTER CONTENT AREA */}
           {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
@@ -603,7 +567,7 @@ const RestaurantListItemContent = memo(
           {/* bottom spacing */}
           {!shouldShowOneLine && <Spacer size={10} />}
         </VStack>
-      </Hoverable>
+      </HoverToZoom>
     )
   })
 )

@@ -1,17 +1,15 @@
 import { graphql } from '@dish/graph'
 import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@dish/react-feather'
-import React, { Suspense, memo, useEffect } from 'react'
+import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
 import { AbsoluteVStack, HStack, Text, Tooltip, VStack, useTheme } from 'snackui'
 
-import { green400 } from '../../../constants/colors'
 import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { restaurantRatio } from '../../../helpers/restaurantsRatio'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { RestaurantRatingView } from '../../home/RestaurantRatingView'
 import { useUserTagVotes } from '../../hooks/useUserTagVotes'
-import { useUserStore } from '../../userStore'
 import { TextSuperScript } from '../TextSuperScript'
 import { VoteButton } from '../VoteButton'
 

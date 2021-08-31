@@ -160,8 +160,8 @@ function CommentBubbleContents({
                 ? text.slice(0, ellipseContentAbove) + '...'
                 : text}{' '}
               {!expanded && !!expandable && (
-                <Link onPress={onExpand}>
-                  <Text>Read more &raquo;</Text>
+                <Link underline={false} onPress={onExpand}>
+                  <Paragraph fontWeight="700">Read &raquo;</Paragraph>
                 </Link>
               )}
             </Text>
@@ -175,7 +175,7 @@ function CommentBubbleContents({
   )
 
   const metaContents = (
-    <HStack y={-6} alignItems="center" width={circleSize}>
+    <HStack y={-10} alignItems="center" width={circleSize}>
       <VStack
         borderRadius={100}
         backgroundColor={
@@ -202,18 +202,17 @@ function CommentBubbleContents({
 
       <HStack pointerEvents="auto" alignItems="center" spacing>
         {!!name && (
-          <Link
-            underline
-            name="user"
-            params={{ username: name }}
-            pointerEvents="auto"
-            maxWidth="100%"
-            flex={1}
-            fontSize={13}
-            ellipse
-          >
-            {name}
-          </Link>
+          <VStack>
+            <Link
+              name="user"
+              params={{ username: name }}
+              pointerEvents="auto"
+              fontSize={13}
+              ellipse
+            >
+              {name}
+            </Link>
+          </VStack>
         )}
 
         {!!name && <Middot />}
@@ -254,6 +253,8 @@ function CommentBubbleContents({
         paddingVertical={10}
         marginLeft={20}
         backgroundColor={theme.cardBackgroundColor}
+        borderColor={theme.borderColor}
+        borderWidth={1}
         borderRadius={20}
         position="relative"
         zIndex={10}
@@ -263,6 +264,7 @@ function CommentBubbleContents({
         height={bubbleHeight}
         pointerEvents="auto"
         {...(chromeless && {
+          borderColor: 'transparent',
           backgroundColor: 'transparent',
           paddingLeft: 0,
           paddingRight: 0,
