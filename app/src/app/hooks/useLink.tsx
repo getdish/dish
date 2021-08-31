@@ -80,7 +80,6 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
           element,
           {
             onClick: onPress,
-            style: styleProps,
             className: `a-link display-contents cursor-pointer ${props.className ?? ''}`,
             target: props.target,
             ...(element === 'a' &&

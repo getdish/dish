@@ -20,14 +20,11 @@ import {
   Toast,
   VStack,
   useForceUpdate,
-  useThemeName,
 } from 'snackui'
 
 import { grey, red400 } from '../../../constants/colors'
-import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
-import { getWindowHeight } from '../../../helpers/getWindow'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
@@ -43,20 +40,17 @@ import { Link } from '../../views/Link'
 import { useListFavorite } from '../../views/list/useList'
 import { PageHead } from '../../views/PageHead'
 import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
-import { ScalingPressable } from '../../views/ScalingPressable'
 import { Score } from '../../views/Score'
-import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
-import { PageTitle } from '../PageTitle'
 import { CircleButton } from '../restaurant/CircleButton'
-import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors, randomListColor } from './listColors'
+import { ListItem } from './ListItem'
 import { useListRestaurants } from './useListRestaurants'
 
 type Props = StackItemProps<HomeStateItemList>
@@ -442,16 +436,14 @@ const ListPageContent = memo(
                 )}
 
                 {/* overflow clip prevention with marginVerticals here */}
-                <VStack position="relative" marginHorizontal={-20}>
-                  <ListPageTitle
-                    listTheme={listTheme}
-                    isLight={isLight}
-                    locationName={region.data?.name ?? props.item.region}
-                    list={list}
-                    isEditing={isEditing}
-                    draft={draft}
-                  />
-                </VStack>
+                <ListPageTitle
+                  listTheme={listTheme}
+                  isLight={isLight}
+                  locationName={region.data?.name ?? props.item.region}
+                  list={list}
+                  isEditing={isEditing}
+                  draft={draft}
+                />
 
                 {!!(list.description || isEditing || listTheme === 'minimal') && (
                   <VStack
@@ -566,7 +558,7 @@ const ListPageContent = memo(
                                 />
                               </HStack>
                             )}
-                            <RestaurantListItem
+                            <ListItem
                               hideDescription={!comment}
                               dishSize="lg"
                               curLocInfo={props.item.curLocInfo ?? null}
@@ -685,67 +677,40 @@ const ListPageTitle = ({
   )
 
   return (
-    <PageTitle
-      noDivider
-      title={
-        <>
-          {listTheme === 'minimal' && (
-            <VStack
-              alignItems="flex-start"
-              justifyContent="flex-end"
-              width="100%"
-              paddingHorizontal={25}
-            >
-              <Spacer size={84} />
-              <Title
-                maxWidth={620}
-                width="100%"
-                size="xxxl"
-                sizeLineHeight={0.72}
-                color={textColor}
-              >
-                {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
-              </Title>
-              <Spacer size="lg" />
-            </VStack>
-          )}
+    <>
+      {listTheme === 'minimal' && (
+        <VStack
+          alignItems="flex-start"
+          justifyContent="flex-end"
+          width="100%"
+          paddingHorizontal={28}
+        >
+          <Spacer size={84} />
+          <Title maxWidth={620} width="100%" size="xxxl" sizeLineHeight={0.72} color={textColor}>
+            {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
+          </Title>
+          <Spacer size="lg" />
+        </VStack>
+      )}
 
-          {listTheme === 'modern' && (
-            <VStack
-              paddingTop={15}
-              marginHorizontal="auto"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <ScalingPressable>
-                <Link name="user" params={{ username: list.user?.username ?? '' }}>
-                  <SlantedTitle scale={1} size="md" alignSelf="center">
-                    {list.user?.username ?? '...'}'s
-                  </SlantedTitle>
-                </Link>
-              </ScalingPressable>
-
-              <VStack position="relative" alignSelf="center">
-                <SlantedTitle
-                  maxWidth={450}
-                  marginTop={-5}
-                  backgroundColor={color}
-                  alignSelf="center"
-                  zIndex={0}
-                  size={titleSize}
-                  color={textColor}
-                >
-                  {titleContents}
-                </SlantedTitle>
-                <SlantedTitle fontWeight="300" scale={1} zIndex={-1} size="xxs" alignSelf="center">
-                  {locationName ?? 'anywhere'}
-                </SlantedTitle>
-              </VStack>
-            </VStack>
-          )}
-        </>
-      }
-    />
+      {listTheme === 'modern' && (
+        <HStack
+          paddingVertical={28}
+          marginHorizontal="auto"
+          alignItems="center"
+          justifyContent="center"
+          spacing
+        >
+          <Link name="user" params={{ username: list.user?.username ?? '' }}>
+            <Title size="md">{list.user?.username ?? '...'}'s</Title>
+          </Link>
+          <Title size="md" maxWidth={450} color={color} zIndex={0}>
+            {titleContents}
+          </Title>
+          <Title size="md">{locationName ?? 'anywhere'}</Title>
+        </HStack>
+      )}
+    </>
   )
 }
 

@@ -66,31 +66,31 @@ export const RestaurantReview = memo(
         </Text>
       ) : null
 
-      const meta = (
-        <>
-          {!!review.rating && (
-            <Text
-              {...bottomMetaTextProps}
-              borderRadius={100}
-              backgroundColor={
-                review.rating >= 4 ? green200 : review.rating >= 3 ? yellow200 : red200
-              }
-              lineHeight={20}
-              paddingHorizontal={12}
-              // @ts-ignore
-              display={isWeb ? 'inline-flex' : 'flex'}
-              alignItems="center"
-              justifyContent="center"
-              margin={-2}
-              fontSize={12}
-              fontWeight="400"
-            >
-              {review.rating === 1 ? 'Upvote' : 'Downvote'}
-            </Text>
-          )}
-          {authoredAt}
-        </>
-      )
+      // const meta = (
+      //   <>
+      //     {!!review.rating && (
+      //       <Text
+      //         {...bottomMetaTextProps}
+      //         borderRadius={100}
+      //         backgroundColor={
+      //           review.rating >= 4 ? green200 : review.rating >= 3 ? yellow200 : red200
+      //         }
+      //         lineHeight={20}
+      //         paddingHorizontal={12}
+      //         // @ts-ignore
+      //         display={isWeb ? 'inline-flex' : 'flex'}
+      //         alignItems="center"
+      //         justifyContent="center"
+      //         margin={-2}
+      //         fontSize={12}
+      //         fontWeight="400"
+      //       >
+      //         {review.rating === 1 ? 'Upvote' : 'Downvote'}
+      //       </Text>
+      //     )}
+      //     {authoredAt}
+      //   </>
+      // )
 
       let name = hideUsername ? '' : review.username ?? ''
       const isYelp = name?.startsWith('yelp-')
@@ -109,7 +109,12 @@ export const RestaurantReview = memo(
             ),
           })}
           date={review.updated_at}
-          belowContent={review.vote ? <SentimentText sentiment={review.vote} /> : null}
+          belowContent={
+            <>
+              {review.vote ? <SentimentText sentiment={review.vote} /> : null}
+              {/* {meta} */}
+            </>
+          }
           bubbleHeight={height}
           avatar={{
             image: review.user.avatar ?? '',
