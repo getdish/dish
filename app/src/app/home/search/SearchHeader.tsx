@@ -84,7 +84,7 @@ export const SearchHeader = memo(() => {
                 </AbsoluteVStack>
               </VStack>
 
-              <SearchForkListButton size="sm" />
+              {/* <SearchForkListButton size="sm" /> */}
 
               <Suspense fallback={null}>
                 <SearchPageListsRow />

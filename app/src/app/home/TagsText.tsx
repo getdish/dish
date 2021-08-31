@@ -1,9 +1,10 @@
 import React from 'react'
-import { Spacer, Text } from 'snackui'
+import { Spacer, Text, useTheme } from 'snackui'
 
 import { tagDisplayName } from '../../constants/tagDisplayName'
 
-export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
+export function TagsText({ tags }: { tags: any[] }) {
+  const theme = useTheme()
   return (
     <>
       {tags.map((tag, index) => (
@@ -14,11 +15,11 @@ export function TagsText({ tags, color }: { tags: any[]; color?: string }) {
             </Text>
           ) : null}
           <Spacer size="sm" />
-          <Text color={color} fontSize={15} fontWeight="400">
+          <Text color={theme.color} fontSize={15} fontWeight="400">
             {tagDisplayName(tag)}
           </Text>
           {index < tags.length - 1 ? (
-            <Text paddingHorizontal={8} fontSize={12} opacity={0.23} y={-1}>
+            <Text color={theme.color} paddingHorizontal={8} fontSize={12} opacity={0.23} y={-1}>
               +
             </Text>
           ) : null}

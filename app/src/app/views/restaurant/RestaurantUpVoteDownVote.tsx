@@ -149,7 +149,8 @@ const RatingWithVotes = memo(
       />
     )
 
-    const fontSize = Math.min(16, sizePx / `${score}`.length) * scale * 1.15
+    const len = `${score}`.length
+    const fontSize = (len === 1 ? 16 : len === 2 ? 15 : len === 3 ? 13 : 12) * scale
 
     return (
       <VStack

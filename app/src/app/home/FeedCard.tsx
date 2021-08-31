@@ -74,7 +74,7 @@ export const FeedCard = ({
                   onlyIcon={tags.length > 1 && tag.type === 'lense'}
                   transparent
                   size={emphasizeTag ? 'lg' : 'md'}
-                  fontWeight={emphasizeTag ? '300' : '700'}
+                  fontWeight={emphasizeTag ? '600' : '700'}
                   color={colorString}
                   {...tag}
                 />

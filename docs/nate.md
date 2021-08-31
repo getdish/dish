@@ -1,3 +1,9 @@
+- list making is/will be a better review form
+- design list entry as review as flexible document-db interface
+- list commenting
+
+
+
 - auto-lists based on your votes
 - make map work with custom point data structure instead of restaurantId (represent restaurant, OSM, other types of points)
 - import osm and integrate into playlists search

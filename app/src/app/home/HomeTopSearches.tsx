@@ -29,10 +29,7 @@ export const HomeTopSearches = memo(() => {
         return (
           <Link key={index} tags={search.tags} asyncClick>
             <GradientButton bordered rgb={rgb}>
-              <TagsText
-                tags={search.tags}
-                color={themeName === 'dark' ? '#ffffff99' : rgbString(rgb)}
-              />
+              <TagsText tags={search.tags} />
             </GradientButton>
           </Link>
         )
