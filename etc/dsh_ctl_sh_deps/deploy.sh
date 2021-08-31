@@ -44,7 +44,7 @@ function deploy_to() {
     source .env
     source .env.production
     ./dsh pull_all
-    ./dsh deploy_all
+    ./dsh deploy_dish
     docker system prune --force || true &
     echo done
   "
@@ -58,7 +58,7 @@ function deploy_all() {
   # let registry come online if necessary
   sleep 10 && docker_login || sleep 10 && docker_login || exit 1
   # deploy_swarmprom
-  deploy_dish
+  deploy_dish_stack_bootstrap
 }
 
 function deploy_dish_stack_bootstrap() {
@@ -82,8 +82,12 @@ function deploy_dish() {
 }
 
 function docker_service_restart_with_latest_image() {
-  docker service update \
-    --image registry.dishapp.com/dish-worker:latest "$1"
+  image=$(
+    docker service inspect \
+      --format='{{.Spec.TaskTemplate.ContainerSpec.Image}}' \
+      "$1"
+  )
+  docker service update --image "$image" "$1"
 }
 
 function docker_restart() {
