@@ -2,6 +2,7 @@ import React from 'react'
 import { AbsoluteHStack, Paragraph, Text, VStack, useTheme } from 'snackui'
 
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
+import { pluralize } from '../../helpers/pluralize'
 import { rgbString } from '../../helpers/rgb'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { TagButton } from '../views/TagButton'
@@ -117,7 +118,11 @@ export const FeedCard = ({
                   fontWeight="300"
                   opacity={0.5}
                 >
-                  {numItems ? <>{`${numItems}`} &middot; </> : ''}
+                  {typeof numItems !== 'undefined' ? (
+                    <>{`${pluralize(numItems, 'item')}`} &middot; </>
+                  ) : (
+                    ''
+                  )}
                   {author ?? ''}
                 </Paragraph>
               )}

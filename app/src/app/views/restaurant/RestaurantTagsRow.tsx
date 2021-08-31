@@ -83,7 +83,7 @@ const RestaurantTagsRowContent = memo(
                 restaurantSlug={restaurantSlug}
                 {...props.tagButtonProps}
               />
-              <Spacer />
+              <Spacer size={props.spacing ?? 5} />
             </React.Fragment>
           )
         })}

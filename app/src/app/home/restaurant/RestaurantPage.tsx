@@ -217,10 +217,7 @@ const RestaurantPage = memo(
 
               <VStack ref={setReviewsSection}>
                 <Suspense fallback={null}>
-                  <RestaurantReviewsList
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurant.id}
-                  />
+                  <RestaurantReviewsList restaurantSlug={restaurantSlug} />
                 </Suspense>
               </VStack>
 

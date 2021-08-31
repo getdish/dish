@@ -25,7 +25,7 @@ import { Link } from './Link'
 import { Middot } from './Middot'
 import { PaneControlButtons } from './PaneControlButtons'
 
-type CommentBubbleProps = Omit<StackProps, 'children'> & {
+export type CommentBubbleProps = Omit<StackProps, 'children'> & {
   title?: any
   name: string
   avatar?: { charIndex: number; image: string } | null
@@ -134,6 +134,7 @@ function CommentBubbleContents({
   const circleSize = 65
   const imageSize = circleSize * 0.6
   const colors = getColorsForName(`${name}`)
+  const canExpand = !expanded && !!expandable
 
   const contents = (
     <>
@@ -157,9 +158,9 @@ function CommentBubbleContents({
               {expanded
                 ? text
                 : typeof text === 'string'
-                ? text.slice(0, ellipseContentAbove) + '...'
+                ? text.replace(/\s+/g, ' ').slice(0, ellipseContentAbove) + '...'
                 : text}{' '}
-              {!expanded && !!expandable && (
+              {canExpand && (
                 <Link underline={false} onPress={onExpand}>
                   <Paragraph fontWeight="700">Read &raquo;</Paragraph>
                 </Link>
@@ -175,7 +176,7 @@ function CommentBubbleContents({
   )
 
   const metaContents = (
-    <HStack y={-10} alignItems="center" width={circleSize}>
+    <HStack y={-10} alignItems="center">
       <VStack
         borderRadius={100}
         backgroundColor={
@@ -200,7 +201,7 @@ function CommentBubbleContents({
 
       <Spacer size="lg" />
 
-      <HStack pointerEvents="auto" alignItems="center" spacing>
+      <HStack flex={1} pointerEvents="auto" alignItems="center" spacing>
         {!!name && (
           <VStack>
             <Link

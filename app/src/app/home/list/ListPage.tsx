@@ -241,27 +241,11 @@ const ListPageContent = memo(
           return <TagButton key={tag?.slug ?? i} size="sm" {...getTagButtonProps(tag)} />
         })
 
-      // const isLight = typeof list.color === 'number' ? lightBackgrounds.has(list.color) : false
-      const isLight = false
-
-      const len = list.name?.length ?? 16
-      const textColor = listTheme === 'minimal' ? color : isLight ? '#000' : '#fff'
-      const titleSize =
-        len < 12
-          ? 'xxxl'
-          : len < 16
-          ? 'xxl'
-          : len < 24
-          ? 'xl'
-          : len < 30
-          ? 'lg'
-          : len < 60
-          ? 'md'
-          : 'sm'
+      const textColor = listTheme === 'minimal' ? color : '#999'
       const titleContents = isEditing ? (
         <Input
           fontSize={20}
-          fontWeight="700"
+          fontWeight="600"
           width="auto"
           textAlign="center"
           {...(listTheme === 'minimal' && {
@@ -270,14 +254,11 @@ const ListPageContent = memo(
             width: '100%',
             textAlign: 'left',
           })}
-          backgroundColor="transparent"
           defaultValue={list.name || ''}
           onChangeText={(val) => {
             draft.current.name = val
           }}
           color={textColor}
-          borderColor="transparent"
-          marginHorizontal={-15}
           multiline
           marginVertical={-5}
         />
@@ -411,7 +392,14 @@ const ListPageContent = memo(
                 {isMyList && (
                   <>
                     {isEditing && (
-                      <HStack paddingTop={60} spacing alignItems="center" justifyContent="center">
+                      <HStack
+                        flexWrap="wrap"
+                        paddingTop={70}
+                        paddingBottom={10}
+                        spacing
+                        alignItems="center"
+                        justifyContent="center"
+                      >
                         <Paragraph>Color:</Paragraph>
 
                         <ColorPicker colors={listColors} color={color} onChange={setColor} />
@@ -448,8 +436,10 @@ const ListPageContent = memo(
                           </Paragraph>
                         </InteractiveContainer>
 
-                        <Paragraph>Public:</Paragraph>
-                        <Switch value={isPublic} onValueChange={setPublic} />
+                        <HStack>
+                          <Paragraph>Public:&nbsp;</Paragraph>
+                          <Switch value={isPublic} onValueChange={setPublic} />
+                        </HStack>
 
                         <SmallButton
                           tooltip="Delete"
@@ -506,15 +496,23 @@ const ListPageContent = memo(
                       marginHorizontal="auto"
                       alignItems="center"
                       justifyContent="center"
-                      spacing
+                      width="100%"
                     >
-                      <Link name="user" params={{ username: list.user?.username ?? '' }}>
-                        <Title size="md">{list.user?.username ?? '...'}'s</Title>
-                      </Link>
-                      <Title size="md" maxWidth={450} color={color} zIndex={0}>
-                        {titleContents}
-                      </Title>
-                      <Title size="md">{locationName ?? 'anywhere'}</Title>
+                      <HStack flex={1} maxWidth="80%" alignItems="center" justifyContent="center">
+                        <Text lineHeight={22} textAlign="center">
+                          <Link name="user" params={{ username: list.user?.username ?? '' }}>
+                            <Title size="sm" fontWeight="300" opacity={0.5}>
+                              {list.user?.username ?? '...'}'s&nbsp;
+                            </Title>
+                          </Link>
+                          <Title size="sm" fontWeight="600" color={color} zIndex={0}>
+                            {titleContents}&nbsp;
+                          </Title>
+                          <Title size="sm" fontWeight="300" opacity={0.5}>
+                            {locationName ?? 'anywhere'}
+                          </Title>
+                        </Text>
+                      </HStack>
                     </HStack>
                   )}
 
@@ -598,69 +596,62 @@ const ListPageContent = memo(
                     </VStack>
                   )}
 
-                  {restaurants.map(
-                    ({ restaurantId, restaurant, comment, dishSlugs, position }, index) => {
-                      if (!restaurant.slug) {
-                        return null
-                      }
-                      return (
-                        <React.Fragment key={restaurant.slug}>
-                          <HStack position="relative">
-                            {/* {userStore.isAdmin && <Text>{restaurant.id}</Text>} */}
-                            {isEditing && (
-                              <HStack alignItems="center" spacing paddingLeft={10}>
-                                <CircleButton
-                                  backgroundColor={red400}
-                                  width={40}
-                                  height={40}
-                                  onPress={() => {
-                                    restaurantActions.delete(restaurantId)
-                                  }}
-                                >
-                                  <X size={20} color="#fff" />
-                                </CircleButton>
-
-                                <Score
-                                  size="sm"
-                                  votable
-                                  upTooltip="Move up"
-                                  downTooltip="Move down"
-                                  score={index + 1}
-                                  setVote={(vote) => {
-                                    restaurantActions.promote(vote === 1 ? index : index + 1)
-                                  }}
-                                />
-                              </HStack>
-                            )}
-                            <ListItem
-                              hideDescription={!comment}
-                              dishSize="lg"
-                              curLocInfo={props.item.curLocInfo ?? null}
-                              restaurantId={restaurantId}
-                              restaurantSlug={restaurant.slug}
-                              rank={index + 1}
-                              description={comment}
-                              hideRate
-                              flexibleHeight
-                              dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                              editableDishes={isEditing}
-                              onChangeDishes={async (dishes) => {
-                                console.log('should change dishes', dishes)
-                                await restaurantActions.setDishes(restaurantId, dishes)
-                                Toast.success(`Updated dishes`)
-                              }}
-                              editableDescription={isEditing}
-                              onChangeDescription={async (next) => {
-                                await restaurantActions.setComment(restaurantId, next)
-                                Toast.success('Updated description')
-                              }}
-                            />
-                          </HStack>
-                          {/* <Spacer /> */}
-                        </React.Fragment>
-                      )
+                  {restaurants.map(({ restaurantId, restaurant, dishSlugs, position }, index) => {
+                    if (!restaurant.slug) {
+                      return null
                     }
-                  )}
+                    return (
+                      <React.Fragment key={restaurant.slug}>
+                        <HStack position="relative">
+                          {/* {userStore.isAdmin && <Text>{restaurant.id}</Text>} */}
+                          {isEditing && (
+                            <HStack alignItems="center" spacing paddingLeft={10}>
+                              <CircleButton
+                                backgroundColor={red400}
+                                width={40}
+                                height={40}
+                                onPress={() => {
+                                  restaurantActions.delete(restaurantId)
+                                }}
+                              >
+                                <X size={20} color="#fff" />
+                              </CircleButton>
+
+                              <Score
+                                size="sm"
+                                votable
+                                upTooltip="Move up"
+                                downTooltip="Move down"
+                                score={index + 1}
+                                setVote={(vote) => {
+                                  restaurantActions.promote(vote === 1 ? index : index + 1)
+                                }}
+                              />
+                            </HStack>
+                          )}
+                          <ListItem
+                            dishSize="lg"
+                            restaurantId={restaurantId}
+                            restaurantSlug={restaurant.slug}
+                            rank={index + 1}
+                            hideRate
+                            dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                            editable={isEditing || isMyList}
+                            onChangeDishes={async (dishes) => {
+                              console.log('should change dishes', dishes)
+                              await restaurantActions.setDishes(restaurantId, dishes)
+                              Toast.success(`Updated dishes`)
+                            }}
+                            onChangeDescription={async (next) => {
+                              await restaurantActions.setComment(restaurantId, next)
+                              Toast.success('Updated description')
+                            }}
+                          />
+                        </HStack>
+                        {/* <Spacer /> */}
+                      </React.Fragment>
+                    )
+                  })}
 
                   {isMyList && (
                     <>
