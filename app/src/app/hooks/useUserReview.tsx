@@ -9,7 +9,6 @@ import {
   resolved,
   reviewDelete,
   reviewFindOne,
-  reviewUpsert,
   review_bool_exp,
   review_constraint,
   review_update_column,
@@ -46,8 +45,22 @@ export type ReviewWithTag = Pick<
 
 export const isTagReview = (r: DeepPartial<Review>) => !!r.tag_id && r.tag_id !== globalTagId
 
+export const useCurrentUserQuery = () => {
+  const userStore = useUserStore()
+  return (
+    query.user({
+      where: {
+        id: {
+          _eq: userStore.user?.id,
+        },
+      },
+      limit: 1,
+    }) ?? []
+  )
+}
+
 export const useUserReviewCommentQuery = (
-  restaurantId: string,
+  restaurantSlug: string,
   {
     onUpsert,
     onDelete,
@@ -56,15 +69,33 @@ export const useUserReviewCommentQuery = (
     onDelete?: () => void
   } = {}
 ) => {
-  const { reviews, refetch, upsert, reviewsQuery } = useUserReviewsQuery({
-    restaurant_id: { _eq: restaurantId },
-    type: { _eq: 'comment' },
-  })
+  const [user] = useCurrentUserQuery()
+  const { reviews, refetch, upsert, reviewsQuery } = useUserReviewsQuery(
+    {
+      restaurant: {
+        slug: {
+          _eq: restaurantSlug,
+        },
+      },
+      type: { _eq: 'comment' },
+    },
+    {
+      limit: 1,
+    }
+  )
   const review = reviews.filter((x) => !isTagReview(x) && !!x.text)[0]
   return {
+    user,
     review,
     reviewsQuery,
     async upsertReview(review: Partial<Review>) {
+      const restaurantId = await resolved(
+        () => query.restaurant({ where: { slug: { _eq: restaurantSlug } } })[0]?.id
+      )
+      if (!restaurantId) {
+        Toast.error('no restaurant')
+        return
+      }
       const result = await upsert({
         type: 'comment',
         ...review,
@@ -89,7 +120,7 @@ export const useUserReviewCommentQuery = (
   }
 }
 
-export const useUserReviewsQuery = (where: review_bool_exp) => {
+export const useUserReviewsQuery = (where: review_bool_exp, rest: any = null) => {
   const userStore = useUserStore()
   const userId = (userStore.user?.id as string) ?? ''
   const shouldFetch = userId && (where.restaurant_id || where.list_id)
@@ -104,6 +135,7 @@ export const useUserReviewsQuery = (where: review_bool_exp) => {
         },
         limit: 10,
         order_by: [{ updated_at: order_by.desc }],
+        ...rest,
       })
     : null
   const reviews = reviewsQuery

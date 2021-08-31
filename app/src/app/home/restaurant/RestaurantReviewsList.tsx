@@ -1,6 +1,6 @@
 import { graphql, query } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, Grid, HStack, Spacer, Text, Theme, VStack } from 'snackui'
+import { AbsoluteVStack, Grid, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -9,26 +9,19 @@ import { RestaurantReview } from './RestaurantReview'
 
 export const RestaurantReviewsList = memo(
   graphql(
-    ({
-      restaurantSlug,
-      restaurantId,
-      before,
-    }: {
-      restaurantSlug: string
-      restaurantId: string
-      numToShow?: number
-      before?: any
-    }) => {
+    ({ restaurantSlug, before }: { restaurantSlug: string; numToShow?: number; before?: any }) => {
       const topReviews = query.review({
         limit: 4,
         where: {
-          restaurant_id: {
-            _eq: restaurantId,
+          restaurant: {
+            slug: {
+              _eq: restaurantSlug,
+            },
           },
         },
       })
 
-      const { review: ownReview } = useUserReviewCommentQuery(restaurantId)
+      const { review: ownReview } = useUserReviewCommentQuery(restaurantSlug)
 
       return (
         <VStack paddingHorizontal="3%">
@@ -44,10 +37,7 @@ export const RestaurantReviewsList = memo(
 
             <AbsoluteVStack top={-30} right={0}>
               <Suspense fallback={null}>
-                <RestaurantAddCommentButton
-                  restaurantId={restaurantId}
-                  restaurantSlug={restaurantSlug}
-                />
+                <RestaurantAddCommentButton restaurantSlug={restaurantSlug} />
               </Suspense>
             </AbsoluteVStack>
           </HStack>
@@ -65,7 +55,7 @@ export const RestaurantReviewsList = memo(
               </VStack>
             )}
             <Grid itemMinWidth={320}>
-              {ownReview && <RestaurantReview reviewId={ownReview.id} />}
+              {ownReview && <RestaurantReview restaurantSlug={restaurantSlug} />}
 
               {topReviews.map((review, i) => {
                 return (

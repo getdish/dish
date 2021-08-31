@@ -66,10 +66,7 @@ const RestaurantHeaderContent = memo(
         <>
           <PaneControlButtonsLeft>
             <Suspense fallback={null}>
-              <RestaurantAddCommentButton
-                restaurantId={restaurantId}
-                restaurantSlug={restaurantSlug}
-              />
+              <RestaurantAddCommentButton restaurantSlug={restaurantSlug} />
             </Suspense>
             <Suspense fallback={null}>
               <RestaurantAddToListButton floating restaurantSlug={restaurantSlug} />

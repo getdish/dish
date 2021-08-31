@@ -10,7 +10,6 @@ import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 
 export const RestaurantAddCommentButton = graphql(
   ({
-    restaurantId,
     restaurantSlug,
     size,
     hideLabel,
@@ -18,10 +17,9 @@ export const RestaurantAddCommentButton = graphql(
   }: SmallButtonProps & {
     size?: number
     hideLabel?: boolean
-    restaurantId: string
-    restaurantSlug?: string
+    restaurantSlug: string
   }) => {
-    const { review } = useUserReviewCommentQuery(restaurantId)
+    const { review } = useUserReviewCommentQuery(restaurantSlug)
     return (
       <Theme name="active">
         <Link name="restaurantReview" params={{ slug: restaurantSlug || '' }}>

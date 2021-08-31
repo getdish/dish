@@ -1,8 +1,9 @@
 import { graphql, query, refetch } from '@dish/graph'
+import { Plus } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { HStack, Input, LoadingItems, Modal, Spacer, Text, VStack } from 'snackui'
+import { Button, HStack, Input, LoadingItems, Modal, Spacer, Text, VStack } from 'snackui'
 
 import { red } from '../../../constants/colors'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
@@ -13,13 +14,10 @@ import { homeStore, useIsHomeTypeActive } from '../../homeStore'
 import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
 import { useUserStore } from '../../userStore'
 import { CommentBubble } from '../../views/CommentBubble'
-import { Image } from '../../views/Image'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SmallButton } from '../../views/SmallButton'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
-import { TagSmallButton } from '../../views/TagSmallButton'
-import { RestaurantLenseVote } from '../restaurant/RestaurantLenseVote'
 import { SentimentText } from '../restaurant/SentimentText'
 
 export default memo(function RestaurantReviewPage() {
@@ -74,7 +72,6 @@ const HomePageReviewContent = memo(
     return (
       <VStack width="100%" maxWidth="100%" padding={18} spacing="lg" flex={1}>
         <SmallTitle fontWeight="600">{restaurant.name}</SmallTitle>
-
         <Suspense fallback={<LoadingItems />}>
           <RestaurantReviewCommentForm
             restaurantSlug={state.restaurantSlug}
@@ -162,15 +159,13 @@ export const RestaurantReviewCommentForm = memo(
               }}
               multiline
               numberOfLines={5}
-              placeholder="A note, a tip, a whole review, it's up to you."
+              placeholder="...a note, a tip, a whole review, it's up to you."
+              marginHorizontal={-10}
+              marginVertical={-5}
             />
           }
           after={
             <HStack flex={1}>
-              <Suspense fallback={null}>
-                <UserReviewVotesRow restaurantId={restaurantId} userId={user?.id} />
-              </Suspense>
-              <VStack flex={1} />
               <HStack alignItems="center" justifyContent="center" marginVertical={-10} flex={1}>
                 <Spacer flex={1} />
                 <SmallButton
@@ -212,9 +207,13 @@ export const RestaurantReviewCommentForm = memo(
           }
         />
 
-        <Spacer />
+        {/* <Spacer /> */}
 
-        <SmallTitle divider="center">Votes</SmallTitle>
+        <HStack>
+          <Button icon={<Plus />} />
+        </HStack>
+
+        {/* <SmallTitle divider="center">Votes</SmallTitle>
         <Spacer />
         <HStack spacing="xl">
           <VStack borderRadius={10} paddingHorizontal={45} paddingVertical={15} flex={1} spacing>
@@ -249,8 +248,7 @@ export const RestaurantReviewCommentForm = memo(
                 })}
               </HStack>
             </ScrollView>
-          </VStack>
-        </HStack>
+          </VStack> */}
 
         {/* {review && (
             <>

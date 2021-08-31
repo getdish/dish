@@ -63,7 +63,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
 
   return (
     <VStack
-      // pointerEvents={media.sm ? 'auto' : 'none'}
+      pointerEvents="none"
       opacity={media.sm ? 1 : 0}
       zIndex={media.sm ? zIndexDrawer : -1}
       width="100%"

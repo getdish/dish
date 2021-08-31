@@ -1,4 +1,4 @@
-import { graphql, mutate, query, resolved, resolvedMutation } from '@dish/graph'
+import { graphql, mutate, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, useState } from 'react'
 import { AbsoluteVStack, Hoverable, Toast, VStack } from 'snackui'
@@ -15,7 +15,6 @@ import { useList } from './useList'
 
 export type ListCardProps = ListIDProps &
   FeedCardProps & {
-    numItems?: number
     onHover?: (is: boolean) => any
     floating?: boolean
     colored?: boolean
@@ -84,13 +83,16 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         outside={
           <>
             {outside}
-            {(userStore.isAdmin || deletable) && (
+            {(userStore.isAdmin || userStore.user?.username === userSlug || deletable) && (
               <AbsoluteVStack zIndex={1000} pointerEvents="auto" top={-5} right={-5}>
                 <CloseButton
                   size={40}
                   shadowed
                   pointerEvents="auto"
                   onPress={async (e) => {
+                    if (!confirm('Are you sure you want to delete?')) {
+                      return
+                    }
                     e.stopPropagation()
                     setHidden(true)
                     Toast.show('Deleted')

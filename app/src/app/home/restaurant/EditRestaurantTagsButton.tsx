@@ -1,10 +1,9 @@
 import { graphql, restaurant_tag } from '@dish/graph'
 import { ChevronDown, ChevronUp, Edit, Plus, X } from '@dish/react-feather'
 import { sortBy } from 'lodash'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { Image, ScrollView } from 'react-native'
 import {
-  AbsoluteVStack,
   Button,
   Circle,
   Divider,
@@ -24,17 +23,34 @@ import { CloseButton } from '../../views/CloseButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
-export const EditRestaurantTagsButton = graphql(
+export type EditTagsProps = {
+  restaurantSlug: string
+  tagSlugs: string[]
+  onChange?: (slugs: string[]) => any
+}
+
+export const EditRestaurantTagsButton = graphql((props: EditTagsProps) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const hide = useCallback(() => setIsOpen(false), [])
+  return (
+    <>
+      <Button onPress={() => setIsOpen(true)} icon={<Edit size={16} color="#999" />} />
+      <Modal visible={isOpen} maxWidth={480} width="90%" maxHeight="90%" onDismiss={hide}>
+        {(isOpen) => (isOpen ? <EditTagsModal {...props} setIsOpen={setIsOpen} /> : null)}
+      </Modal>
+    </>
+  )
+})
+
+const EditTagsModal = memo(
   ({
     restaurantSlug,
     tagSlugs,
     onChange,
-  }: {
-    restaurantSlug: string
-    tagSlugs: string[]
-    onChange?: (slugs: string[]) => any
+    setIsOpen,
+  }: EditTagsProps & {
+    setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
   }) => {
-    const [isOpen, setIsOpen] = useState(false)
     const [slugs, setSlugs] = useState<string[]>(tagSlugs)
     const [restaurant] = queryRestaurant(restaurantSlug)
     const theme = useTheme()
@@ -99,104 +115,96 @@ export const EditRestaurantTagsButton = graphql(
       )
     }
 
-    const hide = useCallback(() => setIsOpen(false), [])
-
     return (
       <>
-        <AbsoluteVStack pointerEvents="auto" zIndex={10000}>
-          <Button onPress={() => setIsOpen(true)} icon={<Edit color="#999" />} />
-        </AbsoluteVStack>
+        <PaneControlButtons>
+          <CloseButton onPress={() => setIsOpen(false)} />
+        </PaneControlButtons>
 
-        <Modal visible={isOpen} maxWidth={480} width="90%" maxHeight="90%" onDismiss={hide}>
-          <PaneControlButtons>
-            <CloseButton onPress={hide} />
-          </PaneControlButtons>
+        <SlantedTitle alignSelf="center" marginTop={-10}>
+          {restaurant.name}
+        </SlantedTitle>
 
-          <SlantedTitle alignSelf="center" marginTop={-10}>
-            {restaurant.name}
-          </SlantedTitle>
+        <Spacer />
 
-          <Spacer />
+        <VStack width="100%" flexShrink={0}>
+          <Input
+            backgroundColor={theme.backgroundColorSecondary}
+            marginHorizontal={20}
+            placeholder="Search dishes..."
+          />
+        </VStack>
 
-          <VStack width="100%" flexShrink={0}>
-            <Input
-              backgroundColor={theme.backgroundColorSecondary}
-              marginHorizontal={20}
-              placeholder="Search dishes..."
-            />
-          </VStack>
-
-          <ScrollView style={{ width: '100%' }}>
-            <VStack padding={18}>
-              {dishes.map((dish, index) => {
-                return getDishItem(
-                  dish,
-                  <VStack alignItems="center" justifyContent="center">
-                    <VStack
-                      padding={10}
-                      onPress={() => {
-                        const next = promote(slugs, index)
-                        setSlugs(next)
-                      }}
-                    >
-                      <ChevronUp size={16} color="rgba(150,150,150,0.9)" />
-                    </VStack>
-                    <VStack
-                      padding={10}
-                      onPress={() => {
-                        const next = promote(slugs, index + 1)
-                        setSlugs(next)
-                      }}
-                    >
-                      <ChevronDown size={16} color="rgba(150,150,150,0.9)" />
-                    </VStack>
-                  </VStack>,
+        <ScrollView style={{ width: '100%' }}>
+          <VStack padding={18}>
+            {dishes.map((dish, index) => {
+              return getDishItem(
+                dish,
+                <VStack alignItems="center" justifyContent="center">
                   <VStack
                     padding={10}
                     onPress={() => {
-                      const next = [...slugs]
-                      next.splice(index, 1)
+                      const next = promote(slugs, index)
                       setSlugs(next)
                     }}
                   >
-                    <X size={16} color="#000" />
+                    <ChevronUp size={16} color="rgba(150,150,150,0.9)" />
                   </VStack>
-                )
-              })}
-
-              <Spacer />
-              <Divider />
-              <Spacer />
-
-              {restDishes.map((dish) => {
-                dish.tag?.slug
-                return getDishItem(
-                  dish,
                   <VStack
                     padding={10}
                     onPress={() => {
-                      if (dish.tag.slug) {
-                        setSlugs([...slugs, dish.tag.slug])
-                      }
+                      const next = promote(slugs, index + 1)
+                      setSlugs(next)
                     }}
-                    alignItems="center"
-                    justifyContent="center"
                   >
-                    <Plus size={16} color="rgba(150,150,150,0.9)" />
+                    <ChevronDown size={16} color="rgba(150,150,150,0.9)" />
                   </VStack>
-                )
-              })}
-            </VStack>
-          </ScrollView>
+                </VStack>,
+                <VStack
+                  padding={10}
+                  onPress={() => {
+                    const next = [...slugs]
+                    next.splice(index, 1)
+                    setSlugs(next)
+                  }}
+                >
+                  <X size={16} color="#000" />
+                </VStack>
+              )
+            })}
 
-          <HStack flexShrink={0}>
-            <Theme name="active">
-              <Button onPress={() => onChange?.(slugs)}>Save</Button>
-            </Theme>
-          </HStack>
+            <Spacer />
+            <Divider />
+            <Spacer />
 
-          <Spacer />
-        </Modal>
+            {restDishes.map((dish) => {
+              dish.tag?.slug
+              return getDishItem(
+                dish,
+                <VStack
+                  padding={10}
+                  onPress={() => {
+                    if (dish.tag.slug) {
+                      setSlugs([...slugs, dish.tag.slug])
+                    }
+                  }}
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Plus size={16} color="rgba(150,150,150,0.9)" />
+                </VStack>
+              )
+            })}
+          </VStack>
+        </ScrollView>
+
+        <HStack flexShrink={0}>
+          <Theme name="active">
+            <Button onPress={() => onChange?.(slugs)}>Save</Button>
+          </Theme>
+        </HStack>
+
+        <Spacer />
       </>
     )
   }
