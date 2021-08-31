@@ -244,6 +244,48 @@ const ListPageContent = memo(
       // const isLight = typeof list.color === 'number' ? lightBackgrounds.has(list.color) : false
       const isLight = false
 
+      const len = list.name?.length ?? 16
+      const textColor = listTheme === 'minimal' ? color : isLight ? '#000' : '#fff'
+      const titleSize =
+        len < 12
+          ? 'xxxl'
+          : len < 16
+          ? 'xxl'
+          : len < 24
+          ? 'xl'
+          : len < 30
+          ? 'lg'
+          : len < 60
+          ? 'md'
+          : 'sm'
+      const titleContents = isEditing ? (
+        <Input
+          fontSize={20}
+          fontWeight="700"
+          width="auto"
+          textAlign="center"
+          {...(listTheme === 'minimal' && {
+            fontSize: 60,
+            fontWeight: '400',
+            width: '100%',
+            textAlign: 'left',
+          })}
+          backgroundColor="transparent"
+          defaultValue={list.name || ''}
+          onChangeText={(val) => {
+            draft.current.name = val
+          }}
+          color={textColor}
+          borderColor="transparent"
+          marginHorizontal={-15}
+          multiline
+          marginVertical={-5}
+        />
+      ) : (
+        list.name
+      )
+      const locationName = region.data?.name ?? props.item.region
+
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
         <>
@@ -436,86 +478,118 @@ const ListPageContent = memo(
                 )}
 
                 {/* overflow clip prevention with marginVerticals here */}
-                <ListPageTitle
-                  listTheme={listTheme}
-                  isLight={isLight}
-                  locationName={region.data?.name ?? props.item.region}
-                  list={list}
-                  isEditing={isEditing}
-                  draft={draft}
-                />
+                <VStack backgroundColor={`${color}11`}>
+                  {listTheme === 'minimal' && (
+                    <VStack
+                      alignItems="flex-start"
+                      justifyContent="flex-end"
+                      width="100%"
+                      paddingHorizontal={28}
+                    >
+                      <Spacer size={84} />
+                      <Title
+                        maxWidth={620}
+                        width="100%"
+                        size="xxxl"
+                        sizeLineHeight={0.72}
+                        color={textColor}
+                      >
+                        {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
+                      </Title>
+                      <Spacer size="lg" />
+                    </VStack>
+                  )}
 
-                {!!(list.description || isEditing || listTheme === 'minimal') && (
-                  <VStack
-                    marginBottom={10}
-                    {...(listTheme === 'minimal' && {
-                      marginBottom: isEditing ? 20 : list.description ? 20 : -20,
-                    })}
-                  >
-                    {/* {chromeless && (
+                  {listTheme === 'modern' && (
+                    <HStack
+                      paddingVertical={28}
+                      marginHorizontal="auto"
+                      alignItems="center"
+                      justifyContent="center"
+                      spacing
+                    >
+                      <Link name="user" params={{ username: list.user?.username ?? '' }}>
+                        <Title size="md">{list.user?.username ?? '...'}'s</Title>
+                      </Link>
+                      <Title size="md" maxWidth={450} color={color} zIndex={0}>
+                        {titleContents}
+                      </Title>
+                      <Title size="md">{locationName ?? 'anywhere'}</Title>
+                    </HStack>
+                  )}
+
+                  {!!(list.description || isEditing || listTheme === 'minimal') && (
+                    <VStack
+                      marginBottom={10}
+                      {...(listTheme === 'minimal' && {
+                        marginBottom: isEditing ? 20 : list.description ? 20 : -20,
+                      })}
+                    >
+                      {/* {chromeless && (
                         <>
                           <Divider />
                           <Spacer size="lg" />
                         </>
                       )} */}
-                    <CommentBubble
-                      chromeless={listTheme === 'minimal'}
-                      paddingHorizontal={20}
-                      date={list.created_at}
-                      after={
-                        <>
-                          {!!tagButtons.length && (
-                            <HStack spacing justifyContent="center">
-                              {tagButtons}
-                            </HStack>
-                          )}
-                        </>
-                      }
-                      avatar={{
-                        image: list.user?.avatar || '',
-                        charIndex: list.user?.charIndex || 0,
-                      }}
-                      name={list.user?.username ?? ''}
-                    >
-                      {isEditing ? (
-                        <Input
-                          placeholder="..."
-                          multiline
-                          numberOfLines={3}
-                          lineHeight={30}
-                          width="100%"
-                          fontSize={20}
-                          marginVertical={-12}
-                          marginHorizontal={-8}
-                          defaultValue={list.description ?? ''}
-                          onChangeText={(val) => {
-                            draft.current.description = val
-                          }}
-                        />
-                      ) : (
-                        (() => {
-                          const items = list.description?.split('\n\n') ?? []
-                          return (
-                            <>
-                              {items.map((x, i) => {
-                                return (
-                                  <Paragraph
-                                    paddingBottom={i < items.length - 1 ? 26 : 0}
-                                    key={i}
-                                    sizeLineHeight={1.1}
-                                    size={i == 0 ? 'lg' : 'md'}
-                                  >
-                                    {x}
-                                  </Paragraph>
-                                )
-                              })}
-                            </>
-                          )
-                        })()
-                      )}
-                    </CommentBubble>
-                  </VStack>
-                )}
+                      <CommentBubble
+                        chromeless={listTheme === 'minimal'}
+                        paddingHorizontal={20}
+                        date={list.created_at}
+                        after={
+                          <>
+                            {!!tagButtons.length && (
+                              <HStack spacing justifyContent="center">
+                                {tagButtons}
+                              </HStack>
+                            )}
+                          </>
+                        }
+                        avatar={{
+                          image: list.user?.avatar || '',
+                          charIndex: list.user?.charIndex || 0,
+                        }}
+                        name={list.user?.username ?? ''}
+                      >
+                        {isEditing ? (
+                          <Input
+                            placeholder="..."
+                            multiline
+                            numberOfLines={3}
+                            lineHeight={30}
+                            width="100%"
+                            fontSize={20}
+                            marginVertical={-12}
+                            marginHorizontal={-8}
+                            defaultValue={list.description ?? ''}
+                            onChangeText={(val) => {
+                              draft.current.description = val
+                            }}
+                          />
+                        ) : (
+                          (() => {
+                            const items = list.description?.split('\n\n') ?? []
+                            return (
+                              <>
+                                {items.map((x, i) => {
+                                  return (
+                                    <Paragraph
+                                      paddingBottom={i < items.length - 1 ? 26 : 0}
+                                      key={i}
+                                      sizeLineHeight={1.1}
+                                      size={i == 0 ? 'lg' : 'md'}
+                                    >
+                                      {x}
+                                    </Paragraph>
+                                  )
+                                })}
+                              </>
+                            )
+                          })()
+                        )}
+                      </CommentBubble>
+                    </VStack>
+                  )}
+                </VStack>
 
                 <VStack minHeight={300}>
                   {!restaurants.length && (
@@ -618,101 +692,6 @@ const ListPageContent = memo(
     { suspense: false }
   )
 )
-
-const ListPageTitle = ({
-  isLight,
-  list,
-  locationName,
-  isEditing,
-  draft,
-  listTheme,
-}: {
-  isLight: boolean
-  locationName: string
-  list: list
-  isEditing?: boolean
-  draft: any
-  listTheme: ListTheme
-}) => {
-  const len = list.name?.length ?? 16
-  const color = getListColor(list.color)
-  const textColor = listTheme === 'minimal' ? color : isLight ? '#000' : '#fff'
-  const titleSize =
-    len < 12
-      ? 'xxxl'
-      : len < 16
-      ? 'xxl'
-      : len < 24
-      ? 'xl'
-      : len < 30
-      ? 'lg'
-      : len < 60
-      ? 'md'
-      : 'sm'
-  const titleContents = isEditing ? (
-    <Input
-      fontSize={20}
-      fontWeight="700"
-      width="auto"
-      textAlign="center"
-      {...(listTheme === 'minimal' && {
-        fontSize: 60,
-        fontWeight: '400',
-        width: '100%',
-        textAlign: 'left',
-      })}
-      backgroundColor="transparent"
-      defaultValue={list.name || ''}
-      onChangeText={(val) => {
-        draft.current.name = val
-      }}
-      color={textColor}
-      borderColor="transparent"
-      marginHorizontal={-15}
-      multiline
-      marginVertical={-5}
-    />
-  ) : (
-    list.name
-  )
-
-  return (
-    <>
-      {listTheme === 'minimal' && (
-        <VStack
-          alignItems="flex-start"
-          justifyContent="flex-end"
-          width="100%"
-          paddingHorizontal={28}
-        >
-          <Spacer size={84} />
-          <Title maxWidth={620} width="100%" size="xxxl" sizeLineHeight={0.72} color={textColor}>
-            {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
-          </Title>
-          <Spacer size="lg" />
-        </VStack>
-      )}
-
-      {listTheme === 'modern' && (
-        <HStack
-          paddingVertical={28}
-          marginHorizontal="auto"
-          alignItems="center"
-          justifyContent="center"
-          spacing
-        >
-          <Link name="user" params={{ username: list.user?.username ?? '' }}>
-            <Title size="md">{list.user?.username ?? '...'}'s</Title>
-          </Link>
-          <Title size="md" maxWidth={450} color={color} zIndex={0}>
-            {titleContents}
-          </Title>
-          <Title size="md">{locationName ?? 'anywhere'}</Title>
-        </HStack>
-      )}
-    </>
-  )
-}
 
 function ColorBubble(props: StackProps) {
   return (
