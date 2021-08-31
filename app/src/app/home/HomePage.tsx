@@ -151,6 +151,7 @@ const HomePageContent = (props: Props) => {
               <Link onPress={() => autocompletesStore.setTarget('location')}>
                 <SlantedTitle
                   color={regionColors.color}
+                  alignSelf="center"
                   size={
                     regionName.length > 24
                       ? 'xxxs'

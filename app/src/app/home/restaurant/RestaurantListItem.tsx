@@ -208,8 +208,6 @@ const RestaurantListItemContent = memo(
 
     const imgSize = shouldShowOneLine ? 44 : 58
 
-    return <VStack height={200} width="100%" backgroundColor="red" />
-
     return (
       <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}>
         <VStack
@@ -560,6 +558,10 @@ const RestaurantListItemContent = memo(
                     spacing={0}
                     spacingHorizontal={0}
                     maxItems={4}
+                    tagButtonProps={{
+                      votable: true,
+                      borderWidth: 0,
+                    }}
                   />
                 </Suspense>
               )}

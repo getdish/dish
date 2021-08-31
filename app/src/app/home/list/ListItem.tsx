@@ -443,9 +443,7 @@ const ListItemContent = memo(
               />
             </Suspense>
 
-            <Spacer size={10} />
-
-            <Spacer size="lg" />
+            <Spacer size="sm" />
           </VStack>
         </HStack>
       </HoverToZoom>
