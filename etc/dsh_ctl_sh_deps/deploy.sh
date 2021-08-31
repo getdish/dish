@@ -74,11 +74,20 @@ function deploy_dish() {
 
   echo "$services" | while read -r service; do
     echo "dish restarting: $service"
-    docker_restart "$service"
+    docker_service_restart_with_latest_image "$service"
   done
   wait
 
   sleep 5
+}
+
+function docker_service_restart_with_latest_image() {
+  docker service update \
+    --image registry.dishapp.com/dish-worker:latest "$1"
+}
+
+function docker_restart() {
+  docker service update --force "$1"
 }
 
 function deploy_one() {
