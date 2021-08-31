@@ -237,34 +237,33 @@ const SearchBarActionButton = memo(() => {
           homeStore.popBack()
         }
       }}
+      {...(!showAutocomplete && upRoute)}
     >
-      <Link {...upRoute}>
-        <VStack
-          alignSelf="center"
-          skewX="-12deg"
-          pointerEvents={isDisabled ? 'none' : 'auto'}
-          width={30}
-          height={searchBarHeight}
-          alignItems="center"
-          justifyContent="center"
-          opacity={0}
-          padding={0}
-          backgroundColor="rgba(0,0,0,0.1)"
-          {...(!isDisabled && {
-            opacity: 0.5,
-            hoverStyle: {
-              opacity: 1,
-            },
-            pressStyle: {
-              opacity: 0.2,
-            },
-          })}
-        >
-          <VStack skewX="12deg">
-            <Icon color={isWeb ? 'var(--color)' : '#888'} size={20} />
-          </VStack>
+      <VStack
+        alignSelf="center"
+        skewX="-12deg"
+        pointerEvents={isDisabled ? 'none' : 'auto'}
+        width={30}
+        height={searchBarHeight}
+        alignItems="center"
+        justifyContent="center"
+        opacity={0}
+        padding={0}
+        backgroundColor="rgba(0,0,0,0.1)"
+        {...(!isDisabled && {
+          opacity: 0.5,
+          hoverStyle: {
+            opacity: 1,
+          },
+          pressStyle: {
+            opacity: 0.2,
+          },
+        })}
+      >
+        <VStack skewX="12deg">
+          <Icon color={isWeb ? 'var(--color)' : '#888'} size={20} />
         </VStack>
-      </Link>
+      </VStack>
     </Link>
   )
 })
