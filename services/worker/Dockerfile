@@ -25,4 +25,4 @@ ARG GIT_COMMIT=""
 ENV GIT_BRANCH=${GIT_BRANCH}
 ENV GIT_COMMIT=${GIT_COMMIT}
 
-CMD ["./entry.sh"]
+CMD ["nodemon", "--watch", "dist/*", "dist/index.js"]

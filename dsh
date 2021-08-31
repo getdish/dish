@@ -24,6 +24,7 @@ if [ "$DEV_USER" = "tom@tombh.co.uk" ]; then
 fi
 
 if [ "$DEV_USER" = "natewienert@gmail.com" ]; then
+  export CLEAR_JOBS
   RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
   DISH_DEBUG=${DISH_DEBUG:-"2"}
 fi
