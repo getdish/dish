@@ -1,7 +1,7 @@
-import { Review, order_by, query, reviewUpsert, review_constraint } from '@dish/graph'
+import { Review, order_by, reviewUpsert, review_constraint } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import { debounce } from 'lodash'
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { Toast, useConstant } from 'snackui'
 
 import { getFullTags } from '../../helpers/getFullTags'
@@ -9,7 +9,7 @@ import { queryRestaurant } from '../../queries/queryRestaurant'
 import { HomeActiveTagsRecord } from '../../types/homeTypes'
 import { useUserStore, userStore } from '../userStore'
 
-export type VoteNumber = -1 | 0 | 1
+export type VoteNumber = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
 
 type VoteStoreProps = { tagSlug: string; restaurantSlug: string }
 
@@ -29,23 +29,32 @@ export class TagVoteStore extends Store<VoteStoreProps> {
         console.error('error writing vote', this.props.tagSlug)
         return undefined
       }
+      const user_id = userStore.user?.id
+      const username = userStore.user?.username
+      if (!user_id || !username) {
+        // not logged in, default to ignore (promptLogin can trigger)
+        console.warn('ignoring no user')
+        return
+      }
       const review = {
+        username,
         tag_id: tag.id,
-        user_id: userStore.user?.id,
+        user_id,
         restaurant_id: restaurantId,
         vote,
         type: 'vote',
       }
       return await writeReview(review)
     } catch (err) {
-      Toast.error(`Error writing vote: ${err.message}`)
+      console.error('error writing vote', err.message, err.stack)
+      Toast.error(`Error writing vote`)
     }
   }, 50)
 }
 
 const writeReview = async (review: Partial<Review>) => {
   console.log('writing', review)
-  await reviewUpsert([review], review_constraint.review_type_user_id_list_id_key)
+  await reviewUpsert([review], review_constraint.review_username_restauarant_id_tag_id_type_key)
 }
 
 export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTagsRecord) => {
@@ -82,26 +91,28 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   const userId = userStore.user?.id
   const voteStore = useStore(TagVoteStore, props)
   const [restaurant] = queryRestaurant(props.restaurantSlug)
+  const restaurantId = restaurant?.id
 
-  const vote = userId
-    ? restaurant?.reviews({
-        limit: 1,
-        where: {
-          type: {
-            _eq: 'vote',
-          },
-          user_id: {
-            _eq: userId,
-          },
-          tag: {
-            slug: {
-              _eq: props.tagSlug,
+  const vote =
+    userId && restaurant && props.tagSlug
+      ? restaurant.reviews({
+          limit: 1,
+          where: {
+            type: {
+              _eq: 'vote',
+            },
+            user_id: {
+              _eq: userId,
+            },
+            tag: {
+              slug: {
+                _eq: props.tagSlug,
+              },
             },
           },
-        },
-        order_by: [{ authored_at: order_by.desc }],
-      })[0]?.vote ?? 0
-    : 0
+          order_by: [{ authored_at: order_by.asc }],
+        })[0]?.vote ?? 0
+      : 0
 
   useEffect(() => {
     if (vote !== voteStore.vote) {
@@ -112,6 +123,10 @@ export const useUserTagVote = (props: VoteStoreProps) => {
   return {
     vote: voteStore.vote,
     setVote: async (userVote: VoteNumber | 'toggle') => {
+      if (!restaurantId) {
+        Toast.error('No restaurant ID')
+        return
+      }
       if (userStore.promptLogin()) {
         return
       }
@@ -120,7 +135,7 @@ export const useUserTagVote = (props: VoteStoreProps) => {
       }
       const vote = userVote == 'toggle' ? toggleRating(voteStore.vote) : userVote
       voteStore.setVote(vote)
-      voteStore.writeVote(restaurant.id, vote)
+      voteStore.writeVote(restaurantId, vote)
       Toast.show(`Saved`)
     },
   }

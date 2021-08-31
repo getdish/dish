@@ -17,12 +17,13 @@ export const HoverToZoom = ({
 }: {
   children: any
   id: string
-  slug: string
+  slug?: string
 }) => {
   return (
     <Hoverable
       onHoverIn={() => {
         setHoveredSlow({
+          slug: '',
           ...props,
           // todo get from context?
           via: 'list',

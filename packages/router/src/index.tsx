@@ -231,6 +231,7 @@ export class Router<
       this.getNormalizedParams(historyItem.params),
       this.getNormalizedParams(this.curPage.params)
     )
+    console.log('getShouldNavigate', sameName, sameParams, navItem, historyItem)
     return !sameName || !sameParams
   }
 
@@ -459,6 +460,8 @@ const defaultPage: HistoryItem = {
 const uid = () => `${Math.random()}`.replace('.', '')
 const isObject = (x: any) => x && `${x}` === `[object Object]`
 const isEqual = (a: any, b: any) => {
+  if ((!a && b) || (!b && a)) return false
+  if (!a && !b) return a === b
   const eqLen = Object.keys(a).length === Object.keys(b).length
   if (!eqLen) {
     return false

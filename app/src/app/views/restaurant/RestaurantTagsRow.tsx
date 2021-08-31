@@ -23,7 +23,7 @@ type TagRowProps = {
 }
 
 export const RestaurantTagsRow = (props: TagRowProps) => {
-  const rowHeight = 50 * (props.size === 'lg' ? 1.2 : props.size === 'sm' ? 0.65 : 1)
+  const rowHeight = 50 * (props.size === 'lg' ? 1.1 : props.size === 'sm' ? 0.65 : 0.92)
   return (
     <HStack
       marginBottom={typeof props.spacing === 'number' ? -props.spacing : 0}

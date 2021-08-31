@@ -1,131 +1,168 @@
 import { fullyIdle, series } from '@dish/async'
-import { RestaurantItemMeta, graphql, order_by } from '@dish/graph'
+import { graphql, listFindOne, order_by, refetch, restaurant, review } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import { useStoreInstanceSelector } from '@dish/use-store'
-import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import {
   AbsoluteVStack,
-  Button,
   Circle,
   HStack,
   InteractiveContainer,
-  LoadingItem,
   Spacer,
   Text,
+  Toast,
   VStack,
   useMedia,
   useTheme,
 } from 'snackui'
 
 import { brandColor, green, red } from '../../../constants/colors'
-import { drawerWidthMax, isWeb } from '../../../constants/constants'
+import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
-import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
-import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
-import { useCurrentUserQuery, useUserReviewCommentQuery } from '../../hooks/useUserReview'
-import { useUserStore } from '../../userStore'
-import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
-import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
+import { getUserReviewQueryMutations } from '../../hooks/useUserReview'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
-import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { SmallButton } from '../../views/SmallButton'
-import { TagButton, getTagButtonProps } from '../../views/TagButton'
-import { EditRestaurantTagsButton } from '../restaurant/EditRestaurantTagsButton'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
 import { RankView } from '../restaurant/RankView'
 import { RestaurantAddress } from '../restaurant/RestaurantAddress'
 import { RestaurantAddToListButton } from '../restaurant/RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from '../restaurant/RestaurantDeliveryButtons'
 import { openingHours, priceRange } from '../restaurant/RestaurantDetailRow'
-import { RestaurantFavoriteStar } from '../restaurant/RestaurantFavoriteButton'
+import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
 import { RestaurantRatingView } from '../RestaurantRatingView'
-import { RestaurantReviewCommentForm } from '../restaurantReview/RestaurantReviewPage'
 import { getSearchPageStore } from '../search/SearchPageStore'
 
 export type ListItemProps = {
-  restaurantId: string
-  restaurantSlug: string
+  reviewQuery?: review[] | null
+  username?: string
+  restaurant: restaurant
+  listSlug?: string
   hideRate?: boolean
   hideDescription?: boolean
   rank: number
   activeTagSlugs?: string[]
   onFinishRender?: Function
-  description?: string | null
-  onChangeDescription?: (next: string) => void
-  dishSlugs?: string[]
   editable?: boolean
-  onChangeDishes?: (slugs: string[]) => void
   hideTagRow?: boolean
   above?: any
-  beforeBottomRow?: any
-  dishSize?: 'md' | 'lg'
 }
 
-export const ListItem = (props: ListItemProps) => {
-  const theme = useTheme()
-  // acts as min-width
-  const [width, setWidth] = useState(300)
+export const ListItem = graphql((props: ListItemProps) => {
+  const [isEditing, setIsEditing] = useState(false)
 
-  return (
-    <Suspense
-      fallback={
-        props.hideDescription ? (
-          <VStack
-            className="shine"
-            height={61}
-            backgroundColor={theme.backgroundColorTransluscent}
-            borderWidth={2}
-            borderColor={theme.backgroundColorTransparent}
-            width="100%"
-          />
-        ) : (
-          <LoadingItem size="lg" />
-        )
-      }
-    >
-      <ContentScrollViewHorizontalFitted width={width} setWidth={setWidth}>
-        <ListItemContent {...props} />
-      </ContentScrollViewHorizontalFitted>
-    </Suspense>
-  )
-}
+  const listItemContentProps = {
+    ...props,
+    isEditing,
+    setIsEditing,
+    onUpdate: () => {
+      if (props.reviewQuery) refetch(props.reviewQuery)
+    },
+  }
+
+  // controlled
+  if (props.reviewQuery) {
+    return <ListItemContent {...listItemContentProps} />
+  }
+
+  // otherwise determine the right review to show (first list-specific, then user, then generic)
+  const listReview = props.listSlug
+    ? props.restaurant.reviews({
+        where: {
+          username: {
+            _eq: props.username,
+          },
+          list: {
+            slug: {
+              _eq: props.listSlug,
+            },
+          },
+          text: {
+            _neq: '',
+          },
+        },
+        limit: 1,
+      })
+    : null
+
+  const userReview = props.restaurant.reviews({
+    where: {
+      username: {
+        _eq: props.username,
+      },
+      text: {
+        _neq: '',
+      },
+    },
+    limit: 1,
+  })
+
+  const topReview = isEditing
+    ? null
+    : props.restaurant.reviews({
+        where: {
+          text: {
+            _neq: '',
+          },
+        },
+        limit: 1,
+        order_by: [{ vote: order_by.desc }],
+      })
+
+  const hasListReview = !!listReview?.[0]?.text
+  const hasUserReview = !!userReview?.[0]?.text
+
+  const isLoading = listReview?.[0] && listReview?.[0].text === undefined
+
+  listItemContentProps.onUpdate = () => {
+    if (topReview) refetch(topReview)
+    if (userReview) refetch(userReview)
+    if (listReview) refetch(listReview)
+  }
+
+  // we need to be sure to render them all first pass so they fetch once,
+  // then second pass it will hide all but one
+
+  if (isEditing || hasListReview) {
+    return <ListItemContent {...listItemContentProps} reviewQuery={listReview} />
+  }
+
+  if (hasUserReview) {
+    return <ListItemContent {...listItemContentProps} reviewQuery={userReview} />
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <ListItemContent {...listItemContentProps} reviewQuery={topReview} />
+        <ListItemContent {...listItemContentProps} reviewQuery={userReview} />
+        <ListItemContent {...listItemContentProps} reviewQuery={listReview} />
+      </>
+    )
+  }
+
+  return <ListItemContent {...listItemContentProps} reviewQuery={topReview} />
+})
 
 const ListItemContent = memo(
-  graphql(function ListItemContent(props: ListItemProps) {
-    const {
-      rank,
-      restaurantId,
-      restaurantSlug,
-      beforeBottomRow,
-      description = null,
-      editable,
-      onChangeDishes,
-      onChangeDescription,
-    } = props
-    const media = useMedia()
-    const [restaurant] = queryRestaurant(restaurantSlug)
-    const [state, setState] = useState({
-      editing: false,
-      description: null as null | string,
-    })
-
-    useEffect(() => {
-      setState((prev) => ({
-        ...prev,
-        description,
-      }))
-    }, [description])
-
-    if (!restaurant) {
-      return null
+  graphql(function ListItemContent(
+    props: ListItemProps & {
+      onUpdate: Function
+      isEditing: boolean
+      setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
     }
+  ) {
+    const { rank, restaurant, editable, reviewQuery, isEditing, setIsEditing, onUpdate } = props
+    const review = reviewQuery?.[0]
+    const reviewMutations = getUserReviewQueryMutations({
+      restaurantId: restaurant?.id,
+      reviewQuery,
+    })
+    const media = useMedia()
 
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
@@ -155,22 +192,14 @@ const ListItemContent = memo(
     const titleFontSize = Math.round((media.sm ? 20 : 23) * titleFontScale)
     const titleHeight = titleFontSize + 8 * 2
     const theme = useTheme()
-    const imgSize = 180
+    const imgSize = 160
 
-    // const topReview = restaurant.reviews({
-    //   where: {
-    //     text: {
-    //       _is_null: false,
-    //     },
-    //   },
-    //   limit: 1,
-    //   order_by: [{ updated_at: order_by.asc }],
-    // })[0]
-
-    const [currentUser] = useCurrentUserQuery()
+    if (!restaurant) {
+      return null
+    }
 
     return (
-      <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}>
+      <HoverToZoom id={restaurant.id} slug={restaurant.slug}>
         <HStack
           overflow="hidden"
           className="hover-faded-in-parent"
@@ -180,6 +209,8 @@ const ListItemContent = memo(
           borderTopWidth={1}
           flexGrow={1}
           maxWidth="100%"
+          // this is the height that keeps the <InteractiveCOntainer> from overflowing
+          minHeight={280}
           // turn this off breaks something? but hides the rest of title hover?
           // overflow="hidden"
           // prevent jitter/layout moving until loaded
@@ -207,17 +238,76 @@ const ListItemContent = memo(
             margin={16}
             marginLeft={media.sm ? -90 : -20}
             position="relative"
+            // borderRadius={1000}
           >
-            <AbsoluteVStack top={0} right={0} y={0} x={20} zIndex={10000}>
-              <RestaurantRatingView slug={restaurantSlug} floating size={52} />
+            <AbsoluteVStack top={0} right={0} y={-10} x={15} zIndex={10000}>
+              <RestaurantRatingView restaurant={restaurant} floating size={52} />
             </AbsoluteVStack>
-            <Image
-              source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
-              style={{
-                width: imgSize,
-                height: imgSize,
-              }}
-            />
+            <Link name="gallery" params={{ restaurantSlug: restaurant.slug || '', offset: 0 }}>
+              <Image
+                source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
+                style={{
+                  width: imgSize,
+                  height: imgSize,
+                  // borderRadius: 1000,
+                }}
+              />
+            </Link>
+
+            <Spacer />
+
+            <Suspense fallback={null}>
+              <VStack
+                width={70}
+                marginLeft={media.sm ? 90 : 20}
+                x={10}
+                // so it doesnt get hidden at the bottom
+                marginTop={-50}
+                zIndex={1000}
+              >
+                <InteractiveContainer flexDirection="column">
+                  <Link
+                    name="restaurant"
+                    params={{
+                      slug: restaurant.slug || '',
+                      section: 'reviews',
+                    }}
+                  >
+                    <SmallButton
+                      width="100%"
+                      borderRadius={0}
+                      tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                      icon={
+                        <MessageSquare
+                          style={{
+                            opacity: 0.5,
+                            marginLeft: -8,
+                          }}
+                          size={12}
+                          color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                        />
+                      }
+                    >
+                      {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                    </SmallButton>
+                  </Link>
+
+                  <RestaurantFavoriteButton
+                    width="100%"
+                    borderRadius={0}
+                    size="md"
+                    restaurantSlug={restaurant.slug || ''}
+                  />
+
+                  <RestaurantAddToListButton
+                    width="100%"
+                    borderRadius={0}
+                    restaurantSlug={restaurant.slug || ''}
+                    noLabel
+                  />
+                </InteractiveContainer>
+              </VStack>
+            </Suspense>
           </VStack>
 
           {/* second column */}
@@ -236,7 +326,7 @@ const ListItemContent = memo(
                 flex={2}
                 tagName="div"
                 name="restaurant"
-                params={{ slug: restaurantSlug }}
+                params={{ slug: restaurant.slug || '' }}
                 zIndex={2}
               >
                 <Spacer />
@@ -246,7 +336,7 @@ const ListItemContent = memo(
                   </VStack>
 
                   {/* SECOND LINK WITH actual <a /> */}
-                  <Link name="restaurant" params={{ slug: restaurantSlug }}>
+                  <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
                     <HStack
                       paddingHorizontal={8}
                       borderRadius={8}
@@ -283,28 +373,18 @@ const ListItemContent = memo(
 
             <HStack position="relative" className="safari-fix-overflow" alignItems="center" spacing>
               <HStack alignItems="center" overflow="hidden" spacing>
-                {beforeBottomRow}
-
-                {!!editable && !state.editing && (
-                  <SmallButton onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
+                {!!editable && !isEditing && (
+                  <SmallButton themeInverse onPress={() => setIsEditing(true)}>
                     Edit
                   </SmallButton>
                 )}
 
-                {!!restaurant.address && (
-                  <RestaurantAddress size={'xs'} address={restaurant.address} />
+                {!!editable && isEditing && (
+                  <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
                 )}
 
-                {!!editable && state.editing && (
-                  <Button
-                    themeInverse
-                    onPress={() => {
-                      setState((prev) => ({ ...prev, editing: false }))
-                      onChangeDescription?.(state.description ?? '')
-                    }}
-                  >
-                    Save
-                  </Button>
+                {!!restaurant.address && (
+                  <RestaurantAddress size={'xs'} address={restaurant.address} />
                 )}
 
                 <Text
@@ -319,61 +399,17 @@ const ListItemContent = memo(
 
                 <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
 
-                <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
                   <SmallButton minWidth={120} textProps={{ opacity: 0.6 }}>
                     {open.nextTime || '~~'}
                   </SmallButton>
                 </Link>
 
-                <InteractiveContainer>
-                  <Link
-                    name="restaurant"
-                    params={{
-                      slug: props.restaurantSlug,
-                      section: 'reviews',
-                    }}
-                  >
-                    <SmallButton
-                      marginRight={-2}
-                      borderRadius={0}
-                      tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                      width={90}
-                      icon={
-                        <MessageSquare
-                          style={{
-                            opacity: 0.5,
-                            marginLeft: -8,
-                          }}
-                          size={12}
-                          color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                        />
-                      }
-                    >
-                      {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-                    </SmallButton>
-                  </Link>
-
-                  <Suspense fallback={<Spacer size={44} />}>
-                    <VStack marginRight={-2}>
-                      <RestaurantFavoriteStar
-                        borderRadius={0}
-                        size="md"
-                        restaurantId={restaurantId}
-                      />
-                    </VStack>
-                  </Suspense>
-
-                  <Suspense fallback={<Spacer size={44} />}>
-                    <RestaurantAddToListButton
-                      borderRadius={0}
-                      restaurantSlug={restaurantSlug}
-                      noLabel
-                    />
-                  </Suspense>
-                </InteractiveContainer>
-
                 <Suspense fallback={null}>
-                  <RestaurantDeliveryButtons showLabels={false} restaurantSlug={restaurantSlug} />
+                  <RestaurantDeliveryButtons
+                    showLabels={false}
+                    restaurantSlug={restaurant.slug || ''}
+                  />
                 </Suspense>
               </HStack>
             </HStack>
@@ -390,135 +426,52 @@ const ListItemContent = memo(
               marginLeft={-16}
               position="relative"
             >
-              {/* {!state.editing && !userReview && (
-                <AbsoluteVStack zIndex={100} fullscreen alignItems="center" justifyContent="center">
-                  <AbsoluteVStack
-                    fullscreen
-                    backgroundColor={theme.backgroundColor}
-                    zIndex={-1}
-                    opacity={0.75}
-                  />
-
-                  <Button
-                    onPress={() =>
-                      setState((x) => ({
-                        ...x,
-                        editing: true,
-                      }))
-                    }
-                    textProps={{ fontWeight: '800' }}
-                  >
-                    Add my review
-                  </Button>
-                </AbsoluteVStack>
-              )} */}
-
-              <>
+              <Suspense fallback={null}>
                 <RestaurantReview
+                  isEditing={isEditing}
+                  onEdit={async (text) => {
+                    if (review) {
+                      review.text = text
+                      reviewMutations.upsertReview(review)
+                    } else {
+                      // never reviewed before
+                      const list = await listFindOne(
+                        {
+                          slug: props.listSlug,
+                        },
+                        {
+                          keys: ['id'],
+                        }
+                      )
+                      if (!list) {
+                        Toast.error('no list')
+                        return
+                      }
+                      reviewMutations.upsertReview({
+                        type: 'comment',
+                        list_id: list.id,
+                        text,
+                      })
+                    }
+                    onUpdate()
+                    setIsEditing(false)
+                  }}
+                  onDelete={() => {
+                    reviewMutations.deleteReview()
+                  }}
                   hideRestaurantName
-                  restaurantSlug={restaurantSlug}
-                  user={currentUser}
-                  isEditing={state.editing}
+                  restaurantSlug={restaurant.slug}
+                  review={review}
+                  maxWidth={media.sm ? getWindowWidth() - 95 : 650}
+                  listSlug={props.listSlug}
                   // refetchKey={shownReview.text || ''}
                 />
-                <Spacer />
-              </>
+              </Suspense>
+              <Spacer />
             </VStack>
-            {/* 
-            {!hideTagRow && (
-              <>
-                <Spacer size="md" />
-                <Suspense fallback={null}>
-                  <RestaurantTagsRow
-                    exclude={excludeTags}
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurantId}
-                    maxItems={4}
-                    tagButtonProps={{
-                      borderWidth: 0,
-                    }}
-                  />
-                </Suspense>
-              </>
-            )} */}
-
-            {/* <Spacer size="sm" /> */}
-
-            {/* PEEK / TAGS (RIGHT SIDE) */}
-            {/* margin top: negative the titles second row height */}
-            {/* <Suspense fallback={null}>
-              <ListItemDishTagRow
-                restaurantSlug={props.restaurantSlug}
-                restaurantId={props.restaurantId}
-                activeTagSlugs={activeTagSlugs}
-                tagSlugs={dishSlugs}
-                editable={editable}
-                onChangeTags={handleChangeDishes}
-                size={dishSize}
-                isLoaded
-              />
-            </Suspense> */}
-
-            {/* <Spacer size="md" /> */}
           </VStack>
         </HStack>
       </HoverToZoom>
-    )
-  })
-)
-
-const ListItemDishTagRow = memo(
-  graphql(function ListItemDishTagRow(props: {
-    size?: 'lg' | 'md'
-    restaurantSlug: string
-    restaurantId: string
-    activeTagSlugs?: string[]
-    isLoaded: boolean
-    tagSlugs?: string[]
-    editable?: boolean
-    onChangeTags?: (slugs: string[]) => void
-  }) {
-    const restaurant = queryRestaurant(props.restaurantSlug)[0]
-    const dishes = props.tagSlugs
-      ? restaurant
-          ?.tags({
-            where: {
-              tag: {
-                slug: {
-                  _in: props.tagSlugs,
-                },
-              },
-            },
-          })
-          .map(selectRishDishViewSimple) ?? []
-      : getRestaurantDishes({
-          restaurant,
-          tagSlugs: props.activeTagSlugs,
-          max: 5,
-        })
-
-    return (
-      <HStack position="relative" alignItems="center" spacing>
-        {props.editable && (
-          <EditRestaurantTagsButton
-            restaurantSlug={props.restaurantSlug}
-            tagSlugs={props.tagSlugs ?? dishes.map((x) => x.slug)}
-            onChange={props.onChangeTags}
-          />
-        )}
-        {!!dishes[0]?.name &&
-          dishes.map((dish, i) => {
-            return (
-              <VStack key={dish.slug} marginRight={-2} zIndex={100 - i}>
-                <TagButton
-                  restaurantSlug={props.restaurantSlug}
-                  {...getTagButtonProps(dish)}
-                  showSearchButton={!props.editable}
-                />
-              </VStack>
-            )
-          })}
-      </HStack>
     )
   })
 )

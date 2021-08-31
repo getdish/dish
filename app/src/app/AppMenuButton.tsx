@@ -1,13 +1,11 @@
-import { ChevronUp, HelpCircle, Menu } from '@dish/react-feather'
+import { Menu } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo } from 'react'
-import { HStack, Popover, Theme, Tooltip, useMedia } from 'snackui'
+import { HStack, Popover, Text, Theme, useMedia } from 'snackui'
 
-import { useRouterCurPage } from '../router'
 import { AppMenuContents } from './AppMenuContents'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { appMenuStore } from './AppMenuStore'
-import { homeStore } from './homeStore'
 import { useUserStore } from './userStore'
 
 export const AppMenuButton = memo(() => {
@@ -15,7 +13,7 @@ export const AppMenuButton = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
   const showUserMenu = appMenu.isVisible
-  const pageName = useRouterCurPage().name
+  // const pageName = useRouterCurPage().name
 
   return (
     <HStack alignItems="center">
@@ -32,35 +30,10 @@ export const AppMenuButton = memo(() => {
         }
         mountImmediately
       >
-        <AppMenuLinkButton
-          Icon={Menu}
-          onPress={() => appMenu.setIsVisible(!showUserMenu)}
-          text={!media.sm && !userStore.isLoggedIn ? 'Signup' : ''}
-        />
+        <AppMenuLinkButton Icon={Menu} onPress={() => appMenu.setIsVisible(!showUserMenu)}>
+          <Text display={!userStore.isLoggedIn || media.sm ? 'none' : 'flex'}>Signup</Text>
+        </AppMenuLinkButton>
       </Popover>
-
-      {media.md && (
-        <>
-          {!userStore.isLoggedIn && (
-            <Tooltip contents="About">
-              <AppMenuLinkButton
-                name="about"
-                Icon={HelpCircle}
-                ActiveIcon={ChevronUp}
-                onPress={(e) => {
-                  if (pageName === 'about') {
-                    e.preventDefault()
-                    homeStore.up()
-                  } else {
-                    // @ts-ignore
-                    e.navigate()
-                  }
-                }}
-              />
-            </Tooltip>
-          )}
-        </>
-      )}
     </HStack>
   )
 })

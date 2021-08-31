@@ -1,20 +1,18 @@
 import { series } from '@dish/async'
-import { List, graphql, list, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
+import { List, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
-import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
+import React, { Suspense, SuspenseList, memo, useEffect, useRef, useState } from 'react'
 import { Switch } from 'react-native'
 import {
-  Box,
+  AbsoluteVStack,
   Button,
   HStack,
   Input,
   InteractiveContainer,
   Modal,
   Paragraph,
-  Popover,
   Spacer,
-  StackProps,
   Text,
   Title,
   Toast,
@@ -43,11 +41,13 @@ import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneCont
 import { Score } from '../../views/Score'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
+import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { CircleButton } from '../restaurant/CircleButton'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
+import { ColorPicker } from './ColorPicker'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors, randomListColor } from './listColors'
 import { ListItem } from './ListItem'
@@ -111,9 +111,9 @@ export default function ListPage(props: Props) {
       )}
 
       {!isCreating && (
-        <Suspense fallback={<StackDrawer closable title={`...`} />}>
+        <StackDrawer closable>
           <ListPageContent {...props} item={item} />
-        </Suspense>
+        </StackDrawer>
       )}
     </>
   )
@@ -158,13 +158,14 @@ const ListPageContent = memo(
       })
       const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999999')
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
-      const [restaurants, restaurantActions] = useListRestaurants(list)
+      const { items: restaurants, ...listActions } = useListRestaurants(list)
 
       const region = useRegionQuery(props.item.region)
 
       const listThemeIndex = list.theme ?? 0
       const forceUpdate = useForceUpdate()
       const listTheme = listThemes[listThemeIndex]
+      const listSlug = props.item.slug
 
       const setTheme = async (val: number) => {
         list.theme = val
@@ -232,7 +233,8 @@ const ListPageContent = memo(
         )
       }
 
-      const username = list.user?.name ?? list.user?.username ?? ''
+      const username = list.user?.username || ''
+      const userFullNameOrUsername = username || list.user?.username || ''
 
       const tagButtons = list
         .tags({ limit: 10 })
@@ -270,136 +272,251 @@ const ListPageContent = memo(
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
         <>
-          <StackDrawer closable>
-            <PageHead isActive={props.isActive}>{`${username}'s ${list.name}${
-              region.data?.name ? `in ${region.data.name}` : ''
-            }`}</PageHead>
+          <PageHead isActive={props.isActive}>{`${userFullNameOrUsername}'s ${list.name}${
+            region.data?.name ? `in ${region.data.name}` : ''
+          }`}</PageHead>
 
-            {props.isActive && isMyList && (
-              <BottomFloatingArea>
-                <Button
-                  pointerEvents="auto"
-                  themeInverse
-                  borderRadius={100}
-                  width={55}
-                  height={55}
-                  alignItems="center"
-                  justifyContent="center"
-                  elevation={2}
-                  noTextWrap
-                  onPress={() => {
-                    setShowAddModal(true)
-                  }}
-                >
-                  <Plus size={42} color="#777" />
-                </Button>
-                <VStack pointerEvents="none" flex={1} />
-              </BottomFloatingArea>
-            )}
-
-            {isMyList && (
-              <Modal
-                visible={showAddModal}
-                onDismiss={() => setShowAddModal(false)}
-                width={380}
-                flex={1}
-                height="90%"
-                minHeight={480}
+          {props.isActive && isMyList && (
+            <BottomFloatingArea>
+              <Button
+                pointerEvents="auto"
+                themeInverse
+                borderRadius={100}
+                width={55}
+                height={55}
+                alignItems="center"
+                justifyContent="center"
+                elevation={2}
+                noTextWrap
+                onPress={() => {
+                  setShowAddModal(true)
+                }}
               >
-                {showAddModal && (
+                <Plus size={42} color="#777" />
+              </Button>
+              <VStack pointerEvents="none" flex={1} />
+            </BottomFloatingArea>
+          )}
+
+          {isMyList && (
+            <Modal
+              visible={showAddModal}
+              onDismiss={() => setShowAddModal(false)}
+              width={380}
+              flex={1}
+              height="90%"
+              minHeight={480}
+            >
+              {showAddModal && (
+                <>
+                  <PaneControlButtons>
+                    <CloseButton onPress={() => setShowAddModal(false)} />
+                  </PaneControlButtons>
+                  <SuspenseFallback>
+                    <ListAddRestuarant listSlug={listSlug} onAdd={listActions.add} />
+                  </SuspenseFallback>
+                </>
+              )}
+            </Modal>
+          )}
+
+          <ContentScrollView id="list">
+            <PageContentWithFooter>
+              <PaneControlButtonsLeft>
+                <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
+                  {reviewsCount}
+                </FavoriteButton>
+
+                {isEditing && (
                   <>
-                    <PaneControlButtons>
-                      <CloseButton onPress={() => setShowAddModal(false)} />
-                    </PaneControlButtons>
-                    <Suspense fallback={null}>
-                      <ListAddRestuarant listSlug={props.item.slug} onAdd={restaurantActions.add} />
-                    </Suspense>
+                    <SmallButton
+                      themeInverse
+                      elevation={1}
+                      onPress={async () => {
+                        router.setRouteAlert(null)
+                        setIsEditing(false)
+                        await listUpdate(
+                          {
+                            id: list.id,
+                            ...draft.current,
+                            ...(color !== '#999' && {
+                              color: listColors.indexOf(color),
+                            }),
+                            public: isPublic,
+                          },
+                          {
+                            query: list,
+                          }
+                        )
+                        refetch()
+                        Toast.show('Saved')
+                      }}
+                    >
+                      Save
+                    </SmallButton>
+
+                    <Spacer />
+
+                    <VStack
+                      opacity={0.8}
+                      hoverStyle={{
+                        opacity: 1,
+                      }}
+                      padding={6}
+                      onPress={() => {
+                        setIsEditing(false)
+                      }}
+                    >
+                      <X color={grey} size={24} />
+                    </VStack>
+                    <Spacer size="lg" />
                   </>
                 )}
-              </Modal>
-            )}
+              </PaneControlButtonsLeft>
 
-            <ContentScrollView id="list">
-              <PageContentWithFooter>
-                <PaneControlButtonsLeft>
-                  <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
-                    {reviewsCount}
-                  </FavoriteButton>
-
-                  {!isEditing && isMyList && (
-                    <SmallButton
-                      elevation={1}
-                      alignSelf="center"
-                      onPress={() => setIsEditing(true)}
+              {/* overflow clip prevention with marginVerticals here */}
+              {/* START HEADER */}
+              <VStack backgroundColor={`${color}11`}>
+                {listTheme === 'minimal' && (
+                  <VStack
+                    alignItems="flex-start"
+                    justifyContent="flex-end"
+                    width="100%"
+                    paddingHorizontal={28}
+                  >
+                    <Spacer size={84} />
+                    <Title
+                      maxWidth={620}
+                      width="100%"
+                      size="xxxl"
+                      sizeLineHeight={0.72}
+                      color={textColor}
                     >
-                      Edit
-                    </SmallButton>
-                  )}
+                      {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
+                    </Title>
+                    <Spacer size="lg" />
+                  </VStack>
+                )}
 
-                  {isMyList && (
-                    <SmallButton elevation={1} onPress={() => setShowAddModal(true)}>
-                      Add
-                    </SmallButton>
-                  )}
+                {listTheme === 'modern' && (
+                  <HStack
+                    paddingVertical={28}
+                    marginHorizontal="auto"
+                    alignItems="center"
+                    justifyContent="center"
+                    width="100%"
+                  >
+                    <HStack
+                      flex={1}
+                      maxWidth="75%"
+                      minWidth={200}
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Text lineHeight={22} textAlign="center">
+                        <Link name="user" params={{ username }}>
+                          <Title size="sm" fontWeight="300" opacity={0.5}>
+                            {username || '...'}'s&nbsp;
+                          </Title>
+                        </Link>
+                        <Title size="sm" fontWeight="600" color={color} zIndex={0}>
+                          {titleContents}&nbsp;
+                        </Title>
+                        <Title size="sm" fontWeight="300" opacity={0.5}>
+                          {locationName ?? 'anywhere'}
+                        </Title>
+                      </Text>
+                    </HStack>
+                  </HStack>
+                )}
 
-                  {isEditing && (
-                    <>
-                      <SmallButton
-                        themeInverse
-                        elevation={1}
-                        onPress={async () => {
-                          router.setRouteAlert(null)
-                          setIsEditing(false)
-                          await listUpdate(
-                            {
-                              id: list.id,
-                              ...draft.current,
-                              ...(color !== '#999' && {
-                                color: listColors.indexOf(color),
-                              }),
-                              public: isPublic,
-                            },
-                            {
-                              query: list,
-                            }
+                {!!(list.description || isEditing || listTheme === 'minimal') && (
+                  <VStack
+                    marginBottom={10}
+                    marginTop={-5}
+                    {...(listTheme === 'minimal' && {
+                      marginBottom: isEditing ? 20 : list.description ? 20 : -20,
+                    })}
+                  >
+                    <CommentBubble
+                      chromeless={listTheme === 'minimal'}
+                      paddingHorizontal={20}
+                      date={list.created_at}
+                      after={
+                        <>
+                          {!!tagButtons.length && (
+                            <HStack spacing="sm" justifyContent="center">
+                              {tagButtons}
+                            </HStack>
+                          )}
+                        </>
+                      }
+                      avatar={{
+                        image: list.user?.avatar || '',
+                        charIndex: list.user?.charIndex || 0,
+                      }}
+                      name={userFullNameOrUsername}
+                    >
+                      {isEditing ? (
+                        <Input
+                          placeholder="..."
+                          multiline
+                          numberOfLines={3}
+                          lineHeight={30}
+                          fontSize={20}
+                          marginVertical={-10}
+                          marginHorizontal={-15}
+                          defaultValue={list.description ?? ''}
+                          onChangeText={(val) => {
+                            draft.current.description = val
+                          }}
+                        />
+                      ) : (
+                        (() => {
+                          const items = list.description?.split('\n\n') ?? []
+                          return (
+                            <>
+                              {items.map((x, i) => {
+                                return (
+                                  <Paragraph
+                                    paddingBottom={i < items.length - 1 ? 26 : 0}
+                                    key={i}
+                                    sizeLineHeight={1.1}
+                                    size={i == 0 ? 'lg' : 'md'}
+                                  >
+                                    {x}
+                                  </Paragraph>
+                                )
+                              })}
+                            </>
                           )
-                          refetch()
-                          Toast.show('Saved')
-                        }}
-                      >
-                        Save
-                      </SmallButton>
-
-                      <Spacer />
-
-                      <VStack
-                        opacity={0.8}
-                        hoverStyle={{
-                          opacity: 1,
-                        }}
-                        padding={6}
-                        onPress={() => {
-                          setIsEditing(false)
-                        }}
-                      >
-                        <X color={grey} size={24} />
-                      </VStack>
-                      <Spacer size="lg" />
-                    </>
-                  )}
-                </PaneControlButtonsLeft>
+                        })()
+                      )}
+                    </CommentBubble>
+                  </VStack>
+                )}
 
                 {isMyList && (
-                  <>
+                  <HStack
+                    position="relative"
+                    zIndex={1000}
+                    paddingBottom={10}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    {!isEditing && (
+                      <HStack alignItems="center" flexWrap="wrap" spacing>
+                        <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
+                          Customize
+                        </SmallButton>
+                        <SmallButton elevation={1} onPress={() => setShowAddModal(true)}>
+                          Add
+                        </SmallButton>
+                      </HStack>
+                    )}
+
                     {isEditing && (
-                      <HStack
-                        flexWrap="wrap"
-                        paddingTop={70}
-                        paddingBottom={10}
-                        spacing
-                        alignItems="center"
-                        justifyContent="center"
-                      >
+                      <HStack alignItems="center" flexWrap="wrap" spacing>
                         <Paragraph>Color:</Paragraph>
 
                         <ColorPicker colors={listColors} color={color} onChange={setColor} />
@@ -464,282 +581,112 @@ const ListPageContent = memo(
                         />
                       </HStack>
                     )}
-                  </>
+                  </HStack>
+                )}
+              </VStack>
+
+              {/* END HEADER */}
+
+              <VStack minHeight={300}>
+                {!restaurants.length && (
+                  <VStack padding={20} margin={20} borderRadius={10}>
+                    <Paragraph>Nothing on this list, yet.</Paragraph>
+                  </VStack>
                 )}
 
-                {/* overflow clip prevention with marginVerticals here */}
-                <VStack backgroundColor={`${color}11`}>
-                  {listTheme === 'minimal' && (
-                    <VStack
-                      alignItems="flex-start"
-                      justifyContent="flex-end"
-                      width="100%"
-                      paddingHorizontal={28}
-                    >
-                      <Spacer size={84} />
-                      <Title
-                        maxWidth={620}
-                        width="100%"
-                        size="xxxl"
-                        sizeLineHeight={0.72}
-                        color={textColor}
-                      >
-                        {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
-                      </Title>
-                      <Spacer size="lg" />
-                    </VStack>
-                  )}
-
-                  {listTheme === 'modern' && (
-                    <HStack
-                      paddingVertical={28}
-                      marginHorizontal="auto"
-                      alignItems="center"
-                      justifyContent="center"
-                      width="100%"
-                    >
-                      <HStack flex={1} maxWidth="80%" alignItems="center" justifyContent="center">
-                        <Text lineHeight={22} textAlign="center">
-                          <Link name="user" params={{ username: list.user?.username ?? '' }}>
-                            <Title size="sm" fontWeight="300" opacity={0.5}>
-                              {list.user?.username ?? '...'}'s&nbsp;
-                            </Title>
-                          </Link>
-                          <Title size="sm" fontWeight="600" color={color} zIndex={0}>
-                            {titleContents}&nbsp;
-                          </Title>
-                          <Title size="sm" fontWeight="300" opacity={0.5}>
-                            {locationName ?? 'anywhere'}
-                          </Title>
-                        </Text>
-                      </HStack>
-                    </HStack>
-                  )}
-
-                  {!!(list.description || isEditing || listTheme === 'minimal') && (
-                    <VStack
-                      marginBottom={10}
-                      {...(listTheme === 'minimal' && {
-                        marginBottom: isEditing ? 20 : list.description ? 20 : -20,
-                      })}
-                    >
-                      {/* {chromeless && (
-                        <>
-                          <Divider />
-                          <Spacer size="lg" />
-                        </>
-                      )} */}
-                      <CommentBubble
-                        chromeless={listTheme === 'minimal'}
-                        paddingHorizontal={20}
-                        date={list.created_at}
-                        after={
-                          <>
-                            {!!tagButtons.length && (
-                              <HStack spacing justifyContent="center">
-                                {tagButtons}
-                              </HStack>
-                            )}
-                          </>
-                        }
-                        avatar={{
-                          image: list.user?.avatar || '',
-                          charIndex: list.user?.charIndex || 0,
-                        }}
-                        name={list.user?.username ?? ''}
-                      >
-                        {isEditing ? (
-                          <Input
-                            placeholder="..."
-                            multiline
-                            numberOfLines={3}
-                            lineHeight={30}
-                            width="100%"
-                            fontSize={20}
-                            marginVertical={-12}
-                            marginHorizontal={-8}
-                            defaultValue={list.description ?? ''}
-                            onChangeText={(val) => {
-                              draft.current.description = val
-                            }}
-                          />
-                        ) : (
-                          (() => {
-                            const items = list.description?.split('\n\n') ?? []
-                            return (
-                              <>
-                                {items.map((x, i) => {
-                                  return (
-                                    <Paragraph
-                                      paddingBottom={i < items.length - 1 ? 26 : 0}
-                                      key={i}
-                                      sizeLineHeight={1.1}
-                                      size={i == 0 ? 'lg' : 'md'}
-                                    >
-                                      {x}
-                                    </Paragraph>
-                                  )
-                                })}
-                              </>
-                            )
-                          })()
-                        )}
-                      </CommentBubble>
-                    </VStack>
-                  )}
-                </VStack>
-
-                <VStack minHeight={300}>
-                  {!restaurants.length && (
-                    <VStack padding={20} margin={20} borderRadius={10}>
-                      <Paragraph>Nothing on this list, yet.</Paragraph>
-                    </VStack>
-                  )}
-
-                  {restaurants.map(({ restaurantId, restaurant, dishSlugs, position }, index) => {
-                    if (!restaurant.slug) {
-                      return null
-                    }
-                    return (
-                      <React.Fragment key={restaurant.slug}>
-                        <HStack position="relative">
-                          {/* {userStore.isAdmin && <Text>{restaurant.id}</Text>} */}
-                          {isEditing && (
-                            <HStack alignItems="center" spacing paddingLeft={10}>
-                              <CircleButton
-                                backgroundColor={red400}
-                                width={40}
-                                height={40}
-                                onPress={() => {
-                                  restaurantActions.delete(restaurantId)
-                                }}
+                <SuspenseList revealOrder="forwards">
+                  {restaurants.map(
+                    ({ restaurantId, restaurant, dishSlugs, position, list_restaurant }, index) => {
+                      return (
+                        <Suspense fallback={null} key={restaurant.slug}>
+                          <HStack position="relative">
+                            {/* {userStore.isAdmin && <Text>{restaurant.id}</Text>} */}
+                            {isEditing && (
+                              <AbsoluteVStack
+                                zIndex={1000}
+                                top={0}
+                                left={0}
+                                alignItems="center"
+                                justifyContent="center"
+                                spacing
                               >
-                                <X size={20} color="#fff" />
-                              </CircleButton>
+                                <CircleButton
+                                  backgroundColor={red400}
+                                  width={40}
+                                  height={40}
+                                  onPress={() => {
+                                    listActions.delete(restaurantId)
+                                  }}
+                                >
+                                  <X size={20} color="#fff" />
+                                </CircleButton>
 
-                              <Score
-                                size="sm"
-                                votable
-                                upTooltip="Move up"
-                                downTooltip="Move down"
-                                score={index + 1}
-                                setVote={(vote) => {
-                                  restaurantActions.promote(vote === 1 ? index : index + 1)
-                                }}
-                              />
-                            </HStack>
-                          )}
-                          <ListItem
-                            dishSize="lg"
-                            restaurantId={restaurantId}
-                            restaurantSlug={restaurant.slug}
-                            rank={index + 1}
-                            hideRate
-                            dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                            editable={isEditing || isMyList}
-                            onChangeDishes={async (dishes) => {
-                              console.log('should change dishes', dishes)
-                              await restaurantActions.setDishes(restaurantId, dishes)
-                              Toast.success(`Updated dishes`)
-                            }}
-                            onChangeDescription={async (next) => {
-                              await restaurantActions.setComment(restaurantId, next)
-                              Toast.success('Updated description')
-                            }}
-                          />
-                        </HStack>
-                        {/* <Spacer /> */}
-                      </React.Fragment>
-                    )
-                  })}
-
-                  {isMyList && (
-                    <>
-                      <Spacer size="lg" />
-                      <HStack paddingHorizontal={20}>
-                        <Button
-                          onPress={() => {
-                            setShowAddModal(true)
-                          }}
-                          icon={<Plus size={16} color="rgba(150,150,150,0.8)" />}
-                          paddingVertical={16}
-                          paddingHorizontal={28}
-                          textProps={{
-                            fontSize: 18,
-                          }}
-                        >
-                          Add
-                        </Button>
-                      </HStack>
-                    </>
+                                <Score
+                                  size="sm"
+                                  votable
+                                  upTooltip="Move up"
+                                  downTooltip="Move down"
+                                  score={index + 1}
+                                  setVote={(vote) => {
+                                    listActions.promote(vote === 1 ? index : index + 1)
+                                  }}
+                                />
+                              </AbsoluteVStack>
+                            )}
+                            <ListItem
+                              restaurant={restaurant}
+                              listSlug={listSlug}
+                              rank={index + 1}
+                              hideRate
+                              // dishSlugs={dishSlugs.length ? dishSlugs : undefined}
+                              editable={isEditing || isMyList}
+                              username={username}
+                              // onChangeDishes={async (dishes) => {
+                              //   console.log('should change dishes', dishes)
+                              //   await listActions.setDishes(restaurantId, dishes)
+                              //   Toast.success(`Updated dishes`)
+                              // }}
+                              // onChangeDescription={async (next) => {
+                              //   await listActions.setComment(restaurantId, next)
+                              //   Toast.success('Updated description')
+                              // }}
+                            />
+                          </HStack>
+                          {/* <Spacer /> */}
+                        </Suspense>
+                      )
+                    }
                   )}
-                </VStack>
-              </PageContentWithFooter>
-            </ContentScrollView>
-          </StackDrawer>
+                </SuspenseList>
+
+                {isMyList && (
+                  <>
+                    <Spacer size="lg" />
+                    <HStack paddingHorizontal={20}>
+                      <Button
+                        onPress={() => {
+                          setShowAddModal(true)
+                        }}
+                        icon={<Plus size={16} color="rgba(150,150,150,0.8)" />}
+                        paddingVertical={16}
+                        paddingHorizontal={28}
+                        textProps={{
+                          fontSize: 18,
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </HStack>
+                  </>
+                )}
+              </VStack>
+            </PageContentWithFooter>
+          </ContentScrollView>
         </>
       )
     },
-    { suspense: false }
+    {
+      suspense: false,
+    }
   )
 )
-
-function ColorBubble(props: StackProps) {
-  return (
-    <VStack
-      borderWidth={2}
-      borderColor="#000"
-      borderRadius={1000}
-      width={34}
-      height={34}
-      {...props}
-    />
-  )
-}
-
-function ColorPicker({
-  colors,
-  color,
-  onChange,
-}: {
-  colors: string[]
-  color: string
-  onChange: (next: string) => void
-}) {
-  const [isOpen, setIsOpen] = useState(false)
-  return (
-    <Popover
-      isOpen={isOpen}
-      onChangeOpen={setIsOpen}
-      contents={() => {
-        return (
-          <Box
-            flexDirection="row"
-            padding={20}
-            maxWidth={130}
-            flexWrap="wrap"
-            justifyContent="space-between"
-          >
-            {colors.map((color) => {
-              return (
-                <ColorBubble
-                  key={color}
-                  marginBottom={10}
-                  backgroundColor={color}
-                  onPress={() => {
-                    onChange(color)
-                    setIsOpen(false)
-                  }}
-                />
-              )
-            })}
-          </Box>
-        )
-      }}
-    >
-      <VStack onPress={() => setIsOpen((x) => !x)}>
-        <ColorBubble backgroundColor={color} />
-      </VStack>
-    </Popover>
-  )
-}

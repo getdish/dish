@@ -1,23 +1,19 @@
-import { slugify } from '@dish/graph'
-import { ArrowUp, ChevronLeft, MapPin, Plus, Search } from '@dish/react-feather'
+import { MapPin, Search } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo, useState } from 'react'
-import { GestureResponderEvent, TouchableOpacity } from 'react-native'
-import { Box, HStack, Popover, Spacer, Theme, VStack, useMedia } from 'snackui'
+import React, { Suspense, memo } from 'react'
+import { TouchableOpacity } from 'react-native'
+import { Button, HStack, Spacer, VStack, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
-import { getWindowHeight } from '../helpers/getWindow'
+import { AppActionButton } from './AppActionButton'
 import { AppMenuButton } from './AppMenuButton'
-import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { autocompletesStore } from './AutocompletesStore'
-import { homeStore, useHomeStoreSelector } from './homeStore'
-import { MenuLinkButton } from './MenuLinkButton'
+import { SearchBarActionButton } from './SearchBarActionButton'
 import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
 import { DishLogoButton } from './views/DishLogoButton'
-import { Link } from './views/Link'
 
 export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
   const autocompletes = useStoreInstance(autocompletesStore)
@@ -119,19 +115,19 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
 
       {media.xs && (
         <>
-          <Spacer size={16} />
-          <TouchableOpacity
-            onPressOut={() => {
-              autocompletes.setTarget(showLocation ? 'search' : 'location')
-            }}
-          >
-            <VStack>
+          <TouchableOpacity>
+            <Button
+              chromeless
+              onPressOut={() => {
+                autocompletes.setTarget(showLocation ? 'search' : 'location')
+              }}
+            >
               {showLocation ? (
-                <Search color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
+                <Search color={'#999'} size={20} opacity={0.5} />
               ) : (
-                <MapPin color={isWeb ? 'var(--color)' : '#999'} size={22} opacity={0.5} />
+                <MapPin color={'#999'} size={20} opacity={0.5} />
               )}
-            </VStack>
+            </Button>
           </TouchableOpacity>
         </>
       )}
@@ -158,112 +154,5 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
         </>
       )}
     </HStack>
-  )
-})
-
-const AppActionButton = () => {
-  const [visible, setVisible] = useState(false)
-  return (
-    <Popover
-      position="bottom"
-      isOpen={visible}
-      noArrow
-      onChangeOpen={setVisible}
-      contents={
-        <Theme name="dark">
-          <AppActionButtonContents hide={() => setVisible(false)} />
-        </Theme>
-      }
-      mountImmediately
-    >
-      <AppMenuLinkButton onPress={() => setVisible((x) => !x)} Icon={Plus} tooltip="Create" />
-    </Popover>
-  )
-}
-
-const AppActionButtonContents = ({ hide }: { hide?: (e: GestureResponderEvent) => any }) => {
-  const { user } = useUserStore()
-  return (
-    <Box
-      maxHeight={Math.max(350, getWindowHeight() - searchBarHeight - 30)}
-      padding={0}
-      alignItems="stretch"
-      pointerEvents="auto"
-      minWidth={240}
-    >
-      {/* safari y={} fix overflow */}
-      <VStack overflow="hidden" borderRadius={12} y={0.01}>
-        <MenuLinkButton
-          promptLogin
-          name="list"
-          params={{
-            userSlug: slugify(user?.username ?? 'me'),
-            slug: 'create',
-          }}
-          onPressOut={hide}
-        >
-          Create Playlist
-        </MenuLinkButton>
-      </VStack>
-    </Box>
-  )
-}
-
-const SearchBarActionButton = memo(() => {
-  const upRoute = useHomeStoreSelector((x) => x.upRoute)
-  const isOnHome = useHomeStoreSelector((x) => x.currentStateType === 'home')
-  const autocompletes = useStoreInstance(autocompletesStore)
-  const showAutocomplete = autocompletes.visible
-  const isDisabled = !showAutocomplete && isOnHome
-  // const theme = useTheme()
-  const Icon = (() => {
-    if (showAutocomplete) {
-      // if (media.sm) {
-      //   return ArrowDown
-      // }
-      return ArrowUp
-    }
-    return ChevronLeft
-  })()
-
-  return (
-    <Link
-      marginRight={-5}
-      opacity={isWeb && !showAutocomplete ? 0 : 1}
-      onPress={() => {
-        if (showAutocomplete) {
-          autocompletes.setVisible(false)
-        } else {
-          homeStore.popBack()
-        }
-      }}
-      {...(!showAutocomplete && upRoute)}
-    >
-      <VStack
-        alignSelf="center"
-        skewX="-12deg"
-        pointerEvents={isDisabled ? 'none' : 'auto'}
-        width={30}
-        height={searchBarHeight}
-        alignItems="center"
-        justifyContent="center"
-        opacity={0}
-        padding={0}
-        backgroundColor="rgba(0,0,0,0.1)"
-        {...(!isDisabled && {
-          opacity: 0.5,
-          hoverStyle: {
-            opacity: 1,
-          },
-          pressStyle: {
-            opacity: 0.2,
-          },
-        })}
-      >
-        <VStack skewX="12deg">
-          <Icon color={isWeb ? 'var(--color)' : '#888'} size={20} />
-        </VStack>
-      </VStack>
-    </Link>
   )
 })

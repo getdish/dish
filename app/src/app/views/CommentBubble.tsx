@@ -39,7 +39,6 @@ export type CommentBubbleProps = Omit<StackProps, 'children'> & {
   bubbleHeight?: number
   expandable?: boolean
   date?: Date
-  belowContent?: any
   children?: any
   chromeless?: boolean
 }
@@ -113,7 +112,7 @@ function CommentBubbleContents({
   date,
   onExpand,
   expanded,
-  belowContent,
+  // belowContent,
   avatarBackgroundColor,
   scrollable,
   children,
@@ -152,6 +151,7 @@ function CommentBubbleContents({
           overflow="hidden"
           sizeLineHeight={0.9}
           size={1}
+          fontSize={15}
         >
           {ellipseContentAbove && text && text.length > ellipseContentAbove ? (
             <Text>
@@ -299,13 +299,6 @@ function CommentBubbleContents({
             ) : (
               contents
             )}
-          </>
-        )}
-
-        {!!belowContent && (
-          <>
-            <Spacer size="sm" />
-            {belowContent}
           </>
         )}
       </VStack>

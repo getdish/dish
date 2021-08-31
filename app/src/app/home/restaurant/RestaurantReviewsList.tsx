@@ -2,7 +2,7 @@ import { graphql, query } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, Grid, HStack, Spacer, Text, VStack } from 'snackui'
 
-import { useUserReviewCommentQuery } from '../../hooks/useUserReview'
+import { useUserReviewQuery } from '../../hooks/useUserReview'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentReviewButton'
 import { RestaurantReview } from './RestaurantReview'
@@ -18,10 +18,13 @@ export const RestaurantReviewsList = memo(
               _eq: restaurantSlug,
             },
           },
+          text: {
+            _is_null: false,
+          },
         },
       })
 
-      const { review: ownReview } = useUserReviewCommentQuery(restaurantSlug)
+      const [review] = useUserReviewQuery(restaurantSlug)
 
       return (
         <VStack paddingHorizontal="3%">
@@ -47,7 +50,7 @@ export const RestaurantReviewsList = memo(
           {before}
 
           <Suspense fallback={null}>
-            {!topReviews.length && !ownReview && (
+            {!topReviews.length && !review && (
               <VStack minHeight={100} alignItems="center" justifyContent="center">
                 <Text opacity={0.5} fontSize={12}>
                   No reviews, yet!
@@ -55,7 +58,7 @@ export const RestaurantReviewsList = memo(
               </VStack>
             )}
             <Grid itemMinWidth={320}>
-              {ownReview && <RestaurantReview restaurantSlug={restaurantSlug} />}
+              {!!review && <RestaurantReview hideRestaurantName review={review} />}
 
               {topReviews.map((review, i) => {
                 return (

@@ -1,7 +1,7 @@
 import { series, sleep } from '@dish/async'
 import { graphql, query, resolved, useRefetch } from '@dish/graph'
 import { Loader } from '@dish/react-feather'
-import { debounce } from 'lodash'
+import { debounce, uniqBy } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { Input, Spacer, Text, VStack, useDebounce, useTheme } from 'snackui'
@@ -88,7 +88,7 @@ export const ListAddRestuarant = graphql(
             searchRestaurantsNearby(searchQuery),
           ]),
         ([boxRes = [], nearbyRes = []]) => {
-          setResults([...boxRes, ...nearbyRes])
+          setResults(uniqBy([...boxRes, ...nearbyRes], (x) => x.id))
           setIsSearching(false)
         },
       ])

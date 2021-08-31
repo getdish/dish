@@ -1,30 +1,35 @@
 import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
-import { ThumbsDown, ThumbsUp, X } from '@dish/react-feather'
-import React, { memo } from 'react'
+import { Plus, X } from '@dish/react-feather'
+import React, { memo, useRef } from 'react'
 import {
   AbsoluteVStack,
+  Box,
   HStack,
-  Spacer,
+  HoverablePopover,
+  HoverablePopoverRef,
   StackProps,
   Text,
   TextProps,
   Theme,
   ThemeName,
+  Tooltip,
   VStack,
   prevent,
   useTheme,
   useThemeName,
 } from 'snackui'
 
+import { blue } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
 import { tagDisplayName } from '../../constants/tagDisplayName'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { RGB } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
-import { useUserTagVotes } from '../hooks/useUserTagVotes'
+import { VoteNumber, useUserTagVotes } from '../hooks/useUserTagVotes'
 import { SearchTagButton } from './dish/SearchTagButton'
 import { Image } from './Image'
 import { Link } from './Link'
+import { LinkButton } from './LinkButton'
 import { Pie } from './Pie'
 
 export type TagButtonTagProps = {
@@ -88,6 +93,7 @@ export type TagButtonProps = StackProps &
     bordered?: boolean
     isActive?: boolean
     showSearchButton?: boolean
+    tooltip?: string
   }
 
 const typeColors = {
@@ -142,6 +148,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     ratingStyle = 'pie',
     transparent,
     noLink,
+    tooltip,
     children,
     ...rest
   } = props
@@ -157,10 +164,11 @@ const TagButtonInner = (props: TagButtonProps) => {
 
   const rankElement = !onlyIcon && showRank && rank && rank < 100 && (
     <>
-      <Text color={theme.color} fontSize={11} fontWeight="300" opacity={0.5}>
+      <Text pointerEvents="none" color={theme.color} fontSize={11} fontWeight="300" opacity={0.5}>
         #
       </Text>
       <Text
+        pointerEvents="none"
         fontSize={smallerFontSize}
         alignContent="center"
         justifyContent="center"
@@ -189,7 +197,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         }}
       />
     ) : (
-      <Text fontSize={12} marginRight={-2} marginLeft={isSmall ? 2 : 5}>
+      <Text pointerEvents="none" fontSize={16} marginRight={-2} marginLeft={isSmall ? 2 : 5}>
         {icon}
       </Text>
     )
@@ -201,6 +209,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       spacing={fontSize * 0.5}
       borderRadius={8}
       backgroundColor={theme.backgroundColor}
+      overflow="hidden"
       borderWidth={1}
       borderColor={bordered ? theme.borderColor : 'transparent'}
       hoverStyle={{
@@ -241,6 +250,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           fontWeight={fontWeight || '400'}
           lineHeight={isSmall ? 13 : 22}
           color={color || theme.color}
+          pointerEvents="none"
           // borderBottomColor={theme.backgroundColor}
           // borderBottomWidth={floating ? 0 : 1}
           opacity={0.8}
@@ -303,7 +313,7 @@ const TagButtonInner = (props: TagButtonProps) => {
 
       {!!slug && !!votable && !!props.restaurantSlug && (
         <TagButtonVote
-          key={getTagSlug(slug) + props.restaurantSlug}
+          key={slug + props.restaurantSlug}
           {...props}
           color={theme.color}
           scale={scale}
@@ -374,65 +384,110 @@ const TagButtonInner = (props: TagButtonProps) => {
     )
   }
 
+  if (tooltip) {
+    contents = <Tooltip contents={tooltip}>{contents}</Tooltip>
+  }
+
   return contents
 }
 
 const TagButtonVote = graphql(
   (props: TagButtonProps & { scale: number }) => {
     const { scale } = props
-    const { vote, setVote } = useUserTagVotes(props.restaurantSlug ?? '', {
-      [getTagSlug(props.slug)]: true,
+    const hovPopRef = useRef<HoverablePopoverRef>()
+    const tagSlug = getTagSlug(props.slug)
+    const { vote, setVote } = useUserTagVotes(props.restaurantSlug || '', {
+      [tagSlug]: true,
     })
-    const Icon = vote ? ThumbsDown : ThumbsUp
     const color = props.color ?? 'rgba(0,0,0,0.7)'
     const theme = useTheme()
     const iconProps = {
       size: 14 * scale,
       color,
     }
-
     return (
-      <VStack
-        backgroundColor={theme.backgroundColorTransluscent}
-        alignItems="center"
-        justifyContent="center"
-        borderRadius={100}
-        width={32 * scale}
-        height={32 * scale}
-        marginVertical={-2 * scale}
-        opacity={0.8}
-        hoverStyle={{
-          opacity: 1,
-          backgroundColor: theme.backgroundColorTransluscentHover,
-        }}
-        pressStyle={{
-          opacity: 0.5,
-          transform: [{ scale: 0.9 }],
-        }}
-        onPress={(e) => {
-          prevent(e)
-          setVote(vote == 0 ? 1 : vote === -1 ? 0 : -1)
-        }}
+      <HoverablePopover
+        // @ts-ignore
+        ref={hovPopRef}
+        allowHoverOnContent
+        anchor="CENTER"
+        contents={
+          <Theme name="dark">
+            <Box paddingVertical={1} paddingHorizontal={1} borderRadius={8}>
+              <HStack>
+                {tagRatings.map((rating) => (
+                  <LinkButton
+                    promptLogin
+                    borderRadius={1000}
+                    width={38}
+                    height={38}
+                    paddingHorizontal={0}
+                    textProps={{
+                      letterSpacing: -1,
+                      fontWeight: '600',
+                      paddingHorizontal: 4,
+                    }}
+                    onPress={(e) => {
+                      e.stopPropagation()
+                      setVote(rating)
+                      // give time to see it update
+                      setTimeout(() => {
+                        hovPopRef.current?.close()
+                      }, 200)
+                    }}
+                    key={rating}
+                    {...(vote === rating
+                      ? {
+                          backgroundColor: blue,
+                        }
+                      : {
+                          backgroundColor: 'transparent',
+                        })}
+                  >
+                    {rating}
+                  </LinkButton>
+                ))}
+              </HStack>
+            </Box>
+          </Theme>
+        }
       >
-        {vote === 0 && <Icon {...iconProps} />}
-        {vote !== 0 && (
-          <VStack
-            width={24 * scale}
-            height={24 * scale}
-            backgroundColor={color}
-            borderRadius={100}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Text color="#fff" fontSize={12 * scale} fontWeight="600">
-              {vote < 0 ? vote : `+${vote}`}
-            </Text>
-          </VStack>
-        )}
-      </VStack>
+        <VStack
+          alignItems="center"
+          pointerEvents="auto"
+          zIndex={100}
+          position="relative"
+          justifyContent="center"
+          borderRadius={100}
+          width={50 * scale}
+          height={50 * scale}
+          marginVertical={-10 * scale}
+          marginHorizontal={-10 * scale}
+          marginRight={-15 * scale}
+          opacity={0.8}
+        >
+          {vote === 0 && <Plus {...iconProps} />}
+          {vote !== 0 && (
+            <VStack
+              width={24 * scale}
+              height={24 * scale}
+              backgroundColor={color}
+              borderRadius={100}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Text color={theme.backgroundColor} fontSize={12 * scale} fontWeight="600">
+                {vote < 0 ? vote : `${vote}`}
+              </Text>
+            </VStack>
+          )}
+        </VStack>
+      </HoverablePopover>
     )
   },
   {
     suspense: false,
   }
 )
+
+const tagRatings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as VoteNumber[]

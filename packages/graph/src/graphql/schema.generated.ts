@@ -522,6 +522,7 @@ export interface list_restaurant_bool_exp {
   restaurant_id?: Maybe<uuid_comparison_exp>
   restaurants?: Maybe<restaurant_bool_exp>
   tags?: Maybe<list_restaurant_tag_bool_exp>
+  user?: Maybe<user_bool_exp>
   user_id?: Maybe<uuid_comparison_exp>
 }
 
@@ -551,6 +552,7 @@ export interface list_restaurant_insert_input {
   restaurant_id?: Maybe<Scalars['uuid']>
   restaurants?: Maybe<restaurant_arr_rel_insert_input>
   tags?: Maybe<list_restaurant_tag_arr_rel_insert_input>
+  user?: Maybe<user_obj_rel_insert_input>
   user_id?: Maybe<Scalars['uuid']>
 }
 
@@ -598,6 +600,7 @@ export interface list_restaurant_order_by {
   restaurant_id?: Maybe<order_by>
   restaurants_aggregate?: Maybe<restaurant_aggregate_order_by>
   tags_aggregate?: Maybe<list_restaurant_tag_aggregate_order_by>
+  user?: Maybe<user_order_by>
   user_id?: Maybe<order_by>
 }
 
@@ -2958,6 +2961,7 @@ export interface review_bool_exp {
   rating?: Maybe<numeric_comparison_exp>
   restaurant?: Maybe<restaurant_bool_exp>
   restaurant_id?: Maybe<uuid_comparison_exp>
+  reviews?: Maybe<review_bool_exp>
   sentiments?: Maybe<review_tag_sentence_bool_exp>
   source?: Maybe<String_comparison_exp>
   tag?: Maybe<tag_bool_exp>
@@ -3019,6 +3023,7 @@ export interface review_insert_input {
   rating?: Maybe<Scalars['numeric']>
   restaurant?: Maybe<restaurant_obj_rel_insert_input>
   restaurant_id?: Maybe<Scalars['uuid']>
+  reviews?: Maybe<review_arr_rel_insert_input>
   sentiments?: Maybe<review_tag_sentence_arr_rel_insert_input>
   source?: Maybe<Scalars['String']>
   tag?: Maybe<tag_obj_rel_insert_input>
@@ -3094,6 +3099,7 @@ export interface review_order_by {
   rating?: Maybe<order_by>
   restaurant?: Maybe<restaurant_order_by>
   restaurant_id?: Maybe<order_by>
+  reviews_aggregate?: Maybe<review_aggregate_order_by>
   sentiments_aggregate?: Maybe<review_tag_sentence_aggregate_order_by>
   source?: Maybe<order_by>
   tag?: Maybe<tag_order_by>
@@ -6863,6 +6869,7 @@ export const generatedSchema = {
         where: 'list_restaurant_tag_bool_exp',
       },
     },
+    user: { __type: 'user!' },
     user_id: { __type: 'uuid!' },
   },
   list_restaurant_aggregate: {
@@ -6919,6 +6926,7 @@ export const generatedSchema = {
     restaurant_id: { __type: 'uuid_comparison_exp' },
     restaurants: { __type: 'restaurant_bool_exp' },
     tags: { __type: 'list_restaurant_tag_bool_exp' },
+    user: { __type: 'user_bool_exp' },
     user_id: { __type: 'uuid_comparison_exp' },
   },
   list_restaurant_inc_input: { position: { __type: 'Int' } },
@@ -6932,6 +6940,7 @@ export const generatedSchema = {
     restaurant_id: { __type: 'uuid' },
     restaurants: { __type: 'restaurant_arr_rel_insert_input' },
     tags: { __type: 'list_restaurant_tag_arr_rel_insert_input' },
+    user: { __type: 'user_obj_rel_insert_input' },
     user_id: { __type: 'uuid' },
   },
   list_restaurant_max_fields: {
@@ -6992,6 +7001,7 @@ export const generatedSchema = {
     restaurant_id: { __type: 'order_by' },
     restaurants_aggregate: { __type: 'restaurant_aggregate_order_by' },
     tags_aggregate: { __type: 'list_restaurant_tag_aggregate_order_by' },
+    user: { __type: 'user_order_by' },
     user_id: { __type: 'order_by' },
   },
   list_restaurant_pk_columns_input: {
@@ -9135,6 +9145,26 @@ export const generatedSchema = {
     rating: { __type: 'numeric' },
     restaurant: { __type: 'restaurant' },
     restaurant_id: { __type: 'uuid' },
+    reviews: {
+      __type: '[review!]!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
+    reviews_aggregate: {
+      __type: 'review_aggregate!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
     sentiments: {
       __type: '[review_tag_sentence!]!',
       __args: {
@@ -9224,6 +9254,7 @@ export const generatedSchema = {
     rating: { __type: 'numeric_comparison_exp' },
     restaurant: { __type: 'restaurant_bool_exp' },
     restaurant_id: { __type: 'uuid_comparison_exp' },
+    reviews: { __type: 'review_bool_exp' },
     sentiments: { __type: 'review_tag_sentence_bool_exp' },
     source: { __type: 'String_comparison_exp' },
     tag: { __type: 'tag_bool_exp' },
@@ -9252,6 +9283,7 @@ export const generatedSchema = {
     rating: { __type: 'numeric' },
     restaurant: { __type: 'restaurant_obj_rel_insert_input' },
     restaurant_id: { __type: 'uuid' },
+    reviews: { __type: 'review_arr_rel_insert_input' },
     sentiments: { __type: 'review_tag_sentence_arr_rel_insert_input' },
     source: { __type: 'String' },
     tag: { __type: 'tag_obj_rel_insert_input' },
@@ -9356,6 +9388,7 @@ export const generatedSchema = {
     rating: { __type: 'order_by' },
     restaurant: { __type: 'restaurant_order_by' },
     restaurant_id: { __type: 'order_by' },
+    reviews_aggregate: { __type: 'review_aggregate_order_by' },
     sentiments_aggregate: { __type: 'review_tag_sentence_aggregate_order_by' },
     source: { __type: 'order_by' },
     tag: { __type: 'tag_order_by' },
@@ -12492,6 +12525,10 @@ export interface list_restaurant {
      */
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => list_restaurant_tag_aggregate
+  /**
+   * An object relationship
+   */
+  user: user
   user_id: ScalarsEnums['uuid']
 }
 
@@ -14385,6 +14422,56 @@ export interface review {
    */
   restaurant?: Maybe<restaurant>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  /**
+   * An array relationship
+   */
+  reviews: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<review_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => Array<review>
+  /**
+   * An aggregated array relationship
+   */
+  reviews_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<review_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => review_aggregate
   /**
    * An array relationship
    */

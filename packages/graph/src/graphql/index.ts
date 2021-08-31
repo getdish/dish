@@ -5,7 +5,6 @@ import { Auth } from '../Auth'
 import { GRAPH_API, isManualDebugMode } from '../constants'
 import { getAuthHeaders } from '../getAuth'
 import { GeneratedSchema, generatedSchema, scalarsEnumsHash } from './schema.generated'
-import { DISH_DEBUG } from '..'
 
 export * from './schema.generated'
 
@@ -92,7 +91,7 @@ export const client = createClient<GeneratedSchema>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
-  catchSelectionsTimeMS: 40,
+  catchSelectionsTimeMS: 80,
   normalization: false,
   retry: false,
 })

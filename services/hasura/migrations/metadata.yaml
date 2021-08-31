@@ -49,11 +49,13 @@ tables:
       - color
       - description
       - id
+      - image
       - location
       - name
       - public
       - region
       - slug
+      - theme
       - user_id
       backend_only: false
   select_permissions:
@@ -64,11 +66,13 @@ tables:
       - created_at
       - description
       - id
+      - image
       - location
       - name
       - public
       - region
       - slug
+      - theme
       - updated_at
       - user_id
       filter: {}
@@ -80,11 +84,13 @@ tables:
       - created_at
       - description
       - id
+      - image
       - location
       - name
       - public
       - region
       - slug
+      - theme
       - updated_at
       - user_id
       filter: {}
@@ -95,11 +101,13 @@ tables:
       columns:
       - color
       - description
+      - image
       - location
       - name
       - public
       - region
       - slug
+      - theme
       - user_id
       filter:
         user_id:
@@ -121,6 +129,9 @@ tables:
   - name: restaurant
     using:
       foreign_key_constraint_on: restaurant_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
   array_relationships:
   - name: restaurants
     using:
@@ -769,6 +780,14 @@ tables:
     using:
       foreign_key_constraint_on: user_id
   array_relationships:
+  - name: reviews
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: review
+        column_mapping:
+          restaurant_id: restaurant_id
   - name: sentiments
     using:
       foreign_key_constraint_on:
@@ -825,7 +844,6 @@ tables:
       - id
       - list_id
       - location
-      - native_data_unique_key
       - rating
       - restaurant_id
       - source

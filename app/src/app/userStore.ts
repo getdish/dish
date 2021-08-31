@@ -10,7 +10,7 @@ import {
   userEdit,
   userFetchSimple,
 } from '@dish/graph'
-import { Store, createStore, useStoreInstance } from '@dish/use-store'
+import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import { Toast } from 'snackui'
 
 import { queryUserQuery } from '../queries/queryUser'
@@ -210,4 +210,8 @@ class UserStore extends Store {
 export const userStore = createStore(UserStore)
 export const useUserStore = () => {
   return useStoreInstance(userStore)
+}
+
+export const useUsername = () => {
+  return useStoreInstanceSelector(userStore, (x) => x.user?.username)
 }
