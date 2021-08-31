@@ -52,7 +52,7 @@ export const ListCard = graphql((props: ListCardProps) => {
       {...(props.colored && {
         color: listColor,
         ...(listThemeName === 'modern' && {
-          backgroundColor: `${listColor}55`,
+          backgroundColor: `${listColor}44`,
         }),
         chromeless: true,
         flat: true,
