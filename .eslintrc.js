@@ -18,6 +18,7 @@ module.exports = {
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     'import/named': 'off',
     'react/no-unescaped-entities': 'off',
     'react/prop-types': 'off',
