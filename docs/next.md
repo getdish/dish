@@ -19,6 +19,10 @@
 
 # inbox
 
+- rate limit mutations
+
+- login link + email option button (lower)
+
 - adding in OSM data for any location
 
 - auto create lists on voting will flesh out profiles
