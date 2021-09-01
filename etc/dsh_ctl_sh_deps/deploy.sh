@@ -87,7 +87,7 @@ function docker_service_restart_with_latest_image() {
       --format='{{.Spec.TaskTemplate.ContainerSpec.Image}}' \
       "$1"
   )
-  docker service update --image "$image" "$1"
+  docker service update --force --image "$image" "$1"
 }
 
 function docker_restart() {
