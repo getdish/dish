@@ -82,11 +82,12 @@ function deploy_dish() {
 }
 
 function docker_service_restart_with_latest_image() {
-  image=$(
+  image_with_sha=$(
     docker service inspect \
       --format='{{.Spec.TaskTemplate.ContainerSpec.Image}}' \
       "$1"
   )
+  image=$(echo "$image_with_sha" | cut -d"@" -f1)
   docker service update --force --image "$image" "$1"
 }
 
