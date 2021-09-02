@@ -339,7 +339,7 @@ services:
         - traefik.http.services.worker.loadbalancer.server.port=3434
     environment:
       <<: *dish-env
-      DISH_DEBUG: 1
+      DISH_DEBUG: 2
 
   umami:
     image: ghcr.io/mikecao/umami:postgresql-latest
