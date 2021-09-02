@@ -173,7 +173,8 @@ export class Tripadvisor extends WorkerJob {
           throw new Error(error)
         }
       }
-      if (html.length > 10000) {
+      // TODO find a better a way of detecting success than counting chars!
+      if (html.length > 2000) {
         return html
       } else {
         this.log('Retrying: ' + path)
@@ -317,6 +318,7 @@ export class Tripadvisor extends WorkerJob {
         more = true
       }
     } catch (error) {
+      // TODO it seems this is only triggered when there are 0 reviews
       sentryException(error)
     }
     return { more, data: updated_html }
