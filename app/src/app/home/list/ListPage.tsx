@@ -473,6 +473,9 @@ const ListPageContent = memo(
                         />
                       ) : (
                         (() => {
+                          if (!list.description) {
+                            return null
+                          }
                           const items = list.description?.split('\n\n') ?? []
                           return (
                             <>

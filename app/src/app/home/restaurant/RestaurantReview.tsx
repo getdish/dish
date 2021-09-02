@@ -19,6 +19,7 @@ export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
   height?: number
   onEdit?: (text: string) => void
   onDelete?: () => void
+  showEmptyReview?: boolean
 }
 
 export const RestaurantReview = memo(
@@ -38,6 +39,7 @@ export const RestaurantReview = memo(
         restaurantSlug,
         listSlug,
         review,
+        showEmptyReview,
         ...commentBubbleProps
       } = props
 
@@ -45,22 +47,15 @@ export const RestaurantReview = memo(
         return <RestaurantReviewEdit {...props} onEdit={onEdit} onDelete={onDelete} />
       }
 
-      // restaurantSlug === `woodys-liquor-store`
-      // const [showAddTag, setShowAddTag] = useState(false)
-      // const media = useMedia()
-      // useLazyEffect(() => {
-      //   if (refetchKey) {
-      //     console.log('refetching review', refetchKey)
-      //     reviews.map(refetch)
-      //   }
-      // }, [refetchKey])
-
-      // console.log('review.username', review?.username)
+      if (!review && !showEmptyReview) {
+        return <ReviewTagsRow {...props} />
+      }
 
       const name = getUserName(review?.user)
       let userName = propName ?? (hideUsername ? '' : name ?? '')
       const isYelp = userName?.startsWith('yelp-')
       userName = isYelp ? 'Yelp' : userName
+
       return (
         <>
           {/* {showAddTag && <RateRestaurantTagsModal onDismiss={() => setShowAddTag(false)} />} */}
@@ -89,7 +84,7 @@ export const RestaurantReview = memo(
               name={userName}
               after={
                 <HStack flex={1} overflow="hidden" alignItems="center" maxWidth="100%">
-                  <Divider flex />
+                  <VStack flex={1} />
                   {after}
                 </HStack>
               }
@@ -126,3 +121,15 @@ export const ListItemHStack = (props: StackProps) => {
     </HStack>
   )
 }
+
+// restaurantSlug === `woodys-liquor-store`
+// const [showAddTag, setShowAddTag] = useState(false)
+// const media = useMedia()
+// useLazyEffect(() => {
+//   if (refetchKey) {
+//     console.log('refetching review', refetchKey)
+//     reviews.map(refetch)
+//   }
+// }, [refetchKey])
+
+// console.log('review.username', review?.username)

@@ -198,7 +198,9 @@ export const ReviewTagsRow = graphql(
         </HStack>
         <ScrollView horizontal>
           <HStack paddingVertical={16} spacing="sm">
-            {currentTags.map((tagButtonProps) => {
+            {currentTags.map((tagButtonProps, i) => {
+              const isLense = tagButtonProps.type === 'lense'
+              const lastItem = currentTags[i - 1]
               return (
                 <TagButton
                   noLink
@@ -206,15 +208,18 @@ export const ReviewTagsRow = graphql(
                   restaurantSlug={restaurantSlug}
                   key={tagButtonProps.slug || 0}
                   {...tagButtonProps}
-                  {...(tagButtonProps.type === 'lense' && {
+                  {...(isLense && {
                     name: '',
                     tooltip: tagButtonProps.name,
+                    circular: true,
                   })}
-                  {...(tagButtonProps.slug === 'lenses__gems' && {
-                    name: 'Overall',
-                    icon: tagButtonProps.icon || '',
-                    tooltip: '',
+                  {...(!isLense && {
+                    backgroundColor: 'transparent',
                   })}
+                  {...(lastItem?.type === 'lense' &&
+                    !isLense && {
+                      marginLeft: 20,
+                    })}
                   votable
                 />
               )

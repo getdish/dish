@@ -44,6 +44,7 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
   return (
     <RestaurantReview
       {...props}
+      showEmptyReview
       // prevent infinite recursion
       isEditing={false}
       avatar={{
