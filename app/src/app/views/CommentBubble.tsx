@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
-  Divider,
   HStack,
   Modal,
   Paragraph,
@@ -41,6 +40,7 @@ export type CommentBubbleProps = Omit<StackProps, 'children'> & {
   date?: Date
   children?: any
   chromeless?: boolean
+  hideMeta?: boolean
 }
 
 export const CommentBubble = (props: CommentBubbleProps) => {
@@ -69,7 +69,6 @@ export const CommentBubble = (props: CommentBubbleProps) => {
       spacing="sm"
       overflow="hidden"
       margin={-10}
-      marginBottom={-20}
       {...rest}
     >
       {fullWidth && ensureFlexText}
@@ -106,6 +105,7 @@ function CommentBubbleContents({
   expandable,
   text,
   before,
+  hideMeta,
   after,
   afterName,
   chromeless,
@@ -176,60 +176,64 @@ function CommentBubbleContents({
   )
 
   const metaContents = (
-    <HStack y={-10} alignItems="center">
-      <VStack
-        borderRadius={100}
-        backgroundColor={
-          avatarBackgroundColor ?? (isYelp ? thirdPartyCrawlSources.yelp.color : colors.color200)
-        }
-      >
-        {!avatar && <User color={theme.color} size={imageSize} />}
-        {!!avatar && (
-          <UserAvatar
-            charIndex={avatar.charIndex}
-            size={imageSize}
-            avatar={
-              isTripAdvisor
-                ? thirdPartyCrawlSources.tripadvisor.image
-                : isYelp
-                ? thirdPartyCrawlSources.yelp.image
-                : avatar.image
+    <HStack marginTop={-10} alignItems="center" pointerEvents="auto">
+      {hideMeta ? (
+        <VStack flex={1} />
+      ) : (
+        <>
+          <VStack
+            borderRadius={100}
+            backgroundColor={
+              avatarBackgroundColor ??
+              (isYelp ? thirdPartyCrawlSources.yelp.color : colors.color200)
             }
-          />
-        )}
-      </VStack>
-
-      <Spacer size="lg" />
-
-      <HStack flex={1} pointerEvents="auto" alignItems="center" spacing>
-        {!!name && (
-          <VStack>
-            <Link
-              name="user"
-              params={{ username: name }}
-              pointerEvents="auto"
-              fontSize={13}
-              ellipse
-            >
-              {name}
-            </Link>
+          >
+            {!avatar && <User color={theme.color} size={imageSize} />}
+            {!!avatar && (
+              <UserAvatar
+                charIndex={avatar.charIndex}
+                size={imageSize}
+                avatar={
+                  isTripAdvisor
+                    ? thirdPartyCrawlSources.tripadvisor.image
+                    : isYelp
+                    ? thirdPartyCrawlSources.yelp.image
+                    : avatar.image
+                }
+              />
+            )}
           </VStack>
-        )}
+          <Spacer size="lg" />
 
-        {!!name && <Middot />}
+          <HStack flex={1} pointerEvents="auto" alignItems="center" spacing>
+            {!!name && (
+              <VStack>
+                <Link
+                  name="user"
+                  params={{ username: name }}
+                  pointerEvents="auto"
+                  fontSize={13}
+                  ellipse
+                >
+                  {name}
+                </Link>
+              </VStack>
+            )}
 
-        {!!date && (
-          <>
-            <Paragraph flexShrink={0} size="sm" opacity={0.5}>
-              {getTimeFormat(new Date(date))}
-            </Paragraph>
-          </>
-        )}
+            {!!name && <Middot />}
 
-        {!!date && <Middot />}
+            {!!date && (
+              <>
+                <Paragraph flexShrink={0} size="sm" opacity={0.5}>
+                  {getTimeFormat(new Date(date))}
+                </Paragraph>
+              </>
+            )}
+          </HStack>
+        </>
+      )}
 
-        {after}
-      </HStack>
+      {after}
     </HStack>
   )
 
@@ -249,59 +253,57 @@ function CommentBubbleContents({
       {chromeless && metaContents}
 
       {/* main card */}
-      <VStack
-        paddingHorizontal={15}
-        paddingVertical={10}
-        marginLeft={20}
-        backgroundColor={theme.cardBackgroundColor}
-        borderColor={theme.borderColor}
-        borderWidth={1}
-        borderRadius={20}
-        position="relative"
-        zIndex={10}
-        shadowColor={theme.shadowColorLighter}
-        shadowRadius={8}
-        shadowOffset={{ height: 3, width: 0 }}
-        height={bubbleHeight}
-        pointerEvents="auto"
-        {...(chromeless && {
-          borderColor: 'transparent',
-          backgroundColor: 'transparent',
-          paddingLeft: 0,
-          paddingRight: 0,
-          shadowColor: 'transparent',
-        })}
-      >
-        {/* tiny bottom left bubble */}
-        {!chromeless && (
-          <AbsoluteVStack
-            bottom={-10}
-            left={0}
-            width={20}
-            height={20}
-            borderRadius={100}
-            backgroundColor={theme.cardBackgroundColor}
-            shadowColor={theme.shadowColorLighter}
-            shadowRadius={4}
-            shadowOffset={{ height: 3, width: -3 }}
-          />
-        )}
+      {!!contents && (
+        <VStack
+          paddingHorizontal={15}
+          paddingVertical={10}
+          marginLeft={20}
+          backgroundColor={theme.cardBackgroundColor}
+          borderColor={theme.borderColor}
+          borderWidth={1}
+          borderRadius={20}
+          position="relative"
+          zIndex={10}
+          shadowColor={theme.shadowColorLighter}
+          shadowRadius={8}
+          shadowOffset={{ height: 3, width: 0 }}
+          height={bubbleHeight}
+          pointerEvents="auto"
+          {...(chromeless && {
+            borderColor: 'transparent',
+            backgroundColor: 'transparent',
+            paddingLeft: 0,
+            paddingRight: 0,
+            shadowColor: 'transparent',
+          })}
+        >
+          {/* tiny bottom left bubble */}
+          {!chromeless && (
+            <AbsoluteVStack
+              bottom={-10}
+              left={0}
+              width={20}
+              height={20}
+              borderRadius={100}
+              backgroundColor={theme.cardBackgroundColor}
+              shadowColor={theme.shadowColorLighter}
+              shadowRadius={4}
+              shadowOffset={{ height: 3, width: -3 }}
+            />
+          )}
 
-        {!!contents && (
-          <>
-            {scrollable ? (
-              <ScrollView
-                pointerEvents="auto"
-                style={{ maxHeight: Math.min(getWindowHeight() * 0.8, 600) }}
-              >
-                {contents}
-              </ScrollView>
-            ) : (
-              contents
-            )}
-          </>
-        )}
-      </VStack>
+          {scrollable ? (
+            <ScrollView
+              pointerEvents="auto"
+              style={{ maxHeight: Math.min(getWindowHeight() * 0.8, 600) }}
+            >
+              {contents}
+            </ScrollView>
+          ) : (
+            contents
+          )}
+        </VStack>
+      )}
 
       {!chromeless && metaContents}
     </VStack>

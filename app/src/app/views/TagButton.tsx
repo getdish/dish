@@ -6,6 +6,7 @@ import {
   Box,
   HStack,
   HoverablePopover,
+  HoverablePopoverProps,
   HoverablePopoverRef,
   StackProps,
   Text,
@@ -94,6 +95,7 @@ export type TagButtonProps = StackProps &
     isActive?: boolean
     showSearchButton?: boolean
     tooltip?: string
+    circular?: boolean
   }
 
 const typeColors = {
@@ -150,6 +152,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     noLink,
     tooltip,
     children,
+    circular,
     ...rest
   } = props
 
@@ -209,7 +212,6 @@ const TagButtonInner = (props: TagButtonProps) => {
       spacing={fontSize * 0.5}
       borderRadius={8}
       backgroundColor={theme.backgroundColor}
-      overflow="hidden"
       borderWidth={1}
       borderColor={bordered ? theme.borderColor : 'transparent'}
       hoverStyle={{
@@ -238,12 +240,17 @@ const TagButtonInner = (props: TagButtonProps) => {
       paddingHorizontal={isSmall ? 5 : 10}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
+      {...(circular && {
+        height: 44,
+        width: 44,
+        borderRadius: 1000,
+      })}
       {...rest}
     >
       {rankElement}
       {iconElement}
 
-      {!onlyIcon && (
+      {!onlyIcon && !circular && (
         <Text
           ellipse
           fontSize={fontSize}
@@ -312,12 +319,22 @@ const TagButtonInner = (props: TagButtonProps) => {
       )}
 
       {!!slug && !!votable && !!props.restaurantSlug && (
-        <TagButtonVote
-          key={slug + props.restaurantSlug}
-          {...props}
-          color={theme.color}
-          scale={scale}
-        />
+        <VStack
+          {...(circular && {
+            position: 'absolute',
+            scale: 0.8,
+            bottom: -10,
+            right: -10,
+          })}
+        >
+          <TagButtonVote
+            key={slug + props.restaurantSlug}
+            {...props}
+            color={theme.color}
+            scale={scale}
+            disablePopover={noLink}
+          />
+        </VStack>
       )}
 
       {!!after && (
@@ -388,23 +405,28 @@ const TagButtonInner = (props: TagButtonProps) => {
     contents = <Tooltip contents={tooltip}>{contents}</Tooltip>
   }
 
+  // make entire button votable in this case
+  if (noLink && votable) {
+    return <TagVotePopover {...props}>{contents}</TagVotePopover>
+  }
+
   return contents
 }
 
-const TagButtonVote = graphql(
-  (props: TagButtonProps & { scale: number }) => {
-    const { scale } = props
+const TagVotePopover = graphql(
+  ({
+    slug,
+    restaurantSlug,
+    ...popoverProps
+  }: HoverablePopoverProps & {
+    slug?: string
+    restaurantSlug?: string
+  }) => {
     const hovPopRef = useRef<HoverablePopoverRef>()
-    const tagSlug = getTagSlug(props.slug)
-    const { vote, setVote } = useUserTagVotes(props.restaurantSlug || '', {
+    const tagSlug = getTagSlug(slug)
+    const { vote, setVote } = useUserTagVotes(restaurantSlug || '', {
       [tagSlug]: true,
     })
-    const color = props.color ?? 'rgba(0,0,0,0.7)'
-    const theme = useTheme()
-    const iconProps = {
-      size: 14 * scale,
-      color,
-    }
     return (
       <HoverablePopover
         // @ts-ignore
@@ -413,7 +435,7 @@ const TagButtonVote = graphql(
         anchor="CENTER"
         contents={
           <Theme name="dark">
-            <Box paddingVertical={1} paddingHorizontal={1} borderRadius={8}>
+            <Box paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
               <HStack>
                 {tagRatings.map((rating) => (
                   <LinkButton
@@ -451,39 +473,68 @@ const TagButtonVote = graphql(
             </Box>
           </Theme>
         }
+        {...popoverProps}
+      />
+    )
+  },
+  {
+    suspense: false,
+  }
+)
+
+const TagButtonVote = graphql(
+  (props: TagButtonProps & { scale: number; disablePopover?: boolean }) => {
+    const { scale } = props
+    const tagSlug = getTagSlug(props.slug)
+    const { vote } = useUserTagVotes(props.restaurantSlug || '', {
+      [tagSlug]: true,
+    })
+    const theme = useTheme()
+    const iconProps = {
+      size: 14,
+      color: 'rgba(0,0,0,0.45)',
+    }
+    const contents = (
+      <VStack
+        alignItems="center"
+        pointerEvents="auto"
+        zIndex={100}
+        position="relative"
+        justifyContent="center"
+        borderRadius={100}
+        width={50 * scale}
+        height={50 * scale}
+        marginVertical={-10 * scale}
+        marginHorizontal={-10 * scale}
+        marginRight={-15 * scale}
+        opacity={0.8}
       >
-        <VStack
-          alignItems="center"
-          pointerEvents="auto"
-          zIndex={100}
-          position="relative"
-          justifyContent="center"
-          borderRadius={100}
-          width={50 * scale}
-          height={50 * scale}
-          marginVertical={-10 * scale}
-          marginHorizontal={-10 * scale}
-          marginRight={-15 * scale}
-          opacity={0.8}
-        >
-          {vote === 0 && <Plus {...iconProps} />}
-          {vote !== 0 && (
+        {!props.circular && vote === 0 && <Plus {...iconProps} />}
+        {vote !== 0 && (
+          <Theme name="light">
             <VStack
-              width={24 * scale}
-              height={24 * scale}
-              backgroundColor={color}
+              width={28 * scale}
+              height={28 * scale}
+              backgroundColor={theme.backgroundColor}
               borderRadius={100}
               alignItems="center"
               justifyContent="center"
+              pointerEvents="none"
             >
-              <Text color={theme.backgroundColor} fontSize={12 * scale} fontWeight="600">
+              <Text color={theme.color} fontSize={14 * scale} fontWeight="800">
                 {vote < 0 ? vote : `${vote}`}
               </Text>
             </VStack>
-          )}
-        </VStack>
-      </HoverablePopover>
+          </Theme>
+        )}
+      </VStack>
     )
+
+    if (props.disablePopover) {
+      return contents
+    }
+
+    return <TagVotePopover {...props}>{contents}</TagVotePopover>
   },
   {
     suspense: false,

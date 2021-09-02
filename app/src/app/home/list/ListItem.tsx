@@ -101,17 +101,17 @@ export const ListItem = graphql((props: ListItemProps) => {
     limit: 1,
   })
 
-  const topReview = isEditing
-    ? null
-    : props.restaurant.reviews({
-        where: {
-          text: {
-            _neq: '',
-          },
-        },
-        limit: 1,
-        order_by: [{ vote: order_by.desc }],
-      })
+  // const topReview = isEditing
+  //   ? null
+  //   : props.restaurant.reviews({
+  //       where: {
+  //         text: {
+  //           _neq: '',
+  //         },
+  //       },
+  //       limit: 1,
+  //       order_by: [{ vote: order_by.desc }],
+  //     })
 
   const hasListReview = !!listReview?.[0]?.text
   const hasUserReview = !!userReview?.[0]?.text
@@ -119,7 +119,7 @@ export const ListItem = graphql((props: ListItemProps) => {
   const isLoading = listReview?.[0] && listReview?.[0].text === undefined
 
   listItemContentProps.onUpdate = () => {
-    if (topReview) refetch(topReview)
+    // if (topReview) refetch(topReview)
     if (userReview) refetch(userReview)
     if (listReview) refetch(listReview)
   }
@@ -138,14 +138,14 @@ export const ListItem = graphql((props: ListItemProps) => {
   if (isLoading) {
     return (
       <>
-        <ListItemContent {...listItemContentProps} reviewQuery={topReview} />
+        {/* <ListItemContent {...listItemContentProps} reviewQuery={topReview} /> */}
         <ListItemContent {...listItemContentProps} reviewQuery={userReview} />
         <ListItemContent {...listItemContentProps} reviewQuery={listReview} />
       </>
     )
   }
 
-  return <ListItemContent {...listItemContentProps} reviewQuery={topReview} />
+  return <ListItemContent {...listItemContentProps} />
 })
 
 const ListItemContent = memo(
@@ -177,22 +177,21 @@ const ListItemContent = memo(
     const totalReviews = useTotalReviews(restaurant)
     const nameLen = restaurantName.length
     const titleFontScale =
-      nameLen > 50
+      nameLen > 40
+        ? 0.65
+        : nameLen > 32
+        ? 0.75
+        : nameLen > 26
         ? 0.8
-        : nameLen > 40
+        : nameLen > 20
         ? 0.85
-        : nameLen > 30
-        ? 0.95
-        : nameLen > 25
-        ? 0.975
-        : nameLen > 15
-        ? 1
+        : nameLen > 13
+        ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 20 : 23) * titleFontScale)
-    const titleHeight = titleFontSize + 8 * 2
+    const titleFontSize = Math.round((media.sm ? 20 : 28) * titleFontScale)
     const theme = useTheme()
-    const imgSize = 160
+    const imgSize = 72
 
     if (!restaurant) {
       return null
@@ -200,207 +199,125 @@ const ListItemContent = memo(
 
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug}>
-        <HStack
-          overflow="hidden"
-          className="hover-faded-in-parent"
-          alignItems="flex-start"
-          justifyContent="flex-start"
+        <VStack
           borderTopColor={theme.borderColor}
           borderTopWidth={1}
-          flexGrow={1}
+          hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
-          // this is the height that keeps the <InteractiveCOntainer> from overflowing
-          minHeight={280}
-          // turn this off breaks something? but hides the rest of title hover?
-          // overflow="hidden"
-          // prevent jitter/layout moving until loaded
-          display={restaurant.name === null ? 'none' : 'flex'}
-          position="relative"
         >
-          {/* active indicator */}
-          <AbsoluteVStack
-            top={0}
-            bottom={0}
-            zIndex={-1}
-            width={18}
-            left={-13}
-            backgroundColor={isActive ? brandColor : 'transparent'}
-            borderTopRightRadius={8}
-            borderBottomRightRadius={8}
-          />
-
-          {/* first column */}
-
-          <VStack
-            backgroundColor={theme.backgroundColorSecondary}
-            width={imgSize}
-            height={imgSize}
-            margin={16}
-            marginLeft={media.sm ? -90 : -20}
+          <HStack
+            className="hover-faded-in-parent"
+            alignItems="center"
+            flexGrow={1}
             position="relative"
-            // borderRadius={1000}
           >
-            <AbsoluteVStack top={0} right={0} y={-10} x={15} zIndex={10000}>
-              <RestaurantRatingView restaurant={restaurant} floating size={52} />
-            </AbsoluteVStack>
-            <Link name="gallery" params={{ restaurantSlug: restaurant.slug || '', offset: 0 }}>
-              <Image
-                source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
-                style={{
-                  width: imgSize,
-                  height: imgSize,
-                  // borderRadius: 1000,
-                }}
-              />
-            </Link>
+            {/* active indicator */}
+            <AbsoluteVStack
+              top={0}
+              bottom={0}
+              zIndex={-1}
+              width={18}
+              left={-13}
+              backgroundColor={isActive ? brandColor : 'transparent'}
+              borderTopRightRadius={8}
+              borderBottomRightRadius={8}
+            />
 
-            <Spacer />
-
-            <Suspense fallback={null}>
+            <HStack position="relative" paddingVertical={10} alignItems="center">
               <VStack
-                width={70}
-                marginLeft={media.sm ? 90 : 20}
-                x={10}
-                // so it doesnt get hidden at the bottom
-                marginTop={-50}
-                zIndex={1000}
+                backgroundColor={theme.backgroundColorSecondary}
+                width={imgSize}
+                height={imgSize}
+                position="relative"
+                borderRadius={1000}
+                overflow="hidden"
+                marginRight={-20}
+                marginLeft={-5}
               >
-                <InteractiveContainer flexDirection="column">
-                  <Link
-                    name="restaurant"
-                    params={{
-                      slug: restaurant.slug || '',
-                      section: 'reviews',
+                <Link name="gallery" params={{ restaurantSlug: restaurant.slug || '', offset: 0 }}>
+                  <Image
+                    source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
+                    style={{
+                      width: imgSize,
+                      height: imgSize,
+                      // borderRadius: 1000,
                     }}
-                  >
-                    <SmallButton
-                      width="100%"
-                      borderRadius={0}
-                      tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                      icon={
-                        <MessageSquare
-                          style={{
-                            opacity: 0.5,
-                            marginLeft: -8,
-                          }}
-                          size={12}
-                          color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                        />
-                      }
-                    >
-                      {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-                    </SmallButton>
-                  </Link>
-
-                  <RestaurantFavoriteButton
-                    width="100%"
-                    borderRadius={0}
-                    size="md"
-                    restaurantSlug={restaurant.slug || ''}
                   />
-
-                  <RestaurantAddToListButton
-                    width="100%"
-                    borderRadius={0}
-                    restaurantSlug={restaurant.slug || ''}
-                    noLabel
-                  />
-                </InteractiveContainer>
+                </Link>
               </VStack>
-            </Suspense>
-          </VStack>
-
-          {/* second column */}
-
-          <VStack flex={1} overflow="hidden" paddingLeft={20} marginLeft={-20}>
-            {/* <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}> */}
-            <VStack
-              hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
-              marginLeft={-200}
-              paddingLeft={200}
-              paddingTop={5}
-              position="relative"
-            >
-              {/* LINK */}
-              <Link
-                flex={2}
-                tagName="div"
-                name="restaurant"
-                params={{ slug: restaurant.slug || '' }}
-                zIndex={2}
-              >
-                <Spacer />
-                <HStack position="relative" alignItems="center">
-                  <VStack marginRight={-10} marginLeft={-8} y={2}>
-                    <RankView rank={rank} />
-                  </VStack>
-
-                  {/* SECOND LINK WITH actual <a /> */}
-                  <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
-                    <HStack
-                      paddingHorizontal={8}
-                      borderRadius={8}
-                      alignItems="center"
-                      marginVertical={-5}
-                      hoverStyle={{
-                        backgroundColor: theme.backgroundColorSecondary,
-                      }}
-                      pressStyle={{
-                        backgroundColor: theme.backgroundColorTertiary,
-                      }}
-                    >
-                      <Text
-                        fontSize={titleFontSize}
-                        lineHeight={titleHeight}
-                        height={titleHeight}
-                        color={theme.color}
-                        fontWeight="400"
-                        letterSpacing={-0.25}
-                        paddingHorizontal={1} // prevents clipping due to letter-spacing
-                        ellipse
-                      >
-                        {restaurantName}
-                      </Text>
-                    </HStack>
-                  </Link>
-                </HStack>
-                <Spacer size="xs" />
-              </Link>
-            </VStack>
-            {/* </HoverToZoom> */}
-
-            {/* ROW: META */}
-
-            <HStack position="relative" className="safari-fix-overflow" alignItems="center" spacing>
-              <HStack alignItems="center" overflow="hidden" spacing>
+              <VStack marginTop={-5}>
+                <RestaurantRatingView restaurant={restaurant} floating size={42} />
+              </VStack>
+              <AbsoluteVStack bottom={-20} right={10}>
                 {!!editable && !isEditing && (
-                  <SmallButton themeInverse onPress={() => setIsEditing(true)}>
-                    Edit
-                  </SmallButton>
+                  <SmallButton
+                    elevation={1}
+                    icon={<MessageSquare size={16} color="#777" />}
+                    onPress={() => setIsEditing(true)}
+                  ></SmallButton>
                 )}
 
                 {!!editable && isEditing && (
-                  <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
+                  <SmallButton elevation={1} onPress={() => setIsEditing(false)}>
+                    Cancel
+                  </SmallButton>
                 )}
+              </AbsoluteVStack>
+            </HStack>
 
+            <HStack alignItems="center" marginTop={-5} marginBottom={5}>
+              <VStack marginRight={-10} marginLeft={-10}>
+                <RankView rank={rank} />
+              </VStack>
+
+              <HStack alignItems="center" width={200}>
+                <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
+                  <HStack
+                    paddingHorizontal={10}
+                    paddingVertical={8}
+                    borderRadius={8}
+                    alignItems="center"
+                    hoverStyle={{
+                      backgroundColor: theme.backgroundColorSecondary,
+                    }}
+                    pressStyle={{
+                      backgroundColor: theme.backgroundColorTertiary,
+                    }}
+                  >
+                    <Text
+                      fontSize={titleFontSize}
+                      color={theme.color}
+                      fontWeight="400"
+                      letterSpacing={-0.25}
+                      paddingHorizontal={1} // prevents clipping due to letter-spacing
+                      ellipse
+                    >
+                      {restaurantName}
+                    </Text>
+                  </HStack>
+                </Link>
+              </HStack>
+
+              <Spacer size="xl" />
+
+              <HStack alignItems="center" overflow="hidden" spacing>
                 {!!restaurant.address && (
                   <RestaurantAddress size={'xs'} address={restaurant.address} />
                 )}
 
-                <Text
-                  width={42}
-                  textAlign="center"
-                  fontSize={14}
-                  fontWeight="700"
-                  color={theme.colorTertiary}
-                >
+                <Text width={42} textAlign="center" fontSize={14} color={theme.colorTertiary}>
                   {price_range ?? '-'}
                 </Text>
 
                 <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
 
                 <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
-                  <SmallButton minWidth={120} textProps={{ opacity: 0.6 }}>
+                  <SmallButton
+                    borderWidth={0}
+                    backgroundColor="transparent"
+                    minWidth={120}
+                    textProps={{ opacity: 0.6 }}
+                  >
                     {open.nextTime || '~~'}
                   </SmallButton>
                 </Link>
@@ -411,24 +328,64 @@ const ListItemContent = memo(
                     restaurantSlug={restaurant.slug || ''}
                   />
                 </Suspense>
+
+                <Suspense fallback={null}>
+                  <HStack>
+                    <Link
+                      name="restaurant"
+                      flexShrink={1}
+                      params={{
+                        slug: restaurant.slug || '',
+                        section: 'reviews',
+                      }}
+                    >
+                      <SmallButton
+                        borderWidth={0}
+                        width="100%"
+                        backgroundColor="transparent"
+                        tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                        icon={
+                          <MessageSquare
+                            style={{
+                              opacity: 0.5,
+                              marginLeft: -8,
+                            }}
+                            size={12}
+                            color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                          />
+                        }
+                      >
+                        {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                      </SmallButton>
+                    </Link>
+                  </HStack>
+                  <HStack>
+                    <RestaurantFavoriteButton
+                      width="100%"
+                      borderWidth={0}
+                      backgroundColor="transparent"
+                      size="md"
+                      restaurantSlug={restaurant.slug || ''}
+                    />
+                  </HStack>
+                </Suspense>
               </HStack>
             </HStack>
+          </HStack>
 
-            <Spacer size="xs" />
-
+          <HStack
+            marginTop={-20}
+            marginBottom={15}
+            paddingLeft={90}
+            alignItems="center"
+            spacing="lg"
+          >
             {/* ROW: OVERVIEW */}
-            <VStack
-              overflow="hidden"
-              className="fix-safari-shrink-height"
-              justifyContent="center"
-              flex={1}
-              paddingLeft={9}
-              marginLeft={-16}
-              position="relative"
-            >
+            <VStack justifyContent="center" flex={1} position="relative">
               <Suspense fallback={null}>
                 <RestaurantReview
                   isEditing={isEditing}
+                  hideMeta
                   onEdit={async (text) => {
                     if (review) {
                       review.text = text
@@ -467,10 +424,9 @@ const ListItemContent = memo(
                   // refetchKey={shownReview.text || ''}
                 />
               </Suspense>
-              <Spacer />
             </VStack>
-          </VStack>
-        </HStack>
+          </HStack>
+        </VStack>
       </HoverToZoom>
     )
   })

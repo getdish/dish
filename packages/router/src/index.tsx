@@ -231,7 +231,6 @@ export class Router<
       this.getNormalizedParams(historyItem.params),
       this.getNormalizedParams(this.curPage.params)
     )
-    console.log('getShouldNavigate', sameName, sameParams, navItem, historyItem)
     return !sameName || !sameParams
   }
 
