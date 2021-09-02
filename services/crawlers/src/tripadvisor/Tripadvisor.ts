@@ -74,14 +74,15 @@ export class Tripadvisor extends WorkerJob {
 
   async getRestaurant(path: string) {
     this.detail_id = this.extractDetailID(path)
-    const response = await axios.get(TRIPADVISOR_DOMAIN + path, {
-      headers: AXIOS_HEADERS,
-    })
-    let data = this._extractEmbeddedJSONData(response.data)
+    const html = await this.curl_cli_retries(
+      path,
+      "--compressed -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0'"
+    )
+    let data = this._extractEmbeddedJSONData(html)
     const scrape_id = await this.saveRestaurant(data)
     if (!scrape_id) throw new Error("Tripadvisor crawler couldn't save restaurant")
     await this.savePhotos(scrape_id)
-    await this.saveReviews(path, scrape_id, 0, response.data)
+    await this.saveReviews(path, scrape_id, 0, html)
     this.log(`"${this.restaurant_name}" scrape complete`)
   }
 
