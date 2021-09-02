@@ -257,7 +257,13 @@ const Inner = () => {
   }
 
   return (
-    <AbsoluteVStack zIndex={100000000} fullscreen alignItems="flex-end" justifyContent="flex-end">
+    <AbsoluteVStack
+      pointerEvents="none"
+      zIndex={100000000}
+      fullscreen
+      alignItems="flex-end"
+      justifyContent="flex-end"
+    >
       <AnimatedVStack>
         <VStack
           backgroundColor={theme.backgroundColor}
