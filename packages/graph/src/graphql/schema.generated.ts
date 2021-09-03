@@ -8153,7 +8153,7 @@ export const generatedSchema = {
     score: { __type: 'numeric' },
     score_breakdown: { __type: 'jsonb' },
     scrape_metadata: { __type: 'jsonb' },
-    slug: { __type: 'String!' },
+    slug: { __type: 'String' },
     source_breakdown: { __type: 'jsonb' },
     sources: { __type: 'jsonb' },
     state: { __type: 'String' },
@@ -13795,7 +13795,7 @@ export interface restaurant {
   score?: Maybe<ScalarsEnums['numeric']>
   score_breakdown?: Maybe<ScalarsEnums['jsonb']>
   scrape_metadata?: Maybe<ScalarsEnums['jsonb']>
-  slug: ScalarsEnums['String']
+  slug?: Maybe<ScalarsEnums['String']>
   source_breakdown?: Maybe<ScalarsEnums['jsonb']>
   sources?: Maybe<ScalarsEnums['jsonb']>
   state?: Maybe<ScalarsEnums['String']>
