@@ -22,7 +22,7 @@ steps:
   - label: ":docker: build worker"
     key: worker
     depends_on: base
-    command: ./dsh compose_build worker
+    command: ./dsh compose_build_and_push worker
 
   - label: ":docker: build run-tests"
     key: run-tests
