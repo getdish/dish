@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { HStack, Input, useDebounce } from 'snackui'
 
 import { red } from '../../../constants/colors'
-import { tagLenses } from '../../../constants/localTags'
+import { tagCategoriesPopular, tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useAsyncEffect } from '../../hooks/useAsync'
@@ -137,27 +137,37 @@ export const ReviewTagsRow = graphql(
     //   : []
 
     const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
-    const restaurantTags =
-      restaurant?.top_tags({
-        args: {
-          // _tag_types: 'dish',
-          tag_slugs: '',
-        },
-        limit: 20,
-      }) || []
 
-    const tags = uniqBy(
-      [
-        ...tagLenses,
-        ...userTags.map((x) => x.tag),
-        //
-        ...restaurantTags.map((x) => x.tag),
-      ],
-      (x) => x?.slug
-    )
+    let allTags = [
+      ...tagLenses,
+      ...userTags.map((x) => x.tag),
+      //
+      ...(
+        restaurant?.top_tags({
+          args: {
+            _tag_types: 'dish',
+          },
+          limit: 20,
+        }) || []
+      ).map((x) => x.tag),
+      ...(
+        restaurant?.top_tags({
+          args: {
+            tag_slugs: '',
+          },
+          limit: 20,
+        }) || []
+      ).map((x) => x.tag),
+    ]
+
+    if (allTags.length < 5) {
+      allTags = [...allTags]
+    }
+
+    const tags = uniqBy(allTags, (x) => x?.slug)
       .filter(isPresent)
       .map(getTagButtonProps)
-    const tagsKey = tags.map((x) => x.slug).join(',')
+    const tagsKey = tags.map((x) => x.slug).join('')
 
     useAsyncEffect(
       async (mounted) => {

@@ -8,6 +8,8 @@ import { sortBy } from 'lodash'
 
 import { getFullTag } from '../src/helpers/getFullTag'
 
+globalThis['window'] = globalThis
+
 startLogging()
 main()
 
@@ -95,6 +97,20 @@ async function getAllTags() {
     })
   ).filter((x) => x.name)
 
+  const tagCategoriesPopular = await resolved(() => {
+    return query
+      .tag({
+        where: {
+          type: {
+            _eq: 'category',
+          },
+        },
+        order_by: [{ popularity: order_by.desc }],
+        limit: 10,
+      })
+      .map(getFullTag)
+  })
+
   const tagLensesAll = await resolved(() => {
     return query
       .tag({
@@ -118,5 +134,6 @@ async function getAllTags() {
     tagDefaultAutocomplete,
     tagLenses,
     tagFilters,
+    tagCategoriesPopular,
   }
 }

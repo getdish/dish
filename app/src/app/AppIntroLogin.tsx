@@ -14,8 +14,9 @@ export const AppIntroLogin = memo(() => {
 
   return (
     <>
-      <VStack overflow="hidden" borderRadius={20} padding={30} alignItems="center">
-        <LogoColor scale={2} />
+      <VStack overflow="hidden" borderRadius={20} padding={30} alignItems="center" spacing="xl">
+        <LogoColor scale={1.4} />
+
         <TagLine />
 
         {!userStore.isLoggedIn && (
@@ -24,8 +25,6 @@ export const AppIntroLogin = memo(() => {
             <AuthForm />
           </>
         )}
-
-        <Spacer size="xxl" />
 
         <LinkButton
           alignSelf="center"

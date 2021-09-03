@@ -1,6 +1,3 @@
-import { hexToRGB } from '../helpers/rgb'
-import { blue300, blue400, green300, green400, pink300, pink400, red300, red400 } from './colors'
-
 export const tagDefaultAutocomplete = [
   {
     id: '97517a08-c2f1-4d38-8c50-d7932b3787da',
@@ -8,6 +5,7 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🍜',
     slug: 'vietnamese__pho',
+    rgb: [],
   },
   {
     id: '1212987b-580f-4733-beee-e4cf3a6155b8',
@@ -23,6 +21,7 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🥩',
     slug: 'american__steak',
+    rgb: [],
   },
   {
     id: 'bead10d3-f8e2-4e99-934d-e85b92ae1a8c',
@@ -30,6 +29,7 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🍣',
     slug: 'hawaiian__poke',
+    rgb: [],
   },
   {
     id: '1cb327c1-fbc6-4366-94e0-e795e015ef31',
@@ -37,6 +37,7 @@ export const tagDefaultAutocomplete = [
     type: '',
     icon: '🥟',
     slug: 'global__dim-sum',
+    rgb: [],
   },
   {
     id: 'd57bf047-54d5-4a4b-9f69-c511fe26e0f8',
@@ -44,6 +45,7 @@ export const tagDefaultAutocomplete = [
     type: 'dish',
     icon: '🥪',
     slug: 'vietnamese__banh-mi',
+    rgb: [],
   },
   {
     id: 'ed0cf73a-674d-429e-a15c-35bb046ccf6a',
@@ -181,7 +183,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '💎',
     slug: 'lenses__gems',
-    rgb: hexToRGB(pink400).rgb,
+    rgb: ['199', ' 58', ' 107'],
   },
   {
     id: 'b1580bd8-4f60-45e3-a5a9-c31effe8e7a3',
@@ -189,7 +191,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🍷',
     slug: 'lenses__drinks',
-    rgb: hexToRGB(red400).rgb,
+    rgb: ['153', ' 76', ' 76'],
   },
   {
     id: '5da93fbe-5715-43b4-8b15-6521e3897bd9',
@@ -197,7 +199,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🌃',
     slug: 'lenses__vibe',
-    rgb: hexToRGB(blue400).rgb,
+    rgb: ['30', ' 83', ' 141'],
   },
   {
     id: '4768116c-bca3-4936-970b-5f2570a9e8f8',
@@ -205,16 +207,8 @@ export const tagLenses = [
     type: 'lense',
     icon: '🥬',
     slug: 'lenses__veg',
-    rgb: hexToRGB(green400).rgb,
+    rgb: ['51', ' 153', ' 51'],
   },
-  // {
-  //   id: '30d67fcc-759b-4cd6-8241-400028de9196',
-  //   name: 'Date',
-  //   type: 'lense',
-  //   icon: '🌴',
-  //   slug: 'lenses__service',
-  //   rgb: [88, 75, 34],
-  // },
 ]
 export const tagFilters = [
   {
@@ -255,6 +249,88 @@ export const tagFilters = [
     type: 'filter',
     icon: '🕐',
     slug: 'filters__open',
+    rgb: null,
+  },
+]
+export const tagCategoriesPopular = [
+  {
+    id: 'c0bf32d2-427d-44ca-913c-2c8f15ce79d2',
+    name: 'Sushi',
+    type: 'category',
+    icon: '',
+    slug: 'categories__sushi',
+    rgb: null,
+  },
+  {
+    id: 'eaa61da5-aae3-4ada-82ca-b5a2f4f14861',
+    name: 'Pasta',
+    type: 'category',
+    icon: '',
+    slug: 'categories__pasta',
+    rgb: null,
+  },
+  {
+    id: 'a4439510-f4a1-4883-98dc-f04d60d771a1',
+    name: 'Rice',
+    type: 'category',
+    icon: '',
+    slug: 'categories__rice',
+    rgb: null,
+  },
+  {
+    id: '7bef7997-267c-4656-ab72-d28155a6f0e7',
+    name: 'Breakfast',
+    type: 'category',
+    icon: '',
+    slug: 'categories__breakfast',
+    rgb: null,
+  },
+  {
+    id: '7564e362-6175-4c36-b670-1853c88eb629',
+    name: 'Bread',
+    type: 'category',
+    icon: '',
+    slug: 'categories__bread',
+    rgb: null,
+  },
+  {
+    id: '62accc33-18ea-4c54-b1ca-002beca3332a',
+    name: 'Noodles',
+    type: 'category',
+    icon: '',
+    slug: 'categories__noodles',
+    rgb: null,
+  },
+  {
+    id: 'd331a58e-0fa3-45f5-b390-3aa008ccbee3',
+    name: 'Cheese',
+    type: 'category',
+    icon: '',
+    slug: 'categories__cheese',
+    rgb: null,
+  },
+  {
+    id: '9486c75f-e1c8-4227-b87b-fd01477221b2',
+    name: 'Sashimi',
+    type: 'category',
+    icon: '',
+    slug: 'categories__sashimi',
+    rgb: null,
+  },
+  {
+    id: '424fbe33-5aae-44a3-9c67-68f3256ea32b',
+    name: 'Dumplings',
+    type: 'category',
+    icon: '',
+    slug: 'categories__dumplings',
+    rgb: null,
+  },
+  {
+    id: '3e59178b-ee93-41d7-8acd-59282f170f6c',
+    name: 'Noodle',
+    type: 'category',
+    icon: '',
+    slug: 'categories__noodle',
     rgb: null,
   },
 ]

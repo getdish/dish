@@ -8,6 +8,7 @@ import {
   Circle,
   HStack,
   InteractiveContainer,
+  LoadingItem,
   Spacer,
   StackProps,
   Text,
@@ -149,25 +150,15 @@ export const ListItem = graphql((props: ListItemProps) => {
   // we need to be sure to render them all first pass so they fetch once,
   // then second pass it will hide all but one
 
-  if (isEditing || hasListReview) {
-    return <ListItemContent {...listItemContentProps} reviewQuery={listReview} />
-  }
-
-  if (hasUserReview) {
-    return <ListItemContent {...listItemContentProps} reviewQuery={userReview} />
-  }
-
-  if (isLoading) {
-    return (
-      <>
-        {/* <ListItemContent {...listItemContentProps} reviewQuery={topReview} /> */}
-        <ListItemContent {...listItemContentProps} reviewQuery={userReview} />
-        <ListItemContent {...listItemContentProps} reviewQuery={listReview} />
-      </>
-    )
-  }
-
-  return <ListItemContent {...listItemContentProps} />
+  return (
+    <Suspense
+      fallback={
+        <VStack height={180}>
+          <LoadingItem />
+        </VStack>
+      }
+    ></Suspense>
+  )
 })
 
 const ListItemContent = memo(
@@ -222,8 +213,8 @@ const ListItemContent = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug}>
         <VStack
-          // borderTopColor={theme.borderColor}
-          // borderTopWidth={1}
+          borderTopColor={theme.borderColor}
+          borderTopWidth={0.5}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
         >
@@ -350,7 +341,7 @@ const ListItemContent = memo(
                 </Link>
               </Column>
 
-              <Column>
+              <Column width={40}>
                 <Suspense fallback={null}>
                   <RestaurantDeliveryButtons
                     showLabels={false}
