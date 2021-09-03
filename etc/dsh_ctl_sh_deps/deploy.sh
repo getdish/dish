@@ -69,8 +69,10 @@ function deploy_dish_stack_bootstrap() {
 function deploy_dish() {
   echo "deploying dish - $DISH_ENV $POSTGRES_DB $POSTGRES_DB_DIR"
 
-  updateable_services="_app|_cron|_hooks|_search|_site|_worker"
+  updateable_services="_app|_cron|_hooks|_search|_site|_worker|_migrate"
   services=$(docker stack services --format "{{.Name}}" dish | grep -E "$updateable_services")
+
+  echo "updating $services"
 
   echo "$services" | while read -r service; do
     echo "dish restarting: $service"
