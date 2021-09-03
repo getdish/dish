@@ -253,7 +253,6 @@ const ListPageContent = memo(
           return <TagButton key={tag?.slug ?? i} size="sm" {...getTagButtonProps(tag)} />
         })
 
-      const textColor = listTheme === 'minimal' ? color : '#999'
       const titleContents = isEditing ? (
         <Input
           fontSize={20}
@@ -270,7 +269,6 @@ const ListPageContent = memo(
           onChangeText={(val) => {
             draft.current.name = val
           }}
-          color={textColor}
           multiline
           marginVertical={-5}
         />
@@ -400,11 +398,11 @@ const ListPageContent = memo(
                     <Title
                       maxWidth={620}
                       width="100%"
-                      size="xxxl"
-                      sizeLineHeight={0.72}
-                      color={textColor}
+                      size="xxxxxl"
+                      sizeLineHeight={0.76}
+                      fontWeight="300"
                     >
-                      {titleContents} <Text opacity={0.5}>{locationName ?? 'anywhere'}</Text>
+                      {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
                     </Title>
                     <Spacer size="lg" />
                   </VStack>
@@ -429,7 +427,7 @@ const ListPageContent = memo(
                       <Text lineHeight={22} textAlign="center">
                         <Link name="user" params={{ username }}>
                           <Title size="xl" fontWeight="200" opacity={0.5}>
-                            {username || '...'}'s&nbsp;
+                            {user.user?.name || username || '...'}'s&nbsp;
                           </Title>
                         </Link>
                         <Title size="xl" fontWeight="700" color={color} zIndex={0}>
@@ -516,7 +514,8 @@ const ListPageContent = memo(
                   <HStack
                     position="relative"
                     zIndex={1000}
-                    paddingBottom={10}
+                    marginBottom={isEditing ? 20 : -10}
+                    marginTop={-10}
                     alignItems="center"
                     justifyContent="center"
                   >
@@ -532,7 +531,7 @@ const ListPageContent = memo(
                     )}
 
                     {isEditing && (
-                      <HStack alignItems="center" flexWrap="wrap" spacing>
+                      <HStack alignItems="center" flexWrap="wrap" spacing="xxl">
                         <Paragraph>Color:</Paragraph>
 
                         <ColorPicker colors={listColors} color={color} onChange={setColor} />
