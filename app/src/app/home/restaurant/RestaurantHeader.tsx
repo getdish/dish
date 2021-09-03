@@ -89,9 +89,9 @@ const RestaurantHeaderContent = memo(
             <VStack flex={1}>
               {/* title row */}
               <HStack paddingLeft={20} alignItems="flex-end" position="relative">
-                <VStack marginRight={-15} marginBottom={-5} zIndex={200}>
+                <VStack width={66} height={66} marginRight={-15} marginBottom={-5} zIndex={200}>
                   <Theme name={themeName}>
-                    <RestaurantRatingView floating size={66} slug={restaurantSlug} />
+                    <RestaurantRatingView floating size={66} restaurant={restaurant} />
                   </Theme>
                 </VStack>
 

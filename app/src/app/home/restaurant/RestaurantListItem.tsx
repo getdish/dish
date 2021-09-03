@@ -268,8 +268,9 @@ const RestaurantListItemContent = memo(
           />
 
           {/* vote button and score */}
-          <AbsoluteVStack top={34} left={-5} zIndex={2000000}>
+          <AbsoluteVStack top={34} left={-5} zIndex={200000000}>
             {above}
+
             {!hideRate && (
               <RestaurantUpVoteDownVote
                 rounded
@@ -309,7 +310,7 @@ const RestaurantListItemContent = memo(
                   position="relative"
                   alignItems="center"
                 >
-                  {!media.sm && (
+                  {!media.xs && (
                     <VStack
                       backgroundColor={theme.backgroundColorSecondary}
                       borderRadius={1000}

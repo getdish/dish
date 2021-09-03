@@ -1,28 +1,24 @@
 import { useEffect } from 'react'
 
-class AsyncCancellation {}
-
-export function useAsyncEffect<V>(
-  effect: (wait: () => boolean) => any | Promise<any>,
-  inputs: any[]
-) {
-  useEffect(() => {
-    let mounted = true
-    try {
-      effect(() => {
-        if (!mounted) {
-          throw new AsyncCancellation()
-        }
-        return true
+export const useAsyncEffect = (
+  effect: (mounted: () => boolean) => Promise<any>,
+  destroy?: any,
+  inputs?: any
+) => {
+  const hasDestroyer = typeof destroy === 'function'
+  useEffect(
+    () => {
+      let result: any
+      let mounted = true
+      const promiseMaybe = effect(() => mounted)
+      Promise.resolve(promiseMaybe).then(function (value) {
+        result = value
       })
-    } catch (err) {
-      if (err instanceof AsyncCancellation) {
-        return undefined
+      return () => {
+        mounted = false
+        hasDestroyer && destroy(result)
       }
-      throw err
-    }
-    return () => {
-      mounted = false
-    }
-  }, inputs)
+    },
+    hasDestroyer ? inputs : destroy
+  )
 }

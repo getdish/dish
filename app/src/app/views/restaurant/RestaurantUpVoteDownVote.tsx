@@ -9,7 +9,7 @@ import { numberFormat } from '../../../helpers/numberFormat'
 import { restaurantRatio } from '../../../helpers/restaurantsRatio'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { RestaurantRatingView } from '../../home/RestaurantRatingView'
-import { useUserTagVotes } from '../../hooks/useUserTagVotes'
+import { VoteNumber, useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { TextSuperScript } from '../TextSuperScript'
 import { VoteButton } from '../VoteButton'
 
@@ -74,7 +74,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           shadowOpacity={0.1}
           shadowRadius={3}
         >
-          <RestaurantRatingView slug={restaurantSlug} floating size={42} />
+          <RestaurantRatingView restaurant={restaurant} floating size={42} />
         </AbsoluteVStack>
         <RatingWithVotes
           score={score}
@@ -104,7 +104,7 @@ const RatingWithVotes = memo(
     size?: 'sm' | 'md'
     ratio?: number
     score: number
-    vote: -1 | 0 | 1
+    vote: VoteNumber
     setVote?: Function
     onClickPoints?: (event: GestureResponderEvent) => void
     subtle?: boolean
