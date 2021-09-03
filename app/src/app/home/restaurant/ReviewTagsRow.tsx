@@ -94,7 +94,7 @@ import { RestaurantReviewProps } from './RestaurantReview'
 // )
 
 export const ReviewTagsRow = graphql(
-  ({ review, restaurantSlug, ...props }: RestaurantReviewProps) => {
+  ({ review, restaurantSlug, listTheme, ...props }: RestaurantReviewProps) => {
     const [search, setSearch] = useState('')
     const setSearchDbc = useDebounce(setSearch, 350)
     const [isFocused, setIsFocused] = useState(false)
@@ -210,12 +210,19 @@ export const ReviewTagsRow = graphql(
             onBlur={() => setIsFocused(false)}
             color="#777"
             placeholder="Tags:"
+            fontSize={13}
             width={isFocused ? 110 : 70}
             borderColor="transparent"
             onChangeText={(text) => setSearchDbc(text)}
           />
         </HStack>
-        <HStack paddingVertical={16} spacing="sm">
+        <HStack
+          {...(listTheme === 'minimal' && {
+            opacity: 0.75,
+          })}
+          paddingVertical={16}
+          spacing="sm"
+        >
           {currentTags.map((tagButtonProps, i) => {
             const isLense = tagButtonProps.type === 'lense'
             const lastItem = currentTags[i - 1]
@@ -225,8 +232,10 @@ export const ReviewTagsRow = graphql(
                 restaurantSlug={restaurantSlug}
                 key={tagButtonProps.slug || 0}
                 {...tagButtonProps}
+                backgroundColor="transparent"
                 {...(isLense && {
                   name: '',
+                  marginRight: -4,
                   tooltip: tagButtonProps.name,
                   circular: true,
                 })}

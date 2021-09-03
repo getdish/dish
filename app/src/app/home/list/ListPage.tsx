@@ -1,9 +1,9 @@
 import { series } from '@dish/async'
-import { List, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
+import { List, graphql, listInsert, listUpdate, mutate, order_by, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
 import React, { Suspense, SuspenseList, memo, useEffect, useRef, useState } from 'react'
-import { Switch } from 'react-native'
+import { Image, Switch } from 'react-native'
 import {
   AbsoluteVStack,
   Button,
@@ -19,11 +19,13 @@ import {
   Toast,
   VStack,
   useForceUpdate,
+  useMedia,
   useTheme,
 } from 'snackui'
 
 import { blue200, grey, red400 } from '../../../constants/colors'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
+import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
@@ -49,6 +51,7 @@ import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { CircleButton } from '../restaurant/CircleButton'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
+import { UserAvatar } from '../user/UserAvatar'
 import { ColorPicker } from './ColorPicker'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors, randomListColor } from './listColors'
@@ -276,6 +279,19 @@ const ListPageContent = memo(
         list.name
       )
       const locationName = region.data?.name ?? props.item.region
+      const media = useMedia()
+
+      const uri = [
+        list.image || '',
+        ...(list
+          .restaurants({
+            limit: 3,
+            order_by: [{ position: order_by.asc }],
+          })
+          .map((x) => x.restaurant.image) || ''),
+      ].find(Boolean)
+
+      console.log('uri', uri)
 
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
@@ -388,24 +404,35 @@ const ListPageContent = memo(
               {/* START HEADER */}
               <VStack backgroundColor={`${color}11`}>
                 {listTheme === 'minimal' && (
-                  <VStack
-                    alignItems="flex-start"
-                    justifyContent="flex-end"
-                    width="100%"
-                    paddingHorizontal={28}
-                  >
-                    <Spacer size={84} />
-                    <Title
-                      maxWidth={620}
-                      width="100%"
-                      size="xxxxxl"
-                      sizeLineHeight={0.76}
-                      fontWeight="300"
-                    >
-                      {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
-                    </Title>
-                    <Spacer size="lg" />
-                  </VStack>
+                  <HStack paddingHorizontal={28}>
+                    <VStack alignItems="flex-start" justifyContent="flex-end" width="100%" flex={1}>
+                      <Spacer size={84} />
+                      <Title
+                        maxWidth={620}
+                        width="100%"
+                        size="xxxxxl"
+                        sizeLineHeight={0.76}
+                        fontWeight="300"
+                      >
+                        {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
+                      </Title>
+                      <Spacer size="lg" />
+
+                      <VStack flex={1} />
+                    </VStack>
+                    <Image
+                      // @ts-ignore
+                      source={{
+                        uri: getImageUrl(`${uri || ''}`, 400, 300),
+                      }}
+                      style={{
+                        width: 400,
+                        height: 300,
+                        margin: -30,
+                        marginBottom: -70,
+                      }}
+                    />
+                  </HStack>
                 )}
 
                 {listTheme === 'modern' && (
@@ -415,16 +442,29 @@ const ListPageContent = memo(
                     alignItems="center"
                     justifyContent="center"
                     width="100%"
-                    maxWidth={500}
+                    maxWidth={680}
                   >
                     <HStack
                       flex={1}
-                      maxWidth="75%"
-                      minWidth={200}
+                      maxWidth={media.notSm ? '80%%' : '70%'}
+                      minWidth={220}
                       alignItems="center"
                       justifyContent="center"
+                      spacing
                     >
-                      <Text lineHeight={22} textAlign="center">
+                      <Link
+                        name="user"
+                        params={{
+                          username: user.user?.username || '',
+                        }}
+                      >
+                        <UserAvatar
+                          avatar={user.user?.avatar ?? ''}
+                          charIndex={user.user?.charIndex ?? 0}
+                        />
+                      </Link>
+
+                      <Text lineHeight={22} textAlign="left">
                         <Link name="user" params={{ username }}>
                           <Title size="xl" fontWeight="200" opacity={0.5}>
                             {user.user?.name || username || '...'}'s&nbsp;
@@ -649,6 +689,7 @@ const ListPageContent = memo(
                               </AbsoluteVStack>
                             )}
                             <ListItem
+                              listTheme={listTheme}
                               restaurant={restaurant}
                               listSlug={listSlug}
                               rank={index + 1}

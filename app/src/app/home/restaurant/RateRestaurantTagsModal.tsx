@@ -6,7 +6,7 @@ import { tagLenses } from '../../../constants/localTags'
 import { CloseButton, SmallCircleButton } from '../../views/CloseButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { ListItemHStack } from './RestaurantReview'
+import { ListItemHStack } from './ListItemHStack'
 
 // const meta = (
 //   <>

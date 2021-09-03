@@ -1,6 +1,6 @@
 import { getUserName, graphql, review } from '@dish/graph'
 import React, { memo } from 'react'
-import { Divider, HStack, StackProps, Text, VStack, useTheme } from 'snackui'
+import { Divider, HStack, Text, VStack } from 'snackui'
 
 import { CommentBubble, CommentBubbleProps } from '../../views/CommentBubble'
 import { Link } from '../../views/Link'
@@ -9,6 +9,7 @@ import { ReviewTagsRow } from './ReviewTagsRow'
 import { SentimentText } from './SentimentText'
 
 export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
+  listTheme?: 'modern' | 'minimal'
   restaurantSlug?: string
   listSlug?: string
   review?: review | null
@@ -38,6 +39,7 @@ export const RestaurantReview = memo(
         after,
         restaurantSlug,
         listSlug,
+        listTheme,
         review,
         showEmptyReview,
         ...commentBubbleProps
@@ -104,32 +106,3 @@ export const RestaurantReview = memo(
     }
   )
 )
-
-export const ListItemHStack = (props: StackProps) => {
-  const theme = useTheme()
-  return (
-    <HStack
-      paddingVertical={12}
-      paddingHorizontal={8}
-      width="100%"
-      alignItems="center"
-      borderTopColor={theme.borderColor}
-      borderTopWidth={1}
-      {...props}
-    >
-      {props.children}
-    </HStack>
-  )
-}
-
-// restaurantSlug === `woodys-liquor-store`
-// const [showAddTag, setShowAddTag] = useState(false)
-// const media = useMedia()
-// useLazyEffect(() => {
-//   if (refetchKey) {
-//     console.log('refetching review', refetchKey)
-//     reviews.map(refetch)
-//   }
-// }, [refetchKey])
-
-// console.log('review.username', review?.username)

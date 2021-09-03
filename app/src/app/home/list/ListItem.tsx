@@ -40,6 +40,7 @@ import { RestaurantRatingView } from '../RestaurantRatingView'
 import { getSearchPageStore } from '../search/SearchPageStore'
 
 export type ListItemProps = {
+  listTheme?: 'modern' | 'minimal'
   reviewQuery?: review[] | null
   username?: string
   restaurant: restaurant
@@ -176,7 +177,18 @@ const ListItemContent = memo(
       setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
     }
   ) {
-    const { rank, restaurant, editable, reviewQuery, isEditing, setIsEditing, onUpdate } = props
+    const {
+      listTheme,
+      rank,
+      restaurant,
+      editable,
+      reviewQuery,
+      isEditing,
+      setIsEditing,
+      onUpdate,
+    } = props
+    // modern default
+    const isMinimal = listTheme === 'minimal'
     const review = reviewQuery?.[0]
     const reviewMutations = getUserReviewQueryMutations({
       restaurantId: restaurant?.id,
@@ -211,7 +223,7 @@ const ListItemContent = memo(
 
     const titleFontSize = Math.round((media.sm ? 20 : 26) * titleFontScale)
     const theme = useTheme()
-    const imgSize = 72
+    const imgSize = isMinimal ? 72 : 110
 
     if (!restaurant) {
       return null
@@ -243,7 +255,7 @@ const ListItemContent = memo(
               borderBottomRightRadius={8}
             />
 
-            <HStack position="relative" paddingVertical={10} alignItems="center">
+            <HStack zIndex={100} position="relative" paddingVertical={10} alignItems="center">
               <VStack
                 backgroundColor={theme.backgroundColorSecondary}
                 width={imgSize}
@@ -268,7 +280,7 @@ const ListItemContent = memo(
               <VStack marginTop={-5}>
                 <RestaurantRatingView restaurant={restaurant} floating size={42} />
               </VStack>
-              <AbsoluteVStack bottom={-20} right={10}>
+              <AbsoluteVStack bottom="-1%" right="10%">
                 {!!editable && !isEditing && (
                   <SmallButton
                     elevation={1}
@@ -402,7 +414,7 @@ const ListItemContent = memo(
           <HStack
             marginTop={-20}
             marginBottom={15}
-            paddingLeft={90}
+            paddingLeft={isMinimal ? 90 : 110}
             alignItems="center"
             spacing="lg"
           >
@@ -410,6 +422,7 @@ const ListItemContent = memo(
             <VStack justifyContent="center" flex={1} position="relative">
               <Suspense fallback={null}>
                 <RestaurantReview
+                  listTheme={listTheme}
                   isEditing={isEditing}
                   hideMeta
                   onEdit={async (text) => {
