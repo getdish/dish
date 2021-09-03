@@ -86,6 +86,7 @@ export const RestaurantDishRowContent = memo(
                 })}
               >
                 <TagButton
+                  backgroundColor="transparent"
                   isActive={isSelected}
                   noLink
                   restaurantSlug={restaurantSlug}

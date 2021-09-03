@@ -20,7 +20,7 @@ import {
   useForceUpdate,
 } from 'snackui'
 
-import { grey, red400 } from '../../../constants/colors'
+import { blue200, grey, red400 } from '../../../constants/colors'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { router } from '../../../router'
@@ -280,19 +280,21 @@ const ListPageContent = memo(
             <BottomFloatingArea>
               <Button
                 pointerEvents="auto"
-                themeInverse
+                borderWidth={2}
+                borderColor={blue200}
+                theme="active"
                 borderRadius={100}
                 width={55}
                 height={55}
                 alignItems="center"
                 justifyContent="center"
-                elevation={2}
+                elevation={1}
                 noTextWrap
                 onPress={() => {
                   setShowAddModal(true)
                 }}
               >
-                <Plus size={42} color="#777" />
+                <Plus size={42} color="#fff" />
               </Button>
               <VStack pointerEvents="none" flex={1} />
             </BottomFloatingArea>
@@ -405,6 +407,7 @@ const ListPageContent = memo(
                     alignItems="center"
                     justifyContent="center"
                     width="100%"
+                    maxWidth={500}
                   >
                     <HStack
                       flex={1}
@@ -415,15 +418,15 @@ const ListPageContent = memo(
                     >
                       <Text lineHeight={22} textAlign="center">
                         <Link name="user" params={{ username }}>
-                          <Title size="sm" fontWeight="300" opacity={0.5}>
+                          <Title size="xl" fontWeight="200" opacity={0.5}>
                             {username || '...'}'s&nbsp;
                           </Title>
                         </Link>
-                        <Title size="sm" fontWeight="600" color={color} zIndex={0}>
+                        <Title size="xl" fontWeight="700" color={color} zIndex={0}>
                           {titleContents}&nbsp;
                         </Title>
-                        <Title size="sm" fontWeight="300" opacity={0.5}>
-                          {locationName ?? 'anywhere'}
+                        <Title size="xl" fontWeight="200" opacity={0.5}>
+                          {locationName ?? ''}
                         </Title>
                       </Text>
                     </HStack>

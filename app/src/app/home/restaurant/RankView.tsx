@@ -23,7 +23,6 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       position="relative"
       alignItems="center"
       justifyContent="center"
-      opacity={0.5}
     >
       <AbsoluteVStack
         borderRadius={1000}
@@ -32,9 +31,9 @@ export const RankView = memo(({ rank }: { rank: number }) => {
         zIndex={-1}
       />
       <Text textAlign="center" lineHeight={38}>
-        <TextSuperScript color={theme.colorAlt} transform={[{ translateY: -15 }]} fontSize={11}>
+        <Text opacity={0.5} color={theme.colorAlt} y={-5} x={10} fontSize={11}>
           #
-        </TextSuperScript>
+        </Text>
         <Text
           letterSpacing={-1}
           fontSize={+rank > 9 ? 17 : 21}

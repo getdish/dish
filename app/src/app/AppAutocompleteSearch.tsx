@@ -122,6 +122,7 @@ function useSearchQueryEffect(
             console.error(err)
           }
         }
+        console.log('searched for', results, query)
       },
       // allow cancel
       () => sleep(1),

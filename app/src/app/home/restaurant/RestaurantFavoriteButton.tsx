@@ -1,11 +1,10 @@
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
-import { ButtonProps } from 'snackui'
 
 import { useUserFavoriteQuery } from '../../hooks/useUserReview'
 import { FavoriteButton, FavoriteButtonProps } from '../../views/FavoriteButton'
 
-export type RestaurantFavoriteButtonProps = ButtonProps & {
+export type RestaurantFavoriteButtonProps = Partial<FavoriteButtonProps> & {
   size?: FavoriteButtonProps['size']
   restaurantSlug: string
 }
@@ -22,7 +21,7 @@ export const RestaurantFavoriteButton = memo(
     })
     return (
       <Suspense fallback={null}>
-        <FavoriteButton isFavorite={!!favorited} onToggle={toggle} {...buttonProps}>
+        <FavoriteButton {...buttonProps} onToggle={toggle} isFavorite={!!favorited}>
           {total > 0 ? total : null}
         </FavoriteButton>
       </Suspense>

@@ -322,9 +322,9 @@ const TagButtonInner = (props: TagButtonProps) => {
         <VStack
           {...(circular && {
             position: 'absolute',
-            scale: 0.8,
-            bottom: -10,
-            right: -10,
+            scale: 0.9,
+            bottom: -6,
+            right: -8,
           })}
         >
           <TagButtonVote
@@ -511,21 +511,19 @@ const TagButtonVote = graphql(
       >
         {!props.circular && vote === 0 && <Plus {...iconProps} />}
         {vote !== 0 && (
-          <Theme name="light">
-            <VStack
-              width={28 * scale}
-              height={28 * scale}
-              backgroundColor={theme.backgroundColor}
-              borderRadius={100}
-              alignItems="center"
-              justifyContent="center"
-              pointerEvents="none"
-            >
-              <Text color={theme.color} fontSize={14 * scale} fontWeight="800">
-                {vote < 0 ? vote : `${vote}`}
-              </Text>
-            </VStack>
-          </Theme>
+          <VStack
+            width={28 * scale}
+            height={28 * scale}
+            backgroundColor={theme.backgroundColor}
+            borderRadius={100}
+            alignItems="center"
+            justifyContent="center"
+            pointerEvents="none"
+          >
+            <Text color={theme.color} fontSize={14 * scale} fontWeight="800">
+              {vote < 0 ? vote : `${vote}`}
+            </Text>
+          </VStack>
         )}
       </VStack>
     )

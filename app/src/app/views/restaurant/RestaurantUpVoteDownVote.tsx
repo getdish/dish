@@ -74,7 +74,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           shadowOpacity={0.1}
           shadowRadius={3}
         >
-          <RestaurantRatingView slug={restaurantSlug} floating size={42} />
+          <RestaurantRatingView restaurant={restaurant} floating size={42} />
         </AbsoluteVStack>
         <RatingWithVotes
           score={score}

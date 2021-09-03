@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph'
+import { graphql, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Search } from '@dish/react-feather'
 import { uniqBy } from 'lodash'
@@ -6,9 +6,11 @@ import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { HStack, Input, useDebounce } from 'snackui'
 
+import { red } from '../../../constants/colors'
 import { tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { useAsyncEffect } from '../../hooks/useAsync'
 import { useUserStore } from '../../userStore'
 import { TagButton, TagButtonProps, getTagButtonProps } from '../../views/TagButton'
 import { RestaurantReviewProps } from './RestaurantReview'
@@ -158,29 +160,45 @@ export const ReviewTagsRow = graphql(
       .map(getTagButtonProps)
     const tagsKey = tags.map((x) => x.slug).join(',')
 
-    useEffect(() => {
-      if (!search) {
-        setFiltered([])
-        return
-      }
-      let cancel = false
-      fuzzySearch({
-        items: tags,
-        query: search,
-        keys: ['name'],
-      }).then((res) => {
-        if (cancel) return
-        setFiltered(res)
-      })
-      return () => {
-        cancel = true
-      }
-    }, [search, tagsKey])
+    useAsyncEffect(
+      async (mounted) => {
+        if (!search) {
+          setFiltered([])
+          return
+        }
+        const foundTagsWithNames = await resolved(() =>
+          query
+            .tag({
+              where: {
+                name: {
+                  _ilike: `${search}%`,
+                },
+              },
+              limit: 15,
+            })
+            .map(getTagButtonProps)
+        )
+        if (!mounted()) return
+        const filtered = await fuzzySearch({
+          items: [...tags, ...foundTagsWithNames],
+          query: search,
+          keys: ['name'],
+        })
+        setFiltered(filtered)
+      },
+      [search, tagsKey]
+    )
 
     const currentTags = filtered.length ? filtered : tags
 
     return (
-      <HStack marginVertical={-6} width="100%" alignItems="center">
+      <HStack
+        marginVertical={-6}
+        width="100%"
+        alignItems="center"
+        pointerEvents="auto"
+        zIndex={1000}
+      >
         <HStack pointerEvents="auto" alignItems="center" flexShrink={0} zIndex={-1}>
           <Search size={16} color="#777" />
           <Input
@@ -191,41 +209,39 @@ export const ReviewTagsRow = graphql(
             onBlur={() => setIsFocused(false)}
             color="#777"
             placeholder="Tags:"
-            width={isFocused ? 120 : 70}
+            width={isFocused ? 110 : 70}
             borderColor="transparent"
             onChangeText={(text) => setSearchDbc(text)}
           />
         </HStack>
-        <ScrollView horizontal>
-          <HStack paddingVertical={16} spacing="sm">
-            {currentTags.map((tagButtonProps, i) => {
-              const isLense = tagButtonProps.type === 'lense'
-              const lastItem = currentTags[i - 1]
-              return (
-                <TagButton
-                  noLink
-                  // transparent
-                  restaurantSlug={restaurantSlug}
-                  key={tagButtonProps.slug || 0}
-                  {...tagButtonProps}
-                  {...(isLense && {
-                    name: '',
-                    tooltip: tagButtonProps.name,
-                    circular: true,
+        <HStack paddingVertical={16} spacing="sm">
+          {currentTags.map((tagButtonProps, i) => {
+            const isLense = tagButtonProps.type === 'lense'
+            const lastItem = currentTags[i - 1]
+            return (
+              <TagButton
+                noLink
+                // transparent
+                restaurantSlug={restaurantSlug}
+                key={tagButtonProps.slug || [console.log('warn'), `${Math.random()}`][1]}
+                {...tagButtonProps}
+                {...(isLense && {
+                  name: '',
+                  tooltip: tagButtonProps.name,
+                  circular: true,
+                })}
+                {...(!isLense && {
+                  backgroundColor: 'transparent',
+                })}
+                {...(lastItem?.type === 'lense' &&
+                  !isLense && {
+                    marginLeft: 20,
                   })}
-                  {...(!isLense && {
-                    backgroundColor: 'transparent',
-                  })}
-                  {...(lastItem?.type === 'lense' &&
-                    !isLense && {
-                      marginLeft: 20,
-                    })}
-                  votable
-                />
-              )
-            })}
-          </HStack>
-        </ScrollView>
+                votable
+              />
+            )
+          })}
+        </HStack>
       </HStack>
     )
   },
