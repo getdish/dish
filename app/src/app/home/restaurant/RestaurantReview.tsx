@@ -63,6 +63,7 @@ export const RestaurantReview = memo(
           {/* {showAddTag && <RateRestaurantTagsModal onDismiss={() => setShowAddTag(false)} />} */}
           <VStack width="100%">
             <CommentBubble
+              chromeless={listTheme === 'minimal'}
               expandable
               {...(!hideRestaurantName && {
                 title: (

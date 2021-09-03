@@ -109,11 +109,12 @@ export const ContentScrollContext = createContext('id')
 type ContentScrollViewProps = ScrollViewProps & {
   id: string
   children: any
+  bidirectional?: boolean
   onScrollYThrottled?: Function
 }
 
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
-  ({ children, onScrollYThrottled, style, id, ...props }, ref) => {
+  ({ children, onScrollYThrottled, style, id, bidirectional, ...props }, ref) => {
     // this updates when drawer moves to top
     // this is already handled in useScrollActive i think
     // const isActive = useStoreSelector(ContentParentStore, x => x.activeId === id, { id })
@@ -170,6 +171,14 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
 
     // memo because preventScrolling changes on media queries
     const childrenMemo = useMemo(() => {
+      if (bidirectional) {
+        return (
+          <ScrollView horizontal bounces={false}>
+            {children}
+          </ScrollView>
+        )
+      }
+
       return children
     }, [children])
 
@@ -201,6 +210,10 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
         <ScrollView
           removeClippedSubviews
           {...props}
+          {...(bidirectional && {
+            nestedScrollEnabled: true,
+            bouces: false,
+          })}
           ref={combineRefs(scrollRef, ref)}
           scrollEventThrottle={16}
           onScroll={(e) => {

@@ -19,6 +19,8 @@
 
 # inbox
 
+- need to validate ratings aren't above 5, below 0
+
 - rate limit mutations
 
 - login link + email option button (lower)

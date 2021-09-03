@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql, listFindOne, order_by, refetch, restaurant, review } from '@dish/graph'
+import { graphql, listFindOne, refetch, restaurant, review } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
@@ -8,8 +8,6 @@ import {
   Circle,
   HStack,
   InteractiveContainer,
-  LoadingItem,
-  Spacer,
   StackProps,
   Text,
   Toast,
@@ -30,7 +28,6 @@ import { SmallButton } from '../../views/SmallButton'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
 import { RankView } from '../restaurant/RankView'
 import { RestaurantAddress } from '../restaurant/RestaurantAddress'
-import { RestaurantAddToListButton } from '../restaurant/RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from '../restaurant/RestaurantDeliveryButtons'
 import { openingHours, priceRange } from '../restaurant/RestaurantDetailRow'
 import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton'
@@ -64,7 +61,7 @@ const Column = (props: ColumnProps) => {
       width={150}
       // borderLeftColor={theme.borderColor}
       // borderLeftWidth={2}
-      height={44}
+      height={46}
       alignItems="center"
       justifyContent="center"
       overflow="hidden"
@@ -255,7 +252,16 @@ const ListItemContent = memo(
               borderBottomRightRadius={8}
             />
 
-            <HStack zIndex={100} position="relative" paddingVertical={10} alignItems="center">
+            <HStack
+              zIndex={100}
+              position="relative"
+              paddingVertical={10}
+              alignItems="center"
+              {...(!isMinimal && {
+                marginBottom: -40,
+                marginLeft: -20,
+              })}
+            >
               <VStack
                 backgroundColor={theme.backgroundColorSecondary}
                 width={imgSize}
@@ -298,7 +304,7 @@ const ListItemContent = memo(
             </HStack>
 
             <HStack alignItems="center" marginTop={-5} marginBottom={5}>
-              <Column width={200} flexDirection="row" alignItems="flex-start">
+              <Column width={190} flexDirection="row" alignItems="flex-start">
                 <VStack marginRight={-10} marginLeft={-10}>
                   <RankView rank={rank} />
                 </VStack>
@@ -332,35 +338,35 @@ const ListItemContent = memo(
                 </Link>
               </Column>
 
-              <Column>
-                {!!restaurant.address && (
-                  <RestaurantAddress size={'xs'} address={restaurant.address} />
-                )}
+              <Column width={20}>
+                <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
               </Column>
 
-              <Column width={50}>
+              <Column width={60}>
                 <Text fontSize={14} color={theme.colorTertiary}>
                   {price_range ?? '?'}
                 </Text>
               </Column>
 
-              <Column width={40}>
-                <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
-              </Column>
-
-              <Column>
+              <Column width={100}>
                 <Link
                   backgroundColor="red"
                   name="restaurantHours"
                   params={{ slug: restaurant.slug || '' }}
                 >
-                  <Text fontSize={14} color={theme.colorTertiary}>
+                  <Text fontSize={12} color={theme.colorTertiary}>
                     {open.nextTime || '~~'}
                   </Text>
                 </Link>
               </Column>
 
-              <Column width={40}>
+              <Column width={150}>
+                {!!restaurant.address && (
+                  <RestaurantAddress size={'xs'} address={restaurant.address} />
+                )}
+              </Column>
+
+              <Column width={55}>
                 <Suspense fallback={null}>
                   <RestaurantDeliveryButtons
                     showLabels={false}
@@ -369,44 +375,39 @@ const ListItemContent = memo(
                 </Suspense>
               </Column>
 
-              <Column>
-                <Link
-                  name="restaurant"
-                  flexShrink={1}
-                  params={{
-                    slug: restaurant.slug || '',
-                    section: 'reviews',
-                  }}
-                >
-                  <SmallButton
-                    borderWidth={0}
-                    width="100%"
-                    backgroundColor="transparent"
-                    tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                    icon={
-                      <MessageSquare
-                        style={{
-                          opacity: 0.5,
-                          marginLeft: -8,
-                        }}
-                        size={12}
-                        color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                      />
-                    }
+              <Column flexDirection="row" width={150}>
+                <InteractiveContainer>
+                  <Link
+                    name="restaurant"
+                    flexShrink={1}
+                    params={{
+                      slug: restaurant.slug || '',
+                      section: 'reviews',
+                    }}
                   >
-                    {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-                  </SmallButton>
-                </Link>
-              </Column>
-
-              <Column>
-                <RestaurantFavoriteButton
-                  width="100%"
-                  borderWidth={0}
-                  backgroundColor="transparent"
-                  size="md"
-                  restaurantSlug={restaurant.slug || ''}
-                />
+                    <SmallButton
+                      borderRadius={0}
+                      tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                      icon={
+                        <MessageSquare
+                          style={{
+                            opacity: 0.5,
+                            marginLeft: -8,
+                          }}
+                          size={12}
+                          color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                        />
+                      }
+                    >
+                      {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                    </SmallButton>
+                  </Link>
+                  <RestaurantFavoriteButton
+                    borderRadius={0}
+                    size="md"
+                    restaurantSlug={restaurant.slug || ''}
+                  />
+                </InteractiveContainer>
               </Column>
             </HStack>
           </HStack>
@@ -414,7 +415,7 @@ const ListItemContent = memo(
           <HStack
             marginTop={-20}
             marginBottom={15}
-            paddingLeft={isMinimal ? 90 : 110}
+            paddingLeft={isMinimal ? 90 : 90}
             alignItems="center"
             spacing="lg"
           >

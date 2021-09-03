@@ -1,17 +1,17 @@
-import { graphql, query, resolved } from '@dish/graph'
+import { graphql, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Search } from '@dish/react-feather'
+import { Search, Tag } from '@dish/react-feather'
 import { uniqBy } from 'lodash'
 import React, { useState } from 'react'
-import { HStack, Input, useDebounce } from 'snackui'
+import { AbsoluteHStack, HStack, Input, useDebounce } from 'snackui'
 
-import { red } from '../../../constants/colors'
-import { tagCategoriesPopular, tagLenses } from '../../../constants/localTags'
+import { tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useAsyncEffect } from '../../hooks/useAsync'
 import { useUserStore } from '../../userStore'
+import { SmallButton } from '../../views/SmallButton'
 import { TagButton, TagButtonProps, getTagButtonProps } from '../../views/TagButton'
 import { RestaurantReviewProps } from './RestaurantReview'
 
@@ -94,7 +94,17 @@ import { RestaurantReviewProps } from './RestaurantReview'
 // )
 
 export const ReviewTagsRow = graphql(
-  ({ review, restaurantSlug, listTheme, ...props }: RestaurantReviewProps) => {
+  ({
+    review,
+    restaurantSlug,
+    listTheme,
+    label = 'Tags:',
+    query,
+    ...props
+  }: RestaurantReviewProps & {
+    label?: string
+    query?: any
+  }) => {
     const [search, setSearch] = useState('')
     const setSearchDbc = useDebounce(setSearch, 350)
     const [isFocused, setIsFocused] = useState(false)
@@ -200,35 +210,49 @@ export const ReviewTagsRow = graphql(
         pointerEvents="auto"
         zIndex={1000}
       >
-        <HStack pointerEvents="auto" alignItems="center" flexShrink={0} zIndex={-1}>
-          <Search size={16} color="#777" />
+        <HStack
+          position="relative"
+          pointerEvents="auto"
+          alignItems="center"
+          flexShrink={0}
+          zIndex={-1}
+        >
+          <AbsoluteHStack
+            top={0}
+            bottom={0}
+            alignItems="center"
+            left={-15}
+            opacity={isFocused ? 1 : 0}
+          >
+            <Search size={16} color="#777" />
+          </AbsoluteHStack>
+
+          {!isFocused && (
+            <AbsoluteHStack fullscreen>
+              <SmallButton icon={<Tag size={16} color="#777" />} elevation={1}></SmallButton>
+            </AbsoluteHStack>
+          )}
           <Input
-            marginLeft={-5}
-            marginRight={-3}
+            placeholder="Dishes, tags:"
+            opacity={isFocused ? 1 : 0}
             zIndex={10}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             color="#777"
-            placeholder="Tags:"
             fontSize={13}
-            width={isFocused ? 110 : 70}
+            width={isFocused ? 130 : 50}
             borderColor="transparent"
             onChangeText={(text) => setSearchDbc(text)}
           />
         </HStack>
-        <HStack
-          {...(listTheme === 'minimal' && {
-            opacity: 0.75,
-          })}
-          paddingVertical={16}
-          spacing="sm"
-        >
+        <HStack alignItems="center" paddingVertical={16} spacing="sm">
           {currentTags.map((tagButtonProps, i) => {
             const isLense = tagButtonProps.type === 'lense'
             const lastItem = currentTags[i - 1]
             return (
               <TagButton
                 noLink
+                size="sm"
                 restaurantSlug={restaurantSlug}
                 key={tagButtonProps.slug || 0}
                 {...tagButtonProps}

@@ -1,5 +1,5 @@
 import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
-import { Plus, X } from '@dish/react-feather'
+import { Circle, Plus, X } from '@dish/react-feather'
 import React, { memo, useRef } from 'react'
 import {
   AbsoluteVStack,
@@ -320,7 +320,7 @@ const TagButtonInner = (props: TagButtonProps) => {
 
       {!!slug && !!votable && !!props.restaurantSlug && (
         <VStack
-          {...(circular && {
+          {...(noLink && {
             position: 'absolute',
             scale: 0.9,
             bottom: -6,
@@ -493,7 +493,7 @@ const TagButtonVote = graphql(
     const theme = useTheme()
     const iconProps = {
       size: 14,
-      color: 'rgba(0,0,0,0.45)',
+      color: 'rgba(150,150,150,0.25)',
     }
     const contents = (
       <VStack
@@ -510,7 +510,7 @@ const TagButtonVote = graphql(
         marginRight={-15 * scale}
         opacity={0.8}
       >
-        {!props.circular && vote === 0 && <Plus {...iconProps} />}
+        {!props.disablePopover && vote === 0 && <Circle {...iconProps} />}
         {vote !== 0 && (
           <VStack
             width={28 * scale}
@@ -541,4 +541,4 @@ const TagButtonVote = graphql(
   }
 )
 
-const tagRatings = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as VoteNumber[]
+const tagRatings = [1, 2, 3, 4, 5] as VoteNumber[]

@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
-import { HStack, Paragraph, StackProps } from 'snackui'
+import { HStack, Paragraph, StackProps, Text, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
@@ -22,21 +22,18 @@ export const RestaurantDeliveryButtons = memo(
     ...props
   }: Props) {
     const [restaurant] = queryRestaurant(restaurantSlug)
+    const theme = useTheme()
     if (!restaurant) {
       return null
     }
     const sources = getRestaurantDeliverySources(restaurant.sources)
 
-    if (!sources.length) {
-      return null
-    }
-
     return (
       <HStack flexWrap="wrap" alignItems="center" spacing="xs" {...props}>
         {!!label && (
-          <Paragraph fontSize={14} color="rgba(0,0,0,0.5)" marginRight={8} y={-1}>
+          <Text fontSize={14} color={theme.colorQuartenary} marginRight={8} y={-1}>
             {label}
-          </Paragraph>
+          </Text>
         )}
         {sources.map((source) => {
           return (
@@ -50,6 +47,11 @@ export const RestaurantDeliveryButtons = memo(
             />
           )
         })}
+        {!sources.length && (
+          <Text textAlign="center" fontSize={11} color={theme.colorQuartenary}>
+            No delivery
+          </Text>
+        )}
       </HStack>
     )
   })
