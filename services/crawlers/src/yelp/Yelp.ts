@@ -25,17 +25,17 @@ type RestaurantMatching = Required<Pick<Restaurant, 'name' | 'address' | 'teleph
 
 export type YelpScrape = Scrape<YelpScrapeData>
 
-const YELP_DOMAIN = 'https://www.yelp.com'
-const YELP_DOMAIN_MOBILE = 'https://m.yelp.com'
+export const YELP_DOMAIN = 'https://www.yelp.com'
+export const YELP_DOMAIN_MOBILE = 'https://m.yelp.com'
 
-const yelpAPI = new ProxiedRequests(YELP_DOMAIN, process.env.YELP_AWS_PROXY || YELP_DOMAIN, {
+export const yelpAPI = new ProxiedRequests(YELP_DOMAIN, process.env.YELP_AWS_PROXY || YELP_DOMAIN, {
   headers: {
     'X-My-X-Forwarded-For': 'www.yelp.com',
   },
   timeout: null,
 })
 
-const yelpAPIMobile = new ProxiedRequests(
+export const yelpAPIMobile = new ProxiedRequests(
   YELP_DOMAIN_MOBILE,
   process.env.YELP_MOBILE_AWS_PROXY || YELP_DOMAIN_MOBILE,
   {

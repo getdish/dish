@@ -2032,6 +2032,7 @@ export interface restaurant_bool_exp {
   hours?: Maybe<jsonb_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
   image?: Maybe<String_comparison_exp>
+  is_out_of_business?: Maybe<Boolean_comparison_exp>
   lists?: Maybe<list_restaurant_bool_exp>
   location?: Maybe<geometry_comparison_exp>
   menu_items?: Maybe<menu_item_bool_exp>
@@ -2138,6 +2139,7 @@ export interface restaurant_insert_input {
   hours?: Maybe<Scalars['jsonb']>
   id?: Maybe<Scalars['uuid']>
   image?: Maybe<Scalars['String']>
+  is_out_of_business?: Maybe<Scalars['Boolean']>
   lists?: Maybe<list_restaurant_arr_rel_insert_input>
   location?: Maybe<Scalars['geometry']>
   menu_items?: Maybe<menu_item_arr_rel_insert_input>
@@ -2249,6 +2251,7 @@ export interface restaurant_order_by {
   hours?: Maybe<order_by>
   id?: Maybe<order_by>
   image?: Maybe<order_by>
+  is_out_of_business?: Maybe<order_by>
   lists_aggregate?: Maybe<list_restaurant_aggregate_order_by>
   location?: Maybe<order_by>
   menu_items_aggregate?: Maybe<menu_item_aggregate_order_by>
@@ -2321,6 +2324,8 @@ export enum restaurant_select_column {
   /** column name */
   image = 'image',
   /** column name */
+  is_out_of_business = 'is_out_of_business',
+  /** column name */
   location = 'location',
   /** column name */
   name = 'name',
@@ -2380,6 +2385,7 @@ export interface restaurant_set_input {
   hours?: Maybe<Scalars['jsonb']>
   id?: Maybe<Scalars['uuid']>
   image?: Maybe<Scalars['String']>
+  is_out_of_business?: Maybe<Scalars['Boolean']>
   location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
   og_source_ids?: Maybe<Scalars['jsonb']>
@@ -2831,6 +2837,8 @@ export enum restaurant_update_column {
   id = 'id',
   /** column name */
   image = 'image',
+  /** column name */
+  is_out_of_business = 'is_out_of_business',
   /** column name */
   location = 'location',
   /** column name */
@@ -8053,6 +8061,7 @@ export const generatedSchema = {
     id: { __type: 'uuid!' },
     image: { __type: 'String' },
     is_open_now: { __type: 'Boolean' },
+    is_out_of_business: { __type: 'Boolean' },
     lists: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -8270,6 +8279,7 @@ export const generatedSchema = {
     hours: { __type: 'jsonb_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
     image: { __type: 'String_comparison_exp' },
+    is_out_of_business: { __type: 'Boolean_comparison_exp' },
     lists: { __type: 'list_restaurant_bool_exp' },
     location: { __type: 'geometry_comparison_exp' },
     menu_items: { __type: 'menu_item_bool_exp' },
@@ -8354,6 +8364,7 @@ export const generatedSchema = {
     hours: { __type: 'jsonb' },
     id: { __type: 'uuid' },
     image: { __type: 'String' },
+    is_out_of_business: { __type: 'Boolean' },
     lists: { __type: 'list_restaurant_arr_rel_insert_input' },
     location: { __type: 'geometry' },
     menu_items: { __type: 'menu_item_arr_rel_insert_input' },
@@ -8507,6 +8518,7 @@ export const generatedSchema = {
     hours: { __type: 'order_by' },
     id: { __type: 'order_by' },
     image: { __type: 'order_by' },
+    is_out_of_business: { __type: 'order_by' },
     lists_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
     location: { __type: 'order_by' },
     menu_items_aggregate: { __type: 'menu_item_aggregate_order_by' },
@@ -8560,6 +8572,7 @@ export const generatedSchema = {
     hours: { __type: 'jsonb' },
     id: { __type: 'uuid' },
     image: { __type: 'String' },
+    is_out_of_business: { __type: 'Boolean' },
     location: { __type: 'geometry' },
     name: { __type: 'String' },
     og_source_ids: { __type: 'jsonb' },
@@ -13570,6 +13583,7 @@ export interface restaurant {
    * A computed field, executes function "is_restaurant_open"
    */
   is_open_now?: Maybe<ScalarsEnums['Boolean']>
+  is_out_of_business?: Maybe<ScalarsEnums['Boolean']>
   /**
    * An array relationship
    */

@@ -116,6 +116,7 @@ test.beforeEach(async (t) => {
 })
 
 test('Merging', async (t) => {
+  sinon.stub(Self.prototype, 'checkIfClosed').resolves(null)
   const self = new Self()
   t.is(__uploadToDOSpaces__count, 0)
   t.is(__assessNewPhotos__count, 0)

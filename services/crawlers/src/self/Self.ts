@@ -13,7 +13,7 @@ import {
   tagUpsert,
 } from '@dish/graph'
 import { Database } from '@dish/helpers-node'
-import { DEBUG_LEVEL, WorkerJob } from '@dish/worker'
+import { DEBUG_LEVEL, ProxiedRequests, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
@@ -47,7 +47,7 @@ import {
   restaurantFindOneWithTagsSQL,
   roughSizeOfObject,
 } from '../utils'
-import { YelpScrape } from '../yelp/Yelp'
+import { YELP_DOMAIN, YelpScrape, yelpAPIMobile } from '../yelp/Yelp'
 import { GPT3 } from './GPT3'
 import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
 import { RestaurantBaseScore } from './RestaurantBaseScore'
@@ -226,6 +226,7 @@ export class Self extends WorkerJob {
       this.addSourceOgIds,
       this.addSources,
       this.noteAvailableSources,
+      this.checkIfClosed,
       this.addPriceRange,
       this.getRatingFactors,
     ]
@@ -700,6 +701,24 @@ export class Self extends WorkerJob {
     this.restaurant.sources.google = {
       url: source,
       rating: ratings?.google,
+    }
+  }
+
+  async checkIfClosed() {
+    this.log('Checking closed status')
+    let url = this.restaurant.sources?.yelp?.url
+    if (!url) {
+      this.log('Cannot check if closed, no Yelp source')
+      return
+    }
+    url = url.replace(YELP_DOMAIN, '')
+    const SIGNATURE = 'Yelpers report this location has closed'
+    const html = await yelpAPIMobile.getText(url)
+    if (html.includes(SIGNATURE)) {
+      this.restaurant.is_out_of_business = true
+      this.log('Restaurant is out of business')
+    } else {
+      this.log('Restaurant is in business')
     }
   }
 
