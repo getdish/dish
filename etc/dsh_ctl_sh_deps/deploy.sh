@@ -88,6 +88,7 @@ function docker_service_restart_with_latest_image() {
       "$1"
   )
   image=$(echo "$image_with_sha" | cut -d"@" -f1)
+  echo "pulling image $image from $image_with_sha"
   docker service update --force --image "$image" "$1"
 }
 
