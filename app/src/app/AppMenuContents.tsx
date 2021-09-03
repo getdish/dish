@@ -164,7 +164,7 @@ export const AppMenuContents = memo(
                 </MenuLinkButton>
               </>
 
-              <MenuLinkButton promptLogin name="roadmap" icon={<Truck color="#999" size={14} />}>
+              <MenuLinkButton name="roadmap" icon={<Truck color="#999" size={14} />}>
                 Roadmap
               </MenuLinkButton>
             </ScrollView>
