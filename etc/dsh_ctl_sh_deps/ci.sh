@@ -77,24 +77,9 @@ function setup_test_services() {
   echo "done"
 }
 
-function run_all_tests() {
-  docker run \
-    --net host \
-    -v /var/run/docker.sock:/var/run/docker.sock \
-    -v "$POSTGRES_DB_DIR:$POSTGRES_DB_DIR" \
-    -v "$TIMESCALE_DB_DIR:$TIMESCALE_DB_DIR" \
-    registry.dishapp.com/dish-run-tests:latest yarn test
-}
-
-function run_all_tests_in_compose() {
-  exec migrate yarn test
-}
-
-function run_all_tests_in_compose_retry() {
-  # this just runs it inside the `dish-migrate` container which is idle
-  exec migrate yarn test
-  # if you want to retry on failed (too course, we should retry just the http stuff really)
-  # || (echo "failed, retrying" && exec migrate yarn test)
+function run_idempotent_tests() {
+  echo "Running all idempotent tests..."
+  run_inside_live_compose yarn test
 }
 
 function run_integration_tests() {
@@ -104,6 +89,11 @@ function run_integration_tests() {
   sleep 5
   ./test/testcafe.sh
   popd
+}
+
+function run_http_dependent_tests() {
+  echo "Running HTTP-dependent tests..."
+  run_inside_live_compose yarn test:http
 }
 
 function docker_login() {

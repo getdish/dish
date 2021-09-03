@@ -127,16 +127,23 @@ steps:
       SHOW_DOCKER_IMAGES: true
       DATA_CLEAR_ON_FAIL: true
 
-  - label: "run tests"
+  - label: "run tests main"
     key: tests
     timeout_in_minutes: 10
-    command: "./dsh run_all_tests_in_compose_retry"
+    command: "./dsh run_idempotent_tests"
     depends_on: test-setup
     env:
       LOG_DOCKER: true
       SHOW_DOCKER_IMAGES: true
       DOCKER_COMPOSE_DOWN: true
       DOCKER_CLEAN: true
+
+  - label: "run http-dependent tests"
+    key: tests-http-dependent
+    timeout_in_minutes: 10
+    command: "./dsh run_http_dependent_tests"
+    depends_on: test-setup
+    soft_fail: true
 
   # - label: "run integration test"
   #   command: "./dsh run_integration_tests"

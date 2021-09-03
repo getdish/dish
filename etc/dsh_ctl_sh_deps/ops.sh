@@ -13,6 +13,12 @@ function exec() {
   docker exec -it $(docker ps | grep $app | head -n1 | awk '{print $1}') $cmd
 }
 
+function run_inside_live_compose() {
+  command="$@"
+  app="migrate"
+  docker-compose run "$app" bash -c "$command"
+}
+
 function logs() {
   docker service logs "$@"
 }

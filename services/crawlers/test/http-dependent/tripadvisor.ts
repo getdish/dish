@@ -9,7 +9,7 @@ test.beforeEach(async () => {
   await deleteAllScrapesBySourceID(ID)
 })
 
-// Skipped only because it can sometimes take longer than the timeout
+// Skipped because Luminati's residneital proxies are just too expensive
 test.skip('Gets and persists a restaurant', async (t) => {
   const ta = new Tripadvisor()
   ta.MAPVIEW_SIZE = 350
