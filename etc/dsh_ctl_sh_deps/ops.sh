@@ -5,14 +5,6 @@ function shell() {
   ssh "root@$host"
 }
 
-function exec() {
-  app=${1:-app}
-  shift
-  cmd=$*
-  echo "exec $app: running $cmd"
-  docker exec -it $(docker ps | grep $app | head -n1 | awk '{print $1}') $cmd
-}
-
 function run_inside_live_compose() {
   command="$@"
   app="migrate"

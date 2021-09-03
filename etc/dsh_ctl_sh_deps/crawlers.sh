@@ -12,29 +12,29 @@ function stop_crawl() {
 
 # example: ./dsh start_crawler Yelp
 function start_crawler() {
-  exec worker "node /app/services/crawlers/_/$1/all.js"
+  worker_cli "node /app/services/crawlers/_/$1/all.js"
 }
 
 # example: ./dsh start_crawler_for_city yelp Tucson, Arizona
 function start_crawler_for_city() {
-  exec worker "node /app/services/crawlers/dist/$1/all.js --city \"$2\""
+  worker_cli "node /app/services/crawlers/dist/$1/all.js --city \"$2\""
 }
 
 function crawl_one() {
   slug=$1
-  exec worker "node /app/services/crawlers/dist/one.js $slug"
+  worker_cli "node /app/services/crawlers/dist/one.js $slug"
 }
 
 function crawl_self() {
   echo "Running self crawler"
-  exec worker "node /app/services/crawlers/dist/self/all.js"
+  worker_cli "node /app/services/crawlers/dist/self/all.js"
 }
 
 function crawl_self_by_query() {
   [ -z "$1" ] && exit 1
   query="SELECT id FROM restaurant $1"
   echo "Running self crawler with SQL: $query"
-  exec worker "RUN=1 QUERY=${query@Q} node /app/services/crawlers/dist/self/one.js"
+  worker_cli "RUN=1 QUERY=${query@Q} node /app/services/crawlers/dist/self/one.js"
 }
 
 function start_all_crawlers_for_city() {
