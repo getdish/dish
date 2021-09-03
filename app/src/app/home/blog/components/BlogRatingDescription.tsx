@@ -26,7 +26,7 @@ export function BlogRatingDescription() {
       </Paragraph>
 
       <HStack justifyContent="center">
-        <RestaurantRatingView size={72} slug="miss-saigon" />
+        {/* <RestaurantRatingView size={72} slug="miss-saigon" /> */}
         <Spacer />
         <VStack>
           <RatingView rating={50} size={20} stacked />

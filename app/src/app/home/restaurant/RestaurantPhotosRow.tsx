@@ -49,7 +49,7 @@ export const RestaurantPhotosRowContent = memo(
         const wScale = isEscalated ? 1.25 : 1
         const photoWidth = width * wScale
         // dont change uri
-        const uri = getImageUrl(url, initialWidth * wScale, photoHeight, 100)
+        const uri = getImageUrl(url || '', initialWidth * wScale, photoHeight, 100)
         return { uri, height: photoHeight, width: photoWidth, isEscalated }
       })
       const fullWidth = photosData.reduce((a, b) => a + b.width, 0)

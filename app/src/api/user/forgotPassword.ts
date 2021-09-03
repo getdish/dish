@@ -39,7 +39,7 @@ async function sendPasswordResetEmail(user: User, token: string) {
     user.email,
     'Dish: Password reset',
     `
-  Dear ${getUserName(user)},
+  Dear ${getUserName(user as any)},
 
   Please follow this link to reset your password:
 

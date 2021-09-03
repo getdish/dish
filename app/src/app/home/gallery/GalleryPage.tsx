@@ -284,6 +284,7 @@ export const GalleryLightbox = memo(
         <VStack height={ThumbnailSize}>
           {hasLoadedFirstImage && (
             <GalleryLightboxPhotosList
+              // @ts-expect-error
               photos={photosList}
               onPhotoPress={(photo, index) => {
                 setActiveImage({

@@ -161,5 +161,3 @@ export function useListRestaurants(list?: list) {
     },
   }
 }
-
-export type UseListRestaurantsActions = ReturnType<typeof useListRestaurants>[1]

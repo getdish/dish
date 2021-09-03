@@ -9,6 +9,7 @@ import { LinkButtonProps } from './LinkProps'
 export function LinkButton<Name extends DRouteName = DRouteName>(
   props: LinkButtonProps<Name, RoutesTable[Name]['params']>
 ) {
+  // @ts-ignore
   const { wrapWithLinkElement } = useLink(props)
   const {
     children,

@@ -2,8 +2,7 @@ import { graphql, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Search } from '@dish/react-feather'
 import { uniqBy } from 'lodash'
-import React, { useEffect, useState } from 'react'
-import { ScrollView } from 'react-native'
+import React, { useState } from 'react'
 import { HStack, Input, useDebounce } from 'snackui'
 
 import { red } from '../../../constants/colors'
@@ -221,9 +220,8 @@ export const ReviewTagsRow = graphql(
             return (
               <TagButton
                 noLink
-                // transparent
                 restaurantSlug={restaurantSlug}
-                key={tagButtonProps.slug || [console.log('warn'), `${Math.random()}`][1]}
+                key={tagButtonProps.slug || 0}
                 {...tagButtonProps}
                 {...(isLense && {
                   name: '',

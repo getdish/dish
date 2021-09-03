@@ -97,7 +97,7 @@ export const RestaurantCardContent = graphql(
                 </HStack>
               )}
               <AbsoluteVStack scale={size === 'xs' ? 0.85 : 1} top={-12} right={-12} zIndex={100}>
-                <RestaurantRatingView slug={restaurantSlug} floating size={38} />
+                <RestaurantRatingView restaurant={restaurant} floating size={38} />
               </AbsoluteVStack>
             </>
           )}

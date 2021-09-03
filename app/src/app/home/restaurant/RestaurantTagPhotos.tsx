@@ -55,7 +55,7 @@ export const RestaurantTagPhotosContent = memo(
                   name="gallery"
                   params={{
                     restaurantSlug,
-                    tagSlug: tag?.tag?.slug ?? '',
+                    // tagSlug: tag?.tag?.slug ?? '',
                     offset: index,
                   }}
                 >

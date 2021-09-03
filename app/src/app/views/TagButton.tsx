@@ -407,6 +407,7 @@ const TagButtonInner = (props: TagButtonProps) => {
 
   // make entire button votable in this case
   if (noLink && votable) {
+    // @ts-ignore
     return <TagVotePopover {...props}>{contents}</TagVotePopover>
   }
 
@@ -532,6 +533,7 @@ const TagButtonVote = graphql(
       return contents
     }
 
+    // @ts-ignore
     return <TagVotePopover {...props}>{contents}</TagVotePopover>
   },
   {

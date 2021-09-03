@@ -49,7 +49,7 @@ export const RestaurantButton = graphql(
               {restaurant.name}
             </Text>
             <VStack margin={-6} marginLeft={10}>
-              <RestaurantRatingView size={32} slug={slug} />
+              <RestaurantRatingView size={32} restaurant={restaurant} />
             </VStack>
           </HStack>
         </Button>

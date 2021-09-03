@@ -110,6 +110,7 @@ export const getUserReviewQueryMutations = ({
     },
     async deleteReview() {
       if (review) {
+        // @ts-ignore
         return await deleteUserReview(review, reviewQuery)
       }
     },
@@ -257,7 +258,7 @@ export async function upsertUserReviewFn(review: UpdateableReview) {
     } catch (err) {
       console.log('aught err', err)
       if (err.message?.includes('Uniqueness violation')) {
-        const existing = await reviewFindOne(next)
+        const existing = await reviewFindOne(next as any)
         if (!existing) {
           Toast.error('Error saving')
           return
