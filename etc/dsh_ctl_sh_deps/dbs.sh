@@ -117,6 +117,18 @@ function main_db_command() {
   echo "$1" | psql "$POSTGRES_URL" -P pager=off -P format=unaligned
 }
 
+function timescale_db_command() {
+  if [ "$TIMESCALE_URL" = "" ]; then
+    echo "no url given"
+  fi
+  echo "$1" | psql "$TIMESCALE_URL" -P pager=off -P format=unaligned
+}
+
+function scrape_json_query() {
+  query="$1"
+  timescale_db_command "select jsonb_agg(t) from ($query) t" | grep '\[{'
+}
+
 function hasura_clean_event_logs() {
   main_db_command '
     DELETE FROM hdb_catalog.event_invocation_logs;
