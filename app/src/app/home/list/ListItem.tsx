@@ -150,15 +150,22 @@ export const ListItem = graphql((props: ListItemProps) => {
   // we need to be sure to render them all first pass so they fetch once,
   // then second pass it will hide all but one
 
-  return (
-    <Suspense
-      fallback={
-        <VStack height={180}>
-          <LoadingItem />
-        </VStack>
-      }
-    ></Suspense>
-  )
+  if (isEditing || hasListReview) {
+    return <ListItemContent {...listItemContentProps} reviewQuery={listReview} />
+  }
+  if (hasUserReview) {
+    return <ListItemContent {...listItemContentProps} reviewQuery={userReview} />
+  }
+  if (isLoading) {
+    return (
+      <>
+        {/* <ListItemContent {...listItemContentProps} reviewQuery={topReview} /> */}
+        <ListItemContent {...listItemContentProps} reviewQuery={userReview} />
+        <ListItemContent {...listItemContentProps} reviewQuery={listReview} />
+      </>
+    )
+  }
+  return <ListItemContent {...listItemContentProps} />
 })
 
 const ListItemContent = memo(

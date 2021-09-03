@@ -8,6 +8,7 @@ import { HStack, Input, useDebounce } from 'snackui'
 import { red } from '../../../constants/colors'
 import { tagCategoriesPopular, tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
+import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useAsyncEffect } from '../../hooks/useAsync'
 import { useUserStore } from '../../userStore'
@@ -142,22 +143,13 @@ export const ReviewTagsRow = graphql(
       ...tagLenses,
       ...userTags.map((x) => x.tag),
       //
-      ...(
-        restaurant?.top_tags({
-          args: {
-            _tag_types: 'dish',
-          },
-          limit: 20,
-        }) || []
-      ).map((x) => x.tag),
-      ...(
-        restaurant?.top_tags({
-          args: {
-            tag_slugs: '',
-          },
-          limit: 20,
-        }) || []
-      ).map((x) => x.tag),
+      ...((!!restaurant &&
+        getRestaurantDishes({
+          restaurant,
+          max: 10,
+          tagSlugs: [''],
+        })) ||
+        []),
     ]
 
     if (allTags.length < 5) {

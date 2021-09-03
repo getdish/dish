@@ -10,6 +10,7 @@ import {
   HStack,
   Input,
   InteractiveContainer,
+  LoadingItem,
   Modal,
   Paragraph,
   Spacer,
@@ -18,6 +19,7 @@ import {
   Toast,
   VStack,
   useForceUpdate,
+  useTheme,
 } from 'snackui'
 
 import { blue200, grey, red400 } from '../../../constants/colors'
@@ -143,6 +145,14 @@ const listThemes = {
   1: ListTheme.minimal,
 } as const
 
+const FallbackListItem = () => {
+  const theme = useTheme()
+  return (
+    <VStack height={150} borderTopColor={theme.borderColorHover}>
+      <LoadingItem />
+    </VStack>
+  )
+}
 const ListPageContent = memo(
   graphql(
     (props: Props) => {
@@ -600,11 +610,11 @@ const ListPageContent = memo(
                   </VStack>
                 )}
 
-                <SuspenseList revealOrder="forwards">
+                <SuspenseList revealOrder="together">
                   {restaurants.map(
                     ({ restaurantId, restaurant, dishSlugs, position, list_restaurant }, index) => {
                       return (
-                        <Suspense fallback={null} key={restaurant.slug}>
+                        <Suspense fallback={<FallbackListItem />} key={restaurant.slug}>
                           <HStack position="relative">
                             {/* {userStore.isAdmin && <Text>{restaurant.id}</Text>} */}
                             {isEditing && (
