@@ -1,105 +1,154 @@
-import { Review, order_by, reviewUpsert, review_constraint, useRefetch } from '@dish/graph'
-import { Store, useStore } from '@dish/use-store'
+import {
+  Review,
+  order_by,
+  restaurant,
+  reviewUpsert,
+  review_constraint,
+  useRefetch,
+} from '@dish/graph'
+import { Store, createStore, useStoreInstanceSelector, useStoreSelector } from '@dish/use-store'
 import { debounce } from 'lodash'
-import { useCallback, useEffect, useRef } from 'react'
-import { Toast, useConstant, useLazyEffect } from 'snackui'
+import { useCallback, useEffect } from 'react'
+import { Toast, useLazyEffect } from 'snackui'
 
 import { getFullTags } from '../../helpers/getFullTags'
-import { queryRestaurant } from '../../queries/queryRestaurant'
-import { HomeActiveTagsRecord } from '../../types/homeTypes'
 import { useUserStore, userStore } from '../userStore'
 
-export type VoteNumber = -1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10
+export type VoteNumber = 1 | 2 | 3 | 4 | 5
 
-type VoteStoreProps = { tagSlug: string; restaurantSlug: string }
-
-// using this for now until gqty optimistic update gets better
-export class TagVoteStore extends Store<VoteStoreProps> {
-  vote: VoteNumber = 0
-
-  setVote(vote: VoteNumber) {
-    this.vote = vote
-  }
-
-  writeVote = debounce(async (restaurantId: string, vote: VoteNumber) => {
-    try {
-      // insert into db
-      const [tag] = await getFullTags([{ slug: this.props.tagSlug }])
-      if (!tag) {
-        console.error('error writing vote', this.props.tagSlug)
-        return undefined
+const tagVotesStore = createStore(
+  class TagVotesStore extends Store {
+    votesByRestaurant = {}
+    setVote(rid: string, tagSlug: string, val: VoteNumber) {
+      this.votesByRestaurant = {
+        ...this.votesByRestaurant,
+        [rid]: {
+          ...this.votesByRestaurant[rid],
+          [tagSlug]: val,
+        },
       }
-      const user_id = userStore.user?.id
-      const username = userStore.user?.username
-      if (!user_id || !username) {
-        // not logged in, default to ignore (promptLogin can trigger)
-        console.warn('ignoring no user')
-        return
-      }
-      const review = {
-        username,
-        tag_id: tag.id,
-        user_id,
-        restaurant_id: restaurantId,
-        vote,
-        type: 'vote',
-      }
-      return await writeReview(review)
-    } catch (err) {
-      console.error('error writing vote', err.message, err.stack)
-      Toast.error(`Error writing vote`)
     }
-  }, 50)
-}
+  }
+)
 
-const writeReview = async (review: Partial<Review>) => {
-  console.log('writing', review)
+const writeVote = debounce(async (tagSlug: string, restaurantId: string, vote: VoteNumber) => {
+  let ogVote = tagVotesStore.votesByRestaurant[restaurantId][tagSlug]
+  try {
+    // optimistic
+    tagVotesStore.setVote(restaurantId, tagSlug, vote)
+    // insert into db
+    const [tag] = await getFullTags([{ slug: tagSlug }])
+    if (!tag) {
+      console.error('error writing vote', tagSlug)
+      return
+    }
+    const user_id = userStore.user?.id
+    const username = userStore.user?.username
+    if (!user_id || !username) {
+      // not logged in, default to ignore (promptLogin can trigger)
+      console.warn('ignoring no user')
+      return
+    }
+    const review = {
+      username,
+      tag_id: tag.id,
+      user_id,
+      restaurant_id: restaurantId,
+      vote,
+      type: 'vote',
+    }
+    return await upsertReview(review)
+  } catch (err) {
+    console.error('error writing vote', err.message, err.stack)
+    Toast.error(`Error writing vote`)
+    // unwind optimistic
+    tagVotesStore.setVote(restaurantId, tagSlug, ogVote)
+  }
+})
+
+const upsertReview = async (review: Partial<Review>) => {
   await reviewUpsert([review], review_constraint.review_username_restauarant_id_tag_id_type_key)
 }
 
-export const useUserTagVotes = (
-  restaurantSlug: string,
-  activeTags: HomeActiveTagsRecord,
+export type UserTagVotesProps = {
+  restaurant?: restaurant | null
+  activeTags: string[]
   refetchKey?: string
-) => {
-  // never change to avoid hooks issues, should never change from above
-  const tagSlugList = useConstant(() => Object.keys(activeTags).filter((x) => activeTags[x]))
+}
 
-  // handles multiple
-  const votes: VoteNumber[] = []
-  const setVotes = useRef<Function[]>([])
-  for (const tagSlug of tagSlugList) {
-    const { vote, setVote } = useUserTagVote({ restaurantSlug, tagSlug }, refetchKey)
-    votes.push(vote)
-    setVotes.current.push(setVote)
-  }
+const useTagVotes = (rid: string, tagSlugs: string[]) => {
+  return useStoreInstanceSelector(tagVotesStore, (s) => {
+    for (const slug of tagSlugs) {
+      if (s.votesByRestaurant[rid]?.[slug]) {
+        return s.votesByRestaurant[rid][slug]
+      }
+    }
+  })
+}
 
-  const setVote = useCallback((vote: VoteNumber) => {
-    if (userStore.promptLogin()) {
-      return
+export const useUserTagVotes = (props: UserTagVotesProps) => {
+  const refetch = useRefetch()
+  const restaurantId = props.restaurant?.id
+  const votesNow = useTagVotes(restaurantId, props.activeTags)
+  const votes = props.activeTags.map((tagSlug) =>
+    queryUserTagVote({
+      ...props,
+      tagSlug,
+    })
+  )
+  // use the first one when querying multiple
+  const userVote = votes[0]?.vote
+  const vote = votesNow ?? votes[0]?.vote ?? 0
+
+  // sync down
+  useEffect(() => {
+    for (const vote of votes) {
+      if (vote) {
+        tagVotesStore.setVote(restaurantId, vote.tagSlug, vote.vote)
+      }
     }
-    for (const setVote of setVotes.current) {
-      setVote(vote)
-    }
-    Toast.show(`Saved`)
-  }, [])
+  }, [JSON.stringify(votes)])
+
+  useLazyEffect(() => {
+    votes.map(({ voteQuery }) => refetch(voteQuery))
+  }, [props.refetchKey])
+
+  const setVote = useCallback(
+    (vote: VoteNumber) => {
+      if (userStore.promptLogin()) {
+        return
+      }
+      for (const tagSlug of props.activeTags) {
+        const existing = votes.find((x) => x?.tagSlug === tagSlug)?.voteQuery?.[0]
+        if (existing) {
+          existing.vote = vote
+        }
+        writeVote(tagSlug, restaurantId, vote)
+      }
+      Toast.show(`Saved`)
+    },
+    [restaurantId]
+  )
 
   return {
-    vote: votes[0] ?? 0, // use the first one when querying multiple
+    vote,
     setVote,
+    didVoteDuringSession: !!votesNow,
   }
 }
 
-export const useUserTagVote = (props: VoteStoreProps, refetchKey?: string) => {
+const queryUserTagVote = ({
+  tagSlug,
+  activeTags,
+  restaurant,
+}: UserTagVotesProps & {
+  tagSlug: string
+}) => {
   const userStore = useUserStore()
   const userId = userStore.user?.id
-  const voteStore = useStore(TagVoteStore, props)
-  const [restaurant] = queryRestaurant(props.restaurantSlug)
-  const restaurantId = restaurant?.id
-  const refetch = useRefetch()
 
   const voteQuery =
-    userId && restaurant && props.tagSlug
+    userId && restaurant && tagSlug
       ? restaurant.reviews({
           limit: 1,
           where: {
@@ -111,7 +160,7 @@ export const useUserTagVote = (props: VoteStoreProps, refetchKey?: string) => {
             },
             tag: {
               slug: {
-                _eq: props.tagSlug,
+                _eq: tagSlug,
               },
             },
           },
@@ -119,37 +168,11 @@ export const useUserTagVote = (props: VoteStoreProps, refetchKey?: string) => {
         })
       : null
 
-  useLazyEffect(() => {
-    refetch(voteQuery)
-  }, [refetchKey])
-
   const vote = voteQuery?.[0]?.vote ?? 0
 
-  useEffect(() => {
-    if (vote !== voteStore.vote) {
-      voteStore.setVote(vote)
-    }
-  }, [vote])
-
   return {
-    vote: voteStore.vote,
-    setVote: async (userVote: VoteNumber | 'toggle') => {
-      if (!restaurantId) {
-        Toast.error('No restaurant ID')
-        return
-      }
-      if (userStore.promptLogin()) {
-        return
-      }
-      if (!restaurant) {
-        return
-      }
-      const vote = userVote == 'toggle' ? toggleRating(voteStore.vote) : userVote
-      voteStore.setVote(vote)
-      voteStore.writeVote(restaurantId, vote)
-      Toast.show(`Saved`)
-    },
+    tagSlug,
+    voteQuery,
+    vote,
   }
 }
-
-const toggleRating = (r: number) => (r == 1 ? -1 : 1)

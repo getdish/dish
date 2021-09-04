@@ -77,6 +77,7 @@ export function createWebpackConfig({
 
   function getConfig() {
     const defines = {
+      __DEV__: JSON.stringify(isDevelopment),
       process: '({})',
       'process.env': '({})',
       'process.env.IS_SSR_RENDERING': isSSR,
@@ -243,8 +244,14 @@ export function createWebpackConfig({
                 // @ts-ignore
                 use: [
                   'thread-loader',
-                  // babel i think is better hmr
-                  // 'babel-loader',
+
+                  {
+                    loader: 'babel-loader',
+                    options: {
+                      plugins: ['react-native-reanimated/plugin'],
+                    },
+                  },
+
                   {
                     loader: require.resolve('esbuild-loader'),
                     options: {
@@ -254,6 +261,7 @@ export function createWebpackConfig({
                       // implementation: esbuild,
                     },
                   },
+
                   isStaticExtracted
                     ? {
                         loader: require.resolve('snackui-loader'),

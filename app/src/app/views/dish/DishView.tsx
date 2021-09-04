@@ -1,3 +1,4 @@
+import { restaurant } from '@dish/graph/types'
 import { supportsTouchWeb } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
@@ -30,8 +31,7 @@ const getRoundedDishViewSize = (size: string | number) => {
 
 export type DishViewProps = DishTagItem &
   Omit<StackProps, 'size'> & {
-    restaurantId?: string
-    restaurantSlug?: string
+    restaurant?: restaurant | null
     cuisine?: NavigableTag
     size?: number
     isFallback?: boolean
@@ -68,8 +68,7 @@ const DishViewContent = (props: DishViewProps) => {
     // rest
     cuisine,
     size = 100,
-    restaurantSlug,
-    restaurantId,
+    restaurant,
     selected,
     disableFallbackFade,
     hideVote,
@@ -95,8 +94,7 @@ const DishViewContent = (props: DishViewProps) => {
   const backgroundColor = themeName === 'dark' ? colors.color600 : colors.color200
   const isActive = (isHovered || selected) ?? false
 
-  const showVote =
-    !hideVote && typeof score === 'number' && !!restaurantId && !!restaurantSlug && !!name
+  const showVote = !hideVote && typeof score === 'number' && !!restaurant && !!name
 
   const showSearchButton_ = showSearchButton && isActive && slug
 
@@ -121,11 +119,7 @@ const DishViewContent = (props: DishViewProps) => {
                 slug={slug}
                 score={score || 0}
                 rating={rating}
-                {...(restaurantId &&
-                  restaurantSlug && {
-                    restaurantId,
-                    restaurantSlug,
-                  })}
+                restaurant={restaurant}
               />
             </Suspense>
           </AbsoluteVStack>
@@ -213,11 +207,11 @@ const DishViewContent = (props: DishViewProps) => {
   if (!noLink) {
     contents = (
       <Link
-        {...(restaurantSlug
+        {...(restaurant
           ? {
               name: 'restaurant',
               params: {
-                slug: restaurantSlug,
+                slug: restaurant.slug || '',
                 section: 'reviews',
                 sectionSlug: slug,
               },

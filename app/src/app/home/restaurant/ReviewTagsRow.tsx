@@ -3,7 +3,7 @@ import { isPresent } from '@dish/helpers'
 import { Search, Tag, X } from '@dish/react-feather'
 import { sortBy, uniqBy } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { AbsoluteHStack, HStack, Input, useDebounce } from 'snackui'
+import { AbsoluteHStack, HStack, Input, useDebounce, useLazyEffect } from 'snackui'
 
 import { tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
@@ -15,6 +15,8 @@ import { SmallButton } from '../../views/SmallButton'
 import { TagButton, TagButtonProps, getTagButtonProps } from '../../views/TagButton'
 import { RestaurantReviewProps } from './RestaurantReview'
 
+// add votable prop
+
 export const ReviewTagsRow = graphql(
   ({
     review,
@@ -22,6 +24,7 @@ export const ReviewTagsRow = graphql(
     restaurantSlug,
     listTheme,
     label = 'Tags:',
+    votable = true,
     hideGeneralTags,
     wrapTagsRow,
     ...props
@@ -33,7 +36,6 @@ export const ReviewTagsRow = graphql(
     const setSearchDbc = useDebounce(setSearch, 350)
     const [isFocused, setIsFocused] = useState(false)
     const [filtered, setFiltered] = useState<TagButtonProps[]>([])
-    const [refetchKey, setRefetchKey] = useState('')
     const refetch = useRefetch()
     const user = useUserStore().user
     const isOwnList = review?.user_id === user?.id
@@ -60,13 +62,13 @@ export const ReviewTagsRow = graphql(
           },
         ],
       },
-      order_by: [{ tag: { id: order_by.desc } }],
+      order_by: [{ updated_at: order_by.desc }],
     })
 
     const restaurantSlugUserTags = restaurantSlug
       ? list?.user?.reviews({
           limit: 50,
-          order_by: [{ tag: { id: order_by.desc } }],
+          order_by: [{ updated_at: order_by.desc }],
           where: {
             _and: [
               {
@@ -98,8 +100,6 @@ export const ReviewTagsRow = graphql(
 
     const userTags = reviewUserTags || restaurantSlugUserTags || []
 
-    console.log('reviewUserTags', review, reviewUserTags, restaurantSlugUserTags)
-
     // review?.reviews({
     //     limit: 20,
     //     // where: {
@@ -109,9 +109,9 @@ export const ReviewTagsRow = graphql(
     //     // },
     //   }) || []
 
-    useEffect(() => {
+    useLazyEffect(() => {
       refetch(userTags)
-      setRefetchKey(`${Math.random()}`)
+      // setRefetchKey(`${Math.random()}`)
     }, [isFocused])
 
     // console.log('userTags', userTags?.[0]?.tag?.name)
@@ -168,7 +168,7 @@ export const ReviewTagsRow = graphql(
             return true
           })
     tags = uniqBy(tags, (x) => x.name || x.slug)
-    tags = sortBy(tags, (x) => (x.type === 'lense' ? -1 : 0))
+    tags = sortBy(tags, (x) => (x.type === 'lense' ? 'aaaaaaaaaa' + tagLenses.indexOf(x) : x.slug))
 
     const tagsKey = tags.map((x) => x.slug).join('')
 
@@ -204,60 +204,12 @@ export const ReviewTagsRow = graphql(
     return (
       <HStack
         paddingRight={20}
-        width="100%"
+        maxWidth="100%"
         alignItems="center"
         pointerEvents="auto"
         zIndex={1000}
         {...props}
       >
-        <HStack
-          position="relative"
-          pointerEvents="auto"
-          alignItems="center"
-          flexShrink={0}
-          zIndex={-1}
-        >
-          <AbsoluteHStack
-            top={0}
-            bottom={0}
-            alignItems="center"
-            left={-15}
-            opacity={isFocused ? 1 : 0}
-          >
-            <Search size={16} color="#777" />
-          </AbsoluteHStack>
-          <AbsoluteHStack
-            onPress={() => setIsFocused(false)}
-            bottom={-10}
-            left={-15}
-            opacity={isFocused ? 1 : 0}
-          >
-            <X size={16} color="#777" />
-          </AbsoluteHStack>
-
-          {showTagButton && !isFocused && (
-            <SmallButton
-              onPress={() => setIsFocused(true)}
-              icon={<Tag opacity={0.5} size={16} color="#888" />}
-              marginRight={15}
-            ></SmallButton>
-          )}
-
-          {isFocused && (
-            <Input
-              placeholder="Dishes, tags:"
-              autoFocus
-              opacity={isFocused ? 1 : 0}
-              zIndex={10}
-              onFocus={() => setIsFocused(true)}
-              color="#777"
-              fontSize={13}
-              width={isFocused ? 130 : 50}
-              borderColor="transparent"
-              onChangeText={(text) => setSearchDbc(text)}
-            />
-          )}
-        </HStack>
         <HStack
           alignItems="center"
           paddingVertical={16}
@@ -266,8 +218,58 @@ export const ReviewTagsRow = graphql(
             flexWrap: 'wrap',
             marginBottom: -10,
             flex: 1,
+            overflow: 'hidden',
           })}
         >
+          <HStack
+            position="relative"
+            pointerEvents="auto"
+            alignItems="center"
+            flexShrink={0}
+            zIndex={-1}
+          >
+            <AbsoluteHStack
+              top={0}
+              bottom={0}
+              alignItems="center"
+              left={-15}
+              opacity={isFocused ? 1 : 0}
+            >
+              <Search size={16} color="#777" />
+            </AbsoluteHStack>
+            <AbsoluteHStack
+              onPress={() => setIsFocused(false)}
+              bottom={-10}
+              left={-15}
+              opacity={isFocused ? 1 : 0}
+            >
+              <X size={16} color="#777" />
+            </AbsoluteHStack>
+
+            {showTagButton && !isFocused && (
+              <SmallButton
+                onPress={() => setIsFocused(true)}
+                icon={<Tag opacity={0.5} size={16} color="#888" />}
+                marginRight={15}
+              ></SmallButton>
+            )}
+
+            {isFocused && (
+              <Input
+                placeholder="Dishes, tags:"
+                autoFocus
+                opacity={isFocused ? 1 : 0}
+                zIndex={10}
+                onFocus={() => setIsFocused(true)}
+                color="#777"
+                fontSize={13}
+                width={isFocused ? 130 : 50}
+                borderColor="transparent"
+                onChangeText={(text) => setSearchDbc(text)}
+              />
+            )}
+          </HStack>
+
           {tags.map((tbp, i) => {
             const isLense = tbp.type === 'lense'
             const lastItem = tags[i - 1]
@@ -275,10 +277,10 @@ export const ReviewTagsRow = graphql(
               <TagButton
                 noLink
                 size="sm"
-                restaurantSlug={restaurantSlug}
+                restaurant={restaurant}
                 hideRank
                 key={tbp.slug || 0}
-                refetchKey={refetchKey}
+                // refetchKey={refetchKey}
                 {...tbp}
                 backgroundColor="transparent"
                 {...(isLense && {
@@ -302,7 +304,7 @@ export const ReviewTagsRow = graphql(
                 {...(wrapTagsRow && {
                   marginBottom: 10,
                 })}
-                votable
+                votable={votable}
               />
             )
           })}

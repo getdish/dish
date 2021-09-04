@@ -1,4 +1,4 @@
-import { graphql, query } from '@dish/graph'
+import { graphql, order_by, query } from '@dish/graph'
 import React, { Suspense, memo } from 'react'
 import { AbsoluteVStack, Grid, HStack, Spacer, Text, VStack } from 'snackui'
 
@@ -42,6 +42,13 @@ export const RestaurantReviewsList = memo(
             _is_null: false,
           },
         },
+        order_by: [
+          {
+            reviews_aggregate: {
+              count: order_by.desc,
+            },
+          },
+        ],
       })
 
       const topReviews = [
@@ -83,13 +90,19 @@ export const RestaurantReviewsList = memo(
               </VStack>
             )}
             <Grid itemMinWidth={320}>
-              {!!review && <RestaurantReview hideRestaurantName review={review} />}
+              {!!review && <RestaurantReview wrapTagsRow hideRestaurantName review={review} />}
 
               {topReviews.map((review, i) => {
                 return (
                   <VStack marginVertical={20} flex={1} key={i}>
                     <VStack flex={1} />
-                    <RestaurantReview hideRestaurantName review={review} />
+                    <RestaurantReview
+                      hideGeneralTags
+                      wrapTagsRow
+                      hideRestaurantName
+                      votable={false}
+                      review={review}
+                    />
                   </VStack>
                 )
               })}

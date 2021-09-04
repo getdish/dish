@@ -230,7 +230,11 @@ const RestaurantListItemContent = memo(
               <SlantedTitle alignSelf="center">Breakdown</SlantedTitle>
               <Spacer />
               <Suspense fallback={<LoadingItemsSmall />}>
-                <RestaurantListItemScoreBreakdown {...props} meta={meta} />
+                <RestaurantListItemScoreBreakdown
+                  activeTagSlugs={props.activeTagSlugs}
+                  restaurant={restaurant}
+                  meta={meta}
+                />
               </Suspense>
             </AbsoluteVStack>
           )}
@@ -255,8 +259,8 @@ const RestaurantListItemContent = memo(
               <RestaurantUpVoteDownVote
                 rounded
                 score={score}
-                restaurantSlug={restaurantSlug}
-                activeTagSlugs={activeTagSlugs}
+                restaurant={restaurant}
+                activeTags={activeTagSlugs}
                 onClickPoints={toggleSetExpanded}
               />
             )}

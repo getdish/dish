@@ -91,7 +91,7 @@ export const RestaurantDishRowContent = memo(
                     backgroundColor: 'transparent',
                   })}
                   noLink
-                  restaurantSlug={restaurantSlug}
+                  restaurant={restaurant}
                   showSearchButton
                   votable
                   {...dish}

@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph'
+import { graphql, restaurant, tagSlug } from '@dish/graph'
 import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@dish/react-feather'
 import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
@@ -7,7 +7,6 @@ import { AbsoluteVStack, HStack, Text, Tooltip, VStack, useTheme } from 'snackui
 import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { restaurantRatio } from '../../../helpers/restaurantsRatio'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { RestaurantRatingView } from '../../home/RestaurantRatingView'
 import { VoteNumber, useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { TextSuperScript } from '../TextSuperScript'
@@ -16,8 +15,8 @@ import { VoteButton } from '../VoteButton'
 type RatingDisplay = 'ratio' | 'points'
 
 type UpvoteDownvoteProps = {
-  restaurantSlug: string
-  activeTagSlugs?: string[]
+  restaurant?: restaurant | null
+  activeTags?: string[]
   onClickPoints?: (event: GestureResponderEvent) => void
   // only to override
   score?: number
@@ -27,31 +26,29 @@ type UpvoteDownvoteProps = {
 }
 
 export const RestaurantUpVoteDownVote = (props: UpvoteDownvoteProps) => {
-  const activeTags = props.activeTagSlugs ?? [tagLenses[0].slug]
+  const activeTags = props.activeTags ?? [tagLenses[0].slug]
   const key = JSON.stringify(activeTags)
   return (
     <Suspense fallback={null}>
-      <RestaurantUpVoteDownVoteContents key={key} {...props} activeTagSlugs={activeTags} />
+      <RestaurantUpVoteDownVoteContents key={key} {...props} activeTags={activeTags} />
     </Suspense>
   )
 }
 
 const RestaurantUpVoteDownVoteContents = graphql(
   ({
-    restaurantSlug,
+    restaurant,
     onClickPoints,
-    activeTagSlugs,
+    activeTags = [],
     rounded,
     score,
     ratio,
     display,
   }: UpvoteDownvoteProps) => {
-    const [restaurant] = queryRestaurant(restaurantSlug)
-    const restaurantTagSlugs = (activeTagSlugs ?? []).reduce(
-      (acc, cur) => ({ ...acc, [cur]: true }),
-      {}
-    )
-    const { vote, setVote } = useUserTagVotes(restaurantSlug, restaurantTagSlugs)
+    const { vote, setVote } = useUserTagVotes({
+      activeTags,
+      restaurant,
+    })
     const theme = useTheme()
 
     if (!restaurant) {
@@ -77,12 +74,12 @@ const RestaurantUpVoteDownVoteContents = graphql(
           <RestaurantRatingView restaurant={restaurant} floating size={42} />
         </AbsoluteVStack>
         <RatingWithVotes
-          score={score}
+          score={score || 0}
           ratio={ratio}
           vote={vote}
           setVote={setVote}
           onClickPoints={onClickPoints}
-          isMultiple={activeTagSlugs ? activeTagSlugs.length > 1 : false}
+          isMultiple={tagSlug ? tagSlug.length > 1 : false}
           display={display}
         />
       </VStack>

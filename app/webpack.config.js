@@ -5,6 +5,7 @@ module.exports = (opts) => {
   return createWebpackConfig({
     ...opts,
     entry: path.resolve(path.join(__dirname, 'src', 'index.web.tsx')),
+    // polyFillPath: 'babel-polyfill',
     cwd: __dirname,
     defineOptions: {
       ...(process.env.APP_ENDPOINT && {

@@ -1,4 +1,4 @@
-import { Tag, TagQuery, TagType, graphql, review } from '@dish/graph'
+import { Tag, TagQuery, TagType, graphql, restaurant, review } from '@dish/graph'
 import { Plus, X } from '@dish/react-feather'
 import React, { memo, useRef } from 'react'
 import {
@@ -87,7 +87,7 @@ export type TagButtonProps = StackProps &
     rgb?: RGB | null
     refetchKey?: string
     slug?: string
-    restaurantSlug?: string
+    restaurant?: restaurant | null
     size?: 'lg' | 'md' | 'sm'
     votable?: boolean
     closable?: boolean
@@ -159,7 +159,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     after,
     showSearchButton,
     replace,
-    restaurantSlug,
+    restaurant,
     hideRating,
     hideRank,
     ratingStyle = 'pie',
@@ -328,10 +328,10 @@ const TagButtonInner = (props: TagButtonProps) => {
         </>
       )}
 
-      {!!slug && !!votable && !!props.restaurantSlug && (
+      {!!slug && !!votable && !!props.restaurant && (
         <VStack>
           <TagButtonVote
-            key={slug + props.restaurantSlug}
+            key={`${slug}${props.restaurant?.slug}`}
             {...props}
             color={theme.color}
             scale={scale}
@@ -384,11 +384,11 @@ const TagButtonInner = (props: TagButtonProps) => {
   if (!noLink) {
     contents = (
       <Link
-        {...(restaurantSlug
+        {...(restaurant
           ? {
               name: 'restaurant',
               params: {
-                slug: restaurantSlug,
+                slug: restaurant.slug || '',
                 section: 'reviews',
                 sectionSlug: slug,
               },
@@ -418,18 +418,12 @@ const TagButtonInner = (props: TagButtonProps) => {
 }
 
 export const TagVotePopover = graphql(
-  ({
-    slug,
-    restaurantSlug,
-    ...popoverProps
-  }: HoverablePopoverProps & {
-    slug?: string
-    restaurantSlug?: string
-  }) => {
+  ({ slug, restaurant, ...popoverProps }: HoverablePopoverProps & TagButtonProps) => {
     const hovPopRef = useRef<HoverablePopoverRef>()
     const tagSlug = getTagSlug(slug)
-    const { vote, setVote } = useUserTagVotes(restaurantSlug || '', {
-      [tagSlug]: true,
+    const { vote, setVote } = useUserTagVotes({
+      restaurant,
+      activeTags: [tagSlug],
     })
     return (
       <HoverablePopover

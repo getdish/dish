@@ -1,19 +1,16 @@
-import { order_by } from '@dish/graph'
-
-import { queryRestaurant } from './queryRestaurant'
+import { order_by, restaurant } from '@dish/graph'
 
 export type QueryRestaurantTagsProps = {
-  restaurantSlug: string
+  restaurant?: restaurant | null
   limit?: number
   exclude?: ('lense' | 'country' | 'dish' | 'category')[]
 }
 
 export const queryRestaurantTags = ({
-  restaurantSlug,
+  restaurant,
   limit = 20,
   exclude = [],
 }: QueryRestaurantTagsProps) => {
-  const [restaurant] = queryRestaurant(restaurantSlug)
   if (!restaurant) {
     return []
   }
