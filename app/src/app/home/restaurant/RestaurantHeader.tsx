@@ -122,7 +122,7 @@ const RestaurantHeaderContent = memo(
                   />
                   <HStack>
                     <Text
-                      color={theme.color}
+                      color="#fff"
                       alignSelf="flex-start"
                       selectable
                       letterSpacing={-1}
@@ -218,8 +218,7 @@ const RestaurantHeaderContent = memo(
                     <RestaurantTagsRow
                       maxLines={2}
                       exclude={['dish']}
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurantId}
+                      restaurant={restaurant}
                       spacing={10}
                       maxItems={8}
                       tagButtonProps={{

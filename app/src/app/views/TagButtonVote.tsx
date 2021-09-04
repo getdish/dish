@@ -13,15 +13,15 @@ export const TagButtonVote = graphql(
     const tagSlug = getTagSlug(props.slug)
 
     // allows for controlled or user-controlled... not pretty
-    const userVote = useUserTagVotes(
-      props.restaurantSlug || '',
-      {
-        [tagSlug]: true,
-      },
-      props.refetchKey
-    ).vote
+    const userVote = useUserTagVotes({
+      ...props,
+      activeTags: [tagSlug],
+    })
 
-    const vote = 'vote' in props ? props.vote : userVote
+    const vote =
+      (userVote.didVoteDuringSession && props.votable) || !('vote' in props)
+        ? userVote.vote
+        : props.vote
 
     const theme = useTheme()
     const iconProps = {

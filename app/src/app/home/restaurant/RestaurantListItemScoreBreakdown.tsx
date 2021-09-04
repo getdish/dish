@@ -1,21 +1,24 @@
-import { RestaurantItemMeta, graphql } from '@dish/graph'
+import { RestaurantItemMeta, graphql, restaurant } from '@dish/graph'
 import React, { memo } from 'react'
 import { VStack } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
-import { RestaurantListItemProps } from './RestaurantListItem'
 
 export const RestaurantListItemScoreBreakdown = memo(
   graphql(
     ({
       activeTagSlugs,
       meta,
-      restaurantSlug,
-    }: RestaurantListItemProps & { meta: RestaurantItemMeta }) => {
+      restaurant,
+    }: {
+      activeTagSlugs?: string[]
+      restaurant?: restaurant | null
+      meta: RestaurantItemMeta
+    }) => {
       const restaurantTags = queryRestaurantTagScores({
-        restaurantSlug,
+        restaurant,
         tagSlugs: activeTagSlugs ?? [],
       })
       return (
@@ -26,7 +29,7 @@ export const RestaurantListItemScoreBreakdown = memo(
                 key={rtag.slug}
                 {...getTagButtonProps(rtag)}
                 votable
-                restaurantSlug={restaurantSlug}
+                restaurant={restaurant}
               />
             )
           })}

@@ -11,8 +11,17 @@ import {
 } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
-import React, { Suspense, SuspenseList, memo, useEffect, useRef, useState } from 'react'
-import { Image, StyleSheet, Switch } from 'react-native'
+import React, {
+  Suspense,
+  SuspenseList,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+import { Image, Pressable, StyleSheet, Switch } from 'react-native'
+import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
 import {
   AbsoluteVStack,
   Button,
@@ -28,6 +37,7 @@ import {
   Theme,
   Title,
   Toast,
+  TouchableOpacity,
   VStack,
   useForceUpdate,
   useMedia,
@@ -72,7 +82,7 @@ import { ColorPicker } from './ColorPicker'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { getListColor, listColors, randomListColor } from './listColors'
 import { ListItem } from './ListItem'
-import { useListRestaurants } from './useListRestaurants'
+import { useListItems } from './useListItems'
 
 type Props = StackItemProps<HomeStateItemList>
 
@@ -188,17 +198,16 @@ const ListPageContent = memo(
       })
       const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999999')
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
-      const { items, ...listActions } = useListRestaurants(list)
+      const listItems = useListItems(list)
       const [isLoaded, setIsLoaded] = useState(false)
-      // only show first ones to load images faster on initial load
-      const restaurants = items.slice(0, isLoaded ? 100 : 2)
       const region = useRegionQuery(props.item.region)
-      const listThemeIndex = list.theme ?? 0
+      // disable for now
+      const listThemeIndex = 1 // list.theme ?? 0
       const forceUpdate = useForceUpdate()
       const listTheme = listThemeIndex === 0 ? listThemes[0] : listThemes[1]
       const listSlug = props.item.slug
 
-      const isRestaurantLoaded = !!restaurants[0]?.id
+      const isRestaurantLoaded = !!listItems.items[0]?.id
 
       useAsyncEffect(
         async (mounted) => {
@@ -266,7 +275,7 @@ const ListPageContent = memo(
         id: props.item.id,
         hideRegions: true,
         isActive: props.isActive,
-        results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),
+        results: listItems.items.map((x) => x.restaurant).map(getRestaurantIdentifiers),
         showRank: true,
         zoomOnHover: true,
         fitToResults: true,
@@ -287,7 +296,14 @@ const ListPageContent = memo(
         .tags({ limit: 10 })
         .map((x) => x.tag!)
         .map((tag, i) => {
-          return <TagButton key={tag?.slug || i} size="sm" {...getTagButtonProps(tag)} />
+          return (
+            <TagButton
+              key={tag?.slug || i}
+              size="sm"
+              {...getTagButtonProps(tag)}
+              votable={isMyList}
+            />
+          )
         })
 
       const titleContents = isEditing ? (
@@ -471,7 +487,7 @@ const ListPageContent = memo(
                       height={270}
                       width={200}
                       floating
-                      restaurant={restaurants[0].restaurant}
+                      restaurant={listItems.items[0].restaurant}
                       max={2}
                     />
                   </VStack>
@@ -553,7 +569,7 @@ const ListPageContent = memo(
                   >
                     <Paragraph>Color:</Paragraph>
                     <ColorPicker colors={listColors} color={color} onChange={setColor} />
-                    <InteractiveContainer alignItems="center">
+                    {/* <InteractiveContainer alignItems="center">
                       <Paragraph
                         size="sm"
                         opacity={0.5}
@@ -583,7 +599,7 @@ const ListPageContent = memo(
                       >
                         Minimal
                       </Paragraph>
-                    </InteractiveContainer>
+                    </InteractiveContainer> */}
                     <HStack>
                       <Paragraph>Public:&nbsp;</Paragraph>
                       <Switch value={isPublic} onValueChange={setPublic} />
@@ -618,7 +634,34 @@ const ListPageContent = memo(
         </>
       )
 
-      const drawerWidth = useAppDrawerWidth()
+      const renderItem = useCallback(
+        ({ item, index = 0, drag, isActive }: RenderItemParams<any>) => {
+          const { restaurantId, restaurant, dishSlugs, position, list_restaurant } = item
+          return (
+            <Pressable
+              style={{
+                // height: 100,
+                backgroundColor: isActive ? 'red' : undefined,
+              }}
+              onLongPress={drag}
+            >
+              {/* <Suspense fallback={<FallbackListItem />}> */}
+              <ListItem
+                list={list}
+                listTheme={listTheme}
+                restaurant={restaurant}
+                listSlug={listSlug}
+                rank={index + 1}
+                hideRate
+                editable={isEditing || isMyList}
+                username={username}
+              />
+              {/* </Suspense> */}
+            </Pressable>
+          )
+        },
+        [isMyList, isEditing, listTheme]
+      )
 
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
@@ -664,7 +707,7 @@ const ListPageContent = memo(
                     <CloseButton onPress={() => setShowAddModal(false)} />
                   </PaneControlButtons>
                   <SuspenseFallback>
-                    <ListAddRestuarant listSlug={listSlug} onAdd={listActions.add} />
+                    <ListAddRestuarant listSlug={listSlug} onAdd={listItems.add} />
                   </SuspenseFallback>
                 </>
               )}
@@ -727,83 +770,22 @@ const ListPageContent = memo(
 
           <ContentScrollView bidirectional={listTheme === 'modern'} id="list">
             <>
-              <VStack minWidth={drawerWidth} minHeight={getWindowHeight()}>
+              <VStack width="100%" minHeight={getWindowHeight()}>
                 {listTheme === 'modern' ? null : listHeaderEl}
 
                 {listTheme === 'modern' ? userCommentEl : null}
 
-                {!restaurants.length && (
+                {!listItems.items.length && (
                   <VStack padding={20} margin={20} borderRadius={10}>
                     <Paragraph>Nothing on this list, yet.</Paragraph>
                   </VStack>
                 )}
 
-                <SuspenseList revealOrder="together">
-                  {restaurants.map(
-                    ({ restaurantId, restaurant, dishSlugs, position, list_restaurant }, index) => {
-                      return (
-                        <Suspense fallback={<FallbackListItem />} key={restaurant.slug || index}>
-                          <HStack position="relative">
-                            {/* {userStore.isAdmin && <Text>{restaurant.id}</Text>} */}
-                            {isEditing && (
-                              <AbsoluteVStack
-                                zIndex={1000}
-                                top={0}
-                                left={0}
-                                alignItems="center"
-                                justifyContent="center"
-                                spacing
-                              >
-                                <CircleButton
-                                  backgroundColor={red400}
-                                  width={40}
-                                  height={40}
-                                  onPress={() => {
-                                    listActions.delete(restaurantId)
-                                  }}
-                                >
-                                  <X size={20} color="#fff" />
-                                </CircleButton>
-
-                                <Score
-                                  size="sm"
-                                  votable
-                                  upTooltip="Move up"
-                                  downTooltip="Move down"
-                                  score={index + 1}
-                                  setVote={(vote) => {
-                                    listActions.promote(vote === 1 ? index : index + 1)
-                                  }}
-                                />
-                              </AbsoluteVStack>
-                            )}
-                            <ListItem
-                              list={list}
-                              listTheme={listTheme}
-                              restaurant={restaurant}
-                              listSlug={listSlug}
-                              rank={index + 1}
-                              hideRate
-                              // dishSlugs={dishSlugs.length ? dishSlugs : undefined}
-                              editable={isEditing || isMyList}
-                              username={username}
-                              // onChangeDishes={async (dishes) => {
-                              //   console.log('should change dishes', dishes)
-                              //   await listActions.setDishes(restaurantId, dishes)
-                              //   Toast.success(`Updated dishes`)
-                              // }}
-                              // onChangeDescription={async (next) => {
-                              //   await listActions.setComment(restaurantId, next)
-                              //   Toast.success('Updated description')
-                              // }}
-                            />
-                          </HStack>
-                          {/* <Spacer /> */}
-                        </Suspense>
-                      )
-                    }
-                  )}
-                </SuspenseList>
+                <DraggableFlatList
+                  keyExtractor={(item, index) => `draggable-item-${item.key}-${isMyList}`}
+                  data={listItems.items}
+                  renderItem={renderItem}
+                />
 
                 {isMyList && (
                   <>
@@ -823,8 +805,11 @@ const ListPageContent = memo(
                         Add
                       </Button>
                     </HStack>
+                    <Spacer size="xl" />
                   </>
                 )}
+
+                <Spacer size="xxxl" />
               </VStack>
             </>
           </ContentScrollView>

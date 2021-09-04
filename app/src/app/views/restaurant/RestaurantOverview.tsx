@@ -6,6 +6,7 @@ import { AbsoluteVStack, HStack, Input, Text, VStack, useDebounce, useTheme } fr
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
+import { CommentBubble } from '../CommentBubble'
 
 const quote = (
   <AbsoluteVStack top={-10} left={-0}>
@@ -54,7 +55,7 @@ export const RestaurantOverview = memo(
       .map((x) => x?.sentence)
       .join(' ')
     const summary = text || restaurant.summary || headlines || ''
-    const scale = size === 'lg' ? 1.1 : 1
+    const scale = size === 'lg' ? 1.2 : 1
     const extra = size === 'lg' ? 2 : 1
     const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)
     const fontSize = Math.round(14 * scale + extra)
@@ -139,7 +140,16 @@ export const RestaurantOverview = memo(
         //   </VStack>
         // )
         // return (
-        //   <CommentBubble name="" avatar={<VStack />} avatarBackgroundColor="transparent">
+        //   <CommentBubble
+        //     avatar={{
+        //       charIndex: 0,
+        //       image: '',
+        //     }}
+        //     username=""
+        //     text={content}
+        //     name="DishBot"
+        //     source="dish"
+        //   >
         //     {content}
         //   </CommentBubble>
         // )
