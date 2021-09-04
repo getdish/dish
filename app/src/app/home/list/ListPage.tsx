@@ -292,111 +292,8 @@ const ListPageContent = memo(
           .map((x) => x.restaurant.image) || ''),
       ].find(Boolean)
 
-      // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
-      return (
+      const listHeaderEl = (
         <>
-          <PageHead isActive={props.isActive}>{`${userFullNameOrUsername}'s ${list.name}${
-            region.data?.name ? `in ${region.data.name}` : ''
-          }`}</PageHead>
-
-          {props.isActive && isMyList && (
-            <BottomFloatingArea>
-              <Button
-                pointerEvents="auto"
-                borderWidth={2}
-                borderColor={blue200}
-                theme="active"
-                borderRadius={100}
-                width={55}
-                height={55}
-                alignItems="center"
-                justifyContent="center"
-                elevation={1}
-                noTextWrap
-                onPress={() => {
-                  setShowAddModal(true)
-                }}
-              >
-                <Plus size={42} color="#fff" />
-              </Button>
-              <VStack pointerEvents="none" flex={1} />
-            </BottomFloatingArea>
-          )}
-
-          {isMyList && (
-            <Modal
-              visible={showAddModal}
-              onDismiss={() => setShowAddModal(false)}
-              width={380}
-              flex={1}
-              height="90%"
-              minHeight={480}
-            >
-              {showAddModal && (
-                <>
-                  <PaneControlButtons>
-                    <CloseButton onPress={() => setShowAddModal(false)} />
-                  </PaneControlButtons>
-                  <SuspenseFallback>
-                    <ListAddRestuarant listSlug={listSlug} onAdd={listActions.add} />
-                  </SuspenseFallback>
-                </>
-              )}
-            </Modal>
-          )}
-
-          <PaneControlButtonsLeft>
-            <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
-              {reviewsCount}
-            </FavoriteButton>
-
-            {isEditing && (
-              <>
-                <SmallButton
-                  themeInverse
-                  elevation={1}
-                  onPress={async () => {
-                    router.setRouteAlert(null)
-                    setIsEditing(false)
-                    await listUpdate(
-                      {
-                        id: list.id,
-                        ...draft.current,
-                        ...(color !== '#999' && {
-                          color: listColors.indexOf(color),
-                        }),
-                        public: isPublic,
-                      },
-                      {
-                        query: list,
-                      }
-                    )
-                    refetch()
-                    Toast.show('Saved')
-                  }}
-                >
-                  Save
-                </SmallButton>
-
-                <Spacer />
-
-                <VStack
-                  opacity={0.8}
-                  hoverStyle={{
-                    opacity: 1,
-                  }}
-                  padding={6}
-                  onPress={() => {
-                    setIsEditing(false)
-                  }}
-                >
-                  <X color={grey} size={24} />
-                </VStack>
-                <Spacer size="lg" />
-              </>
-            )}
-          </PaneControlButtonsLeft>
-
           {/* START HEADER */}
           <VStack backgroundColor={`${color}11`}>
             {listTheme === 'minimal' && (
@@ -406,7 +303,7 @@ const ListPageContent = memo(
                   <Title
                     maxWidth={620}
                     width="100%"
-                    size="xxxxxl"
+                    size="xxxl"
                     sizeLineHeight={0.76}
                     fontWeight="300"
                   >
@@ -430,7 +327,6 @@ const ListPageContent = memo(
                 />
               </HStack>
             )}
-
             {listTheme === 'modern' && (
               <HStack
                 paddingVertical={20}
@@ -636,12 +532,122 @@ const ListPageContent = memo(
               </HStack>
             )}
           </VStack>
-
           {/* END HEADER */}
+        </>
+      )
+
+      // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
+      return (
+        <>
+          <PageHead isActive={props.isActive}>{`${userFullNameOrUsername}'s ${list.name}${
+            region.data?.name ? `in ${region.data.name}` : ''
+          }`}</PageHead>
+
+          {props.isActive && isMyList && (
+            <BottomFloatingArea>
+              <Button
+                pointerEvents="auto"
+                borderWidth={2}
+                borderColor={blue200}
+                theme="active"
+                borderRadius={100}
+                width={55}
+                height={55}
+                alignItems="center"
+                justifyContent="center"
+                elevation={1}
+                noTextWrap
+                onPress={() => {
+                  setShowAddModal(true)
+                }}
+              >
+                <Plus size={42} color="#fff" />
+              </Button>
+              <VStack pointerEvents="none" flex={1} />
+            </BottomFloatingArea>
+          )}
+
+          {isMyList && (
+            <Modal
+              visible={showAddModal}
+              onDismiss={() => setShowAddModal(false)}
+              width={380}
+              flex={1}
+              height="90%"
+              minHeight={480}
+            >
+              {showAddModal && (
+                <>
+                  <PaneControlButtons>
+                    <CloseButton onPress={() => setShowAddModal(false)} />
+                  </PaneControlButtons>
+                  <SuspenseFallback>
+                    <ListAddRestuarant listSlug={listSlug} onAdd={listActions.add} />
+                  </SuspenseFallback>
+                </>
+              )}
+            </Modal>
+          )}
+
+          <PaneControlButtonsLeft>
+            <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
+              {reviewsCount}
+            </FavoriteButton>
+
+            {isEditing && (
+              <>
+                <SmallButton
+                  themeInverse
+                  elevation={1}
+                  onPress={async () => {
+                    router.setRouteAlert(null)
+                    setIsEditing(false)
+                    await listUpdate(
+                      {
+                        id: list.id,
+                        ...draft.current,
+                        ...(color !== '#999' && {
+                          color: listColors.indexOf(color),
+                        }),
+                        public: isPublic,
+                      },
+                      {
+                        query: list,
+                      }
+                    )
+                    refetch()
+                    Toast.show('Saved')
+                  }}
+                >
+                  Save
+                </SmallButton>
+
+                <Spacer />
+
+                <VStack
+                  opacity={0.8}
+                  hoverStyle={{
+                    opacity: 1,
+                  }}
+                  padding={6}
+                  onPress={() => {
+                    setIsEditing(false)
+                  }}
+                >
+                  <X color={grey} size={24} />
+                </VStack>
+                <Spacer size="lg" />
+              </>
+            )}
+          </PaneControlButtonsLeft>
+
+          {listTheme === 'modern' ? listHeaderEl : null}
 
           <ContentScrollView bidirectional={listTheme === 'modern'} id="list">
             <>
               <VStack minHeight={getWindowHeight()}>
+                {listTheme === 'modern' ? null : listHeaderEl}
+
                 {!restaurants.length && (
                   <VStack padding={20} margin={20} borderRadius={10}>
                     <Paragraph>Nothing on this list, yet.</Paragraph>
