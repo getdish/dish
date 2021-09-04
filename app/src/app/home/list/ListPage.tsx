@@ -231,6 +231,7 @@ const ListPageContent = memo(
       }, [props.isActive, isEditing])
 
       useSetAppMap({
+        id: props.item.id,
         hideRegions: true,
         isActive: props.isActive,
         results: restaurants.map((x) => x.restaurant).map(getRestaurantIdentifiers),

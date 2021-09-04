@@ -187,6 +187,7 @@ const SearchPageContent = memo(function SearchPageContent(
   )
 
   useSetAppMap({
+    id: props.item.id,
     isActive: props.isActive,
     results,
     showRank: true,

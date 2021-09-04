@@ -714,6 +714,7 @@ export const cancelUpdateRegion = () => {
 }
 
 export type UseSetAppMapProps = MapOpts & {
+  id: string // eq homeStore.states[].id
   center?: MapPosition['center'] | null
   span?: MapPosition['span'] | null
   results?: RestaurantOnlyIdsPartial[]
@@ -721,13 +722,9 @@ export type UseSetAppMapProps = MapOpts & {
   region?: string | null
 }
 
-const setToPosition = (position: Partial<AppMapPosition>) => {
-  homeStore.updateCurrentState('useSetAppMap.position', position)
-  appMapStore.setPosition(position)
-}
-
 export const useSetAppMap = (props: UseSetAppMapProps) => {
   const {
+    id,
     results,
     showRank,
     isActive,
@@ -738,6 +735,14 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
     hideRegions,
     region,
   } = props
+
+  const setToPosition = (position: Partial<AppMapPosition>) => {
+    homeStore.updateHomeState('useSetAppMap.position', {
+      id,
+      position,
+    })
+    appMapStore.setPosition(position)
+  }
 
   useEffect(() => {
     if (!isActive) return

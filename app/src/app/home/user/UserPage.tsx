@@ -145,6 +145,7 @@ const UserPageContent = memo(
       useSnapToFullscreenOnMount()
 
       useSetAppMap({
+        id: props.item.id,
         hideRegions: true,
         fitToResults: true,
         isActive,

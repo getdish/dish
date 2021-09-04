@@ -179,6 +179,7 @@ const HomePageContent = (props: Props) => {
   const wasEverActive = useLastValueWhen(() => props.isActive, !props.isActive)
 
   const homePageFeedProps = {
+    id: props.item.id,
     isActive: props.isActive,
     fitToResults: false,
     results,

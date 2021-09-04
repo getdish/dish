@@ -84,7 +84,7 @@
     "@types/react": "17.0.19",
     "react": "18.0.0-alpha-568dc3532",
     "react-dom": "18.0.0-alpha-568dc3532",
-    "react-refresh": "0.11.0-alpha-67f38366a-20210830",
+    "react-refresh": "0.11.0-alpha-568dc3532",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.0-rc.6",
     "@testing-library/react": "12.0.0-alpha.2",
     "fs-extra": "10.0.0",

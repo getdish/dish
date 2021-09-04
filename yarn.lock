@@ -21528,10 +21528,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-refresh@npm:0.11.0-alpha-67f38366a-20210830":
-  version: 0.11.0-alpha-67f38366a-20210830
-  resolution: "react-refresh@npm:0.11.0-alpha-67f38366a-20210830"
-  checksum: e0f4f38bfff150533b824a86608f71ddd88cafa5c261a8fd667545394b5415f0b69d385d4f9d3f7e81067765eda3f96ecdb6494a72b7204ad6a30f046d1324c5
+"react-refresh@npm:0.11.0-alpha-568dc3532":
+  version: 0.11.0-alpha-568dc3532
+  resolution: "react-refresh@npm:0.11.0-alpha-568dc3532"
+  checksum: ea91d3afc5176252e47383f7852d4d15ddbddb7441265e26ff78c9efd494f4cdcf610dcfa13e3bcc9dfdd2a7cba0cc6776d07e31a9e8e7f7c6f7eb47db8a2fcf
   languageName: node
   linkType: hard
 

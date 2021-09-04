@@ -91,6 +91,7 @@ const RestaurantPage = memo(
       // console.log('RestaurantPage.render', { props, position })
 
       useSetAppMap({
+        id: props.item.id,
         hideRegions: true,
         zoomOnHover: false,
         isActive: props.isActive,
