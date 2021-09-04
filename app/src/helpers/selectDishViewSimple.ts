@@ -1,4 +1,4 @@
-import { restaurant_tag, tag } from '@dish/graph'
+import { restaurant, restaurant_tag, tag } from '@dish/graph'
 
 import { RGB } from './rgb'
 
@@ -14,6 +14,7 @@ export type DishTagItemSimple = {
   type: string
   rank?: number
   rgb?: RGB | null
+  restaurant?: restaurant
 }
 
 export const selectRishDishViewSimple = (tag: restaurant_tag): DishTagItemSimple => {
@@ -24,6 +25,7 @@ export const selectRishDishViewSimple = (tag: restaurant_tag): DishTagItemSimple
   const ratioRating = totalVotes > 0 ? (tag.upvotes / totalVotes) * 100 : 0
   const rating = Math.round((rawRating ?? ratioRating) / 10)
   return {
+    restaurant: tag.restaurant,
     id: tag.tag?.id,
     name: tag.tag?.name || '',
     icon: tag.tag?.icon || '',

@@ -1990,11 +1990,13 @@ __metadata:
     react-native-clean-project: ^3.6.4
     react-native-codegen: ^0.0.7
     react-native-dotenv: ^2.5.3
+    react-native-draggable-flatlist: ^2.6.2
     react-native-fast-image: ^8.3.4
     react-native-gesture-handler: ^1.10.3
     react-native-reanimated: ^2.2.0
     react-native-safe-area-context: ^3.1.9
     react-native-svg: ^12.1.1
+    react-native-swipeable-item: ^1.5.7
     react-native-unimodules: ^0.14.6
     react-query: ^3.23.0
     react-reparenting: ^0.6.1
@@ -11176,7 +11178,7 @@ __metadata:
     "@typescript-eslint/parser": ^4.29.2
     "@yarnpkg/plugin-patch": ^2.1.2
     ava: ^3.14.0
-    esbuild: ^0.12.19
+    esbuild: "*"
     esbuild-register: ^2.6.0
     eslint: ^7.32.0
     eslint-import-resolver-typescript: ^2.4.0
@@ -11804,12 +11806,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:0.12.19":
-  version: 0.12.19
-  resolution: "esbuild@npm:0.12.19"
+"esbuild@npm:0.12.28":
+  version: 0.12.28
+  resolution: "esbuild@npm:0.12.28"
   bin:
     esbuild: bin/esbuild
-  checksum: f6ba6b9ee0e114c24b222bf95f18f6742002c4462d8b74e779effd1244bae8af964452ad8f6d70120d8ddf311a3b8ccc5026fb8ff1d0ac1fda14ed6435e2f6b3
+  checksum: 9127dc048aad41a59d736460b9ea3cf5e367a7e5a650b2b465e066ee291e3c5e9fa5ad4b56cd4dea76cde9a1dee25a0e9e94f558b24170fc124eb0778e043eae
   languageName: node
   linkType: hard
 
@@ -21724,6 +21726,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-draggable-flatlist@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "react-native-draggable-flatlist@npm:2.6.2"
+  peerDependencies:
+    react-native: ">=0.62.0"
+    react-native-gesture-handler: ^1.0.0
+    react-native-reanimated: ^2.0.0
+  checksum: 2381d047678d9fb2860b63861a9b47beb78f53f092aebff27c53509a5a571d3d0ec491084591b6ad7240e43871ec9d84ce4045b4341bf6d1ad3ca3b59482df99
+  languageName: node
+  linkType: hard
+
 "react-native-fast-image@npm:^8.3.4":
   version: 8.3.7
   resolution: "react-native-fast-image@npm:8.3.7"
@@ -21747,19 +21760,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "react-native-reanimated@npm:2.2.0"
+"react-native-reanimated@npm:2.3.0-alpha.3":
+  version: 2.3.0-alpha.3
+  resolution: "react-native-reanimated@npm:2.3.0-alpha.3"
   dependencies:
     "@babel/plugin-transform-object-assign": ^7.10.4
-    fbjs: ^3.0.0
+    invariant: ^2.2.4
+    lodash.isequal: ^4.5.0
     mockdate: ^3.0.2
+    react-native-screens: ^3.4.0
     string-hash-64: ^1.0.3
   peerDependencies:
     react: "*"
     react-native: "*"
     react-native-gesture-handler: "*"
-  checksum: faa81f9bcfa846aca54deed82485790ed112d536ad12d2dd0a578868a023ec7ec14da5c46b24af5a911ca89f2e8f74d00313306d5b08780fc3a0ba89ff464d1f
+  checksum: b55ddce1d07d9cb12284d6004b470fcd9cb9d46af2ac749e8cfe3c733575f557cf3eadd441dfdac662ff38b6f9979ec5e28996016f1ceda506434b56968bc6fb
   languageName: node
   linkType: hard
 
@@ -21773,6 +21788,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-screens@npm:^3.4.0":
+  version: 3.6.0
+  resolution: "react-native-screens@npm:3.6.0"
+  dependencies:
+    warn-once: ^0.1.0
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: f82625c851663237f04afe5e6f1bb6c0355e94148288bf1f37bb612bdbfc1638363c8908fb021cb080db4759b81fc41744b7d571f781117341bc9cbea1ea2156
+  languageName: node
+  linkType: hard
+
 "react-native-svg@npm:^12.1.1":
   version: 12.1.1
   resolution: "react-native-svg@npm:12.1.1"
@@ -21783,6 +21810,17 @@ __metadata:
     react: "*"
     react-native: ">=0.50.0"
   checksum: 20a9b2987bf5836821e51a0497fc2b598a859032fe168f80c6dcab3727bf26dc34bcb3197059e1e5775dfc91b6b20633502292d8c82e9aeb3e76807d03e0189d
+  languageName: node
+  linkType: hard
+
+"react-native-swipeable-item@npm:^1.5.7":
+  version: 1.5.7
+  resolution: "react-native-swipeable-item@npm:1.5.7"
+  peerDependencies:
+    react-native: ^0.59.0
+    react-native-gesture-handler: ^1.0.0
+    react-native-reanimated: ^1.0.0
+  checksum: 90ae6cef4e0a7a206d5451ca10c4cf569d2cddcf64c2763f6d757ddbd2490966e9cf22e9157351bc69e167a662c067b222821df6b2435b7277dac6f70485d477
   languageName: node
   linkType: hard
 
@@ -26344,6 +26382,13 @@ __metadata:
   dependencies:
     makeerror: 1.0.x
   checksum: 4038fcf92f6ab0288267ad05008aec9e089a759f1bd32e1ea45cc2eb498eb12095ec43cf8ca2bf23a465f4580a0d33b25b89f450ba521dd27083cbc695ee6bf5
+  languageName: node
+  linkType: hard
+
+"warn-once@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "warn-once@npm:0.1.0"
+  checksum: 5fde2b526d132369ae30a34e9bd172f77ae3c061e6b875194de42d668bc189bd779ddada5217348cdf23ecac6a277931b40482173c6695544b924f6a8cd67601
   languageName: node
   linkType: hard
 

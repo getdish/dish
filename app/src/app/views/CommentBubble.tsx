@@ -283,9 +283,8 @@ function CommentBubbleContents({
       {!!contents && (
         <VStack
           paddingHorizontal={15}
-          paddingVertical={chromeless ? 0 : 10}
-          paddingBottom={chromeless ? 10 : 0}
-          marginLeft={chromeless ? 0 : 20}
+          paddingVertical={15}
+          marginLeft={20}
           backgroundColor={theme.cardBackgroundColor}
           borderColor={theme.borderColor}
           borderWidth={0.5}
@@ -298,10 +297,13 @@ function CommentBubbleContents({
           height={bubbleHeight}
           pointerEvents="auto"
           {...(chromeless && {
-            borderColor: 'transparent',
-            backgroundColor: 'transparent',
             paddingLeft: 0,
             paddingRight: 0,
+            paddingTop: 0,
+            marginLeft: 0,
+            paddingBottom: 10,
+            borderColor: 'transparent',
+            backgroundColor: 'transparent',
             shadowColor: 'transparent',
           })}
         >

@@ -1,16 +1,16 @@
+import { restaurant } from '@dish/graph/types'
 import { isPresent } from '@dish/helpers'
 
 import { selectRishDishViewSimple } from '../helpers/selectDishViewSimple'
 import { queryRestaurant } from './queryRestaurant'
 
 export function queryRestaurantTagScores({
-  restaurantSlug,
+  restaurant,
   tagSlugs,
 }: {
-  restaurantSlug: string
+  restaurant?: restaurant | null
   tagSlugs: string[]
 }) {
-  const [restaurant] = queryRestaurant(restaurantSlug)
   if (!restaurant) {
     return []
   }

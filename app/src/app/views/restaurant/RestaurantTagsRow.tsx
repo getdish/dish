@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph'
+import { graphql, restaurant } from '@dish/graph'
 import { sortBy, uniqBy } from 'lodash'
 import React, { Suspense, memo } from 'react'
 import { HStack, Spacer, VStack } from 'snackui'
@@ -9,13 +9,12 @@ import { TagButton, TagButtonProps, TagButtonTagProps, getTagButtonProps } from 
 
 type TagRowProps = {
   tagButtonProps?: TagButtonProps
-  restaurantSlug: string
+  restaurant?: restaurant | null
   showMore?: boolean
   size?: TagButtonProps['size']
   maxLines?: number
   divider?: any
   tags?: TagButtonTagProps[]
-  restaurantId?: string
   spacing?: number
   spacingHorizontal?: number
   maxItems?: number
@@ -42,8 +41,8 @@ export const RestaurantTagsRow = (props: TagRowProps) => {
 
 const RestaurantTagsRowContent = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
-    const { size = 'sm', restaurantSlug, showMore } = props
-    if (!restaurantSlug) {
+    const { size = 'sm', restaurant, showMore } = props
+    if (!restaurant) {
       return null
     }
     let tags: TagButtonTagProps[] = []
@@ -51,7 +50,7 @@ const RestaurantTagsRowContent = memo(
       tags = props.tags.map(getTagButtonProps)
     } else {
       tags = queryRestaurantTags({
-        restaurantSlug,
+        restaurant,
         limit: props.maxItems,
         exclude: props.exclude,
       }).map(selectRishDishViewSimple)
@@ -80,7 +79,7 @@ const RestaurantTagsRowContent = memo(
                 hideRank
                 size={size}
                 {...tag}
-                restaurantSlug={restaurantSlug}
+                restaurant={restaurant}
                 {...props.tagButtonProps}
               />
               <Spacer size={props.spacing ?? 5} />
