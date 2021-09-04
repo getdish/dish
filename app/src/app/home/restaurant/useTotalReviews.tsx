@@ -2,7 +2,8 @@ import { RestaurantQuery } from '@dish/graph'
 
 import { isNative } from '../../../constants/constants'
 
-export const useTotalReviews = (restaurant: RestaurantQuery) => {
+export const useTotalReviews = (restaurant?: RestaurantQuery | null) => {
+  if (!restaurant) return 0
   if (isNative) {
     return 0
   }

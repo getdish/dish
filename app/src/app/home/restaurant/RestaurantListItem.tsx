@@ -12,6 +12,7 @@ import {
   InteractiveContainer,
   LoadingItem,
   LoadingItemsSmall,
+  Paragraph,
   Spacer,
   StackProps,
   Text,
@@ -87,26 +88,26 @@ export const RestaurantListItem = (props: RestaurantListItemProps) => {
   const handleScroll = isLoaded ? undefined : handleScrollMemo
 
   return (
-    <Suspense
-      fallback={
-        props.hideDescription ? (
-          <VStack
-            className="shine"
-            height={61}
-            backgroundColor={theme.backgroundColorTransluscent}
-            borderWidth={2}
-            borderColor={theme.backgroundColorTransparent}
-            width="100%"
-          />
-        ) : (
-          <LoadingItem size="lg" />
-        )
-      }
-    >
-      <ContentScrollViewHorizontal onScroll={handleScroll} scrollEventThrottle={100}>
+    <ContentScrollViewHorizontal onScroll={handleScroll} scrollEventThrottle={100}>
+      <Suspense
+        fallback={
+          props.hideDescription ? (
+            <VStack
+              className="shine"
+              height={61}
+              backgroundColor={theme.backgroundColorTransluscent}
+              borderWidth={2}
+              borderColor={theme.backgroundColorTransparent}
+              width="100%"
+            />
+          ) : (
+            <LoadingItem size="lg" />
+          )
+        }
+      >
         <RestaurantListItemContent isLoaded={isLoaded} {...props} />
-      </ContentScrollViewHorizontal>
-    </Suspense>
+      </Suspense>
+    </ContentScrollViewHorizontal>
   )
 }
 
@@ -144,6 +145,13 @@ const RestaurantListItemContent = memo(
       editing: false,
       description: null as null | string,
     })
+    const handleChangeDishes = useCallback(onChangeDishes as any, [])
+    const isActive = useStoreInstanceSelector(getSearchPageStore(), (x) => x.index === rank - 1)
+    const [isExpanded, setIsExpanded] = useState(false)
+    const toggleSetExpanded = useCallback(() => {
+      setIsExpanded((x) => !x)
+    }, [])
+    const totalReviews = useTotalReviews(restaurant)
 
     useEffect(() => {
       setState((prev) => ({
@@ -152,20 +160,18 @@ const RestaurantListItemContent = memo(
       }))
     }, [description])
 
-    if (!restaurant) {
-      return null
-    }
-
     useEffect(() => {
+      if (!restaurant) return
       if (!!restaurant.name && props.onFinishRender) {
         return series([() => fullyIdle({ min: 16 }), props.onFinishRender!])
       }
-    }, [restaurant.name])
+    }, [restaurant?.name])
+
+    if (!restaurant) {
+      return <Paragraph>missing restaurant {restaurantSlug}</Paragraph>
+    }
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-    const isActive = useStoreInstanceSelector(getSearchPageStore(), (x) => x.index === rank - 1)
-    const [isExpanded, setIsExpanded] = useState(false)
-
     const contentSideProps: StackProps = {
       width: media.sm ? '70%' : '60%',
       minWidth: media.sm ? (isWeb ? '55vw' : Dimensions.get('window').width * 0.65) : 320,
@@ -175,11 +181,8 @@ const RestaurantListItemContent = memo(
         media.sm ? 360 : flexibleHeight ? 560 : 480
       ),
     }
-
-    const handleChangeDishes = useCallback(onChangeDishes as any, [])
     const open = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
-    const totalReviews = useTotalReviews(restaurant)
     const nameLen = restaurantName.length
     const titleFontScale =
       nameLen > 50
@@ -193,19 +196,12 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 1
         : 1
-
     const shouldShowOneLine = hideDescription && !description && !state.editing
-
     const titleFontSize =
       Math.round((media.sm ? 20 : 23) * titleFontScale) * (shouldShowOneLine ? 0.8 : 1)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
-
-    const toggleSetExpanded = useCallback(() => {
-      setIsExpanded((x) => !x)
-    }, [])
-
     const imgSize = shouldShowOneLine ? 44 : 58
 
     return (
