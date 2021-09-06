@@ -13,8 +13,7 @@ test.beforeEach(async () => {
   await deleteAllBy('restaurant', 'name', name)
 })
 
-// Skipped only because it's flakey
-test.skip('Gets and persists a restaurant', async (t) => {
+test('Gets and persists a restaurant', async (t) => {
   console.log('get and persist')
   const yelp = new Yelp()
   await yelp.getRestaurants({
@@ -31,6 +30,8 @@ test.skip('Gets and persists a restaurant', async (t) => {
   t.assert(scrape.data.data_from_search_list_item.name.includes('Flour + Water'))
   t.deepEqual(scrape.location, { lon: -122.4122826, lat: 37.7589326 })
   t.is(scrape.data.data_from_search_list_item.phone, '(415) 826-7000')
-  t.assert(scrape.data?.photos?.['dishpage-1']?.length > 25)
-  t.assert(scrape.data?.reviews?.['dishpage-0']?.length > 9)
+  t.assert(scrape.data?.photosp0?.length > 25)
+  t.assert(scrape.data?.photosp1?.length > 25)
+  t.assert(scrape.data?.reviewsp0?.length > 9)
+  t.assert(scrape.data?.reviewsp1?.length > 9)
 })

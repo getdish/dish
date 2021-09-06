@@ -10,7 +10,6 @@ import {
   restaurantUpsertOrphanTags,
   tagFindOne,
   tagInsert,
-  tagUpsert,
 } from '@dish/graph'
 import { Database, hashFromURLResource, reviewFindAllForRestaurant } from '@dish/helpers-node'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
@@ -125,6 +124,7 @@ test('Merging', async (t) => {
     id: t.context.restaurant.id,
   })
   const photos = await bestPhotosForRestaurant(t.context.restaurant.id)
+  t.is(photos.length, 3)
   const p0 = photos.find((p) => p.photo?.origin == 'https://i.imgur.com/N6YtgRI.jpeg')
   const p1 = photos.find((p) => p.photo?.origin == 'https://i.imgur.com/92a8cNI.jpg')
   t.assert(parseFloat(p0.photo?.quality).toFixed(3), '5.374')

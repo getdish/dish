@@ -475,8 +475,8 @@ export class Yelp extends WorkerJob {
     }
 
     const photos: { [keys: string]: any } = {}
-    photos['dishpage-' + page] = data
-    await scrapeMergeData(id, { photos })
+    photos['photosp' + page] = data
+    await scrapeMergeData(id, photos)
     this.log(`got photo page ${page} with ${data.length} photos`)
   }
 
@@ -493,11 +493,11 @@ export class Yelp extends WorkerJob {
     })
     const data = response.reviews
     let reviews: ScrapeData = {}
-    reviews['dishpage-' + page] = data
-    await scrapeMergeData(id, { reviews })
+    reviews['reviewsp' + page] = data
+    await scrapeMergeData(id, reviews)
     this.log(`${this.current_biz_path}, got review page ${page} with ${data.length} reviews`)
 
-    if (process.env.NODE_ENV == 'test') {
+    if (process.env.NODE_ENV == 'test' && page > 1) {
       this.log('Exiting review loop early in test mode')
       return
     }

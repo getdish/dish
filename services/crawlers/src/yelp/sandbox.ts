@@ -2,8 +2,8 @@ import { Yelp } from './Yelp'
 
 async function one() {
   const range = 0.001
-  const name = 'Little Heaven'
-  const coords = [37.75948, -122.41943]
+  const name = 'Lily'
+  const coords = [37.7829564749474, -122.46180336331848]
   const t = new Yelp()
   await t.getRestaurants({
     top_right: [coords[0] - range, coords[1] - range],

@@ -41,16 +41,46 @@ export type YelpListItemData = {
   phone: string
 }
 
-export type YelpScrapeData = YelpDetailPageData & {
-  yelp_path: string
-  data_from_search_list_item: YelpListItemData
-  photos: {
-    [key: string]: { url: string; caption: string }[]
+type Tens = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+type Hundreds = [
+  ...Tens,
+  ...Tens,
+  ...Tens,
+  ...Tens,
+  ...Tens,
+  ...Tens,
+  ...Tens,
+  ...Tens,
+  ...Tens,
+  ...Tens
+] // 100
+type Thousands = [
+  ...Hundreds,
+  ...Hundreds,
+  ...Hundreds,
+  ...Hundreds,
+  ...Hundreds,
+  ...Hundreds,
+  ...Hundreds,
+  ...Hundreds,
+  ...Hundreds,
+  ...Hundreds
+] // 1000
+
+type PhotoKeyNames = `photosp${Exclude<keyof Thousands, keyof any[]>}`
+type PhotoKeys = { [K in PhotoKeyNames]?: { url: string; caption: string }[] }
+interface Photos extends PhotoKeys {}
+
+type ReviewKeyNames = `reviewsp${Exclude<keyof Thousands, keyof any[]>}`
+type ReviewKeys = { [K in ReviewKeyNames]?: YelpReviewData[] }
+interface Reviews extends ReviewKeys {}
+
+export type YelpScrapeData = YelpDetailPageData &
+  Reviews &
+  Photos & {
+    yelp_path: string
+    data_from_search_list_item: YelpListItemData
   }
-  reviews: {
-    [key: string]: YelpReviewData[]
-  }
-}
 
 const yelpReview = {
   id: 'abc123',
@@ -97,23 +127,19 @@ export const yelp: Partial<YelpScrape> = {
     },
     dynamic: require('./yelp-dynamic-fixture').default,
     json: require('./yelp-json-fixture').default,
-    photos: {
-      'dishpage-0': [
-        {
-          url: 'https://i.imgur.com/92a8cNI.jpg',
-          caption: 'Test tag existing 1',
-        },
-      ],
-      'dishpage-1': [
-        {
-          url: 'https://i.imgur.com/N6YtgRI.jpeg',
-          caption: 'Test tag existing 2',
-        },
-      ],
-    },
-    reviews: {
-      'dishpage-0': [yelpReview],
-    },
+    photosp0: [
+      {
+        url: 'https://i.imgur.com/92a8cNI.jpg',
+        caption: 'Test tag existing 1',
+      },
+    ],
+    photosp1: [
+      {
+        url: 'https://i.imgur.com/N6YtgRI.jpeg',
+        caption: 'Test tag existing 2',
+      },
+    ],
+    reviewsp0: [yelpReview],
   },
 }
 

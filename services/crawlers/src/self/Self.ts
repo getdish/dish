@@ -815,11 +815,10 @@ export class Self extends WorkerJob {
   }
 
   async mergePhotos() {
-    const yelp_data = this.yelp?.data
     let urls: string[] = [
       ...scrapeGetData(this.tripadvisor, (x) => x.photos, []),
       ...this._getGooglePhotos(),
-      ...(yelp_data ? this.getPaginatedData(yelp_data.photos)?.map((i) => i.url) : []),
+      ...this._getYelpPhotos(this.yelp?.data),
     ]
     let photos: PhotoXref[] = urls.map((url) => {
       return {
@@ -833,6 +832,12 @@ export class Self extends WorkerJob {
     await photoUpsert(photos)
     const most_aesthetic = (await bestPhotosForRestaurant(this.restaurant.id)) || []
     this.restaurant.photos = most_aesthetic.map((p) => p.photo?.url)
+  }
+
+  _getYelpPhotos(data: any) {
+    if (!data) return []
+    console.log(data.photos)
+    return this.getPaginatedDataNumberedKeys(data, 'photos')?.map((i) => i.url)
   }
 
   _getGooglePhotos() {

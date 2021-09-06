@@ -12,7 +12,7 @@ function stop_crawl() {
 
 # example: ./dsh start_crawler Yelp
 function start_crawler() {
-  worker_cli "node /app/services/crawlers/_/$1/all.js"
+  worker_cli "node /app/services/crawlers/dist/$1/all.js"
 }
 
 # example: ./dsh start_crawler_for_city yelp Tucson, Arizona

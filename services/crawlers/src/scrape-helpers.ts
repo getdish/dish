@@ -170,6 +170,16 @@ export async function scrapeUpdateAllRestaurantIDs(
   `)
 }
 
+// NB this does not deep merge, eg;
+// ```
+// select '{"a": {"s1": 1}}'::jsonb || '{"a": {"s2": 2}}'::jsonb
+// -- {"a": {"s2": 2}}
+// ```
+// It only merges the top-level keys:
+// // ```
+// select '{"a": {"s1": 1}}'::jsonb || '{"b": {"s2": 2}}'::jsonb
+// -- {"a": {"s1": 1}, "b": {"s2": 2}}
+// ```
 export async function scrapeMergeData(id: string, data: ScrapeData) {
   data = ensureJSONSyntax(data)
   const stringified = JSON.stringify(data).replace(/'/g, `''`)

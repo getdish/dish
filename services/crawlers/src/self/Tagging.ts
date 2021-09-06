@@ -268,8 +268,8 @@ export class Tagging extends Loggable {
   async getPhotosWithText() {
     let photos: PhotoWithText[] = []
 
-    if (this.crawler.yelp?.data.photos) {
-      const photoData = this.crawler.getPaginatedData(this.crawler.yelp.data.photos)
+    if (this.crawler.yelp?.data.photosp0) {
+      const photoData = this.crawler.getPaginatedDataNumberedKeys(this.crawler.yelp.data, 'photos')
       this.log(`Yelp main photos: ${photoData.length}`)
       for (const item of photoData) {
         if (item.caption) {
@@ -281,11 +281,11 @@ export class Tagging extends Loggable {
       }
     }
 
-    if (this.crawler.yelp?.data?.reviews) {
+    if (this.crawler.yelp?.data?.reviewsp0) {
       const reviewPhotos = (
         await Promise.all(
           this.crawler
-            .getPaginatedData(this.crawler.yelp.data.reviews)
+            .getPaginatedDataNumberedKeys(this.crawler.yelp.data, 'reviews')
             .flatMap((x) => x.photos)
             .map(async (item) => {
               const photo = item.src
@@ -390,7 +390,7 @@ export class Tagging extends Loggable {
       this.log(`getYelpReviews: No yelp data found`, this.crawler.yelp)
       return []
     }
-    const yelp_reviews = this.crawler.getPaginatedData(data.reviews)
+    const yelp_reviews = this.crawler.getPaginatedDataNumberedKeys(data, 'reviews')
     if (DISH_DEBUG > 1) {
       this.log(`Get yelp reviews`, yelp_reviews)
     }
@@ -405,7 +405,7 @@ export class Tagging extends Loggable {
         restaurant_id: this.crawler.restaurant.id,
         text: [
           yelp_review.comment?.text,
-          yelp_review.lightboxMediaItems?.map((i) => i.caption).join(' '),
+          yelp_review.lightboxMediaItems?.map((i: any) => i.caption).join(' '),
         ].join(' '),
         rating: yelp_review.rating,
         type: 'review',
