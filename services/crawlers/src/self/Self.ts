@@ -189,7 +189,7 @@ export class Self extends WorkerJob {
         this.getGrubHubDishes,
         this.scanCorpus,
         this.addReviewHeadlines,
-        this.generateSummary,
+        // this.generateSummary,
       ]
       for (const async_func of async_steps) {
         this.log('running step', async_func.name)
