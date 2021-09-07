@@ -86,6 +86,8 @@ export function SignInAppleButtonContents() {
             fontSize={18}
             fontWeight="600"
             marginTop={-1}
+            flexShrink={0}
+            ellipse
           >
             {loading ? 'Loading...' : 'Sign in with Apple'}
           </Text>

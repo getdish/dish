@@ -30,6 +30,9 @@ body {
   max-height: 100vh;
   position: absolute;
   inset: 0;
+  /* ios safari fix */
+  height: 100%;
+  width: 100%;
 }
 
 * {
