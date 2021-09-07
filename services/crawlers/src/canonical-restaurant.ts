@@ -29,6 +29,9 @@ export async function restaurantSaveCanonical(
     name,
     address
   )
+  if (!/\S/.test(address) || !address) {
+    throw new Error('Restaurant can only be saved with an address')
+  }
   if (restaurant_id) {
     return restaurant_id
   }
