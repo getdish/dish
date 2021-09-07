@@ -75,9 +75,15 @@ export const getNextHomeState = (navState: HomeStateNav): HomeStateItem => {
 
   const activeTags = Object.fromEntries([...existing].map((slug) => [slug, true]))
 
-  // if they've moved off the region, set it to geo-coordinates
   const regionState = homeStore.lastHomeOrSearchState
-  const region = isOffRegion(regionState) ? false : state.region
+  let region = state.region || regionState.region
+
+  if (state.type === 'search') {
+    if (isOffRegion(regionState)) {
+      // if they've moved off the region, set it to geo-coordinates, why false here though?
+      region = false
+    }
+  }
 
   const nextState = {
     id: state.id,
