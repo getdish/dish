@@ -10,6 +10,8 @@ module.exports = (opts) => {
       ...(process.env.APP_ENDPOINT && {
         'process.env.APP_ENDPOINT': process.env.APP_ENDPOINT,
       }),
+      'process.env.GIT_COMMIT': process.env.GIT_COMMIT,
+      'process.env.SENTRY_URL': process.env.SENTRY_URL || '',
       'process.env.DISH_DEBUG':
         process.env.DISH_DEBUG ?? process.env.NODE_ENV === 'production' ? '0' : '1',
     },
