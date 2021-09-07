@@ -288,7 +288,11 @@ class HomeStore extends Store {
       case 'homeRegion':
       case 'home': {
         const prev = _.findLast(this.states, isHomeState)
-        const region = item.params.region ?? prev?.region
+        let region = item.params.region ?? prev?.region
+        if (!region || region == 'false') {
+          debugger
+          region = initialHomeState.region
+        }
         nextState = {
           type: 'home', // region ? 'homeRegion' : 'home',region && prev?.type === 'homeRegion' ? 'homeRegion' : 'home', // region ? 'homeRegion' : 'home',
           searchQuery: '',

@@ -43,7 +43,6 @@ export type ListItemProps = {
   restaurant: restaurant
   listSlug?: string
   hideRate?: boolean
-  hideDescription?: boolean
   rank: number
   activeTagSlugs?: string[]
   onFinishRender?: Function

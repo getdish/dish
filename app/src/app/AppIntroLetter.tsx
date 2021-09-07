@@ -57,10 +57,16 @@ export const AppIntroLetter = memo(() => {
               store.setHidden(true)
             }}
           />
-          <AbsoluteVStack bottom={-10} zIndex={1000} right={-40} rotate="-10deg">
+          <AbsoluteVStack
+            pointerEvents="none"
+            bottom={-10}
+            zIndex={1000}
+            right={-40}
+            rotate="-10deg"
+          >
             <Text fontSize={62}>🌮</Text>
           </AbsoluteVStack>
-          <AbsoluteVStack bottom={-10} zIndex={1000} left={-40} rotate="10deg">
+          <AbsoluteVStack pointerEvents="none" bottom={-10} zIndex={1000} left={-40} rotate="10deg">
             <Text fontSize={62}>🍜</Text>
           </AbsoluteVStack>
         </>
