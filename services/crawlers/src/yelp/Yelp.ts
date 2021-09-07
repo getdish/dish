@@ -384,7 +384,7 @@ export class Yelp extends WorkerJob {
       longitude,
       latitude,
       scrape.data.data_from_search_list_item.name,
-      scrape.data.data_from_search_list_item.formattedAddress
+      Yelp.getNameAndAddress(scrape).address
     )
     if (this.find_only) {
       this.log(`ID for ${this.find_only.name} is ${restaurant_id}`)
@@ -403,9 +403,18 @@ export class Yelp extends WorkerJob {
   }
 
   static getNameAndAddress(scrape: YelpScrape) {
+    const parts = scrape.data.json.address
+    const address = [
+      parts.streetAddress,
+      parts.addressLocality,
+      parts.addressRegion,
+      parts.postalCode,
+      parts.addressCountry,
+    ].join(', ')
+
     return {
       name: scrape.data.data_from_search_list_item.name,
-      address: scrape.data.data_from_search_list_item.formattedAddress,
+      address,
     }
   }
 
