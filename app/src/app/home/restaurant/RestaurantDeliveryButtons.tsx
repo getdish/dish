@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
-import { HStack, Paragraph, StackProps, Text, useTheme } from 'snackui'
+import { HStack, Paragraph, StackProps, Text, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
@@ -29,22 +29,23 @@ export const RestaurantDeliveryButtons = memo(
     const sources = getRestaurantDeliverySources(restaurant.sources)
 
     return (
-      <HStack flexWrap="wrap" alignItems="center" spacing="xs" {...props}>
+      <HStack flexWrap="wrap" alignItems="center" spacing="xxs" {...props}>
         {!!label && (
           <Text fontSize={14} color={theme.colorQuartenary} marginRight={8} y={-1}>
             {label}
           </Text>
         )}
-        {sources.map((source) => {
+        {sources.map((source, i) => {
           return (
-            <RestaurantDeliveryButton
-              key={source.id}
-              name={source.name}
-              image={typeof source.image === 'string' ? source.image : null}
-              url={source.url}
-              restaurantSlug={restaurantSlug}
-              showLabels={showLabels}
-            />
+            <VStack zIndex={1000 - i} key={source.id} marginHorizontal={-5}>
+              <RestaurantDeliveryButton
+                name={source.name}
+                image={typeof source.image === 'string' ? source.image : null}
+                url={source.url}
+                restaurantSlug={restaurantSlug}
+                showLabels={showLabels}
+              />
+            </VStack>
           )
         })}
         {!sources.length && (
@@ -66,6 +67,7 @@ const RestaurantDeliveryButton = ({
   return (
     <Link href={url}>
       <SmallButton
+        paddingHorizontal={0}
         tooltip={!showLabels ? name : null}
         icon={
           !!image ? (

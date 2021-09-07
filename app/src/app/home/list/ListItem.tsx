@@ -220,7 +220,7 @@ const ListItemContent = memo(
 
     const titleFontSize = Math.round((media.sm ? 20 : 26) * titleFontScale)
     const theme = useTheme()
-    const imgSize = isMinimal ? 72 : 110
+    const imgSize = isMinimal ? 400 : 110
 
     if (!restaurant) {
       return null
@@ -229,11 +229,42 @@ const ListItemContent = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug}>
         <VStack
-          borderTopColor={theme.borderColor}
-          borderTopWidth={0.5}
+          {...(!isMinimal && {
+            borderTopColor: theme.borderColor,
+            borderTopWidth: 0.5,
+          })}
+          {...(isMinimal && {
+            paddingVertical: 20,
+          })}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
+          width="100%"
         >
+          {/* {isMinimal && (
+            <>
+              <VStack
+                maxWidth={500}
+                marginHorizontal="auto"
+                flex={2}
+                width="100%"
+                height={imgSize / 2}
+                position="relative"
+                overflow="hidden"
+              >
+                <Link name="gallery" params={{ restaurantSlug: restaurant.slug || '', offset: 0 }}>
+                  <Image
+                    source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      // borderRadius: 1000,
+                    }}
+                  />
+                </Link>
+              </VStack>
+            </>
+          )} */}
+
           <HStack
             className="hover-faded-in-parent"
             alignItems="center"
@@ -262,27 +293,33 @@ const ListItemContent = memo(
                 marginLeft: -20,
               })}
             >
-              <VStack
-                backgroundColor={theme.backgroundColorSecondary}
-                width={imgSize}
-                height={imgSize}
-                position="relative"
-                borderRadius={1000}
-                overflow="hidden"
-                marginRight={-20}
-                marginLeft={-5}
-              >
-                <Link name="gallery" params={{ restaurantSlug: restaurant.slug || '', offset: 0 }}>
-                  <Image
-                    source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
-                    style={{
-                      width: imgSize,
-                      height: imgSize,
-                      // borderRadius: 1000,
-                    }}
-                  />
-                </Link>
-              </VStack>
+              {!isMinimal && (
+                <VStack
+                  backgroundColor={theme.backgroundColorSecondary}
+                  width={imgSize}
+                  height={imgSize}
+                  position="relative"
+                  borderRadius={1000}
+                  overflow="hidden"
+                  marginRight={-20}
+                  marginLeft={-5}
+                >
+                  <Link
+                    name="gallery"
+                    params={{ restaurantSlug: restaurant.slug || '', offset: 0 }}
+                  >
+                    <Image
+                      source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
+                      style={{
+                        width: imgSize,
+                        height: imgSize,
+                        // borderRadius: 1000,
+                      }}
+                    />
+                  </Link>
+                </VStack>
+              )}
+
               <VStack marginTop={-5}>
                 <RestaurantRatingView restaurant={restaurant} floating size={42} />
               </VStack>
@@ -366,7 +403,7 @@ const ListItemContent = memo(
                 )}
               </Column>
 
-              <Column width={55}>
+              <Column flexDirection="row" width={75}>
                 <Suspense fallback={null}>
                   <RestaurantDeliveryButtons
                     showLabels={false}
@@ -415,7 +452,7 @@ const ListItemContent = memo(
           <HStack
             marginTop={-20}
             marginBottom={15}
-            paddingLeft={isMinimal ? 90 : 90}
+            paddingLeft={isMinimal ? 40 : 90}
             alignItems="center"
             spacing="lg"
           >

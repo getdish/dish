@@ -647,3 +647,8 @@ mark {
 .prevent-touch > div {
   overflow: hidden !important;
 }
+
+.mask-fade-out-to-left {
+  mask-image: linear-gradient(to right, transparent 10%, black);
+  -webkit-mask: linear-gradient(to right, transparent 10%, black);
+}

@@ -3,13 +3,14 @@ import { List, graphql, listInsert, listUpdate, mutate, order_by, slugify } from
 import { assertPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
 import React, { Suspense, SuspenseList, memo, useEffect, useRef, useState } from 'react'
-import { Image, Switch } from 'react-native'
+import { Image, StyleSheet, Switch } from 'react-native'
 import {
   AbsoluteVStack,
   Button,
   HStack,
   Input,
   InteractiveContainer,
+  LinearGradient,
   LoadingItem,
   Modal,
   Paragraph,
@@ -24,10 +25,11 @@ import {
 } from 'snackui'
 
 import { blue200, grey, red400 } from '../../../constants/colors'
+import { drawerWidthMax } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
-import { getWindowHeight } from '../../../helpers/getWindow'
+import { getWindowHeight, getWindowWidth } from '../../../helpers/getWindow'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
@@ -293,41 +295,102 @@ const ListPageContent = memo(
           .map((x) => x.restaurant.image) || ''),
       ].find(Boolean)
 
+      const userCommentEl = (
+        <VStack
+          marginBottom={10}
+          paddingVertical={20}
+          maxWidth={Math.min(getWindowWidth(), drawerWidthMax) - 100}
+          marginTop={-5}
+          {...(listTheme === 'minimal' && {
+            marginBottom: isEditing ? 20 : list.description ? 20 : -20,
+          })}
+        >
+          <CommentBubble
+            chromeless={listTheme === 'minimal'}
+            paddingHorizontal={20}
+            date={list.created_at}
+            after={
+              <>
+                {!!tagButtons.length && (
+                  <HStack spacing="sm" justifyContent="center">
+                    {tagButtons}
+                  </HStack>
+                )}
+              </>
+            }
+            avatar={{
+              image: list.user?.avatar || '',
+              charIndex: list.user?.charIndex || 0,
+            }}
+            name={userFullNameOrUsername}
+          >
+            {isEditing ? (
+              <Input
+                placeholder="..."
+                multiline
+                numberOfLines={3}
+                lineHeight={30}
+                fontSize={20}
+                marginVertical={-10}
+                marginHorizontal={-15}
+                defaultValue={list.description ?? ''}
+                onChangeText={(val) => {
+                  draft.current.description = val
+                }}
+              />
+            ) : (
+              (() => {
+                if (!list.description) {
+                  return null
+                }
+                const items = list.description?.split('\n\n') ?? []
+                return (
+                  <>
+                    {items.map((x, i) => {
+                      return (
+                        <Paragraph
+                          paddingBottom={i < items.length - 1 ? 26 : 0}
+                          key={i}
+                          sizeLineHeight={1.1}
+                          size={i == 0 ? 'lg' : 'md'}
+                        >
+                          {x}
+                        </Paragraph>
+                      )
+                    })}
+                  </>
+                )
+              })()
+            )}
+          </CommentBubble>
+        </VStack>
+      )
+
       const listHeaderEl = (
         <>
           {/* START HEADER */}
-          <VStack backgroundColor={`${color}11`}>
+          <VStack position="relative" backgroundColor={`${color}11`}>
             {listTheme === 'minimal' && (
               <HStack paddingHorizontal={28}>
                 <VStack alignItems="flex-start" justifyContent="flex-end" width="100%" flex={1}>
                   <Spacer size={84} />
                   <Title
                     maxWidth={620}
-                    width="100%"
+                    width="60%"
+                    minWidth={300}
                     size="xxxl"
                     sizeLineHeight={0.76}
                     fontWeight="300"
                   >
                     {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
                   </Title>
-                  <Spacer size="lg" />
-
-                  <VStack flex={1} />
+                  <Spacer size="xl" />
+                  {userCommentEl}
+                  <Spacer size="xs" />
                 </VStack>
-                <Image
-                  // @ts-ignore
-                  source={{
-                    uri: getImageUrl(`${uri || ''}`, 400, 280),
-                  }}
-                  style={{
-                    width: 400,
-                    height: 280,
-                    margin: -30,
-                    marginBottom: -46,
-                  }}
-                />
               </HStack>
             )}
+
             {listTheme === 'modern' && (
               <HStack
                 paddingVertical={20}
@@ -336,6 +399,8 @@ const ListPageContent = memo(
                 justifyContent="center"
                 width="100%"
                 maxWidth={680}
+                zIndex={100}
+                position="relative"
               >
                 <HStack
                   flex={1}
@@ -360,11 +425,11 @@ const ListPageContent = memo(
 
                   <Text lineHeight={22} textAlign="left">
                     <Link name="user" params={{ username }}>
-                      <Title size="lg" fontWeight="200" opacity={0.5}>
+                      <Title size="lg" fontWeight="400" opacity={0.5}>
                         {user.user?.name || username || '...'}'s&nbsp;
                       </Title>
                     </Link>
-                    <Title size="lg" fontWeight="800" color={color} zIndex={0}>
+                    <Title size="lg" fontWeight="800" zIndex={0}>
                       {titleContents}&nbsp;
                     </Title>
                     <Title size="lg" fontWeight="200" opacity={0.5}>
@@ -375,73 +440,28 @@ const ListPageContent = memo(
               </HStack>
             )}
 
-            {!!(list.description || isEditing || listTheme === 'minimal') && (
-              <VStack
-                marginBottom={10}
-                marginTop={-5}
-                {...(listTheme === 'minimal' && {
-                  marginBottom: isEditing ? 20 : list.description ? 20 : -20,
-                })}
+            {listTheme === 'minimal' && (
+              <AbsoluteVStack
+                top={0}
+                className="mask-fade-out-to-left"
+                right={0}
+                bottom={0}
+                width="50%"
+                maxWidth={400}
+                overflow="hidden"
+                opacity={0.5}
               >
-                <CommentBubble
-                  chromeless={listTheme === 'minimal'}
-                  paddingHorizontal={20}
-                  date={list.created_at}
-                  after={
-                    <>
-                      {!!tagButtons.length && (
-                        <HStack spacing="sm" justifyContent="center">
-                          {tagButtons}
-                        </HStack>
-                      )}
-                    </>
-                  }
-                  avatar={{
-                    image: list.user?.avatar || '',
-                    charIndex: list.user?.charIndex || 0,
+                <Image
+                  // @ts-ignore
+                  source={{
+                    uri: getImageUrl(`${uri || ''}`, 400, 300),
                   }}
-                  name={userFullNameOrUsername}
-                >
-                  {isEditing ? (
-                    <Input
-                      placeholder="..."
-                      multiline
-                      numberOfLines={3}
-                      lineHeight={30}
-                      fontSize={20}
-                      marginVertical={-10}
-                      marginHorizontal={-15}
-                      defaultValue={list.description ?? ''}
-                      onChangeText={(val) => {
-                        draft.current.description = val
-                      }}
-                    />
-                  ) : (
-                    (() => {
-                      if (!list.description) {
-                        return null
-                      }
-                      const items = list.description?.split('\n\n') ?? []
-                      return (
-                        <>
-                          {items.map((x, i) => {
-                            return (
-                              <Paragraph
-                                paddingBottom={i < items.length - 1 ? 26 : 0}
-                                key={i}
-                                sizeLineHeight={1.1}
-                                size={i == 0 ? 'lg' : 'md'}
-                              >
-                                {x}
-                              </Paragraph>
-                            )
-                          })}
-                        </>
-                      )
-                    })()
-                  )}
-                </CommentBubble>
-              </VStack>
+                  style={{
+                    width: 400,
+                    height: 300,
+                  }}
+                />
+              </AbsoluteVStack>
             )}
 
             {isMyList && (
@@ -467,9 +487,7 @@ const ListPageContent = memo(
                 {isEditing && (
                   <HStack alignItems="center" flexWrap="wrap" spacing="xxl">
                     <Paragraph>Color:</Paragraph>
-
                     <ColorPicker colors={listColors} color={color} onChange={setColor} />
-
                     <InteractiveContainer alignItems="center">
                       <Paragraph
                         size="sm"
@@ -501,12 +519,10 @@ const ListPageContent = memo(
                         Minimal
                       </Paragraph>
                     </InteractiveContainer>
-
                     <HStack>
                       <Paragraph>Public:&nbsp;</Paragraph>
                       <Switch value={isPublic} onValueChange={setPublic} />
                     </HStack>
-
                     <SmallButton
                       tooltip="Delete"
                       icon={<Trash color={red400} size={20} />}
@@ -533,6 +549,7 @@ const ListPageContent = memo(
               </HStack>
             )}
           </VStack>
+
           {/* END HEADER */}
         </>
       )
@@ -648,6 +665,8 @@ const ListPageContent = memo(
             <>
               <VStack minHeight={getWindowHeight()}>
                 {listTheme === 'modern' ? null : listHeaderEl}
+
+                {listTheme === 'modern' ? userCommentEl : null}
 
                 {!restaurants.length && (
                   <VStack padding={20} margin={20} borderRadius={10}>
