@@ -41,39 +41,13 @@ export type YelpListItemData = {
   phone: string
 }
 
-type Tens = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-type Hundreds = [
-  ...Tens,
-  ...Tens,
-  ...Tens,
-  ...Tens,
-  ...Tens,
-  ...Tens,
-  ...Tens,
-  ...Tens,
-  ...Tens,
-  ...Tens
-] // 100
-type Thousands = [
-  ...Hundreds,
-  ...Hundreds,
-  ...Hundreds,
-  ...Hundreds,
-  ...Hundreds,
-  ...Hundreds,
-  ...Hundreds,
-  ...Hundreds,
-  ...Hundreds,
-  ...Hundreds
-] // 1000
+interface Photos {
+  [key: `photosp${number}`]: { url: string; caption: string }[]
+}
 
-type PhotoKeyNames = `photosp${Exclude<keyof Thousands, keyof any[]>}`
-type PhotoKeys = { [K in PhotoKeyNames]?: { url: string; caption: string }[] }
-interface Photos extends PhotoKeys {}
-
-type ReviewKeyNames = `reviewsp${Exclude<keyof Thousands, keyof any[]>}`
-type ReviewKeys = { [K in ReviewKeyNames]?: YelpReviewData[] }
-interface Reviews extends ReviewKeys {}
+interface Reviews {
+  [key: `reviewsp${number}`]: YelpReviewData[]
+}
 
 export type YelpScrapeData = YelpDetailPageData &
   Reviews &
