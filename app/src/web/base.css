@@ -1,6 +1,7 @@
 /* default to not selectable like react native */
-.snack-text {
+.snack-text, span {
   user-select: none;
+  -webkit-user-select: none;
 }
 
 /* tmp bugfix until i can figure out why tis excluded in prod... */

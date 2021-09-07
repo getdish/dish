@@ -255,7 +255,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           ellipse
           fontSize={fontSize}
           fontWeight={fontWeight || '400'}
-          lineHeight={isSmall ? 13 : 22}
+          lineHeight={isSmall ? 15 : 22}
           color={color || theme.color}
           pointerEvents="none"
           // borderBottomColor={theme.backgroundColor}

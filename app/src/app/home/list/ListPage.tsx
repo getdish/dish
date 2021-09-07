@@ -413,20 +413,20 @@ const ListPageContent = memo(
                   <Link
                     name="user"
                     params={{
-                      username: user.user?.username || '',
+                      username: list.user?.username || '',
                     }}
                   >
                     <UserAvatar
                       size={42}
-                      avatar={user.user?.avatar ?? ''}
-                      charIndex={user.user?.charIndex ?? 0}
+                      avatar={list.user?.avatar ?? ''}
+                      charIndex={list.user?.charIndex ?? 0}
                     />
                   </Link>
 
                   <Text lineHeight={22} textAlign="left">
                     <Link name="user" params={{ username }}>
                       <Title size="lg" fontWeight="400" opacity={0.5}>
-                        {user.user?.name || username || '...'}'s&nbsp;
+                        {list.user?.name || username || '...'}'s&nbsp;
                       </Title>
                     </Link>
                     <Title size="lg" fontWeight="800" zIndex={0}>
@@ -468,8 +468,8 @@ const ListPageContent = memo(
               <HStack
                 position="relative"
                 zIndex={1000}
-                marginBottom={isEditing ? 20 : -10}
-                marginTop={-10}
+                marginBottom={-25}
+                marginTop={-25}
                 alignItems="center"
                 justifyContent="center"
               >
