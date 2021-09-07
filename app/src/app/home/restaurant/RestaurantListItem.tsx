@@ -26,6 +26,7 @@ import { brandColor, green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
+import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -33,6 +34,7 @@ import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
+import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { DishView } from '../../views/dish/DishView'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
@@ -61,7 +63,6 @@ type RestaurantListItemProps = {
   restaurantId: string
   restaurantSlug: string
   hideRate?: boolean
-  hideDescription?: boolean
   rank: number
   meta?: RestaurantItemMeta
   activeTagSlugs?: string[]
@@ -77,37 +78,28 @@ type RestaurantListItemProps = {
   above?: any
   beforeBottomRow?: any
   dishSize?: 'md' | 'lg'
+  shouldShowOneLine?: boolean
 }
 
 export const RestaurantListItem = (props: RestaurantListItemProps) => {
   const [isLoaded, setIsLoaded] = useState(false)
-  const theme = useTheme()
+  const [width, setWidth] = useState(getWindowWidth())
   const handleScrollMemo = useCallback(() => {
     setIsLoaded(true)
   }, [])
   const handleScroll = isLoaded ? undefined : handleScrollMemo
 
   return (
-    <ContentScrollViewHorizontal onScroll={handleScroll} scrollEventThrottle={100}>
-      <Suspense
-        fallback={
-          props.hideDescription ? (
-            <VStack
-              className="shine"
-              height={61}
-              backgroundColor={theme.backgroundColorTransluscent}
-              borderWidth={2}
-              borderColor={theme.backgroundColorTransparent}
-              width="100%"
-            />
-          ) : (
-            <LoadingItem size="lg" />
-          )
-        }
-      >
+    <ContentScrollViewHorizontalFitted
+      width={width}
+      setWidth={setWidth}
+      onScroll={handleScroll}
+      scrollEventThrottle={100}
+    >
+      <Suspense fallback={<LoadingItem size="lg" />}>
         <RestaurantListItemContent isLoaded={isLoaded} {...props} />
       </Suspense>
-    </ContentScrollViewHorizontal>
+    </ContentScrollViewHorizontalFitted>
   )
 }
 
@@ -124,6 +116,7 @@ const RestaurantListItemContent = memo(
       dishSize,
       curLocInfo,
       activeTagSlugs,
+      shouldShowOneLine,
       isLoaded,
       hideRate,
       meta,
@@ -132,7 +125,6 @@ const RestaurantListItemContent = memo(
       description = null,
       dishSlugs,
       flexibleHeight,
-      hideDescription,
       above,
       editableDishes,
       onChangeDishes,
@@ -196,7 +188,6 @@ const RestaurantListItemContent = memo(
         : nameLen > 15
         ? 1
         : 1
-    const shouldShowOneLine = hideDescription && !description && !state.editing
     const titleFontSize =
       Math.round((media.sm ? 20 : 23) * titleFontScale) * (shouldShowOneLine ? 0.8 : 1)
     const titleHeight = titleFontSize + 8 * 2
@@ -306,26 +297,24 @@ const RestaurantListItemContent = memo(
                   position="relative"
                   alignItems="center"
                 >
-                  {!media.xs && (
-                    <VStack
-                      backgroundColor={theme.backgroundColorSecondary}
-                      borderRadius={1000}
-                      width={imgSize}
-                      height={imgSize}
-                      marginLeft={shouldShowOneLine ? 0 : hideRate ? -20 : -40}
-                      marginVertical={-18}
-                      marginRight={2}
-                      overflow="hidden"
-                    >
-                      <Image
-                        source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
-                        style={{
-                          width: imgSize,
-                          height: imgSize,
-                        }}
-                      />
-                    </VStack>
-                  )}
+                  <VStack
+                    backgroundColor={theme.backgroundColorSecondary}
+                    borderRadius={1000}
+                    width={imgSize}
+                    height={imgSize}
+                    marginLeft={shouldShowOneLine ? 0 : hideRate ? -20 : -40}
+                    marginVertical={-18}
+                    marginRight={2}
+                    overflow="hidden"
+                  >
+                    <Image
+                      source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
+                      style={{
+                        width: imgSize,
+                        height: imgSize,
+                      }}
+                    />
+                  </VStack>
 
                   <VStack marginRight={-10} y={3} marginLeft={-5}>
                     <RankView rank={rank} />
