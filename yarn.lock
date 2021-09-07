@@ -10931,7 +10931,7 @@ __metadata:
     react-refresh: "*"
     snackui: "*"
     tsconfig-paths: ^3.9.0
-    typescript: ^4.2.4
+    typescript: "*"
     typescript-monorepo-toolkit: ^0.2.0
     ultra-runner: ^3.10.5
     zx: ^1.14.1
@@ -17759,7 +17759,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro-babel-register@npm:^0.66.2":
+"metro-babel-register@npm:0.66.2":
   version: 0.66.2
   resolution: "metro-babel-register@npm:0.66.2"
   dependencies:
@@ -17794,7 +17794,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro-cache@npm:^0.66.2":
+"metro-cache@npm:0.66.2":
   version: 0.66.2
   resolution: "metro-cache@npm:0.66.2"
   dependencies:
@@ -17805,7 +17805,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro-config@npm:^0.66.2":
+"metro-config@npm:0.66.2":
   version: 0.66.2
   resolution: "metro-config@npm:0.66.2"
   dependencies:
@@ -17819,7 +17819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro-core@npm:^0.66.2":
+"metro-core@npm:0.66.2":
   version: 0.66.2
   resolution: "metro-core@npm:0.66.2"
   dependencies:
@@ -17860,7 +17860,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro-react-native-babel-preset@npm:^0.66.2":
+"metro-react-native-babel-preset@npm:0.66.2":
   version: 0.66.2
   resolution: "metro-react-native-babel-preset@npm:0.66.2"
   dependencies:
@@ -17910,7 +17910,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro-react-native-babel-transformer@npm:^0.66.2":
+"metro-react-native-babel-transformer@npm:0.66.2":
   version: 0.66.2
   resolution: "metro-react-native-babel-transformer@npm:0.66.2"
   dependencies:
@@ -17927,7 +17927,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro-resolver@npm:^0.66.2":
+"metro-resolver@npm:0.66.2":
   version: 0.66.2
   resolution: "metro-resolver@npm:0.66.2"
   dependencies:
@@ -17950,7 +17950,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro-source-map@npm:^0.66.2":
+"metro-source-map@npm:0.66.2":
   version: 0.66.2
   resolution: "metro-source-map@npm:0.66.2"
   dependencies:
@@ -17966,7 +17966,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro-symbolicate@npm:^0.66.2":
+"metro-symbolicate@npm:0.66.2":
   version: 0.66.2
   resolution: "metro-symbolicate@npm:0.66.2"
   dependencies:
@@ -18016,7 +18016,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"metro@npm:^0.66.2":
+"metro@npm:0.66.2":
   version: 0.66.2
   resolution: "metro@npm:0.66.2"
   dependencies:
@@ -24998,23 +24998,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.3.4":
-  version: 4.3.4
-  resolution: "typescript@npm:4.3.4"
+"typescript@npm:4.4.2":
+  version: 4.4.2
+  resolution: "typescript@npm:4.4.2"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 75e1f2769c7ff38c718523d05eaf1c2611dbf92c0ab0f85f603ead9bb23416af2009a5dac46e76ef6a207a8508fa53f51b43a41f2a91b1241b53cd744c16128c
+  checksum: 194e08e9d1971d667d6fd1a0554616b7022312a2319d70e81a64e502a265992061ee7817ed9a69b52bbabe7a9b85e7938cb8c11c433e40a516b277f8c4dacd51
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A4.3.4#~builtin<compat/typescript>":
-  version: 4.3.4
-  resolution: "typescript@patch:typescript@npm%3A4.3.4#~builtin<compat/typescript>::version=4.3.4&hash=d8b4e7"
+"typescript@patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>":
+  version: 4.4.2
+  resolution: "typescript@patch:typescript@npm%3A4.4.2#~builtin<compat/typescript>::version=4.4.2&hash=d8b4e7"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: a6b1a3674b60971691b89fa8187a4905e132cb8061724b4bd485e5d5441caa61166fe3bcf2b47aa679a6d860cae823022ca51db713cc3446296274c005dd02e5
+  checksum: 11d6ab6e868117908c388401e2ac06d503c5c8709115ab80ee69a1a6352c1f98471d1e595636bfe6a2d6b20b03a44df6bb2d3d198cea97c0c328968cd18d2b70
   languageName: node
   linkType: hard
 
