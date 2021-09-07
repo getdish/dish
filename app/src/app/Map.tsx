@@ -188,7 +188,6 @@ export default function Map(props: MapProps) {
         map.loadImage(asset, (err, image) => {
           if (err || !image || !map) return rej(err)
           if (!map.hasImage(name)) {
-            console.log('loaded image', image)
             map.addImage(name, image)
           }
           res(image)

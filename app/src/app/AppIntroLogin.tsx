@@ -14,11 +14,9 @@ export const AppIntroLogin = memo(() => {
 
   return (
     <>
-      <VStack overflow="hidden" borderRadius={20} padding={30} alignItems="center" spacing="xl">
+      <VStack overflow="hidden" borderRadius={20} padding={30} alignItems="center" spacing="md">
         <LogoColor scale={1.4} />
-
         <TagLine />
-
         {!userStore.isLoggedIn && (
           <>
             <Spacer />

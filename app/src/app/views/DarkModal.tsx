@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { AbsoluteVStack, AnimatedVStack, Theme, VStack, prevent, useMedia } from 'snackui'
 

@@ -191,14 +191,14 @@ function CommentBubbleContents({
             {!avatar && <User color={theme.color} size={imageSize} />}
             {!!avatar && (
               <UserAvatar
-                charIndex={avatar.charIndex}
+                charIndex={avatar?.charIndex || 0}
                 size={imageSize}
                 avatar={
                   isTripAdvisor
                     ? thirdPartyCrawlSources.tripadvisor.image
                     : isYelp
                     ? thirdPartyCrawlSources.yelp.image
-                    : avatar.image
+                    : avatar?.image || ''
                 }
               />
             )}
