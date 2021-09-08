@@ -187,15 +187,24 @@ function clean_dangling() {
 
 function hungry_services_tunnels() {
   echo "Opening tunnels to hungry services on prod..."
-  hungry_service_tunnel 5002 & # Summarizer
-  hungry_service_tunnel 5005 & # Bert
-  hungry_service_tunnel 8884 & # Image recognition
+  tunnel_prod_service_to_local 5002 & # Summarizer
+  tunnel_prod_service_to_local 5005 & # Bert
+  tunnel_prod_service_to_local 8884 & # Image recognition
+  wait
+}
+
+function tunnel_prods_to_local() {
+  echo "Opening tunnels to production DBs..."
+  tunnel_prod_service_to_local 5432 &
+  tunnel_prod_service_to_local 5433 &
+  tunnel_prod_service_to_local 8080 &
+  tunnel_prod_service_to_local 8091 &
   wait
 }
 
 # This are big, relatively unchanging services, such as bert, image-quality, that don't need to be
 # brought up and down in every CI run
-function hungry_service_tunnel() {
+function tunnel_prod_service_to_local() {
   port=$1
   ssh -N -i etc/keys/server_rsa -L $port:localhost:$port root@$io1_HOST
 }
