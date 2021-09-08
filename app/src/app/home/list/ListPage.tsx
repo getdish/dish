@@ -16,6 +16,7 @@ import {
   Paragraph,
   Spacer,
   Text,
+  Theme,
   Title,
   Toast,
   VStack,
@@ -51,7 +52,6 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { StackItemProps } from '../HomeStackView'
-import { PageContentWithFooter } from '../PageContentWithFooter'
 import { CircleButton } from '../restaurant/CircleButton'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { UserAvatar } from '../user/UserAvatar'
@@ -366,190 +366,200 @@ const ListPageContent = memo(
         </VStack>
       )
 
+      const theme = useTheme()
+      const isMinimal = listTheme === 'minimal'
+
       const listHeaderEl = (
         <>
           {/* START HEADER */}
-          <VStack position="relative" backgroundColor={`${color}11`}>
-            {listTheme === 'minimal' && (
-              <HStack paddingHorizontal={28}>
-                <VStack alignItems="flex-start" justifyContent="flex-end" width="100%" flex={1}>
-                  <Spacer size={84} />
-                  <Title
-                    maxWidth={620}
-                    width="60%"
-                    minWidth={300}
-                    size="xxxl"
-                    sizeLineHeight={0.76}
-                    fontWeight="300"
-                  >
-                    {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
-                  </Title>
-                  <Spacer size="xl" />
-                  {userCommentEl}
-                  <Spacer size="xs" />
-                </VStack>
-              </HStack>
-            )}
+          <Theme name={isMinimal ? 'dark' : undefined}>
+            <VStack
+              minHeight={isMinimal ? 350 : 40}
+              paddingHorizontal={20}
+              position="relative"
+              backgroundColor={`${color}11`}
+            >
+              {isMinimal && (
+                <>
+                  <VStack minHeight={80} flex={1} />
 
-            {listTheme === 'modern' && (
-              <HStack
-                paddingVertical={20}
-                marginHorizontal="auto"
-                alignItems="center"
-                justifyContent="center"
-                width="100%"
-                maxWidth={680}
-                zIndex={100}
-                position="relative"
-              >
-                <HStack
-                  flex={1}
-                  maxWidth={media.notSm ? '80%%' : '70%'}
-                  minWidth={220}
-                  alignItems="center"
-                  justifyContent="center"
-                  spacing
-                >
-                  <Link
-                    name="user"
-                    params={{
-                      username: list.user?.username || '',
-                    }}
-                  >
-                    <UserAvatar
-                      size={42}
-                      avatar={list.user?.avatar ?? ''}
-                      charIndex={list.user?.charIndex ?? 0}
-                    />
-                  </Link>
-
-                  <Text lineHeight={22} textAlign="left">
-                    <Link name="user" params={{ username }}>
-                      <Title size="lg" fontWeight="400" opacity={0.5}>
-                        {list.user?.name || username || '...'}'s&nbsp;
-                      </Title>
-                    </Link>
-                    <Title size="lg" fontWeight="800" zIndex={0}>
-                      {titleContents}&nbsp;
-                    </Title>
-                    <Title size="lg" fontWeight="200" opacity={0.5}>
-                      {locationName ?? ''}
-                    </Title>
-                  </Text>
-                </HStack>
-              </HStack>
-            )}
-
-            {listTheme === 'minimal' && (
-              <AbsoluteVStack
-                top={0}
-                className="mask-fade-out-to-left"
-                right={0}
-                bottom={0}
-                width="50%"
-                maxWidth={400}
-                overflow="hidden"
-                opacity={0.5}
-              >
-                <Image
-                  // @ts-ignore
-                  source={{
-                    uri: getImageUrl(`${uri || ''}`, 400, 300),
-                  }}
-                  style={{
-                    width: 400,
-                    height: 300,
-                  }}
-                />
-              </AbsoluteVStack>
-            )}
-
-            {isMyList && (
-              <HStack
-                position="relative"
-                zIndex={1000}
-                marginBottom={-25}
-                marginTop={-25}
-                alignItems="center"
-                justifyContent="center"
-              >
-                {!isEditing && (
-                  <HStack alignItems="center" flexWrap="wrap" spacing>
-                    <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
-                      Customize
-                    </SmallButton>
-                    <SmallButton elevation={1} onPress={() => setShowAddModal(true)}>
-                      Add
-                    </SmallButton>
-                  </HStack>
-                )}
-
-                {isEditing && (
-                  <HStack alignItems="center" flexWrap="wrap" spacing="xxl">
-                    <Paragraph>Color:</Paragraph>
-                    <ColorPicker colors={listColors} color={color} onChange={setColor} />
-                    <InteractiveContainer alignItems="center">
-                      <Paragraph
-                        size="sm"
-                        opacity={0.5}
-                        onPress={() => {
-                          setTheme(0)
-                        }}
-                        paddingVertical={6}
-                        paddingHorizontal={12}
-                      >
-                        Modern
-                      </Paragraph>
-                      <Switch
-                        value={list.theme === 1}
-                        onValueChange={(isOn) => {
-                          console.log('?')
-                          setTheme(isOn ? 1 : 0)
-                        }}
-                      />
-                      <Paragraph
-                        size="sm"
-                        opacity={0.5}
-                        onPress={() => {
-                          setTheme(1)
-                        }}
-                        paddingVertical={6}
-                        paddingHorizontal={12}
-                      >
-                        Minimal
-                      </Paragraph>
-                    </InteractiveContainer>
-                    <HStack>
-                      <Paragraph>Public:&nbsp;</Paragraph>
-                      <Switch value={isPublic} onValueChange={setPublic} />
-                    </HStack>
-                    <SmallButton
-                      tooltip="Delete"
-                      icon={<Trash color={red400} size={20} />}
-                      onPress={async () => {
-                        assertPresent(list.id, 'no list id')
-                        if (confirm('Permanently delete this list?')) {
-                          router.setRouteAlert(null)
-                          await mutate((mutation) => {
-                            return mutation.delete_list({
-                              where: {
-                                id: {
-                                  _eq: list.id,
-                                },
-                              },
-                            })?.__typename
-                          })
-                          Toast.show('Deleted list')
-                          homeStore.popBack()
-                        }
+                  <AbsoluteVStack zIndex={-1} fullscreen top="auto" overflow="hidden">
+                    <Image
+                      // @ts-ignore
+                      source={{
+                        uri: getImageUrl(`${uri || ''}`, 600, 450),
+                      }}
+                      style={{
+                        width: '100%',
+                        height: 450,
                       }}
                     />
-                  </HStack>
-                )}
-              </HStack>
-            )}
-          </VStack>
+                    <LinearGradient
+                      colors={[
+                        'rgba(0,0,0,0.8)',
+                        // 'rgba(20,20,20,0.2)',
+                        'rgba(20,20,20,0.35)',
+                      ].reverse()}
+                      style={StyleSheet.absoluteFill}
+                    />
+                  </AbsoluteVStack>
 
+                  <HStack paddingHorizontal={28}>
+                    <VStack alignItems="flex-start" justifyContent="flex-end" width="100%" flex={1}>
+                      <Spacer size={84} />
+                      <Title
+                        textShadowColor={theme.shadowColor}
+                        textShadowRadius={2}
+                        textShadowOffset={{ height: 1, width: 0 }}
+                        size="xxl"
+                        sizeLineHeight={0.76}
+                        fontWeight="700"
+                      >
+                        {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
+                      </Title>
+                      <Spacer size="sm" />
+                      {userCommentEl}
+                      <Spacer size="sm" />
+                    </VStack>
+                  </HStack>
+                </>
+              )}
+
+              {listTheme === 'modern' && (
+                <HStack
+                  paddingVertical={20}
+                  marginHorizontal="auto"
+                  alignItems="center"
+                  justifyContent="center"
+                  width="100%"
+                  maxWidth={680}
+                  zIndex={100}
+                  position="relative"
+                >
+                  <HStack
+                    flex={1}
+                    maxWidth={media.notSm ? '80%%' : '70%'}
+                    minWidth={220}
+                    alignItems="center"
+                    justifyContent="center"
+                    spacing
+                  >
+                    <Link
+                      name="user"
+                      params={{
+                        username: list.user?.username || '',
+                      }}
+                    >
+                      <UserAvatar
+                        size={42}
+                        avatar={list.user?.avatar ?? ''}
+                        charIndex={list.user?.charIndex ?? 0}
+                      />
+                    </Link>
+
+                    <Text lineHeight={22} textAlign="left">
+                      <Link name="user" params={{ username }}>
+                        <Title size="lg" fontWeight="400" opacity={0.5}>
+                          {list.user?.name || username || '...'}'s&nbsp;
+                        </Title>
+                      </Link>
+                      <Title size="lg" fontWeight="800" zIndex={0}>
+                        {titleContents}&nbsp;
+                      </Title>
+                      <Title size="lg" fontWeight="200" opacity={0.5}>
+                        {locationName ?? ''}
+                      </Title>
+                    </Text>
+                  </HStack>
+                </HStack>
+              )}
+
+              {isMyList && (
+                <HStack
+                  position="relative"
+                  zIndex={1000}
+                  marginBottom={-25}
+                  marginTop={-25}
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  {!isEditing && (
+                    <HStack alignItems="center" flexWrap="wrap" spacing>
+                      <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
+                        Customize
+                      </SmallButton>
+                      <SmallButton elevation={1} onPress={() => setShowAddModal(true)}>
+                        Add
+                      </SmallButton>
+                    </HStack>
+                  )}
+
+                  {isEditing && (
+                    <HStack alignItems="center" flexWrap="wrap" spacing="xxl">
+                      <Paragraph>Color:</Paragraph>
+                      <ColorPicker colors={listColors} color={color} onChange={setColor} />
+                      <InteractiveContainer alignItems="center">
+                        <Paragraph
+                          size="sm"
+                          opacity={0.5}
+                          onPress={() => {
+                            setTheme(0)
+                          }}
+                          paddingVertical={6}
+                          paddingHorizontal={12}
+                        >
+                          Modern
+                        </Paragraph>
+                        <Switch
+                          value={list.theme === 1}
+                          onValueChange={(isOn) => {
+                            console.log('?')
+                            setTheme(isOn ? 1 : 0)
+                          }}
+                        />
+                        <Paragraph
+                          size="sm"
+                          opacity={0.5}
+                          onPress={() => {
+                            setTheme(1)
+                          }}
+                          paddingVertical={6}
+                          paddingHorizontal={12}
+                        >
+                          Minimal
+                        </Paragraph>
+                      </InteractiveContainer>
+                      <HStack>
+                        <Paragraph>Public:&nbsp;</Paragraph>
+                        <Switch value={isPublic} onValueChange={setPublic} />
+                      </HStack>
+                      <SmallButton
+                        tooltip="Delete"
+                        icon={<Trash color={red400} size={20} />}
+                        onPress={async () => {
+                          assertPresent(list.id, 'no list id')
+                          if (confirm('Permanently delete this list?')) {
+                            router.setRouteAlert(null)
+                            await mutate((mutation) => {
+                              return mutation.delete_list({
+                                where: {
+                                  id: {
+                                    _eq: list.id,
+                                  },
+                                },
+                              })?.__typename
+                            })
+                            Toast.show('Deleted list')
+                            homeStore.popBack()
+                          }
+                        }}
+                      />
+                    </HStack>
+                  )}
+                </HStack>
+              )}
+            </VStack>
+          </Theme>
           {/* END HEADER */}
         </>
       )

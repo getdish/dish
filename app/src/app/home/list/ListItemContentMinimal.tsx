@@ -74,7 +74,7 @@ export const ListItemContentMinimal = memo(
 
     const titleFontSize = Math.round((media.sm ? 22 : 32) * titleFontScale)
     const theme = useTheme()
-    const imgSize = 80
+    const imgSize = 100
 
     if (!restaurant) {
       return null
@@ -97,6 +97,7 @@ export const ListItemContentMinimal = memo(
               position="relative"
               borderRadius={1000}
               overflow="hidden"
+              marginLeft={-70}
             >
               <Link name="gallery" params={{ restaurantSlug: restaurant.slug || '', offset: 0 }}>
                 <Image

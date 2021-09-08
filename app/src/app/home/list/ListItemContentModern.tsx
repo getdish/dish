@@ -74,7 +74,7 @@ export const ListItemContentModern = memo(
 
     const titleFontSize = Math.round((media.sm ? 20 : 26) * titleFontScale)
     const theme = useTheme()
-    const imgSize = 80
+    const imgSize = 70
 
     if (!restaurant) {
       return null
