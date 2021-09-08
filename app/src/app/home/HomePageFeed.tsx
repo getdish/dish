@@ -52,11 +52,13 @@ export const HomePageFeed = memo(
         setHoveredDbc.cancel()
       }
 
-      useSetAppMap({
+      const props = {
         ...useSetAppMapProps,
         hideRegions: false,
         results: hovered ?? useSetAppMapProps.results,
-      })
+      }
+      console.log('props are', props)
+      useSetAppMap(props)
 
       // useDebounceEffect(
       //   () => {
