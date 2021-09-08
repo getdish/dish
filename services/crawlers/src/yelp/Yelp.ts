@@ -20,6 +20,7 @@ import {
   scrapeUpdateBasic,
 } from '../scrape-helpers'
 import { aroundCoords, boundingBoxFromCenter, geocode } from '../utils'
+import { FixAddressBug } from './fix_address_bug'
 
 type RestaurantMatching = Required<Pick<Restaurant, 'name' | 'address' | 'telephone'>>
 
@@ -410,7 +411,9 @@ export class Yelp extends WorkerJob {
       parts.addressRegion,
       parts.postalCode,
       parts.addressCountry,
-    ].join(', ')
+    ]
+      .filter(Boolean)
+      .join(', ')
 
     return {
       name: scrape.data.data_from_search_list_item.name,
@@ -515,6 +518,13 @@ export class Yelp extends WorkerJob {
     if (next_page <= response.pagination.totalResults) {
       await this.runOnWorker('getReviews', [id, bizId, next_page])
     }
+  }
+
+  async _reGeocodeScrapes() {
+    await FixAddressBug.reGeocodeScrapes(this)
+  }
+  async _reGeocodeOneScrape(id: string) {
+    await FixAddressBug.reGeocodeOneScrape(id)
   }
 }
 
