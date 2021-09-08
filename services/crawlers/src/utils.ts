@@ -364,3 +364,15 @@ export async function curl_cli(url: string, args: string = '') {
   const { stdout, stderr } = await exec(command, { maxBuffer: 1024 * 3000 })
   return stdout
 }
+
+// I use this just for catching unexpected things in a loop. For instance I want to double
+// check some data in a long running task before letting the loop continue
+export async function keypress() {
+  process.stdin.setRawMode(true)
+  return new Promise<void>((resolve) =>
+    process.stdin.once('data', () => {
+      process.stdin.setRawMode(false)
+      resolve()
+    })
+  )
+}

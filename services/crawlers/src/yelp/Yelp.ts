@@ -422,10 +422,8 @@ export class Yelp extends WorkerJob {
   }
 
   async getNextScrapes(id: string, scrape: YelpScrape) {
-    // console.log('got', JSON.stringify(scrape.data, null, 2))
-    const photoGrid = scrape.data.dynamic.legacyProps.props.modules.serverModules.flatMap((x) =>
-      x.component === 'PhotoGrid' ? x : []
-    )[0]?.props
+    const source = scrape.data.dynamic.legacyProps.props.modules.serverModules
+    const photoGrid = source.flatMap((x) => (x.component === 'PhotoGrid' ? x : []))[0]?.props
     let photoTotal = (photoGrid.mediaCount as number) ?? 0
     this.log(`getNextScrapes photoTotal ${photoTotal}`)
     if (photoTotal > 31 && process.env.NODE_ENV == 'test') {

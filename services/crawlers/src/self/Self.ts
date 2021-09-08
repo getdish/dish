@@ -13,7 +13,7 @@ import {
   tagUpsert,
 } from '@dish/graph'
 import { Database } from '@dish/helpers-node'
-import { DEBUG_LEVEL, ProxiedRequests, WorkerJob } from '@dish/worker'
+import { DEBUG_LEVEL, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
 import moment from 'moment'
@@ -265,6 +265,7 @@ export class Self extends WorkerJob {
     this.restaurant = restaurant
     this.log('Merging: ' + this.restaurant.name)
     this.resetTimer()
+    this.log('Fetching scrape data')
     await this.getScrapeData()
     this.noteAvailableSources()
   }
@@ -836,7 +837,6 @@ export class Self extends WorkerJob {
 
   _getYelpPhotos(data: any) {
     if (!data) return []
-    console.log(data.photos)
     return this.getPaginatedDataNumberedKeys(data, 'photos')?.map((i) => i.url)
   }
 

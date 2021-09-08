@@ -4,7 +4,6 @@ import { bertResultToNumber, fetchBertSentiment } from '@dish/helpers'
 import { Loggable } from '@dish/worker'
 import { chunk } from 'lodash'
 
-import { DISH_DEBUG } from '../constants'
 import { Self } from './Self'
 
 const BERT_NEGATIVE_SENTIMENT_CRITERIA = -0.999

@@ -85,6 +85,7 @@ function ensurePhotosAreUniqueKeyAble(photos: Partial<PhotoXref>[]) {
 
 // ensure they are valid image urls otherwise other steps fail
 async function ensureValidPhotos(photosOg: Partial<PhotoXref>[]) {
+  console.log(`Downloading ${photosOg.length} to check validity`)
   const valid = (
     await Promise.all(
       photosOg.map(async (photo) => {
@@ -103,6 +104,7 @@ async function ensureValidPhotos(photosOg: Partial<PhotoXref>[]) {
       }
     }
   }
+  console.log('All photos checked for validity')
   return valid
 }
 

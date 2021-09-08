@@ -193,12 +193,26 @@ function hungry_services_tunnels() {
   wait
 }
 
-function tunnel_prods_to_local() {
+function prod_services_tunnels() {
+  echo "Opening regular prod service tunnels..."
+  tunnel_prod_service_to_local 3535 & # Puppet proxy
+  tunnel_prod_service_to_local 6154 & # Dish hooks
+  wait
+}
+
+function tunnel_prod_dbs_to_local() {
   echo "Opening tunnels to production DBs..."
-  tunnel_prod_service_to_local 5432 &
-  tunnel_prod_service_to_local 5433 &
-  tunnel_prod_service_to_local 8080 &
-  tunnel_prod_service_to_local 8091 &
+  tunnel_prod_service_to_local 5432 & # Main DB
+  tunnel_prod_service_to_local 5433 & # Scrape DB
+  tunnel_prod_service_to_local 8080 & # Hasura API
+  tunnel_prod_service_to_local 8091 & # Hasura console
+  wait
+}
+
+function all_tunnels() {
+  hungry_services_tunnels &
+  prod_services_tunnels &
+  tunnel_prod_dbs_to_local &
   wait
 }
 

@@ -64,9 +64,10 @@ export class GoogleGeocoder {
   }
 
   private async getSearchEndpointSetting() {
-    return await settingFindOne({
+    const result = await settingFindOne({
       key: GOOGLE_SEARCH_ENDPOINT_KEY,
-    }).then((x) => x?.value)
+    })
+    return result?.value
   }
 
   private async getSearchEndpoint() {

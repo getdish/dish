@@ -16,8 +16,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 export PROJECT_ROOT=$SCRIPT_DIR
 
 if [ "$DEV_USER" = "tom@tombh.co.uk" ]; then
-  DISH_ENV=development
-  IS_LOCAL=1
+  DISH_ENV="${DISH_ENV:-development}"
+  IS_LOCAL="${IS_LOCAL:-1}"
   DISH_DEBUG=${DISH_DEBUG:-"0"}
   RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
   chmod 600 $PROJECT_ROOT/etc/keys/server_rsa
