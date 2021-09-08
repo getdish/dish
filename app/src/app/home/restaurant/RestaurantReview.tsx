@@ -1,6 +1,6 @@
 import { getUserName, graphql, review } from '@dish/graph'
 import React, { memo } from 'react'
-import { Divider, HStack, Text, VStack } from 'snackui'
+import { Divider, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { CommentBubble, CommentBubbleProps } from '../../views/CommentBubble'
 import { Link } from '../../views/Link'
@@ -21,6 +21,7 @@ export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
   onEdit?: (text: string) => void
   onDelete?: () => void
   showEmptyReview?: boolean
+  hideTagsRow?: boolean
 }
 
 export const RestaurantReview = memo(
@@ -40,6 +41,7 @@ export const RestaurantReview = memo(
         restaurantSlug,
         listSlug,
         listTheme,
+        hideTagsRow,
         review,
         showEmptyReview,
         ...commentBubbleProps
@@ -49,8 +51,19 @@ export const RestaurantReview = memo(
         return <RestaurantReviewEdit {...props} onEdit={onEdit} onDelete={onDelete} />
       }
 
+      const tagsRowEl = (
+        <>
+          {!hideTagsRow && (
+            <ReviewTagsRow
+              {...props}
+              restaurantSlug={props.restaurantSlug ?? review?.restaurant?.slug}
+            />
+          )}
+        </>
+      )
+
       if (!review && !showEmptyReview) {
-        return <ReviewTagsRow {...props} />
+        return tagsRowEl
       }
 
       const name = getUserName(review?.user)
@@ -94,10 +107,7 @@ export const RestaurantReview = memo(
               {...commentBubbleProps}
             />
 
-            <ReviewTagsRow
-              {...props}
-              restaurantSlug={props.restaurantSlug ?? review?.restaurant?.slug}
-            />
+            {tagsRowEl}
           </VStack>
         </>
       )
