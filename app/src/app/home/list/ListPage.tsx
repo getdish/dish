@@ -372,7 +372,7 @@ const ListPageContent = memo(
       const listHeaderEl = (
         <>
           {/* START HEADER */}
-          <Theme name={isMinimal ? 'dark' : undefined}>
+          <Theme name={isMinimal ? 'dark' : null}>
             <VStack
               minHeight={isMinimal ? 350 : 40}
               paddingHorizontal={20}
