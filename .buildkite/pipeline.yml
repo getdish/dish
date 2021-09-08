@@ -143,9 +143,6 @@ steps:
     command: "./dsh run_http_dependent_tests"
     depends_on: tests
     soft_fail: true
-    env:
-      DOCKER_COMPOSE_DOWN: true
-      DOCKER_CLEAN: true
 
   # - label: "run integration test"
   #   command: "./dsh run_integration_tests"
