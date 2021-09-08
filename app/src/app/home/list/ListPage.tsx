@@ -1,5 +1,14 @@
 import { series } from '@dish/async'
-import { List, graphql, listInsert, listUpdate, mutate, order_by, slugify } from '@dish/graph'
+import {
+  List,
+  getUserName,
+  graphql,
+  listInsert,
+  listUpdate,
+  mutate,
+  order_by,
+  slugify,
+} from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
 import React, { Suspense, SuspenseList, memo, useEffect, useRef, useState } from 'react'
@@ -251,7 +260,7 @@ const ListPageContent = memo(
       }
 
       const username = list.user?.username || ''
-      const userFullNameOrUsername = username || list.user?.username || ''
+      const userFullNameOrUsername = getUserName(list.user)
 
       const tagButtons = list
         .tags({ limit: 10 })

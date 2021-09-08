@@ -1,4 +1,4 @@
-import { graphql, mutate, query, resolved } from '@dish/graph'
+import { getUserName, graphql, mutate, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useState } from 'react'
 import { AbsoluteVStack, Hoverable, Toast, VStack } from 'snackui'
@@ -45,7 +45,7 @@ const ListCardContent = graphql((props: ListCardProps) => {
     <ListCardFrame
       title={list?.name ?? ''}
       numItems={numItems}
-      author={` by ${list?.user?.username ?? ''}`}
+      author={` by ${getUserName(list?.user)}`}
       {...props}
       theme={listThemeName}
       tags={
