@@ -62,6 +62,7 @@ async function findExistingCanonical(
 ): Promise<[string | undefined, string | undefined]> {
   const scrape = await scrapeFindOneBySourceID(source, id_from_source, true)
   let restaurant: RestaurantWithId | null
+  let google_id: string
   if (scrape && scrape.restaurant_id !== ZeroUUID) {
     restaurant = await restaurantFindOne({ id: scrape.restaurant_id })
     if (restaurant && restaurant.geocoder_id) {
@@ -69,13 +70,9 @@ async function findExistingCanonical(
     }
   }
   console.log('findExistingCanonical, no existing scrape or restaurant, geocoding...')
-  const geocoder = new GoogleGeocoder()
-  const query = name + ', ' + address
-  const google_id = await geocoder.searchForID(query, lat, lon)
-  if (!google_id) {
-    throw new Error(`No google id ${query} ${lat} ${lon} for ${name}, ${address}`)
-  }
-  restaurant = await restaurantFindOne({ geocoder_id: google_id })
+  const [_restaurant, _google_id] = await geocodeRestaurant(name, address, lat, lon)
+  restaurant = _restaurant
+  google_id = _google_id
   if (restaurant) {
     console.log('found restaurant via geocoder_id', restaurant.id)
     return [restaurant.id, undefined]
@@ -83,4 +80,21 @@ async function findExistingCanonical(
     console.log('first ever scrape of ', name)
     return [undefined, google_id]
   }
+}
+
+export async function geocodeRestaurant(name: string, address: string, lat: number, lon: number) {
+  if (!/\S/.test(name) || !name) {
+    throw new Error('Geocoder must be given a name')
+  }
+  if (!/\S/.test(address) || !address) {
+    throw new Error('Geocoder must be given an address')
+  }
+  const geocoder = new GoogleGeocoder()
+  const query = name + ', ' + address
+  const google_id = await geocoder.searchForID(query, lat, lon)
+  if (!google_id) {
+    throw new Error(`No google id ${query} ${lat} ${lon} for ${name}, ${address}`)
+  }
+  const restaurant = await restaurantFindOne({ geocoder_id: google_id })
+  return [restaurant, google_id]
 }
