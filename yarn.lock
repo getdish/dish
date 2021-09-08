@@ -1685,12 +1685,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.13.16, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.7.7, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.12.13, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.13.16, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.7.7, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
   version: 7.14.8
   resolution: "@babel/runtime@npm:7.14.8"
   dependencies:
     regenerator-runtime: ^0.13.4
   checksum: d2dd0ce51ddab78ac93928b04042425145d0dc8cc2b70150d47934f8703f55702eb0b2894f9bd47f66794ad04d8bb03a6a847d0138fbb7aa0b970b5ccd5cc8b7
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.6.2":
+  version: 7.15.4
+  resolution: "@babel/runtime@npm:7.15.4"
+  dependencies:
+    regenerator-runtime: ^0.13.4
+  checksum: c40825430400e47c19b97e4142d5315d2910305b9714d44a711472587ee2fd4521fdba5f02ddd9df3902f5e988d9854fa83f4da1e0c091f70f6983fa52480606
   languageName: node
   linkType: hard
 
@@ -1984,7 +1993,7 @@ __metadata:
     react-native-safe-area-context: ^3.1.9
     react-native-svg: ^12.1.1
     react-native-unimodules: ^0.14.6
-    react-query: ^3.15.2
+    react-query: ^3.23.0
     react-reparenting: ^0.6.1
     react-test-renderer: ^17.0.1
     recyclerlistview: ^3.0.5
@@ -21215,16 +21224,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:18.0.0-alpha-568dc3532":
-  version: 18.0.0-alpha-568dc3532
-  resolution: "react-dom@npm:18.0.0-alpha-568dc3532"
+"react-dom@npm:0.0.0-experimental-d75105fa9":
+  version: 0.0.0-experimental-d75105fa9
+  resolution: "react-dom@npm:0.0.0-experimental-d75105fa9"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-    scheduler: 0.21.0-alpha-568dc3532
+    scheduler: 0.0.0-experimental-d75105fa9
   peerDependencies:
-    react: 18.0.0-alpha-568dc3532
-  checksum: dbe910e09679b9b20da332398813e04df67ac9c3eda5f050745fd91587cf691c929624e1d6681fc543ac8faffdf1b4aa1f5f01e4411cdf2bf21f8978b6a408d8
+    react: 0.0.0-experimental-d75105fa9
+  checksum: da438d4e706e9b11e9f22675d0eb3e439eec200081952bacd2a2be1cd5af475d23ba8a4eb0fb8b6818e7986c89133ebdab54f9b09a9ec9ea13d2c938443a1220
   languageName: node
   linkType: hard
 
@@ -21524,9 +21533,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.15.2":
-  version: 3.19.1
-  resolution: "react-query@npm:3.19.1"
+"react-query@npm:^3.23.0":
+  version: 3.23.0
+  resolution: "react-query@npm:3.23.0"
   dependencies:
     "@babel/runtime": ^7.5.5
     broadcast-channel: ^3.4.1
@@ -21538,7 +21547,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: 8e865d9ba4b59aa93228bb5c56cda9b8dd86c3685a40be1926d779d13701cb8e674cae55cbed8d8c07531bbabe4f535f4a42821b64bc8d4e440b2e8e4d3c055e
+  checksum: 1a292c0edae1bf8b3681d84a886c9ea793015f5a0573a9970e43a50df82402633475a418fb458f3a01217a798de3b443fa5008a71dad50d6e6ea935a8f0a2370
   languageName: node
   linkType: hard
 
@@ -21665,13 +21674,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:18.0.0-alpha-568dc3532":
-  version: 18.0.0-alpha-568dc3532
-  resolution: "react@npm:18.0.0-alpha-568dc3532"
+"react@npm:0.0.0-experimental-d75105fa9":
+  version: 0.0.0-experimental-d75105fa9
+  resolution: "react@npm:0.0.0-experimental-d75105fa9"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 260a2d9e73408b10b304a43c334995f51ede299255d960ae68c439b616cced0d7bdcb2c3cd79042bbc017242158df9918bf5b6482b0d046ac7948eaa5e9a1511
+  checksum: 1a5b32554fe71e6d31ce83ba7822d8e40be1d82f4056a552a190ea840c23e50442b30bfb6e8c8f632ed4d1f7b6618cff34a48d57248b501560c7b7d20db7f059
   languageName: node
   linkType: hard
 
@@ -22584,13 +22593,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:0.21.0-alpha-568dc3532":
-  version: 0.21.0-alpha-568dc3532
-  resolution: "scheduler@npm:0.21.0-alpha-568dc3532"
+"scheduler@npm:0.0.0-experimental-d75105fa9":
+  version: 0.0.0-experimental-d75105fa9
+  resolution: "scheduler@npm:0.0.0-experimental-d75105fa9"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 55f81d8fcae281edb399c9c6bd851f56704a2116b33ada01fbc6dcf8382f18afc5f63eb5ca764db8bcc918441b7751fc3f81892507ea11e0cbca1df74d8de0bf
+  checksum: d62ac68f9722d99067ead5f6b195365bba7a46da9d2ead3b3d9b0aed8a784dbbf69ec4438c71dcef2d74a1b9fa69549f4b432f850ea9c9419ed5811c961f5ad4
   languageName: node
   linkType: hard
 
