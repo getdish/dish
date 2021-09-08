@@ -850,11 +850,11 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
 
     return () => {
       disposeSeries()
-      appMapStore.setState({
-        zoomOnHover: false,
-        showRank: false,
-        features: [],
-      })
+      // appMapStore.setState({
+      //   zoomOnHover: false,
+      //   showRank: false,
+      //   features: [],
+      // })
     }
   }, [JSON.stringify(results), fitToResults, isActive, zoomOnHover, hideRegions, region, showRank])
 }

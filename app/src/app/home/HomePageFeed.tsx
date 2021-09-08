@@ -57,7 +57,7 @@ export const HomePageFeed = memo(
         hideRegions: false,
         results: hovered ?? useSetAppMapProps.results,
       }
-      console.log('props are', props)
+      // console.log('props are', props)
       useSetAppMap(props)
 
       // useDebounceEffect(

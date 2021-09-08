@@ -1,3 +1,10 @@
+- make a new auto-dish + auto-sentiment api for listpage edit
+    - use it on vietnamese list, have it pull out dishes
+    - show in dish row at bottom auto ratings
+
+- fix reviews row on restaurantpage
+- fix add review page
+
 - list making is/will be a better review form
 - design list entry as review as flexible document-db interface
 - list commenting
