@@ -1,5 +1,5 @@
 import { RestaurantWithId, ZeroUUID, ensureJSONSyntax, restaurantFindOne } from '@dish/graph'
-import { db } from '@dish/helpers-node'
+import { scrape_db } from '@dish/helpers-node'
 import { clone } from 'lodash'
 
 import { DoorDash } from './doordash/DoorDash'
@@ -43,7 +43,7 @@ export function scrapeGetData<
 }
 
 export async function scrapeFindOneBySourceID(source: string, id: string, allow_not_found = false) {
-  const result = await db.query(`
+  const result = await scrape_db.query(`
   SELECT *, st_asgeojson(location) as location
   FROM scrape
     WHERE source = '${source}'
@@ -64,7 +64,7 @@ export async function scrapeFindOneBySourceID(source: string, id: string, allow_
 }
 
 export async function scrapeFindOneByUUID(id: string) {
-  const result = await db.query(`
+  const result = await scrape_db.query(`
     SELECT *, st_asgeojson(location) as location
     FROM scrape
       WHERE id = '${id}'
@@ -82,7 +82,7 @@ function parseLocation(json: string) {
 }
 
 export async function latestScrapeForRestaurant(restaurant: RestaurantWithId, source: string) {
-  const result = await db.query(`
+  const result = await scrape_db.query(`
     SELECT *
     FROM scrape
       WHERE restaurant_id = '${restaurant.id}'
@@ -105,7 +105,7 @@ export async function latestScrapeForRestaurant(restaurant: RestaurantWithId, so
 
 export async function removeScrapeForRestaurant(restaurant: RestaurantWithId, source: string) {
   console.log('Removing scrape for', restaurant.id)
-  await db.query(`
+  await scrape_db.query(`
     DELETE
     FROM scrape
       WHERE restaurant_id = '${restaurant.id}'
@@ -116,7 +116,7 @@ export async function removeScrapeForRestaurant(restaurant: RestaurantWithId, so
 export async function scrapeInsert(scrape: Scrape) {
   try {
     const data = JSON.stringify(ensureJSONSyntax(scrape.data)).replace(/'/g, `''`)
-    const result = await db.query(`
+    const result = await scrape_db.query(`
       INSERT INTO scrape (
         time,
         source,
@@ -145,7 +145,7 @@ export async function scrapeInsert(scrape: Scrape) {
 
 export async function scrapeUpdateBasic(scrape: Scrape) {
   console.log(`Updating scrape ${scrape.id} to point to restaurant ${scrape.restaurant_id}`)
-  const result = await db.query(`
+  const result = await scrape_db.query(`
     UPDATE scrape SET
       restaurant_id = '${scrape.restaurant_id}',
       location = ST_GeomFromText('POINT(
@@ -162,7 +162,7 @@ export async function scrapeUpdateAllRestaurantIDs(
   restaurant_id: string | null
 ) {
   restaurant_id = restaurant_id == null ? `NULL` : `'${restaurant_id}'`
-  await db.query(`
+  await scrape_db.query(`
     UPDATE scrape SET
       restaurant_id = ${restaurant_id}
     WHERE source = '${source}'
@@ -183,7 +183,7 @@ export async function scrapeUpdateAllRestaurantIDs(
 export async function scrapeMergeData(id: string, data: ScrapeData) {
   data = ensureJSONSyntax(data)
   const stringified = JSON.stringify(data).replace(/'/g, `''`)
-  const result = await db.query(`
+  const result = await scrape_db.query(`
     UPDATE scrape
       SET data = data || '${stringified}'
       WHERE id = '${id}'
@@ -193,24 +193,24 @@ export async function scrapeMergeData(id: string, data: ScrapeData) {
 }
 
 export async function deleteAllScrapesBySourceID(id: string) {
-  await db.query(`
+  await scrape_db.query(`
     DELETE FROM scrape WHERE id_from_source = '${id}';
   `)
 }
 
 export async function deleteAllTestScrapes() {
-  await db.query(`
+  await scrape_db.query(`
     DELETE FROM scrape WHERE id_from_source LIKE 'test%';
   `)
 }
 
 export async function scrapeGetAllDistinct() {
-  const result = await db.query(`SELECT scrape_id FROM distinct_sources`)
+  const result = await scrape_db.query(`SELECT scrape_id FROM distinct_sources`)
   return result.rows
 }
 
 export async function scrapeUpdateGeocoderID(scrape_id: string) {
-  const result = await db.query(
+  const result = await scrape_db.query(
     `
       SELECT *, st_asgeojson(location) as location
       FROM scrape WHERE id = '${scrape_id}'

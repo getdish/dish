@@ -87,7 +87,7 @@ const extPort = process.env.TIMESCALE_PORT || 5433
 const intPort = process.env.TIMESCALE_PORT_INTERNAL || 5432
 const port = +(process.env.IS_LOCAL ? extPort : intPort)
 
-const db_config: PoolConfig = {
+const scrape_db_config: PoolConfig = {
   host: process.env.TIMESCALE_HOST || 'localhost',
   port,
   user: process.env.TIMESCALE_USER || 'postgres',
@@ -111,9 +111,9 @@ const main_db_config: PoolConfig = {
 }
 
 export const main_db = new Database(main_db_config)
-export const db = new Database(db_config)
+export const scrape_db = new Database(scrape_db_config)
 
 if (process.env.DEBUG) {
   // prettier-ignore
-  console.log('db configs', JSON.stringify({ db_config, main_db_config }, null, 2))
+  console.log('db configs', JSON.stringify({ scrape_db_config, main_db_config }, null, 2))
 }

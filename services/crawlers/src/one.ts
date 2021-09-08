@@ -1,7 +1,7 @@
 import '@dish/helpers/polyfill'
 
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
-import { db } from '@dish/helpers-node'
+import { scrape_db } from '@dish/helpers-node'
 
 import * as Google from './google/one'
 import * as Self from './self/one'
@@ -38,7 +38,7 @@ export async function main(slug: string) {
     // clear existing scrapes
     if (rest.id && !shouldSkip('external') && !shouldSkip('scrapes')) {
       if (process.env.CLEAR_EXISTING === '1') {
-        const res = await db.query(`DELETE FROM scrape WHERE restaurant_id = '${rest.id}';`)
+        const res = await scrape_db.query(`DELETE FROM scrape WHERE restaurant_id = '${rest.id}';`)
         console.log('Deleted', res.rows)
       } else {
         console.log('To clear existing scrapes for restaurant set CLEAR_EXISTING=1')
