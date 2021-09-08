@@ -293,6 +293,8 @@ const ListPageContent = memo(
       )
       const locationName = region.data?.name ?? props.item.region
       const media = useMedia()
+      const theme = useTheme()
+      const isMinimal = listTheme === 'minimal'
 
       const uri = [
         list.image || '',
@@ -308,15 +310,15 @@ const ListPageContent = memo(
         <VStack
           marginBottom={10}
           paddingVertical={20}
-          maxWidth={Math.min(getWindowWidth(), drawerWidthMax) - 100}
+          maxWidth={media.sm ? '100%' : '80%'}
           marginTop={-5}
-          {...(listTheme === 'minimal' && {
+          {...(isMinimal && {
             marginBottom: isEditing ? 20 : list.description ? 20 : -20,
           })}
         >
           <CommentBubble
-            chromeless={listTheme === 'minimal'}
-            paddingHorizontal={20}
+            chromeless={isMinimal}
+            paddingHorizontal={isMinimal ? 0 : 20}
             date={list.created_at}
             after={
               <>
@@ -375,9 +377,6 @@ const ListPageContent = memo(
         </VStack>
       )
 
-      const theme = useTheme()
-      const isMinimal = listTheme === 'minimal'
-
       const listHeaderEl = (
         <>
           {/* START HEADER */}
@@ -392,7 +391,7 @@ const ListPageContent = memo(
                 <>
                   <VStack minHeight={80} flex={1} />
 
-                  <AbsoluteVStack zIndex={-1} fullscreen top="auto" overflow="hidden">
+                  <AbsoluteVStack backgroundColor="#000" zIndex={-1} fullscreen overflow="hidden">
                     <Image
                       // @ts-ignore
                       source={{
@@ -447,7 +446,7 @@ const ListPageContent = memo(
                 >
                   <HStack
                     flex={1}
-                    maxWidth={media.notSm ? '80%%' : '70%'}
+                    maxWidth={media.notSm ? '80%' : '70%'}
                     minWidth={220}
                     alignItems="center"
                     justifyContent="center"
