@@ -203,7 +203,13 @@ export const ReviewTagsRow = graphql(
     const currentTags = filtered.length ? filtered : tags
 
     return (
-      <HStack width="100%" alignItems="center" pointerEvents="auto" zIndex={1000}>
+      <HStack
+        marginVertical={-16}
+        width="100%"
+        alignItems="center"
+        pointerEvents="auto"
+        zIndex={1000}
+      >
         <HStack
           position="relative"
           pointerEvents="auto"
@@ -223,9 +229,10 @@ export const ReviewTagsRow = graphql(
 
           {!isFocused && (
             <AbsoluteHStack fullscreen>
-              <SmallButton icon={<Tag size={16} color="#777" />} elevation={1}></SmallButton>
+              <SmallButton borderWidth={1} icon={<Tag size={16} color="#999" />}></SmallButton>
             </AbsoluteHStack>
           )}
+
           <Input
             placeholder="Dishes, tags:"
             opacity={isFocused ? 1 : 0}

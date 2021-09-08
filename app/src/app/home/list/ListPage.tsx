@@ -306,12 +306,15 @@ const ListPageContent = memo(
           .map((x) => x.restaurant.image) || ''),
       ].find(Boolean)
 
-      const userCommentEl = (
+      const userCommentEl = (isEditing || list.description) && (
         <VStack
           marginBottom={10}
           paddingVertical={20}
           maxWidth={media.sm ? '100%' : '80%'}
           marginTop={-5}
+          {...(!isMinimal && {
+            maxWidth: Math.min(getWindowWidth(), drawerWidthMax) * 0.95,
+          })}
           {...(isMinimal && {
             marginBottom: isEditing ? 20 : list.description ? 20 : -20,
           })}
@@ -435,7 +438,7 @@ const ListPageContent = memo(
 
               {listTheme === 'modern' && (
                 <HStack
-                  paddingVertical={20}
+                  paddingVertical={14}
                   marginHorizontal="auto"
                   alignItems="center"
                   justifyContent="center"
@@ -446,35 +449,30 @@ const ListPageContent = memo(
                 >
                   <HStack
                     flex={1}
-                    maxWidth={media.notSm ? '80%' : '70%'}
+                    maxWidth={media.notSm ? '90%' : '75%'}
                     minWidth={220}
                     alignItems="center"
                     justifyContent="center"
                     spacing
                   >
-                    <Link
-                      name="user"
-                      params={{
-                        username: list.user?.username || '',
-                      }}
-                    >
+                    <Link name="user" params={{ username }}>
                       <UserAvatar
-                        size={42}
+                        size={52}
                         avatar={list.user?.avatar ?? ''}
                         charIndex={list.user?.charIndex ?? 0}
                       />
                     </Link>
 
-                    <Text lineHeight={22} textAlign="left">
+                    <Text ellipse lineHeight={22} textAlign="left">
                       <Link name="user" params={{ username }}>
-                        <Title size="lg" fontWeight="400" opacity={0.5}>
+                        <Title size="sm" fontWeight="400" opacity={0.5}>
                           {list.user?.name || username || '...'}'s&nbsp;
                         </Title>
                       </Link>
-                      <Title size="lg" fontWeight="800" zIndex={0}>
+                      <Title size="sm" fontWeight="800" zIndex={0}>
                         {titleContents}&nbsp;
                       </Title>
-                      <Title size="lg" fontWeight="200" opacity={0.5}>
+                      <Title size="sm" fontWeight="200" opacity={0.5}>
                         {locationName ?? ''}
                       </Title>
                     </Text>

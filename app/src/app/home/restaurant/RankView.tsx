@@ -31,14 +31,14 @@ export const RankView = memo(({ rank }: { rank: number }) => {
         zIndex={-1}
       />
       <Text textAlign="center" lineHeight={38}>
-        <Text opacity={0.5} color={theme.colorAlt} y={-5} x={10} fontSize={11}>
+        <Text opacity={0.5} color={theme.colorQuartenary} y={-5} x={10} fontSize={11}>
           #
         </Text>
         <Text
           letterSpacing={-1}
-          fontSize={+rank > 9 ? 17 : 21}
+          fontSize={+rank > 9 ? 18 : 22}
           fontWeight="500"
-          color={theme.color}
+          color={theme.colorTertiary}
         >
           {rank}
         </Text>
