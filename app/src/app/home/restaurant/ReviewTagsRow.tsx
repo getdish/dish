@@ -203,13 +203,7 @@ export const ReviewTagsRow = graphql(
     const currentTags = filtered.length ? filtered : tags
 
     return (
-      <HStack
-        marginVertical={-6}
-        width="100%"
-        alignItems="center"
-        pointerEvents="auto"
-        zIndex={1000}
-      >
+      <HStack width="100%" alignItems="center" pointerEvents="auto" zIndex={1000}>
         <HStack
           position="relative"
           pointerEvents="auto"
