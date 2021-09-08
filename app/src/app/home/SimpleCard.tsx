@@ -6,13 +6,13 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 
 type CarouselSize = 'md' | 'sm'
 
-export const SimpleCard = ({
-  children,
-  size,
-  slanted,
-  isBehind,
-  ...props
-}: StackProps & { size?: CarouselSize; slanted?: boolean; isBehind?: boolean }) => {
+export type SimpleCardProps = StackProps & {
+  size?: CarouselSize
+  slanted?: boolean
+  isBehind?: boolean
+}
+
+export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: SimpleCardProps) => {
   const theme = useTheme()
   return (
     <VStack
