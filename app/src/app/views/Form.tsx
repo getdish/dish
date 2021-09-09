@@ -53,6 +53,8 @@ export function SubmittableForm({
               marginLeft="auto"
               onPress={onSubmit}
               theme="active"
+              borderRadius={100}
+              elevation={1}
               disabled={isSubmitting}
             >
               {submitText}

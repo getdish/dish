@@ -8,11 +8,13 @@ export const DarkModal = ({
   children,
   outside,
   onDismiss,
+  fullscreen,
 }: {
   hide?: boolean
   children: any
   outside?: any
   onDismiss?: any
+  fullscreen?: boolean
 }) => {
   const media = useMedia()
   const [fullHide, setFullHide] = useState(hide)
@@ -39,13 +41,22 @@ export const DarkModal = ({
         display={fullHide ? 'none' : 'flex'}
         pointerEvents={hide ? 'none' : 'auto'}
         onPress={onDismiss}
+        {...(fullscreen && {
+          paddingHorizontal: 0,
+        })}
       >
-        <VStack flex={1} />
-        <AnimatedVStack
+        <VStack
           maxWidth={450}
           maxHeight="80%"
           width="100%"
-          animateState={hide ? 'out' : 'in'}
+          {...(fullscreen && {
+            maxWidth: 'auto',
+            maxHeight: 'auto',
+            flex: 1,
+            width: '100%',
+            height: '100%',
+          })}
+          // animateState={hide ? 'out' : 'in'}
         >
           <VStack
             flex={1}
@@ -57,6 +68,9 @@ export const DarkModal = ({
             shadowRadius={150}
             shadowOffset={{ height: 10, width: 0 }}
             onPress={prevent}
+            {...(fullscreen && {
+              borderRadius: 0,
+            })}
           >
             {outside}
             <ScrollView
@@ -71,8 +85,7 @@ export const DarkModal = ({
               </VStack>
             </ScrollView>
           </VStack>
-        </AnimatedVStack>
-        <VStack flex={1} />
+        </VStack>
       </AbsoluteVStack>
     </Theme>
   )

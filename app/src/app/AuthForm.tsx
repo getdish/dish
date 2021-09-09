@@ -165,7 +165,8 @@ export const PasswordReset = ({ autoFocus }: AuthFormPageProps) => {
         control={control}
         errors={errors.confirmation}
         secureTextEntry
-        name="email"
+        // @ts-ignore
+        name="password-confirm"
         placeholder="Confirmation"
         onChangeText={onChange('confirmation')}
         rules={{
