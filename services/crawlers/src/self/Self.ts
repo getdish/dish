@@ -72,6 +72,8 @@ const toPostgresTime = (day: Day, time: string) => {
   return timestamp
 }
 
+const IS_FULL_RUN = !process.env.ONLY_FUNC
+
 export class Self extends WorkerJob {
   ALL_SOURCES = [
     'yelp',
@@ -193,7 +195,9 @@ export class Self extends WorkerJob {
       ]
       for (const async_func of async_steps) {
         this.log('running step', async_func.name)
-        await this._runFailableFunction(async_func)
+        if (IS_FULL_RUN || process.env.ONLY_FUNC == async_func.name) {
+          await this._runFailableFunction(async_func)
+        }
       }
       await this.postMerge()
       this.log('done with restaurant', id)
@@ -280,9 +284,14 @@ export class Self extends WorkerJob {
       })
       return
     }
-    await this.oldestReview()
     await this._runFailableFunction(this.finishTagsEtc)
-    await this._runFailableFunction(this.finalScores)
+    const async_steps = [this.oldestReview, this.finalScores]
+    for (const async_func of async_steps) {
+      this.log('running postMerge step', async_func.name)
+      if (IS_FULL_RUN || process.env.ONLY_FUNC == async_func.name) {
+        await this._runFailableFunction(async_func)
+      }
+    }
     this.log('merging final restaurant')
     await restaurantUpdate(this.restaurant)
     clearInterval(this._debugRamIntervalFunction)
