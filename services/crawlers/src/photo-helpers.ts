@@ -108,12 +108,18 @@ async function ensureValidPhotos(photosOg: Partial<PhotoXref>[]) {
   return valid
 }
 
+// TODO Handle TCP error. Therefore, don't delete a photo if there's a TCP error
 async function isValidPhoto(url?: string | null) {
   if (!url) return false
-  const res = await fetch(url)
-  if (res.status >= 300) return false
-  const contentType = res.headers.get('content-type')
-  return contentType?.startsWith('image/')
+  try {
+    const res = await fetch(url)
+    if (res.status >= 300) return false
+    const contentType = res.headers.get('content-type')
+    return contentType?.startsWith('image/')
+  } catch (e) {
+    console.error(`Unexpected error validating image: ${url}`, e)
+    return false
+  }
 }
 
 function normalizePhotos(photos: Partial<PhotoXref>[]) {
