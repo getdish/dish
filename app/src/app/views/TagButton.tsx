@@ -434,6 +434,7 @@ const TagVotePopover = graphql(
         ref={hovPopRef}
         allowHoverOnContent
         anchor="CENTER"
+        animated={false}
         {...popoverProps}
         contents={
           <Theme name="dark">

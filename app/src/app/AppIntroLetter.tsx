@@ -1,33 +1,27 @@
 import { Home } from '@dish/react-feather'
 import { useStore } from '@dish/use-store'
-import React, { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import Globe, { GlobeMethods } from 'react-globe.gl'
+import loadable from '@loadable/component'
+import React, { memo, useLayoutEffect, useMemo, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
   Button,
-  Grid,
   HStack,
-  Input,
   LinearGradient,
   Modal,
   Paragraph,
   Spacer,
   Text,
   Theme,
-  Title,
   VStack,
   useMedia,
   useTheme,
 } from 'snackui'
 
-import earthDark from '../assets/earth-dark.jpg'
 import iphoneScreen from '../assets/iphone-home-screen.jpg'
-import { blue, blue300, green, pink, yellow } from '../constants/colors'
+import { blue, green, pink } from '../constants/colors'
 import { useQueryLoud } from '../helpers/useQueryLoud'
 import { useRouterCurPage } from '../router'
-import { AppIntroLogin } from './AppIntroLogin'
-import { AuthForm } from './AuthForm'
 import { useFormAction } from './hooks/useFormAction'
 import { useLocalStorageState } from './hooks/useLocalStorageState'
 import { IntroModalStore } from './IntroModalStore'
@@ -51,7 +45,6 @@ export const AppIntroLetter = memo(() => {
   const curPage = useRouterCurPage()
   const isPasswordReset = curPage.name == 'passwordReset'
   const media = useMedia()
-  const globeRef = useRef<GlobeMethods>()
   const theme = useTheme()
 
   const countries = useQueryLoud(
@@ -61,9 +54,8 @@ export const AppIntroLetter = memo(() => {
       suspense: false,
     }
   )
-  const features = countries.data?.features ?? []
 
-  console.log('countries', countries)
+  const features = useMemo(() => countries.data?.features ?? [], [countries.data])
 
   useLayoutEffect(() => {
     if (store.started) return
@@ -75,20 +67,6 @@ export const AppIntroLetter = memo(() => {
       store.setHidden(false)
     }
   }, [closes, store.hidden, isLoggedIn, hasOnboarded])
-
-  useEffect(() => {
-    if (!globeRef.current) return
-    const globe = globeRef.current
-    console.log('globe', globe)
-    const controls = globe.controls() as any
-    console.log('controls', controls)
-    controls.autoRotate = true
-    controls.autoRotateSpeed = 0.25
-  }, [])
-
-  if (isLoggedIn && hasOnboarded) {
-    return null
-  }
 
   if (isLoggedIn && !hasOnboarded) {
     return (
@@ -120,6 +98,10 @@ export const AppIntroLetter = memo(() => {
     )
   }
 
+  if (isLoggedIn) {
+    return null
+  }
+
   return (
     <>
       <Theme name="dark">
@@ -128,7 +110,7 @@ export const AppIntroLetter = memo(() => {
           onDismiss={() => setShowSignup(false)}
           flex={1}
           paddingHorizontal={20}
-          paddingVertical={30}
+          paddingVertical={20}
         >
           <PaneControlButtons>
             <CloseButton onPress={() => setShowSignup(false)} />
@@ -143,128 +125,99 @@ export const AppIntroLetter = memo(() => {
       </Theme>
 
       <DarkModal fullscreen hide={store.hidden} onDismiss={store.setHidden}>
-        {!isLoggedIn && !isPasswordReset && (
-          <VStack
-            paddingVertical={media.sm ? 20 : 50}
-            paddingHorizontal={20}
-            maxWidth={850}
-            alignItems="center"
-            minHeight="100%"
-            spacing="xl"
+        <AbsoluteVStack top={90} pointerEvents="none" zIndex={-1}>
+          {!!features.length && <AppGlobe features={features} />}
+          <LinearGradient
+            style={StyleSheet.absoluteFill}
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
+          />
+        </AbsoluteVStack>
+
+        <VStack
+          paddingVertical={20}
+          paddingHorizontal={20}
+          maxWidth={940}
+          alignItems="center"
+          minHeight="100%"
+          spacing="xl"
+        >
+          <LogoColor scale={media.sm ? 1.5 : 1.8} />
+
+          <Text
+            color={theme.color}
+            textAlign="center"
+            fontSize={media.sm ? 40 : 60}
+            fontWeight="900"
+            selectable
           >
-            <LogoColor scale={media.sm ? 1.5 : 1.8} />
+            Curate a better map of the&nbsp;world, together.
+          </Text>
 
-            <Text
-              color={theme.color}
-              textAlign="center"
-              fontSize={media.sm ? 40 : 60}
-              fontWeight="900"
-              selectable
-            >
-              Curate a better map of the&nbsp;world, together.
-            </Text>
+          <Button
+            theme="active"
+            paddingVertical={12}
+            paddingHorizontal={20}
+            elevation={3}
+            borderRadius={100}
+            textProps={{ fontSize: 16, fontWeight: '800' }}
+            onPress={() => setShowSignup(true)}
+          >
+            Sign up &nbsp; ✨
+          </Button>
 
-            <AbsoluteVStack top={90} pointerEvents="none" zIndex={-1}>
-              <Globe
-                ref={globeRef}
-                globeImageUrl={earthDark}
-                arcDashAnimateTime={5000}
-                arcsTransitionDuration={5000}
-                enablePointerInteraction={false}
-                showGraticules
-                showAtmosphere
-                animateIn
-                hexPolygonsData={features}
-                hexPolygonResolution={4}
-                hexPolygonMargin={0.3}
-                // rendererConfig={{
-                //   antialias: false,
-                // }}
-                hexPolygonColor={() =>
-                  `#${Math.round(Math.random() * Math.pow(2, 24))
-                    .toString(16)
-                    .padStart(6, '0')}`
-                }
-                hexPolygonLabel={({ properties: d }) => `
-        <b>${d.ADMIN} (${d.ISO_A2})</b> <br />
-        Population: <i>${d.POP_EST}</i>
-      `}
-              />
-              <LinearGradient
-                style={StyleSheet.absoluteFill}
-                colors={['rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
-              />
-            </AbsoluteVStack>
+          <Text
+            color={theme.color}
+            textAlign="center"
+            fontSize={media.sm ? 22 : 30}
+            marginHorizontal="7%"
+            fontWeight="700"
+            selectable
+          >
+            Better adventures, or just better pho.
+          </Text>
 
-            <Button
-              theme="active"
-              paddingVertical={12}
-              paddingHorizontal={20}
-              elevation={3}
-              borderRadius={100}
-              textProps={{ fontSize: 16, fontWeight: '800' }}
-              onPress={() => setShowSignup(true)}
-            >
-              Sign up &nbsp; ✨
-            </Button>
+          <Text
+            color={theme.color}
+            textAlign="center"
+            fontSize={media.sm ? 22 : 28}
+            marginHorizontal="7%"
+            lineHeight={media.sm ? 30 : 40}
+            fontWeight="300"
+            selectable
+            opacity={0.8}
+          >
+            Dish is a better map for curation - for travelers, foodies, or people who just like
+            finding great things.
+          </Text>
 
-            <Spacer />
-            <Spacer />
+          <Spacer size="md" />
 
-            <Text
-              color={theme.color}
-              textAlign="center"
-              fontSize={media.sm ? 24 : 32}
-              marginHorizontal="7%"
-              fontWeight="700"
-              selectable
-            >
-              Adventure, or just better pho.
-            </Text>
+          <HStack marginBottom={-20} flexWrap="wrap" alignItems="center" justifyContent="center">
+            <GridItem
+              title="Discover"
+              content="Better reviews of every restaurant - search across delivery, by dish and more."
+              color={blue}
+              image={iphoneScreen}
+              position="right"
+            />
 
-            <Text
-              color={theme.color}
-              textAlign="center"
-              fontSize={media.sm ? 22 : 28}
-              marginHorizontal="7%"
-              lineHeight={media.sm ? 30 : 40}
-              fontWeight="200"
-              selectable
-              opacity={0.8}
-            >
-              Dish is a community for curation - for travelers, foodies, or people who just like
-              finding great things.
-            </Text>
+            <GridItem
+              title="Collect"
+              content="List your favorite nights out, plan a trip, and share favorites with friends."
+              color={green}
+              image={iphoneScreen}
+              position="right"
+            />
 
-            <Spacer size="xl" />
-
-            <HStack flexWrap="wrap">
-              <GridItem
-                title="Discover"
-                content="Better reviews of every restaurant - search across delivery, by dish and more."
-                color={blue}
-                image={iphoneScreen}
-              />
-
-              <GridItem
-                title="Curate"
-                content="Collect your favorite nights out, plan a trip, and share your tips with friends."
-                color={green}
-                image={iphoneScreen}
-                position="right"
-              />
-
-              <GridItem
-                isLast
-                title="Earn"
-                color={pink}
-                content="Curators and contributors earn for lists, photos and reviews."
-                image={iphoneScreen}
-                position="below"
-              />
-            </HStack>
-          </VStack>
-        )}
+            <GridItem
+              title="Earn"
+              color={pink}
+              content="Curators and contributors earn for lists, photos and reviews."
+              image={iphoneScreen}
+              position="right"
+            />
+          </HStack>
+        </VStack>
       </DarkModal>
     </>
   )
@@ -313,19 +266,20 @@ const GridItem = (props: {
 
   return (
     <VStack
-      minWidth={260}
-      minHeight={250}
+      minWidth={250}
+      minHeight={220}
       borderRadius={30}
-      padding={26}
+      padding={20}
       overflow="hidden"
-      marginBottom={20}
-      marginHorizontal={10}
+      marginBottom={10}
+      marginHorizontal={5}
       position="relative"
-      flex={1}
+      flexShrink={1}
+      flexGrow={0}
       {...(props.position === 'below' && {
         alignItems: 'center',
         justifyContent: 'center',
-        paddingBottom: 150,
+        paddingBottom: 120,
       })}
     >
       <AbsoluteVStack fullscreen backgroundColor={props.color} zIndex={0} opacity={0.2} />
@@ -333,7 +287,7 @@ const GridItem = (props: {
       <Text
         color={theme.color}
         textAlign="center"
-        fontSize={media.sm ? 20 : 35}
+        fontSize={media.sm ? 22 : 24}
         fontWeight="800"
         selectable
       >
@@ -344,8 +298,8 @@ const GridItem = (props: {
 
       <VStack
         marginVertical="auto"
-        maxWidth={props.isLast ? 'auto' : 320}
-        paddingLeft={100}
+        maxWidth={media.sm ? '90%' : 250}
+        paddingLeft={110}
         {...(props.position === 'right' && {
           paddingLeft: 0,
           paddingRight: 120,
@@ -355,13 +309,16 @@ const GridItem = (props: {
           paddingRight: 0,
         })}
       >
-        <Paragraph size="md">{props.content}</Paragraph>
+        <Paragraph flexShrink={1} size="md">
+          {props.content}
+        </Paragraph>
       </VStack>
 
       <VStack
         position="absolute"
         top={80}
         left={-50}
+        pointerEvents="none"
         backgroundColor="#000"
         borderRadius={15}
         paddingVertical={6}
@@ -387,7 +344,7 @@ const GridItem = (props: {
 
 const SignupBetaForm = () => {
   const { onChange, onSubmit, control, errors, isSubmitting, errorMessage } = useFormAction({
-    name: 'register',
+    name: 'beta-register',
     initialValues: {
       username: '',
       password: '',
@@ -428,3 +385,8 @@ const SignupBetaForm = () => {
     </VStack>
   )
 }
+
+const AppGlobe =
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+    ? require('./AppGlobe').default
+    : loadable(() => import('./AppGlobe'))
