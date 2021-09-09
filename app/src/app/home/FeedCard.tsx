@@ -71,6 +71,7 @@ export const FeedCard = ({
             >
               {tags.map((tag) => (
                 <TagButton
+                  noLink
                   key={tag.slug}
                   onlyIcon={tags.length > 1 && tag.type === 'lense'}
                   transparent
