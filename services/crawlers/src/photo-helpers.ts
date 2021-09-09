@@ -551,19 +551,25 @@ async function findUnassessedPhotos(photos: Partial<PhotoXref>[]): Promise<strin
     ]
   }
 
+  // nate:
   // filter and delete invalid urls here as well in case we have old urls from previous scrapes that are no longer valid
   // the other filter/delete only handles the current scrape
-  const validPhotos = (
-    await Promise.all(
-      unassessed.map(async (x) => {
-        if (await isValidPhoto(x.photo.url)) return x
-        await photoXrefDelete(x)
-        return null
-      })
-    )
-  ).filter(isPresent)
+  // tombh:
+  // but all these should be already uploaded to DO, so if a photo here is invalid, then either
+  // DO is broken or the previous validations let something slip through?
+  // so i feel like this could be removed. but it must be solving some problem, so i'll wait
+  // and see
+  // const validPhotos = (
+  //   await Promise.all(
+  //     unassessed.map(async (x) => {
+  //       if (await isValidPhoto(x.photo.url)) return x
+  //       await photoXrefDelete(x)
+  //       return null
+  //     })
+  //   )
+  // ).filter(isPresent)
 
-  return validPhotos
+  return unassessed
     .filter((p) => {
       if (!p.photo?.url) {
         console.error('findUnassessedPhotos(): Photo.url NOT NULL violation')
