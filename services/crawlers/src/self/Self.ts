@@ -349,12 +349,9 @@ export class Self extends WorkerJob {
   async findPhotosForTags() {
     const all = await this.tagging.findPhotosForTags()
     await photoUpsert(all)
-    const most_aesthetic = await bestPhotosForRestaurantTags(this.restaurant.id)
-    for (const photo_xref of most_aesthetic) {
-      const match = this.tagging.restaurant_tags.find((rt) => rt.tag_id == photo_xref.tag_id)
-      if (!match) continue
-      if (!match?.photos) match.photos = []
-      match?.photos.push(photo_xref.photo?.url)
+    for (const tag of this.tagging.restaurant_tags) {
+      const most_aesthetic = await bestPhotosForRestaurantTags(this.restaurant.id, tag.tag_id)
+      tag.photos = most_aesthetic.map((p) => p.photo.url)
     }
   }
 

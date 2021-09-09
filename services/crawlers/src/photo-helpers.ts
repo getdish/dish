@@ -363,17 +363,26 @@ export async function bestPhotosForTag(tag_id: uuid): Promise<PhotoXref[]> {
   return uniqBy(photos, (p) => p.photo_id)
 }
 
-export async function bestPhotosForRestaurantTags(restaurant_id: uuid): Promise<PhotoXref[]> {
+export async function bestPhotosForRestaurantTags(
+  restaurant_id: uuid,
+  tag_id: uuid
+): Promise<PhotoXref[]> {
   const photos = await resolvedWithFields(
     () =>
       query.photo_xref({
         where: {
-          restaurant_id: {
-            _eq: restaurant_id,
-          },
-          tag_id: {
-            _neq: ZeroUUID,
-          },
+          _and: [
+            {
+              restaurant_id: {
+                _eq: restaurant_id,
+              },
+            },
+            {
+              tag_id: {
+                _eq: tag_id,
+              },
+            },
+          ],
         },
         order_by: [
           {
