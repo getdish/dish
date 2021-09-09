@@ -35,7 +35,6 @@ export const DarkModal = ({
         zIndex={10000000000}
         alignItems="center"
         justifyContent="center"
-        paddingHorizontal={media.sm ? 0 : '2%'}
         backgroundColor="rgba(30,0,12,0.5)"
         opacity={hide ? 0 : 1}
         display={fullHide ? 'none' : 'flex'}
