@@ -283,8 +283,8 @@ const Inner = () => {
           </PaneControlButtons>
           <VStack paddingVertical={20} paddingHorizontal={20}>
             <Paragraph size="md" sizeLineHeight={0.9}>
-              <Text fontWeight="800">A better pocket guide for the world.</Text> Find great
-              playlists for the real world, earn money curating and reviewing.{' '}
+              <Text fontWeight="800">A better pocket guide to the world.</Text> Find and make
+              playlists of the real world and earn money.{' '}
               <Link name="about" fontWeight="600">
                 Learn more
               </Link>

@@ -72,10 +72,10 @@ function AppHomeContent(props: { children?: any }) {
           </Suspense>
         </ErrorBoundary>
       )}
-      {/* 
+
       <Suspense fallback={null}>
         <AppIntroLetter />
-      </Suspense> */}
+      </Suspense>
 
       <Suspense fallback={null}>
         {/*  */}
