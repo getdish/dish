@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
+  Box,
   HStack,
   Modal,
   Paragraph,
@@ -13,6 +14,7 @@ import {
   useTheme,
 } from 'snackui'
 
+import { grey } from '../../constants/colors'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { getTimeFormat } from '../../helpers/getTimeFormat'
@@ -20,6 +22,7 @@ import { getWindowHeight } from '../../helpers/getWindow'
 import { ensureFlexText } from '../home/restaurant/ensureFlexText'
 import { UserAvatar } from '../home/user/UserAvatar'
 import { CloseButton } from './CloseButton'
+import { Image } from './Image'
 import { Link } from './Link'
 import { Middot } from './Middot'
 import { PaneControlButtons } from './PaneControlButtons'
@@ -41,6 +44,7 @@ export type CommentBubbleProps = Omit<StackProps, 'children'> & {
   children?: any
   chromeless?: boolean
   hideMeta?: boolean
+  source?: string
 }
 
 export const CommentBubble = (props: CommentBubbleProps) => {
@@ -99,7 +103,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
 function CommentBubbleContents({
   title,
   name,
-  avatar,
+  avatar: avatarProp,
   ellipseContentAbove,
   bubbleHeight,
   expandable,
@@ -113,6 +117,7 @@ function CommentBubbleContents({
   onExpand,
   expanded,
   // belowContent,
+  source,
   avatarBackgroundColor,
   scrollable,
   children,
@@ -122,17 +127,6 @@ function CommentBubbleContents({
   scrollable?: boolean
 }) {
   const theme = useTheme()
-  const isTripAdvisor = name?.startsWith('tripadvisor-')
-  const isYelp = name?.startsWith('Yelp')
-  if (isTripAdvisor) {
-    name = name?.replace('tripadvisor-', '')
-  }
-  if (isYelp) {
-    name = name?.replace('yelp-', '').replace(/[_-].*/, '')
-  }
-  const circleSize = 65
-  const imageSize = circleSize * 0.6
-  const colors = getColorsForName(`${name}`)
   const canExpand = !expanded && !!expandable
 
   const contents = (
@@ -175,48 +169,78 @@ function CommentBubbleContents({
     </>
   )
 
+  const circleSize = 44
+  const extImgSize = 38
+  const charSize = 22
+  // const colors = getColorsForName(`${name}`)
+
+  const externalSource = source ? thirdPartyCrawlSources[source] : null
+  const backgroundColor = avatarBackgroundColor || grey
+  const avatar = avatarProp?.image || ''
+
   const metaContents = (
     <HStack marginTop={-10} alignItems="center" pointerEvents="auto">
       {hideMeta ? (
         <VStack flex={1} />
       ) : (
         <>
-          <VStack
-            borderRadius={100}
-            backgroundColor={
-              avatarBackgroundColor ??
-              (isYelp ? thirdPartyCrawlSources.yelp.color : colors.color200)
-            }
-          >
-            {!avatar && <User color={theme.color} size={imageSize} />}
-            {!!avatar && (
-              <UserAvatar
-                charIndex={avatar?.charIndex || 0}
-                size={imageSize}
-                avatar={
-                  isTripAdvisor
-                    ? thirdPartyCrawlSources.tripadvisor.image
-                    : isYelp
-                    ? thirdPartyCrawlSources.yelp.image
-                    : avatar?.image || ''
-                }
-              />
+          <HStack spacing="sm" alignItems="center">
+            <VStack
+              width={circleSize}
+              height={circleSize}
+              borderRadius={100}
+              backgroundColor={backgroundColor}
+              alignItems="center"
+              justifyContent="center"
+            >
+              {!avatar && <User color={theme.color} size={charSize} />}
+              {!!avatar && (
+                <UserAvatar
+                  charIndex={avatarProp?.charIndex || 0}
+                  size={circleSize}
+                  avatar={avatar}
+                />
+              )}
+            </VStack>
+            {!!externalSource && (
+              <VStack
+                shadowColor={theme.shadowColor}
+                shadowRadius={4}
+                shadowOffset={{ height: 2, width: 0 }}
+                borderRadius={1000}
+                overflow="hidden"
+                zIndex={-1}
+                position="relative"
+                width={extImgSize}
+                height={extImgSize}
+              >
+                <Image
+                  source={{ uri: externalSource.image }}
+                  style={{ width: extImgSize, height: extImgSize }}
+                />
+              </VStack>
             )}
-          </VStack>
+          </HStack>
           <Spacer size="lg" />
 
           <HStack flex={1} pointerEvents="auto" alignItems="center" spacing>
             {!!name && (
               <VStack>
-                <Link
-                  name="user"
-                  params={{ username: name }}
-                  pointerEvents="auto"
-                  fontSize={13}
-                  ellipse
-                >
-                  {name}
-                </Link>
+                {name === '_dish_external_user' ? (
+                  <Paragraph opacity={0.7} size="sm">
+                    via {externalSource?.name || '-'}
+                  </Paragraph>
+                ) : (
+                  <Link
+                    name="user"
+                    params={{ username: name }}
+                    pointerEvents="auto"
+                    fontSize={13}
+                    ellipse
+                  >
+                    {name}
+                  </Link>
+                )}
               </VStack>
             )}
 

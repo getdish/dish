@@ -1,12 +1,11 @@
 import { getUserName, graphql, review } from '@dish/graph'
 import React, { memo } from 'react'
-import { Divider, HStack, Spacer, Text, VStack } from 'snackui'
+import { HStack, Text, VStack } from 'snackui'
 
 import { CommentBubble, CommentBubbleProps } from '../../views/CommentBubble'
 import { Link } from '../../views/Link'
 import { RestaurantReviewEdit } from './RestaurantReviewEdit'
 import { ReviewTagsRow } from './ReviewTagsRow'
-import { SentimentText } from './SentimentText'
 
 export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
   listTheme?: 'modern' | 'minimal'
@@ -66,10 +65,9 @@ export const RestaurantReview = memo(
         return tagsRowEl
       }
 
+      const user = review?.user
       const name = getUserName(review?.user)
       let userName = propName ?? (hideUsername ? '' : name ?? '')
-      const isYelp = userName?.startsWith('yelp-')
-      userName = isYelp ? 'Yelp' : userName
 
       return (
         <>
@@ -94,6 +92,8 @@ export const RestaurantReview = memo(
                 image: review?.user.avatar ?? '',
                 charIndex: review?.user.charIndex || 0,
               }}
+              // @ts-ignore
+              source={review?.source}
               height={height}
               ellipseContentAbove={200}
               text={review?.text ?? ''}

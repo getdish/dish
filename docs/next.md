@@ -19,6 +19,8 @@
 
 # inbox
 
+- summary for each top reviewer place: take top X reviews and run through summarizer, then potentially secondly through gpt3 or eleuthers gpt service if they have
+
 - need to validate ratings aren't above 5, below 0
 
 - rate limit mutations

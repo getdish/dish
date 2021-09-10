@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export const useIsMountedRef = () => {
   const isMounted = useRef(true)
@@ -10,4 +10,20 @@ export const useIsMountedRef = () => {
   }, [])
 
   return isMounted
+}
+
+export const useIsMounted = (delay = 0) => {
+  const [x, setX] = useState(false)
+  useEffect(() => {
+    if (delay) {
+      const tm = setTimeout(() => {
+        setX(true)
+      }, delay)
+      return () => {
+        clearTimeout(tm)
+      }
+    }
+    setX(true)
+  }, [])
+  return x
 }

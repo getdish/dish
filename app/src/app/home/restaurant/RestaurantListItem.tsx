@@ -17,7 +17,6 @@ import {
   StackProps,
   Text,
   VStack,
-  getMedia,
   useMedia,
   useTheme,
 } from 'snackui'
@@ -25,17 +24,12 @@ import {
 import { brandColor, green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
-import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
-import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
-import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
 import { GeocodePlace } from '../../../types/homeTypes'
-import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
-import { DishView } from '../../views/dish/DishView'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
@@ -43,10 +37,7 @@ import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
-import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { getSearchPageStore } from '../search/SearchPageStore'
-import { SkewedCardCarousel } from '../SimpleCard'
-import { EditRestaurantTagsButton } from './EditRestaurantTagsButton'
 import { HoverToZoom } from './HoverToZoom'
 import { RankView } from './RankView'
 import { RestaurantAddress } from './RestaurantAddress'
@@ -54,11 +45,13 @@ import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
+import { RestaurantListItemScoreBreakdown } from './RestaurantListItemScoreBreakdown'
+import { RestaurantPeekDishes } from './RestaurantPeekDishes'
 import { useTotalReviews } from './useTotalReviews'
 
 export const ITEM_HEIGHT = 180
 
-type RestaurantListItemProps = {
+export type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
   restaurantId: string
   restaurantSlug: string
@@ -560,125 +553,6 @@ const RestaurantListItemContent = memo(
           {!shouldShowOneLine && <Spacer size={10} />}
         </VStack>
       </HoverToZoom>
-    )
-  })
-)
-
-const RestaurantListItemScoreBreakdown = memo(
-  graphql(
-    ({
-      activeTagSlugs,
-      meta,
-      restaurantSlug,
-    }: RestaurantListItemProps & { meta: RestaurantItemMeta }) => {
-      const restaurantTags = queryRestaurantTagScores({
-        restaurantSlug,
-        tagSlugs: activeTagSlugs ?? [],
-      })
-      return (
-        <VStack spacing>
-          {restaurantTags.map((rtag) => {
-            return (
-              <TagButton
-                key={rtag.slug}
-                {...getTagButtonProps(rtag)}
-                votable
-                restaurantSlug={restaurantSlug}
-              />
-            )
-          })}
-          {isWeb && process.env.NODE_ENV === 'development' && (
-            <pre style={{ color: '#777' }}>{JSON.stringify(meta ?? null, null, 2)}</pre>
-          )}
-        </VStack>
-      )
-    }
-  )
-)
-
-// dont re-render this one
-const showInitial = getMedia().xs ? 1 : getMedia().sm ? 2 : 3
-
-const RestaurantPeekDishes = memo(
-  graphql(function RestaurantPeekDishes(props: {
-    size?: 'lg' | 'md'
-    restaurantSlug: string
-    restaurantId: string
-    activeTagSlugs?: string[]
-    isLoaded: boolean
-    tagSlugs?: string[]
-    editable?: boolean
-    onChangeTags?: (slugs: string[]) => void
-  }) {
-    const { isLoaded, size = 'md' } = props
-    const restaurant = queryRestaurant(props.restaurantSlug)[0]
-    const dishes = props.tagSlugs
-      ? restaurant
-          ?.tags({
-            where: {
-              tag: {
-                slug: {
-                  _in: props.tagSlugs,
-                },
-              },
-            },
-          })
-          .map(selectRishDishViewSimple) ?? []
-      : getRestaurantDishes({
-          restaurant,
-          tagSlugs: props.activeTagSlugs,
-          max: 5,
-        })
-
-    const foundMatchingSearchedDish = props.activeTagSlugs?.includes(dishes?.[0]?.slug)
-    const dishSize = size === 'lg' ? 150 : 130
-
-    return (
-      <>
-        <HStack
-          position="relative"
-          pointerEvents="none"
-          paddingHorizontal={20}
-          paddingVertical={0}
-          // this is to pull it up near title
-          marginTop={-35}
-          x={-15}
-          alignItems="center"
-        >
-          {props.editable && (
-            <EditRestaurantTagsButton
-              restaurantSlug={props.restaurantSlug}
-              tagSlugs={props.tagSlugs ?? dishes.map((x) => x.slug)}
-              onChange={props.onChangeTags}
-            />
-          )}
-          <SkewedCardCarousel>
-            {!!dishes[0]?.name &&
-              dishes.map((dish, i) => {
-                // const isEven = i % 2 === 0
-                const baseSize = foundMatchingSearchedDish
-                  ? i == 0
-                    ? dishSize
-                    : dishSize * 0.95
-                  : dishSize
-
-                const preventLoad = !isLoaded && i > showInitial
-                return (
-                  <VStack key={dish.slug} marginRight={-2} zIndex={100 - i}>
-                    <DishView
-                      preventLoad={preventLoad}
-                      size={baseSize}
-                      restaurantSlug={props.restaurantSlug}
-                      restaurantId={props.restaurantId}
-                      {...dish}
-                      showSearchButton={!props.editable}
-                    />
-                  </VStack>
-                )
-              })}
-          </SkewedCardCarousel>
-        </HStack>
-      </>
     )
   })
 )
