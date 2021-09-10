@@ -1,12 +1,13 @@
 import React from 'react'
-import { AbsoluteHStack, Paragraph, Text, VStack, useTheme } from 'snackui'
+import { AbsoluteHStack, AbsoluteVStack, Paragraph, Text, VStack, useTheme } from 'snackui'
 
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { pluralize } from '../../helpers/pluralize'
 import { rgbString } from '../../helpers/rgb'
+import { Image } from '../views/Image'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { TagButton } from '../views/TagButton'
-import { Card, CardOverlay, CardProps } from './restaurant/Card'
+import { Card, CardOverlay, CardProps, getCardDimensions } from './restaurant/Card'
 
 export type FeedCardProps = CardProps & {
   author?: string
@@ -28,12 +29,13 @@ export const FeedCard = ({
   children,
   numItems,
   outside,
+  photo,
   theme = 'modern',
   ...cardProps
 }: FeedCardProps) => {
   const isMinimal = theme === 'minimal'
   const { chromeless, emphasizeTag, flat } = cardProps
-  const colorString = color || rgbString(tags[0]?.rgb ?? [200, 150, 150])
+  const colorString = !isMinimal ? '#fff' : color || rgbString(tags[0]?.rgb ?? [200, 150, 150])
   const longTitle = typeof title === 'string' && title.length > 15 ? true : false
 
   const fontSize = Math.round(
@@ -46,9 +48,13 @@ export const FeedCard = ({
       : size === 'sm' || size.endsWith('xs')
       ? 15
       : longTitle
-      ? 22
-      : 28
+      ? 18
+      : 24
   )
+
+  const dimensions = getCardDimensions({
+    size,
+  })
 
   return (
     <Card
@@ -60,6 +66,31 @@ export const FeedCard = ({
       outside={
         <>
           {outside}
+
+          {!!photo && (
+            <AbsoluteVStack pointerEvents="none" fullscreen overflow="hidden">
+              <AbsoluteVStack
+                className="ease-in-out hover-90-opacity-child"
+                opacity={0.1}
+                overflow="hidden"
+                fullscreen
+                zIndex={1}
+              >
+                <Image
+                  source={{ uri: photo }}
+                  style={{ width: dimensions.width, height: Math.round(dimensions.height * 1.333) }}
+                />
+              </AbsoluteVStack>
+              <AbsoluteVStack
+                zIndex={10}
+                fullscreen
+                opacity={0.5}
+                y={40}
+                className="ease-in-out hover-slide-up-child hover-90-opacity-child hover-linear-gradient-up"
+              />
+            </AbsoluteVStack>
+          )}
+
           <CardOverlay flat={chromeless || flat}>
             <AbsoluteHStack
               top={0}

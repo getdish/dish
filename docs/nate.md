@@ -1,3 +1,5 @@
+- known for: dishes/tags row
+
 - make a new auto-dish + auto-sentiment api for listpage edit
     - use it on vietnamese list, have it pull out dishes
     - show in dish row at bottom auto ratings

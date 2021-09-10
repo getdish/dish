@@ -65,6 +65,15 @@ const scales = {
 const getLongestWord = (title: string) =>
   title?.split(' ').reduce((acc, cur) => Math.max(cur.length, acc), 0) ?? 0
 
+export const getCardDimensions = (props: Partial<CardProps>) => {
+  const width = widths[props.size || 'md']
+  const height = props.square ? width : heights[props.size || 'md']
+  return {
+    width,
+    height,
+  }
+}
+
 export function Card(props: CardProps) {
   const {
     below,
@@ -93,12 +102,8 @@ export function Card(props: CardProps) {
     ? getColorsForName(colorsKey || title || '')
     : getColorsForName('')
   const isSm = size === 'sm'
-  const width = widths[size]
-  const height = cardFrameProps.square ? width : heights[size]
-  const sizes = {
-    width,
-    height,
-  }
+  const sizes = getCardDimensions(props)
+
   // const frame = {
   //   ...sizes,
   //   width: aspectFixed ? sizes.width : '100%',

@@ -29,18 +29,11 @@ export default memo(({ features }: { features: any[] }) => {
       hexPolygonsData={features}
       hexPolygonResolution={4}
       hexPolygonMargin={0.3}
-      // rendererConfig={{
-      //   antialias: false,
-      // }}
       hexPolygonColor={() =>
         `#${Math.round(Math.random() * Math.pow(2, 24))
           .toString(16)
           .padStart(6, '0')}`
       }
-      hexPolygonLabel={({ properties: d }) => `
-        <b>${d.ADMIN} (${d.ISO_A2})</b> <br />
-        Population: <i>${d.POP_EST}</i>
-      `}
     />
   )
 })

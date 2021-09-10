@@ -617,9 +617,19 @@ mark {
   opacity: 1;
 }
 
+.hover-parent:hover .hover-slide-up-child,
+.hover-parent .hover-slide-up-child:hover {
+  transform: translateY(0);
+}
+
 .hover-parent:hover .hover-75-opacity-child,
 .hover-parent .hover-75-opacity-child:hover {
   opacity: 0.75;
+}
+
+.hover-parent:hover .hover-90-opacity-child,
+.hover-parent .hover-90-opacity-child:hover {
+  opacity: 0.9;
 }
 
 .hover-parent:hover .hover-50-opacity-child,
@@ -655,4 +665,8 @@ mark {
 .mask-fade-out-to-left {
   mask-image: linear-gradient(to right, transparent 10%, black);
   -webkit-mask: linear-gradient(to right, transparent 10%, black);
+}
+
+.hover-linear-gradient-up {
+  background: linear-gradient(rgba(16,16,16,0) 0%, rgba(16,16,16,0.7), rgba(16,16,16,0.95), rgba(16,16,16,1));
 }
