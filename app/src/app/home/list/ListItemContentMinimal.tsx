@@ -188,15 +188,11 @@ export const ListItemContentMinimal = memo(
                     <Text fontSize={14} color={theme.colorTertiary}>
                       {price_range ?? '?'}
                     </Text>
-                    <Link
-                      backgroundColor="red"
-                      name="restaurantHours"
-                      params={{ slug: restaurant.slug || '' }}
-                    >
+                    <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
                       <Text fontSize={12} color={theme.colorTertiary}>
                         {open.nextTime || '~~'}
                       </Text>
-                    </Link>{' '}
+                    </Link>
                   </HStack>
                 </VStack>
               </HStack>

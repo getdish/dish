@@ -1,7 +1,12 @@
 import React from 'react'
 import { AbsoluteVStack, HStack, StackProps, VStack, useTheme } from 'snackui'
 
-import { cardFrameBorderRadius, cardFrameWidth, isWeb } from '../../constants/constants'
+import {
+  cardFrameBorderRadius,
+  cardFrameWidth,
+  cardFrameWidthSm,
+  isWeb,
+} from '../../constants/constants'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 
 type CarouselSize = 'md' | 'sm'
@@ -16,7 +21,7 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
   const theme = useTheme()
   return (
     <VStack
-      backgroundColor={theme.backgroundColor}
+      backgroundColor={theme.backgroundColorDarker}
       marginRight={size === 'sm' ? -3 : -8}
       className="disable-hover-touch ease-in-out-faster"
       borderRadius={cardFrameBorderRadius}
@@ -48,18 +53,22 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
       }}
       {...props}
     >
+      {/* was broke on larger size too */}
       {/* on native this causes laggy scrolls */}
       {isWeb && isBehind && (
         <AbsoluteVStack
           className="ease-in-out"
           zIndex={1002}
           borderRadius={cardFrameBorderRadius}
-          fullscreen
-          x={-cardFrameWidth}
+          top={-10}
+          left={0}
+          bottom={-10}
+          width={40}
+          x={-20}
           // this makes react native work...
-          backgroundColor="rgba(0,0,0,0.1)"
+          backgroundColor="red"
           shadowColor="#000"
-          shadowOpacity={0.3}
+          shadowOpacity={0.5}
           shadowRadius={20}
           shadowOffset={{ width: 10, height: 0 }}
         />

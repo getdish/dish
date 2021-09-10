@@ -53,7 +53,6 @@ export const RestaurantPhotosRowContent = memo(
         return { uri, height: photoHeight, width: photoWidth, isEscalated }
       })
       const fullWidth = photosData.reduce((a, b) => a + b.width, 0)
-      const theme = useTheme()
       // console.log('photosData', JSON.stringify(photosData, null, 2))
 
       if (!restaurant) {
@@ -104,6 +103,7 @@ export const RestaurantPhotosRowContent = memo(
                 return (
                   <PhotoCard
                     {...photoCardProps}
+                    marginRight={-width * 0.3}
                     zIndex={1000 - index}
                     isBehind={index > 0}
                     key={index}
@@ -148,7 +148,6 @@ const PhotoCard = (props: SimpleCardProps & { floating?: boolean }) => {
   return (
     <SimpleCard
       slanted
-      marginRight={-40}
       {...(props.floating && {
         borderRadius: 12,
         overflow: 'hidden',

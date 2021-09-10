@@ -91,8 +91,9 @@ export const client = createClient<GeneratedSchema>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
-  catchSelectionsTimeMS: 80,
-  normalization: false,
+  catchSelectionsTimeMS: 40,
+  // turning on fixed infinite loop on loading lily restaurantpage list items
+  normalization: true,
   retry: false,
 })
 

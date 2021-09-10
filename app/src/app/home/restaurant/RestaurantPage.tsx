@@ -28,7 +28,6 @@ import { RestaurantOverallAndTagReviews } from './RestaurantOverallAndTagReviews
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { RestaurantTagPhotos } from './RestaurantTagPhotos'
 import { useSelectedDish } from './useSelectedDish'
-import { useSnapToFullscreenOnMount } from './useSnapToFullscreenOnMount'
 
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
@@ -104,7 +103,7 @@ const RestaurantPage = memo(
         ...position,
       })
 
-      useSnapToFullscreenOnMount()
+      // useSnapToFullscreenOnMount()
 
       useEffect(() => {
         if (!scrollView) return

@@ -1,35 +1,29 @@
 - known for: dishes/tags row
-
+- fix write review
+- fix restaurant page show tag reviews on individual + Edit button
+- fix add review page
 - make a new auto-dish + auto-sentiment api for listpage edit
     - use it on vietnamese list, have it pull out dishes
     - show in dish row at bottom auto ratings
-
-- fix reviews row on restaurantpage
-- fix add review page
-
-- list making is/will be a better review form
 - design list entry as review as flexible document-db interface
-- list commenting
+- fix mobile web bugs
 - Follow people (+ follow in list page)
 - Reset password: SyntaxError: The string did not match the expected pattern.
 - auto-lists based on your votes
+    - need onboarding tutorial for this then...
 - make map work with custom point data structure instead of restaurantId (represent restaurant, OSM, other types of points)
 - import osm and integrate into playlists search
 - after autocomplete select tag, needs to clear input value of tag
 - [m] [0] (restaurantpage) tap: address, phone, website get working
-- make lists prettier (formatting esp with writing)
-- fix mobile web bugs
 - beta / invite features
 - "bring map life" project (home, then others)
-- mobile
+- list commenting
 - should we do a mobile web mode that is just flat / no drawer,
     - may actually save time in not too long run?
 
-
 ---
 
-- move react-query to react-fetch@latest
-
+- move react-query to react-fetch@latest (see use-asset)
 
 ---
 
