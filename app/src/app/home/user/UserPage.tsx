@@ -88,6 +88,11 @@ const UserPageContent = memo(
       const username = item.username
 
       const user = queryUser(username)
+
+      if (!user) {
+        return <NotFoundPage />
+      }
+
       const lists = user.lists({
         limit: 10,
         where: {

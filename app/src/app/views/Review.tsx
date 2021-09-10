@@ -83,7 +83,7 @@ export const Review = memo(
       </Text>
     )
 
-    let name = props.hideUsername ? '' : review.username ?? ''
+    let name = props.hideUsername ? '' : getUserName(review.user) ?? ''
     const isYelp = name?.startsWith('yelp-')
     name = isYelp ? 'Yelp' : name
 
@@ -107,6 +107,7 @@ export const Review = memo(
         ellipseContentAbove={200}
         text={review.text}
         name={name}
+        username={review.user?.username}
         after={
           !!review.text ? (
             <HStack width="100%" overflow="hidden" alignItems="center" maxWidth="100%">

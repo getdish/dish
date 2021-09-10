@@ -351,6 +351,7 @@ const ListPageContent = memo(
                 )}
               </>
             }
+            username={list.user?.username}
             avatar={{
               image: list.user?.avatar || '',
               charIndex: list.user?.charIndex || 0,

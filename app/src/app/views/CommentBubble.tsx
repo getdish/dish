@@ -28,8 +28,9 @@ import { Middot } from './Middot'
 import { PaneControlButtons } from './PaneControlButtons'
 
 export type CommentBubbleProps = Omit<StackProps, 'children'> & {
-  title?: any
   name: string
+  username: string | undefined | null
+  title?: any
   avatar?: { charIndex: number; image: string } | null
   text?: any
   before?: any
@@ -103,6 +104,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
 function CommentBubbleContents({
   title,
   name,
+  username,
   avatar: avatarProp,
   ellipseContentAbove,
   bubbleHeight,
@@ -128,6 +130,10 @@ function CommentBubbleContents({
 }) {
   const theme = useTheme()
   const canExpand = !expanded && !!expandable
+
+  if (name && !username) {
+    return <AbsoluteVStack fullscreen backgroundColor="pink" />
+  }
 
   const contents = (
     <>
@@ -233,7 +239,7 @@ function CommentBubbleContents({
                 ) : (
                   <Link
                     name="user"
-                    params={{ username: name }}
+                    params={{ username }}
                     pointerEvents="auto"
                     fontSize={13}
                     ellipse

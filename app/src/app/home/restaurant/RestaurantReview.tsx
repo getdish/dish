@@ -65,9 +65,8 @@ export const RestaurantReview = memo(
         return tagsRowEl
       }
 
-      const user = review?.user
       const name = getUserName(review?.user)
-      let userName = propName ?? (hideUsername ? '' : name ?? '')
+      const userName = hideUsername ? '' : propName ?? name ?? ''
 
       return (
         <>
@@ -98,6 +97,7 @@ export const RestaurantReview = memo(
               ellipseContentAbove={200}
               text={review?.text ?? ''}
               name={userName}
+              username={userName}
               after={
                 <HStack flex={1} overflow="hidden" alignItems="center" maxWidth="100%">
                   <VStack flex={1} />
