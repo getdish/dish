@@ -15,6 +15,7 @@ import {
   order_by,
   photo_constraint,
   photo_xref,
+  photo_xref_constraint,
   photo_xref_select_column,
   query,
   resolvedWithFields,
@@ -47,6 +48,9 @@ const selectBasePhotoXrefFields = {
     return v.map((p) => {
       return {
         ...selectFields(p, '*', 2),
+        photo: {
+          ...selectFields(p.photo),
+        },
       }
     })
   },
@@ -55,13 +59,22 @@ const selectBasePhotoXrefFields = {
 export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 
 export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
-  if (photosOg.length == 0) return
+  if (photosOg.length == 0) return []
   let photos = await ensureValidPhotos(normalizePhotos(photosOg))
   photos = ensurePhotosAreUniqueKeyAble(photos)
   photos = uniqBy(photos, (el) => [el.tag_id, el.restaurant_id, el.photo?.url].join())
   photos = archiveURLInOrigin(photos)
-  await photoXrefUpsert(photos)
-  await postUpsert(photos)
+  const upserted = await photoXrefUpsert(
+    photos,
+    photo_xref_constraint.photos_xref_photos_id_restaurant_id_tag_id_key,
+    selectBasePhotoXrefFields
+  )
+  const updated = await postUpsert(photos)
+  if (updated.length > 0) {
+    return updated
+  } else {
+    return upserted.map((px) => px.photo)
+  }
 }
 
 function archiveURLInOrigin(photos: Partial<PhotoXref>[]) {
@@ -142,7 +155,8 @@ function normalizePhotos(photos: Partial<PhotoXref>[]) {
 
 async function postUpsert(photos: Partial<PhotoXref>[]) {
   await uploadToDO(photos)
-  await updatePhotoQualityAndCategories(photos)
+  const updated = await updatePhotoQualityAndCategories(photos)
+  return updated
 }
 
 export async function uploadToDO(photos: Partial<PhotoXref>[]) {
@@ -161,7 +175,14 @@ export async function uploadToDO(photos: Partial<PhotoXref>[]) {
 
 export async function updatePhotoQualityAndCategories(photos: Partial<PhotoXref>[]) {
   const unassessed_photos = await findUnassessedPhotos(photos)
-  await assessNewPhotos(unassessed_photos)
+  const result = await assessNewPhotos(unassessed_photos)
+  if (!result) {
+    return unassessed_photos.map((url) => {
+      return { url }
+    })
+  } else {
+    return result
+  }
 }
 
 async function findNotUploadedRestaurantPhotos(restaurant_id: uuid): Promise<PhotoXref[]> {
@@ -407,7 +428,8 @@ async function assessNewPhotos(unassessed_photos: string[]) {
   for (const batch of chunk(unassessed_photos, IMAGE_QUALITY_API_BATCH_SIZE)) {
     assessed.push(...(await assessPhoto(batch)))
   }
-  await photoBaseUpsert(assessed, photo_constraint.photo_url_key)
+  const photos = await photoBaseUpsert(assessed, photo_constraint.photo_url_key)
+  return photos
 }
 
 async function assessPhoto(urls: string[]) {
@@ -463,7 +485,6 @@ async function assessPhotoWithoutRetries(urls: string[]) {
       categories,
     })
   }
-  console.log(res)
   return res
 }
 
@@ -696,47 +717,16 @@ export async function findHeroImage(restaurant_id: uuid) {
 }
 
 export async function uploadHeroImage(url: string, restaurant_id: uuid) {
-  const existing = await findHeroImage(restaurant_id)
-  const do_url = DO_BASE + restaurant_id
-  let shouldUpdate = false
-  if (existing) {
-    if (!existing.photo?.origin) {
-      shouldUpdate = true
-      // delete previous before insert to avoid constraint
-      await PhotoXrefQueryHelpers.delete({
-        id: existing.id,
-      })
-    } else if (existing.photo?.origin != url) {
-      shouldUpdate = true
-    }
+  const result = await photoUpsert([
+    {
+      restaurant_id,
+      tag_id: globalTagId,
+      type: 'hero',
+      photo: { url } as PhotoBase,
+    },
+  ])
+  if (!result) {
+    throw new Error("Hero image didn't upload")
   }
-  if (!existing || shouldUpdate) {
-    const failed_id = await sendToDO(url, restaurant_id)
-    if (failed_id) return
-    const existingPhoto = await PhotoBaseQueryHelpers.findOne({ url })
-    console.log('Setting new hero image', url, restaurant_id, existingPhoto)
-    const photo =
-      existingPhoto ||
-      (
-        await PhotoBaseQueryHelpers.upsert(
-          [
-            {
-              origin: url,
-              url: do_url,
-            },
-          ],
-          photo_constraint.photo_url_key
-        )
-      )?.[0]
-
-    await photoXrefUpsert([
-      {
-        restaurant_id,
-        tag_id: globalTagId,
-        type: 'hero',
-        photo_id: photo.id,
-      },
-    ])
-  }
-  return do_url
+  return result[0].url
 }

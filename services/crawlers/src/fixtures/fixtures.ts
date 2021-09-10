@@ -264,7 +264,7 @@ export const google = {
   id_from_source: 'test-google123',
   data: {
     rating: 4,
-    hero_image: '',
+    hero_image: 'https://i.imgur.com/N6YtgRI.jpeg',
     telephone: '',
     website: '',
     pricing: '',

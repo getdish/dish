@@ -761,6 +761,8 @@ export class Self extends WorkerJob {
       if (uploaded) {
         this.restaurant.image = uploaded
       }
+    } else {
+      this.log('No hero image')
     }
   }
 

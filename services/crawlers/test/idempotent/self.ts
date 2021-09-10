@@ -1,7 +1,9 @@
 import {
+  PhotoBase,
   RestaurantWithId,
   Tag,
   flushTestData,
+  globalTagId,
   restaurantFindOne,
   restaurantFindOneWithTags,
   restaurantInsert,
@@ -13,6 +15,7 @@ import {
 } from '@dish/graph'
 import { Database, hashFromURLResource, reviewFindAllForRestaurant } from '@dish/helpers-node'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
+import _ from 'lodash'
 import sinon from 'sinon'
 
 import { restaurantSaveCanonical } from '../../src/canonical-restaurant'
@@ -33,6 +36,7 @@ import {
   __uploadToDOSpaces__count,
   bestPhotosForRestaurant,
 } from '../../src/photo-helpers'
+import { photoUpsert } from '../../src/photo-helpers'
 import { deleteAllTestScrapes, scrapeInsert } from '../../src/scrape-helpers'
 import { Self } from '../../src/self/Self'
 import { restaurantFindOneWithTagsSQL } from '../../src/utils'
@@ -41,6 +45,9 @@ import { breakdown } from '../restaurant_base_breakdown'
 interface Context {
   restaurant: RestaurantWithId
 }
+
+const IMGUR1_HASH = '24ca44b8bd74d9b25aaf9916b2111fc9ac3c6dacb76522b31ca7c514e04ad2b4'
+const IMGUR2_HASH = 'f35a355a923d1f7dfbfb05654405d7b1cdb03d9a7e8fc5e9465cf2fda79bcbd5'
 
 const test = anyTest as TestInterface<Context>
 
@@ -172,6 +179,45 @@ test('Merging', async (t) => {
   await self.mergeAll(t.context.restaurant.id)
   t.is(__uploadToDOSpaces__count, 1)
   t.is(__assessNewPhotos__count, 1)
+})
+
+test('Updating hero image', async (t) => {
+  const self = new Self()
+  await self.preMerge(t.context.restaurant)
+  t.is(t.context.restaurant.image, null)
+  await self.mergeImage()
+  t.is(await hashFromURLResource(self.restaurant.image), IMGUR1_HASH)
+  self.google.data.hero_image = 'https://i.imgur.com/udwFNWI.jpeg'
+  await self.mergeImage()
+  t.is(await hashFromURLResource(self.restaurant.image), IMGUR2_HASH)
+})
+
+test('Updating hero when photo already exists', async (t) => {
+  const imgur2 = 'https://i.imgur.com/udwFNWI.jpeg'
+  const self = new Self()
+  const r1 = await Database.one_query_on_main(`
+    SELECT * FROM photo WHERE origin = '${imgur2}'
+  `)
+  t.is(r1.rows.length, 0)
+  await photoUpsert([
+    {
+      restaurant_id: t.context.restaurant.id,
+      tag_id: globalTagId,
+      photo: {
+        origin: imgur2,
+        url: imgur2,
+      } as PhotoBase,
+    },
+  ])
+
+  await self.preMerge(t.context.restaurant)
+  self.google.data.hero_image = imgur2
+  await self.mergeImage()
+  t.is(await hashFromURLResource(t.context.restaurant.image), IMGUR2_HASH)
+  const r2 = await Database.one_query_on_main(`
+    SELECT * FROM photo WHERE origin = '${imgur2}'
+  `)
+  t.is(r2.rows.length, 1)
 })
 
 test('Merging dishes', async (t) => {
