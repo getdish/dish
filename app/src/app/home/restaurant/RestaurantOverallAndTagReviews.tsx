@@ -143,7 +143,7 @@ const Content = memo(
                     >
                       <VStack position="relative" alignSelf="center">
                         <SlantedTitle
-                          marginTop={-30}
+                          marginTop={-20}
                           size="xxs"
                           paddingVertical={4}
                           paddingHorizontal={8}
@@ -152,9 +152,9 @@ const Content = memo(
                         </SlantedTitle>
                       </VStack>
 
-                      <Spacer size="md" />
+                      <Spacer size="xs" />
 
-                      <HStack flex={1}>
+                      <HStack flex={1} maxHeight="100%">
                         <VStack spacing alignItems="center">
                           <Link href={sources[name.toLowerCase()]?.url}>
                             <Image
@@ -168,12 +168,15 @@ const Content = memo(
                           </Link>
 
                           <Text
+                            letterSpacing={-1}
                             fontSize={18}
-                            fontWeight="800"
-                            color={positive > negative ? green : grey}
+                            fontWeight="700"
+                            color={theme.color}
                           >
                             {Math.round(ratio * 5 * 10) / 10}
-                            <Text fontWeight="300">/5</Text>
+                            <Text color={positive > negative ? green : grey} fontWeight="300">
+                              /5
+                            </Text>
                           </Text>
 
                           {/* <HStack spacing="xs">

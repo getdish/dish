@@ -404,14 +404,14 @@ const ListPageContent = memo(
           {/* START HEADER */}
           <Theme name={isMinimal ? 'dark' : null}>
             <VStack
-              minHeight={isMinimal ? 350 : 40}
+              minHeight={isMinimal ? 300 : 40}
               paddingHorizontal={20}
               position="relative"
               backgroundColor={`${color}11`}
             >
               {isMinimal && (
                 <>
-                  <VStack minHeight={80} flex={1} />
+                  <VStack minHeight={20} flex={1} />
 
                   <AbsoluteVStack backgroundColor="#000" zIndex={-1} fullscreen overflow="hidden">
                     <Image
@@ -425,10 +425,11 @@ const ListPageContent = memo(
                       }}
                     />
                     <LinearGradient
+                      // start={[0.1, 0]}
                       colors={[
-                        'rgba(0,0,0,1)',
+                        'rgba(20,20,20,1)',
                         // 'rgba(20,20,20,0.2)',
-                        'rgba(20,20,20,0.35)',
+                        'rgba(0,0,0,0.35)',
                       ].reverse()}
                       style={StyleSheet.absoluteFill}
                     />

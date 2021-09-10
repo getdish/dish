@@ -78,7 +78,7 @@ export const ListItemContentMinimal = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 22 : 32) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 22 : 26) * titleFontScale)
     const theme = useTheme()
     const imgSize = 100
 
@@ -177,7 +177,7 @@ export const ListItemContentMinimal = memo(
                     paddingVertical={0}
                     paddingHorizontal={20}
                     borderTopColor={theme.borderColor}
-                    borderTopWidth={1}
+                    borderTopWidth={0.5}
                     alignItems="center"
                     spacing
                   >

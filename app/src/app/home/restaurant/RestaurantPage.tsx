@@ -190,7 +190,7 @@ const RestaurantPage = memo(
                     />
                   </View>
 
-                  <VStack zIndex={0} marginHorizontal={-20} marginBottom={-20} marginTop={-10}>
+                  <VStack zIndex={0} marginHorizontal={-20} marginBottom={-20}>
                     <RestaurantOverallAndTagReviews
                       tagSlug={selectedDish}
                       borderless

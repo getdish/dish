@@ -209,6 +209,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
           console.warn(` [api] ⚠️  no function/array export, ignoring ${file}`, endpoint)
           continue
         }
+        delete handlers[name]
         handlers[name] = endpoint
         handlerStatus[name] = 'ready'
         disposes.add(() => {
