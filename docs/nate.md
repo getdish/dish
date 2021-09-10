@@ -1,3 +1,4 @@
+- list custom header image
 - known for: dishes/tags row
 - fix write review
 - fix restaurant page show tag reviews on individual + Edit button
@@ -30,3 +31,11 @@
 ideas around "what would make for really interesting data-focused articles?" eg analyzing cuisine trends over time, showing a lot of points across larger areas, and more.
 
 similary, split out other types of articles and see what overlaps
+
+---
+
+Wow demo ideas:
+
+- Favorite a few dishes like quesabirria
+- Home page now shows me all my favorite stuff nearby thats open_now by default
+- Home page shows quick links to search my favorite dishes/cuisines
