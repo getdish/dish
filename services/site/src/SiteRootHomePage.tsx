@@ -297,7 +297,6 @@ export const SiteRoot = () => {
           </DishTitleSlanted>
 
           <VStack
-            backgroundColor="red"
             marginBottom={-60}
             paddingVertical={10}
             paddingTop={60}

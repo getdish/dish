@@ -17,7 +17,7 @@ import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 
 export const AppSearchBarFloating = () => {
   const media = useMedia()
-  const { theme, themeName, background, isColored } = useSearchBarTheme()
+  const { themeName, background, isColored } = useSearchBarTheme()
   const height = searchBarHeight + 9
 
   if (media.sm) {
@@ -33,7 +33,7 @@ export const AppSearchBarFloating = () => {
   //   const newParent = parentIds[media.sm ? 'small' : 'large']
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [media.sm])
-  const barThemeName = media.sm ? theme.name : themeName
+  const barThemeName = media.sm ? null : themeName
 
   return (
     <Theme name={barThemeName}>
@@ -47,19 +47,6 @@ export const AppSearchBarFloating = () => {
         right={0}
         top={0}
       >
-        {/* under fade (only useful if actually floating so things show behind) */}
-        {/* <AbsoluteVStack
-          // doesnt fix flickering
-          // display={media.sm ? 'none' : 'flex'}
-          fullscreen
-          zIndex={-1}
-        >
-          <LinearGradient
-            style={[StyleSheet.absoluteFill]}
-            colors={[bgLightTranslucent, `rgba(255,255,255,0)`]}
-          />
-        </AbsoluteVStack> */}
-
         {/* container */}
         <AbsoluteVStack top={0} left={-20} right={-20} alignItems="center">
           {/* bg/shadows */}

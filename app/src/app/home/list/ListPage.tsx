@@ -328,9 +328,8 @@ const ListPageContent = memo(
         <VStack
           marginBottom={10}
           width="100%"
-          paddingVertical={20}
+          paddingVertical={10}
           maxWidth={media.sm ? '100%' : '80%'}
-          marginTop={-5}
           {...(!isMinimal && {
             maxWidth: Math.min(getWindowWidth(), drawerWidthMax) * 0.95,
           })}
@@ -454,7 +453,6 @@ const ListPageContent = memo(
                       </Title>
                       <Spacer size="sm" />
                       {userCommentEl}
-                      <Spacer size="sm" />
                     </VStack>
                   </HStack>
                 </>

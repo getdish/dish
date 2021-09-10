@@ -77,7 +77,7 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
       after={
         <>
           <SmallButton
-            theme="red"
+            theme="error"
             accessible
             accessibilityRole="button"
             icon={<Trash color={red} size={16} />}

@@ -281,11 +281,7 @@ export const ListItemContentModern = memo(
             </Column>
 
             <Column width={100}>
-              <Link
-                backgroundColor="red"
-                name="restaurantHours"
-                params={{ slug: restaurant.slug || '' }}
-              >
+              <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
                 <Text fontSize={12} color={theme.colorTertiary}>
                   {open.nextTime || '~~'}
                 </Text>

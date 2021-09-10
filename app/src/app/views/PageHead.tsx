@@ -4,9 +4,8 @@ import { isWeb } from '../../constants/constants'
 import { rgbString } from '../../helpers/rgb'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 
-export const PageHead = (props: { children: any; isActive: boolean }) => {
+export const PageHead = (props: { children: any; isActive: boolean; color?: any }) => {
   const lenseColor = useCurrentLenseColor()
-  const themeColor = rgbString(lenseColor.rgb, 1)
 
   if (!isWeb) {
     return null
@@ -20,7 +19,7 @@ export const PageHead = (props: { children: any; isActive: boolean }) => {
   return (
     <Helmet>
       <title>{props.children}</title>
-      <meta name="theme-color" content={themeColor} />
+      <meta name="theme-color" content={props.color || rgbString(lenseColor.rgb, 1)} />
     </Helmet>
   )
 }

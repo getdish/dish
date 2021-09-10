@@ -227,6 +227,7 @@ function CommentBubbleContents({
               </VStack>
             )}
           </HStack>
+
           <Spacer size="lg" />
 
           <HStack flex={1} pointerEvents="auto" alignItems="center" spacing>
@@ -275,7 +276,6 @@ function CommentBubbleContents({
       paddingLeft={3}
       padding={10}
       width="100%"
-      spacing
       pointerEvents="none"
     >
       {before}
