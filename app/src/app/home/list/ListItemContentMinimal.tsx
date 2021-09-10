@@ -1,10 +1,8 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, listFindOne } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
-import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import {
-  AbsoluteVStack,
   Circle,
   HStack,
   InteractiveContainer,
@@ -16,10 +14,9 @@ import {
   useTheme,
 } from 'snackui'
 
-import { brandColor, green, red } from '../../../constants/colors'
+import { green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
-import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { getUserReviewQueryMutations } from '../../hooks/useUserReview'
 import { Image } from '../../views/Image'
@@ -31,17 +28,25 @@ import { RestaurantAddress } from '../restaurant/RestaurantAddress'
 import { RestaurantDeliveryButtons } from '../restaurant/RestaurantDeliveryButtons'
 import { openingHours, priceRange } from '../restaurant/RestaurantDetailRow'
 import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton'
+import { RestaurantOverallAndTagReviews } from '../restaurant/RestaurantOverallAndTagReviews'
 import { RestaurantPhotosRow } from '../restaurant/RestaurantPhotosRow'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
 import { RestaurantRatingView } from '../RestaurantRatingView'
-import { getSearchPageStore } from '../search/SearchPageStore'
-import { Column } from './Column'
-import { ListItemContentProps, ListItemProps } from './ListItem'
+import { ListItemContentProps } from './ListItemProps'
 
 export const ListItemContentMinimal = memo(
   graphql((props: ListItemContentProps) => {
-    const { rank, restaurant, editable, reviewQuery, isEditing, setIsEditing, onUpdate } = props
+    const {
+      rank,
+      restaurant,
+      editable,
+      reviewQuery,
+      isEditing,
+      setIsEditing,
+      onUpdate,
+      isExternalReview,
+    } = props
     const review = reviewQuery?.[0]
     const reviewMutations = getUserReviewQueryMutations({
       restaurantId: restaurant?.id,
@@ -84,7 +89,7 @@ export const ListItemContentMinimal = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug}>
         <HStack
-          paddingVertical={30}
+          paddingVertical={20}
           paddingHorizontal={20}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
@@ -168,7 +173,8 @@ export const ListItemContentMinimal = memo(
                   </HStack>
 
                   <HStack
-                    paddingVertical={5}
+                    marginTop={-3}
+                    paddingVertical={0}
                     paddingHorizontal={20}
                     borderTopColor={theme.borderColor}
                     borderTopWidth={1}
@@ -205,19 +211,27 @@ export const ListItemContentMinimal = memo(
               >
                 {/* ROW: OVERVIEW */}
                 <VStack
-                  maxWidth={media.sm ? '100%' : '80%'}
+                  maxWidth={media.sm ? '100%' : '100%'}
                   justifyContent="center"
                   flex={1}
                   position="relative"
                 >
                   <Suspense fallback={null}>
+                    {!review && (
+                      <RestaurantOverallAndTagReviews
+                        borderless
+                        showScoreTable
+                        id={restaurant.slug || ''}
+                        restaurant={restaurant}
+                      />
+                    )}
                     <RestaurantReview
                       hideTagsRow
                       expandable={false}
                       ellipseContentAbove={Infinity}
                       listTheme="minimal"
                       isEditing={isEditing}
-                      hideMeta
+                      hideMeta={!isExternalReview}
                       onEdit={async (text) => {
                         if (review) {
                           review.text = text
@@ -258,7 +272,7 @@ export const ListItemContentMinimal = memo(
               </HStack>
               {/* END CONTENT ROW */}
 
-              <Spacer />
+              <Spacer size="xs" />
 
               <HStack alignItems="center" spacing="lg">
                 <InteractiveContainer>
@@ -303,13 +317,16 @@ export const ListItemContentMinimal = memo(
               </HStack>
             </VStack>
 
-            <RestaurantPhotosRow
-              restaurant={restaurant}
-              spacing="md"
-              floating
-              width={170}
-              height={180}
-            />
+            <VStack x={-40}>
+              <RestaurantPhotosRow
+                restaurant={restaurant}
+                // spacing="md"
+                floating
+                width={230}
+                max={2}
+                height={290}
+              />
+            </VStack>
           </HStack>
         </HStack>
       </HoverToZoom>

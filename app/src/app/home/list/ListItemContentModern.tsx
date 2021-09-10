@@ -36,7 +36,7 @@ import { useTotalReviews } from '../restaurant/useTotalReviews'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { getSearchPageStore } from '../search/SearchPageStore'
 import { Column } from './Column'
-import { ListItemContentProps, ListItemProps } from './ListItem'
+import { ListItemContentProps, ListItemProps } from './ListItemProps'
 
 export const ListItemContentModern = memo(
   graphql((props: ListItemContentProps) => {

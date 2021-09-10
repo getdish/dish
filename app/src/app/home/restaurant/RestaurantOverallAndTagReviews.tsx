@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph'
+import { graphql, restaurant } from '@dish/graph'
 import { ellipseText, isPresent } from '@dish/helpers'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
@@ -37,20 +37,20 @@ export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
 type Props = {
   title?: string
   tagSlug?: string | null
-  restaurantId: string
-  restaurantSlug: string
+  id: string
+  restaurant: restaurant | undefined
   closable?: boolean
   showScoreTable?: boolean
   borderless?: boolean
 }
 
-const height = 210
-const scrollHeight = height - 40
+const height = 140
+const scrollHeight = height
 const itemHeight = scrollHeight - 20
 
 export const RestaurantOverallAndTagReviews = (props: Props) => {
   return (
-    <VStack height={height + 40}>
+    <VStack height={height}>
       <Suspense fallback={null}>
         <Content {...props} />
       </Suspense>
@@ -59,179 +59,179 @@ export const RestaurantOverallAndTagReviews = (props: Props) => {
 }
 
 const Content = memo(
-  graphql(
-    ({ tagSlug, restaurantId, restaurantSlug, closable, borderless, showScoreTable }: Props) => {
-      const [restaurant] = queryRestaurant(restaurantSlug)
-      if (!restaurant) {
-        return null
-      }
-      const tag = tagSlug
-        ? restaurant.tags({
-            where: {
-              tag: {
-                slug: {
-                  _eq: tagSlug,
-                },
+  graphql(({ tagSlug, restaurant, id, closable, borderless, showScoreTable }: Props) => {
+    if (!restaurant) {
+      return null
+    }
+    const tag = tagSlug
+      ? restaurant.tags({
+          where: {
+            tag: {
+              slug: {
+                _eq: tagSlug,
               },
             },
-          })[0]
-        : null
-      const tagName = tag?.tag?.displayName ?? tag?.tag?.name ?? null
-      const store = useStore(RestaurantReviewsDisplayStore, {
-        id: restaurantId,
-      })
-      const spacing = 12
-      const theme = useTheme()
-      const sources = restaurant.sources ?? {}
-      const items = (
-        (tagName
-          ? getTagSourceBreakdowns(
-              restaurant.tags({
-                where: {
-                  tag: {
-                    name: {
-                      _ilike: tagName,
-                    },
+          },
+        })[0]
+      : null
+    const tagName = tag?.tag?.displayName ?? tag?.tag?.name ?? null
+    const store = useStore(RestaurantReviewsDisplayStore, {
+      id,
+    })
+    const spacing = 12
+    const theme = useTheme()
+    const sources = restaurant.sources ?? {}
+    const items = (
+      (tagName
+        ? getTagSourceBreakdowns(
+            restaurant.tags({
+              where: {
+                tag: {
+                  name: {
+                    _ilike: tagName,
                   },
                 },
-              })[0]?.source_breakdown
-            )
-          : getSourceBreakdowns(restaurant.source_breakdown?.sources)) ?? []
-      ).filter(isPresent)
+              },
+            })[0]?.source_breakdown
+          )
+        : getSourceBreakdowns(restaurant.source_breakdown?.sources)) ?? []
+    ).filter(isPresent)
 
-      return (
-        <VStack maxWidth="100%" width="100%" height="100%" position="relative">
-          {closable && (
-            <AbsoluteVStack zIndex={1000} top={10} right={10}>
-              <CloseButton onPress={store.toggleShowComments} />
-            </AbsoluteVStack>
-          )}
+    return (
+      <VStack maxWidth="100%" width="100%" height={scrollHeight} position="relative">
+        {closable && (
+          <AbsoluteVStack zIndex={1000} top={10} right={10}>
+            <CloseButton onPress={store.toggleShowComments} />
+          </AbsoluteVStack>
+        )}
 
-          {/* <SlantedTitle fontSize={12} marginBottom={-30} alignSelf="center" size="sm">
+        {/* <SlantedTitle fontSize={12} marginBottom={-30} alignSelf="center" size="sm">
             {tagName ?? 'Overall'}
           </SlantedTitle> */}
 
-          <VStack
-            minWidth={260}
-            // maxWidth={drawerWidthMax / 2 - 40}
-            flex={2}
-            overflow="hidden"
-            paddingHorizontal={10}
-            paddingVertical={20}
-            alignItems="center"
-            justifyContent="center"
-            spacing={10}
-          >
-            <ContentScrollViewHorizontal height={scrollHeight}>
-              <HStack paddingHorizontal={20}>
-                {items.map(({ name, sentence, image, positive, negative }) => {
-                  const ratio = positive / (Math.abs(negative) + positive)
-                  return (
-                    <VStack key={name} margin="auto">
-                      <VStack
-                        margin={spacing}
-                        shadowColor="#000"
-                        shadowOpacity={0.05}
-                        backgroundColor={theme.cardBackgroundColor}
-                        width={400}
-                        height={itemHeight}
-                        shadowRadius={15}
-                        shadowOffset={{ height: 3, width: 0 }}
-                        padding={20}
-                        alignSelf="center"
-                        borderRadius={10}
-                        position="relative"
-                        flex={1}
-                      >
-                        <VStack position="relative" alignSelf="center">
-                          <SlantedTitle marginTop={-30} size="xs">
-                            {name}
-                          </SlantedTitle>
+        <VStack
+          minWidth={260}
+          // maxWidth={drawerWidthMax / 2 - 40}
+          flex={2}
+          overflow="hidden"
+          paddingHorizontal={10}
+          paddingVertical={20}
+          alignItems="center"
+          justifyContent="center"
+          spacing={10}
+        >
+          <ContentScrollViewHorizontal height={scrollHeight}>
+            <HStack paddingHorizontal={20}>
+              {items.map(({ name, sentence, image, positive, negative }) => {
+                const ratio = positive / (Math.abs(negative) + positive)
+                return (
+                  <VStack key={name} margin="auto">
+                    <VStack
+                      margin={spacing / 2}
+                      shadowColor="#000"
+                      shadowOpacity={0.05}
+                      backgroundColor={theme.cardBackgroundColor}
+                      width={290}
+                      height={itemHeight}
+                      shadowRadius={15}
+                      shadowOffset={{ height: 3, width: 0 }}
+                      padding={16}
+                      alignSelf="center"
+                      borderRadius={10}
+                      position="relative"
+                      flex={1}
+                    >
+                      <VStack position="relative" alignSelf="center">
+                        <SlantedTitle
+                          marginTop={-30}
+                          size="xxs"
+                          paddingVertical={4}
+                          paddingHorizontal={8}
+                        >
+                          {name}
+                        </SlantedTitle>
+                      </VStack>
+
+                      <Spacer size="md" />
+
+                      <HStack flex={1}>
+                        <VStack spacing alignItems="center">
+                          <Link href={sources[name.toLowerCase()]?.url}>
+                            <Image
+                              source={{ uri: image }}
+                              style={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: 100,
+                              }}
+                            />
+                          </Link>
+
+                          <Text
+                            fontSize={18}
+                            fontWeight="800"
+                            color={positive > negative ? green : grey}
+                          >
+                            {Math.round(ratio * 5 * 10) / 10}
+                            <Text fontWeight="300">/5</Text>
+                          </Text>
+
+                          {/* <HStack spacing="xs">
+                            <SentimentText sentiment={1}>
+                              {numberFormat(positive || 0, 'sm')}
+                            </SentimentText>
+                            <SentimentText sentiment={-1}>
+                              {numberFormat(Math.abs(negative || 0), 'sm')}
+                            </SentimentText>
+                          </HStack> */}
                         </VStack>
 
-                        <Spacer size="lg" />
+                        <Spacer size="md" />
 
-                        <HStack>
-                          <VStack marginTop={-18} spacing alignItems="center">
-                            <Link href={sources[name.toLowerCase()]?.url}>
-                              <Image
-                                source={{ uri: image }}
-                                style={{
-                                  width: 32,
-                                  height: 32,
-                                  borderRadius: 100,
+                        <VStack overflow="hidden" position="relative" flex={1} maxWidth="100%">
+                          <Paragraph
+                            sizeLineHeight={0.9}
+                            size="sm"
+                            maxHeight="100%"
+                            overflow="hidden"
+                          >
+                            {!!tagName && isWeb && sentence ? (
+                              <div
+                                className="block"
+                                dangerouslySetInnerHTML={{
+                                  __html:
+                                    `<b>${tagName}</b> -` +
+                                      sentence
+                                        ?.replace(/\s+/g, ' ')
+                                        .replace(
+                                          new RegExp(tagName, 'gi'),
+                                          (match) => `<mark>${match}</mark>`
+                                        ) ?? '',
                                 }}
                               />
-                            </Link>
+                            ) : (
+                              sentence
+                            )}
+                          </Paragraph>
 
-                            <Text
-                              fontSize={30}
-                              fontWeight="800"
-                              color={positive > negative ? green : grey}
-                              letterSpacing={-1}
-                            >
-                              {Math.round(ratio * 100)}%
-                            </Text>
-
-                            <HStack spacing="xs">
-                              <SentimentText sentiment={1}>
-                                {numberFormat(positive || 0, 'sm')}
-                              </SentimentText>
-                              <SentimentText sentiment={-1}>
-                                {numberFormat(Math.abs(negative || 0), 'sm')}
-                              </SentimentText>
-                            </HStack>
-                          </VStack>
-
-                          <Spacer size="lg" />
-
-                          <VStack overflow="hidden" position="relative" flex={1} maxWidth="100%">
-                            <Paragraph
-                              sizeLineHeight={0.9}
-                              maxHeight={height - 100}
-                              overflow="hidden"
-                            >
-                              {!!tagName && isWeb && sentence ? (
-                                <div
-                                  className="block"
-                                  dangerouslySetInnerHTML={{
-                                    __html:
-                                      `<b>${tagName}</b> -` +
-                                        sentence
-                                          ?.replace(/\s+/g, ' ')
-                                          .replace(
-                                            new RegExp(tagName, 'gi'),
-                                            (match) => `<mark>${match}</mark>`
-                                          ) ?? '',
-                                  }}
-                                />
-                              ) : (
-                                sentence
-                              )}
-                            </Paragraph>
-
-                            <AbsoluteVStack zIndex={10} bottom={0} left={0} height={50} right={0}>
-                              <LinearGradient
-                                colors={[
-                                  `${theme.cardBackgroundColor}00`,
-                                  theme.cardBackgroundColor,
-                                ]}
-                                style={StyleSheet.absoluteFill}
-                              />
-                            </AbsoluteVStack>
-                          </VStack>
-                        </HStack>
-                      </VStack>
+                          <AbsoluteVStack zIndex={10} bottom={0} left={0} height={50} right={0}>
+                            <LinearGradient
+                              colors={[`${theme.cardBackgroundColor}00`, theme.cardBackgroundColor]}
+                              style={StyleSheet.absoluteFill}
+                            />
+                          </AbsoluteVStack>
+                        </VStack>
+                      </HStack>
                     </VStack>
-                  )
-                })}
-              </HStack>
-            </ContentScrollViewHorizontal>
-          </VStack>
+                  </VStack>
+                )
+              })}
+            </HStack>
+          </ContentScrollViewHorizontal>
         </VStack>
-      )
-    }
-  )
+      </VStack>
+    )
+  })
 )
 
 type RatingCount = {

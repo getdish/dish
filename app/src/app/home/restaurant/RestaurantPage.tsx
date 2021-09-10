@@ -195,8 +195,8 @@ const RestaurantPage = memo(
                       tagSlug={selectedDish}
                       borderless
                       showScoreTable
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurant.id}
+                      id={restaurantSlug}
+                      restaurant={restaurant}
                     />
                   </VStack>
 

@@ -1,29 +1,9 @@
-import { graphql, refetch, restaurant, review } from '@dish/graph'
-import React, { useState } from 'react'
+import { graphql, order_by, refetch } from '@dish/graph'
+import { useState } from 'react'
 
 import { ListItemContentMinimal } from './ListItemContentMinimal'
 import { ListItemContentModern } from './ListItemContentModern'
-
-export type ListItemProps = {
-  listTheme?: 'modern' | 'minimal'
-  reviewQuery?: review[] | null
-  username?: string
-  restaurant: restaurant
-  listSlug?: string
-  hideRate?: boolean
-  rank: number
-  activeTagSlugs?: string[]
-  onFinishRender?: Function
-  editable?: boolean
-  hideTagRow?: boolean
-  above?: any
-}
-
-export type ListItemContentProps = ListItemProps & {
-  onUpdate: Function
-  isEditing: boolean
-  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
-}
+import { ListItemProps } from './ListItemProps'
 
 export const ListItem = graphql((props: ListItemProps) => {
   const [isEditing, setIsEditing] = useState(false)
@@ -78,17 +58,26 @@ export const ListItem = graphql((props: ListItemProps) => {
     limit: 1,
   })
 
-  // const topReview = isEditing
-  //   ? null
-  //   : props.restaurant.reviews({
-  //       where: {
-  //         text: {
-  //           _neq: '',
+  // const topReview = props.restaurant.reviews({
+  //   where: {
+  //     text: {
+  //       _neq: '',
+  //     },
+  //     source: {
+  //       _neq: null,
+  //     },
+  //   },
+  //   limit: 1,
+  //   order_by: [
+  //     {
+  //       sentiments_aggregate: {
+  //         avg: {
+  //           ml_sentiment: order_by.desc,
   //         },
   //       },
-  //       limit: 1,
-  //       order_by: [{ vote: order_by.desc }],
-  //     })
+  //     },
+  //   ],
+  // })
 
   const hasListReview = !!listReview?.[0]?.text
   const hasUserReview = !!userReview?.[0]?.text
@@ -107,6 +96,9 @@ export const ListItem = graphql((props: ListItemProps) => {
   if (hasUserReview) {
     return <Element {...listItemContentProps} reviewQuery={userReview} />
   }
+  // if (topReview) {
+  //   return <Element {...listItemContentProps} reviewQuery={topReview} isExternalReview />
+  // }
   if (isLoading) {
     return (
       <>

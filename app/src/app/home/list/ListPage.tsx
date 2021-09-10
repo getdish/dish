@@ -1,4 +1,4 @@
-import { series } from '@dish/async'
+import { series, sleep } from '@dish/async'
 import {
   List,
   getUserName,
@@ -40,10 +40,12 @@ import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { getWindowHeight, getWindowWidth } from '../../../helpers/getWindow'
+import { useIsMounted } from '../../../helpers/useIsMountedRef'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
 import { homeStore, useHomeStateById } from '../../homeStore'
+import { useAsyncEffect } from '../../hooks/useAsync'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
@@ -168,6 +170,7 @@ const FallbackListItem = () => {
     </VStack>
   )
 }
+
 const ListPageContent = memo(
   graphql(
     (props: Props) => {
@@ -183,14 +186,29 @@ const ListPageContent = memo(
       })
       const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999999')
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
-      const { items: restaurants, ...listActions } = useListRestaurants(list)
-
+      const { items, ...listActions } = useListRestaurants(list)
+      const [isLoaded, setIsLoaded] = useState(false)
+      // only show first ones to load images faster on initial load
+      const restaurants = items.slice(0, isLoaded ? 100 : 2)
       const region = useRegionQuery(props.item.region)
-
       const listThemeIndex = list.theme ?? 0
       const forceUpdate = useForceUpdate()
       const listTheme = listThemeIndex === 0 ? listThemes[0] : listThemes[1]
       const listSlug = props.item.slug
+
+      const isRestaurantLoaded = !!restaurants[0]?.id
+
+      useAsyncEffect(
+        async (mounted) => {
+          if (isRestaurantLoaded) {
+            // let images load roughly
+            await sleep(500)
+            if (!mounted()) return
+            setIsLoaded(true)
+          }
+        },
+        [isRestaurantLoaded]
+      )
 
       const setTheme = async (val: number) => {
         list.theme = val
@@ -276,7 +294,7 @@ const ListPageContent = memo(
           width="auto"
           textAlign="center"
           {...(listTheme === 'minimal' && {
-            fontSize: 60,
+            fontSize: 30,
             fontWeight: '400',
             width: '100%',
             textAlign: 'left',
@@ -309,6 +327,7 @@ const ListPageContent = memo(
       const userCommentEl = (isEditing || list.description) && (
         <VStack
           marginBottom={10}
+          width="100%"
           paddingVertical={20}
           maxWidth={media.sm ? '100%' : '80%'}
           marginTop={-5}
@@ -407,7 +426,7 @@ const ListPageContent = memo(
                     />
                     <LinearGradient
                       colors={[
-                        'rgba(0,0,0,0.8)',
+                        'rgba(0,0,0,1)',
                         // 'rgba(20,20,20,0.2)',
                         'rgba(20,20,20,0.35)',
                       ].reverse()}
@@ -425,6 +444,9 @@ const ListPageContent = memo(
                         size="xxl"
                         sizeLineHeight={0.76}
                         fontWeight="700"
+                        {...(isEditing && {
+                          width: '100%',
+                        })}
                       >
                         {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
                       </Title>
@@ -501,7 +523,16 @@ const ListPageContent = memo(
                   )}
 
                   {isEditing && (
-                    <HStack alignItems="center" flexWrap="wrap" spacing="xxl">
+                    <HStack
+                      backgroundColor={theme.backgroundColor}
+                      padding={5}
+                      paddingHorizontal={20}
+                      borderRadius={100}
+                      elevation={1}
+                      alignItems="center"
+                      flexWrap="wrap"
+                      spacing="xxl"
+                    >
                       <Paragraph>Color:</Paragraph>
                       <ColorPicker colors={listColors} color={color} onChange={setColor} />
                       <InteractiveContainer alignItems="center">
