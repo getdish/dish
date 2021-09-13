@@ -19,7 +19,8 @@ function psql_main() {
     -d "$POSTGRES_DB" \
     -U "$POSTGRES_USER" \
     -p "$POSTGRES_PORT" \
-    -h "$POSTGRES_HOST"
+    -h "$POSTGRES_HOST" \
+    "$@"
 }
 
 function psql_timescale() {
@@ -62,6 +63,10 @@ function migrate_hasura() {
   if ! [ -x "$(command -v hasura)" ]; then
     curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v1.3.3 bash
   fi
+
+  # ensure hasura v2 "default" database in postgres
+  dsh psql_main -c "SELECT 1 FROM pg_database WHERE datname = 'default'" | grep -q 1 || dsh psql_main -c "CREATE DATABASE default"
+
   echo "hasura version"
   hasura version
   echo "POSTGRES_DB $POSTGRES_DB"
