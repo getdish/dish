@@ -18,7 +18,7 @@ import { green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { numberFormat } from '../../../helpers/numberFormat'
-import { getUserReviewQueryMutations } from '../../hooks/useUserReview'
+import { useUserReviewQueryMutations } from '../../hooks/useUserReview'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
@@ -48,7 +48,7 @@ export const ListItemContentMinimal = memo(
       isExternalReview,
     } = props
     const review = reviewQuery?.[0]
-    const reviewMutations = getUserReviewQueryMutations({
+    const reviewMutations = useUserReviewQueryMutations({
       restaurantId: restaurant?.id,
       reviewQuery,
     })

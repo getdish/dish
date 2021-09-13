@@ -99,8 +99,8 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
             }}
             marginVertical={10}
             onPress={() => {
-              onEdit?.(reviewText)
               setIsSaved(true)
+              onEdit?.(reviewText)
             }}
           >
             Save

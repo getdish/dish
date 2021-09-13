@@ -2,12 +2,12 @@ import { graphql, query } from '@dish/graph'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
-import { LoadingItems, Modal, Text, VStack } from 'snackui'
+import { LoadingItems, Modal, Text, Toast, VStack } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemReview } from '../../../types/homeTypes'
 import { homeStore, useIsHomeTypeActive } from '../../homeStore'
-import { useUserReviewQuery } from '../../hooks/useUserReview'
+import { useUserReviewQuery, useUserReviewQueryMutations } from '../../hooks/useUserReview'
 import { useUserStore } from '../../userStore'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SmallTitle } from '../../views/SmallTitle'
@@ -24,7 +24,7 @@ function RestaurantReviewPageContent() {
   const store = useStoreInstance(homeStore)
   const state = store.getLastStateByType('restaurantReview')
   return (
-    <Modal width="98%" maxWidth={700} visible>
+    <Modal width="98%" maxWidth={720} visible>
       <PaneControlButtons>
         <StackViewCloseButton />
       </PaneControlButtons>
@@ -39,7 +39,9 @@ function RestaurantReviewPageContent() {
         }}
       >
         <Suspense fallback={<LoadingItems />}>
-          <HomePageReviewContent state={state} />
+          <VStack padding={20}>
+            <HomePageReviewContent state={state} />
+          </VStack>
         </Suspense>
       </ScrollView>
     </Modal>
@@ -57,7 +59,12 @@ const HomePageReviewContent = memo(
       )
     }
     const [restaurant] = queryRestaurant(state.restaurantSlug)
-    const [review] = user?.name ? useUserReviewQuery(state.restaurantSlug) : []
+    const reviewQuery = user?.name ? useUserReviewQuery(state.restaurantSlug) : []
+    let [review] = reviewQuery
+    const reviewMutations = useUserReviewQueryMutations({
+      restaurantId: restaurant?.id,
+      reviewQuery,
+    })
 
     if (!restaurant) {
       return null
@@ -67,7 +74,22 @@ const HomePageReviewContent = memo(
       <VStack width="100%" maxWidth="100%" flex={1}>
         <SmallTitle fontWeight="600">{restaurant.name}</SmallTitle>
         <Suspense fallback={<LoadingItems />}>
-          <RestaurantReviewEdit review={review} restaurantSlug={state.restaurantSlug} />
+          <RestaurantReviewEdit
+            review={review}
+            restaurantSlug={state.restaurantSlug}
+            onEdit={(text) => {
+              if (!restaurant || !user) return
+              if (!review) {
+                review = {
+                  restaurant_id: restaurant.id,
+                  user_id: user.id,
+                } as any
+              }
+              review.text = text
+              reviewMutations.upsertReview(review)
+              Toast.show('Saved review')
+            }}
+          />
         </Suspense>
       </VStack>
     )

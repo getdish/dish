@@ -49,7 +49,7 @@ export const RestaurantReview = memo(
       } = props
 
       if (isEditing) {
-        return <RestaurantReviewEdit {...props} onEdit={onEdit} onDelete={onDelete} />
+        return <RestaurantReviewEdit {...props} />
       }
 
       const tagsRowEl = (

@@ -61,22 +61,28 @@ export const useCurrentUserQuery = () => {
 }
 
 export const useUserReviewQuery = (restaurantSlug: string) => {
-  return query.review({
-    where: {
-      text: {
-        _neq: '',
-      },
-      restaurant: {
-        slug: {
-          _eq: restaurantSlug,
+  const user = useUserStore().user
+  return user
+    ? query.review({
+        where: {
+          text: {
+            _neq: '',
+          },
+          restaurant: {
+            slug: {
+              _eq: restaurantSlug,
+            },
+          },
+          user_id: {
+            _eq: user.id,
+          },
         },
-      },
-    },
-    limit: 1,
-  })
+        limit: 1,
+      })
+    : []
 }
 
-export const getUserReviewQueryMutations = ({
+export const useUserReviewQueryMutations = ({
   restaurantId,
   reviewQuery,
 }: {
@@ -117,7 +123,7 @@ export const getUserReviewQueryMutations = ({
   }
 }
 
-export async function upsertUserReview(review: Partial<review>, reviewQuery: any) {
+export async function upsertUserReview(review: Partial<review>, reviewQuery?: any) {
   const result = await upsertUserReviewFn({
     type: review.type || 'comment',
     id: review.id,
