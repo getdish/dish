@@ -360,12 +360,12 @@ export interface list_bool_exp {
   description?: Maybe<String_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
   image?: Maybe<String_comparison_exp>
-  list_restaurant_tags?: Maybe<list_restaurant_tag_bool_exp>
-  list_restaurants?: Maybe<list_restaurant_bool_exp>
+  list_reviews?: Maybe<review_bool_exp>
   location?: Maybe<geometry_comparison_exp>
   name?: Maybe<String_comparison_exp>
   public?: Maybe<Boolean_comparison_exp>
   region?: Maybe<String_comparison_exp>
+  restaurants?: Maybe<list_restaurant_bool_exp>
   slug?: Maybe<String_comparison_exp>
   tags?: Maybe<list_tag_bool_exp>
   theme?: Maybe<Int_comparison_exp>
@@ -395,12 +395,12 @@ export interface list_insert_input {
   description?: Maybe<Scalars['String']>
   id?: Maybe<Scalars['uuid']>
   image?: Maybe<Scalars['String']>
-  list_restaurant_tags?: Maybe<list_restaurant_tag_arr_rel_insert_input>
-  list_restaurants?: Maybe<list_restaurant_arr_rel_insert_input>
+  list_reviews?: Maybe<review_arr_rel_insert_input>
   location?: Maybe<Scalars['geometry']>
   name?: Maybe<Scalars['String']>
   public?: Maybe<Scalars['Boolean']>
   region?: Maybe<Scalars['String']>
+  restaurants?: Maybe<list_restaurant_arr_rel_insert_input>
   slug?: Maybe<Scalars['String']>
   tags?: Maybe<list_tag_arr_rel_insert_input>
   theme?: Maybe<Scalars['Int']>
@@ -459,12 +459,12 @@ export interface list_order_by {
   description?: Maybe<order_by>
   id?: Maybe<order_by>
   image?: Maybe<order_by>
-  list_restaurant_tags_aggregate?: Maybe<list_restaurant_tag_aggregate_order_by>
-  list_restaurants_aggregate?: Maybe<list_restaurant_aggregate_order_by>
+  list_reviews_aggregate?: Maybe<review_aggregate_order_by>
   location?: Maybe<order_by>
   name?: Maybe<order_by>
   public?: Maybe<order_by>
   region?: Maybe<order_by>
+  restaurants_aggregate?: Maybe<list_restaurant_aggregate_order_by>
   slug?: Maybe<order_by>
   tags_aggregate?: Maybe<list_tag_aggregate_order_by>
   theme?: Maybe<order_by>
@@ -476,6 +476,10 @@ export interface list_order_by {
 /** primary key columns input for table: "list" */
 export interface list_pk_columns_input {
   id: Scalars['uuid']
+}
+
+export interface list_populated_args {
+  min_items?: Maybe<Scalars['Int']>
 }
 
 /** order by aggregate values of table "list_restaurant" */
@@ -513,10 +517,12 @@ export interface list_restaurant_bool_exp {
   id?: Maybe<uuid_comparison_exp>
   list?: Maybe<list_bool_exp>
   list_id?: Maybe<uuid_comparison_exp>
-  list_restaurant_tags?: Maybe<list_restaurant_tag_bool_exp>
   position?: Maybe<Int_comparison_exp>
   restaurant?: Maybe<restaurant_bool_exp>
   restaurant_id?: Maybe<uuid_comparison_exp>
+  restaurants?: Maybe<restaurant_bool_exp>
+  tags?: Maybe<list_restaurant_tag_bool_exp>
+  user?: Maybe<user_bool_exp>
   user_id?: Maybe<uuid_comparison_exp>
 }
 
@@ -541,10 +547,12 @@ export interface list_restaurant_insert_input {
   id?: Maybe<Scalars['uuid']>
   list?: Maybe<list_obj_rel_insert_input>
   list_id?: Maybe<Scalars['uuid']>
-  list_restaurant_tags?: Maybe<list_restaurant_tag_arr_rel_insert_input>
   position?: Maybe<Scalars['Int']>
   restaurant?: Maybe<restaurant_obj_rel_insert_input>
   restaurant_id?: Maybe<Scalars['uuid']>
+  restaurants?: Maybe<restaurant_arr_rel_insert_input>
+  tags?: Maybe<list_restaurant_tag_arr_rel_insert_input>
+  user?: Maybe<user_obj_rel_insert_input>
   user_id?: Maybe<Scalars['uuid']>
 }
 
@@ -587,10 +595,12 @@ export interface list_restaurant_order_by {
   id?: Maybe<order_by>
   list?: Maybe<list_order_by>
   list_id?: Maybe<order_by>
-  list_restaurant_tags_aggregate?: Maybe<list_restaurant_tag_aggregate_order_by>
   position?: Maybe<order_by>
   restaurant?: Maybe<restaurant_order_by>
   restaurant_id?: Maybe<order_by>
+  restaurants_aggregate?: Maybe<restaurant_aggregate_order_by>
+  tags_aggregate?: Maybe<list_restaurant_tag_aggregate_order_by>
+  user?: Maybe<user_order_by>
   user_id?: Maybe<order_by>
 }
 
@@ -678,13 +688,11 @@ export interface list_restaurant_tag_bool_exp {
   _not?: Maybe<list_restaurant_tag_bool_exp>
   _or?: Maybe<Array<Maybe<list_restaurant_tag_bool_exp>>>
   id?: Maybe<uuid_comparison_exp>
-  list?: Maybe<list_bool_exp>
   list_id?: Maybe<uuid_comparison_exp>
-  list_restaurant?: Maybe<list_restaurant_bool_exp>
   list_restaurant_id?: Maybe<uuid_comparison_exp>
   position?: Maybe<Int_comparison_exp>
+  restaurant_tag?: Maybe<restaurant_tag_bool_exp>
   restaurant_tag_id?: Maybe<uuid_comparison_exp>
-  tag?: Maybe<tag_bool_exp>
   user_id?: Maybe<uuid_comparison_exp>
 }
 
@@ -708,13 +716,11 @@ export interface list_restaurant_tag_inc_input {
 /** input type for inserting data into table "list_restaurant_tag" */
 export interface list_restaurant_tag_insert_input {
   id?: Maybe<Scalars['uuid']>
-  list?: Maybe<list_obj_rel_insert_input>
   list_id?: Maybe<Scalars['uuid']>
-  list_restaurant?: Maybe<list_restaurant_obj_rel_insert_input>
   list_restaurant_id?: Maybe<Scalars['uuid']>
   position?: Maybe<Scalars['Int']>
+  restaurant_tag?: Maybe<restaurant_tag_obj_rel_insert_input>
   restaurant_tag_id?: Maybe<Scalars['uuid']>
-  tag?: Maybe<tag_obj_rel_insert_input>
   user_id?: Maybe<Scalars['uuid']>
 }
 
@@ -754,13 +760,11 @@ export interface list_restaurant_tag_on_conflict {
 /** ordering options when selecting data from "list_restaurant_tag" */
 export interface list_restaurant_tag_order_by {
   id?: Maybe<order_by>
-  list?: Maybe<list_order_by>
   list_id?: Maybe<order_by>
-  list_restaurant?: Maybe<list_restaurant_order_by>
   list_restaurant_id?: Maybe<order_by>
   position?: Maybe<order_by>
+  restaurant_tag?: Maybe<restaurant_tag_order_by>
   restaurant_tag_id?: Maybe<order_by>
-  tag?: Maybe<tag_order_by>
   user_id?: Maybe<order_by>
 }
 
@@ -968,7 +972,9 @@ export interface list_tag_bool_exp {
   _or?: Maybe<Array<Maybe<list_tag_bool_exp>>>
   created_at?: Maybe<timestamptz_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
+  list?: Maybe<list_bool_exp>
   list_id?: Maybe<uuid_comparison_exp>
+  tag?: Maybe<tag_bool_exp>
   tag_id?: Maybe<uuid_comparison_exp>
 }
 
@@ -984,7 +990,9 @@ export enum list_tag_constraint {
 export interface list_tag_insert_input {
   created_at?: Maybe<Scalars['timestamptz']>
   id?: Maybe<Scalars['uuid']>
+  list?: Maybe<list_obj_rel_insert_input>
   list_id?: Maybe<Scalars['uuid']>
+  tag?: Maybe<tag_obj_rel_insert_input>
   tag_id?: Maybe<Scalars['uuid']>
 }
 
@@ -1021,7 +1029,9 @@ export interface list_tag_on_conflict {
 export interface list_tag_order_by {
   created_at?: Maybe<order_by>
   id?: Maybe<order_by>
+  list?: Maybe<list_order_by>
   list_id?: Maybe<order_by>
+  tag?: Maybe<tag_order_by>
   tag_id?: Maybe<order_by>
 }
 
@@ -2023,11 +2033,13 @@ export interface restaurant_bool_exp {
   id?: Maybe<uuid_comparison_exp>
   image?: Maybe<String_comparison_exp>
   is_out_of_business?: Maybe<Boolean_comparison_exp>
+  lists?: Maybe<list_restaurant_bool_exp>
   location?: Maybe<geometry_comparison_exp>
   menu_items?: Maybe<menu_item_bool_exp>
   name?: Maybe<String_comparison_exp>
   og_source_ids?: Maybe<jsonb_comparison_exp>
   oldest_review_date?: Maybe<timestamptz_comparison_exp>
+  photo_table?: Maybe<photo_xref_bool_exp>
   photos?: Maybe<jsonb_comparison_exp>
   price_range?: Maybe<String_comparison_exp>
   rating?: Maybe<numeric_comparison_exp>
@@ -2128,11 +2140,13 @@ export interface restaurant_insert_input {
   id?: Maybe<Scalars['uuid']>
   image?: Maybe<Scalars['String']>
   is_out_of_business?: Maybe<Scalars['Boolean']>
+  lists?: Maybe<list_restaurant_arr_rel_insert_input>
   location?: Maybe<Scalars['geometry']>
   menu_items?: Maybe<menu_item_arr_rel_insert_input>
   name?: Maybe<Scalars['String']>
   og_source_ids?: Maybe<Scalars['jsonb']>
   oldest_review_date?: Maybe<Scalars['timestamptz']>
+  photo_table?: Maybe<photo_xref_arr_rel_insert_input>
   photos?: Maybe<Scalars['jsonb']>
   price_range?: Maybe<Scalars['String']>
   rating?: Maybe<Scalars['numeric']>
@@ -2208,6 +2222,10 @@ export interface restaurant_min_order_by {
   zip?: Maybe<order_by>
 }
 
+export interface restaurant_new_args {
+  region_slug?: Maybe<Scalars['String']>
+}
+
 /** input type for inserting object relation for remote table "restaurant" */
 export interface restaurant_obj_rel_insert_input {
   data: restaurant_insert_input
@@ -2234,11 +2252,13 @@ export interface restaurant_order_by {
   id?: Maybe<order_by>
   image?: Maybe<order_by>
   is_out_of_business?: Maybe<order_by>
+  lists_aggregate?: Maybe<list_restaurant_aggregate_order_by>
   location?: Maybe<order_by>
   menu_items_aggregate?: Maybe<menu_item_aggregate_order_by>
   name?: Maybe<order_by>
   og_source_ids?: Maybe<order_by>
   oldest_review_date?: Maybe<order_by>
+  photo_table_aggregate?: Maybe<photo_xref_aggregate_order_by>
   photos?: Maybe<order_by>
   price_range?: Maybe<order_by>
   rating?: Maybe<order_by>
@@ -2791,6 +2811,10 @@ export interface restaurant_top_tags_args {
   tag_slugs?: Maybe<Scalars['String']>
 }
 
+export interface restaurant_trending_args {
+  region_slug?: Maybe<Scalars['String']>
+}
+
 /** update columns of table "restaurant" */
 export enum restaurant_update_column {
   /** column name */
@@ -2893,6 +2917,10 @@ export interface restaurant_variance_order_by {
   zip?: Maybe<order_by>
 }
 
+export interface restaurant_with_tags_args {
+  tag_slugs?: Maybe<Scalars['String']>
+}
+
 /** order by aggregate values of table "review" */
 export interface review_aggregate_order_by {
   avg?: Maybe<review_avg_order_by>
@@ -2934,12 +2962,14 @@ export interface review_bool_exp {
   categories?: Maybe<jsonb_comparison_exp>
   favorited?: Maybe<Boolean_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
+  list?: Maybe<list_bool_exp>
   list_id?: Maybe<uuid_comparison_exp>
   location?: Maybe<geometry_comparison_exp>
   native_data_unique_key?: Maybe<String_comparison_exp>
   rating?: Maybe<numeric_comparison_exp>
   restaurant?: Maybe<restaurant_bool_exp>
   restaurant_id?: Maybe<uuid_comparison_exp>
+  reviews?: Maybe<review_bool_exp>
   sentiments?: Maybe<review_tag_sentence_bool_exp>
   source?: Maybe<String_comparison_exp>
   tag?: Maybe<tag_bool_exp>
@@ -2996,12 +3026,14 @@ export interface review_insert_input {
   categories?: Maybe<Scalars['jsonb']>
   favorited?: Maybe<Scalars['Boolean']>
   id?: Maybe<Scalars['uuid']>
+  list?: Maybe<list_obj_rel_insert_input>
   list_id?: Maybe<Scalars['uuid']>
   location?: Maybe<Scalars['geometry']>
   native_data_unique_key?: Maybe<Scalars['String']>
   rating?: Maybe<Scalars['numeric']>
   restaurant?: Maybe<restaurant_obj_rel_insert_input>
   restaurant_id?: Maybe<Scalars['uuid']>
+  reviews?: Maybe<review_arr_rel_insert_input>
   sentiments?: Maybe<review_tag_sentence_arr_rel_insert_input>
   source?: Maybe<Scalars['String']>
   tag?: Maybe<tag_obj_rel_insert_input>
@@ -3070,12 +3102,14 @@ export interface review_order_by {
   categories?: Maybe<order_by>
   favorited?: Maybe<order_by>
   id?: Maybe<order_by>
+  list?: Maybe<list_order_by>
   list_id?: Maybe<order_by>
   location?: Maybe<order_by>
   native_data_unique_key?: Maybe<order_by>
   rating?: Maybe<order_by>
   restaurant?: Maybe<restaurant_order_by>
   restaurant_id?: Maybe<order_by>
+  reviews_aggregate?: Maybe<review_aggregate_order_by>
   sentiments_aggregate?: Maybe<review_tag_sentence_aggregate_order_by>
   source?: Maybe<order_by>
   tag?: Maybe<tag_order_by>
@@ -3667,6 +3701,7 @@ export interface tag_bool_exp {
   parentId?: Maybe<uuid_comparison_exp>
   popularity?: Maybe<Int_comparison_exp>
   restaurant_taxonomies?: Maybe<restaurant_tag_bool_exp>
+  reviews?: Maybe<review_bool_exp>
   rgb?: Maybe<jsonb_comparison_exp>
   slug?: Maybe<String_comparison_exp>
   type?: Maybe<String_comparison_exp>
@@ -3738,6 +3773,7 @@ export interface tag_insert_input {
   parentId?: Maybe<Scalars['uuid']>
   popularity?: Maybe<Scalars['Int']>
   restaurant_taxonomies?: Maybe<restaurant_tag_arr_rel_insert_input>
+  reviews?: Maybe<review_arr_rel_insert_input>
   rgb?: Maybe<Scalars['jsonb']>
   slug?: Maybe<Scalars['String']>
   type?: Maybe<Scalars['String']>
@@ -3813,6 +3849,7 @@ export interface tag_order_by {
   parentId?: Maybe<order_by>
   popularity?: Maybe<order_by>
   restaurant_taxonomies_aggregate?: Maybe<restaurant_tag_aggregate_order_by>
+  reviews_aggregate?: Maybe<review_aggregate_order_by>
   rgb?: Maybe<order_by>
   slug?: Maybe<order_by>
   type?: Maybe<order_by>
@@ -4155,6 +4192,7 @@ export interface user_bool_exp {
   email?: Maybe<String_comparison_exp>
   has_onboarded?: Maybe<Boolean_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
+  lists?: Maybe<list_bool_exp>
   location?: Maybe<String_comparison_exp>
   name?: Maybe<String_comparison_exp>
   password?: Maybe<String_comparison_exp>
@@ -4194,6 +4232,7 @@ export interface user_insert_input {
   email?: Maybe<Scalars['String']>
   has_onboarded?: Maybe<Scalars['Boolean']>
   id?: Maybe<Scalars['uuid']>
+  lists?: Maybe<list_arr_rel_insert_input>
   location?: Maybe<Scalars['String']>
   name?: Maybe<Scalars['String']>
   password?: Maybe<Scalars['String']>
@@ -4275,6 +4314,7 @@ export interface user_order_by {
   email?: Maybe<order_by>
   has_onboarded?: Maybe<order_by>
   id?: Maybe<order_by>
+  lists_aggregate?: Maybe<list_aggregate_order_by>
   location?: Maybe<order_by>
   name?: Maybe<order_by>
   password?: Maybe<order_by>
@@ -4758,6 +4798,28 @@ export const generatedSchema = {
       },
     },
     list_by_pk: { __type: 'list', __args: { id: 'uuid!' } },
+    list_populated: {
+      __type: '[list!]!',
+      __args: {
+        args: 'list_populated_args!',
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
+    list_populated_aggregate: {
+      __type: 'list_aggregate!',
+      __args: {
+        args: 'list_populated_args!',
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
     list_restaurant: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -4950,6 +5012,28 @@ export const generatedSchema = {
       },
     },
     restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
+    restaurant_new: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_new_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_new_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_new_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
     restaurant_tag: {
       __type: '[restaurant_tag!]!',
       __args: {
@@ -4973,6 +5057,72 @@ export const generatedSchema = {
     restaurant_tag_by_pk: {
       __type: 'restaurant_tag',
       __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
+    },
+    restaurant_top_tags: {
+      __type: '[restaurant_tag!]!',
+      __args: {
+        args: 'restaurant_top_tags_args!',
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_top_tags_aggregate: {
+      __type: 'restaurant_tag_aggregate!',
+      __args: {
+        args: 'restaurant_top_tags_args!',
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_trending: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_trending_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_trending_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_trending_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_with_tags: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_with_tags_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_with_tags_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_with_tags_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
     },
     review: {
       __type: '[review!]!',
@@ -5732,6 +5882,28 @@ export const generatedSchema = {
       },
     },
     list_by_pk: { __type: 'list', __args: { id: 'uuid!' } },
+    list_populated: {
+      __type: '[list!]!',
+      __args: {
+        args: 'list_populated_args!',
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
+    list_populated_aggregate: {
+      __type: 'list_aggregate!',
+      __args: {
+        args: 'list_populated_args!',
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
     list_restaurant: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -5924,6 +6096,28 @@ export const generatedSchema = {
       },
     },
     restaurant_by_pk: { __type: 'restaurant', __args: { id: 'uuid!' } },
+    restaurant_new: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_new_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_new_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_new_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
     restaurant_tag: {
       __type: '[restaurant_tag!]!',
       __args: {
@@ -5947,6 +6141,72 @@ export const generatedSchema = {
     restaurant_tag_by_pk: {
       __type: 'restaurant_tag',
       __args: { restaurant_id: 'uuid!', tag_id: 'uuid!' },
+    },
+    restaurant_top_tags: {
+      __type: '[restaurant_tag!]!',
+      __args: {
+        args: 'restaurant_top_tags_args!',
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_top_tags_aggregate: {
+      __type: 'restaurant_tag_aggregate!',
+      __args: {
+        args: 'restaurant_top_tags_args!',
+        distinct_on: '[restaurant_tag_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_tag_order_by!]',
+        where: 'restaurant_tag_bool_exp',
+      },
+    },
+    restaurant_trending: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_trending_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_trending_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_trending_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_with_tags: {
+      __type: '[restaurant!]!',
+      __args: {
+        args: 'restaurant_with_tags_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurant_with_tags_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        args: 'restaurant_with_tags_args!',
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
     },
     review: {
       __type: '[review!]!',
@@ -6327,27 +6587,31 @@ export const generatedSchema = {
     description: { __type: 'String' },
     id: { __type: 'uuid!' },
     image: { __type: 'String' },
-    list_restaurant_tags: {
-      __type: '[list_restaurant_tag!]!',
+    list_reviews: {
+      __type: '[review!]!',
       __args: {
-        distinct_on: '[list_restaurant_tag_select_column!]',
+        distinct_on: '[review_select_column!]',
         limit: 'Int',
         offset: 'Int',
-        order_by: '[list_restaurant_tag_order_by!]',
-        where: 'list_restaurant_tag_bool_exp',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
       },
     },
-    list_restaurant_tags_aggregate: {
-      __type: 'list_restaurant_tag_aggregate!',
+    list_reviews_aggregate: {
+      __type: 'review_aggregate!',
       __args: {
-        distinct_on: '[list_restaurant_tag_select_column!]',
+        distinct_on: '[review_select_column!]',
         limit: 'Int',
         offset: 'Int',
-        order_by: '[list_restaurant_tag_order_by!]',
-        where: 'list_restaurant_tag_bool_exp',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
       },
     },
-    list_restaurants: {
+    location: { __type: 'geometry' },
+    name: { __type: 'String!' },
+    public: { __type: 'Boolean!' },
+    region: { __type: 'String' },
+    restaurants: {
       __type: '[list_restaurant!]!',
       __args: {
         distinct_on: '[list_restaurant_select_column!]',
@@ -6357,7 +6621,7 @@ export const generatedSchema = {
         where: 'list_restaurant_bool_exp',
       },
     },
-    list_restaurants_aggregate: {
+    restaurants_aggregate: {
       __type: 'list_restaurant_aggregate!',
       __args: {
         distinct_on: '[list_restaurant_select_column!]',
@@ -6367,10 +6631,6 @@ export const generatedSchema = {
         where: 'list_restaurant_bool_exp',
       },
     },
-    location: { __type: 'geometry' },
-    name: { __type: 'String!' },
-    public: { __type: 'Boolean!' },
-    region: { __type: 'String' },
     slug: { __type: 'String!' },
     tags: {
       __type: '[list_tag!]!',
@@ -6448,12 +6708,12 @@ export const generatedSchema = {
     description: { __type: 'String_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
     image: { __type: 'String_comparison_exp' },
-    list_restaurant_tags: { __type: 'list_restaurant_tag_bool_exp' },
-    list_restaurants: { __type: 'list_restaurant_bool_exp' },
+    list_reviews: { __type: 'review_bool_exp' },
     location: { __type: 'geometry_comparison_exp' },
     name: { __type: 'String_comparison_exp' },
     public: { __type: 'Boolean_comparison_exp' },
     region: { __type: 'String_comparison_exp' },
+    restaurants: { __type: 'list_restaurant_bool_exp' },
     slug: { __type: 'String_comparison_exp' },
     tags: { __type: 'list_tag_bool_exp' },
     theme: { __type: 'Int_comparison_exp' },
@@ -6468,12 +6728,12 @@ export const generatedSchema = {
     description: { __type: 'String' },
     id: { __type: 'uuid' },
     image: { __type: 'String' },
-    list_restaurant_tags: { __type: 'list_restaurant_tag_arr_rel_insert_input' },
-    list_restaurants: { __type: 'list_restaurant_arr_rel_insert_input' },
+    list_reviews: { __type: 'review_arr_rel_insert_input' },
     location: { __type: 'geometry' },
     name: { __type: 'String' },
     public: { __type: 'Boolean' },
     region: { __type: 'String' },
+    restaurants: { __type: 'list_restaurant_arr_rel_insert_input' },
     slug: { __type: 'String' },
     tags: { __type: 'list_tag_arr_rel_insert_input' },
     theme: { __type: 'Int' },
@@ -6555,12 +6815,12 @@ export const generatedSchema = {
     description: { __type: 'order_by' },
     id: { __type: 'order_by' },
     image: { __type: 'order_by' },
-    list_restaurant_tags_aggregate: { __type: 'list_restaurant_tag_aggregate_order_by' },
-    list_restaurants_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
+    list_reviews_aggregate: { __type: 'review_aggregate_order_by' },
     location: { __type: 'order_by' },
     name: { __type: 'order_by' },
     public: { __type: 'order_by' },
     region: { __type: 'order_by' },
+    restaurants_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
     slug: { __type: 'order_by' },
     tags_aggregate: { __type: 'list_tag_aggregate_order_by' },
     theme: { __type: 'order_by' },
@@ -6569,13 +6829,37 @@ export const generatedSchema = {
     user_id: { __type: 'order_by' },
   },
   list_pk_columns_input: { id: { __type: 'uuid!' } },
+  list_populated_args: { min_items: { __type: 'Int' } },
   list_restaurant: {
     __typename: { __type: 'String!' },
     comment: { __type: 'String' },
     id: { __type: 'uuid!' },
     list: { __type: 'list!' },
     list_id: { __type: 'uuid!' },
-    list_restaurant_tags: {
+    position: { __type: 'Int' },
+    restaurant: { __type: 'restaurant!' },
+    restaurant_id: { __type: 'uuid!' },
+    restaurants: {
+      __type: '[restaurant!]!',
+      __args: {
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    restaurants_aggregate: {
+      __type: 'restaurant_aggregate!',
+      __args: {
+        distinct_on: '[restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[restaurant_order_by!]',
+        where: 'restaurant_bool_exp',
+      },
+    },
+    tags: {
       __type: '[list_restaurant_tag!]!',
       __args: {
         distinct_on: '[list_restaurant_tag_select_column!]',
@@ -6585,7 +6869,7 @@ export const generatedSchema = {
         where: 'list_restaurant_tag_bool_exp',
       },
     },
-    list_restaurant_tags_aggregate: {
+    tags_aggregate: {
       __type: 'list_restaurant_tag_aggregate!',
       __args: {
         distinct_on: '[list_restaurant_tag_select_column!]',
@@ -6595,9 +6879,7 @@ export const generatedSchema = {
         where: 'list_restaurant_tag_bool_exp',
       },
     },
-    position: { __type: 'Int' },
-    restaurant: { __type: 'restaurant!' },
-    restaurant_id: { __type: 'uuid!' },
+    user: { __type: 'user!' },
     user_id: { __type: 'uuid!' },
   },
   list_restaurant_aggregate: {
@@ -6649,10 +6931,12 @@ export const generatedSchema = {
     id: { __type: 'uuid_comparison_exp' },
     list: { __type: 'list_bool_exp' },
     list_id: { __type: 'uuid_comparison_exp' },
-    list_restaurant_tags: { __type: 'list_restaurant_tag_bool_exp' },
     position: { __type: 'Int_comparison_exp' },
     restaurant: { __type: 'restaurant_bool_exp' },
     restaurant_id: { __type: 'uuid_comparison_exp' },
+    restaurants: { __type: 'restaurant_bool_exp' },
+    tags: { __type: 'list_restaurant_tag_bool_exp' },
+    user: { __type: 'user_bool_exp' },
     user_id: { __type: 'uuid_comparison_exp' },
   },
   list_restaurant_inc_input: { position: { __type: 'Int' } },
@@ -6661,10 +6945,12 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     list: { __type: 'list_obj_rel_insert_input' },
     list_id: { __type: 'uuid' },
-    list_restaurant_tags: { __type: 'list_restaurant_tag_arr_rel_insert_input' },
     position: { __type: 'Int' },
     restaurant: { __type: 'restaurant_obj_rel_insert_input' },
     restaurant_id: { __type: 'uuid' },
+    restaurants: { __type: 'restaurant_arr_rel_insert_input' },
+    tags: { __type: 'list_restaurant_tag_arr_rel_insert_input' },
+    user: { __type: 'user_obj_rel_insert_input' },
     user_id: { __type: 'uuid' },
   },
   list_restaurant_max_fields: {
@@ -6720,10 +7006,12 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     list: { __type: 'list_order_by' },
     list_id: { __type: 'order_by' },
-    list_restaurant_tags_aggregate: { __type: 'list_restaurant_tag_aggregate_order_by' },
     position: { __type: 'order_by' },
     restaurant: { __type: 'restaurant_order_by' },
     restaurant_id: { __type: 'order_by' },
+    restaurants_aggregate: { __type: 'restaurant_aggregate_order_by' },
+    tags_aggregate: { __type: 'list_restaurant_tag_aggregate_order_by' },
+    user: { __type: 'user_order_by' },
     user_id: { __type: 'order_by' },
   },
   list_restaurant_pk_columns_input: {
@@ -6758,13 +7046,11 @@ export const generatedSchema = {
   list_restaurant_tag: {
     __typename: { __type: 'String!' },
     id: { __type: 'uuid!' },
-    list: { __type: 'list!' },
     list_id: { __type: 'uuid!' },
-    list_restaurant: { __type: 'list_restaurant!' },
     list_restaurant_id: { __type: 'uuid!' },
     position: { __type: 'Int!' },
+    restaurant_tag: { __type: 'restaurant_tag' },
     restaurant_tag_id: { __type: 'uuid!' },
-    tag: { __type: 'tag!' },
     user_id: { __type: 'uuid!' },
   },
   list_restaurant_tag_aggregate: {
@@ -6816,25 +7102,21 @@ export const generatedSchema = {
     _not: { __type: 'list_restaurant_tag_bool_exp' },
     _or: { __type: '[list_restaurant_tag_bool_exp]' },
     id: { __type: 'uuid_comparison_exp' },
-    list: { __type: 'list_bool_exp' },
     list_id: { __type: 'uuid_comparison_exp' },
-    list_restaurant: { __type: 'list_restaurant_bool_exp' },
     list_restaurant_id: { __type: 'uuid_comparison_exp' },
     position: { __type: 'Int_comparison_exp' },
+    restaurant_tag: { __type: 'restaurant_tag_bool_exp' },
     restaurant_tag_id: { __type: 'uuid_comparison_exp' },
-    tag: { __type: 'tag_bool_exp' },
     user_id: { __type: 'uuid_comparison_exp' },
   },
   list_restaurant_tag_inc_input: { position: { __type: 'Int' } },
   list_restaurant_tag_insert_input: {
     id: { __type: 'uuid' },
-    list: { __type: 'list_obj_rel_insert_input' },
     list_id: { __type: 'uuid' },
-    list_restaurant: { __type: 'list_restaurant_obj_rel_insert_input' },
     list_restaurant_id: { __type: 'uuid' },
     position: { __type: 'Int' },
+    restaurant_tag: { __type: 'restaurant_tag_obj_rel_insert_input' },
     restaurant_tag_id: { __type: 'uuid' },
-    tag: { __type: 'tag_obj_rel_insert_input' },
     user_id: { __type: 'uuid' },
   },
   list_restaurant_tag_max_fields: {
@@ -6887,13 +7169,11 @@ export const generatedSchema = {
   },
   list_restaurant_tag_order_by: {
     id: { __type: 'order_by' },
-    list: { __type: 'list_order_by' },
     list_id: { __type: 'order_by' },
-    list_restaurant: { __type: 'list_restaurant_order_by' },
     list_restaurant_id: { __type: 'order_by' },
     position: { __type: 'order_by' },
+    restaurant_tag: { __type: 'restaurant_tag_order_by' },
     restaurant_tag_id: { __type: 'order_by' },
-    tag: { __type: 'tag_order_by' },
     user_id: { __type: 'order_by' },
   },
   list_restaurant_tag_pk_columns_input: { id: { __type: 'uuid!' } },
@@ -6998,7 +7278,9 @@ export const generatedSchema = {
     __typename: { __type: 'String!' },
     created_at: { __type: 'timestamptz!' },
     id: { __type: 'uuid!' },
+    list: { __type: 'list' },
     list_id: { __type: 'uuid!' },
+    tag: { __type: 'tag' },
     tag_id: { __type: 'uuid!' },
   },
   list_tag_aggregate: {
@@ -7027,13 +7309,17 @@ export const generatedSchema = {
     _or: { __type: '[list_tag_bool_exp]' },
     created_at: { __type: 'timestamptz_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
+    list: { __type: 'list_bool_exp' },
     list_id: { __type: 'uuid_comparison_exp' },
+    tag: { __type: 'tag_bool_exp' },
     tag_id: { __type: 'uuid_comparison_exp' },
   },
   list_tag_insert_input: {
     created_at: { __type: 'timestamptz' },
     id: { __type: 'uuid' },
+    list: { __type: 'list_obj_rel_insert_input' },
     list_id: { __type: 'uuid' },
+    tag: { __type: 'tag_obj_rel_insert_input' },
     tag_id: { __type: 'uuid' },
   },
   list_tag_max_fields: {
@@ -7079,7 +7365,9 @@ export const generatedSchema = {
   list_tag_order_by: {
     created_at: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    list: { __type: 'list_order_by' },
     list_id: { __type: 'order_by' },
+    tag: { __type: 'tag_order_by' },
     tag_id: { __type: 'order_by' },
   },
   list_tag_pk_columns_input: { id: { __type: 'uuid!' } },
@@ -7776,6 +8064,26 @@ export const generatedSchema = {
     image: { __type: 'String' },
     is_open_now: { __type: 'Boolean' },
     is_out_of_business: { __type: 'Boolean' },
+    lists: {
+      __type: '[list_restaurant!]!',
+      __args: {
+        distinct_on: '[list_restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_order_by!]',
+        where: 'list_restaurant_bool_exp',
+      },
+    },
+    lists_aggregate: {
+      __type: 'list_restaurant_aggregate!',
+      __args: {
+        distinct_on: '[list_restaurant_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_restaurant_order_by!]',
+        where: 'list_restaurant_bool_exp',
+      },
+    },
     location: { __type: 'geometry!' },
     menu_items: {
       __type: '[menu_item!]!',
@@ -7800,6 +8108,26 @@ export const generatedSchema = {
     name: { __type: 'String!' },
     og_source_ids: { __type: 'jsonb' },
     oldest_review_date: { __type: 'timestamptz' },
+    photo_table: {
+      __type: '[photo_xref!]!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
+    photo_table_aggregate: {
+      __type: 'photo_xref_aggregate!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
     photos: { __type: 'jsonb' },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -7954,11 +8282,13 @@ export const generatedSchema = {
     id: { __type: 'uuid_comparison_exp' },
     image: { __type: 'String_comparison_exp' },
     is_out_of_business: { __type: 'Boolean_comparison_exp' },
+    lists: { __type: 'list_restaurant_bool_exp' },
     location: { __type: 'geometry_comparison_exp' },
     menu_items: { __type: 'menu_item_bool_exp' },
     name: { __type: 'String_comparison_exp' },
     og_source_ids: { __type: 'jsonb_comparison_exp' },
     oldest_review_date: { __type: 'timestamptz_comparison_exp' },
+    photo_table: { __type: 'photo_xref_bool_exp' },
     photos: { __type: 'jsonb_comparison_exp' },
     price_range: { __type: 'String_comparison_exp' },
     rating: { __type: 'numeric_comparison_exp' },
@@ -8037,11 +8367,13 @@ export const generatedSchema = {
     id: { __type: 'uuid' },
     image: { __type: 'String' },
     is_out_of_business: { __type: 'Boolean' },
+    lists: { __type: 'list_restaurant_arr_rel_insert_input' },
     location: { __type: 'geometry' },
     menu_items: { __type: 'menu_item_arr_rel_insert_input' },
     name: { __type: 'String' },
     og_source_ids: { __type: 'jsonb' },
     oldest_review_date: { __type: 'timestamptz' },
+    photo_table: { __type: 'photo_xref_arr_rel_insert_input' },
     photos: { __type: 'jsonb' },
     price_range: { __type: 'String' },
     rating: { __type: 'numeric' },
@@ -8167,6 +8499,7 @@ export const generatedSchema = {
     affected_rows: { __type: 'Int!' },
     returning: { __type: '[restaurant!]!' },
   },
+  restaurant_new_args: { region_slug: { __type: 'String' } },
   restaurant_obj_rel_insert_input: {
     data: { __type: 'restaurant_insert_input!' },
     on_conflict: { __type: 'restaurant_on_conflict' },
@@ -8188,11 +8521,13 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     image: { __type: 'order_by' },
     is_out_of_business: { __type: 'order_by' },
+    lists_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
     location: { __type: 'order_by' },
     menu_items_aggregate: { __type: 'menu_item_aggregate_order_by' },
     name: { __type: 'order_by' },
     og_source_ids: { __type: 'order_by' },
     oldest_review_date: { __type: 'order_by' },
+    photo_table_aggregate: { __type: 'photo_xref_aggregate_order_by' },
     photos: { __type: 'order_by' },
     price_range: { __type: 'order_by' },
     rating: { __type: 'order_by' },
@@ -8759,6 +9094,7 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
   },
   restaurant_top_tags_args: { _tag_types: { __type: 'String' }, tag_slugs: { __type: 'String' } },
+  restaurant_trending_args: { region_slug: { __type: 'String' } },
   restaurant_var_pop_fields: {
     __typename: { __type: 'String!' },
     downvotes: { __type: 'Float' },
@@ -8810,18 +9146,40 @@ export const generatedSchema = {
     votes_ratio: { __type: 'order_by' },
     zip: { __type: 'order_by' },
   },
+  restaurant_with_tags_args: { tag_slugs: { __type: 'String' } },
   review: {
     __typename: { __type: 'String!' },
     authored_at: { __type: 'timestamptz!' },
     categories: { __type: 'jsonb' },
     favorited: { __type: 'Boolean' },
     id: { __type: 'uuid!' },
+    list: { __type: 'list' },
     list_id: { __type: 'uuid' },
     location: { __type: 'geometry' },
     native_data_unique_key: { __type: 'String' },
     rating: { __type: 'numeric' },
     restaurant: { __type: 'restaurant' },
     restaurant_id: { __type: 'uuid' },
+    reviews: {
+      __type: '[review!]!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
+    reviews_aggregate: {
+      __type: 'review_aggregate!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
     sentiments: {
       __type: '[review_tag_sentence!]!',
       __args: {
@@ -8904,12 +9262,14 @@ export const generatedSchema = {
     categories: { __type: 'jsonb_comparison_exp' },
     favorited: { __type: 'Boolean_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
+    list: { __type: 'list_bool_exp' },
     list_id: { __type: 'uuid_comparison_exp' },
     location: { __type: 'geometry_comparison_exp' },
     native_data_unique_key: { __type: 'String_comparison_exp' },
     rating: { __type: 'numeric_comparison_exp' },
     restaurant: { __type: 'restaurant_bool_exp' },
     restaurant_id: { __type: 'uuid_comparison_exp' },
+    reviews: { __type: 'review_bool_exp' },
     sentiments: { __type: 'review_tag_sentence_bool_exp' },
     source: { __type: 'String_comparison_exp' },
     tag: { __type: 'tag_bool_exp' },
@@ -8931,12 +9291,14 @@ export const generatedSchema = {
     categories: { __type: 'jsonb' },
     favorited: { __type: 'Boolean' },
     id: { __type: 'uuid' },
+    list: { __type: 'list_obj_rel_insert_input' },
     list_id: { __type: 'uuid' },
     location: { __type: 'geometry' },
     native_data_unique_key: { __type: 'String' },
     rating: { __type: 'numeric' },
     restaurant: { __type: 'restaurant_obj_rel_insert_input' },
     restaurant_id: { __type: 'uuid' },
+    reviews: { __type: 'review_arr_rel_insert_input' },
     sentiments: { __type: 'review_tag_sentence_arr_rel_insert_input' },
     source: { __type: 'String' },
     tag: { __type: 'tag_obj_rel_insert_input' },
@@ -9034,12 +9396,14 @@ export const generatedSchema = {
     categories: { __type: 'order_by' },
     favorited: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    list: { __type: 'list_order_by' },
     list_id: { __type: 'order_by' },
     location: { __type: 'order_by' },
     native_data_unique_key: { __type: 'order_by' },
     rating: { __type: 'order_by' },
     restaurant: { __type: 'restaurant_order_by' },
     restaurant_id: { __type: 'order_by' },
+    reviews_aggregate: { __type: 'review_aggregate_order_by' },
     sentiments_aggregate: { __type: 'review_tag_sentence_aggregate_order_by' },
     source: { __type: 'order_by' },
     tag: { __type: 'tag_order_by' },
@@ -9509,6 +9873,26 @@ export const generatedSchema = {
         where: 'restaurant_tag_bool_exp',
       },
     },
+    reviews: {
+      __type: '[review!]!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
+    reviews_aggregate: {
+      __type: 'review_aggregate!',
+      __args: {
+        distinct_on: '[review_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[review_order_by!]',
+        where: 'review_bool_exp',
+      },
+    },
     rgb: { __type: 'jsonb' },
     slug: { __type: 'String' },
     type: { __type: 'String' },
@@ -9589,6 +9973,7 @@ export const generatedSchema = {
     parentId: { __type: 'uuid_comparison_exp' },
     popularity: { __type: 'Int_comparison_exp' },
     restaurant_taxonomies: { __type: 'restaurant_tag_bool_exp' },
+    reviews: { __type: 'review_bool_exp' },
     rgb: { __type: 'jsonb_comparison_exp' },
     slug: { __type: 'String_comparison_exp' },
     type: { __type: 'String_comparison_exp' },
@@ -9636,6 +10021,7 @@ export const generatedSchema = {
     parentId: { __type: 'uuid' },
     popularity: { __type: 'Int' },
     restaurant_taxonomies: { __type: 'restaurant_tag_arr_rel_insert_input' },
+    reviews: { __type: 'review_arr_rel_insert_input' },
     rgb: { __type: 'jsonb' },
     slug: { __type: 'String' },
     type: { __type: 'String' },
@@ -9740,6 +10126,7 @@ export const generatedSchema = {
     parentId: { __type: 'order_by' },
     popularity: { __type: 'order_by' },
     restaurant_taxonomies_aggregate: { __type: 'restaurant_tag_aggregate_order_by' },
+    reviews_aggregate: { __type: 'review_aggregate_order_by' },
     rgb: { __type: 'order_by' },
     slug: { __type: 'order_by' },
     type: { __type: 'order_by' },
@@ -9961,6 +10348,26 @@ export const generatedSchema = {
     email: { __type: 'String' },
     has_onboarded: { __type: 'Boolean!' },
     id: { __type: 'uuid!' },
+    lists: {
+      __type: '[list!]!',
+      __args: {
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
+    lists_aggregate: {
+      __type: 'list_aggregate!',
+      __args: {
+        distinct_on: '[list_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_order_by!]',
+        where: 'list_bool_exp',
+      },
+    },
     location: { __type: 'String' },
     name: { __type: 'String' },
     password: { __type: 'String!' },
@@ -10043,6 +10450,7 @@ export const generatedSchema = {
     email: { __type: 'String_comparison_exp' },
     has_onboarded: { __type: 'Boolean_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
+    lists: { __type: 'list_bool_exp' },
     location: { __type: 'String_comparison_exp' },
     name: { __type: 'String_comparison_exp' },
     password: { __type: 'String_comparison_exp' },
@@ -10066,6 +10474,7 @@ export const generatedSchema = {
     email: { __type: 'String' },
     has_onboarded: { __type: 'Boolean' },
     id: { __type: 'uuid' },
+    lists: { __type: 'list_arr_rel_insert_input' },
     location: { __type: 'String' },
     name: { __type: 'String' },
     password: { __type: 'String' },
@@ -10184,6 +10593,7 @@ export const generatedSchema = {
     email: { __type: 'order_by' },
     has_onboarded: { __type: 'order_by' },
     id: { __type: 'order_by' },
+    lists_aggregate: { __type: 'list_aggregate_order_by' },
     location: { __type: 'order_by' },
     name: { __type: 'order_by' },
     password: { __type: 'order_by' },
@@ -10426,6 +10836,22 @@ export interface Query {
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
   list_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list>
+  list_populated: (args: {
+    args: list_populated_args
+    distinct_on?: Maybe<Array<list_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<list_order_by>>
+    where?: Maybe<list_bool_exp>
+  }) => Array<list>
+  list_populated_aggregate: (args: {
+    args: list_populated_args
+    distinct_on?: Maybe<Array<list_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<list_order_by>>
+    where?: Maybe<list_bool_exp>
+  }) => list_aggregate
   list_restaurant: (args?: {
     distinct_on?: Maybe<Array<list_restaurant_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -10564,6 +10990,22 @@ export interface Query {
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   restaurant_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<restaurant>
+  restaurant_new: (args: {
+    args: restaurant_new_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_new_aggregate: (args: {
+    args: restaurant_new_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   restaurant_tag: (args?: {
     distinct_on?: Maybe<Array<restaurant_tag_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -10582,6 +11024,54 @@ export interface Query {
     restaurant_id: Scalars['uuid']
     tag_id: Scalars['uuid']
   }) => Maybe<restaurant_tag>
+  restaurant_top_tags: (args: {
+    args: restaurant_top_tags_args
+    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => Array<restaurant_tag>
+  restaurant_top_tags_aggregate: (args: {
+    args: restaurant_top_tags_args
+    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => restaurant_tag_aggregate
+  restaurant_trending: (args: {
+    args: restaurant_trending_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_trending_aggregate: (args: {
+    args: restaurant_trending_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
+  restaurant_with_tags: (args: {
+    args: restaurant_with_tags_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_with_tags_aggregate: (args: {
+    args: restaurant_with_tags_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   review: (args?: {
     distinct_on?: Maybe<Array<review_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -11179,6 +11669,22 @@ export interface Subscription {
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
   list_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list>
+  list_populated: (args: {
+    args: list_populated_args
+    distinct_on?: Maybe<Array<list_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<list_order_by>>
+    where?: Maybe<list_bool_exp>
+  }) => Array<list>
+  list_populated_aggregate: (args: {
+    args: list_populated_args
+    distinct_on?: Maybe<Array<list_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<list_order_by>>
+    where?: Maybe<list_bool_exp>
+  }) => list_aggregate
   list_restaurant: (args?: {
     distinct_on?: Maybe<Array<list_restaurant_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -11317,6 +11823,22 @@ export interface Subscription {
     where?: Maybe<restaurant_bool_exp>
   }) => restaurant_aggregate
   restaurant_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<restaurant>
+  restaurant_new: (args: {
+    args: restaurant_new_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_new_aggregate: (args: {
+    args: restaurant_new_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   restaurant_tag: (args?: {
     distinct_on?: Maybe<Array<restaurant_tag_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -11335,6 +11857,54 @@ export interface Subscription {
     restaurant_id: Scalars['uuid']
     tag_id: Scalars['uuid']
   }) => Maybe<restaurant_tag>
+  restaurant_top_tags: (args: {
+    args: restaurant_top_tags_args
+    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => Array<restaurant_tag>
+  restaurant_top_tags_aggregate: (args: {
+    args: restaurant_top_tags_args
+    distinct_on?: Maybe<Array<restaurant_tag_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_tag_order_by>>
+    where?: Maybe<restaurant_tag_bool_exp>
+  }) => restaurant_tag_aggregate
+  restaurant_trending: (args: {
+    args: restaurant_trending_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_trending_aggregate: (args: {
+    args: restaurant_trending_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
+  restaurant_with_tags: (args: {
+    args: restaurant_with_tags_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  restaurant_with_tags_aggregate: (args: {
+    args: restaurant_with_tags_args
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<restaurant_order_by>>
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
   review: (args?: {
     distinct_on?: Maybe<Array<review_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -11601,11 +12171,11 @@ export interface list {
   /**
    * An array relationship
    */
-  list_restaurant_tags: (args?: {
+  list_reviews: (args?: {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_restaurant_tag_select_column>>
+    distinct_on?: Maybe<Array<review_select_column>>
     /**
      * limit the number of rows returned
      */
@@ -11617,20 +12187,20 @@ export interface list {
     /**
      * sort the rows by one or more columns
      */
-    order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    order_by?: Maybe<Array<review_order_by>>
     /**
      * filter the rows returned
      */
-    where?: Maybe<list_restaurant_tag_bool_exp>
-  }) => Array<list_restaurant_tag>
+    where?: Maybe<review_bool_exp>
+  }) => Array<review>
   /**
    * An aggregated array relationship
    */
-  list_restaurant_tags_aggregate: (args?: {
+  list_reviews_aggregate: (args?: {
     /**
      * distinct select on columns
      */
-    distinct_on?: Maybe<Array<list_restaurant_tag_select_column>>
+    distinct_on?: Maybe<Array<review_select_column>>
     /**
      * limit the number of rows returned
      */
@@ -11642,16 +12212,20 @@ export interface list {
     /**
      * sort the rows by one or more columns
      */
-    order_by?: Maybe<Array<list_restaurant_tag_order_by>>
+    order_by?: Maybe<Array<review_order_by>>
     /**
      * filter the rows returned
      */
-    where?: Maybe<list_restaurant_tag_bool_exp>
-  }) => list_restaurant_tag_aggregate
+    where?: Maybe<review_bool_exp>
+  }) => review_aggregate
+  location?: Maybe<ScalarsEnums['geometry']>
+  name: ScalarsEnums['String']
+  public: ScalarsEnums['Boolean']
+  region?: Maybe<ScalarsEnums['String']>
   /**
    * An array relationship
    */
-  list_restaurants: (args?: {
+  restaurants: (args?: {
     /**
      * distinct select on columns
      */
@@ -11676,7 +12250,7 @@ export interface list {
   /**
    * An aggregated array relationship
    */
-  list_restaurants_aggregate: (args?: {
+  restaurants_aggregate: (args?: {
     /**
      * distinct select on columns
      */
@@ -11698,10 +12272,6 @@ export interface list {
      */
     where?: Maybe<list_restaurant_bool_exp>
   }) => list_restaurant_aggregate
-  location?: Maybe<ScalarsEnums['geometry']>
-  name: ScalarsEnums['String']
-  public: ScalarsEnums['Boolean']
-  region?: Maybe<ScalarsEnums['String']>
   slug: ScalarsEnums['String']
   /**
    * An array relationship
@@ -11864,10 +12434,66 @@ export interface list_restaurant {
    */
   list: list
   list_id: ScalarsEnums['uuid']
+  position?: Maybe<ScalarsEnums['Int']>
+  /**
+   * An object relationship
+   */
+  restaurant: restaurant
+  restaurant_id: ScalarsEnums['uuid']
   /**
    * An array relationship
    */
-  list_restaurant_tags: (args?: {
+  restaurants: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<restaurant_bool_exp>
+  }) => Array<restaurant>
+  /**
+   * An aggregated array relationship
+   */
+  restaurants_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<restaurant_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<restaurant_bool_exp>
+  }) => restaurant_aggregate
+  /**
+   * An array relationship
+   */
+  tags: (args?: {
     /**
      * distinct select on columns
      */
@@ -11892,7 +12518,7 @@ export interface list_restaurant {
   /**
    * An aggregated array relationship
    */
-  list_restaurant_tags_aggregate: (args?: {
+  tags_aggregate: (args?: {
     /**
      * distinct select on columns
      */
@@ -11914,12 +12540,10 @@ export interface list_restaurant {
      */
     where?: Maybe<list_restaurant_tag_bool_exp>
   }) => list_restaurant_tag_aggregate
-  position?: Maybe<ScalarsEnums['Int']>
   /**
    * An object relationship
    */
-  restaurant: restaurant
-  restaurant_id: ScalarsEnums['uuid']
+  user: user
   user_id: ScalarsEnums['uuid']
 }
 
@@ -12040,22 +12664,14 @@ export interface list_restaurant_sum_fields {
 export interface list_restaurant_tag {
   __typename: 'list_restaurant_tag' | undefined
   id: ScalarsEnums['uuid']
-  /**
-   * An object relationship
-   */
-  list: list
   list_id: ScalarsEnums['uuid']
-  /**
-   * An object relationship
-   */
-  list_restaurant: list_restaurant
   list_restaurant_id: ScalarsEnums['uuid']
   position: ScalarsEnums['Int']
-  restaurant_tag_id: ScalarsEnums['uuid']
   /**
    * An object relationship
    */
-  tag: tag
+  restaurant_tag?: Maybe<restaurant_tag>
+  restaurant_tag_id: ScalarsEnums['uuid']
   user_id: ScalarsEnums['uuid']
 }
 
@@ -12261,7 +12877,15 @@ export interface list_tag {
   __typename: 'list_tag' | undefined
   created_at: ScalarsEnums['timestamptz']
   id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
+  list?: Maybe<list>
   list_id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
+  tag?: Maybe<tag>
   tag_id: ScalarsEnums['uuid']
 }
 
@@ -12962,6 +13586,56 @@ export interface restaurant {
    */
   is_open_now?: Maybe<ScalarsEnums['Boolean']>
   is_out_of_business?: Maybe<ScalarsEnums['Boolean']>
+  /**
+   * An array relationship
+   */
+  lists: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<list_restaurant_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<list_restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<list_restaurant_bool_exp>
+  }) => Array<list_restaurant>
+  /**
+   * An aggregated array relationship
+   */
+  lists_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<list_restaurant_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<list_restaurant_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<list_restaurant_bool_exp>
+  }) => list_restaurant_aggregate
   location: ScalarsEnums['geometry']
   /**
    * An array relationship
@@ -13016,6 +13690,56 @@ export interface restaurant {
   name: ScalarsEnums['String']
   og_source_ids?: Maybe<ScalarsEnums['jsonb']>
   oldest_review_date?: Maybe<ScalarsEnums['timestamptz']>
+  /**
+   * An array relationship
+   */
+  photo_table: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<photo_xref_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<photo_xref_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<photo_xref_bool_exp>
+  }) => Array<photo_xref>
+  /**
+   * An aggregated array relationship
+   */
+  photo_table_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<photo_xref_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<photo_xref_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<photo_xref_bool_exp>
+  }) => photo_xref_aggregate
   photos?: Maybe<ScalarsEnums['jsonb']>
   price_range?: Maybe<ScalarsEnums['String']>
   rating?: Maybe<ScalarsEnums['numeric']>
@@ -13701,6 +14425,10 @@ export interface review {
   categories?: Maybe<ScalarsEnums['jsonb']>
   favorited?: Maybe<ScalarsEnums['Boolean']>
   id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
+  list?: Maybe<list>
   list_id?: Maybe<ScalarsEnums['uuid']>
   location?: Maybe<ScalarsEnums['geometry']>
   native_data_unique_key?: Maybe<ScalarsEnums['String']>
@@ -13710,6 +14438,56 @@ export interface review {
    */
   restaurant?: Maybe<restaurant>
   restaurant_id?: Maybe<ScalarsEnums['uuid']>
+  /**
+   * An array relationship
+   */
+  reviews: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<review_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => Array<review>
+  /**
+   * An aggregated array relationship
+   */
+  reviews_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<review_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => review_aggregate
   /**
    * An array relationship
    */
@@ -14299,6 +15077,56 @@ export interface tag {
      */
     where?: Maybe<restaurant_tag_bool_exp>
   }) => restaurant_tag_aggregate
+  /**
+   * An array relationship
+   */
+  reviews: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<review_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => Array<review>
+  /**
+   * An aggregated array relationship
+   */
+  reviews_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<review_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<review_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<review_bool_exp>
+  }) => review_aggregate
   rgb?: Maybe<ScalarsEnums['jsonb']>
   slug?: Maybe<ScalarsEnums['String']>
   type?: Maybe<ScalarsEnums['String']>
@@ -14560,6 +15388,56 @@ export interface user {
   email?: Maybe<ScalarsEnums['String']>
   has_onboarded: ScalarsEnums['Boolean']
   id: ScalarsEnums['uuid']
+  /**
+   * An array relationship
+   */
+  lists: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<list_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<list_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<list_bool_exp>
+  }) => Array<list>
+  /**
+   * An aggregated array relationship
+   */
+  lists_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<list_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<list_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<list_bool_exp>
+  }) => list_aggregate
   location?: Maybe<ScalarsEnums['String']>
   name?: Maybe<ScalarsEnums['String']>
   password: ScalarsEnums['String']
