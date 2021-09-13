@@ -24,6 +24,14 @@ import { FixAddressBug } from './fix_address_bug'
 
 type RestaurantMatching = Required<Pick<Restaurant, 'name' | 'address' | 'telephone'>>
 
+type GetRestaurantsArgs = {
+  top_right: [number, number]
+  bottom_left: [number, number]
+  start: number
+  onlyRestaurant: RestaurantMatching | null
+  category?: 'all' | 'food' | 'restaurants' | 'food,restaurants'
+}
+
 export type YelpScrape = Scrape<YelpScrapeData>
 
 export const YELP_DOMAIN = 'https://www.yelp.com'
@@ -50,6 +58,7 @@ export const yelpAPIMobile = new ProxiedRequests(
 export class Yelp extends WorkerJob {
   current_biz_path?: string
   find_only: RestaurantMatching | null = null
+  log_of_found_restaurants = new Set<string>()
 
   static queue_config: QueueOptions = {
     limiter: {
@@ -186,13 +195,7 @@ export class Yelp extends WorkerJob {
     onlyRestaurant = null,
     // comma seems to work!
     category = 'food,restaurants',
-  }: {
-    top_right: [number, number]
-    bottom_left: [number, number]
-    start: number
-    onlyRestaurant: RestaurantMatching | null
-    category?: 'all' | 'food' | 'restaurants' | 'food,restaurants'
-  }) {
+  }: GetRestaurantsArgs) {
     const coords = [top_right[1], top_right[0], bottom_left[1], bottom_left[0]].join(',')
     const bb = encodeURIComponent('g:' + coords)
     const uri = `/search/snippet?cflt=${category}&l=${bb}&start=${start}`
@@ -262,6 +265,7 @@ export class Yelp extends WorkerJob {
       return
     }
 
+    this.trackFoundRestaurants(validResults)
     this.log('got crawlable results', toCrawl.length)
 
     for (const data of toCrawl) {
@@ -275,18 +279,12 @@ export class Yelp extends WorkerJob {
       timeout.cancel()
     }
 
-    this.log('done with getRestaurants page')
-
-    if (pagination && !found_the_one) {
-      // yelp returns results per page in weird location here, use that or fallback to 10
-      const perPage = componentsList.find((x: any) => x?.props?.resultsPerPage) ?? 10
-      const next_page = start + perPage
-      if (next_page <= pagination.totalResults) {
-        await this.runOnWorker('getRestaurants', [
-          { top_right, bottom_left, next_page, onlyRestaurant },
-        ])
-      }
-    }
+    await this.paginate(pagination, found_the_one, {
+      top_right,
+      bottom_left,
+      start,
+      onlyRestaurant,
+    })
 
     if (onlyRestaurant) {
       if (!found_the_one) {
@@ -297,6 +295,25 @@ export class Yelp extends WorkerJob {
     }
 
     this.log('done with getRestaurants')
+  }
+
+  async paginate(pagination: any, found_the_one: boolean, args: GetRestaurantsArgs) {
+    if (!pagination || found_the_one) return
+    if (process.env.NODE_ENV == 'test' && args.start > 50) return
+    const perPage = pagination.props.resultsPerPage
+    const total_results = pagination.props.totalResults
+    args.start += perPage
+    if (args.start <= total_results) {
+      await this.runOnWorker('getRestaurants', [args])
+    }
+  }
+
+  trackFoundRestaurants(validResults: any) {
+    const names = validResults.map((x: any) => x?.searchResultBusiness?.name)
+    names.forEach(this.log_of_found_restaurants.add, this.log_of_found_restaurants)
+    if (DISH_DEBUG >= 2) {
+      this.log(`Found restaurants: ${this.log_of_found_restaurants.size}`)
+    }
   }
 
   async processRestaurant(data: any) {

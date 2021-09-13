@@ -1,5 +1,6 @@
 import { deleteAllBy } from '@dish/graph'
 import test from 'ava'
+import sinon from 'sinon'
 
 import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 import { Yelp, YelpScrape } from '../../src/yelp/Yelp'
@@ -34,4 +35,16 @@ test('Gets and persists a restaurant', async (t) => {
   t.assert(scrape.data?.photosp1?.length > 25)
   t.assert(scrape.data?.reviewsp0?.length > 9)
   t.assert(scrape.data?.reviewsp1?.length > 9)
+})
+
+test('Pagination', async (t) => {
+  sinon.stub(Yelp.prototype, 'processRestaurant').resolves(null)
+  const yelp = new Yelp()
+  await yelp.getRestaurants({
+    top_right: [37.759065, -122.412375],
+    bottom_left: [37.728865, -122.401175],
+    start: 0,
+    onlyRestaurant: null,
+  })
+  t.assert(yelp.log_of_found_restaurants.size >= 50)
 })
