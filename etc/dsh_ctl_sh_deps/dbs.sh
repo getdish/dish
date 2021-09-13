@@ -65,7 +65,7 @@ function migrate_hasura() {
   fi
 
   # ensure hasura v2 "default" database in postgres
-  dsh psql_main -c "SELECT 1 FROM pg_database WHERE datname = 'default'" | grep -q 1 || dsh psql_main -c "CREATE DATABASE default"
+  # dsh psql_main -c "SELECT 1 FROM pg_database WHERE datname = 'default'" | grep -q 1 || dsh psql_main -c "CREATE DATABASE default"
 
   echo "hasura version"
   hasura version
