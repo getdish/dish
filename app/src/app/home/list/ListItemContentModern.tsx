@@ -1,7 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql, listFindOne } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
-import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import {
   AbsoluteVStack,
@@ -10,18 +9,16 @@ import {
   InteractiveContainer,
   Spacer,
   Text,
-  Toast,
   VStack,
   useMedia,
   useTheme,
 } from 'snackui'
 
-import { brandColor, green, red } from '../../../constants/colors'
+import { green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
-import { useUserReviewQueryMutations } from '../../hooks/useUserReview'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
@@ -35,20 +32,26 @@ import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
 import { RestaurantRatingView } from '../RestaurantRatingView'
-import { getSearchPageStore } from '../search/SearchPageStore'
 import { Column } from './Column'
-import { ListItemContentProps, ListItemProps } from './ListItemProps'
+import { ListItemContentProps } from './ListItemProps'
+import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 
 export const ListItemContentModern = memo(
   graphql((props: ListItemContentProps) => {
     const { rank, restaurant, editable, reviewQuery, isEditing, setIsEditing, onUpdate } = props
     // modern default
     const review = reviewQuery?.[0]
-    const reviewMutations = useUserReviewQueryMutations({
-      restaurantId: restaurant?.id,
-      reviewQuery,
-    })
     const media = useMedia()
+
+    const restaurantReviewListProps = useRestaurantReviewListProps({
+      restaurantId: restaurant?.id,
+      listSlug: props.listSlug || '',
+      reviewQuery,
+      onEdit(text) {
+        onUpdate()
+        setIsEditing(false)
+      },
+    })
 
     useEffect(() => {
       if (!!restaurant.name && props.onFinishRender) {
@@ -174,36 +177,7 @@ export const ListItemContentModern = memo(
                   listTheme="modern"
                   isEditing={isEditing}
                   hideMeta
-                  onEdit={async (text) => {
-                    if (review) {
-                      review.text = text
-                      reviewMutations.upsertReview(review)
-                    } else {
-                      // never reviewed before
-                      const list = await listFindOne(
-                        {
-                          slug: props.listSlug,
-                        },
-                        {
-                          keys: ['id'],
-                        }
-                      )
-                      if (!list) {
-                        Toast.error('no list')
-                        return
-                      }
-                      reviewMutations.upsertReview({
-                        type: 'comment',
-                        list_id: list.id,
-                        text,
-                      })
-                    }
-                    onUpdate()
-                    setIsEditing(false)
-                  }}
-                  onDelete={() => {
-                    reviewMutations.deleteReview()
-                  }}
+                  {...restaurantReviewListProps}
                   hideRestaurantName
                   restaurantSlug={restaurant.slug}
                   review={review}

@@ -249,13 +249,14 @@ const ListPageContent = memo(
           return
         }
         if (isEditing) {
-          router.setRouteAlert({
-            condition: () => true,
-            message: `Cancel editing list and lose edits?`,
-          })
-          return () => {
-            router.setRouteAlert(null)
-          }
+          // no need, we have only one case where it can lose edits as not much
+          // router.setRouteAlert({
+          //   condition: () => true,
+          //   message: `Cancel editing list and lose edits?`,
+          // })
+          // return () => {
+          //   router.setRouteAlert(null)
+          // }
         }
       }, [props.isActive, isEditing])
 
