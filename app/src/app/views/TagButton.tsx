@@ -71,6 +71,7 @@ export type TagButtonProps = StackProps &
     noLink?: boolean
     theme?: ThemeName
     rgb?: RGB | null
+    refetchKey?: string
     slug?: string
     restaurantSlug?: string
     size?: 'lg' | 'md' | 'sm'
@@ -488,9 +489,13 @@ const TagButtonVote = graphql(
   (props: TagButtonProps & { scale: number; disablePopover?: boolean }) => {
     const { scale } = props
     const tagSlug = getTagSlug(props.slug)
-    const { vote } = useUserTagVotes(props.restaurantSlug || '', {
-      [tagSlug]: true,
-    })
+    const { vote } = useUserTagVotes(
+      props.restaurantSlug || '',
+      {
+        [tagSlug]: true,
+      },
+      props.refetchKey
+    )
     const theme = useTheme()
     const iconProps = {
       size: 14,

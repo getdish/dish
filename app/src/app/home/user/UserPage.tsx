@@ -321,7 +321,7 @@ const UserPageContent = memo(
               {!pane && !!lists.length && (
                 <VStack position="relative">
                   <AbsoluteVStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="xs">Playlists</SlantedTitle>
+                    <SlantedTitle size="xs">Lists</SlantedTitle>
                   </AbsoluteVStack>
                   <CardCarousel>
                     {lists.map((list, i) => {
@@ -344,7 +344,7 @@ const UserPageContent = memo(
               {!pane && !!favoriteLists.length && (
                 <VStack position="relative">
                   <AbsoluteVStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="xs">Favorite playlists</SlantedTitle>
+                    <SlantedTitle size="xs">Favorite lists</SlantedTitle>
                   </AbsoluteVStack>
                   <CardCarousel>
                     {favoriteLists.map((list, i) => {

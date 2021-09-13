@@ -213,7 +213,7 @@ export const ListItemContentMinimal = memo(
                   position="relative"
                 >
                   <Suspense fallback={null}>
-                    {!review && (
+                    {!isEditing && !review && (
                       <RestaurantOverallAndTagReviews
                         borderless
                         showScoreTable
@@ -221,48 +221,54 @@ export const ListItemContentMinimal = memo(
                         restaurant={restaurant}
                       />
                     )}
-                    <RestaurantReview
-                      // hideTagsRow
-                      expandable={false}
-                      ellipseContentAbove={Infinity}
-                      listTheme="minimal"
-                      isEditing={isEditing}
-                      hideMeta={!isExternalReview}
-                      onEdit={async (text) => {
-                        if (review) {
-                          review.text = text
-                          reviewMutations.upsertReview(review)
-                        } else {
-                          // never reviewed before
-                          const list = await listFindOne(
-                            {
-                              slug: props.listSlug,
-                            },
-                            {
-                              keys: ['id'],
+
+                    {(review || isEditing) && (
+                      <VStack paddingRight={10}>
+                        <RestaurantReview
+                          // hideTagsRow
+                          wrapTagsRow
+                          expandable={false}
+                          ellipseContentAbove={Infinity}
+                          listTheme="minimal"
+                          isEditing={isEditing}
+                          hideMeta={!isExternalReview}
+                          onEdit={async (text) => {
+                            if (review) {
+                              review.text = text
+                              reviewMutations.upsertReview(review)
+                            } else {
+                              // never reviewed before
+                              const list = await listFindOne(
+                                {
+                                  slug: props.listSlug,
+                                },
+                                {
+                                  keys: ['id'],
+                                }
+                              )
+                              if (!list) {
+                                Toast.error('no list')
+                                return
+                              }
+                              reviewMutations.upsertReview({
+                                type: 'comment',
+                                list_id: list.id,
+                                text,
+                              })
                             }
-                          )
-                          if (!list) {
-                            Toast.error('no list')
-                            return
-                          }
-                          reviewMutations.upsertReview({
-                            type: 'comment',
-                            list_id: list.id,
-                            text,
-                          })
-                        }
-                        onUpdate()
-                        setIsEditing(false)
-                      }}
-                      onDelete={() => {
-                        reviewMutations.deleteReview()
-                      }}
-                      hideRestaurantName
-                      restaurantSlug={restaurant.slug}
-                      review={review}
-                      listSlug={props.listSlug}
-                    />
+                            onUpdate()
+                            setIsEditing(false)
+                          }}
+                          onDelete={() => {
+                            reviewMutations.deleteReview()
+                          }}
+                          hideRestaurantName
+                          restaurantSlug={restaurant.slug}
+                          review={review}
+                          listSlug={props.listSlug}
+                        />
+                      </VStack>
+                    )}
                   </Suspense>
                 </VStack>
               </HStack>
@@ -276,7 +282,9 @@ export const ListItemContentMinimal = memo(
                     elevation={1}
                     icon={<MessageSquare size={16} color="#777" />}
                     onPress={() => setIsEditing(true)}
-                  ></SmallButton>
+                  >
+                    Edit
+                  </SmallButton>
                 )}
 
                 {!!editable && isEditing && (

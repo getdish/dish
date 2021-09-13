@@ -13,7 +13,7 @@
 - auto-lists based on your votes
     - need onboarding tutorial for this then...
 - make map work with custom point data structure instead of restaurantId (represent restaurant, OSM, other types of points)
-- import osm and integrate into playlists search
+- import osm and integrate into list search
 - after autocomplete select tag, needs to clear input value of tag
 - [m] [0] (restaurantpage) tap: address, phone, website get working
 - beta / invite features

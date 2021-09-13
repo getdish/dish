@@ -1,8 +1,8 @@
-import { graphql, resolved } from '@dish/graph'
+import { graphql, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Search, Tag } from '@dish/react-feather'
+import { Search, Tag, X } from '@dish/react-feather'
 import { uniqBy } from 'lodash'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AbsoluteHStack, HStack, Input, useDebounce } from 'snackui'
 
 import { tagLenses } from '../../../constants/localTags'
@@ -99,6 +99,7 @@ export const ReviewTagsRow = graphql(
     restaurantSlug,
     listTheme,
     label = 'Tags:',
+    wrapTagsRow,
     query,
     ...props
   }: RestaurantReviewProps & {
@@ -110,6 +111,8 @@ export const ReviewTagsRow = graphql(
     const [isFocused, setIsFocused] = useState(false)
     const userId = useUserStore().user?.id || ''
     const [filtered, setFiltered] = useState<TagButtonProps[]>([])
+    const [refetchKey, setRefetchKey] = useState('')
+    const refetch = useRefetch()
 
     const userTags = userId
       ? review?.reviews({
@@ -121,6 +124,11 @@ export const ReviewTagsRow = graphql(
           },
         }) || []
       : []
+
+    useEffect(() => {
+      refetch(userTags)
+      setRefetchKey(`${Math.random()}`)
+    }, [isFocused])
 
     // console.log('userTags', userTags?.[0]?.tag?.name)
 
@@ -149,18 +157,20 @@ export const ReviewTagsRow = graphql(
 
     const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
 
-    let allTags = [
-      ...tagLenses,
-      ...userTags.map((x) => x.tag),
-      //
-      ...((!!restaurant &&
-        getRestaurantDishes({
-          restaurant,
-          max: 10,
-          tagSlugs: [''],
-        })) ||
-        []),
-    ]
+    let allTags = isFocused
+      ? [
+          ...tagLenses,
+          ...userTags.map((x) => x.tag),
+          //
+          ...((!!restaurant &&
+            getRestaurantDishes({
+              restaurant,
+              max: 10,
+              tagSlugs: [''],
+            })) ||
+            []),
+        ]
+      : [...userTags.map((x) => x.tag)]
 
     if (allTags.length < 5) {
       allTags = [...allTags]
@@ -204,7 +214,8 @@ export const ReviewTagsRow = graphql(
 
     return (
       <HStack
-        marginVertical={-16}
+        paddingRight={20}
+        marginBottom={20}
         width="100%"
         alignItems="center"
         pointerEvents="auto"
@@ -226,6 +237,14 @@ export const ReviewTagsRow = graphql(
           >
             <Search size={16} color="#777" />
           </AbsoluteHStack>
+          <AbsoluteHStack
+            onPress={() => setIsFocused(false)}
+            bottom={-10}
+            left={-15}
+            opacity={isFocused ? 1 : 0}
+          >
+            <X size={16} color="#777" />
+          </AbsoluteHStack>
 
           {!isFocused && (
             <AbsoluteHStack fullscreen>
@@ -238,7 +257,6 @@ export const ReviewTagsRow = graphql(
             opacity={isFocused ? 1 : 0}
             zIndex={10}
             onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
             color="#777"
             fontSize={13}
             width={isFocused ? 130 : 50}
@@ -246,7 +264,15 @@ export const ReviewTagsRow = graphql(
             onChangeText={(text) => setSearchDbc(text)}
           />
         </HStack>
-        <HStack alignItems="center" paddingVertical={16} spacing="sm">
+        <HStack
+          alignItems="center"
+          paddingVertical={16}
+          spacing="sm"
+          {...(wrapTagsRow && {
+            flexWrap: 'wrap',
+            flex: 1,
+          })}
+        >
           {currentTags.map((tagButtonProps, i) => {
             const isLense = tagButtonProps.type === 'lense'
             const lastItem = currentTags[i - 1]
@@ -256,6 +282,7 @@ export const ReviewTagsRow = graphql(
                 size="sm"
                 restaurantSlug={restaurantSlug}
                 key={tagButtonProps.slug || 0}
+                refetchKey={refetchKey}
                 {...tagButtonProps}
                 backgroundColor="transparent"
                 {...(isLense && {

@@ -144,7 +144,7 @@ export const FeedCard = ({
                   numberOfLines={2}
                   opacity={0.65}
                   fontSize={fontSize * 0.9}
-                  color={colorString}
+                  color="#fff"
                 >
                   {title}
                 </Text>

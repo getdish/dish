@@ -1,8 +1,8 @@
-import { Review, order_by, reviewUpsert, review_constraint } from '@dish/graph'
+import { Review, order_by, reviewUpsert, review_constraint, useRefetch } from '@dish/graph'
 import { Store, useStore } from '@dish/use-store'
 import { debounce } from 'lodash'
 import { useCallback, useEffect, useRef } from 'react'
-import { Toast, useConstant } from 'snackui'
+import { Toast, useConstant, useLazyEffect } from 'snackui'
 
 import { getFullTags } from '../../helpers/getFullTags'
 import { queryRestaurant } from '../../queries/queryRestaurant'
@@ -57,7 +57,11 @@ const writeReview = async (review: Partial<Review>) => {
   await reviewUpsert([review], review_constraint.review_username_restauarant_id_tag_id_type_key)
 }
 
-export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTagsRecord) => {
+export const useUserTagVotes = (
+  restaurantSlug: string,
+  activeTags: HomeActiveTagsRecord,
+  refetchKey?: string
+) => {
   // never change to avoid hooks issues, should never change from above
   const tagSlugList = useConstant(() => Object.keys(activeTags).filter((x) => activeTags[x]))
 
@@ -65,7 +69,7 @@ export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTa
   const votes: VoteNumber[] = []
   const setVotes = useRef<Function[]>([])
   for (const tagSlug of tagSlugList) {
-    const { vote, setVote } = useUserTagVote({ restaurantSlug, tagSlug })
+    const { vote, setVote } = useUserTagVote({ restaurantSlug, tagSlug }, refetchKey)
     votes.push(vote)
     setVotes.current.push(setVote)
   }
@@ -86,14 +90,15 @@ export const useUserTagVotes = (restaurantSlug: string, activeTags: HomeActiveTa
   }
 }
 
-export const useUserTagVote = (props: VoteStoreProps) => {
+export const useUserTagVote = (props: VoteStoreProps, refetchKey?: string) => {
   const userStore = useUserStore()
   const userId = userStore.user?.id
   const voteStore = useStore(TagVoteStore, props)
   const [restaurant] = queryRestaurant(props.restaurantSlug)
   const restaurantId = restaurant?.id
+  const refetch = useRefetch()
 
-  const vote =
+  const voteQuery =
     userId && restaurant && props.tagSlug
       ? restaurant.reviews({
           limit: 1,
@@ -111,8 +116,14 @@ export const useUserTagVote = (props: VoteStoreProps) => {
             },
           },
           order_by: [{ authored_at: order_by.asc }],
-        })[0]?.vote ?? 0
-      : 0
+        })
+      : null
+
+  useLazyEffect(() => {
+    refetch(voteQuery)
+  }, [refetchKey])
+
+  const vote = voteQuery?.[0]?.vote ?? 0
 
   useEffect(() => {
     if (vote !== voteStore.vote) {

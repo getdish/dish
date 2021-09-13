@@ -21,6 +21,7 @@ export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
   onDelete?: () => void
   showEmptyReview?: boolean
   hideTagsRow?: boolean
+  wrapTagsRow?: boolean
 }
 
 export const RestaurantReview = memo(
@@ -40,6 +41,7 @@ export const RestaurantReview = memo(
         restaurantSlug,
         listSlug,
         listTheme,
+        wrapTagsRow,
         hideTagsRow,
         review,
         showEmptyReview,
@@ -55,6 +57,7 @@ export const RestaurantReview = memo(
           {!hideTagsRow && (
             <ReviewTagsRow
               {...props}
+              wrapTagsRow={wrapTagsRow}
               restaurantSlug={props.restaurantSlug ?? review?.restaurant?.slug}
             />
           )}

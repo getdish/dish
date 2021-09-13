@@ -278,7 +278,7 @@ function CommentBubbleContents({
     >
       {before}
 
-      {chromeless && metaContents}
+      {/* {chromeless && metaContents} */}
 
       {/* main card */}
       {!!contents && (
@@ -333,7 +333,7 @@ function CommentBubbleContents({
         </VStack>
       )}
 
-      {!chromeless && metaContents}
+      {metaContents}
     </VStack>
   )
 }

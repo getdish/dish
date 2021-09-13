@@ -228,7 +228,7 @@ export const HomePageFeed = memo(
 
           <VStack paddingHorizontal={10} position="relative">
             <AbsoluteVStack zIndex={100} top={-15} left={10}>
-              <SlantedTitle size="xs">Playlists</SlantedTitle>
+              <SlantedTitle size="xs">Top Lists</SlantedTitle>
             </AbsoluteVStack>
 
             <Grid itemMinWidth={cardFrameWidthLg}>
