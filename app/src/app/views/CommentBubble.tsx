@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
-  Box,
   HStack,
   Modal,
   Paragraph,
@@ -16,7 +15,6 @@ import {
 
 import { grey } from '../../constants/colors'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
-import { getColorsForName } from '../../helpers/getColorsForName'
 import { getTimeFormat } from '../../helpers/getTimeFormat'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { ensureFlexText } from '../home/restaurant/ensureFlexText'
@@ -240,7 +238,7 @@ function CommentBubbleContents({
                 ) : (
                   <Link
                     name="user"
-                    params={{ username }}
+                    params={{ username: username || '' }}
                     pointerEvents="auto"
                     fontSize={13}
                     ellipse

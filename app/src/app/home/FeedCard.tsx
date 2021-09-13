@@ -1,11 +1,10 @@
-import React from 'react'
-import { AbsoluteHStack, AbsoluteVStack, Paragraph, Text, VStack, useTheme } from 'snackui'
+import React, { isValidElement } from 'react'
+import { AbsoluteHStack, AbsoluteVStack, Paragraph, Text, VStack } from 'snackui'
 
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { pluralize } from '../../helpers/pluralize'
 import { rgbString } from '../../helpers/rgb'
 import { Image } from '../views/Image'
-import { SlantedTitle } from '../views/SlantedTitle'
 import { TagButton } from '../views/TagButton'
 import { Card, CardOverlay, CardProps, getCardDimensions } from './restaurant/Card'
 
@@ -35,7 +34,7 @@ export const FeedCard = ({
 }: FeedCardProps) => {
   const isMinimal = theme === 'minimal'
   const { chromeless, emphasizeTag, flat } = cardProps
-  const colorString = !isMinimal ? '#fff' : color || rgbString(tags[0]?.rgb ?? [200, 150, 150])
+  const colorString = !isMinimal ? undefined : color || rgbString(tags[0]?.rgb ?? [200, 150, 150])
   const longTitle = typeof title === 'string' && title.length > 15 ? true : false
 
   const fontSize = Math.round(
@@ -76,10 +75,17 @@ export const FeedCard = ({
                 fullscreen
                 zIndex={1}
               >
-                <Image
-                  source={{ uri: photo }}
-                  style={{ width: dimensions.width, height: Math.round(dimensions.height * 1.333) }}
-                />
+                {isValidElement(photo) ? (
+                  photo
+                ) : (
+                  <Image
+                    source={{ uri: photo as string }}
+                    style={{
+                      width: dimensions.width,
+                      height: Math.round(dimensions.height * 1.333),
+                    }}
+                  />
+                )}
               </AbsoluteVStack>
               <AbsoluteVStack
                 zIndex={10}

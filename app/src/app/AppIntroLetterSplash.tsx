@@ -352,7 +352,9 @@ const SignupBetaForm = () => {
       password: '',
       email: '',
     },
-    submit: () => {},
+    submit: async () => {
+      console.warn('todo')
+    },
   })
 
   return (
