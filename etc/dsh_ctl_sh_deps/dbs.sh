@@ -72,7 +72,7 @@ function migrate_hasura() {
   echo "POSTGRES_DB $POSTGRES_DB"
   echo "hasura migrate $HASURA_ENDPOINT"
   pushd "$PROJECT_ROOT/services/hasura"
-  hasura --skip-update-check migrate apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+  # hasura --skip-update-check migrate apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   echo "hasura metadata"
   hasura --skip-update-check metadata apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   popd

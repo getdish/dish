@@ -70,7 +70,7 @@ export const FeedCard = ({
             <AbsoluteVStack pointerEvents="none" fullscreen overflow="hidden">
               <AbsoluteVStack
                 className="hover-50-opacity-child"
-                opacity={0.1}
+                // opacity={0.1}
                 overflow="hidden"
                 fullscreen
                 zIndex={1}
