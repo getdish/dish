@@ -58,7 +58,7 @@ export const RestaurantReview = memo(
             <ReviewTagsRow
               {...props}
               wrapTagsRow={wrapTagsRow}
-              restaurantSlug={props.restaurantSlug ?? review?.restaurant?.slug}
+              restaurantSlug={props.restaurantSlug ?? (review?.restaurant?.slug || '')}
             />
           )}
         </>
