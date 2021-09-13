@@ -86,7 +86,7 @@ export const ListItemContentModern = memo(
     }
 
     return (
-      <HoverToZoom id={restaurant.id} slug={restaurant.slug}>
+      <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <VStack
           borderTopColor={theme.borderColor}
           borderTopWidth={0.5}
@@ -179,7 +179,7 @@ export const ListItemContentModern = memo(
                   hideMeta
                   {...restaurantReviewListProps}
                   hideRestaurantName
-                  restaurantSlug={restaurant.slug}
+                  restaurantSlug={restaurant.slug || ''}
                   review={review}
                   maxWidth={media.sm ? getWindowWidth() - 95 : 650}
                   listSlug={props.listSlug}

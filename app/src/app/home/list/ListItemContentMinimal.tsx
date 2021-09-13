@@ -92,7 +92,7 @@ export const ListItemContentMinimal = memo(
     }
 
     return (
-      <HoverToZoom id={restaurant.id} slug={restaurant.slug}>
+      <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <HStack
           paddingVertical={20}
           paddingHorizontal={20}
@@ -239,7 +239,7 @@ export const ListItemContentMinimal = memo(
                           hideMeta={!isExternalReview}
                           {...restaurantReviewListProps}
                           hideRestaurantName
-                          restaurantSlug={restaurant.slug}
+                          restaurantSlug={restaurant.slug || ''}
                           review={review}
                           listSlug={props.listSlug}
                         />
