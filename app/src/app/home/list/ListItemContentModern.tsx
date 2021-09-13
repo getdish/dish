@@ -21,7 +21,7 @@ import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
-import { getUserReviewQueryMutations } from '../../hooks/useUserReview'
+import { useUserReviewQueryMutations } from '../../hooks/useUserReview'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
@@ -44,7 +44,7 @@ export const ListItemContentModern = memo(
     const { rank, restaurant, editable, reviewQuery, isEditing, setIsEditing, onUpdate } = props
     // modern default
     const review = reviewQuery?.[0]
-    const reviewMutations = getUserReviewQueryMutations({
+    const reviewMutations = useUserReviewQueryMutations({
       restaurantId: restaurant?.id,
       reviewQuery,
     })
