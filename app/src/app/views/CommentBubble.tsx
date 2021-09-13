@@ -183,7 +183,7 @@ function CommentBubbleContents({
   const avatar = avatarProp?.image || ''
 
   const metaContents = (
-    <HStack marginTop={-10} alignItems="center" pointerEvents="auto">
+    <HStack alignItems="center" pointerEvents="auto">
       {hideMeta ? (
         <VStack flex={1} />
       ) : (

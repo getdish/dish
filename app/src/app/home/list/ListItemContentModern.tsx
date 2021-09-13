@@ -8,6 +8,7 @@ import {
   Circle,
   HStack,
   InteractiveContainer,
+  Spacer,
   Text,
   Toast,
   VStack,
@@ -111,26 +112,11 @@ export const ListItemContentModern = memo(
             />
           </AbsoluteVStack>
 
-          <HStack marginLeft={-15} alignItems="center" flexGrow={1} position="relative">
+          <HStack flex={1} marginLeft={-15} alignItems="center" flexGrow={1} position="relative">
             <HStack zIndex={100} position="relative" alignItems="center">
               <VStack marginTop={-5}>
                 <RestaurantRatingView restaurant={restaurant} floating size={38} />
               </VStack>
-              <AbsoluteVStack bottom="-1%" right="10%">
-                {!!editable && !isEditing && (
-                  <SmallButton
-                    elevation={1}
-                    icon={<MessageSquare size={16} color="#777" />}
-                    onPress={() => setIsEditing(true)}
-                  ></SmallButton>
-                )}
-
-                {!!editable && isEditing && (
-                  <SmallButton elevation={1} onPress={() => setIsEditing(false)}>
-                    Cancel
-                  </SmallButton>
-                )}
-              </AbsoluteVStack>
             </HStack>
 
             <Column width={210} flexDirection="row" justifyContent="flex-start">
@@ -229,8 +215,24 @@ export const ListItemContentModern = memo(
           </HStack>
 
           <HStack paddingLeft={20} alignItems="center">
-            <Column flexDirection="row" width={140}>
-              <InteractiveContainer borderWidth={0}>
+            <Column flexDirection="row" width={!!editable && isEditing ? 220 : 180}>
+              {!!editable && !isEditing && (
+                <SmallButton
+                  elevation={1}
+                  icon={<MessageSquare size={16} color="#777" />}
+                  onPress={() => setIsEditing(true)}
+                ></SmallButton>
+              )}
+
+              {!!editable && isEditing && (
+                <SmallButton elevation={1} onPress={() => setIsEditing(false)}>
+                  Cancel
+                </SmallButton>
+              )}
+
+              <Spacer />
+
+              <InteractiveContainer>
                 <Link
                   name="restaurant"
                   flexShrink={1}

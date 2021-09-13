@@ -10,7 +10,7 @@ export const Column = (props: ColumnProps) => {
       width={150}
       // borderLeftColor={theme.borderColor}
       // borderLeftWidth={2}
-      height={46}
+      height={54}
       alignItems="center"
       justifyContent="center"
       overflow="hidden"

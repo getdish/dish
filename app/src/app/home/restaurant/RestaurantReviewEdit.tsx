@@ -80,7 +80,7 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
             theme="error"
             accessible
             accessibilityRole="button"
-            icon={<Trash color={red} size={16} />}
+            icon={<Trash color="#fff" size={16} />}
             onPress={() => {
               if (confirm('Are you sure you want to delete the review?')) {
                 onDelete?.()

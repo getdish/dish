@@ -222,7 +222,7 @@ export const ListItemContentMinimal = memo(
                       />
                     )}
                     <RestaurantReview
-                      hideTagsRow
+                      // hideTagsRow
                       expandable={false}
                       ellipseContentAbove={Infinity}
                       listTheme="minimal"
@@ -271,6 +271,20 @@ export const ListItemContentMinimal = memo(
               <Spacer size="xs" />
 
               <HStack alignItems="center" spacing="lg">
+                {!!editable && !isEditing && (
+                  <SmallButton
+                    elevation={1}
+                    icon={<MessageSquare size={16} color="#777" />}
+                    onPress={() => setIsEditing(true)}
+                  ></SmallButton>
+                )}
+
+                {!!editable && isEditing && (
+                  <SmallButton elevation={1} onPress={() => setIsEditing(false)}>
+                    Cancel
+                  </SmallButton>
+                )}
+
                 <InteractiveContainer>
                   <Link
                     name="restaurant"

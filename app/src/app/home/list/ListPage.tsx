@@ -177,7 +177,7 @@ const ListPageContent = memo(
       // const themeName = useThemeName()
       // const theme = useTheme()
       const user = useUserStore()
-      const isMyList = props.item.userSlug === slugify(user.user?.username)
+      const isMyList = userStore.isAdmin || props.item.userSlug === slugify(user.user?.username)
       const isEditing = props.item.state === 'edit'
       const [showAddModal, setShowAddModal] = useState(false)
       const draft = useRef<Partial<List>>({})
