@@ -2,12 +2,12 @@ WITH
 
 weights AS (
   SELECT
-    0.03  AS restaurant_base,
-    0.16  AS restaurant_base_votes_ratio,
-    0.5   AS main_tag,
+    0.1  AS restaurant_base,
+    0.2  AS restaurant_base_votes_ratio,
+    0.75   AS main_tag,
     1     AS main_tag_votes_ratio,
-    0.08  AS rishes,
-    0.15  AS rishes_votes_ratio
+    0.25  AS rishes,
+    0.5  AS rishes_votes_ratio
 ),
 
 dish_ids AS (

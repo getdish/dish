@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql, listFindOne } from '@dish/graph'
+import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect } from 'react'
 import {
@@ -18,7 +18,6 @@ import { green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { numberFormat } from '../../../helpers/numberFormat'
-import { useUserReviewQueryMutations } from '../../hooks/useUserReview'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
@@ -34,6 +33,7 @@ import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { ListItemContentProps } from './ListItemProps'
+import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 
 export const ListItemContentMinimal = memo(
   graphql((props: ListItemContentProps) => {
@@ -48,18 +48,7 @@ export const ListItemContentMinimal = memo(
       isExternalReview,
     } = props
     const review = reviewQuery?.[0]
-    const reviewMutations = useUserReviewQueryMutations({
-      restaurantId: restaurant?.id,
-      reviewQuery,
-    })
     const media = useMedia()
-
-    useEffect(() => {
-      if (!!restaurant.name && props.onFinishRender) {
-        return series([() => fullyIdle({ min: 16 }), props.onFinishRender!])
-      }
-    }, [restaurant.name])
-
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
     const open = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
@@ -81,6 +70,22 @@ export const ListItemContentMinimal = memo(
     const titleFontSize = Math.round((media.sm ? 22 : 26) * titleFontScale)
     const theme = useTheme()
     const imgSize = 100
+
+    const restaurantReviewListProps = useRestaurantReviewListProps({
+      restaurantId: restaurant?.id,
+      listSlug: props.listSlug || '',
+      reviewQuery,
+      onEdit(text) {
+        onUpdate()
+        setIsEditing(false)
+      },
+    })
+
+    useEffect(() => {
+      if (!!restaurant.name && props.onFinishRender) {
+        return series([() => fullyIdle({ min: 16 }), props.onFinishRender!])
+      }
+    }, [restaurant.name])
 
     if (!restaurant) {
       return null
@@ -232,36 +237,7 @@ export const ListItemContentMinimal = memo(
                           listTheme="minimal"
                           isEditing={isEditing}
                           hideMeta={!isExternalReview}
-                          onEdit={async (text) => {
-                            if (review) {
-                              review.text = text
-                              reviewMutations.upsertReview(review)
-                            } else {
-                              // never reviewed before
-                              const list = await listFindOne(
-                                {
-                                  slug: props.listSlug,
-                                },
-                                {
-                                  keys: ['id'],
-                                }
-                              )
-                              if (!list) {
-                                Toast.error('no list')
-                                return
-                              }
-                              reviewMutations.upsertReview({
-                                type: 'comment',
-                                list_id: list.id,
-                                text,
-                              })
-                            }
-                            onUpdate()
-                            setIsEditing(false)
-                          }}
-                          onDelete={() => {
-                            reviewMutations.deleteReview()
-                          }}
+                          {...restaurantReviewListProps}
                           hideRestaurantName
                           restaurantSlug={restaurant.slug}
                           review={review}
