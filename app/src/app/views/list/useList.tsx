@@ -80,7 +80,7 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
       favorited,
     }
     setIsFavorited(favorited)
-    const response = await reviewUpsert([next], review_constraint.review_type_user_id_list_id_key)
+    const response = await reviewUpsert([next], review_constraint.review_user_id_restaurant_id_list_id_type_key)
     if (!response) {
       console.error('response', response)
       Toast.show('Error saving')
