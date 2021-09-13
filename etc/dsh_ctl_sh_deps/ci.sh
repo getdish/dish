@@ -43,7 +43,7 @@ function deploy_fail() {
 }
 
 function setup_test_services() {
-  echo "setup test services for env $DISH_ENV"
+  echo "setup test services for env $DISH_ENV in home $HOME with postgres db $POSTGRES_DB_DIR"
   docker network create traefik-public || true
 
   # if not already mounted/setup, we need to start postgres once and restart it

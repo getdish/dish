@@ -1,8 +1,10 @@
 #!/bin/bash
 
-set -eo pipefail
+echo "exiting $BUILDKITE_COMMAND_EXIT_STATUS $POSTGRES_DB_DIR"
+whoami
 
 if [ "$FIRST_STEP" == "true" ]; then
+  echo "first step, exit"
   exit 0
 fi
 
@@ -29,17 +31,20 @@ if [ -n "$DOCKER_PUSH" ]; then
 fi
 
 if [ "$SHOW_DOCKER_IMAGES" = "true" ]; then
+  echo "showing images"
   docker images | head -n 30 || true
 fi
 
-if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]; then
+echo "next"
+
+if [ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne "0" ]; then
   touch exit_this_build
   echo "Steps are skipped because $BUILDKITE_AGENT_NAME:$BUILDKITE_LABEL returned $BUILDKITE_COMMAND_EXIT_STATUS" > exit_this_build
 fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "--- docker-compose logs"
-  docker-compose logs | tail -n 200
+  docker-compose logs | tail -n 200 || true
   sleep 2
   echo "docker-compose logs | tail -n 200"
   echo "**to see all**"
@@ -50,8 +55,6 @@ if [ "$LOG_DOCKER" == "true" ]; then
   echo ""
   docker-compose logs --tail 6000 > ./compose.log
 fi
-
-echo "bye"
 
 if [ "$DOCKER_COMPOSE_DOWN" == "true" ]; then
   echo "shutting down docker"
@@ -75,6 +78,8 @@ if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DATA_CLEAR_ON_FAIL" == "tru
 fi
 
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DOCKER_CLEAN_ON_FAIL" = "1" ]; then
-  rm -r "$POSTGRES_DB_DIR"
-  rm -r "$TIMESCALE_DB_DIR"
+  rm -r "$POSTGRES_DB_DIR" || true
+  rm -r "$TIMESCALE_DB_DIR" || true
 fi
+
+echo "bye"
