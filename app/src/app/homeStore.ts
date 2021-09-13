@@ -2,6 +2,7 @@ import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import _, { clamp, findLast, reverse } from 'lodash'
 import { Keyboard } from 'react-native'
+import { Toast } from 'snackui'
 
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
@@ -106,13 +107,12 @@ class HomeStore extends Store {
     return this.searchBarTags[index]
   }
 
+  get statesIncludingFuture(): HomeStateItem[] {
+    return this.stateIds.map((x) => this.allStates[x])
+  }
+
   get states(): HomeStateItem[] {
-    const res = this.stateIds.map((x) => this.allStates[x]).slice(0, this.stateIndex + 1)
-    const last3 = reverse([...res]).slice(0, 3)
-    if (last3.every((x) => x.type === 'list')) {
-      debugger
-    }
-    return res
+    return this.statesIncludingFuture.slice(0, this.stateIndex + 1)
   }
 
   get currentStateLense(): NavigableTag | null {
@@ -418,16 +418,22 @@ class HomeStore extends Store {
         backStates.reverse() // reverse to find most recent match
         nextState = backStates.find((x) => x.id === item.id) ?? null
       } else {
-        const forwardStates = this.states.slice(this.stateIndex + 1)
-        nextState = forwardStates.find((x) => x.id === item.id) ?? null
+        const forwardStates = this.statesIncludingFuture.slice(this.stateIndex + 1)
+        console.log('forwardStates', forwardStates)
+        // fallback to all states
+        nextState = forwardStates.find((x) => x.id === item.id) || this.allStates[item.id] || null
       }
 
       if (!nextState) {
         console.warn('warning! no state found in history, perhaps from old refresh')
+        Toast.show('page not found')
         // allow it then to continue to push
         // probably should just move the index +1/-1 to if possible to fallback to something
       } else {
-        this.stateIndex = this.states.indexOf(nextState) ?? this.stateIndex
+        this.stateIndex = Math.max(
+          0,
+          this.statesIncludingFuture.indexOf(nextState) ?? this.stateIndex
+        )
         return
       }
     } else {
