@@ -82,21 +82,26 @@ export const useUserReviewQuery = (restaurantSlug: string) => {
     : []
 }
 
+export type ReviewQueryMutationsProps = {
+  restaurantId?: string
+  reviewQuery?: review[] | null
+  review?: review
+}
+
 export const useUserReviewQueryMutations = ({
   restaurantId,
   reviewQuery,
-}: {
-  restaurantId?: string
-  reviewQuery?: review[] | null
-}) => {
-  const review = reviewQuery?.[0]
+  review: reviewProp,
+}: ReviewQueryMutationsProps) => {
+  const ogReview = reviewProp || reviewQuery?.[0]
   const user = useUserStore().user
 
   // ensure we select id for update/deletion gqty
-  review?.id
-  review?.list_id
-  review?.restaurant_id
-  review?.tag_id
+  ogReview?.id
+  ogReview?.list_id
+  ogReview?.restaurant_id
+  ogReview?.tag_id
+  ogReview?.user_id
 
   return {
     async upsertReview(review: Partial<review>) {
@@ -104,27 +109,27 @@ export const useUserReviewQueryMutations = ({
         Toast.error('no restaurant / user')
         return
       }
-      const result = await upsertUserReview(
-        {
-          ...review,
-          user_id: user.id,
-          restaurant_id: restaurantId,
-        },
-        reviewQuery
-      )
+      const next = {
+        type: 'comment',
+        ...ogReview,
+        ...review,
+        user_id: user.id,
+        restaurant_id: restaurantId,
+      }
+      const result = await upsertUserReview(next, reviewQuery)
       return result
     },
     async deleteReview() {
-      if (review) {
+      if (ogReview) {
         // @ts-ignore
-        return await deleteUserReview(review, reviewQuery)
+        return await deleteUserReview(ogReview, reviewQuery)
       }
     },
   }
 }
 
 export async function upsertUserReview(review: Partial<review>, reviewQuery?: any) {
-  const result = await upsertUserReviewFn({
+  const next = {
     type: review.type || 'comment',
     id: review.id,
     text: review.text,
@@ -135,7 +140,10 @@ export async function upsertUserReview(review: Partial<review>, reviewQuery?: an
     restaurant_id: review.restaurant_id,
     tag_id: review.tag_id,
     username: userStore.user?.username ?? review.username,
-  })
+    user_id: userStore.user?.id ?? review.user_id,
+  }
+  console.log('upsert', next)
+  const result = await upsertUserReviewFn(next)
   if (result === false) {
     // prompted login
     return
@@ -250,7 +258,7 @@ export async function upsertUserReviewFn(review: UpdateableReview) {
             } as any,
           ],
           on_conflict: {
-            constraint: review_constraint.review_type_user_id_list_id_key,
+            constraint: review_constraint.review_user_id_restaurant_id_list_id_type_key,
             update_columns: Object.keys(review_update_column) as any,
           },
         })?.affected_rows
