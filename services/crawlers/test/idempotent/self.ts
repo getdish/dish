@@ -220,6 +220,22 @@ test('Updating hero when photo already exists', async (t) => {
   t.is(r2.rows.length, 1)
 })
 
+test('Detecting source ID change', async (t) => {
+  const stub = sinon.stub(Self.prototype, 'handleRestaurantSourceIDChange').resolves(null)
+  const self = new Self()
+  await self.preMerge(t.context.restaurant)
+  t.is(self.restaurant.og_source_ids, null)
+  self.addSourceOgIds()
+  let args = stub.getCall(0)
+  t.is(args, null)
+  self.restaurant.og_source_ids = {
+    tripadvisor: 'changeme',
+  }
+  self.addSourceOgIds()
+  args = stub.getCall(0).args
+  t.deepEqual(args, [{ tripadvisor: 'changeme' }])
+})
+
 test('Merging dishes', async (t) => {
   const self = new Self()
   await self.mergeAll(t.context.restaurant.id)

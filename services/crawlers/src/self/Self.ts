@@ -16,6 +16,7 @@ import { Database } from '@dish/helpers-node'
 import { DEBUG_LEVEL, WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 import { Base64 } from 'js-base64'
+import _ from 'lodash'
 import moment from 'moment'
 
 import { DISH_DEBUG } from '../constants'
@@ -595,12 +596,16 @@ export class Self extends WorkerJob {
     this.restaurant.oldest_review_date = oldest_review
   }
 
-  // used for doing easier re-crawls of specific restaurants
-  // can be useful in future for tracking changed names, address, etc
+  // The `id_from_source` field is the source-specific identifier for a restaurant.
+  // Therefore how does say Google or Yelp identify a restaurant? They'll have some sort of
+  // internal UUID in their databases. This is what we are noting here. Though we also
+  // note the ID in the scrape database, it is possible, though quite undesired, that a
+  // source ID will change over time.
   addSourceOgIds() {
     this.restaurant.og_source_ids = {
       ...(this.restaurant.og_source_ids || null),
     }
+    const og_og = _.cloneDeep(this.restaurant.og_source_ids)
     const sources = [
       this.tripadvisor,
       this.michelin,
@@ -616,6 +621,31 @@ export class Self extends WorkerJob {
         this.restaurant.og_source_ids[source.source] = source.id_from_source
       }
     }
+    this.checkForSourceIDChange(og_og)
+  }
+
+  checkForSourceIDChange(og_og: string[]) {
+    if (og_og == null) return
+    let is_change_detected = false
+    for (const [key, og_id] of Object.entries(og_og)) {
+      const newish_id = this.restaurant.og_source_ids[key]
+      if (og_id != newish_id) {
+        is_change_detected = true
+      }
+    }
+    if (!is_change_detected) return
+    this.handleRestaurantSourceIDChange(og_og)
+  }
+
+  handleRestaurantSourceIDChange(og_og: string[]) {
+    const message = 'Change in restaurant source ID'
+    const data = {
+      restaurant_id: this.restaurant.id,
+      og_source_ids: og_og,
+      new_source_ids: this.restaurant.og_source_ids,
+    }
+    this.log(message)
+    sentryMessage(message, { data })
   }
 
   addSources() {

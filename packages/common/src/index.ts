@@ -28,9 +28,9 @@ export const sentryMessage = (
       scope.setTags(tags)
     }
     scope.setExtras(data)
-    Sentry.captureMessage(message)
+    const event_id = Sentry.captureMessage(message)
+    console.log(`Sent message to Sentry (${event_id})):  ${message}`)
   })
-  console.log('Sent message to Sentry: ' + message)
 }
 
 export const sentryException = (
@@ -46,7 +46,7 @@ export const sentryException = (
   } = {}
 ) => {
   if (process.env.DISH_ENV != 'production') {
-    console.log("Sentry caught exception: ")
+    console.log('Sentry caught exception: ')
     logger(error)
     return
   }
