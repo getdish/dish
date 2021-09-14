@@ -523,7 +523,6 @@ const TagButtonVote = graphql(
         height={50 * scale}
         marginVertical={-10 * scale}
         marginHorizontal={-10 * scale}
-        marginRight={-15 * scale}
         opacity={0.8}
       >
         {!props.disablePopover && vote === 0 && <Circle {...iconProps} />}

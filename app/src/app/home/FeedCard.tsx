@@ -66,10 +66,10 @@ export const FeedCard = ({
         <>
           {outside}
 
-          {!!photo && (
+          {/* {!!photo && (
             <AbsoluteVStack pointerEvents="none" fullscreen overflow="hidden">
               <AbsoluteVStack
-                className="hover-100-opacity-child"
+                className="hover-50-opacity-child"
                 opacity={0}
                 overflow="hidden"
                 fullscreen
@@ -95,7 +95,7 @@ export const FeedCard = ({
                 className="hover-slide-up-child hover-75-opacity-child hover-linear-gradient-up"
               />
             </AbsoluteVStack>
-          )}
+          )} */}
 
           <CardOverlay flat={chromeless || flat}>
             <AbsoluteHStack

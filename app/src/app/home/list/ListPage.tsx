@@ -332,7 +332,6 @@ const ListPageContent = memo(
           marginBottom={10}
           width="100%"
           paddingVertical={10}
-          maxWidth={media.sm ? '100%' : '80%'}
           {...(!isMinimal && {
             maxWidth: Math.min(getWindowWidth(), drawerWidthMax) * 0.95,
           })}

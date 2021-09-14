@@ -1,7 +1,7 @@
 import { graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Search, Tag, X } from '@dish/react-feather'
-import { uniqBy } from 'lodash'
+import { sortBy, uniqBy } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { AbsoluteHStack, HStack, Input, useDebounce } from 'snackui'
 
@@ -210,12 +210,12 @@ export const ReviewTagsRow = graphql(
         ]
       : userTags
 
-    // @ts-ignore
-    const tags = uniqBy(allTags, (x) => ('tag' in x ? x.tag : x?.slug))
-      .filter(isPresent)
-      .map(getTagButtonProps)
-
-    console.log('tags', tags)
+    const tags = sortBy(
+      uniqBy(allTags, (x) => ('tag' in x ? x.tag?.slug : x?.['slug']))
+        .filter(isPresent)
+        .map(getTagButtonProps),
+      (x) => (x.type === 'lense' ? -1 : 0)
+    )
 
     const tagsKey = tags.map((x) => x.slug).join('')
 
