@@ -16,20 +16,21 @@ tables:
         column_mapping:
           user_id: id
   array_relationships:
-  - name: list_restaurants
+  - name: list_reviews
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: review
+        column_mapping:
+          id: list_id
+  - name: restaurants
     using:
       foreign_key_constraint_on:
         column: list_id
         table:
           schema: public
           name: list_restaurant
-  - name: list_restaurant_tags
-    using:
-      foreign_key_constraint_on:
-        column: list_id
-        table:
-          schema: public
-          name: list_restaurant_tag
   - name: tags
     using:
       manual_configuration:
@@ -48,11 +49,13 @@ tables:
       - color
       - description
       - id
+      - image
       - location
       - name
       - public
       - region
       - slug
+      - theme
       - user_id
       backend_only: false
   select_permissions:
@@ -63,11 +66,13 @@ tables:
       - created_at
       - description
       - id
+      - image
       - location
       - name
       - public
       - region
       - slug
+      - theme
       - updated_at
       - user_id
       filter: {}
@@ -79,11 +84,13 @@ tables:
       - created_at
       - description
       - id
+      - image
       - location
       - name
       - public
       - region
       - slug
+      - theme
       - updated_at
       - user_id
       filter: {}
@@ -94,11 +101,13 @@ tables:
       columns:
       - color
       - description
+      - image
       - location
       - name
       - public
       - region
       - slug
+      - theme
       - user_id
       filter:
         user_id:
@@ -120,8 +129,19 @@ tables:
   - name: restaurant
     using:
       foreign_key_constraint_on: restaurant_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
   array_relationships:
-  - name: list_restaurant_tags
+  - name: restaurants
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: restaurant
+        column_mapping:
+          restaurant_id: id
+  - name: tags
     using:
       foreign_key_constraint_on:
         column: list_restaurant_id
@@ -187,15 +207,14 @@ tables:
     schema: public
     name: list_restaurant_tag
   object_relationships:
-  - name: list
+  - name: restaurant_tag
     using:
-      foreign_key_constraint_on: list_id
-  - name: list_restaurant
-    using:
-      foreign_key_constraint_on: list_restaurant_id
-  - name: tag
-    using:
-      foreign_key_constraint_on: restaurant_tag_id
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: restaurant_tag
+        column_mapping:
+          restaurant_tag_id: id
   insert_permissions:
   - role: user
     permission:
@@ -203,24 +222,25 @@ tables:
         user_id:
           _eq: X-Hasura-User-Id
       columns:
-      - list_id
-      - list_restaurant_id
-      - position
-      - restaurant_tag_id
-      - user_id
-      backend_only: false
-  select_permissions:
-  - role: anon
-    permission:
-      columns:
       - id
       - list_id
       - list_restaurant_id
       - restaurant_tag_id
       - position
       - user_id
+      backend_only: false
+  select_permissions:
+  - role: anon
+    permission:
+      columns:
+      - position
+      - id
+      - list_id
+      - list_restaurant_id
+      - restaurant_tag_id
+      - user_id
       filter: {}
-      limit: 100
+      limit: 200
   - role: user
     permission:
       columns:
@@ -231,7 +251,7 @@ tables:
       - restaurant_tag_id
       - user_id
       filter: {}
-      limit: 100
+      limit: 200
   update_permissions:
   - role: user
     permission:
@@ -240,7 +260,6 @@ tables:
       - list_restaurant_id
       - position
       - restaurant_tag_id
-      - user_id
       filter:
         user_id:
           _eq: X-Hasura-User-Id
@@ -254,6 +273,23 @@ tables:
 - table:
     schema: public
     name: list_tag
+  object_relationships:
+  - name: list
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: list
+        column_mapping:
+          list_id: id
+  - name: tag
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: tag
+        column_mapping:
+          tag_id: id
   insert_permissions:
   - role: user
     permission:
@@ -372,6 +408,30 @@ tables:
 - table:
     schema: public
     name: photo
+  select_permissions:
+  - role: anon
+    permission:
+      columns:
+      - id
+      - quality
+      - url
+      filter: {}
+  - role: contributor
+    permission:
+      columns:
+      - created_at
+      - id
+      - quality
+      - updated_at
+      - url
+      filter: {}
+  - role: user
+    permission:
+      columns:
+      - id
+      - quality
+      - url
+      filter: {}
 - table:
     schema: public
     name: photo_xref
@@ -379,10 +439,47 @@ tables:
   - name: photo
     using:
       foreign_key_constraint_on: photo_id
+  select_permissions:
+  - role: anon
+    permission:
+      columns:
+      - id
+      - photo_id
+      - restaurant_id
+      - tag_id
+      - type
+      filter: {}
+      limit: 100
+  - role: contributor
+    permission:
+      columns:
+      - id
+      - photo_id
+      - restaurant_id
+      - tag_id
+      - type
+      filter: {}
+  - role: user
+    permission:
+      columns:
+      - id
+      - photo_id
+      - restaurant_id
+      - tag_id
+      - type
+      filter: {}
 - table:
     schema: public
     name: restaurant
   array_relationships:
+  - name: lists
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: list_restaurant
+        column_mapping:
+          id: restaurant_id
   - name: menu_items
     using:
       foreign_key_constraint_on:
@@ -390,6 +487,13 @@ tables:
         table:
           schema: public
           name: menu_item
+  - name: photo_table
+    using:
+      foreign_key_constraint_on:
+        column: restaurant_id
+        table:
+          schema: public
+          name: photo_xref
   - name: reviews
     using:
       foreign_key_constraint_on:
@@ -425,12 +529,14 @@ tables:
       - created_at
       - description
       - downvotes
+      - geocoder_id
       - headlines
       - hours
       - id
       - image
       - location
       - name
+      - oldest_review_date
       - photos
       - price_range
       - rating
@@ -595,10 +701,12 @@ tables:
     permission:
       columns:
       - downvotes
+      - id
       - photos
       - rank
       - rating
       - restaurant_id
+      - review_mentions_count
       - score
       - score_breakdown
       - source_breakdown
@@ -625,6 +733,7 @@ tables:
     permission:
       columns:
       - downvotes
+      - id
       - photos
       - rank
       - rating
@@ -653,6 +762,14 @@ tables:
     schema: public
     name: review
   object_relationships:
+  - name: list
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: list
+        column_mapping:
+          list_id: id
   - name: restaurant
     using:
       foreign_key_constraint_on: restaurant_id
@@ -663,6 +780,14 @@ tables:
     using:
       foreign_key_constraint_on: user_id
   array_relationships:
+  - name: reviews
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: review
+        column_mapping:
+          restaurant_id: restaurant_id
   - name: sentiments
     using:
       foreign_key_constraint_on:
@@ -822,28 +947,6 @@ tables:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
-  event_triggers:
-  - name: gorse_sync
-    definition:
-      enable_manual: true
-      insert:
-        columns: '*'
-      delete:
-        columns: '*'
-      update:
-        columns:
-        - rating
-        - username
-        - id
-        - restaurant_id
-        - tag_id
-        - user_id
-        - favorited
-    retry_conf:
-      num_retries: 3
-      interval_sec: 10
-      timeout_sec: 60
-    webhook_from_env: GORSE_SYNC_HOOK
 - table:
     schema: public
     name: review_tag_sentence
@@ -858,9 +961,13 @@ tables:
   - role: anon
     permission:
       columns:
+      - id
       - ml_sentiment
       - naive_sentiment
+      - restaurant_id
+      - review_id
       - sentence
+      - tag_id
       filter: {}
   - role: contributor
     permission:
@@ -901,6 +1008,13 @@ tables:
         table:
           schema: public
           name: restaurant_tag
+  - name: reviews
+    using:
+      foreign_key_constraint_on:
+        column: tag_id
+        table:
+          schema: public
+          name: review
   insert_permissions:
   - role: contributor
     permission:
@@ -926,9 +1040,11 @@ tables:
       columns:
       - alternates
       - created_at
+      - default_image
       - default_images
       - description
       - displayName
+      - frequency
       - icon
       - id
       - is_ambiguous
@@ -969,9 +1085,11 @@ tables:
       columns:
       - alternates
       - created_at
+      - default_image
       - default_images
       - description
       - displayName
+      - frequency
       - icon
       - id
       - is_ambiguous
@@ -1049,6 +1167,14 @@ tables:
     schema: public
     name: user
   array_relationships:
+  - name: lists
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: list
+        column_mapping:
+          id: user_id
   - name: reviews
     using:
       foreign_key_constraint_on:
@@ -1095,3 +1221,19 @@ tables:
 - table:
     schema: public
     name: zcta5
+functions:
+- function:
+    schema: public
+    name: list_populated
+- function:
+    schema: public
+    name: restaurant_new
+- function:
+    schema: public
+    name: restaurant_top_tags
+- function:
+    schema: public
+    name: restaurant_trending
+- function:
+    schema: public
+    name: restaurant_with_tags
