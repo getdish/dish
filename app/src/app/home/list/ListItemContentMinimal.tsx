@@ -2,23 +2,9 @@ import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect } from 'react'
-import {
-  Circle,
-  HStack,
-  InteractiveContainer,
-  Spacer,
-  Text,
-  Toast,
-  VStack,
-  useMedia,
-  useTheme,
-} from 'snackui'
+import { Circle, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { green, red } from '../../../constants/colors'
-import { isWeb } from '../../../constants/constants'
-import { getImageUrl } from '../../../helpers/getImageUrl'
-import { numberFormat } from '../../../helpers/numberFormat'
-import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
@@ -27,8 +13,6 @@ import { RestaurantAddress } from '../restaurant/RestaurantAddress'
 import { RestaurantDeliveryButtons } from '../restaurant/RestaurantDeliveryButtons'
 import { openingHours, priceRange } from '../restaurant/RestaurantDetailRow'
 import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton'
-import { RestaurantOverallAndTagReviews } from '../restaurant/RestaurantOverallAndTagReviews'
-import { RestaurantPhotosRow } from '../restaurant/RestaurantPhotosRow'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
@@ -148,7 +132,10 @@ export const ListItemContentMinimal = memo(
                     </HStack>
 
                     <HStack paddingHorizontal={20}>
-                      <ReviewTagsRow restaurantSlug={restaurant.slug || ''} />
+                      <ReviewTagsRow
+                        userId={review?.user_id}
+                        restaurantSlug={restaurant.slug || ''}
+                      />
                     </HStack>
                   </HStack>
                 </VStack>

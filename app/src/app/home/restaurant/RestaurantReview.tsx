@@ -22,6 +22,7 @@ export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
   showEmptyReview?: boolean
   hideTagsRow?: boolean
   wrapTagsRow?: boolean
+  userId: string
 }
 
 export const RestaurantReview = memo(

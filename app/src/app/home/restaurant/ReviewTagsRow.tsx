@@ -100,23 +100,24 @@ export const ReviewTagsRow = graphql(
     listTheme,
     label = 'Tags:',
     wrapTagsRow,
+    userId,
     query,
     ...props
   }: RestaurantReviewProps & {
     label?: string
     query?: any
+    userId: string | null
   }) => {
     const [search, setSearch] = useState('')
     const setSearchDbc = useDebounce(setSearch, 350)
     const [isFocused, setIsFocused] = useState(false)
-    const userId = useUserStore().user?.id || ''
     const [filtered, setFiltered] = useState<TagButtonProps[]>([])
     const [refetchKey, setRefetchKey] = useState('')
     const refetch = useRefetch()
 
     const userTags = userId
       ? review?.reviews({
-          limit: 10,
+          limit: 20,
           where: {
             user_id: {
               _eq: userId,
@@ -124,6 +125,8 @@ export const ReviewTagsRow = graphql(
           },
         }) || []
       : []
+
+    console.log('userTags', userTags)
 
     useEffect(() => {
       refetch(userTags)
@@ -157,6 +160,8 @@ export const ReviewTagsRow = graphql(
 
     const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
 
+    console.log('userTags', userTags)
+
     let allTags = isFocused
       ? [
           ...tagLenses,
@@ -170,7 +175,7 @@ export const ReviewTagsRow = graphql(
             })) ||
             []),
         ]
-      : [...userTags.map((x) => x.tag)]
+      : userTags.map((x) => x.tag)
 
     if (allTags.length < 5) {
       allTags = [...allTags]

@@ -1,4 +1,5 @@
 import { graphql, restaurant } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo } from 'react'
 import { HStack, Spacing, Text, VStack, useConstant, useTheme } from 'snackui'
 
@@ -81,60 +82,65 @@ export const RestaurantPhotosRowContent = memo(
             <SkewedCardCarousel>
               {[
                 ...photosData,
-                {
-                  content: (
-                    <LinkButton
-                      width={width}
-                      height={height}
-                      name="gallery"
-                      alignSelf="center"
-                      params={{ restaurantSlug }}
-                      textProps={{
-                        textAlign: 'center',
-                        fontSize: 28,
-                        fontWeight: '800',
-                      }}
+                // @ts-ignore
+                max > 2
+                  ? {
+                      content: (
+                        <LinkButton
+                          width={width}
+                          height={height}
+                          name="gallery"
+                          alignSelf="center"
+                          params={{ restaurantSlug }}
+                          textProps={{
+                            textAlign: 'center',
+                            fontSize: 28,
+                            fontWeight: '800',
+                          }}
+                        >
+                          Gallery 🖼
+                        </LinkButton>
+                      ),
+                    }
+                  : null,
+              ]
+                .filter(isPresent)
+                .map((item, index) => {
+                  return (
+                    <PhotoCard
+                      {...photoCardProps}
+                      marginRight={-width * 0.3}
+                      zIndex={1000 - index}
+                      isBehind={index > 0}
+                      key={index}
                     >
-                      Gallery 🖼
-                    </LinkButton>
-                  ),
-                },
-              ].map((item, index) => {
-                return (
-                  <PhotoCard
-                    {...photoCardProps}
-                    marginRight={-width * 0.3}
-                    zIndex={1000 - index}
-                    isBehind={index > 0}
-                    key={index}
-                  >
-                    {(() => {
-                      if ('content' in item) {
-                        return item.content
-                      }
-                      const { uri, width, height, isEscalated } = item
-                      return (
-                        <>
-                          {(!isEscalated || showEscalated) && (
-                            <Link name="gallery" params={{ restaurantSlug, offset: index }}>
-                              <Image
-                                source={{
-                                  uri,
-                                }}
-                                style={{
-                                  height,
-                                  width,
-                                }}
-                                resizeMode="cover"
-                              />
-                            </Link>
-                          )}
-                        </>
-                      )
-                    })()}
-                  </PhotoCard>
-                )
-              })}
+                      {(() => {
+                        if ('content' in item) {
+                          return item.content
+                        }
+                        const { uri, width, height, isEscalated } = item
+                        return (
+                          <>
+                            {(!isEscalated || showEscalated) && (
+                              <Link name="gallery" params={{ restaurantSlug, offset: index }}>
+                                <Image
+                                  source={{
+                                    uri,
+                                  }}
+                                  style={{
+                                    height,
+                                    width,
+                                  }}
+                                  resizeMode="cover"
+                                />
+                              </Link>
+                            )}
+                          </>
+                        )
+                      })()}
+                    </PhotoCard>
+                  )
+                })}
             </SkewedCardCarousel>
           )}
         </HStack>

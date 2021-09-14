@@ -65,6 +65,7 @@ import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { StackItemProps } from '../HomeStackView'
 import { CircleButton } from '../restaurant/CircleButton'
+import { RestaurantPhotosRow } from '../restaurant/RestaurantPhotosRow'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { UserAvatar } from '../user/UserAvatar'
 import { ColorPicker } from './ColorPicker'
@@ -405,7 +406,7 @@ const ListPageContent = memo(
         <>
           {/* START HEADER */}
           <VStack
-            minHeight={isMinimal ? 300 : 40}
+            minHeight={isMinimal ? 280 : 40}
             paddingHorizontal={20}
             position="relative"
             backgroundColor={`${color}11`}
@@ -441,9 +442,15 @@ const ListPageContent = memo(
                     />
                   </AbsoluteVStack> */}
 
-                <HStack paddingHorizontal={28}>
-                  <VStack alignItems="flex-start" justifyContent="flex-end" width="100%" flex={1}>
-                    <Spacer size={84} />
+                <HStack paddingHorizontal={20}>
+                  <VStack
+                    minWidth={380}
+                    alignItems="flex-start"
+                    justifyContent="flex-end"
+                    width="100%"
+                    flex={1}
+                  >
+                    <Spacer size={80} />
                     <Title
                       textShadowColor={theme.shadowColor}
                       textShadowRadius={2}
@@ -457,8 +464,17 @@ const ListPageContent = memo(
                     >
                       {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
                     </Title>
-                    <Spacer size="sm" />
                     {userCommentEl}
+                  </VStack>
+
+                  <VStack marginRight={-180}>
+                    <RestaurantPhotosRow
+                      height={270}
+                      width={200}
+                      floating
+                      restaurant={restaurants[0].restaurant}
+                      max={2}
+                    />
                   </VStack>
                 </HStack>
               </>
@@ -619,9 +635,7 @@ const ListPageContent = memo(
             <BottomFloatingArea>
               <Button
                 pointerEvents="auto"
-                borderWidth={2}
-                borderColor={blue200}
-                theme="active"
+                themeInverse
                 borderRadius={100}
                 width={55}
                 height={55}
@@ -633,7 +647,7 @@ const ListPageContent = memo(
                   setShowAddModal(true)
                 }}
               >
-                <Plus size={42} color="#fff" />
+                <Plus size={42} color="#777" />
               </Button>
               <VStack pointerEvents="none" flex={1} />
             </BottomFloatingArea>
