@@ -288,7 +288,7 @@ function CommentBubbleContents({
           marginLeft={chromeless ? 0 : 20}
           backgroundColor={theme.cardBackgroundColor}
           borderColor={theme.borderColor}
-          borderWidth={1}
+          borderWidth={0.5}
           borderRadius={20}
           position="relative"
           zIndex={10}
@@ -308,7 +308,7 @@ function CommentBubbleContents({
           {/* tiny bottom left bubble */}
           {!chromeless && (
             <AbsoluteVStack
-              bottom={-10}
+              bottom={-6}
               left={0}
               width={20}
               height={20}
@@ -316,7 +316,7 @@ function CommentBubbleContents({
               backgroundColor={theme.cardBackgroundColor}
               shadowColor={theme.shadowColorLighter}
               shadowRadius={4}
-              shadowOffset={{ height: 3, width: -3 }}
+              shadowOffset={{ height: 3, width: 0 }}
             />
           )}
 

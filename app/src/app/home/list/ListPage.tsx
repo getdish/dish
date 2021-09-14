@@ -45,6 +45,7 @@ import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
 import { homeStore, useHomeStateById } from '../../homeStore'
+import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useAsyncEffect } from '../../hooks/useAsync'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
@@ -605,6 +606,8 @@ const ListPageContent = memo(
         </>
       )
 
+      const drawerWidth = useAppDrawerWidth()
+
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
         <>
@@ -714,7 +717,7 @@ const ListPageContent = memo(
 
           <ContentScrollView bidirectional={listTheme === 'modern'} id="list">
             <>
-              <VStack minHeight={getWindowHeight()}>
+              <VStack minWidth={drawerWidth} minHeight={getWindowHeight()}>
                 {listTheme === 'modern' ? null : listHeaderEl}
 
                 {listTheme === 'modern' ? userCommentEl : null}
@@ -725,7 +728,7 @@ const ListPageContent = memo(
                   </VStack>
                 )}
 
-                <SuspenseList revealOrder="together">
+                <SuspenseList revealOrder="forwards">
                   {restaurants.map(
                     ({ restaurantId, restaurant, dishSlugs, position, list_restaurant }, index) => {
                       return (

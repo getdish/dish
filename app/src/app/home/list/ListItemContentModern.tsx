@@ -77,7 +77,7 @@ export const ListItemContentModern = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 18 : 22) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 26 : 28) * titleFontScale)
     const theme = useTheme()
     const imgSize = 120
 
@@ -88,15 +88,13 @@ export const ListItemContentModern = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <VStack
-          borderTopColor={theme.borderColor}
-          borderTopWidth={0.5}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
           width="100%"
           paddingVertical={16}
           paddingLeft={30}
         >
-          <AbsoluteVStack
+          {/* <AbsoluteVStack
             backgroundColor={theme.backgroundColorSecondary}
             width={imgSize}
             height={imgSize}
@@ -113,16 +111,10 @@ export const ListItemContentModern = memo(
                 // borderRadius: 1000,
               }}
             />
-          </AbsoluteVStack>
+          </AbsoluteVStack> */}
 
           <HStack flex={1} marginLeft={-15} alignItems="center" flexGrow={1} position="relative">
-            <HStack zIndex={100} position="relative" alignItems="center">
-              <VStack marginTop={-5}>
-                <RestaurantRatingView restaurant={restaurant} floating size={38} />
-              </VStack>
-            </HStack>
-
-            <Column width={210} flexDirection="row" justifyContent="flex-start">
+            <Column width={320} flexDirection="row" justifyContent="flex-start">
               <VStack y={3} marginRight={-12} marginLeft={-8}>
                 <RankView rank={rank} />
               </VStack>
@@ -159,8 +151,6 @@ export const ListItemContentModern = memo(
           </HStack>
 
           <HStack
-            paddingVertical={10}
-            paddingLeft={60}
             alignItems="center"
             spacing="lg"
             // below the add comment button
@@ -171,6 +161,7 @@ export const ListItemContentModern = memo(
             <VStack justifyContent="center" flex={1} position="relative">
               <Suspense fallback={null}>
                 <RestaurantReview
+                  paddingBottom={30}
                   hideTagsRow
                   expandable={false}
                   ellipseContentAbove={Infinity}
@@ -189,7 +180,7 @@ export const ListItemContentModern = memo(
           </HStack>
 
           <HStack paddingLeft={20} alignItems="center">
-            <Column flexDirection="row" width={!!editable && isEditing ? 220 : 180}>
+            <Column flexDirection="row" width={!!editable && isEditing ? 300 : 230}>
               {!!editable && !isEditing && (
                 <SmallButton
                   elevation={1}
@@ -203,6 +194,12 @@ export const ListItemContentModern = memo(
                   Cancel
                 </SmallButton>
               )}
+
+              <Spacer />
+
+              <HStack zIndex={100} position="relative" alignItems="center">
+                <RestaurantRatingView restaurant={restaurant} floating size={38} />
+              </HStack>
 
               <Spacer />
 
