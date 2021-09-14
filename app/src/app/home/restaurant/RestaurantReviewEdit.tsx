@@ -68,8 +68,9 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
             setReviewText(text)
           }}
           multiline
-          numberOfLines={5}
-          placeholder="...a note, a tip, a whole review, it's up to you."
+          numberOfLines={2}
+          placeholder="..."
+          autoFocus
           marginHorizontal={-10}
           marginVertical={-5}
         />

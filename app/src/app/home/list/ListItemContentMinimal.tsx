@@ -30,6 +30,7 @@ import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton
 import { RestaurantOverallAndTagReviews } from '../restaurant/RestaurantOverallAndTagReviews'
 import { RestaurantPhotosRow } from '../restaurant/RestaurantPhotosRow'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
+import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { ListItemContentProps } from './ListItemProps'
@@ -94,7 +95,7 @@ export const ListItemContentMinimal = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <HStack
-          paddingVertical={30}
+          paddingVertical={25}
           paddingHorizontal={20}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
@@ -111,7 +112,11 @@ export const ListItemContentMinimal = memo(
                     flexGrow={1}
                     position="relative"
                   >
-                    <HStack alignItems="center" marginTop={-5} marginBottom={5}>
+                    <VStack opacity={0.5} y={3} marginLeft={-35} marginRight={10} width={35}>
+                      <RankView rank={rank} />
+                    </VStack>
+
+                    <HStack marginHorizontal={-10} alignItems="center" marginBottom={5}>
                       <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
                         <HStack
                           paddingVertical={8}
@@ -132,7 +137,7 @@ export const ListItemContentMinimal = memo(
                             color={theme.color}
                             fontWeight="400"
                             letterSpacing={-0.25}
-                            paddingHorizontal={1} // prevents clipping due to letter-spacing
+                            paddingHorizontal={10} // prevents clipping due to letter-spacing
                             ellipse
                             maxWidth="100%"
                           >
@@ -140,6 +145,10 @@ export const ListItemContentMinimal = memo(
                           </Text>
                         </HStack>
                       </Link>
+                    </HStack>
+
+                    <HStack paddingHorizontal={20}>
+                      <ReviewTagsRow restaurantSlug={restaurant.slug || ''} />
                     </HStack>
                   </HStack>
                 </VStack>
@@ -172,7 +181,7 @@ export const ListItemContentMinimal = memo(
                     {(review || isEditing) && (
                       <VStack paddingRight={10}>
                         <RestaurantReview
-                          // hideTagsRow
+                          hideTagsRow
                           wrapTagsRow
                           expandable={false}
                           ellipseContentAbove={Infinity}
@@ -211,66 +220,70 @@ export const ListItemContentMinimal = memo(
                   </SmallButton>
                 )}
 
-                <RestaurantRatingView restaurant={restaurant} floating size={42} />
+                <RestaurantRatingView restaurant={restaurant} size={34} />
 
-                <HStack
-                  paddingVertical={0}
-                  paddingHorizontal={20}
-                  borderTopColor={theme.borderColor}
-                  borderTopWidth={0.5}
-                  alignItems="center"
-                  spacing
-                >
+                <HStack paddingVertical={0} paddingRight={10} alignItems="center" spacing>
                   {!!restaurant.address && (
                     <RestaurantAddress size={'xs'} address={restaurant.address} />
                   )}
                   <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
-                  <Text fontSize={14} color={theme.colorTertiary}>
+
+                  <Text
+                    paddingHorizontal={5}
+                    opacity={0.8}
+                    fontSize={13}
+                    color={theme.colorTertiary}
+                  >
                     {price_range ?? '?'}
                   </Text>
+
                   <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
-                    <Text fontSize={12} color={theme.colorTertiary}>
+                    <Text
+                      paddingHorizontal={5}
+                      opacity={0.8}
+                      fontSize={13}
+                      color={theme.colorTertiary}
+                    >
                       {open.nextTime || '~~'}
                     </Text>
                   </Link>
                 </HStack>
-
-                <InteractiveContainer>
-                  <Link
-                    name="restaurant"
-                    flexShrink={1}
-                    params={{
-                      slug: restaurant.slug || '',
-                      section: 'reviews',
-                    }}
+                {/* 
+                <Link
+                  name="restaurant"
+                  flexShrink={1}
+                  params={{
+                    slug: restaurant.slug || '',
+                    section: 'reviews',
+                  }}
+                >
+                  <SmallButton
+                    backgroundColor="transparent"
+                    tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                    icon={
+                      <MessageSquare
+                        style={{
+                          opacity: 0.5,
+                        }}
+                        size={12}
+                        color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                      />
+                    }
                   >
-                    <SmallButton
-                      borderRadius={0}
-                      tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                      icon={
-                        <MessageSquare
-                          style={{
-                            opacity: 0.5,
-                            marginLeft: -8,
-                          }}
-                          size={12}
-                          color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                        />
-                      }
-                    >
-                      {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-                    </SmallButton>
-                  </Link>
-                  <RestaurantFavoriteButton
-                    borderRadius={0}
-                    size="md"
-                    restaurantSlug={restaurant.slug || ''}
-                  />
-                </InteractiveContainer>
+                    {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                  </SmallButton>
+                </Link> */}
+
+                <RestaurantFavoriteButton
+                  backgroundColor="transparent"
+                  size="md"
+                  restaurantSlug={restaurant.slug || ''}
+                />
 
                 <Suspense fallback={null}>
                   <RestaurantDeliveryButtons
                     showLabels={false}
+                    label={false}
                     restaurantSlug={restaurant.slug || ''}
                   />
                 </Suspense>

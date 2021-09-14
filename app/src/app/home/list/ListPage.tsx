@@ -448,9 +448,9 @@ const ListPageContent = memo(
                       textShadowColor={theme.shadowColor}
                       textShadowRadius={2}
                       textShadowOffset={{ height: 1, width: 0 }}
-                      size="xxl"
+                      size="lg"
                       sizeLineHeight={0.76}
-                      fontWeight="700"
+                      fontWeight="800"
                       {...(isEditing && {
                         width: '100%',
                       })}

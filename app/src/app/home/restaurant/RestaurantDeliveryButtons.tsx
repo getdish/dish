@@ -11,7 +11,7 @@ import { getRestaurantDeliverySources } from './getRestaurantDeliverySources'
 type Props = StackProps & {
   restaurantSlug: string
   showLabels?: boolean
-  label?: string
+  label?: string | boolean
 }
 
 export const RestaurantDeliveryButtons = memo(
@@ -48,7 +48,7 @@ export const RestaurantDeliveryButtons = memo(
             </VStack>
           )
         })}
-        {!sources.length && (
+        {!sources.length && label !== false && (
           <Text textAlign="center" fontSize={11} color={theme.colorQuartenary}>
             No delivery
           </Text>

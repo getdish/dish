@@ -70,7 +70,7 @@ export const RatingView = ({
           color={theme.color}
           letterSpacing={-0.13 * width}
           fontWeight={`${([3, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 8][ratingRounded] ?? 5) * 100}` as any}
-          fontSize={12 * width}
+          fontSize={10 * width}
         >
           {ratingRounded}
         </Text>
