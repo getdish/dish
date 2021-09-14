@@ -403,18 +403,22 @@ const ListPageContent = memo(
       const listHeaderEl = (
         <>
           {/* START HEADER */}
-          <Theme name={isMinimal ? 'dark' : null}>
-            <VStack
-              minHeight={isMinimal ? 300 : 40}
-              paddingHorizontal={20}
-              position="relative"
-              backgroundColor={`${color}11`}
-            >
-              {isMinimal && (
-                <>
-                  <VStack minHeight={20} flex={1} />
+          <VStack
+            minHeight={isMinimal ? 300 : 40}
+            paddingHorizontal={20}
+            position="relative"
+            backgroundColor={`${color}11`}
+          >
+            {isMinimal && (
+              <>
+                <VStack minHeight={20} flex={1} />
 
-                  <AbsoluteVStack backgroundColor="#000" zIndex={-1} fullscreen overflow="hidden">
+                {/* <AbsoluteVStack
+                    backgroundColor="#000"
+                    zIndex={-1}
+                    fullscreen
+                    overflow="hidden"
+                  >
                     <Image
                       // @ts-ignore
                       source={{
@@ -434,170 +438,169 @@ const ListPageContent = memo(
                       ].reverse()}
                       style={StyleSheet.absoluteFill}
                     />
-                  </AbsoluteVStack>
+                  </AbsoluteVStack> */}
 
-                  <HStack paddingHorizontal={28}>
-                    <VStack alignItems="flex-start" justifyContent="flex-end" width="100%" flex={1}>
-                      <Spacer size={84} />
-                      <Title
-                        textShadowColor={theme.shadowColor}
-                        textShadowRadius={2}
-                        textShadowOffset={{ height: 1, width: 0 }}
-                        size="xxl"
-                        sizeLineHeight={0.76}
-                        fontWeight="700"
-                        {...(isEditing && {
-                          width: '100%',
-                        })}
-                      >
-                        {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
-                      </Title>
-                      <Spacer size="sm" />
-                      {userCommentEl}
-                    </VStack>
-                  </HStack>
-                </>
-              )}
-
-              {listTheme === 'modern' && (
-                <HStack
-                  paddingVertical={14}
-                  marginHorizontal="auto"
-                  alignItems="center"
-                  justifyContent="center"
-                  width="100%"
-                  maxWidth={680}
-                  zIndex={100}
-                  position="relative"
-                >
-                  <HStack
-                    flex={1}
-                    maxWidth={media.notSm ? '90%' : '75%'}
-                    minWidth={220}
-                    alignItems="center"
-                    justifyContent="center"
-                    spacing
-                  >
-                    <Link name="user" params={{ username }}>
-                      <UserAvatar
-                        size={52}
-                        avatar={list.user?.avatar ?? ''}
-                        charIndex={list.user?.charIndex ?? 0}
-                      />
-                    </Link>
-
-                    <Text ellipse lineHeight={22} textAlign="left">
-                      <Link name="user" params={{ username }}>
-                        <Title size="sm" fontWeight="400" opacity={0.5}>
-                          {list.user?.name || username || '...'}'s&nbsp;
-                        </Title>
-                      </Link>
-                      <Title size="sm" fontWeight="800" zIndex={0}>
-                        {titleContents}&nbsp;
-                      </Title>
-                      <Title size="sm" fontWeight="200" opacity={0.5}>
-                        {locationName ?? ''}
-                      </Title>
-                    </Text>
-                  </HStack>
-                </HStack>
-              )}
-
-              {isMyList && (
-                <HStack
-                  position="relative"
-                  zIndex={1000}
-                  marginBottom={-25}
-                  marginTop={-25}
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  {!isEditing && (
-                    <HStack alignItems="center" flexWrap="wrap" spacing>
-                      <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
-                        Customize
-                      </SmallButton>
-                      <SmallButton elevation={1} onPress={() => setShowAddModal(true)}>
-                        Add
-                      </SmallButton>
-                    </HStack>
-                  )}
-
-                  {isEditing && (
-                    <HStack
-                      backgroundColor={theme.backgroundColor}
-                      padding={5}
-                      paddingHorizontal={20}
-                      borderRadius={100}
-                      elevation={1}
-                      alignItems="center"
-                      flexWrap="wrap"
-                      spacing="xxl"
+                <HStack paddingHorizontal={28}>
+                  <VStack alignItems="flex-start" justifyContent="flex-end" width="100%" flex={1}>
+                    <Spacer size={84} />
+                    <Title
+                      textShadowColor={theme.shadowColor}
+                      textShadowRadius={2}
+                      textShadowOffset={{ height: 1, width: 0 }}
+                      size="xxl"
+                      sizeLineHeight={0.76}
+                      fontWeight="700"
+                      {...(isEditing && {
+                        width: '100%',
+                      })}
                     >
-                      <Paragraph>Color:</Paragraph>
-                      <ColorPicker colors={listColors} color={color} onChange={setColor} />
-                      <InteractiveContainer alignItems="center">
-                        <Paragraph
-                          size="sm"
-                          opacity={0.5}
-                          onPress={() => {
-                            setTheme(0)
-                          }}
-                          paddingVertical={6}
-                          paddingHorizontal={12}
-                        >
-                          Modern
-                        </Paragraph>
-                        <Switch
-                          value={list.theme === 1}
-                          onValueChange={(isOn) => {
-                            console.log('?')
-                            setTheme(isOn ? 1 : 0)
-                          }}
-                        />
-                        <Paragraph
-                          size="sm"
-                          opacity={0.5}
-                          onPress={() => {
-                            setTheme(1)
-                          }}
-                          paddingVertical={6}
-                          paddingHorizontal={12}
-                        >
-                          Minimal
-                        </Paragraph>
-                      </InteractiveContainer>
-                      <HStack>
-                        <Paragraph>Public:&nbsp;</Paragraph>
-                        <Switch value={isPublic} onValueChange={setPublic} />
-                      </HStack>
-                      <SmallButton
-                        tooltip="Delete"
-                        icon={<Trash color={red400} size={20} />}
-                        onPress={async () => {
-                          assertPresent(list.id, 'no list id')
-                          if (confirm('Permanently delete this list?')) {
-                            router.setRouteAlert(null)
-                            await mutate((mutation) => {
-                              return mutation.delete_list({
-                                where: {
-                                  id: {
-                                    _eq: list.id,
-                                  },
-                                },
-                              })?.__typename
-                            })
-                            Toast.show('Deleted list')
-                            homeStore.popBack()
-                          }
+                      {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
+                    </Title>
+                    <Spacer size="sm" />
+                    {userCommentEl}
+                  </VStack>
+                </HStack>
+              </>
+            )}
+
+            {listTheme === 'modern' && (
+              <HStack
+                paddingVertical={14}
+                marginHorizontal="auto"
+                alignItems="center"
+                justifyContent="center"
+                width="100%"
+                maxWidth={680}
+                zIndex={100}
+                position="relative"
+              >
+                <HStack
+                  flex={1}
+                  maxWidth={media.notSm ? '90%' : '75%'}
+                  minWidth={220}
+                  alignItems="center"
+                  justifyContent="center"
+                  spacing
+                >
+                  <Link name="user" params={{ username }}>
+                    <UserAvatar
+                      size={52}
+                      avatar={list.user?.avatar ?? ''}
+                      charIndex={list.user?.charIndex ?? 0}
+                    />
+                  </Link>
+
+                  <Text ellipse lineHeight={22} textAlign="left">
+                    <Link name="user" params={{ username }}>
+                      <Title size="sm" fontWeight="400" opacity={0.5}>
+                        {list.user?.name || username || '...'}'s&nbsp;
+                      </Title>
+                    </Link>
+                    <Title size="sm" fontWeight="800" zIndex={0}>
+                      {titleContents}&nbsp;
+                    </Title>
+                    <Title size="sm" fontWeight="200" opacity={0.5}>
+                      {locationName ?? ''}
+                    </Title>
+                  </Text>
+                </HStack>
+              </HStack>
+            )}
+
+            {isMyList && (
+              <HStack
+                position="relative"
+                zIndex={1000}
+                marginBottom={-25}
+                marginTop={-25}
+                alignItems="center"
+                justifyContent="center"
+              >
+                {!isEditing && (
+                  <HStack alignItems="center" flexWrap="wrap" spacing>
+                    <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
+                      Customize
+                    </SmallButton>
+                    <SmallButton elevation={1} onPress={() => setShowAddModal(true)}>
+                      Add
+                    </SmallButton>
+                  </HStack>
+                )}
+
+                {isEditing && (
+                  <HStack
+                    backgroundColor={theme.backgroundColor}
+                    padding={5}
+                    paddingHorizontal={20}
+                    borderRadius={100}
+                    elevation={1}
+                    alignItems="center"
+                    flexWrap="wrap"
+                    spacing="xxl"
+                  >
+                    <Paragraph>Color:</Paragraph>
+                    <ColorPicker colors={listColors} color={color} onChange={setColor} />
+                    <InteractiveContainer alignItems="center">
+                      <Paragraph
+                        size="sm"
+                        opacity={0.5}
+                        onPress={() => {
+                          setTheme(0)
+                        }}
+                        paddingVertical={6}
+                        paddingHorizontal={12}
+                      >
+                        Modern
+                      </Paragraph>
+                      <Switch
+                        value={list.theme === 1}
+                        onValueChange={(isOn) => {
+                          console.log('?')
+                          setTheme(isOn ? 1 : 0)
                         }}
                       />
+                      <Paragraph
+                        size="sm"
+                        opacity={0.5}
+                        onPress={() => {
+                          setTheme(1)
+                        }}
+                        paddingVertical={6}
+                        paddingHorizontal={12}
+                      >
+                        Minimal
+                      </Paragraph>
+                    </InteractiveContainer>
+                    <HStack>
+                      <Paragraph>Public:&nbsp;</Paragraph>
+                      <Switch value={isPublic} onValueChange={setPublic} />
                     </HStack>
-                  )}
-                </HStack>
-              )}
-            </VStack>
-          </Theme>
+                    <SmallButton
+                      tooltip="Delete"
+                      icon={<Trash color={red400} size={20} />}
+                      onPress={async () => {
+                        assertPresent(list.id, 'no list id')
+                        if (confirm('Permanently delete this list?')) {
+                          router.setRouteAlert(null)
+                          await mutate((mutation) => {
+                            return mutation.delete_list({
+                              where: {
+                                id: {
+                                  _eq: list.id,
+                                },
+                              },
+                            })?.__typename
+                          })
+                          Toast.show('Deleted list')
+                          homeStore.popBack()
+                        }
+                      }}
+                    />
+                  </HStack>
+                )}
+              </HStack>
+            )}
+          </VStack>
           {/* END HEADER */}
         </>
       )

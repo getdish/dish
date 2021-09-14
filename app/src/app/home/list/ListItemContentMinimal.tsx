@@ -67,7 +67,7 @@ export const ListItemContentMinimal = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 22 : 26) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 24 : 30) * titleFontScale)
     const theme = useTheme()
     const imgSize = 100
 
@@ -94,40 +94,16 @@ export const ListItemContentMinimal = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <HStack
-          paddingVertical={20}
+          paddingVertical={30}
           paddingHorizontal={20}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
           width="100%"
           overflow="hidden"
         >
-          <HStack flex={1}>
+          <HStack paddingLeft={10} flex={1}>
             <VStack flex={1} width={media.xs ? 300 : media.sm ? 450 : 550}>
               <HStack>
-                <VStack
-                  backgroundColor={theme.backgroundColorSecondary}
-                  width={imgSize}
-                  height={imgSize}
-                  position="relative"
-                  borderRadius={1000}
-                  overflow="hidden"
-                  marginLeft={-70}
-                >
-                  <Link
-                    name="gallery"
-                    params={{ restaurantSlug: restaurant.slug || '', offset: 0 }}
-                  >
-                    <Image
-                      source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
-                      style={{
-                        width: imgSize,
-                        height: imgSize,
-                        // borderRadius: 1000,
-                      }}
-                    />
-                  </Link>
-                </VStack>
-
                 <VStack flex={1}>
                   <HStack
                     className="hover-faded-in-parent"
@@ -135,19 +111,9 @@ export const ListItemContentMinimal = memo(
                     flexGrow={1}
                     position="relative"
                   >
-                    <HStack zIndex={100} position="relative" alignItems="center">
-                      <VStack marginLeft={-15} marginTop={-5}>
-                        <RestaurantRatingView restaurant={restaurant} floating size={42} />
-                      </VStack>
-                    </HStack>
-
                     <HStack alignItems="center" marginTop={-5} marginBottom={5}>
-                      <VStack y={3} marginRight={-10} marginLeft={-10}>
-                        <RankView rank={rank} />
-                      </VStack>
                       <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
                         <HStack
-                          paddingHorizontal={10}
                           paddingVertical={8}
                           marginVertical={-8}
                           borderRadius={8}
@@ -176,36 +142,12 @@ export const ListItemContentMinimal = memo(
                       </Link>
                     </HStack>
                   </HStack>
-
-                  <HStack
-                    marginTop={-3}
-                    paddingVertical={0}
-                    paddingHorizontal={20}
-                    borderTopColor={theme.borderColor}
-                    borderTopWidth={0.5}
-                    alignItems="center"
-                    spacing
-                  >
-                    {!!restaurant.address && (
-                      <RestaurantAddress size={'xs'} address={restaurant.address} />
-                    )}
-                    <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
-                    <Text fontSize={14} color={theme.colorTertiary}>
-                      {price_range ?? '?'}
-                    </Text>
-                    <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
-                      <Text fontSize={12} color={theme.colorTertiary}>
-                        {open.nextTime || '~~'}
-                      </Text>
-                    </Link>
-                  </HStack>
                 </VStack>
               </HStack>
 
               {/* START CONTENT ROW */}
               <HStack
                 alignItems="center"
-                spacing="lg"
                 // below the add comment button
                 zIndex={0}
                 position="relative"
@@ -218,14 +160,14 @@ export const ListItemContentMinimal = memo(
                   position="relative"
                 >
                   <Suspense fallback={null}>
-                    {!isEditing && !review && (
+                    {/* {!isEditing && !review && (
                       <RestaurantOverallAndTagReviews
                         borderless
                         showScoreTable
                         id={restaurant.slug || ''}
                         restaurant={restaurant}
                       />
-                    )}
+                    )} */}
 
                     {(review || isEditing) && (
                       <VStack paddingRight={10}>
@@ -269,6 +211,30 @@ export const ListItemContentMinimal = memo(
                   </SmallButton>
                 )}
 
+                <RestaurantRatingView restaurant={restaurant} floating size={42} />
+
+                <HStack
+                  paddingVertical={0}
+                  paddingHorizontal={20}
+                  borderTopColor={theme.borderColor}
+                  borderTopWidth={0.5}
+                  alignItems="center"
+                  spacing
+                >
+                  {!!restaurant.address && (
+                    <RestaurantAddress size={'xs'} address={restaurant.address} />
+                  )}
+                  <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
+                  <Text fontSize={14} color={theme.colorTertiary}>
+                    {price_range ?? '?'}
+                  </Text>
+                  <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
+                    <Text fontSize={12} color={theme.colorTertiary}>
+                      {open.nextTime || '~~'}
+                    </Text>
+                  </Link>
+                </HStack>
+
                 <InteractiveContainer>
                   <Link
                     name="restaurant"
@@ -311,7 +277,7 @@ export const ListItemContentMinimal = memo(
               </HStack>
             </VStack>
 
-            <VStack x={-40}>
+            {/* <VStack x={-40}>
               <RestaurantPhotosRow
                 restaurant={restaurant}
                 // spacing="md"
@@ -320,7 +286,7 @@ export const ListItemContentMinimal = memo(
                 max={2}
                 height={290}
               />
-            </VStack>
+            </VStack> */}
           </HStack>
         </HStack>
       </HoverToZoom>

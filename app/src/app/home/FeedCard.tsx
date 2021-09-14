@@ -69,8 +69,8 @@ export const FeedCard = ({
           {!!photo && (
             <AbsoluteVStack pointerEvents="none" fullscreen overflow="hidden">
               <AbsoluteVStack
-                className="hover-50-opacity-child"
-                opacity={0.1}
+                className="hover-100-opacity-child"
+                opacity={0}
                 overflow="hidden"
                 fullscreen
                 zIndex={1}
@@ -91,7 +91,7 @@ export const FeedCard = ({
                 zIndex={10}
                 fullscreen
                 opacity={0.5}
-                y={40}
+                y={10}
                 className="hover-slide-up-child hover-75-opacity-child hover-linear-gradient-up"
               />
             </AbsoluteVStack>
@@ -137,17 +137,17 @@ export const FeedCard = ({
                   {title}
                 </Text>
               ) : (
-                <Text
+                <Paragraph
                   letterSpacing={-0.25}
                   className="hover-100-opacity-child"
                   fontWeight={emphasizeTag ? '500' : '800'}
                   numberOfLines={2}
                   opacity={0.8}
                   fontSize={fontSize * 0.9}
-                  color="#fff"
+                  // color="#fff"
                 >
                   {title}
-                </Text>
+                </Paragraph>
               )}
 
               {!!(author || typeof numItems !== 'undefined') && (
