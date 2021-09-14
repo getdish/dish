@@ -90,7 +90,7 @@
     "@testing-library/react": "12.0.0-alpha.2",
     "fs-extra": "10.0.0",
     "react-native": "0.64.2",
-    "typescript": "4.4.2",
+    "typescript": "4.4.3",
     "@unimodules/core": "7.0.0",
     "aws-sdk": "2.762.0",
     "webpack": "5.52.0",

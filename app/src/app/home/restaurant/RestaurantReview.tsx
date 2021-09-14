@@ -1,4 +1,4 @@
-import { getUserName, graphql, review } from '@dish/graph'
+import { getUserName, graphql, list, review } from '@dish/graph'
 import React, { memo } from 'react'
 import { HStack, Text, VStack } from 'snackui'
 
@@ -12,6 +12,7 @@ export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
   restaurantSlug?: string
   listSlug?: string
   review?: review | null
+  list?: list | null
   isEditing?: boolean
   refetchKey?: string
   hideUsername?: boolean
@@ -22,7 +23,6 @@ export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
   showEmptyReview?: boolean
   hideTagsRow?: boolean
   wrapTagsRow?: boolean
-  userId: string
 }
 
 export const RestaurantReview = memo(

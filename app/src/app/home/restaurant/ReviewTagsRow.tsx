@@ -1,4 +1,4 @@
-import { graphql, resolved, useRefetch } from '@dish/graph'
+import { graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Search, Tag, X } from '@dish/react-feather'
 import { uniqBy } from 'lodash'
@@ -96,17 +96,14 @@ import { RestaurantReviewProps } from './RestaurantReview'
 export const ReviewTagsRow = graphql(
   ({
     review,
+    list,
     restaurantSlug,
     listTheme,
     label = 'Tags:',
     wrapTagsRow,
-    userId,
-    query,
     ...props
   }: RestaurantReviewProps & {
     label?: string
-    query?: any
-    userId: string | null
   }) => {
     const [search, setSearch] = useState('')
     const setSearchDbc = useDebounce(setSearch, 350)
@@ -115,18 +112,54 @@ export const ReviewTagsRow = graphql(
     const [refetchKey, setRefetchKey] = useState('')
     const refetch = useRefetch()
 
-    const userTags = userId
-      ? review?.reviews({
-          limit: 20,
-          where: {
-            user_id: {
-              _eq: userId,
-            },
-          },
-        }) || []
-      : []
+    // const userTags = query.review({
+    //   where: {
+    //     tag_id: {
+    //       _neq: null,
+    //     },
+    //     user_id: {
+    //       _eq: review?.user_id,
+    //     },
+    //     rating: {
+    //       _neq: null,
+    //     },
+    //   },
+    //   limit: 5,
+    //   order_by: [{ tag: { type: order_by.desc } }, { tag: { id: order_by.desc } }],
+    // })
 
-    console.log('userTags', userTags)
+    const userTags =
+      review?.reviews({
+        limit: 5,
+        where: {},
+        order_by: [{ tag: { id: order_by.desc } }],
+      }) ??
+      (restaurantSlug
+        ? list?.user?.reviews({
+            where: {
+              tag_id: {
+                _neq: null,
+              },
+              rating: {
+                _neq: null,
+              },
+              restaurant: {
+                slug: {
+                  _eq: restaurantSlug,
+                },
+              },
+            },
+          })
+        : null) ??
+      []
+    // review?.reviews({
+    //     limit: 20,
+    //     // where: {
+    //     //   user_id: {
+    //     //     _eq: userId,
+    //     //   },
+    //     // },
+    //   }) || []
 
     useEffect(() => {
       refetch(userTags)
@@ -165,7 +198,7 @@ export const ReviewTagsRow = graphql(
     let allTags = isFocused
       ? [
           ...tagLenses,
-          ...userTags.map((x) => x.tag),
+          ...userTags,
           //
           ...((!!restaurant &&
             getRestaurantDishes({
@@ -175,15 +208,15 @@ export const ReviewTagsRow = graphql(
             })) ||
             []),
         ]
-      : userTags.map((x) => x.tag)
+      : userTags
 
-    if (allTags.length < 5) {
-      allTags = [...allTags]
-    }
-
-    const tags = uniqBy(allTags, (x) => x?.slug)
+    // @ts-ignore
+    const tags = uniqBy(allTags, (x) => ('tag' in x ? x.tag : x?.slug))
       .filter(isPresent)
       .map(getTagButtonProps)
+
+    console.log('tags', tags)
+
     const tagsKey = tags.map((x) => x.slug).join('')
 
     useAsyncEffect(

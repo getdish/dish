@@ -75,7 +75,6 @@ const HomePageReviewContent = memo(
         <SmallTitle fontWeight="600">{restaurant.name}</SmallTitle>
         <Suspense fallback={<LoadingItems />}>
           <RestaurantReviewEdit
-            userId={user?.id || null}
             review={review}
             restaurantSlug={state.restaurantSlug}
             onEdit={(text) => {

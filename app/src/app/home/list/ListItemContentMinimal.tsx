@@ -28,6 +28,7 @@ export const ListItemContentMinimal = memo(
       editable,
       reviewQuery,
       isEditing,
+      list,
       setIsEditing,
       onUpdate,
       isExternalReview,
@@ -75,6 +76,8 @@ export const ListItemContentMinimal = memo(
     if (!restaurant) {
       return null
     }
+
+    console.log('review?.user_id', review?.user_id)
 
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
@@ -133,7 +136,8 @@ export const ListItemContentMinimal = memo(
 
                     <HStack paddingHorizontal={20}>
                       <ReviewTagsRow
-                        userId={review?.user_id}
+                        list={list}
+                        review={review}
                         restaurantSlug={restaurant.slug || ''}
                       />
                     </HStack>

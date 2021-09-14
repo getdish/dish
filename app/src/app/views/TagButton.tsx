@@ -1,4 +1,4 @@
-import { Tag, TagQuery, TagType, graphql } from '@dish/graph'
+import { Tag, TagQuery, TagType, graphql, review } from '@dish/graph'
 import { Circle, Plus, X } from '@dish/react-feather'
 import React, { memo, useRef } from 'react'
 import {
@@ -44,26 +44,36 @@ export type TagButtonTagProps = {
   rating?: number
 }
 
-export const getTagButtonProps = (
-  tag?: TagButtonTagProps | NavigableTag | TagQuery | null
-): TagButtonProps => {
-  if (!tag) {
+type TagLike = TagButtonTagProps | NavigableTag | TagQuery
+
+const getTagProps = (tag: TagLike) => ({
+  name: tagDisplayName(tag as any),
+  type: tag.type as TagType,
+  icon: tag.icon ?? '',
+  rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
+  slug: tag.slug ?? '',
+  ...('rank' in tag && {
+    rank: tag.rank,
+    score: tag.score,
+    rating: tag.rating,
+  }),
+})
+
+export const getTagButtonProps = (review_or_tag?: TagLike | review | null): TagButtonProps => {
+  if (!review_or_tag) {
     return {
       name: '',
     }
   }
-  return {
-    name: tagDisplayName(tag as any),
-    type: tag.type as TagType,
-    icon: tag.icon ?? '',
-    rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
-    slug: tag.slug ?? '',
-    ...('rank' in tag && {
-      rank: tag.rank,
-      score: tag.score,
-      rating: tag.rating,
-    }),
+  const review = review_or_tag as review
+  if (review.tag) {
+    // is a review
+    return {
+      ...getTagProps(review.tag),
+      rating: review.rating * 5,
+    }
   }
+  return getTagProps(review_or_tag as any)
 }
 
 export type TagButtonProps = StackProps &
@@ -283,7 +293,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         <>
           {ratingStyle === 'pie' && (
             <VStack marginVertical={-2} position="relative">
-              {rating * 10 < 25 ? (
+              {rating === 0 ? null : rating * 10 < 18 ? (
                 <Text fontSize={16}>😕</Text>
               ) : rating * 10 > 90 ? (
                 <Text fontSize={16}>💎</Text>

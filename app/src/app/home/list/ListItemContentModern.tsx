@@ -38,7 +38,8 @@ import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 
 export const ListItemContentModern = memo(
   graphql((props: ListItemContentProps) => {
-    const { rank, restaurant, editable, reviewQuery, isEditing, setIsEditing, onUpdate } = props
+    const { rank, restaurant, editable, reviewQuery, isEditing, setIsEditing, onUpdate, list } =
+      props
     // modern default
     const review = reviewQuery?.[0]
     const media = useMedia()
@@ -147,7 +148,7 @@ export const ListItemContentModern = memo(
               </Link>
             </Column>
 
-            <ReviewTagsRow restaurantSlug={restaurant.slug || ''} />
+            <ReviewTagsRow list={list} review={review} restaurantSlug={restaurant.slug || ''} />
           </HStack>
 
           <HStack
@@ -203,38 +204,34 @@ export const ListItemContentModern = memo(
 
               <Spacer />
 
-              <InteractiveContainer>
-                <Link
-                  name="restaurant"
-                  flexShrink={1}
-                  params={{
-                    slug: restaurant.slug || '',
-                    section: 'reviews',
-                  }}
+              <Link
+                name="restaurant"
+                flexShrink={1}
+                params={{
+                  slug: restaurant.slug || '',
+                  section: 'reviews',
+                }}
+              >
+                <SmallButton
+                  tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                  icon={
+                    <MessageSquare
+                      style={{
+                        opacity: 0.5,
+                        marginLeft: -4,
+                      }}
+                      size={12}
+                      color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                    />
+                  }
                 >
-                  <SmallButton
-                    borderRadius={0}
-                    tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                    icon={
-                      <MessageSquare
-                        style={{
-                          opacity: 0.5,
-                          marginLeft: -4,
-                        }}
-                        size={12}
-                        color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                      />
-                    }
-                  >
-                    {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-                  </SmallButton>
-                </Link>
-                <RestaurantFavoriteButton
-                  borderRadius={0}
-                  size="md"
-                  restaurantSlug={restaurant.slug || ''}
-                />
-              </InteractiveContainer>
+                  {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                </SmallButton>
+              </Link>
+
+              <Spacer />
+
+              <RestaurantFavoriteButton size="md" restaurantSlug={restaurant.slug || ''} />
             </Column>
 
             <Column width={160} alignItems="flex-start">

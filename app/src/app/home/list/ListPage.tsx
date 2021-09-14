@@ -287,7 +287,7 @@ const ListPageContent = memo(
         .tags({ limit: 10 })
         .map((x) => x.tag!)
         .map((tag, i) => {
-          return <TagButton key={tag?.slug ?? i} size="sm" {...getTagButtonProps(tag)} />
+          return <TagButton key={tag?.slug || i} size="sm" {...getTagButtonProps(tag)} />
         })
 
       const titleContents = isEditing ? (
@@ -467,7 +467,7 @@ const ListPageContent = memo(
                     {userCommentEl}
                   </VStack>
 
-                  <VStack marginRight={-180}>
+                  <VStack width={380} marginRight={-180}>
                     <RestaurantPhotosRow
                       height={270}
                       width={200}
@@ -537,9 +537,6 @@ const ListPageContent = memo(
                   <HStack alignItems="center" flexWrap="wrap" spacing>
                     <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
                       Customize
-                    </SmallButton>
-                    <SmallButton elevation={1} onPress={() => setShowAddModal(true)}>
-                      Add
                     </SmallButton>
                   </HStack>
                 )}
@@ -742,11 +739,11 @@ const ListPageContent = memo(
                   </VStack>
                 )}
 
-                <SuspenseList revealOrder="forwards">
+                <SuspenseList revealOrder="together">
                   {restaurants.map(
                     ({ restaurantId, restaurant, dishSlugs, position, list_restaurant }, index) => {
                       return (
-                        <Suspense fallback={<FallbackListItem />} key={restaurant.slug}>
+                        <Suspense fallback={<FallbackListItem />} key={restaurant.slug || index}>
                           <HStack position="relative">
                             {/* {userStore.isAdmin && <Text>{restaurant.id}</Text>} */}
                             {isEditing && (
@@ -782,6 +779,7 @@ const ListPageContent = memo(
                               </AbsoluteVStack>
                             )}
                             <ListItem
+                              list={list}
                               listTheme={listTheme}
                               restaurant={restaurant}
                               listSlug={listSlug}

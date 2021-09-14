@@ -1,7 +1,8 @@
-import { restaurant, review } from '@dish/graph'
+import { list, restaurant, review } from '@dish/graph'
 import React from 'react'
 
 export type ListItemProps = {
+  list?: list | null
   listTheme?: 'modern' | 'minimal'
   reviewQuery?: review[] | null
   username?: string
@@ -21,4 +22,5 @@ export type ListItemContentProps = ListItemProps & {
   isEditing: boolean
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
   isExternalReview?: boolean
+  list?: list | null
 }
