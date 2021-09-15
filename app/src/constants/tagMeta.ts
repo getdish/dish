@@ -17,7 +17,7 @@ export const tagDisplayIcons = {
   Vibe: 'Date',
   Veg: 'Green',
   Drinks: 'Drink',
-  Gems: 'Top',
+  Gems: 'Overall',
 }
 
 export const tagDescriptions = {

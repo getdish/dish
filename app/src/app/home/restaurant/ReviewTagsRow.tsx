@@ -113,7 +113,7 @@ export const ReviewTagsRow = graphql(
     const refetch = useRefetch()
     const user = useUserStore().user
     const isOwnList = review?.user_id === user?.id
-    const showTagButton = isOwnList
+    const showTagButton = isOwnList || !review
 
     // const userTags = query.review({
     //   where: {
@@ -196,20 +196,21 @@ export const ReviewTagsRow = graphql(
 
     const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
 
-    const rawTags = isFocused
-      ? [
-          ...tagLenses,
-          ...userTags,
-          //
-          ...((!!restaurant &&
-            getRestaurantDishes({
-              restaurant,
-              max: 10,
-              tagSlugs: [''],
-            })) ||
-            []),
-        ]
-      : userTags
+    const rawTags =
+      isFocused || !review
+        ? [
+            ...tagLenses,
+            ...userTags,
+            //
+            ...((!!restaurant &&
+              getRestaurantDishes({
+                restaurant,
+                max: 10,
+                tagSlugs: [''],
+              })) ||
+              []),
+          ]
+        : userTags
 
     let tags = filtered.length ? filtered : rawTags.filter(isPresent).map(getTagButtonProps)
     tags = uniqBy(tags, (x) => x.name || x.slug)
@@ -319,6 +320,7 @@ export const ReviewTagsRow = graphql(
                 noLink
                 size="sm"
                 restaurantSlug={restaurantSlug}
+                hideRank
                 key={tbp.slug || 0}
                 refetchKey={refetchKey}
                 {...tbp}
