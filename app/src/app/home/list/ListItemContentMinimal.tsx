@@ -208,7 +208,7 @@ export const ListItemContentMinimal = memo(
                   </SmallButton>
                 )}
 
-                <RestaurantRatingView restaurant={restaurant} size={34} />
+                {/* <RestaurantRatingView restaurant={restaurant} size={34} /> */}
 
                 <HStack paddingVertical={0} paddingRight={10} alignItems="center" spacing>
                   {!!restaurant.address && (
