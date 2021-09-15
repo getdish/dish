@@ -13,22 +13,22 @@ export const AppMapRestaurantPeek = memo(
   graphql((props: any) => {
     const home = useHomeStore()
     const [slug, setSlug] = useState('')
-    // const [selectedSlug, hoveredSlug] = useStoreInstanceSelector(
-    //   appMapStore,
-    //   (x) => [x.selected?.slug ?? '', x.hovered?.slug ?? ''] as const
-    // )
+    const [selectedSlug, hoveredSlug] = useStoreInstanceSelector(
+      appMapStore,
+      (x) => [x.selected?.slug ?? '', x.hovered?.slug ?? ''] as const
+    )
 
     console.log('was rendering too much')
 
     // TODO could make hook useMostRecentValue(...args)
 
-    // useEffect(() => {
-    //   setSlug(selectedSlug)
-    // }, [selectedSlug])
+    useEffect(() => {
+      setSlug(selectedSlug)
+    }, [selectedSlug])
 
-    // useEffect(() => {
-    //   setSlug(hoveredSlug)
-    // }, [hoveredSlug])
+    useEffect(() => {
+      setSlug(hoveredSlug)
+    }, [hoveredSlug])
 
     const state = home.currentState
 

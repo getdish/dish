@@ -44,6 +44,8 @@ export type CommentBubbleProps = Omit<StackProps, 'children'> & {
   chromeless?: boolean
   hideMeta?: boolean
   source?: string
+  size?: 'lg' | 'md'
+  color?: string
 }
 
 export const CommentBubble = (props: CommentBubbleProps) => {
@@ -115,11 +117,13 @@ function CommentBubbleContents({
   date,
   onExpand,
   expanded,
+  size,
   // belowContent,
   source,
   avatarBackgroundColor,
   scrollable,
   children,
+  color,
 }: CommentBubbleProps & {
   onExpand?: () => any
   expanded?: boolean
@@ -143,15 +147,14 @@ function CommentBubbleContents({
       {!!text && (
         <Paragraph
           className="preserve-whitespace break-word"
-          selectable
           maxWidth="100%"
           overflow="hidden"
           sizeLineHeight={0.9}
-          size={1}
-          fontSize={15}
+          fontSize={size === 'lg' ? 18 : 14}
+          color={color}
         >
           {ellipseContentAbove && text && text.length > ellipseContentAbove ? (
-            <Text>
+            <Text selectable>
               {expanded
                 ? text
                 : typeof text === 'string'

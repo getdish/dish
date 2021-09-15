@@ -150,7 +150,6 @@ export const ListItemContentModern = memo(
             <VStack justifyContent="center" flex={1} position="relative">
               <Suspense fallback={null}>
                 <RestaurantReview
-                  paddingBottom={30}
                   hideTagsRow
                   expandable={false}
                   ellipseContentAbove={Infinity}

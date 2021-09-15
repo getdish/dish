@@ -8,6 +8,7 @@ import { RestaurantReviewEdit } from './RestaurantReviewEdit'
 import { ReviewTagsRow } from './ReviewTagsRow'
 
 export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
+  size?: 'lg' | 'md'
   listTheme?: 'modern' | 'minimal'
   restaurantSlug?: string
   listSlug?: string
@@ -36,7 +37,6 @@ export const RestaurantReview = memo(
         hideUsername,
         hideRestaurantName,
         height,
-        // @ts-ignore,
         isEditing,
         onEdit,
         onDelete,

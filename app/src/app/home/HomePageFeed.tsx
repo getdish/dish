@@ -157,16 +157,17 @@ export const HomePageFeed = memo(
                   return (
                     <VStack alignItems="center" flex={1} key={i} marginBottom={20}>
                       <Link
-                        {...(list && {
-                          name: 'list',
-                          params: {
-                            slug: list?.slug ?? '',
-                            userSlug: list?.user?.username ?? '',
-                          },
-                        })}
-                        {...(!list && {
-                          tag: lense,
-                        })}
+                        tag={lense}
+                        // {...(list && {
+                        //   name: 'list',
+                        //   params: {
+                        //     slug: list?.slug ?? '',
+                        //     userSlug: list?.user?.username ?? '',
+                        //   },
+                        // })}
+                        // {...(!list && {
+                        //   tag: lense,
+                        // })}
                       >
                         <FeedCard
                           flat

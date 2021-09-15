@@ -118,7 +118,6 @@
     "react-native-reanimated": "^2.2.0",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-svg": "^12.1.1",
-    "react-native-swipeable-item": "^1.5.7",
     "react-query": "^3.23.0",
     "react-reparenting": "^0.6.1",
     "recyclerlistview": "^3.0.5",
