@@ -138,7 +138,7 @@ const RestaurantPage = memo(
 
       const scrollY = useRef(0)
       const topTags = queryRestaurantTags({
-        restaurantSlug,
+        restaurant,
         limit: 3,
         exclude: ['category', 'country', 'lense'],
       }).map((x) => x.tag.name)
