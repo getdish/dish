@@ -31,10 +31,10 @@ export const TagButtonVote = graphql(
         position="relative"
         justifyContent="center"
         borderRadius={100}
-        width={50 * scale}
-        height={50 * scale}
-        marginVertical={-10 * scale}
-        marginHorizontal={-10 * scale}
+        width={48 * scale}
+        height={48 * scale}
+        marginVertical={-8 * scale}
+        marginHorizontal={-8 * scale}
         opacity={0.8}
       >
         {!props.disablePopover && vote === 0 && <Circle {...iconProps} />}

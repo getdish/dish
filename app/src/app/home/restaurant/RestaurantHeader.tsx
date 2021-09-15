@@ -100,7 +100,7 @@ const RestaurantHeaderContent = memo(
                   y={10}
                   marginRight={-30}
                   pointerEvents="auto"
-                  paddingHorizontal={35}
+                  paddingHorizontal={30}
                   paddingVertical={9}
                   alignItems="center"
                   position="relative"
@@ -111,9 +111,9 @@ const RestaurantHeaderContent = memo(
                 >
                   <AbsoluteVStack
                     fullscreen
-                    backgroundColor={theme.backgroundColor}
+                    backgroundColor={colors.themeColorAlt}
                     zIndex={-1}
-                    opacity={0.85}
+                    opacity={0.96}
                     borderRadius={100}
                     shadowColor="#000"
                     shadowOpacity={0.1}
@@ -122,7 +122,7 @@ const RestaurantHeaderContent = memo(
                   />
                   <HStack>
                     <Text
-                      color={colors.themeColorAlt}
+                      color={theme.color}
                       alignSelf="flex-start"
                       selectable
                       letterSpacing={-1}

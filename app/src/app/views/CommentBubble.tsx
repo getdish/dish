@@ -284,6 +284,7 @@ function CommentBubbleContents({
         <VStack
           paddingHorizontal={15}
           paddingVertical={chromeless ? 0 : 10}
+          paddingBottom={chromeless ? 10 : 0}
           marginLeft={chromeless ? 0 : 20}
           backgroundColor={theme.cardBackgroundColor}
           borderColor={theme.borderColor}

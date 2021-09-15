@@ -10,8 +10,8 @@ import { RestaurantReview } from './RestaurantReview'
 export const RestaurantReviewsList = memo(
   graphql(
     ({ restaurantSlug, before }: { restaurantSlug: string; numToShow?: number; before?: any }) => {
-      const topReviews = query.review({
-        limit: 4,
+      const topReviewsInternal = query.review({
+        limit: 6,
         where: {
           restaurant: {
             slug: {
@@ -21,8 +21,33 @@ export const RestaurantReviewsList = memo(
           text: {
             _is_null: false,
           },
+          source: {
+            _is_null: true,
+          },
         },
       })
+
+      const topReviewsExternal = query.review({
+        limit: 2,
+        where: {
+          restaurant: {
+            slug: {
+              _eq: restaurantSlug,
+            },
+          },
+          text: {
+            _is_null: false,
+          },
+          source: {
+            _is_null: false,
+          },
+        },
+      })
+
+      const topReviews = [
+        ...topReviewsInternal,
+        ...(topReviewsInternal.length < 2 ? topReviewsExternal : []),
+      ]
 
       const [review] = useUserReviewQuery(restaurantSlug)
 

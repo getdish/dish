@@ -1,6 +1,6 @@
 - args:
     cascade: false
     read_only: false
-    sql: alter table "public"."review" add constraint "review_type_user_id_list_id_key"
+    sql: alter table "public"."review" add constraint if not exists "review_type_user_id_list_id_key"
       unique ("type", "user_id", "list_id");
   type: run_sql

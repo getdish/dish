@@ -100,10 +100,12 @@ export const ReviewTagsRow = graphql(
     restaurantSlug,
     listTheme,
     label = 'Tags:',
+    hideGeneralTags,
     wrapTagsRow,
     ...props
   }: RestaurantReviewProps & {
     label?: string
+    hideGeneralTags?: boolean
   }) => {
     const [search, setSearch] = useState('')
     const setSearchDbc = useDebounce(setSearch, 350)
@@ -197,7 +199,7 @@ export const ReviewTagsRow = graphql(
     const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
 
     const rawTags =
-      isFocused || !review
+      (isFocused || !review) && !hideGeneralTags
         ? [
             ...tagLenses,
             ...userTags,
@@ -285,6 +287,7 @@ export const ReviewTagsRow = graphql(
             <SmallButton
               onPress={() => setIsFocused(true)}
               icon={<Tag opacity={0.5} size={16} color="#888" />}
+              marginRight={15}
             ></SmallButton>
           )}
 
@@ -309,6 +312,7 @@ export const ReviewTagsRow = graphql(
           spacing="sm"
           {...(wrapTagsRow && {
             flexWrap: 'wrap',
+            marginBottom: -10,
             flex: 1,
           })}
         >
@@ -331,6 +335,11 @@ export const ReviewTagsRow = graphql(
                   tooltip: tbp.name,
                   circular: true,
                 })}
+                {...(tbp.slug === 'lenses__gems' && {
+                  name: 'Overall',
+                  icon: '',
+                  circular: false,
+                })}
                 {...(!isLense && {
                   backgroundColor: 'transparent',
                 })}
@@ -338,6 +347,9 @@ export const ReviewTagsRow = graphql(
                   !isLense && {
                     marginLeft: 20,
                   })}
+                {...(wrapTagsRow && {
+                  marginBottom: 10,
+                })}
                 votable
               />
             )

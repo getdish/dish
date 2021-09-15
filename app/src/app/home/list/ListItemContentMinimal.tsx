@@ -17,6 +17,7 @@ import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
 import { RestaurantRatingView } from '../RestaurantRatingView'
+import { Column } from './Column'
 import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 
@@ -53,9 +54,8 @@ export const ListItemContentMinimal = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 24 : 30) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 24 : 32) * titleFontScale)
     const theme = useTheme()
-    const imgSize = 100
 
     const restaurantReviewListProps = useRestaurantReviewListProps({
       restaurantId: restaurant?.id,
@@ -80,7 +80,7 @@ export const ListItemContentMinimal = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <HStack
-          paddingVertical={12}
+          paddingVertical={16}
           paddingHorizontal={18}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
@@ -88,59 +88,76 @@ export const ListItemContentMinimal = memo(
           overflow="hidden"
         >
           <HStack paddingLeft={10} flex={1}>
-            <VStack flex={1} width={media.xs ? 300 : media.sm ? 450 : 550}>
-              <HStack>
-                <VStack flex={1}>
-                  <HStack
-                    className="hover-faded-in-parent"
-                    alignItems="center"
-                    flexGrow={1}
-                    position="relative"
-                  >
-                    <VStack opacity={0.5} y={3} marginLeft={-38} marginRight={10} width={35}>
-                      <RankView rank={rank} />
-                    </VStack>
-
-                    <HStack marginHorizontal={-10} alignItems="center" marginBottom={5}>
-                      <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
-                        <HStack
-                          paddingVertical={8}
-                          marginVertical={-8}
-                          borderRadius={8}
-                          alignItems="center"
-                          hoverStyle={{
-                            backgroundColor: theme.backgroundColorSecondary,
-                          }}
-                          pressStyle={{
-                            backgroundColor: theme.backgroundColorTertiary,
-                          }}
-                          flex={1}
-                          overflow="hidden"
-                        >
-                          <Text
-                            fontSize={titleFontSize}
-                            color={theme.color}
-                            fontWeight="400"
-                            letterSpacing={-0.25}
-                            paddingHorizontal={10} // prevents clipping due to letter-spacing
-                            ellipse
-                            maxWidth="100%"
-                          >
-                            {restaurantName}
-                          </Text>
-                        </HStack>
-                      </Link>
-                    </HStack>
-
-                    <HStack paddingHorizontal={20}>
-                      <ReviewTagsRow
-                        list={list}
-                        review={review}
-                        restaurantSlug={restaurant.slug || ''}
-                      />
-                    </HStack>
-                  </HStack>
+            <VStack flex={1}>
+              <HStack
+                className="hover-faded-in-parent"
+                alignItems="center"
+                flexGrow={1}
+                position="relative"
+              >
+                <VStack opacity={0.5} y={3} marginLeft={-38} marginRight={10} width={35}>
+                  <RankView rank={rank} />
                 </VStack>
+
+                <HStack marginHorizontal={-10} alignItems="center">
+                  <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
+                    <HStack
+                      paddingVertical={4}
+                      marginVertical={-4}
+                      borderRadius={8}
+                      alignItems="center"
+                      hoverStyle={{
+                        backgroundColor: theme.backgroundColorSecondary,
+                      }}
+                      pressStyle={{
+                        backgroundColor: theme.backgroundColorTertiary,
+                      }}
+                      flex={1}
+                      overflow="hidden"
+                    >
+                      <Text
+                        fontSize={titleFontSize}
+                        color={theme.color}
+                        fontWeight="400"
+                        letterSpacing={-0.25}
+                        paddingHorizontal={10} // prevents clipping due to letter-spacing
+                        ellipse
+                        maxWidth="100%"
+                      >
+                        {restaurantName}
+                      </Text>
+                    </HStack>
+                  </Link>
+                </HStack>
+              </HStack>
+
+              <HStack alignItems="center" marginTop={-5} marginLeft={-7}>
+                <Column width={160} alignItems="flex-start">
+                  {!!restaurant.address && (
+                    <RestaurantAddress size={'xs'} address={restaurant.address} />
+                  )}
+                </Column>
+
+                <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
+
+                <Column width={50}>
+                  <Text fontSize={14} color={theme.colorTertiary}>
+                    {price_range ?? '?'}
+                  </Text>
+                </Column>
+
+                {!!open.nextTime && (
+                  <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
+                    <Text
+                      paddingHorizontal={5}
+                      opacity={0.8}
+                      fontSize={13}
+                      color={theme.colorTertiary}
+                    >
+                      {open.nextTime || ''}
+                    </Text>
+                  </Link>
+                )}
               </HStack>
 
               {/* START CONTENT ROW */}
@@ -168,7 +185,7 @@ export const ListItemContentMinimal = memo(
                     )} */}
 
                     {(review || isEditing) && (
-                      <VStack paddingLeft={0} paddingRight={10}>
+                      <VStack marginTop={10} paddingLeft={0} paddingRight={10}>
                         <RestaurantReview
                           marginTop={-10}
                           hideTagsRow
@@ -201,47 +218,19 @@ export const ListItemContentMinimal = memo(
                 )}
 
                 {!!editable && isEditing && (
-                  <SmallButton elevation={1} onPress={() => setIsEditing(false)}>
-                    Cancel
-                  </SmallButton>
+                  <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
                 )}
 
                 {/* <RestaurantRatingView restaurant={restaurant} size={34} /> */}
 
-                <HStack
-                  marginLeft={-5}
-                  paddingVertical={0}
-                  paddingRight={10}
-                  alignItems="center"
-                  spacing
-                >
-                  {!!restaurant.address && (
-                    <RestaurantAddress size={'xs'} address={restaurant.address} />
-                  )}
-
-                  <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
-
-                  <Text
-                    paddingHorizontal={5}
-                    opacity={0.8}
-                    fontSize={13}
-                    color={theme.colorTertiary}
-                  >
-                    {price_range ?? '?'}
-                  </Text>
-
-                  {!!open.nextTime && (
-                    <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
-                      <Text
-                        paddingHorizontal={5}
-                        opacity={0.8}
-                        fontSize={13}
-                        color={theme.colorTertiary}
-                      >
-                        {open.nextTime || ''}
-                      </Text>
-                    </Link>
-                  )}
+                <HStack flex={1} alignItems="center">
+                  <ReviewTagsRow
+                    hideGeneralTags
+                    wrapTagsRow
+                    list={list}
+                    review={review}
+                    restaurantSlug={restaurant.slug || ''}
+                  />
                 </HStack>
                 {/* 
                 <Link
