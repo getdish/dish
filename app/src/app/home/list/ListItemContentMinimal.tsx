@@ -89,8 +89,7 @@ export const ListItemContentMinimal = memo(
         >
           <HStack paddingLeft={10} flex={1}>
             <VStack flex={1} width={media.xs ? 300 : media.sm ? 450 : 550}>
-              {/* negative margin compensates for tall height of title hover */}
-              <HStack marginBottom={-10}>
+              <HStack>
                 <VStack flex={1}>
                   <HStack
                     className="hover-faded-in-parent"
@@ -171,6 +170,7 @@ export const ListItemContentMinimal = memo(
                     {(review || isEditing) && (
                       <VStack paddingLeft={0} paddingRight={10}>
                         <RestaurantReview
+                          marginTop={-10}
                           hideTagsRow
                           wrapTagsRow
                           expandable={false}
