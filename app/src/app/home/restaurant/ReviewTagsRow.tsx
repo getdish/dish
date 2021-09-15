@@ -135,12 +135,21 @@ export const ReviewTagsRow = graphql(
 
     const userTags =
       review?.reviews({
-        limit: 5,
-        where: {},
+        limit: 50,
+        where: {
+          tag_id: {
+            _neq: null,
+          },
+          rating: {
+            _neq: null,
+          },
+        },
         order_by: [{ tag: { id: order_by.desc } }],
       }) ??
       (restaurantSlug
         ? list?.user?.reviews({
+            limit: 50,
+            order_by: [{ tag: { id: order_by.desc } }],
             where: {
               tag_id: {
                 _neq: null,
@@ -214,7 +223,16 @@ export const ReviewTagsRow = graphql(
           ]
         : userTags
 
-    let tags = filtered.length ? filtered : rawTags.filter(isPresent).map(getTagButtonProps)
+    let tags = filtered.length
+      ? filtered
+      : rawTags
+          .filter(isPresent)
+          .map(getTagButtonProps)
+          .filter((x) => {
+            if (x.slug === 'global__global') return false
+            if (!x.name) return false
+            return true
+          })
     tags = uniqBy(tags, (x) => x.name || x.slug)
     tags = sortBy(tags, (x) => (x.type === 'lense' ? -1 : 0))
 

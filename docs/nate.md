@@ -1,12 +1,5 @@
-- list custom header image
-- known for: dishes/tags row
+- list columns for comparison across tags
 - fix write review
-- fix restaurant page show tag reviews on individual + Edit button
-- fix add review page
-- make a new auto-dish + auto-sentiment api for listpage edit
-    - use it on vietnamese list, have it pull out dishes
-    - show in dish row at bottom auto ratings
-- design list entry as review as flexible document-db interface
 - fix mobile web bugs
 - Follow people (+ follow in list page)
 - Reset password: SyntaxError: The string did not match the expected pattern.

@@ -124,7 +124,7 @@ export default function ListPage(props: Props) {
   return (
     <>
       {isCreating && (
-        <StackDrawer closable title={`Create playlist`}>
+        <StackDrawer closable title={`Create list`}>
           <VStack paddingBottom="50%" alignItems="center" justifyContent="center" flex={1}>
             <Paragraph opacity={0.5}>Creating...</Paragraph>
           </VStack>

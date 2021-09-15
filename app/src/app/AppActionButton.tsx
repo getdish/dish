@@ -51,7 +51,7 @@ const AppActionButtonContents = ({ hide }: { hide?: (e: GestureResponderEvent) =
           }}
           onPressOut={hide}
         >
-          Create Playlist
+          Create list
         </MenuLinkButton>
       </VStack>
     </Box>

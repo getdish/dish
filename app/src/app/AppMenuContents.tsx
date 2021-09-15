@@ -80,7 +80,7 @@ export const AppMenuContents = memo(
                   slug: 'create',
                 }}
               >
-                Create Playlist
+                Create list
               </MenuLinkButton>
 
               {isLoggedIn && user?.username === 'admin' && (
