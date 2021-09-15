@@ -82,7 +82,7 @@ export class GoogleReviewAPI extends WorkerJob {
       if (data.length == 0) break
       allData = [...allData, ...data]
       page++
-      if (process.env.RUN_WITHOUT_WORKER == 'true') {
+      if (process.env.NODE_ENV == 'test') {
         break
       }
       if (!nextPageToken) {
@@ -91,6 +91,7 @@ export class GoogleReviewAPI extends WorkerJob {
       }
     }
     await this.saveRestaurant(restaurant, allData)
+    this.log(`Finished getRestaurant() for '${restaurant.name}'`)
     return true
   }
 

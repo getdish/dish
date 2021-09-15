@@ -188,8 +188,9 @@ function clean_dangling() {
 function hungry_services_tunnels() {
   echo "Opening tunnels to hungry services on prod..."
   tunnel_prod_service_to_local 5002 & # Summarizer
-  tunnel_prod_service_to_local 5005 & # Bert
+  tunnel_prod_service_to_local 5005 & # Image quality
   tunnel_prod_service_to_local 8884 & # Image recognition
+  tunnel_prod_service_to_local 8888 & # Bert
   wait
 }
 

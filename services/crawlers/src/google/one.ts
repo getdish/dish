@@ -6,7 +6,7 @@ import { GoogleReviewAPI } from './GoogleReviewAPI'
 
 async function one_puppeteer(slug: string) {
   const restaurant = await restaurantFindOne({ slug })
-  if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
+  if (!restaurant) throw new Error('Google sandbox: could not find ' + slug)
   const google = new GooglePuppeteer()
   console.log('Restaurant from DB being used for Google crawl: ' + restaurant.name)
   await google.getRestaurant(restaurant)
@@ -14,7 +14,7 @@ async function one_puppeteer(slug: string) {
 
 async function one_geocoder(slug: string) {
   const restaurant = await restaurantFindOne({ slug })
-  if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
+  if (!restaurant) throw new Error('Google sandbox: could not find ' + slug)
   if (!restaurant.location) {
     throw new Error(`No restaurant.location`)
   }
@@ -30,7 +30,7 @@ async function one_geocoder(slug: string) {
 
 async function one_review_api(slug: string) {
   const restaurant = await restaurantFindOne({ slug })
-  if (!restaurant) throw new Error('Google sandbox: could not find ' + name)
+  if (!restaurant) throw new Error('Google sandbox: could not find ' + slug)
   const google = new GoogleReviewAPI()
   console.log('Restaurant from DB being used for Google crawl: ' + restaurant.name)
   await google.getRestaurant(restaurant.id)

@@ -195,8 +195,12 @@ export class Self extends WorkerJob {
         // this.generateSummary,
       ]
       for (const async_func of async_steps) {
-        this.log('running step', async_func.name)
-        if (IS_FULL_RUN || process.env.ONLY_FUNC == async_func.name) {
+        if (
+          IS_FULL_RUN ||
+          process.env.ONLY_FUNC == async_func.name ||
+          async_func.name == 'mergeMainData'
+        ) {
+          this.log('running step', async_func.name)
           await this._runFailableFunction(async_func)
         }
       }
@@ -236,7 +240,10 @@ export class Self extends WorkerJob {
       this.getRatingFactors,
     ]
     for (const step of steps) {
-      await this._runFailableFunction(step)
+      if (IS_FULL_RUN || process.env.ONLY_FUNC == step.name) {
+        this.log('running step', step.name)
+        await this._runFailableFunction(step)
+      }
     }
   }
 
@@ -673,7 +680,6 @@ export class Self extends WorkerJob {
     }
 
     path = scrapeGetData(this.yelp, (x) => x.data_from_search_list_item.businessUrl)
-    this.log('ratings', ratings)
     if (path != '') {
       this.restaurant.sources.yelp = {
         url: 'https://www.yelp.com' + path,

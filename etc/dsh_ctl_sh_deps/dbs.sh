@@ -134,6 +134,11 @@ function scrape_json_query() {
   timescale_db_command "select jsonb_agg(t) from ($query) t" | grep '\[{'
 }
 
+function main_json_query() {
+  query="$1"
+  main_db_command "select jsonb_agg(t) from ($query) t" | grep '\[{'
+}
+
 function hasura_clean_event_logs() {
   main_db_command '
     DELETE FROM hdb_catalog.event_invocation_logs;

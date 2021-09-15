@@ -114,9 +114,9 @@ export async function restaurantUpsertManyTags(
     return { ...existing, ...rt }
   })
   const chunks = chunk(populated, 10)
-  console.log('Upserting tags chunks...', chunks.length)
   let next: RestaurantWithId | null = null
   for (const [index, chunk] of chunks.entries()) {
+    console.log('Upserting tags chunks...', chunk.length)
     next = await restaurantUpsertRestaurantTags(restaurant, chunk, opts)
   }
   return next

@@ -168,7 +168,7 @@ export class Tripadvisor extends WorkerJob {
           TRIPADVISOR_OG_DOMAIN + path,
           args + ' ' + ['--max-time 5', `--proxy 'https://${PROXY}'`].join(' ')
         )
-      } catch (error) {
+      } catch (error: any) {
         if (!error.message.includes('timed out')) {
           throw new Error(error)
         }
@@ -177,7 +177,8 @@ export class Tripadvisor extends WorkerJob {
       if (html.length > 2000) {
         return html
       } else {
-        this.log('Retrying: ' + path)
+        console.log(html)
+        this.log('HTML less than 2000 chars, retrying: ' + path)
       }
       tries += 1
     }

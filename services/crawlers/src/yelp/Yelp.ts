@@ -244,16 +244,18 @@ export class Yelp extends WorkerJob {
         for (const data of validResults) {
           const info = data.searchResultBusiness
           if (isMatchingRestaurant(info, onlyRestaurant, strategy as any)) {
-            // prettier-ignore
-            this.log(`YELP SANDBOX: found ${info.name} ${strategy} - scrape (${info.formattedAddress} ${info.phone} ${info.name}) restaurant (${onlyRestaurant.address} ${onlyRestaurant.telephone} ${onlyRestaurant.name})`)
+            const scrape_msg = `scrape (${info.formattedAddress} ${info.phone} ${info.name})`
+            const restaurant_msg = `restaurant (${onlyRestaurant.address} ${onlyRestaurant.telephone} ${onlyRestaurant.name})`
+            const prefix = `YELP SANDBOX: found ${info.name} ${strategy}`
+            this.log(`${prefix} - ${scrape_msg} ${restaurant_msg}`)
             toCrawl = [data]
             found_the_one = true
             break
           }
         }
       }
-      findOne('strict')
-      findOne('fuzzy')
+      // findOne('strict')
+      // findOne('fuzzy')
       findOne('name')
     }
 
@@ -273,7 +275,7 @@ export class Yelp extends WorkerJob {
       await Promise.race([
         this.processRestaurant(data),
         timeout.then(() => {
-          console.warn('Timed out getting restaurant', name)
+          console.warn('Timed out getting restaurant', data.searchResultBusiness?.name)
         }),
       ])
       timeout.cancel()

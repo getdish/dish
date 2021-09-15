@@ -25,7 +25,6 @@ function clean() {
 
 function run() {
   if [ ! -z "$DEV_USER" ]; then
-    source .env.development
     source .env.local
   fi
   if [ "$DISH_DEBUG" -gt "2" ]; then
