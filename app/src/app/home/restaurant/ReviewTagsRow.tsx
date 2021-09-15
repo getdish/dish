@@ -38,7 +38,7 @@ export const ReviewTagsRow = graphql(
     const [filtered, setFiltered] = useState<TagButtonProps[]>([])
     const refetch = useRefetch()
     const user = useUserStore().user
-    const isOwnList = review?.user_id === user?.id
+    const isOwnList = user && review && review.user_id && review.user_id === user.id
     const showTagButton = isOwnList || !review
 
     const reviewUserTags = review?.reviews({
@@ -203,15 +203,12 @@ export const ReviewTagsRow = graphql(
       [search, tagsKey]
     )
 
+    if (hideGeneralTags && !isOwnList && !tags.length) {
+      return null
+    }
+
     return (
-      <HStack
-        paddingRight={20}
-        maxWidth="100%"
-        alignItems="center"
-        pointerEvents="auto"
-        zIndex={1000}
-        {...props}
-      >
+      <HStack maxWidth="100%" alignItems="center" pointerEvents="auto" zIndex={1000} {...props}>
         <HStack
           alignItems="center"
           paddingVertical={16}

@@ -160,13 +160,13 @@ export const CardFrame = ({
       {!!backgroundColor && (
         <AbsoluteVStack
           fullscreen
-          className="hover-100-opacity-child chrome-fix-overflow safari-fix-overflow"
+          className="hover-25-opacity-child chrome-fix-overflow safari-fix-overflow"
           scale={1}
           overflow="hidden"
           borderRadius={flat ? 0 : cardFrameBorderRadius}
           backgroundColor={backgroundColor}
           {...(hoverEffect === 'background' && {
-            opacity: 0.6,
+            opacity: 0.2,
           })}
         />
       )}

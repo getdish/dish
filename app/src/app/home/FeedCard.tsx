@@ -1,12 +1,11 @@
-import React, { isValidElement } from 'react'
-import { AbsoluteHStack, AbsoluteVStack, Paragraph, Text, VStack } from 'snackui'
+import React from 'react'
+import { AbsoluteHStack, Paragraph, Text, VStack } from 'snackui'
 
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { pluralize } from '../../helpers/pluralize'
 import { rgbString } from '../../helpers/rgb'
-import { Image } from '../views/Image'
 import { TagButton } from '../views/TagButton'
-import { Card, CardOverlay, CardProps, getCardDimensions } from './restaurant/Card'
+import { Card, CardOverlay, CardProps } from './restaurant/Card'
 
 export type FeedCardProps = CardProps & {
   author?: string
