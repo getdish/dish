@@ -4,7 +4,7 @@ import { Toast } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { queryList } from '../../../queries/queryList'
-import { getListColor } from '../../home/list/listColors'
+import { getListColors } from '../../home/list/listColors'
 import { useUserStore, userStore } from '../../userStore'
 import { ListIDProps } from './ListCard'
 
@@ -23,7 +23,7 @@ export const useList = ({ slug }: ListIDProps) => {
       },
     })
     .map((x) => x.restaurant.image)
-  const backgroundColor = getListColor(list?.color) ?? colors.color
+  const backgroundColor = getListColors(list?.color) ?? colors.color
   return { list, colors, photos, backgroundColor }
 }
 
@@ -80,7 +80,10 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
       favorited,
     }
     setIsFavorited(favorited)
-    const response = await reviewUpsert([next], review_constraint.review_user_id_restaurant_id_list_id_type_key)
+    const response = await reviewUpsert(
+      [next],
+      review_constraint.review_user_id_restaurant_id_list_id_type_key
+    )
     if (!response) {
       console.error('response', response)
       Toast.show('Error saving')

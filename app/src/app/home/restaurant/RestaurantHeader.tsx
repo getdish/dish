@@ -7,6 +7,7 @@ import { drawerBorderRadius, isWeb } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { Link } from '../../views/Link'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
@@ -54,7 +55,7 @@ const RestaurantHeaderContent = memo(
       // const { width, drawerWidth, minWidth, setWidthDebounce } = useContentScrollHorizontalFitter()
       const scale = 1
       // const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
-      const fontScale = size === 'sm' ? 0.75 : 1.25
+      const fontScale = size === 'sm' ? 1 : 1.25
       const fontSizeBase =
         nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 26 : nameLen > 16 ? 28 : 32
       const fontSize = Math.round(scale * fontSizeBase * fontScale)
@@ -151,89 +152,79 @@ const RestaurantHeaderContent = memo(
               <Spacer size="xl" />
 
               {/* below title row */}
-              <HStack pointerEvents="auto" flex={1} alignItems="flex-start" minWidth={280}>
-                {spacer}
-                <VStack flex={10}>
-                  <VStack pointerEvents="auto" overflow="hidden" paddingRight={20}>
-                    <HStack alignItems="center" maxWidth="100%" minHeight={55}>
-                      <>
-                        <Suspense fallback={null}>
-                          <HStack marginBottom={10}>
-                            <RestaurantAddressLinksRow
-                              curLocInfo={state?.curLocInfo ?? null}
-                              size="lg"
-                              restaurantSlug={restaurantSlug}
-                            />
-                          </HStack>
+              <ContentScrollViewHorizontal>
+                <HStack pointerEvents="auto" flex={1} alignItems="center" minWidth={280}>
+                  {spacer}
+                  <VStack flex={10}>
+                    <VStack pointerEvents="auto" overflow="hidden" paddingRight={20}>
+                      <HStack alignItems="center" maxWidth="100%" minHeight={55}>
+                        <>
+                          <Suspense fallback={null}>
+                            <HStack>
+                              <RestaurantAddressLinksRow
+                                curLocInfo={state?.curLocInfo ?? null}
+                                size="lg"
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </HStack>
 
-                          <Spacer size="sm" />
+                            <Spacer size="sm" />
 
-                          <VStack marginBottom={10}>
-                            <RestaurantAddress
-                              size="xs"
-                              address={restaurant.address ?? ''}
-                              curLocInfo={state?.curLocInfo ?? null}
-                            />
-                          </VStack>
+                            <VStack>
+                              <RestaurantAddress
+                                size="xs"
+                                address={restaurant.address ?? ''}
+                                curLocInfo={state?.curLocInfo ?? null}
+                              />
+                            </VStack>
 
-                          <Spacer size="sm" />
+                            <Spacer size="sm" />
 
-                          <Link
-                            marginBottom={10}
-                            name="restaurantHours"
-                            params={{ slug: restaurantSlug }}
-                          >
-                            <SmallButton
-                              backgroundColor="transparent"
-                              borderWidth={0}
-                              textProps={{
-                                ellipse: true,
-                                opacity: 0.65,
-                              }}
-                              icon={
-                                <Clock
-                                  size={14}
-                                  color={isWeb ? 'var(--color)' : '#999'}
-                                  style={{ marginRight: 5 }}
-                                />
-                              }
-                            >
-                              {`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
-                            </SmallButton>
-                          </Link>
+                            <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                              <SmallButton
+                                backgroundColor="transparent"
+                                borderWidth={0}
+                                icon={
+                                  <Clock
+                                    size={14}
+                                    color={isWeb ? 'var(--color)' : '#999'}
+                                    style={{ marginRight: 5 }}
+                                  />
+                                }
+                              >
+                                {`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
+                              </SmallButton>
+                            </Link>
 
-                          <RestaurantDeliveryButtons
-                            marginTop={-8}
-                            marginBottom={0}
-                            marginLeft={8}
-                            showLabels
-                            restaurantSlug={restaurantSlug}
-                          />
-                        </Suspense>
-                      </>
-                    </HStack>
+                            <Spacer size="md" />
 
-                    <Spacer size="sm" />
+                            <RestaurantDeliveryButtons showLabels restaurantSlug={restaurantSlug} />
+                          </Suspense>
+                        </>
+                      </HStack>
 
-                    <RestaurantTagsRow
-                      maxLines={2}
-                      exclude={['dish']}
-                      restaurant={restaurant}
-                      spacing={10}
-                      maxItems={8}
-                      tagButtonProps={{
-                        hideRank: false,
-                        hideRating: false,
-                        votable: true,
-                      }}
-                    />
+                      <Spacer size="sm" />
 
-                    <Spacer size="sm" />
+                      <RestaurantTagsRow
+                        maxLines={2}
+                        exclude={['dish']}
+                        restaurant={restaurant}
+                        spacing={10}
+                        maxItems={8}
+                        tagButtonProps={{
+                          hideRank: false,
+                          hideRating: false,
+                          votable: true,
+                        }}
+                      />
 
-                    {afterAddress}
+                      <Spacer size="sm" />
+
+                      {afterAddress}
+                    </VStack>
                   </VStack>
-                </VStack>
-              </HStack>
+                </HStack>
+              </ContentScrollViewHorizontal>
 
               <VStack pointerEvents="auto">
                 <RestaurantOverview

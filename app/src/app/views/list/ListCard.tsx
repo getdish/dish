@@ -6,7 +6,7 @@ import { AbsoluteVStack, Hoverable, Toast, VStack } from 'snackui'
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
 import { getListPhoto } from '../../home/getListPhoto'
-import { getListColor } from '../../home/list/listColors'
+import { getListColors } from '../../home/list/listColors'
 import { ListFavoriteButton } from '../../home/restaurant/ListFavoriteButton'
 import { useUserStore } from '../../userStore'
 import { CloseButton } from '../CloseButton'
@@ -39,7 +39,7 @@ export const ListCard = memo((props: ListCardProps) => {
 const ListCardContent = graphql((props: ListCardProps) => {
   const { list } = useList(props)
   const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
-  const listColor = getListColor(list?.color)
+  const listColors = getListColors(list?.color)
   const listThemeName = (list?.theme || 0) === 0 ? 'modern' : 'minimal'
   return (
     <ListCardFrame
@@ -47,7 +47,7 @@ const ListCardContent = graphql((props: ListCardProps) => {
       numItems={numItems}
       author={` by ${getUserName(list?.user)}`}
       {...props}
-      theme={listThemeName}
+      // theme={listThemeName}
       tags={
         props.size === 'xs'
           ? []
@@ -58,10 +58,8 @@ const ListCardContent = graphql((props: ListCardProps) => {
       }
       photo={getListPhoto(list)}
       {...(props.colored && {
-        color: listColor,
-        ...(listThemeName === 'modern' && {
-          backgroundColor: `${listColor}44`,
-        }),
+        color: listColors.color,
+        backgroundColor: listColors.backgroundColor,
         chromeless: true,
         flat: true,
       })}

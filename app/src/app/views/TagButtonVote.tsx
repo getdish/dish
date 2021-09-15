@@ -40,14 +40,13 @@ export const TagButtonVote = graphql(
         height={48 * scale}
         marginVertical={-8 * scale}
         marginHorizontal={-8 * scale}
-        opacity={0.8}
       >
         {!props.disablePopover && vote === 0 && <Circle {...iconProps} />}
         {vote !== 0 && (
           <VStack
-            // width={28 * scale}
+            width={28 * scale}
             paddingLeft={6}
-            // height={28 * scale}
+            height={28 * scale}
             // backgroundColor={theme.backgroundColor}
             // borderRadius={100}
             borderColor={theme.borderColorHover}
@@ -56,7 +55,7 @@ export const TagButtonVote = graphql(
             justifyContent="center"
             pointerEvents="none"
           >
-            <Text color={theme.color} letterSpacing={-1} fontSize={20 * scale} fontWeight="300">
+            <Text color={theme.color} letterSpacing={-1} fontSize={22 * scale} fontWeight="300">
               {vote < 0 ? vote : `${vote}`}
             </Text>
           </VStack>

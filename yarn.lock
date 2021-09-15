@@ -1994,7 +1994,6 @@ __metadata:
     react-native-reanimated: ^2.2.0
     react-native-safe-area-context: ^3.1.9
     react-native-svg: ^12.1.1
-    react-native-swipeable-item: ^1.5.7
     react-native-unimodules: ^0.14.6
     react-query: ^3.23.0
     react-reparenting: ^0.6.1
@@ -21808,17 +21807,6 @@ __metadata:
     react: "*"
     react-native: ">=0.50.0"
   checksum: 20a9b2987bf5836821e51a0497fc2b598a859032fe168f80c6dcab3727bf26dc34bcb3197059e1e5775dfc91b6b20633502292d8c82e9aeb3e76807d03e0189d
-  languageName: node
-  linkType: hard
-
-"react-native-swipeable-item@npm:^1.5.7":
-  version: 1.5.7
-  resolution: "react-native-swipeable-item@npm:1.5.7"
-  peerDependencies:
-    react-native: ^0.59.0
-    react-native-gesture-handler: ^1.0.0
-    react-native-reanimated: ^1.0.0
-  checksum: 90ae6cef4e0a7a206d5451ca10c4cf569d2cddcf64c2763f6d757ddbd2490966e9cf22e9157351bc69e167a662c067b222821df6b2435b7277dac6f70485d477
   languageName: node
   linkType: hard
 

@@ -61,7 +61,7 @@ import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnM
 import { UserAvatar } from '../user/UserAvatar'
 import { ColorPicker } from './ColorPicker'
 import { ListAddRestuarant } from './ListAddRestuarant'
-import { getListColor, listColors, randomListColor } from './listColors'
+import { getListColors, listColors, randomListColor } from './listColors'
 import { ListItem } from './ListItem'
 import { useListItems } from './useListItems'
 
@@ -166,7 +166,7 @@ const ListPageContent = memo(
       const { list, isFavorited, toggleFavorite, reviewsCount, refetch } = useListFavorite({
         slug: props.item.slug,
       })
-      const listColorsMemo = useMemo(() => getListColor(list?.color), [list?.color])
+      const listColorsMemo = useMemo(() => getListColors(list?.color), [list?.color])
       const [colors, setColors] = useStateSynced(listColorsMemo)
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
       const listItems = useListItems(list)
@@ -239,7 +239,13 @@ const ListPageContent = memo(
           )
         })
 
-      const fontSize = (list.name || '').length > 24 ? 38 : 44
+      const nameLen = (list.name || '').length
+      const media = useMedia()
+      const theme = useTheme()
+      let fontSize = nameLen > 38 ? 26 : nameLen > 30 ? 36 : nameLen > 22 ? 40 : 48
+      if (media.sm) {
+        fontSize = fontSize * 0.8
+      }
 
       const titleContents = isEditing ? (
         <Input
@@ -248,7 +254,6 @@ const ListPageContent = memo(
           width="auto"
           textAlign="center"
           {...(listTheme === 'minimal' && {
-            fontSize: 36,
             fontWeight: '400',
             width: '100%',
             textAlign: 'left',
@@ -264,25 +269,20 @@ const ListPageContent = memo(
         list.name
       )
       const locationName = region.data?.name ?? props.item.region
-      const media = useMedia()
-      const theme = useTheme()
       const isMinimal = listTheme === 'minimal'
 
-      const userCommentEl = (isEditing || list.description) && (
+      const userCommentEl = (
         <VStack
-          marginBottom={10}
           width="100%"
-          paddingVertical={10}
           {...(!isMinimal && {
             maxWidth: Math.min(getWindowWidth(), drawerWidthMax) * 0.95,
           })}
-          {...(isMinimal && {
-            marginBottom: isEditing ? 20 : list.description ? 20 : -20,
-          })}
         >
           <CommentBubble
+            color={colors.color}
             chromeless={isMinimal}
             paddingHorizontal={isMinimal ? 0 : 20}
+            marginLeft={-5}
             date={list.created_at}
             after={
               <>
@@ -346,26 +346,26 @@ const ListPageContent = memo(
         <Theme name={colors.isLight ? 'dark' : 'light'}>
           {/* START HEADER */}
           <VStack
-            minHeight={isMinimal ? 280 : 40}
+            minHeight={isMinimal ? 260 : 40}
             paddingHorizontal={20}
+            paddingBottom={20}
             position="relative"
             backgroundColor={colors.backgroundColor}
           >
             {isMinimal && (
               <>
-                <VStack minHeight={20} flex={1} />
-
                 <HStack paddingHorizontal={20}>
                   <VStack
+                    maxWidth={660}
                     minWidth={380}
                     alignItems="flex-start"
                     justifyContent="flex-end"
                     width="100%"
                     flex={1}
                   >
-                    <Spacer size={80} />
+                    <VStack minHeight={90} flex={1} backgroundColor="red" />
                     <Title
-                      // color={colors.color}
+                      color={colors.color}
                       lineHeight={fontSize * 1.4}
                       fontWeight="800"
                       fontSize={fontSize}
@@ -378,7 +378,7 @@ const ListPageContent = memo(
                     {userCommentEl}
                   </VStack>
 
-                  <VStack width={380} marginRight={-180}>
+                  {/* <VStack width={380} marginRight={-180}>
                     <RestaurantPhotosRow
                       height={270}
                       width={200}
@@ -386,7 +386,7 @@ const ListPageContent = memo(
                       restaurant={listItems.items[0].restaurant}
                       max={2}
                     />
-                  </VStack>
+                  </VStack> */}
                 </HStack>
               </>
             )}
@@ -435,23 +435,14 @@ const ListPageContent = memo(
               </HStack>
             )}
 
-            {isMyList && (
+            {isMyList && isEditing && (
               <HStack
                 position="relative"
                 zIndex={1000}
-                marginBottom={-25}
-                marginTop={-25}
+                marginTop={15}
                 alignItems="center"
                 justifyContent="center"
               >
-                {!isEditing && (
-                  <HStack alignItems="center" flexWrap="wrap" spacing>
-                    <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
-                      Customize
-                    </SmallButton>
-                  </HStack>
-                )}
-
                 {isEditing && (
                   <HStack
                     backgroundColor={theme.backgroundColor}
@@ -469,7 +460,7 @@ const ListPageContent = memo(
                       color={colors.backgroundColor}
                       onChange={(backgroundColor) => {
                         const index = listColors.indexOf(backgroundColor)
-                        setColors(getListColor(index))
+                        setColors(getListColors(index))
                       }}
                     />
                     {/* <InteractiveContainer alignItems="center">
@@ -540,26 +531,32 @@ const ListPageContent = memo(
       const renderItem = useCallback(
         ({ item, index = 0, drag, isActive }: RenderItemParams<any>) => {
           const { restaurantId, restaurant, dishSlugs, position, list_restaurant } = item
+          const content = (
+            <ListItem
+              list={list}
+              listTheme={listTheme}
+              restaurant={restaurant}
+              listSlug={listSlug}
+              rank={index + 1}
+              hideRate
+              editable={isEditing || isMyList}
+              username={username}
+            />
+          )
+
+          if (!isMyList) {
+            return content
+          }
+
           return (
             <Pressable
-              style={{
-                // height: 100,
-                backgroundColor: isActive ? 'red' : undefined,
-              }}
+              // style={{
+              //   // height: 100,
+              //   // backgroundColor: isActive ? 'red' : undefined,
+              // }}
               onLongPress={drag}
             >
-              {/* <Suspense fallback={<FallbackListItem />}> */}
-              <ListItem
-                list={list}
-                listTheme={listTheme}
-                restaurant={restaurant}
-                listSlug={listSlug}
-                rank={index + 1}
-                hideRate
-                editable={isEditing || isMyList}
-                username={username}
-              />
-              {/* </Suspense> */}
+              {content}
             </Pressable>
           )
         },
@@ -621,6 +618,14 @@ const ListPageContent = memo(
             <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
               {reviewsCount}
             </FavoriteButton>
+
+            {!isEditing && (
+              <HStack alignItems="center" flexWrap="wrap" spacing>
+                <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
+                  Customize
+                </SmallButton>
+              </HStack>
+            )}
 
             {isEditing && (
               <>

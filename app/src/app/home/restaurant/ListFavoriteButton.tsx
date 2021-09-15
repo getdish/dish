@@ -13,6 +13,7 @@ export const ListFavoriteButton = graphql(
     return (
       <FavoriteButton
         backgroundColor="transparent"
+        borderWidth={0}
         {...rest}
         isFavorite={isFavorited}
         onToggle={toggleFavorite}

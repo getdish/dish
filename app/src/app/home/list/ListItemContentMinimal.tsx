@@ -12,6 +12,7 @@ import { RankView } from '../restaurant/RankView'
 import { RestaurantAddress } from '../restaurant/RestaurantAddress'
 import { RestaurantDeliveryButtons } from '../restaurant/RestaurantDeliveryButtons'
 import { openingHours, priceRange } from '../restaurant/RestaurantDetailRow'
+import { RestaurantPhotosRow } from '../restaurant/RestaurantPhotosRow'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
@@ -52,7 +53,7 @@ export const ListItemContentMinimal = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 24 : 32) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 28 : 32) * titleFontScale)
     const theme = useTheme()
 
     const restaurantReviewListProps = useRestaurantReviewListProps({
@@ -129,7 +130,7 @@ export const ListItemContentMinimal = memo(
                 </HStack>
               </HStack>
 
-              <HStack alignItems="center" marginTop={-5} marginLeft={-7}>
+              <HStack alignItems="center" marginTop={-8} marginLeft={-6}>
                 <Column width={160} alignItems="flex-start">
                   {!!restaurant.address && (
                     <RestaurantAddress size={'xs'} address={restaurant.address} />
@@ -185,7 +186,9 @@ export const ListItemContentMinimal = memo(
                     {(review || isEditing) && (
                       <VStack marginTop={10} paddingLeft={0} paddingRight={10}>
                         <RestaurantReview
-                          marginTop={-10}
+                          size="lg"
+                          marginTop={-15}
+                          marginBottom={-10}
                           hideTagsRow
                           wrapTagsRow
                           expandable={false}
@@ -272,16 +275,22 @@ export const ListItemContentMinimal = memo(
               </HStack>
             </VStack>
 
-            {/* <VStack x={-40}>
+            <VStack
+              marginTop={-25}
+              marginBottom={-10}
+              display={media.sm ? 'none' : 'flex'}
+              marginRight={-200}
+              x={-40}
+            >
               <RestaurantPhotosRow
                 restaurant={restaurant}
                 // spacing="md"
                 floating
-                width={230}
                 max={2}
-                height={290}
+                width={150}
+                height={190}
               />
-            </VStack> */}
+            </VStack>
           </HStack>
         </HStack>
       </HoverToZoom>
