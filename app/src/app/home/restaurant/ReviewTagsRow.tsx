@@ -199,7 +199,7 @@ export const ReviewTagsRow = graphql(
     const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
 
     const rawTags =
-      (isFocused || !review) && !hideGeneralTags
+      isFocused || (!review && !hideGeneralTags)
         ? [
             ...tagLenses,
             ...userTags,
