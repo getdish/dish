@@ -12,9 +12,9 @@ export type RatingViewProps = {
 export const RatingView = ({ rating = 0, count, size, floating, stacked }: RatingViewProps) => {
   const ratingStr = (Math.round(rating * 10) / 10).toFixed(1)
   const content = (
-    <Paragraph fontWeight="700" letterSpacing={-2}>
+    <Paragraph size={size * 0.02} fontWeight="700" letterSpacing={-1}>
       {ratingStr}
-      <Text marginLeft={1} letterSpacing={-1} fontWeight="200" opacity={0.4}>
+      <Text marginLeft={1} letterSpacing={-1} fontWeight="300" opacity={0.4}>
         /5
       </Text>
     </Paragraph>
@@ -24,8 +24,8 @@ export const RatingView = ({ rating = 0, count, size, floating, stacked }: Ratin
   }
   return (
     <Box
-      width={44}
-      height={44}
+      width={size}
+      height={size}
       elevation={1}
       borderRadius={1000}
       alignItems="center"

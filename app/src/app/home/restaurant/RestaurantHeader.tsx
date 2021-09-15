@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
-import { AbsoluteVStack, HStack, Spacer, Text, Theme, VStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, Spacer, Text, Theme, VStack, useMedia, useTheme } from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/useColorsFor'
@@ -61,6 +61,7 @@ const RestaurantHeaderContent = memo(
       const restaurantId = restaurant.id
       const [hasScrolled, setHasScrolled] = useState(false)
       const colors = useColorsFor(restaurantSlug)
+      const theme = useTheme()
 
       const content = (
         <>
@@ -99,28 +100,29 @@ const RestaurantHeaderContent = memo(
                   y={10}
                   marginRight={-30}
                   pointerEvents="auto"
-                  paddingHorizontal={20}
+                  paddingHorizontal={35}
                   paddingVertical={9}
                   alignItems="center"
                   position="relative"
                   zIndex={199}
                   justifyContent="center"
                   minWidth={100}
-                  skewX="-12deg"
+                  // skewX="-12deg"
                 >
                   <AbsoluteVStack
                     fullscreen
-                    backgroundColor={colors.themeColorAlt}
-                    borderRadius={10}
-                    // opacity={0.95}
+                    backgroundColor={theme.backgroundColor}
+                    zIndex={-1}
+                    opacity={0.85}
+                    borderRadius={100}
                     shadowColor="#000"
-                    shadowOpacity={0.2}
+                    shadowOpacity={0.1}
                     shadowRadius={5}
                     shadowOffset={{ height: 3, width: 0 }}
                   />
-                  <HStack skewX="12deg">
+                  <HStack>
                     <Text
-                      color="#fff"
+                      color={colors.themeColorAlt}
                       alignSelf="flex-start"
                       selectable
                       letterSpacing={-1}

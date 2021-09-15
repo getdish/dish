@@ -51,9 +51,9 @@ export const FeedCard = ({
       : 24
   )
 
-  const dimensions = getCardDimensions({
-    size,
-  })
+  // const dimensions = getCardDimensions({
+  //   size,
+  // })
 
   return (
     <Card

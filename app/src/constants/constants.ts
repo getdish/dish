@@ -53,8 +53,8 @@ export const cardFrameWidth = 170
 export const cardFrameHeight = 220
 export const cardFrameWidthLg = 180
 export const cardFrameHeightLg = 240
-export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.8)
-export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.8)
+export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.9)
+export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.9)
 
 export const MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'
