@@ -67,7 +67,7 @@ const RestaurantDeliveryButton = ({
   return (
     <Link href={url}>
       <SmallButton
-        paddingHorizontal={0}
+        backgroundColor="transparent"
         tooltip={!showLabels ? name : null}
         icon={
           !!image ? (
@@ -89,9 +89,6 @@ const RestaurantDeliveryButton = ({
         {...(showLabels && {
           children: name,
         })}
-        textProps={{
-          opacity: 0.7,
-        }}
       />
     </Link>
   )

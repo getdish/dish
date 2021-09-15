@@ -464,7 +464,6 @@ const RestaurantListItemContent = memo(
                   }}
                 >
                   <SmallButton
-                    marginRight={-2}
                     borderRadius={0}
                     tooltip={`Rating Breakdown (${totalReviews} reviews)`}
                     width={90}
@@ -484,7 +483,7 @@ const RestaurantListItemContent = memo(
                 </Link>
 
                 <Suspense fallback={<Spacer size={44} />}>
-                  <VStack marginRight={-2}>
+                  <VStack>
                     <RestaurantFavoriteButton
                       borderRadius={0}
                       size="md"
@@ -514,11 +513,11 @@ const RestaurantListItemContent = memo(
 
               <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
 
-              <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                <SmallButton minWidth={120} textProps={{ opacity: 0.6 }}>
-                  {open.nextTime || '~~'}
-                </SmallButton>
-              </Link>
+              {!!open.nextTime && (
+                <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                  <SmallButton textProps={{ opacity: 0.6 }}>{open.nextTime || '~~'}</SmallButton>
+                </Link>
+              )}
 
               <Suspense fallback={null}>
                 <RestaurantDeliveryButtons
