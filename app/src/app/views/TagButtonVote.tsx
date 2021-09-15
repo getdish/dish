@@ -46,14 +46,17 @@ export const TagButtonVote = graphql(
         {vote !== 0 && (
           <VStack
             // width={28 * scale}
+            paddingLeft={6}
             // height={28 * scale}
             // backgroundColor={theme.backgroundColor}
             // borderRadius={100}
+            borderColor={theme.borderColorHover}
+            borderLeftWidth={0.5}
             alignItems="center"
             justifyContent="center"
             pointerEvents="none"
           >
-            <Text color={theme.color} letterSpacing={-1} fontSize={20 * scale} fontWeight="200">
+            <Text color={theme.color} letterSpacing={-1} fontSize={20 * scale} fontWeight="300">
               {vote < 0 ? vote : `${vote}`}
             </Text>
           </VStack>

@@ -1,9 +1,25 @@
 import * as Colors from '../../../constants/colors'
 
-export const listColors = [...Colors.colors300, ...Colors.colors400, ...Colors.colors500]
+const lightColors = Colors.colors200
+const colorSetSize = lightColors.length
+export const listColors = [...lightColors, ...Colors.colors400, ...Colors.colors600]
 
-export function getListColor(index?: number | null) {
-  return listColors[index ?? 0] ?? Colors.grey
+export const getIsListColorLight = (index?: number | null) => {
+  return (index || 100) > lightColors.length
+}
+
+export function getListColor(index: number | null = colorSetSize) {
+  index = index || 0
+  const colorOffset = index % colorSetSize
+  const backgroundColor = listColors[index ?? 0] ?? Colors.grey
+  const isLight = getIsListColorLight(index)
+  const color =
+    (isLight ? Colors.colors800[colorOffset] : Colors.colors100[colorOffset]) ?? '#cccccc'
+  return {
+    isLight,
+    color,
+    backgroundColor,
+  }
 }
 
 export function randomListColor() {

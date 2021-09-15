@@ -19,7 +19,8 @@ export type VoteNumber = 1 | 2 | 3 | 4 | 5
 const tagVotesStore = createStore(
   class TagVotesStore extends Store {
     votesByRestaurant = {}
-    setVote(rid: string, tagSlug: string, val: VoteNumber) {
+
+    _setVote(rid: string, tagSlug: string, val: VoteNumber) {
       this.votesByRestaurant = {
         ...this.votesByRestaurant,
         [rid]: {
@@ -35,7 +36,7 @@ const writeVote = debounce(async (tagSlug: string, restaurantId: string, vote: V
   let ogVote = tagVotesStore.votesByRestaurant[restaurantId][tagSlug]
   try {
     // optimistic
-    tagVotesStore.setVote(restaurantId, tagSlug, vote)
+    tagVotesStore._setVote(restaurantId, tagSlug, vote)
     // insert into db
     const [tag] = await getFullTags([{ slug: tagSlug }])
     if (!tag) {
@@ -62,7 +63,7 @@ const writeVote = debounce(async (tagSlug: string, restaurantId: string, vote: V
     console.error('error writing vote', err.message, err.stack)
     Toast.error(`Error writing vote`)
     // unwind optimistic
-    tagVotesStore.setVote(restaurantId, tagSlug, ogVote)
+    tagVotesStore._setVote(restaurantId, tagSlug, ogVote)
   }
 })
 
@@ -104,7 +105,7 @@ export const useUserTagVotes = (props: UserTagVotesProps) => {
   useEffect(() => {
     for (const vote of votes) {
       if (vote) {
-        tagVotesStore.setVote(restaurantId, vote.tagSlug, vote.vote)
+        tagVotesStore._setVote(restaurantId, vote.tagSlug, vote.vote)
       }
     }
   }, [JSON.stringify(votes)])

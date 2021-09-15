@@ -51,13 +51,13 @@ export const blue300 = '#7F90BA'
 export const purple300 = '#9B7DB8'
 export const colors300 = [yellow300, pink300, green300, red300, orange300, blue300, purple300]
 
-export const yellow400 = '#C7B85A'
-export const pink400 = '#C7507C'
-export const green400 = '#4CB57A'
-export const red400 = '#C45151'
-export const orange400 = '#C78150'
-export const blue400 = '#5072C7'
-export const purple400 = '#8D50C7'
+export const yellow400 = '#C7B646'
+export const pink400 = '#C73C70'
+export const green400 = '#3AB56F'
+export const red400 = '#C43D3D'
+export const orange400 = '#C7763C'
+export const blue400 = '#3C64C7'
+export const purple400 = '#843CC7'
 export const colors400 = [yellow400, pink400, green400, red400, orange400, blue400, purple400]
 
 export const yellow500 = '#948946'
@@ -87,22 +87,22 @@ export const blue700 = '#343C4D'
 export const purple700 = '#41344D'
 export const colors700 = [yellow700, pink700, green700, red700, orange700, blue700, purple700]
 
-export const yellow800 = '#383731'
-export const pink800 = '#383134'
-export const green800 = '#313834'
-export const red800 = '#383131'
-export const orange800 = '#383531'
-export const blue800 = '#313338'
-export const purple800 = '#363138'
+export const yellow800 = '#38362C'
+export const pink800 = '#382C30'
+export const green800 = '#2C3831'
+export const red800 = '#382C2C'
+export const orange800 = '#38322C'
+export const blue800 = '#2C2F38'
+export const purple800 = '#342C38'
 export const colors800 = [yellow800, pink800, green800, red800, orange800, blue800, purple800]
 
-export const yellow900 = '#2B2B29'
-export const pink900 = '#2B292A'
-export const green900 = '#292B2A'
-export const red900 = '#2B2929'
-export const orange900 = '#2B2A29'
-export const blue900 = '#29292B'
-export const purple900 = '#2A292B'
+export const yellow900 = '#2B2A24'
+export const pink900 = '#2B2427'
+export const green900 = '#242B27'
+export const red900 = '#2B2424'
+export const orange900 = '#2B2824'
+export const blue900 = '#24262B'
+export const purple900 = '#29242B'
 export const colors900 = [yellow900, pink900, green900, red900, orange900, blue900, purple900]
 
 // WARNING IVE UPDATED THIS FROM SKETCH, THIS IS SOURCE OF TRUTH NOW

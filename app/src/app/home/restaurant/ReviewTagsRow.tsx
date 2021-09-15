@@ -168,7 +168,9 @@ export const ReviewTagsRow = graphql(
             return true
           })
     tags = uniqBy(tags, (x) => x.name || x.slug)
-    tags = sortBy(tags, (x) => (x.type === 'lense' ? 'aaaaaaaaaa' + tagLenses.indexOf(x) : x.slug))
+    tags = sortBy(tags, (x) =>
+      x.type === 'lense' ? 'aaaaaaaaaa' + tagLenses.indexOf(x as any) : x.slug
+    )
 
     const tagsKey = tags.map((x) => x.slug).join('')
 
@@ -221,30 +223,23 @@ export const ReviewTagsRow = graphql(
             overflow: 'hidden',
           })}
         >
-          <HStack
-            position="relative"
-            pointerEvents="auto"
-            alignItems="center"
-            flexShrink={0}
-            zIndex={-1}
-          >
-            <AbsoluteHStack
-              top={0}
-              bottom={0}
-              alignItems="center"
-              left={-15}
-              opacity={isFocused ? 1 : 0}
-            >
-              <Search size={16} color="#777" />
-            </AbsoluteHStack>
-            <AbsoluteHStack
-              onPress={() => setIsFocused(false)}
-              bottom={-10}
-              left={-15}
-              opacity={isFocused ? 1 : 0}
-            >
-              <X size={16} color="#777" />
-            </AbsoluteHStack>
+          <HStack position="relative" pointerEvents="auto" alignItems="center" flexShrink={0}>
+            {isFocused && (
+              <>
+                <HStack onPress={() => setIsFocused(false)} opacity={isFocused ? 1 : 0}>
+                  <X size={16} color="#777" />
+                </HStack>
+
+                <HStack
+                  marginRight={-10}
+                  marginLeft={10}
+                  alignItems="center"
+                  opacity={isFocused ? 0.5 : 0}
+                >
+                  <Search size={16} color="#777" />
+                </HStack>
+              </>
+            )}
 
             {showTagButton && !isFocused && (
               <SmallButton
@@ -282,7 +277,7 @@ export const ReviewTagsRow = graphql(
                 key={tbp.slug || 0}
                 // refetchKey={refetchKey}
                 {...tbp}
-                backgroundColor="transparent"
+                // backgroundColor="transparent"
                 {...(isLense && {
                   name: '',
                   marginRight: -4,

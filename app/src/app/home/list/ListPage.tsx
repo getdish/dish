@@ -1,4 +1,4 @@
-import { series, sleep } from '@dish/async'
+import { series } from '@dish/async'
 import {
   List,
   getUserName,
@@ -11,25 +11,13 @@ import {
 } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { Plus, Trash, X } from '@dish/react-feather'
-import React, {
-  Suspense,
-  SuspenseList,
-  memo,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
-import { Image, Pressable, StyleSheet, Switch } from 'react-native'
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Pressable, Switch } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
 import {
-  AbsoluteVStack,
   Button,
   HStack,
   Input,
-  InteractiveContainer,
-  LinearGradient,
-  LoadingItem,
   Modal,
   Paragraph,
   Spacer,
@@ -37,26 +25,21 @@ import {
   Theme,
   Title,
   Toast,
-  TouchableOpacity,
   VStack,
   useForceUpdate,
   useMedia,
   useTheme,
 } from 'snackui'
 
-import { blue200, grey, red400 } from '../../../constants/colors'
+import { grey, red400 } from '../../../constants/colors'
 import { drawerWidthMax } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
-import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { getWindowHeight, getWindowWidth } from '../../../helpers/getWindow'
-import { useIsMounted } from '../../../helpers/useIsMountedRef'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
 import { homeStore, useHomeStateById } from '../../homeStore'
-import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
-import { useAsyncEffect } from '../../hooks/useAsync'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
@@ -68,13 +51,11 @@ import { Link } from '../../views/Link'
 import { useListFavorite } from '../../views/list/useList'
 import { PageHead } from '../../views/PageHead'
 import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
-import { Score } from '../../views/Score'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { StackItemProps } from '../HomeStackView'
-import { CircleButton } from '../restaurant/CircleButton'
 import { RestaurantPhotosRow } from '../restaurant/RestaurantPhotosRow'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { UserAvatar } from '../user/UserAvatar'
@@ -174,20 +155,9 @@ const listThemes = {
   1: ListTheme.minimal,
 } as const
 
-const FallbackListItem = () => {
-  const theme = useTheme()
-  return (
-    <VStack height={150} borderTopColor={theme.borderColorHover}>
-      <LoadingItem />
-    </VStack>
-  )
-}
-
 const ListPageContent = memo(
   graphql(
     (props: Props) => {
-      // const themeName = useThemeName()
-      // const theme = useTheme()
       const user = useUserStore()
       const isMyList = userStore.isAdmin || props.item.userSlug === slugify(user.user?.username)
       const isEditing = props.item.state === 'edit'
@@ -196,30 +166,17 @@ const ListPageContent = memo(
       const { list, isFavorited, toggleFavorite, reviewsCount, refetch } = useListFavorite({
         slug: props.item.slug,
       })
-      const [color, setColor] = useStateSynced(getListColor(list?.color) ?? '#999999')
+      const listColorsMemo = useMemo(() => getListColor(list?.color), [list?.color])
+      const [colors, setColors] = useStateSynced(listColorsMemo)
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
       const listItems = useListItems(list)
-      const [isLoaded, setIsLoaded] = useState(false)
+      // const [isLoaded, setIsLoaded] = useState(false)
       const region = useRegionQuery(props.item.region)
       // disable for now
-      const listThemeIndex = 1 // list.theme ?? 0
+      // const listThemeIndex = list.theme ?? 0
       const forceUpdate = useForceUpdate()
-      const listTheme = listThemeIndex === 0 ? listThemes[0] : listThemes[1]
+      const listTheme = listThemes[1] as ListTheme //listThemeIndex === 0 ? listThemes[0] :
       const listSlug = props.item.slug
-
-      const isRestaurantLoaded = !!listItems.items[0]?.id
-
-      useAsyncEffect(
-        async (mounted) => {
-          if (isRestaurantLoaded) {
-            // let images load roughly
-            await sleep(500)
-            if (!mounted()) return
-            setIsLoaded(true)
-          }
-        },
-        [isRestaurantLoaded]
-      )
 
       const setTheme = async (val: number) => {
         list.theme = val
@@ -246,30 +203,6 @@ const ListPageContent = memo(
       }
 
       useSnapToFullscreenOnMount()
-
-      useEffect(() => {
-        if (!props.isActive) return
-        homeStore.updateCurrentState<HomeStateItemList>('ListPage.color', {
-          color,
-        })
-      }, [props.isActive, color])
-
-      useEffect(() => {
-        if (!props.isActive) {
-          router.setRouteAlert(null)
-          return
-        }
-        if (isEditing) {
-          // no need, we have only one case where it can lose edits as not much
-          // router.setRouteAlert({
-          //   condition: () => true,
-          //   message: `Cancel editing list and lose edits?`,
-          // })
-          // return () => {
-          //   router.setRouteAlert(null)
-          // }
-        }
-      }, [props.isActive, isEditing])
 
       useSetAppMap({
         id: props.item.id,
@@ -306,14 +239,16 @@ const ListPageContent = memo(
           )
         })
 
+      const fontSize = (list.name || '').length > 24 ? 38 : 44
+
       const titleContents = isEditing ? (
         <Input
-          fontSize={20}
+          fontSize={fontSize}
           fontWeight="600"
           width="auto"
           textAlign="center"
           {...(listTheme === 'minimal' && {
-            fontSize: 30,
+            fontSize: 36,
             fontWeight: '400',
             width: '100%',
             textAlign: 'left',
@@ -332,16 +267,6 @@ const ListPageContent = memo(
       const media = useMedia()
       const theme = useTheme()
       const isMinimal = listTheme === 'minimal'
-
-      const uri = [
-        list.image || '',
-        ...(list
-          .restaurants({
-            limit: 3,
-            order_by: [{ position: order_by.asc }],
-          })
-          .map((x) => x.restaurant.image) || ''),
-      ].find(Boolean)
 
       const userCommentEl = (isEditing || list.description) && (
         <VStack
@@ -418,44 +343,17 @@ const ListPageContent = memo(
       )
 
       const listHeaderEl = (
-        <>
+        <Theme name={colors.isLight ? 'dark' : 'light'}>
           {/* START HEADER */}
           <VStack
             minHeight={isMinimal ? 280 : 40}
             paddingHorizontal={20}
             position="relative"
-            backgroundColor={`${color}11`}
+            backgroundColor={colors.backgroundColor}
           >
             {isMinimal && (
               <>
                 <VStack minHeight={20} flex={1} />
-
-                {/* <AbsoluteVStack
-                    backgroundColor="#000"
-                    zIndex={-1}
-                    fullscreen
-                    overflow="hidden"
-                  >
-                    <Image
-                      // @ts-ignore
-                      source={{
-                        uri: getImageUrl(`${uri || ''}`, 600, 450),
-                      }}
-                      style={{
-                        width: '100%',
-                        height: 450,
-                      }}
-                    />
-                    <LinearGradient
-                      // start={[0.1, 0]}
-                      colors={[
-                        'rgba(20,20,20,1)',
-                        // 'rgba(20,20,20,0.2)',
-                        'rgba(0,0,0,0.35)',
-                      ].reverse()}
-                      style={StyleSheet.absoluteFill}
-                    />
-                  </AbsoluteVStack> */}
 
                 <HStack paddingHorizontal={20}>
                   <VStack
@@ -467,12 +365,10 @@ const ListPageContent = memo(
                   >
                     <Spacer size={80} />
                     <Title
-                      textShadowColor={theme.shadowColor}
-                      textShadowRadius={2}
-                      textShadowOffset={{ height: 1, width: 0 }}
-                      size="lg"
-                      sizeLineHeight={0.76}
+                      // color={colors.color}
+                      lineHeight={fontSize * 1.4}
                       fontWeight="800"
+                      fontSize={fontSize}
                       {...(isEditing && {
                         width: '100%',
                       })}
@@ -568,7 +464,14 @@ const ListPageContent = memo(
                     spacing="xxl"
                   >
                     <Paragraph>Color:</Paragraph>
-                    <ColorPicker colors={listColors} color={color} onChange={setColor} />
+                    <ColorPicker
+                      colors={listColors}
+                      color={colors.backgroundColor}
+                      onChange={(backgroundColor) => {
+                        const index = listColors.indexOf(backgroundColor)
+                        setColors(getListColor(index))
+                      }}
+                    />
                     {/* <InteractiveContainer alignItems="center">
                       <Paragraph
                         size="sm"
@@ -631,7 +534,7 @@ const ListPageContent = memo(
             )}
           </VStack>
           {/* END HEADER */}
-        </>
+        </Theme>
       )
 
       const renderItem = useCallback(
@@ -731,8 +634,8 @@ const ListPageContent = memo(
                       {
                         id: list.id,
                         ...draft.current,
-                        ...(color !== '#999' && {
-                          color: listColors.indexOf(color),
+                        ...(colors.backgroundColor && {
+                          color: listColors.indexOf(colors.backgroundColor),
                         }),
                         public: isPublic,
                       },
@@ -821,3 +724,20 @@ const ListPageContent = memo(
     }
   )
 )
+
+// useEffect(() => {
+//   if (!props.isActive) {
+//     router.setRouteAlert(null)
+//     return
+//   }
+//   if (isEditing) {
+//     // no need, we have only one case where it can lose edits as not much
+//     // router.setRouteAlert({
+//     //   condition: () => true,
+//     //   message: `Cancel editing list and lose edits?`,
+//     // })
+//     // return () => {
+//     //   router.setRouteAlert(null)
+//     // }
+//   }
+// }, [props.isActive, isEditing])
