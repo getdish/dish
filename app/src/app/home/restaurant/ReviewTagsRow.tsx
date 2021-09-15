@@ -1,4 +1,4 @@
-import { graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
+import { ZeroUUID, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Search, Tag, X } from '@dish/react-feather'
 import { sortBy, uniqBy } from 'lodash'
@@ -14,84 +14,6 @@ import { useUserStore } from '../../userStore'
 import { SmallButton } from '../../views/SmallButton'
 import { TagButton, TagButtonProps, getTagButtonProps } from '../../views/TagButton'
 import { RestaurantReviewProps } from './RestaurantReview'
-
-// // most flexible way we can pass in reviews
-// type RestaurantReviewsProps = {
-//   restaurantSlug: string
-//   username: string
-// }
-// export const useRestaurantReviews = () => {
-// }
-// export const useUserCommentReviewQuery = (user: user, restaurantSlug: string) => {
-//   return (
-//     user?.reviews({
-//       where: {
-//         restaurant: {
-//           slug: {
-//             _eq: restaurantSlug,
-//           },
-//         },
-//         text: {
-//           _neq: null,
-//         },
-//       },
-//       limit: 1,
-//     }) || []
-//   )
-// }
-// export const useUserPlaylistCommentReviewQuery = (
-//   restaurantSlug: string,
-//   listSlug?: string
-// ) => {
-//   return listSlug
-//     ?  || []
-//     : []
-// }
-// export const PlaylistRestaurantReview = graphql((props: RestaurantReviewProps & {
-//   list?: list
-// }) => {
-//   props[0]
-//   const [user] = useCurrentUserQuery()
-//   const [playlistReview] = useUserPlaylistCommentReviewQuery(user, )
-//   return null
-// })
-// const [overallReview] = useUserCommentReviewQuery()
-// const [playlistReview] = useUserPlaylistCommentReviewQuery()
-// export const RestaurantReview = suspense(
-//   memo(
-//     graphql((props: RestaurantReviewProps) => {
-//       const { refetchKey, user, restaurantSlug, listSlug, review } = props
-//       if (review) {
-//         return <RestaurantReviewContent {...props} review={review} />
-//       }
-//       const reviews = [playlistReview, overallReview]
-//       useLazyEffect(() => {
-//         if (refetchKey) {
-//           console.log('refetching review', refetchKey)
-//           reviews.map(refetch)
-//         }
-//       }, [refetchKey])
-//       return (
-//         <>
-//           {props.isEditing || (!overallReview && !playlistReview) ? (
-//             <RestaurantReviewContentEdit {...props} />
-//           ) : (
-//             <>
-//               {!!overallReview && !playlistReview && (
-//                 <RestaurantReviewContent {...props} review={overallReview} />
-//               )}
-//               {!!playlistReview && <RestaurantReviewContent {...props} review={playlistReview} />}
-//             </>
-//           )}
-//         </>
-//       )
-//     }),
-//     {
-//       suspense: false,
-//     }
-//   ),
-//   <LoadingItem />
-// )
 
 export const ReviewTagsRow = graphql(
   ({
@@ -117,55 +39,67 @@ export const ReviewTagsRow = graphql(
     const isOwnList = review?.user_id === user?.id
     const showTagButton = isOwnList || !review
 
-    // const userTags = query.review({
-    //   where: {
-    //     tag_id: {
-    //       _neq: null,
-    //     },
-    //     user_id: {
-    //       _eq: review?.user_id,
-    //     },
-    //     rating: {
-    //       _neq: null,
-    //     },
-    //   },
-    //   limit: 5,
-    //   order_by: [{ tag: { type: order_by.desc } }, { tag: { id: order_by.desc } }],
-    // })
+    const reviewUserTags = review?.reviews({
+      limit: 50,
+      where: {
+        _and: [
+          {
+            tag_id: {
+              _neq: ZeroUUID,
+            },
+          },
+          {
+            tag_id: {
+              _is_null: false,
+            },
+          },
+          {
+            type: {
+              _eq: 'vote',
+            },
+          },
+        ],
+      },
+      order_by: [{ tag: { id: order_by.desc } }],
+    })
 
-    const userTags =
-      review?.reviews({
-        limit: 50,
-        where: {
-          tag_id: {
-            _neq: null,
-          },
-          rating: {
-            _neq: null,
-          },
-        },
-        order_by: [{ tag: { id: order_by.desc } }],
-      }) ??
-      (restaurantSlug
-        ? list?.user?.reviews({
-            limit: 50,
-            order_by: [{ tag: { id: order_by.desc } }],
-            where: {
-              tag_id: {
-                _neq: null,
-              },
-              rating: {
-                _neq: null,
-              },
-              restaurant: {
-                slug: {
-                  _eq: restaurantSlug,
+    const restaurantSlugUserTags = restaurantSlug
+      ? list?.user?.reviews({
+          limit: 50,
+          order_by: [{ tag: { id: order_by.desc } }],
+          where: {
+            _and: [
+              {
+                tag_id: {
+                  _neq: ZeroUUID,
                 },
               },
-            },
-          })
-        : null) ??
-      []
+              {
+                tag_id: {
+                  _is_null: false,
+                },
+              },
+              {
+                type: {
+                  _eq: 'vote',
+                },
+              },
+              {
+                restaurant: {
+                  slug: {
+                    _eq: restaurantSlug,
+                  },
+                },
+              },
+            ],
+          },
+        })
+      : null
+
+    const userTags = reviewUserTags || restaurantSlugUserTags || []
+
+    console.log('reviewUserTags', review, reviewUserTags, restaurantSlugUserTags)
+
     // review?.reviews({
     //     limit: 20,
     //     // where: {
@@ -378,3 +312,97 @@ export const ReviewTagsRow = graphql(
   },
   { suspense: false }
 )
+
+// const userTags = query.review({
+//   where: {
+//     tag_id: {
+//       _neq: null,
+//     },
+//     user_id: {
+//       _eq: review?.user_id,
+//     },
+//     rating: {
+//       _neq: null,
+//     },
+//   },
+//   limit: 5,
+//   order_by: [{ tag: { type: order_by.desc } }, { tag: { id: order_by.desc } }],
+// })
+
+// // most flexible way we can pass in reviews
+// type RestaurantReviewsProps = {
+//   restaurantSlug: string
+//   username: string
+// }
+// export const useRestaurantReviews = () => {
+// }
+// export const useUserCommentReviewQuery = (user: user, restaurantSlug: string) => {
+//   return (
+//     user?.reviews({
+//       where: {
+//         restaurant: {
+//           slug: {
+//             _eq: restaurantSlug,
+//           },
+//         },
+//         text: {
+//           _neq: null,
+//         },
+//       },
+//       limit: 1,
+//     }) || []
+//   )
+// }
+// export const useUserPlaylistCommentReviewQuery = (
+//   restaurantSlug: string,
+//   listSlug?: string
+// ) => {
+//   return listSlug
+//     ?  || []
+//     : []
+// }
+// export const PlaylistRestaurantReview = graphql((props: RestaurantReviewProps & {
+//   list?: list
+// }) => {
+//   props[0]
+//   const [user] = useCurrentUserQuery()
+//   const [playlistReview] = useUserPlaylistCommentReviewQuery(user, )
+//   return null
+// })
+// const [overallReview] = useUserCommentReviewQuery()
+// const [playlistReview] = useUserPlaylistCommentReviewQuery()
+// export const RestaurantReview = suspense(
+//   memo(
+//     graphql((props: RestaurantReviewProps) => {
+//       const { refetchKey, user, restaurantSlug, listSlug, review } = props
+//       if (review) {
+//         return <RestaurantReviewContent {...props} review={review} />
+//       }
+//       const reviews = [playlistReview, overallReview]
+//       useLazyEffect(() => {
+//         if (refetchKey) {
+//           console.log('refetching review', refetchKey)
+//           reviews.map(refetch)
+//         }
+//       }, [refetchKey])
+//       return (
+//         <>
+//           {props.isEditing || (!overallReview && !playlistReview) ? (
+//             <RestaurantReviewContentEdit {...props} />
+//           ) : (
+//             <>
+//               {!!overallReview && !playlistReview && (
+//                 <RestaurantReviewContent {...props} review={overallReview} />
+//               )}
+//               {!!playlistReview && <RestaurantReviewContent {...props} review={playlistReview} />}
+//             </>
+//           )}
+//         </>
+//       )
+//     }),
+//     {
+//       suspense: false,
+//     }
+//   ),
+//   <LoadingItem />
+// )

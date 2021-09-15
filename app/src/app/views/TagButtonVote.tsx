@@ -11,13 +11,18 @@ export const TagButtonVote = graphql(
   (props: TagButtonProps & { scale: number; disablePopover?: boolean }) => {
     const { scale } = props
     const tagSlug = getTagSlug(props.slug)
-    const { vote } = useUserTagVotes(
+
+    // allows for controlled or user-controlled... not pretty
+    const userVote = useUserTagVotes(
       props.restaurantSlug || '',
       {
         [tagSlug]: true,
       },
       props.refetchKey
-    )
+    ).vote
+
+    const vote = 'vote' in props ? props.vote : userVote
+
     const theme = useTheme()
     const iconProps = {
       size: 14,

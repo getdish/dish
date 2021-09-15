@@ -43,22 +43,25 @@ export type TagButtonTagProps = {
   score?: number
   rank?: number
   rating?: number
+  vote?: number
 }
 
 type TagLike = TagButtonTagProps | NavigableTag | TagQuery
 
-const getTagProps = (tag: TagLike) => ({
-  name: tagDisplayName(tag as any),
-  type: tag.type as TagType,
-  icon: tag.icon ?? '',
-  rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
-  slug: tag.slug ?? '',
-  ...('rank' in tag && {
-    rank: tag.rank,
-    score: tag.score,
-    rating: tag.rating,
-  }),
-})
+const getTagProps = (tag: TagLike) => {
+  return {
+    name: tagDisplayName(tag as any),
+    type: tag.type as TagType,
+    icon: tag.icon ?? '',
+    rgb: Array.isArray(tag.rgb) ? tag.rgb : tag.rgb?.(),
+    slug: tag.slug ?? '',
+    ...('rank' in tag && {
+      rank: tag.rank,
+      score: tag.score,
+      rating: tag.rating,
+    }),
+  }
+}
 
 export const getTagButtonProps = (review_or_tag?: TagLike | review | null): TagButtonProps => {
   if (!review_or_tag) {
@@ -71,7 +74,7 @@ export const getTagButtonProps = (review_or_tag?: TagLike | review | null): TagB
     // is a review
     return {
       ...getTagProps(review.tag),
-      rating: review.rating * 5,
+      vote: review.vote,
     }
   }
   return getTagProps(review_or_tag as any)

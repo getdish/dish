@@ -27,12 +27,13 @@ export const ListItem = graphql((props: ListItemProps) => {
   }
 
   // otherwise determine the right review to show (first list-specific, then user, then generic)
-  const listReview = props.listSlug
+  const listTextReview = props.listSlug
     ? props.restaurant.reviews({
         where: {
           username: {
             _eq: props.username,
           },
+          // we dont need this, may want just a single review universally
           list: {
             slug: {
               _eq: props.listSlug,
@@ -46,17 +47,19 @@ export const ListItem = graphql((props: ListItemProps) => {
       })
     : null
 
-  const userReview = props.restaurant.reviews({
-    where: {
-      username: {
-        _eq: props.username,
-      },
-      text: {
-        _neq: '',
-      },
-    },
-    limit: 1,
-  })
+  const userReview = props.listSlug
+    ? []
+    : props.restaurant.reviews({
+        where: {
+          username: {
+            _eq: props.username,
+          },
+          text: {
+            _neq: '',
+          },
+        },
+        limit: 1,
+      })
 
   // const topReview = props.restaurant.reviews({
   //   where: {
@@ -79,19 +82,19 @@ export const ListItem = graphql((props: ListItemProps) => {
   //   ],
   // })
 
-  const hasListReview = !!listReview?.[0]?.text
+  const hasListReview = !!listTextReview?.[0]?.text
   const hasUserReview = !!userReview?.[0]?.text
 
-  const isLoading = listReview?.[0] && listReview?.[0].text === undefined
+  const isLoading = listTextReview?.[0] && listTextReview?.[0].text === undefined
 
   listItemContentProps.onUpdate = () => {
     // if (topReview) refetch(topReview)
     if (userReview) refetch(userReview)
-    if (listReview) refetch(listReview)
+    if (listTextReview) refetch(listTextReview)
   }
 
   if (isEditing || hasListReview) {
-    return <Element {...listItemContentProps} reviewQuery={listReview} />
+    return <Element {...listItemContentProps} reviewQuery={listTextReview} />
   }
   if (hasUserReview) {
     return <Element {...listItemContentProps} reviewQuery={userReview} />
@@ -104,7 +107,7 @@ export const ListItem = graphql((props: ListItemProps) => {
       <>
         {/* <Element {...listItemContentProps} reviewQuery={topReview} /> */}
         <Element {...listItemContentProps} reviewQuery={userReview} />
-        <Element {...listItemContentProps} reviewQuery={listReview} />
+        <Element {...listItemContentProps} reviewQuery={listTextReview} />
       </>
     )
   }

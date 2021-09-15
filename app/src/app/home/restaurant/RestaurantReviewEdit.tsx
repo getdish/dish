@@ -3,7 +3,7 @@ import { Trash } from '@dish/react-feather'
 import React, { useEffect, useState } from 'react'
 import { Input, Spacer } from 'snackui'
 
-import { red } from '../../../constants/colors'
+import { red700 } from '../../../constants/colors'
 import { AuthForm } from '../../AuthForm'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useCurrentUserQuery } from '../../hooks/useUserReview'
@@ -81,7 +81,7 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
             theme="error"
             accessible
             accessibilityRole="button"
-            icon={<Trash color={red} size={16} />}
+            icon={<Trash color={red700} size={16} />}
             onPress={() => {
               if (confirm('Are you sure you want to delete the review?')) {
                 onDelete?.()

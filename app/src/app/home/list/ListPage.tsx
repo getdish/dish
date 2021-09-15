@@ -280,7 +280,7 @@ const ListPageContent = memo(
         )
       }
 
-      const username = list.user?.username || ''
+      const username = props.item.userSlug
       const userFullNameOrUsername = getUserName(list.user)
 
       const tagButtons = list
