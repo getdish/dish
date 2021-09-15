@@ -16,17 +16,17 @@ import {
 
 import { HighlightedText } from '../../views/HighlightedText'
 import { Link } from '../../views/Link'
-import { BlogRatingDescription } from './components/BlogRatingDescription'
 import { contentSpace, contentSpaceLg, contentSpaceSm } from './contentSpace'
 import { IntroText } from './IntroText'
 
-const spaceVertical = (Component: any, space?: any) => (props: any) => (
-  <>
-    {space ?? contentSpace}
-    <Component {...props} />
-    {space ?? contentSpace}
-  </>
-)
+const spaceVertical = (Component: any, space?: any) => (props: any) =>
+  (
+    <>
+      {space ?? contentSpace}
+      <Component {...props} />
+      {space ?? contentSpace}
+    </>
+  )
 
 const Alt = spaceVertical((props) => (
   <Text marginTop={-16} marginBottom={16} fontSize="75%" opacity={0.5} {...props} />
@@ -38,8 +38,6 @@ const components = {
   IntroText: spaceVertical(IntroText),
 
   Alt,
-
-  BlogRatingDescription,
 
   LargeImage: ({ alt, ...rest }: ImageProps & { alt?: string }) => (
     <>

@@ -34,7 +34,7 @@ export const RestaurantAddress = ({
             <MapPin color={theme.color} size={size === 'xxs' ? 16 : 10} style={{ opacity: 0.5 }} />
           )
         }
-        iconAfter={<ExternalLink style={{ opacity: 0.5 }} color={theme.color} size={10} />}
+        // iconAfter={<ExternalLink style={{ opacity: 0.5 }} color={theme.color} size={10} />}
         textProps={{
           maxWidth: media.sm ? 100 : 140,
           opacity: 0.45,

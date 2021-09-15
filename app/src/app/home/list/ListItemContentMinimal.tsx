@@ -1,6 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import { MessageSquare } from '@dish/react-feather'
+import { MessageSquare, Plus } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect } from 'react'
 import { Circle, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
 
@@ -197,12 +197,9 @@ export const ListItemContentMinimal = memo(
               <HStack alignItems="center" spacing="lg">
                 {!!editable && !isEditing && (
                   <SmallButton
-                    elevation={1}
-                    icon={<MessageSquare size={16} color="#777" />}
+                    icon={<MessageSquare size={14} color="#888" />}
                     onPress={() => setIsEditing(true)}
-                  >
-                    Edit
-                  </SmallButton>
+                  ></SmallButton>
                 )}
 
                 {!!editable && isEditing && (
@@ -217,7 +214,8 @@ export const ListItemContentMinimal = memo(
                   {!!restaurant.address && (
                     <RestaurantAddress size={'xs'} address={restaurant.address} />
                   )}
-                  <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
+
+                  <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
 
                   <Text
                     paddingHorizontal={5}
@@ -228,16 +226,18 @@ export const ListItemContentMinimal = memo(
                     {price_range ?? '?'}
                   </Text>
 
-                  <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
-                    <Text
-                      paddingHorizontal={5}
-                      opacity={0.8}
-                      fontSize={13}
-                      color={theme.colorTertiary}
-                    >
-                      {open.nextTime || '~~'}
-                    </Text>
-                  </Link>
+                  {!!open.nextTime && (
+                    <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
+                      <Text
+                        paddingHorizontal={5}
+                        opacity={0.8}
+                        fontSize={13}
+                        color={theme.colorTertiary}
+                      >
+                        {open.nextTime || ''}
+                      </Text>
+                    </Link>
+                  )}
                 </HStack>
                 {/* 
                 <Link
@@ -265,11 +265,11 @@ export const ListItemContentMinimal = memo(
                   </SmallButton>
                 </Link> */}
 
-                <RestaurantFavoriteButton
+                {/* <RestaurantFavoriteButton
                   backgroundColor="transparent"
                   size="md"
                   restaurantSlug={restaurant.slug || ''}
-                />
+                /> */}
 
                 <Suspense fallback={null}>
                   <RestaurantDeliveryButtons

@@ -1,5 +1,5 @@
 import { Tag, TagQuery, TagType, graphql, review } from '@dish/graph'
-import { Circle, Plus, X } from '@dish/react-feather'
+import { Plus, X } from '@dish/react-feather'
 import React, { memo, useRef } from 'react'
 import {
   AbsoluteVStack,
@@ -26,12 +26,13 @@ import { tagDisplayName } from '../../constants/tagDisplayName'
 import { getTagSlug } from '../../helpers/getTagSlug'
 import { RGB } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
-import { VoteNumber, useUserTagVotes } from '../hooks/useUserTagVotes'
+import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { SearchTagButton } from './dish/SearchTagButton'
 import { Image } from './Image'
 import { Link } from './Link'
 import { LinkButton } from './LinkButton'
 import { Pie } from './Pie'
+import { TagButtonVote, tagRatings } from './TagButtonVote'
 
 export type TagButtonTagProps = {
   type?: string
@@ -251,11 +252,6 @@ const TagButtonInner = (props: TagButtonProps) => {
       paddingHorizontal={isSmall ? 5 : 10}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
-      {...(circular && {
-        height: 44,
-        width: 44,
-        borderRadius: 1000,
-      })}
       {...rest}
     >
       {rankElement}
@@ -330,14 +326,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       )}
 
       {!!slug && !!votable && !!props.restaurantSlug && (
-        <VStack
-          {...(noLink && {
-            position: 'absolute',
-            scale: 0.9,
-            bottom: -6,
-            right: -8,
-          })}
-        >
+        <VStack>
           <TagButtonVote
             key={slug + props.restaurantSlug}
             {...props}
@@ -425,7 +414,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   return contents
 }
 
-const TagVotePopover = graphql(
+export const TagVotePopover = graphql(
   ({
     slug,
     restaurantSlug,
@@ -494,66 +483,3 @@ const TagVotePopover = graphql(
     suspense: false,
   }
 )
-
-const TagButtonVote = graphql(
-  (props: TagButtonProps & { scale: number; disablePopover?: boolean }) => {
-    const { scale } = props
-    const tagSlug = getTagSlug(props.slug)
-    const { vote } = useUserTagVotes(
-      props.restaurantSlug || '',
-      {
-        [tagSlug]: true,
-      },
-      props.refetchKey
-    )
-    const theme = useTheme()
-    const iconProps = {
-      size: 14,
-      color: 'rgba(150,150,150,0.25)',
-    }
-    const contents = (
-      <VStack
-        alignItems="center"
-        pointerEvents="auto"
-        zIndex={100}
-        position="relative"
-        justifyContent="center"
-        borderRadius={100}
-        width={50 * scale}
-        height={50 * scale}
-        marginVertical={-10 * scale}
-        marginHorizontal={-10 * scale}
-        opacity={0.8}
-      >
-        {!props.disablePopover && vote === 0 && <Circle {...iconProps} />}
-        {vote !== 0 && (
-          <VStack
-            width={28 * scale}
-            height={28 * scale}
-            backgroundColor={theme.backgroundColor}
-            borderRadius={100}
-            alignItems="center"
-            justifyContent="center"
-            pointerEvents="none"
-          >
-            <Text color={theme.color} fontSize={14 * scale} fontWeight="800">
-              {vote < 0 ? vote : `${vote}`}
-            </Text>
-          </VStack>
-        )}
-      </VStack>
-    )
-
-    if (props.disablePopover) {
-      return contents
-    }
-
-    // @ts-ignore
-    return <TagVotePopover {...props}>{contents}</TagVotePopover>
-  },
-  {
-    suspense: false,
-  }
-)
-
-const tagRatings = [1, 2, 3, 4, 5] as VoteNumber[]

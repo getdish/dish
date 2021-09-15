@@ -25,7 +25,7 @@ export const RestaurantRatingView = suspense(
         return null
       }
       const ratingViewProps = {
-        rating: Math.round(((restaurant.rating ?? 0) * 20) / 10),
+        rating: restaurant.rating,
         size,
         floating,
       }
