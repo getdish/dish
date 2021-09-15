@@ -147,7 +147,7 @@ test('Merging', async (t) => {
   t.assert(updated.photos?.[0].includes(DO_BASE))
   t.assert(updated.photos?.[1].includes(DO_BASE))
   t.assert(updated.photos?.[2].includes(DO_BASE))
-  t.is(updated.rating, 4.11)
+  t.is(updated.rating, 4.21)
   t.deepEqual(updated.rating_factors as any, {
     food: 5,
     service: 4.5,
@@ -165,7 +165,7 @@ test('Merging', async (t) => {
     },
     google: {
       url: 'https://www.google.com/maps/place/@0,0,11z/data=!3m1!4b1!4m5!3m4!1stest-google123!8m2!3d0!4d0',
-      rating: 4,
+      rating: 4.5,
     },
     tripadvisor: {
       url: 'https://tripadvisor.com',

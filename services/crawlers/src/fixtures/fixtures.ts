@@ -285,7 +285,7 @@ export const google_review_api = {
       {
         user_id: '123',
         name: 'Mary Lamb',
-        rating: 4.5,
+        rating: '4.5',
         ago_text: '2 months ago',
         text: 'Test tag was great',
         photos: ['https://i.imgur.com/N6YtgRI.jpeg'],

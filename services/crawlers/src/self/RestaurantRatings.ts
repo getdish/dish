@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import { DISH_DEBUG } from '../constants'
 import { scrapeGetData } from '../scrape-helpers'
 import { Self } from './Self'
@@ -35,7 +37,15 @@ export class RestaurantRatings {
       michelin: rating(this._getMichelinRating()),
       doordash: rating(this._doorDashRating()),
       grubhub: rating(scrapeGetData(this.crawler.grubhub, (x) => x.main.rating.rating_value)),
-      google: rating(scrapeGetData(this.crawler.google, (x) => x.rating)),
+
+      // Temporary hack to get the Google rating by averaging the google reviews we scraped
+      google: rating(
+        scrapeGetData(this.crawler.google_review_api, (x) => {
+          const ratings = x.reviews.map((r) => parseFloat(r.rating))
+          const avg = _.mean(ratings)
+          return avg
+        })
+      ),
     }
     return {
       rating: this.weightRatings(ratings, RESTAURANT_WEIGHTS),
