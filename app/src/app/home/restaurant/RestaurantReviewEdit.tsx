@@ -81,7 +81,7 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
             theme="error"
             accessible
             accessibilityRole="button"
-            icon={<Trash color="#fff" size={16} />}
+            icon={<Trash color={red} size={16} />}
             onPress={() => {
               if (confirm('Are you sure you want to delete the review?')) {
                 onDelete?.()
@@ -90,14 +90,11 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
           />
           <Spacer size="sm" />
           <SmallButton
-            themeInverse
+            theme="active"
             accessible
             accessibilityRole="button"
             disabled={isSaved}
             alignSelf="center"
-            textProps={{
-              fontWeight: '700',
-            }}
             marginVertical={10}
             onPress={() => {
               setIsSaved(true)

@@ -77,13 +77,11 @@ export const ListItemContentMinimal = memo(
       return null
     }
 
-    console.log('review?.user_id', review?.user_id)
-
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <HStack
-          paddingVertical={25}
-          paddingHorizontal={20}
+          paddingVertical={12}
+          paddingHorizontal={18}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
           width="100%"
@@ -91,7 +89,8 @@ export const ListItemContentMinimal = memo(
         >
           <HStack paddingLeft={10} flex={1}>
             <VStack flex={1} width={media.xs ? 300 : media.sm ? 450 : 550}>
-              <HStack>
+              {/* negative margin compensates for tall height of title hover */}
+              <HStack marginBottom={-10}>
                 <VStack flex={1}>
                   <HStack
                     className="hover-faded-in-parent"
@@ -99,7 +98,7 @@ export const ListItemContentMinimal = memo(
                     flexGrow={1}
                     position="relative"
                   >
-                    <VStack opacity={0.5} y={3} marginLeft={-35} marginRight={10} width={35}>
+                    <VStack opacity={0.5} y={3} marginLeft={-38} marginRight={10} width={35}>
                       <RankView rank={rank} />
                     </VStack>
 
@@ -170,7 +169,7 @@ export const ListItemContentMinimal = memo(
                     )} */}
 
                     {(review || isEditing) && (
-                      <VStack paddingRight={10}>
+                      <VStack paddingLeft={0} paddingRight={10}>
                         <RestaurantReview
                           hideTagsRow
                           wrapTagsRow
@@ -183,6 +182,7 @@ export const ListItemContentMinimal = memo(
                           hideRestaurantName
                           restaurantSlug={restaurant.slug || ''}
                           review={review}
+                          list={list}
                           listSlug={props.listSlug}
                         />
                       </VStack>
@@ -191,8 +191,6 @@ export const ListItemContentMinimal = memo(
                 </VStack>
               </HStack>
               {/* END CONTENT ROW */}
-
-              <Spacer size="xs" />
 
               <HStack alignItems="center" spacing="lg">
                 {!!editable && !isEditing && (
@@ -210,7 +208,13 @@ export const ListItemContentMinimal = memo(
 
                 {/* <RestaurantRatingView restaurant={restaurant} size={34} /> */}
 
-                <HStack paddingVertical={0} paddingRight={10} alignItems="center" spacing>
+                <HStack
+                  marginLeft={-5}
+                  paddingVertical={0}
+                  paddingRight={10}
+                  alignItems="center"
+                  spacing
+                >
                   {!!restaurant.address && (
                     <RestaurantAddress size={'xs'} address={restaurant.address} />
                   )}

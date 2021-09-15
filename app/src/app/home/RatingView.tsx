@@ -10,9 +10,12 @@ export type RatingViewProps = {
 }
 
 export const RatingView = ({ rating = 0, count, size, floating, stacked }: RatingViewProps) => {
-  const ratingStr = (Math.round(rating * 10) / 10).toFixed(1)
+  let ratingStr = (Math.round(Math.max(0, rating * 10)) / 10).toFixed(1)
+  if (rating == 0) {
+    ratingStr = '?'
+  }
   const content = (
-    <Paragraph size={size * (floating ? 0.02 : 0.03)} fontWeight="700" letterSpacing={-1}>
+    <Paragraph ellipse size={size * (floating ? 0.02 : 0.03)} fontWeight="700" letterSpacing={-1}>
       {ratingStr}
       <Text marginLeft={1} letterSpacing={-1} fontWeight="300" opacity={0.4}>
         /5

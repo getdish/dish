@@ -111,6 +111,9 @@ export const ReviewTagsRow = graphql(
     const [filtered, setFiltered] = useState<TagButtonProps[]>([])
     const [refetchKey, setRefetchKey] = useState('')
     const refetch = useRefetch()
+    const user = useUserStore().user
+    const isOwnList = review?.user_id === user?.id
+    const showTagButton = isOwnList
 
     // const userTags = query.review({
     //   where: {
@@ -277,7 +280,7 @@ export const ReviewTagsRow = graphql(
             <X size={16} color="#777" />
           </AbsoluteHStack>
 
-          {!isFocused && (
+          {showTagButton && !isFocused && (
             <SmallButton
               onPress={() => setIsFocused(true)}
               icon={<Tag opacity={0.5} size={16} color="#888" />}

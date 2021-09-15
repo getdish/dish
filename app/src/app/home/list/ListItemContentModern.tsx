@@ -2,24 +2,12 @@ import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect } from 'react'
-import {
-  AbsoluteVStack,
-  Circle,
-  HStack,
-  InteractiveContainer,
-  Spacer,
-  Text,
-  VStack,
-  useMedia,
-  useTheme,
-} from 'snackui'
+import { Circle, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
-import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
-import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
@@ -80,7 +68,7 @@ export const ListItemContentModern = memo(
 
     const titleFontSize = Math.round((media.sm ? 26 : 28) * titleFontScale)
     const theme = useTheme()
-    const imgSize = 120
+    // const imgSize = 120
 
     if (!restaurant) {
       return null
@@ -175,16 +163,16 @@ export const ListItemContentModern = memo(
                   review={review}
                   maxWidth={media.sm ? getWindowWidth() - 95 : 650}
                   listSlug={props.listSlug}
+                  list={list}
                 />
               </Suspense>
             </VStack>
           </HStack>
 
           <HStack paddingLeft={20} alignItems="center">
-            <Column flexDirection="row" width={!!editable && isEditing ? 300 : 230}>
+            <Column flexDirection="row" width={!editable ? 0 : isEditing ? 300 : 230}>
               {!!editable && !isEditing && (
                 <SmallButton
-                  elevation={1}
                   icon={<MessageSquare size={16} color="#777" />}
                   onPress={() => setIsEditing(true)}
                 ></SmallButton>
@@ -204,32 +192,35 @@ export const ListItemContentModern = memo(
 
               <Spacer />
 
-              <Link
-                name="restaurant"
-                flexShrink={1}
-                params={{
-                  slug: restaurant.slug || '',
-                  section: 'reviews',
-                }}
-              >
-                <SmallButton
-                  tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                  icon={
-                    <MessageSquare
-                      style={{
-                        opacity: 0.5,
-                        marginLeft: -4,
-                      }}
-                      size={12}
-                      color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                    />
-                  }
-                >
-                  {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-                </SmallButton>
-              </Link>
-
-              <Spacer />
+              {!!editable && (
+                <>
+                  <Link
+                    name="restaurant"
+                    flexShrink={1}
+                    params={{
+                      slug: restaurant.slug || '',
+                      section: 'reviews',
+                    }}
+                  >
+                    <SmallButton
+                      tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                      icon={
+                        <MessageSquare
+                          style={{
+                            opacity: 0.5,
+                            marginLeft: -4,
+                          }}
+                          size={12}
+                          color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                        />
+                      }
+                    >
+                      {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                    </SmallButton>
+                  </Link>
+                  <Spacer />
+                </>
+              )}
 
               <RestaurantFavoriteButton size="md" restaurantSlug={restaurant.slug || ''} />
             </Column>

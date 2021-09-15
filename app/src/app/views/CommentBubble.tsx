@@ -71,7 +71,6 @@ export const CommentBubble = (props: CommentBubbleProps) => {
       justifyContent="flex-start"
       spacing="sm"
       overflow="hidden"
-      margin={-10}
       {...rest}
     >
       {fullWidth && ensureFlexText}
@@ -284,7 +283,7 @@ function CommentBubbleContents({
       {!!contents && (
         <VStack
           paddingHorizontal={15}
-          paddingVertical={10}
+          paddingVertical={chromeless ? 0 : 10}
           marginLeft={chromeless ? 0 : 20}
           backgroundColor={theme.cardBackgroundColor}
           borderColor={theme.borderColor}
