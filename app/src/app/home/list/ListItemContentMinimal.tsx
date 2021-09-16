@@ -1,6 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import { MessageSquare, X } from '@dish/react-feather'
+import { MessageSquare, PenTool, X } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect } from 'react'
 import { Circle, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
 
@@ -12,10 +12,12 @@ import { RankView } from '../restaurant/RankView'
 import { RestaurantAddress } from '../restaurant/RestaurantAddress'
 import { RestaurantDeliveryButtons } from '../restaurant/RestaurantDeliveryButtons'
 import { openingHours, priceRange } from '../restaurant/RestaurantDetailRow'
+import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton'
 import { RestaurantPhotosRow } from '../restaurant/RestaurantPhotosRow'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
+import { RestaurantRatingView } from '../RestaurantRatingView'
 import { Column } from './Column'
 import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
@@ -131,14 +133,16 @@ export const ListItemContentMinimal = memo(
                 </HStack>
               </HStack>
 
-              <HStack alignItems="center" marginTop={-12} marginLeft={-12}>
-                <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
+              <HStack spacing alignItems="center" marginTop={-12} marginLeft={0}>
+                <HStack alignItems="center">
+                  <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
 
-                <Column width={160} alignItems="flex-start">
                   {!!restaurant.address && (
                     <RestaurantAddress size={'xs'} address={restaurant.address} />
                   )}
-                </Column>
+                </HStack>
+
+                <RestaurantRatingView restaurant={restaurant} size={24} />
 
                 <Column width={50}>
                   <Text fontSize={14} color={theme.colorTertiary}>
@@ -158,6 +162,14 @@ export const ListItemContentMinimal = memo(
                     </Text>
                   </Link>
                 )}
+
+                <Suspense fallback={null}>
+                  <RestaurantDeliveryButtons
+                    showLabels={false}
+                    label={false}
+                    restaurantSlug={restaurant.slug || ''}
+                  />
+                </Suspense>
               </HStack>
 
               {/* START CONTENT ROW */}
@@ -189,7 +201,7 @@ export const ListItemContentMinimal = memo(
                         <RestaurantReview
                           size="lg"
                           marginTop={-18}
-                          marginBottom={-18}
+                          marginBottom={-10}
                           hideTagsRow
                           wrapTagsRow
                           expandable={false}
@@ -218,7 +230,8 @@ export const ListItemContentMinimal = memo(
 
                 {!!editable && !isEditing && (
                   <SmallButton
-                    icon={<MessageSquare size={14} color="#888" />}
+                    tooltip="Write comment"
+                    icon={<PenTool size={14} color="#888" />}
                     onPress={() => setIsEditing(true)}
                   />
                 )}
@@ -227,7 +240,11 @@ export const ListItemContentMinimal = memo(
                   <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
                 )}
 
-                {/* <RestaurantRatingView restaurant={restaurant} size={34} /> */}
+                <RestaurantFavoriteButton
+                  backgroundColor="transparent"
+                  size="md"
+                  restaurantSlug={restaurant.slug || ''}
+                />
 
                 <HStack flex={1} alignItems="center">
                   <ReviewTagsRow
@@ -238,45 +255,6 @@ export const ListItemContentMinimal = memo(
                     restaurantSlug={restaurant.slug || ''}
                   />
                 </HStack>
-                {/* 
-                <Link
-                  name="restaurant"
-                  flexShrink={1}
-                  params={{
-                    slug: restaurant.slug || '',
-                    section: 'reviews',
-                  }}
-                >
-                  <SmallButton
-                    backgroundColor="transparent"
-                    tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                    icon={
-                      <MessageSquare
-                        style={{
-                          opacity: 0.5,
-                        }}
-                        size={12}
-                        color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                      />
-                    }
-                  >
-                    {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
-                  </SmallButton>
-                </Link> */}
-
-                {/* <RestaurantFavoriteButton
-                  backgroundColor="transparent"
-                  size="md"
-                  restaurantSlug={restaurant.slug || ''}
-                /> */}
-
-                <Suspense fallback={null}>
-                  <RestaurantDeliveryButtons
-                    showLabels={false}
-                    label={false}
-                    restaurantSlug={restaurant.slug || ''}
-                  />
-                </Suspense>
               </HStack>
             </VStack>
 
