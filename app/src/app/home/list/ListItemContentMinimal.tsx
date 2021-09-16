@@ -142,7 +142,7 @@ export const ListItemContentMinimal = memo(
                   )}
                 </HStack>
 
-                <RestaurantRatingView restaurant={restaurant} size={24} />
+                <RestaurantRatingView restaurant={restaurant} size={26} />
 
                 <Column width={50}>
                   <Text fontSize={14} color={theme.colorTertiary}>

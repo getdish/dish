@@ -333,7 +333,7 @@ const ListPageContent = memo(
           {isMyList && (
             <HStack spacing alignSelf="center">
               <Move size={16} color={colors.color} />
-              <Paragraph opacity={0.8} size="sm">
+              <Paragraph opacity={0.6} size="sm">
                 press and hold on any item to sort
               </Paragraph>
             </HStack>
@@ -542,32 +542,10 @@ const ListPageContent = memo(
               username={username}
               onDelete={() => {
                 if (confirm('Delete item?')) {
-                  listItems.delete(list.id)
+                  listItems.delete(restaurant.id)
                 }
               }}
             />
-          )
-
-          return (
-            <VStack>
-              <SmallButton onClick={() => listItems.promote(index)}>Up</SmallButton>
-              <Paragraph>{restaurant.id}</Paragraph>
-              <ListItem
-                list={list}
-                listTheme={listTheme}
-                restaurant={restaurant}
-                listSlug={listSlug}
-                rank={index + 1}
-                hideRate
-                editable={isEditing || isMyList}
-                username={username}
-                onDelete={() => {
-                  if (confirm('Delete item?')) {
-                    listItems.delete(list.id)
-                  }
-                }}
-              />
-            </VStack>
           )
 
           if (!isMyList) {
@@ -580,6 +558,7 @@ const ListPageContent = memo(
               //   // height: 100,
               //   // backgroundColor: isActive ? 'red' : undefined,
               // }}
+              delayLongPress={200}
               onLongPress={drag}
             >
               {content}
@@ -716,7 +695,7 @@ const ListPageContent = memo(
 
                 <VStack flex={1}>
                   <DraggableFlatList
-                    keyExtractor={(item, index) => `draggable-item-${item.key}-${isMyList}`}
+                    keyExtractor={(item, index) => `draggable-item-${item?.key}-${isMyList}`}
                     data={listItems.items}
                     renderItem={renderItem}
                     onDragEnd={listItems.sort}
