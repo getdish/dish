@@ -168,9 +168,10 @@ export const ReviewTagsRow = graphql(
             return true
           })
     tags = uniqBy(tags, (x) => x.name || x.slug)
-    tags = sortBy(tags, (x) =>
-      x.type === 'lense' ? 'aaaaaaaaaa' + tagLenses.indexOf(x as any) : x.slug
-    )
+    tags = sortBy(tags, (x) => {
+      const rating = x?.rating || x?.vote || 0
+      return x.type === 'lense' ? `a${1 / rating}` : `b${1 / rating}`
+    })
 
     const tagsKey = tags.map((x) => x.slug).join('')
 
@@ -211,11 +212,10 @@ export const ReviewTagsRow = graphql(
       <HStack maxWidth="100%" alignItems="center" pointerEvents="auto" zIndex={1000} {...props}>
         <HStack
           alignItems="center"
-          paddingVertical={16}
           spacing="sm"
           {...(wrapTagsRow && {
             flexWrap: 'wrap',
-            marginBottom: -10,
+            marginBottom: -3,
             flex: 1,
             overflow: 'hidden',
           })}
@@ -267,6 +267,7 @@ export const ReviewTagsRow = graphql(
             const lastItem = tags[i - 1]
             return (
               <TagButton
+                fadeLowlyVoted
                 noLink
                 size="sm"
                 restaurant={restaurant}
@@ -294,7 +295,7 @@ export const ReviewTagsRow = graphql(
                     marginLeft: 20,
                   })}
                 {...(wrapTagsRow && {
-                  marginBottom: 10,
+                  marginBottom: 3,
                 })}
                 votable={votable}
               />
