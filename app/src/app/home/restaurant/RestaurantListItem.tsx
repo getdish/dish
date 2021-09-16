@@ -546,6 +546,7 @@ const RestaurantListItemContent = memo(
                     tagButtonProps={{
                       votable: true,
                       borderWidth: 0,
+                      hideIcon: true,
                       hideRating: false,
                       backgroundColor: 'transparent',
                     }}

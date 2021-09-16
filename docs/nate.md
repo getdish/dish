@@ -1,3 +1,4 @@
+- unrate tag
 - list columns for comparison across tags
 - fix write review
 - fix mobile web bugs
