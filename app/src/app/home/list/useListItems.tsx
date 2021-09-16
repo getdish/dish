@@ -8,9 +8,9 @@ import {
   useRefetch,
 } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DragEndParams } from 'react-native-draggable-flatlist'
-import { useDebounce } from 'snackui'
+import { useDebounce, useLazyEffect } from 'snackui'
 
 import { promote } from '../../../helpers/listHelpers'
 import { userStore } from '../../userStore'
@@ -45,6 +45,10 @@ export function useListItems(list?: list) {
 
   const orderNow = items.map((x) => x.id)
   const [orderOverride, setOrderOverride] = useState<string[]>()
+
+  useLazyEffect(() => {
+    setOrderOverride(orderNow)
+  }, [orderNow.join('')])
 
   const mutateOrder = useDebounce(
     async (ids: string[]) => {

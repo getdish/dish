@@ -1,6 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import { MessageSquare } from '@dish/react-feather'
+import { MessageSquare, X } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect } from 'react'
 import { Circle, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
 
@@ -30,6 +30,7 @@ export const ListItemContentMinimal = memo(
       isEditing,
       list,
       setIsEditing,
+      onDelete,
       onUpdate,
       isExternalReview,
     } = props
@@ -210,12 +211,16 @@ export const ListItemContentMinimal = memo(
               </HStack>
               {/* END CONTENT ROW */}
 
-              <HStack paddingTop={10} alignItems="center" spacing="lg">
+              <HStack paddingTop={10} alignItems="center" spacing="sm">
+                {!!editable && (
+                  <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
+                )}
+
                 {!!editable && !isEditing && (
                   <SmallButton
                     icon={<MessageSquare size={14} color="#888" />}
                     onPress={() => setIsEditing(true)}
-                  ></SmallButton>
+                  />
                 )}
 
                 {!!editable && isEditing && (

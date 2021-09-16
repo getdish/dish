@@ -2,7 +2,17 @@ import { restaurant } from '@dish/graph/types'
 import { supportsTouchWeb } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
-import { AbsoluteVStack, Box, StackProps, Text, VStack, prevent, useThemeName } from 'snackui'
+import {
+  AbsoluteVStack,
+  Box,
+  Paragraph,
+  StackProps,
+  Text,
+  VStack,
+  prevent,
+  useTheme,
+  useThemeName,
+} from 'snackui'
 
 import { cardFrameBorderRadius, isWeb } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
@@ -91,6 +101,7 @@ const DishViewContent = (props: DishViewProps) => {
   const fontSize = Math.max(13, (isLong ? 14 : 16) * (isTiny ? 0.75 : 1))
   const colors = getColorsForName(name)
   const themeName = useThemeName()
+  const theme = useTheme()
   const backgroundColor = themeName === 'dark' ? colors.color600 : colors.color200
   const isActive = (isHovered || selected) ?? false
 
@@ -130,8 +141,8 @@ const DishViewContent = (props: DishViewProps) => {
           pointerEvents={showSearchButton_ ? 'auto' : 'none'}
           onPress={prevent}
           zIndex={888}
-          bottom="-7.5%"
-          left="15%"
+          bottom="-10%"
+          right="-10%"
         >
           <SearchTagButton
             backgroundColor={colors.color200}
@@ -141,16 +152,16 @@ const DishViewContent = (props: DishViewProps) => {
           />
         </AbsoluteVStack>
 
-        <Box
+        <VStack
           position="absolute"
           bottom="8%"
           left="10%"
           className="ease-in-out-fast will-change-transform"
-          backgroundColor="#fff"
+          backgroundColor={theme.backgroundColor}
           borderRadius={8}
           paddingVertical={3}
           paddingHorizontal={8}
-          maxWidth={isWeb ? '70%' : '100%'}
+          maxWidth={isWeb ? '90%' : '100%'}
           overflow="hidden"
           x={-10}
           skewX="-12deg"
@@ -161,20 +172,19 @@ const DishViewContent = (props: DishViewProps) => {
             skewX: '-12deg',
           })}
         >
-          <Text
+          <Paragraph
             className="ease-in-out-fast"
             // flex={1} breaks native
             overflow="hidden"
             fontWeight="700"
             letterSpacing={-0.5}
-            color={isActive ? '#fff' : '#000'}
             fontSize={fontSize}
             textAlign="center"
             transform={[{ skewX: '12deg' }]}
           >
             {dishName}
-          </Text>
-        </Box>
+          </Paragraph>
+        </VStack>
       </AbsoluteVStack>
 
       {!!image && (

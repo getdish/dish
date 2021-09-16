@@ -415,15 +415,15 @@ const RestaurantListItemContent = memo(
 
           <HStack
             position="relative"
-            height={46}
-            className="safari-fix-overflow"
+            height={50}
+            marginTop={-5}
+            paddingBottom={6}
             alignItems="center"
             spacing
           >
             <HStack
               paddingLeft={20}
               alignItems="center"
-              overflow="hidden"
               spacing
               {...(shouldShowOneLine && {
                 paddingLeft: 0,
@@ -459,7 +459,7 @@ const RestaurantListItemContent = memo(
                 </Button>
               )}
 
-              <InteractiveContainer borderColor="transparent">
+              <InteractiveContainer>
                 <Link
                   name="restaurant"
                   params={{
@@ -469,6 +469,8 @@ const RestaurantListItemContent = memo(
                 >
                   <SmallButton
                     borderRadius={0}
+                    borderWidth={0}
+                    marginRight={-0.5}
                     tooltip={`Rating Breakdown (${totalReviews} reviews)`}
                     width={90}
                     icon={
@@ -487,9 +489,10 @@ const RestaurantListItemContent = memo(
                 </Link>
 
                 <Suspense fallback={<Spacer size={44} />}>
-                  <VStack>
+                  <VStack marginRight={-0.5}>
                     <RestaurantFavoriteButton
                       borderRadius={0}
+                      borderWidth={0}
                       size="md"
                       restaurantSlug={restaurantSlug}
                     />
@@ -499,6 +502,7 @@ const RestaurantListItemContent = memo(
                 <Suspense fallback={<Spacer size={44} />}>
                   <RestaurantAddToListButton
                     borderRadius={0}
+                    borderWidth={0}
                     restaurantSlug={restaurantSlug}
                     noLabel
                   />
@@ -535,8 +539,7 @@ const RestaurantListItemContent = memo(
                   <RestaurantTagsRow
                     exclude={excludeTags}
                     size="sm"
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurantId}
+                    restaurant={restaurant}
                     spacing={0}
                     spacingHorizontal={0}
                     maxItems={4}

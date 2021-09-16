@@ -540,6 +540,11 @@ const ListPageContent = memo(
               hideRate
               editable={isEditing || isMyList}
               username={username}
+              onDelete={() => {
+                if (confirm('Delete item?')) {
+                  listItems.delete(list.id)
+                }
+              }}
             />
           )
 
@@ -625,7 +630,7 @@ const ListPageContent = memo(
                 {!isEditing && (
                   <HStack alignItems="center" flexWrap="wrap" spacing>
                     <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
-                      Customize
+                      Edit
                     </SmallButton>
                   </HStack>
                 )}
@@ -670,7 +675,7 @@ const ListPageContent = memo(
                         setIsEditing(false)
                       }}
                     >
-                      <X color={grey} size={24} />
+                      <X color={colors.color} size={24} />
                     </VStack>
                     <Spacer size="lg" />
                   </>
@@ -717,9 +722,10 @@ const ListPageContent = memo(
                     <Spacer size="xl" />
                   </>
                 )}
-
-                <Spacer size="xxxl" />
               </VStack>
+
+              <Spacer size="xxxxxl" />
+              <Spacer size="xxxxxl" />
             </>
           </ContentScrollView>
         </>
