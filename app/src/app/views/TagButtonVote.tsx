@@ -3,26 +3,23 @@ import { Circle } from '@dish/react-feather'
 import React from 'react'
 import { Text, VStack, useTheme } from 'snackui'
 
-import { getTagSlug } from '../../helpers/getTagSlug'
 import { VoteNumber, useUserTagVotes } from '../hooks/useUserTagVotes'
 import { TagButtonProps, TagVotePopover } from './TagButton'
 
 export const TagButtonVote = graphql(
-  (props: TagButtonProps & { scale: number; disablePopover?: boolean }) => {
-    const { scale } = props
-    const tagSlug = getTagSlug(props.slug)
-
-    // allows for controlled or user-controlled... not pretty
-    const userVote = useUserTagVotes({
-      ...props,
-      activeTags: [tagSlug],
-    })
-
+  (
+    props: TagButtonProps & {
+      scale: number
+      disablePopover?: boolean
+      userTagVotes: ReturnType<typeof useUserTagVotes>
+    }
+  ) => {
+    const { scale, userTagVotes } = props
+    // const tagSlug = getTagSlug(props.slug)
     const vote =
-      (userVote.didVoteDuringSession && props.votable) || !('vote' in props)
-        ? userVote.vote
+      (userTagVotes.didVoteDuringSession && props.votable) || !('vote' in props)
+        ? userTagVotes.vote
         : props.vote
-
     const theme = useTheme()
     const iconProps = {
       size: 14,

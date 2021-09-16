@@ -37,7 +37,7 @@ const lightBase = {
   cardBackgroundColor: '#ffffff',
   backgroundColorTransparent: 'rgba(255,255,255,0)',
   shadowColor: `rgba(0,0,0,0.1)`,
-  shadowColorLighter: `rgba(0,0,0,0.05)`,
+  shadowColorLighter: `rgba(0,0,0,0.02)`,
 }
 
 const light: MyTheme = {

@@ -110,6 +110,7 @@ export type TagButtonProps = StackProps &
     isActive?: boolean
     showSearchButton?: boolean
     tooltip?: string
+    fadeLowlyVoted?: boolean
     circular?: boolean
   }
 
@@ -151,6 +152,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     fontWeight,
     color,
     icon,
+    fadeLowlyVoted,
     rgb,
     score,
     subtleIcon,
@@ -220,6 +222,13 @@ const TagButtonInner = (props: TagButtonProps) => {
       </Text>
     )
 
+  // allows for controlled or user-controlled... not pretty
+  const tagSlug = getTagSlug(slug)
+  const userTagVotes = useUserTagVotes({
+    ...props,
+    activeTags: [tagSlug],
+  })
+
   let contents = (
     <HStack
       className="hover-parent"
@@ -255,6 +264,10 @@ const TagButtonInner = (props: TagButtonProps) => {
       paddingHorizontal={isSmall ? 5 : 10}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
+      {...(fadeLowlyVoted &&
+        userTagVotes.vote <= 2 && {
+          opacity: 0.5,
+        })}
       {...rest}
     >
       {rankElement}
@@ -331,6 +344,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       {!!slug && !!votable && !!props.restaurant && (
         <VStack>
           <TagButtonVote
+            userTagVotes={userTagVotes}
             key={`${slug}${props.restaurant?.slug}`}
             {...props}
             color={theme.color}

@@ -1,16 +1,7 @@
 import { series } from '@dish/async'
-import {
-  List,
-  getUserName,
-  graphql,
-  listInsert,
-  listUpdate,
-  mutate,
-  order_by,
-  slugify,
-} from '@dish/graph'
+import { List, getUserName, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
-import { Plus, Trash, X } from '@dish/react-feather'
+import { Move, Plus, Trash, X } from '@dish/react-feather'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Pressable, Switch } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
@@ -56,7 +47,6 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { StackItemProps } from '../HomeStackView'
-import { RestaurantPhotosRow } from '../restaurant/RestaurantPhotosRow'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { UserAvatar } from '../user/UserAvatar'
 import { ColorPicker } from './ColorPicker'
@@ -339,6 +329,15 @@ const ListPageContent = memo(
               })()
             )}
           </CommentBubble>
+
+          {isMyList && (
+            <HStack spacing alignSelf="center">
+              <Move size={16} color={colors.color} />
+              <Paragraph opacity={0.8} size="sm">
+                press and hold on any item to sort
+              </Paragraph>
+            </HStack>
+          )}
         </VStack>
       )
 
@@ -614,70 +613,69 @@ const ListPageContent = memo(
             </Modal>
           )}
 
-          <PaneControlButtonsLeft>
-            <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
-              {reviewsCount}
-            </FavoriteButton>
-
-            {!isEditing && (
-              <HStack alignItems="center" flexWrap="wrap" spacing>
-                <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
-                  Customize
-                </SmallButton>
-              </HStack>
-            )}
-
-            {isEditing && (
-              <>
-                <SmallButton
-                  themeInverse
-                  elevation={1}
-                  onPress={async () => {
-                    router.setRouteAlert(null)
-                    setIsEditing(false)
-                    await listUpdate(
-                      {
-                        id: list.id,
-                        ...draft.current,
-                        ...(colors.backgroundColor && {
-                          color: listColors.indexOf(colors.backgroundColor),
-                        }),
-                        public: isPublic,
-                      },
-                      {
-                        query: list,
-                      }
-                    )
-                    refetch()
-                    Toast.show('Saved')
-                  }}
-                >
-                  Save
-                </SmallButton>
-
-                <Spacer />
-
-                <VStack
-                  opacity={0.8}
-                  hoverStyle={{
-                    opacity: 1,
-                  }}
-                  padding={6}
-                  onPress={() => {
-                    setIsEditing(false)
-                  }}
-                >
-                  <X color={grey} size={24} />
-                </VStack>
-                <Spacer size="lg" />
-              </>
-            )}
-          </PaneControlButtonsLeft>
-
           {listTheme === 'modern' ? listHeaderEl : null}
 
           <ContentScrollView bidirectional={listTheme === 'modern'} id="list">
             <>
+              <PaneControlButtonsLeft>
+                <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
+                  {reviewsCount}
+                </FavoriteButton>
+
+                {!isEditing && (
+                  <HStack alignItems="center" flexWrap="wrap" spacing>
+                    <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
+                      Customize
+                    </SmallButton>
+                  </HStack>
+                )}
+
+                {isEditing && (
+                  <>
+                    <SmallButton
+                      themeInverse
+                      elevation={1}
+                      onPress={async () => {
+                        router.setRouteAlert(null)
+                        setIsEditing(false)
+                        await listUpdate(
+                          {
+                            id: list.id,
+                            ...draft.current,
+                            ...(colors.backgroundColor && {
+                              color: listColors.indexOf(colors.backgroundColor),
+                            }),
+                            public: isPublic,
+                          },
+                          {
+                            query: list,
+                          }
+                        )
+                        refetch()
+                        Toast.show('Saved')
+                      }}
+                    >
+                      Save
+                    </SmallButton>
+
+                    <Spacer />
+
+                    <VStack
+                      opacity={0.8}
+                      hoverStyle={{
+                        opacity: 1,
+                      }}
+                      padding={6}
+                      onPress={() => {
+                        setIsEditing(false)
+                      }}
+                    >
+                      <X color={grey} size={24} />
+                    </VStack>
+                    <Spacer size="lg" />
+                  </>
+                )}
+              </PaneControlButtonsLeft>
               <VStack width="100%" minHeight={getWindowHeight()}>
                 {listTheme === 'modern' ? null : listHeaderEl}
 
@@ -689,11 +687,14 @@ const ListPageContent = memo(
                   </VStack>
                 )}
 
-                <DraggableFlatList
-                  keyExtractor={(item, index) => `draggable-item-${item.key}-${isMyList}`}
-                  data={listItems.items}
-                  renderItem={renderItem}
-                />
+                <VStack flex={1}>
+                  <DraggableFlatList
+                    keyExtractor={(item, index) => `draggable-item-${item.key}-${isMyList}`}
+                    data={listItems.items}
+                    renderItem={renderItem}
+                    onDragEnd={listItems.sort}
+                  />
+                </VStack>
 
                 {isMyList && (
                   <>

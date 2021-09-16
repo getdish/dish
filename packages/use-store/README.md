@@ -85,3 +85,5 @@ useEffect(() => {
   )
 }, [])
 ```
+
+Note it does shallow compare.

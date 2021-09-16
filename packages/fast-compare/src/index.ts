@@ -17,7 +17,7 @@ export function isEqual(a: any, b: any, options?: IsEqualOptions) {
   }
   try {
     return isEqualInner(a, b, options)
-  } catch (err) {
+  } catch (err: any) {
     if ((err.message && err.message.match(/stack|recursion/i)) || err.number === -2146828260) {
       // warn on circular references, don't crash
       // browsers give this different errors name and messages:
