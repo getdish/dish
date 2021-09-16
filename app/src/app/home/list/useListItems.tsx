@@ -7,10 +7,10 @@ import {
   order_by,
   useRefetch,
 } from '@dish/graph'
-import { assertPresent } from '@dish/helpers'
+import { assertPresent, isPresent } from '@dish/helpers'
 import { useEffect, useState } from 'react'
 import { DragEndParams } from 'react-native-draggable-flatlist'
-import { useDebounce, useLazyEffect } from 'snackui'
+import { Toast, useDebounce, useLazyEffect } from 'snackui'
 
 import { promote } from '../../../helpers/listHelpers'
 import { userStore } from '../../userStore'
@@ -43,7 +43,7 @@ export function useListItems(list?: list) {
       }
     }) ?? []
 
-  const orderNow = items.map((x) => x.id)
+  const orderNow = items.map((x) => x.restaurantId)
   const [orderOverride, setOrderOverride] = useState<string[]>()
 
   useLazyEffect(() => {
@@ -59,7 +59,7 @@ export function useListItems(list?: list) {
         const positions = ids.map((_, position) => (position + 1) * seed)
         for (const [index, id] of ids.entries()) {
           const position = positions[index]
-          console.log('set', id, position, listId)
+          console.log('set', ids, id, position, listId)
           mutation.update_list_restaurant_by_pk({
             pk_columns: {
               list_id: listId,
@@ -79,14 +79,19 @@ export function useListItems(list?: list) {
     [listId]
   )
 
-  const setOrder = (ids: string[]) => {
+  const setOrder = async (ids: string[]) => {
     setOrderOverride(ids)
-    mutateOrder(ids)
+    await mutateOrder(ids)
   }
 
+  const itemsFinal = (orderOverride || orderNow)
+    .map((id) => items.find((x) => x.restaurantId === id))
+    .filter(isPresent)
+
+  // console.log('itemsFinal', itemsFinal, orderOverride, orderNow, items)
+
   return {
-    // list_restaurants,
-    items: (orderOverride || orderNow).map((id) => items.find((x) => x.id === id)),
+    items: itemsFinal,
     setOrder,
     async add(restaurantId: string) {
       await mutate((mutation) => {
@@ -118,74 +123,24 @@ export function useListItems(list?: list) {
       console.log('added, refreshing')
       await Promise.all([refetch(list), refetch(list_restaurants)])
     },
-    async promote(index: number) {
-      if (index == 0) return
-      const now = items.map((x) => x.restaurant.id as string)
-      const next = promote(now, index)
-      console.log('setting order', next)
-      await setOrder(next)
-    },
-    async sort({ data, from, to }: DragEndParams<typeof items>) {
-      console.log(data, from, to)
-      await setOrder(data.flat().map((x) => x.id))
+    async sort({ data }: DragEndParams<typeof items>) {
+      await setOrder(data.flat().map((x) => x.restaurantId))
     },
     async delete(id: string) {
       await mutate((mutation) => {
-        mutation.delete_list_restaurant({
+        const affected = mutation.delete_list_restaurant({
           where: {
             restaurant_id: {
               _eq: id,
             },
           },
         })?.affected_rows
+        if (affected === 0) {
+          Toast.error(`Didn't delete...`)
+        }
+        return affected
       })
       await Promise.all([refetch(list), refetch(list_restaurants)])
     },
-    // async setComment(id: string, comment: string) {
-    //   await mutate((mutation) => {
-    //     return mutation.update_list_restaurant_by_pk({
-    //       pk_columns: {
-    //         list_id: listId,
-    //         restaurant_id: id,
-    //       },
-    //       _set: {
-    //         comment,
-    //       },
-    //     })?.__typename
-    //   })
-    //   await refetch(list)
-    // },
-    // async setDishes(id: string, dishTags: string[]) {
-    //   const { dishQuery } = items.find((x) => x.restaurantId === id) ?? {}
-    //   const rtagids = await resolved(() =>
-    //     query.restaurant_tag({ where: { tag: { slug: { _in: dishTags } } } }).map((x) => x.id)
-    //   )
-    //   await mutate((mutation) => {
-    //     // immutable style
-    //     // first delete old ones
-    //     mutation.delete_list_restaurant_tag({
-    //       where: {
-    //         list_restaurant_id: {
-    //           _eq: id,
-    //         },
-    //       },
-    //     })?.__typename
-    //     // then add news ones
-    //     assertPresent(list, 'no list')
-    //     assertPresent(userStore.user, 'no user')
-    //     for (const [position, rid] of rtagids.entries()) {
-    //       mutation.insert_list_restaurant_tag_one({
-    //         object: {
-    //           restaurant_tag_id: rid,
-    //           list_restaurant_id: id,
-    //           list_id: list.id,
-    //           user_id: userStore.user.id,
-    //           position,
-    //         },
-    //       })?.__typename
-    //     }
-    //   })
-    //   await refetch(dishQuery)
-    // },
   }
 }
