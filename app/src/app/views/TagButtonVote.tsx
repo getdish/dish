@@ -11,15 +11,11 @@ export const TagButtonVote = graphql(
     props: TagButtonProps & {
       scale: number
       disablePopover?: boolean
-      userTagVotes: ReturnType<typeof useUserTagVotes>
+      vote: number
     }
   ) => {
-    const { scale, userTagVotes } = props
+    const { scale, vote } = props
     // const tagSlug = getTagSlug(props.slug)
-    const vote =
-      (userTagVotes.didVoteDuringSession && props.votable) || !('vote' in props)
-        ? userTagVotes.vote
-        : props.vote
     const theme = useTheme()
     const iconProps = {
       size: 14,
@@ -64,7 +60,6 @@ export const TagButtonVote = graphql(
       return contents
     }
 
-    // @ts-ignore
     return <TagVotePopover {...props}>{contents}</TagVotePopover>
   },
   {
