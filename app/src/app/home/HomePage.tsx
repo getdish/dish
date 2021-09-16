@@ -46,10 +46,11 @@ import { PageContentWithFooter } from './PageContentWithFooter'
 type Props = HomeStackViewProps<HomeStateItemHome>
 
 export default memo(function HomePage(props: Props) {
+  const media = useMedia()
   return (
     <Suspense
       fallback={
-        <VStack marginTop={searchBarHeight}>
+        <VStack marginTop={media.sm ? 0 : searchBarHeight}>
           <LoadingItems />
         </VStack>
       }
@@ -144,7 +145,7 @@ const HomePageContent = (props: Props) => {
     return (
       <>
         <HomeTopSpacer />
-        <Spacer size="md" {...(media.sm && { size: 4 })} />
+
         <HStack marginVertical={-16}>
           <ContentScrollViewHorizontal>
             <HStack alignItems="center" paddingVertical={media.sm ? 10 : 15} paddingHorizontal={10}>
@@ -167,6 +168,7 @@ const HomePageContent = (props: Props) => {
                   {regionName}
                 </SlantedTitle>
               </Link>
+
               <HomeTopSearches />
             </HStack>
           </ContentScrollViewHorizontal>

@@ -220,7 +220,13 @@ export const ReviewTagsRow = graphql(
             overflow: 'hidden',
           })}
         >
-          <HStack position="relative" pointerEvents="auto" alignItems="center" flexShrink={0}>
+          <HStack
+            paddingRight={10} // compensate for negative margin right
+            position="relative"
+            pointerEvents="auto"
+            alignItems="center"
+            flexShrink={0}
+          >
             {isFocused && (
               <>
                 <HStack onPress={() => setIsFocused(false)} opacity={isFocused ? 1 : 0}>
