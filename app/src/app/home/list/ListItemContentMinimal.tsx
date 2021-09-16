@@ -1,6 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import { MessageSquare, PenTool, X } from '@dish/react-feather'
+import { MessageSquare, PenTool, Upload, X } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect } from 'react'
 import { Circle, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
 
