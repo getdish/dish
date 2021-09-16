@@ -71,7 +71,7 @@ const darkBase = {
   backgroundColorTransluscentHover: 'rgba(0,0,0,0.2)',
   backgroundColorTransparent: 'rgba(25,25,25,0)',
   borderColor: '#333333',
-  borderColorHover: '#383838',
+  borderColorHover: '#33333355',
   cardBackgroundColor: '#292929',
   color: '#fefefe',
   colorAlt: '#ffffff',

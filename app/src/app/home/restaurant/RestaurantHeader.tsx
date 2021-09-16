@@ -138,7 +138,7 @@ const RestaurantHeaderContent = memo(
                 <VStack width={170} height={180} />
               </HStack>
 
-              <AbsoluteVStack fullscreen left="20%">
+              <AbsoluteVStack fullscreen left="45%">
                 <RestaurantPhotosRow
                   restaurant={restaurant}
                   spacing="md"

@@ -44,7 +44,7 @@ export const RestaurantPeekDishes = memo(
         })
 
     const foundMatchingSearchedDish = props.activeTagSlugs?.includes(dishes?.[0]?.slug)
-    const dishSize = size === 'lg' ? 150 : 130
+    const dishSize = size === 'lg' ? 130 : 110
 
     return (
       <>
@@ -77,12 +77,11 @@ export const RestaurantPeekDishes = memo(
 
                 const preventLoad = !isLoaded && i > showInitial
                 return (
-                  <VStack key={dish.slug} marginRight={-2} zIndex={100 - i}>
+                  <VStack marginRight={2} key={dish.slug} zIndex={100 - i}>
                     <DishView
                       preventLoad={preventLoad}
                       size={baseSize}
-                      restaurantSlug={props.restaurantSlug}
-                      restaurantId={props.restaurantId}
+                      restaurant={restaurant || undefined}
                       {...dish}
                       showSearchButton={!props.editable}
                     />

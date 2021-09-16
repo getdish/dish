@@ -346,16 +346,14 @@ const TagButtonInner = (props: TagButtonProps) => {
       )}
 
       {!!slug && !!votable && !!props.restaurant && (
-        <VStack>
-          <TagButtonVote
-            {...props}
-            vote={vote}
-            key={`${slug}${props.restaurant?.slug}${userTagVotes.vote}`}
-            color={theme.color}
-            scale={scale}
-            disablePopover={noLink}
-          />
-        </VStack>
+        <TagButtonVote
+          {...props}
+          vote={vote}
+          key={`${slug}${props.restaurant?.slug}${userTagVotes.vote}`}
+          color={theme.color}
+          scale={scale}
+          disablePopover={noLink}
+        />
       )}
 
       {!!after && (

@@ -90,7 +90,8 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         outside={
           <>
             {outside}
-            {(userStore.isAdmin || userStore.user?.username === userSlug || deletable) && (
+            {(userStore.isAdmin ||
+              (userSlug && userStore.user?.username === userSlug && deletable)) && (
               <AbsoluteVStack zIndex={1000} pointerEvents="auto" top={-5} right={-5}>
                 <CloseButton
                   size={40}
