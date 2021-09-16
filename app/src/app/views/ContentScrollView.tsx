@@ -266,7 +266,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                 if (e.nativeEvent.touches.length !== 1) {
                   return
                 }
-                console.log('>>', scrollStore.lock, scrollStore.isAtTop)
                 if (!isScrollingVerticalFromTop()) {
                   return
                 }

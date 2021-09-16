@@ -356,7 +356,7 @@ const ListPageContent = memo(
                 <HStack paddingHorizontal={20}>
                   <VStack
                     maxWidth={660}
-                    minWidth={380}
+                    // minWidth={380}
                     alignItems="flex-start"
                     justifyContent="flex-end"
                     width="100%"
