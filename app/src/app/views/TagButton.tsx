@@ -228,6 +228,10 @@ const TagButtonInner = (props: TagButtonProps) => {
     ...props,
     activeTags: [tagSlug],
   })
+  const vote =
+    (userTagVotes.didVoteDuringSession && props.votable) || !('vote' in props)
+      ? userTagVotes.vote
+      : props.vote
 
   let contents = (
     <HStack
@@ -265,7 +269,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 32 : 38}
       {...(fadeLowlyVoted &&
-        userTagVotes.vote <= 2 && {
+        vote <= 2 && {
           opacity: 0.5,
         })}
       {...rest}
@@ -344,9 +348,9 @@ const TagButtonInner = (props: TagButtonProps) => {
       {!!slug && !!votable && !!props.restaurant && (
         <VStack>
           <TagButtonVote
-            userTagVotes={userTagVotes}
-            key={`${slug}${props.restaurant?.slug}`}
             {...props}
+            vote={vote}
+            key={`${slug}${props.restaurant?.slug}${userTagVotes.vote}`}
             color={theme.color}
             scale={scale}
             disablePopover={noLink}
@@ -424,7 +428,6 @@ const TagButtonInner = (props: TagButtonProps) => {
 
   // make entire button votable in this case
   if (noLink && votable) {
-    // @ts-ignore
     return <TagVotePopover {...props}>{contents}</TagVotePopover>
   }
 
@@ -432,7 +435,11 @@ const TagButtonInner = (props: TagButtonProps) => {
 }
 
 export const TagVotePopover = graphql(
-  ({ slug, restaurant, ...popoverProps }: HoverablePopoverProps & TagButtonProps) => {
+  ({
+    slug,
+    restaurant,
+    ...popoverProps
+  }: Omit<Partial<HoverablePopoverProps>, 'position' | 'style'> & TagButtonProps) => {
     const hovPopRef = useRef<HoverablePopoverRef>()
     const tagSlug = getTagSlug(slug)
     const { vote, setVote } = useUserTagVotes({

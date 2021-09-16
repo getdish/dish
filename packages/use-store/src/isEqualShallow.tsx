@@ -2,6 +2,8 @@ import { isEqual } from '@dish/fast-compare'
 
 export const isEqualSubsetShallow = isEqual
 
+// this profiled slower:
+
 // export function isEqualSubsetShallow(prev: any, next: any) {
 //   if (prev === next) return true
 //   if (!next || !prev) return prev === next
