@@ -98,7 +98,6 @@ export const useUserTagVotes = (props: UserTagVotesProps) => {
     })
   )
   // use the first one when querying multiple
-  const userVote = votes[0]?.vote
   const vote = votesNow ?? votes[0]?.vote ?? 0
 
   // sync down
@@ -137,6 +136,8 @@ export const useUserTagVotes = (props: UserTagVotesProps) => {
     didVoteDuringSession: !!votesNow,
   }
 }
+
+export type UserTagVotes = typeof useUserTagVotes
 
 const queryUserTagVote = ({
   tagSlug,

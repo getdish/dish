@@ -130,14 +130,14 @@ export const ListItemContentMinimal = memo(
                 </HStack>
               </HStack>
 
-              <HStack alignItems="center" marginTop={-8} marginLeft={-6}>
+              <HStack alignItems="center" marginTop={-12} marginLeft={-12}>
+                <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
+
                 <Column width={160} alignItems="flex-start">
                   {!!restaurant.address && (
                     <RestaurantAddress size={'xs'} address={restaurant.address} />
                   )}
                 </Column>
-
-                <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
 
                 <Column width={50}>
                   <Text fontSize={14} color={theme.colorTertiary}>
@@ -187,8 +187,8 @@ export const ListItemContentMinimal = memo(
                       <VStack marginTop={10} paddingLeft={0} paddingRight={10}>
                         <RestaurantReview
                           size="lg"
-                          marginTop={-15}
-                          marginBottom={-10}
+                          marginTop={-18}
+                          marginBottom={-18}
                           hideTagsRow
                           wrapTagsRow
                           expandable={false}
@@ -210,7 +210,7 @@ export const ListItemContentMinimal = memo(
               </HStack>
               {/* END CONTENT ROW */}
 
-              <HStack alignItems="center" spacing="lg">
+              <HStack paddingTop={10} alignItems="center" spacing="lg">
                 {!!editable && !isEditing && (
                   <SmallButton
                     icon={<MessageSquare size={14} color="#888" />}

@@ -1,3 +1,4 @@
+import { sleep } from '@dish/async'
 import {
   list,
   list_restaurant_constraint,
@@ -7,6 +8,9 @@ import {
   useRefetch,
 } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
+import { useState } from 'react'
+import { DragEndParams } from 'react-native-draggable-flatlist'
+import { useDebounce } from 'snackui'
 
 import { promote } from '../../../helpers/listHelpers'
 import { userStore } from '../../userStore'
@@ -39,29 +43,46 @@ export function useListItems(list?: list) {
       }
     }) ?? []
 
-  async function setOrder(ids: string[]) {
-    await mutate((mutation) => {
-      // seed because it doesnt do it all in one step causing uniqueness violations
-      const seed = Math.floor(Math.random() * 10000)
-      assertPresent(list, 'no list')
-      ids.forEach((rid, position) => {
-        mutation.update_list_restaurant_by_pk({
-          pk_columns: {
-            list_id: listId,
-            restaurant_id: rid,
-          },
-          _set: {
-            position: (position + 1) * seed,
-          },
-        })?.__typename
+  const orderNow = items.map((x) => x.id)
+  const [orderOverride, setOrderOverride] = useState<string[]>()
+
+  const mutateOrder = useDebounce(
+    async (ids: string[]) => {
+      await mutate((mutation) => {
+        // seed because it doesnt do it all in one step causing uniqueness violations
+        const seed = Math.floor(Math.random() * 10000)
+        assertPresent(list, 'no list')
+        const positions = ids.map((_, position) => (position + 1) * seed)
+        for (const [index, id] of ids.entries()) {
+          const position = positions[index]
+          console.log('set', id, position, listId)
+          mutation.update_list_restaurant_by_pk({
+            pk_columns: {
+              list_id: listId,
+              restaurant_id: id,
+            },
+            _set: {
+              position,
+            },
+          })?.__typename
+        }
       })
-    })
-    await Promise.all([refetch(list), refetch(list_restaurants)])
+      // await sleep(16)
+      // await Promise.all([refetch(list), refetch(list_restaurants)])
+    },
+    16,
+    {},
+    [listId]
+  )
+
+  const setOrder = (ids: string[]) => {
+    setOrderOverride(ids)
+    mutateOrder(ids)
   }
 
   return {
     // list_restaurants,
-    items,
+    items: (orderOverride || orderNow).map((id) => items.find((x) => x.id === id)),
     setOrder,
     async add(restaurantId: string) {
       await mutate((mutation) => {
@@ -99,6 +120,10 @@ export function useListItems(list?: list) {
       const next = promote(now, index)
       console.log('setting order', next)
       await setOrder(next)
+    },
+    async sort({ data, from, to }: DragEndParams<typeof items>) {
+      console.log(data, from, to)
+      await setOrder(data.flat().map((x) => x.id))
     },
     async delete(id: string) {
       await mutate((mutation) => {

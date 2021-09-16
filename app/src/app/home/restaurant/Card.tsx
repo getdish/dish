@@ -159,10 +159,9 @@ export function Card(props: CardProps) {
           x={-cardFrameWidth}
           // this makes react native work...
           backgroundColor="rgba(0,0,0,0.1)"
-          shadowColor={theme.shadowColor}
-          shadowOpacity={0.5}
-          shadowRadius={100}
-          shadowOffset={{ width: 10, height: 0 }}
+          // shadowColor={theme.shadowColorLighter}
+          // shadowRadius={20}
+          // shadowOffset={{ width: 4, height: 2 }}
         />
       )}
 
