@@ -21777,6 +21777,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-reanimated@patch:react-native-reanimated@npm:2.3.0-alpha.3#.yarn/patches/react-native-reanimated.patch::locator=dish-monorepo%40workspace%3A.":
+  version: 2.3.0-alpha.3
+  resolution: "react-native-reanimated@patch:react-native-reanimated@npm%3A2.3.0-alpha.3#.yarn/patches/react-native-reanimated.patch::version=2.3.0-alpha.3&hash=7d0fb2&locator=dish-monorepo%40workspace%3A."
+  dependencies:
+    "@babel/plugin-transform-object-assign": ^7.10.4
+    invariant: ^2.2.4
+    lodash.isequal: ^4.5.0
+    mockdate: ^3.0.2
+    react-native-screens: ^3.4.0
+    string-hash-64: ^1.0.3
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: "*"
+  checksum: 771d2cdcbc83ca8bb66cee23f08d78d149245ce4e40b8da962838d763d096ba368344ad78c9cf4c6b6bbbfd56b5704877da8a74a03b80fd71596e820d532df07
+  languageName: node
+  linkType: hard
+
 "react-native-safe-area-context@npm:3.2.0, react-native-safe-area-context@npm:^3.1.9":
   version: 3.2.0
   resolution: "react-native-safe-area-context@npm:3.2.0"
@@ -21788,14 +21806,14 @@ __metadata:
   linkType: hard
 
 "react-native-screens@npm:^3.4.0":
-  version: 3.6.0
-  resolution: "react-native-screens@npm:3.6.0"
+  version: 3.7.2
+  resolution: "react-native-screens@npm:3.7.2"
   dependencies:
     warn-once: ^0.1.0
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: f82625c851663237f04afe5e6f1bb6c0355e94148288bf1f37bb612bdbfc1638363c8908fb021cb080db4759b81fc41744b7d571f781117341bc9cbea1ea2156
+  checksum: 869eea68fdb4686f4e73e1eb25c5441376e97a3785d371645f2ac5ccacc0b2e6662befa556b7df3e20c7c0ebbab8d1f87e949c4bc2defc92322ef1ff4bd15288
   languageName: node
   linkType: hard
 

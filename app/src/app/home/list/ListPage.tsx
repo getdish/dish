@@ -548,6 +548,28 @@ const ListPageContent = memo(
             />
           )
 
+          return (
+            <VStack>
+              <SmallButton onClick={() => listItems.promote(index)}>Up</SmallButton>
+              <Paragraph>{restaurant.id}</Paragraph>
+              <ListItem
+                list={list}
+                listTheme={listTheme}
+                restaurant={restaurant}
+                listSlug={listSlug}
+                rank={index + 1}
+                hideRate
+                editable={isEditing || isMyList}
+                username={username}
+                onDelete={() => {
+                  if (confirm('Delete item?')) {
+                    listItems.delete(list.id)
+                  }
+                }}
+              />
+            </VStack>
+          )
+
           if (!isMyList) {
             return content
           }
