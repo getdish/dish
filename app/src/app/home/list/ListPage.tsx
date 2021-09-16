@@ -198,7 +198,7 @@ const ListPageContent = memo(
         id: props.item.id,
         hideRegions: true,
         isActive: props.isActive,
-        results: listItems.items.map((x) => x.restaurant).map(getRestaurantIdentifiers),
+        results: listItems.items.flatMap((x) => x?.restaurant || []).map(getRestaurantIdentifiers),
         showRank: true,
         zoomOnHover: true,
         fitToResults: true,
