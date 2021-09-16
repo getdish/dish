@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import React, { memo } from 'react'
-import { HStack, Paragraph, StackProps, Text, VStack, useTheme } from 'snackui'
+import { HStack, StackProps, Text, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'

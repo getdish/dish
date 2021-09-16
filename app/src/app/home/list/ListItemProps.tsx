@@ -15,6 +15,7 @@ export type ListItemProps = {
   editable?: boolean
   hideTagRow?: boolean
   above?: any
+  onDelete: Function
 }
 
 export type ListItemContentProps = ListItemProps & {
@@ -22,5 +23,4 @@ export type ListItemContentProps = ListItemProps & {
   isEditing: boolean
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>
   isExternalReview?: boolean
-  list?: list | null
 }
