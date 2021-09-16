@@ -14,7 +14,7 @@ export function getListColors(index: number | null = colorSetSize) {
   const backgroundColor = listColors[index ?? 0] ?? Colors.grey
   const isLight = getIsListColorLight(index)
   const color =
-    (isLight ? Colors.colors50[colorOffset] : Colors.colors800[colorOffset]) ?? '#cccccc'
+    (isLight ? Colors.colors100[colorOffset] : Colors.colors700[colorOffset]) ?? '#cccccc'
   return {
     isLight,
     color,

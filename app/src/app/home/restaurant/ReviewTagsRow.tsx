@@ -213,6 +213,7 @@ export const ReviewTagsRow = graphql(
         <HStack
           alignItems="center"
           spacing="sm"
+          paddingRight={10}
           {...(wrapTagsRow && {
             flexWrap: 'wrap',
             marginBottom: -3,
@@ -220,53 +221,45 @@ export const ReviewTagsRow = graphql(
             overflow: 'hidden',
           })}
         >
-          <HStack
-            paddingRight={10} // compensate for negative margin right
-            position="relative"
-            pointerEvents="auto"
-            alignItems="center"
-            flexShrink={0}
-          >
-            {isFocused && (
-              <>
-                <HStack onPress={() => setIsFocused(false)} opacity={isFocused ? 1 : 0}>
-                  <X size={16} color="#777" />
-                </HStack>
+          {isFocused && (
+            <>
+              <HStack onPress={() => setIsFocused(false)} opacity={isFocused ? 1 : 0}>
+                <X size={16} color="#777" />
+              </HStack>
 
-                <HStack
-                  marginRight={-10}
-                  marginLeft={10}
-                  alignItems="center"
-                  opacity={isFocused ? 0.5 : 0}
-                >
-                  <Search size={16} color="#777" />
-                </HStack>
-              </>
-            )}
+              <HStack
+                marginRight={-10}
+                marginLeft={10}
+                alignItems="center"
+                opacity={isFocused ? 0.5 : 0}
+              >
+                <Search size={16} color="#777" />
+              </HStack>
+            </>
+          )}
 
-            {showTagButton && !isFocused && (
-              <SmallButton
-                onPress={() => setIsFocused(true)}
-                icon={<Tag opacity={0.5} size={16} color="#888" />}
-                marginRight={15}
-              ></SmallButton>
-            )}
+          {showTagButton && !isFocused && (
+            <SmallButton
+              onPress={() => setIsFocused(true)}
+              icon={<Tag opacity={0.5} size={16} color="#888" />}
+              marginRight={15}
+            ></SmallButton>
+          )}
 
-            {isFocused && (
-              <Input
-                placeholder="Dishes, tags:"
-                autoFocus
-                opacity={isFocused ? 1 : 0}
-                zIndex={10}
-                onFocus={() => setIsFocused(true)}
-                color="#777"
-                fontSize={13}
-                width={isFocused ? 130 : 50}
-                borderColor="transparent"
-                onChangeText={(text) => setSearchDbc(text)}
-              />
-            )}
-          </HStack>
+          {isFocused && (
+            <Input
+              placeholder="Dishes, tags:"
+              autoFocus
+              opacity={isFocused ? 1 : 0}
+              zIndex={10}
+              onFocus={() => setIsFocused(true)}
+              color="#777"
+              fontSize={13}
+              width={isFocused ? 130 : 50}
+              borderColor="transparent"
+              onChangeText={(text) => setSearchDbc(text)}
+            />
+          )}
 
           {tags.map((tbp, i) => {
             const isLense = tbp.type === 'lense'
