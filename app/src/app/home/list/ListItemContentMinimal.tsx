@@ -267,7 +267,7 @@ export const ListItemContentMinimal = memo(
               marginTop={-25}
               marginBottom={-10}
               display={media.sm ? 'none' : 'flex'}
-              marginRight={-200}
+              marginRight={-215}
               x={-40}
             >
               <RestaurantPhotosRow

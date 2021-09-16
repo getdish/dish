@@ -86,14 +86,8 @@ const UserPageContent = memo(
       // })
       const { item, isActive, pane, setPane } = props
       const username = item.username
-
       const user = queryUser(username)
-
-      if (!user) {
-        return <NotFoundPage />
-      }
-
-      const lists = user.lists({
+      const lists = user?.lists({
         limit: 10,
         where: {
           public: {
@@ -104,7 +98,7 @@ const UserPageContent = memo(
       })
 
       const favoriteLists = user
-        .reviews({
+        ?.reviews({
           limit: 10,
           where: {
             list_id: {
@@ -159,7 +153,7 @@ const UserPageContent = memo(
 
       const favoritesCount =
         user
-          .reviews_aggregate({
+          ?.reviews_aggregate({
             where: {
               favorited: {
                 _eq: true,
@@ -170,7 +164,7 @@ const UserPageContent = memo(
 
       const votesCount =
         user
-          .reviews_aggregate({
+          ?.reviews_aggregate({
             where: {
               text: { _eq: '' },
               restaurant_id: {
@@ -182,7 +176,7 @@ const UserPageContent = memo(
 
       const reviewsCount =
         user
-          .reviews_aggregate({
+          ?.reviews_aggregate({
             where: {
               text: { _neq: '' },
               restaurant_id: {
@@ -213,11 +207,7 @@ const UserPageContent = memo(
         }
       }, [props.isActive])
 
-      if (!username) {
-        return null
-      }
-
-      if (!user) {
+      if (!username || !user) {
         return <NotFoundPage />
       }
 

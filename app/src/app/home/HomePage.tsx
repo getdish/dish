@@ -300,5 +300,5 @@ const Inner = () => {
 
 const HomeTopSpacer = () => {
   const media = useMedia()
-  return <VStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight} />
+  return <VStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight + 10} />
 }
