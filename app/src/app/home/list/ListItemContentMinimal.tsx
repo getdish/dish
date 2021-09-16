@@ -1,8 +1,8 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
 import { MessageSquare, PenTool, Upload, X } from '@dish/react-feather'
-import React, { Suspense, memo, useEffect } from 'react'
-import { Circle, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
+import React, { Suspense, memo, useEffect, useState } from 'react'
+import { Circle, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { green, red } from '../../../constants/colors'
 import { Link } from '../../views/Link'
@@ -75,6 +75,8 @@ export const ListItemContentMinimal = memo(
       }
     }, [restaurant.name])
 
+    const [isFocused, setIsFocused] = useState(false)
+
     if (!restaurant) {
       return null
     }
@@ -144,11 +146,9 @@ export const ListItemContentMinimal = memo(
 
                 <RestaurantRatingView restaurant={restaurant} size={26} />
 
-                <Column width={50}>
-                  <Text fontSize={14} color={theme.colorTertiary}>
-                    {price_range ?? '?'}
-                  </Text>
-                </Column>
+                <Text fontSize={14} color={theme.colorTertiary}>
+                  {price_range ?? '?'}
+                </Text>
 
                 {!!open.nextTime && (
                   <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
@@ -223,38 +223,43 @@ export const ListItemContentMinimal = memo(
               </HStack>
               {/* END CONTENT ROW */}
 
-              <HStack paddingTop={10} alignItems="center" spacing="sm">
-                {!!editable && (
-                  <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
-                )}
+              <HStack paddingTop={5} alignItems="center">
+                <HStack spacing="sm" alignItems="center">
+                  {!isFocused && !!editable && (
+                    <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
+                  )}
 
-                {!!editable && !isEditing && (
-                  <SmallButton
-                    tooltip="Write comment"
-                    icon={<PenTool size={14} color="#888" />}
-                    onPress={() => setIsEditing(true)}
-                  />
-                )}
+                  {!isFocused && !!editable && !isEditing && (
+                    <SmallButton
+                      tooltip="Write comment"
+                      icon={<PenTool size={14} color="#888" />}
+                      onPress={() => setIsEditing(true)}
+                    />
+                  )}
 
-                {!!editable && isEditing && (
-                  <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
-                )}
+                  {!!editable && isEditing && (
+                    <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
+                  )}
 
-                <RestaurantFavoriteButton
-                  backgroundColor="transparent"
-                  size="md"
-                  restaurantSlug={restaurant.slug || ''}
-                />
-
-                <HStack flex={1} alignItems="center">
-                  <ReviewTagsRow
-                    hideGeneralTags
-                    wrapTagsRow
-                    list={list}
-                    review={review}
-                    restaurantSlug={restaurant.slug || ''}
-                  />
+                  {!isFocused && (
+                    <RestaurantFavoriteButton
+                      backgroundColor="transparent"
+                      size="md"
+                      restaurantSlug={restaurant.slug || ''}
+                    />
+                  )}
                 </HStack>
+
+                <Spacer size="sm" />
+
+                <ReviewTagsRow
+                  hideGeneralTags
+                  wrapTagsRow
+                  list={list}
+                  review={review}
+                  restaurantSlug={restaurant.slug || ''}
+                  onFocusChange={setIsFocused}
+                />
               </HStack>
             </VStack>
 

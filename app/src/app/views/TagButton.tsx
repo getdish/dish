@@ -228,6 +228,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     ...props,
     activeTags: [tagSlug],
   })
+
   const vote =
     (userTagVotes.didVoteDuringSession && props.votable) || !('vote' in props)
       ? userTagVotes.vote
@@ -267,7 +268,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       justifyContent="center"
       paddingHorizontal={isSmall ? 5 : 10}
       paddingVertical={isSmall ? 3 : 5}
-      height={isSmall ? 32 : 38}
+      height={isSmall ? 36 : 38}
       {...(fadeLowlyVoted &&
         vote <= 2 && {
           opacity: 0.5,
@@ -288,7 +289,6 @@ const TagButtonInner = (props: TagButtonProps) => {
           // borderBottomColor={theme.backgroundColor}
           // borderBottomWidth={floating ? 0 : 1}
           opacity={0.8}
-          marginTop={-1}
           {...(floating && {
             color: '#fff',
             textShadowColor: theme.shadowColorLighter,
@@ -444,6 +444,7 @@ export const TagVotePopover = graphql(
       restaurant,
       activeTags: [tagSlug],
     })
+
     return (
       <HoverablePopover
         // @ts-ignore

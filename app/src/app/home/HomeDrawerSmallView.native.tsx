@@ -184,7 +184,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           window['scroller'] = scroller
           if (scroller) {
             const y = Math.round(scrolledY + -vy * 10)
-            console.log('thrown to', scroller, scrolledY, y, vy, scrollStore.lock)
+            // console.log('thrown to', scroller, scrolledY, y, vy, scrollStore.lock)
             if (isNative) {
               console.log('avoiding throw, seemed like it was freezing UI for a while, checking')
               return null

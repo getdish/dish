@@ -2,7 +2,7 @@ import { ZeroUUID, graphql, order_by, query, resolved, useRefetch } from '@dish/
 import { isPresent } from '@dish/helpers'
 import { Search, Tag, X } from '@dish/react-feather'
 import { sortBy, uniqBy } from 'lodash'
-import React, { useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { AbsoluteHStack, HStack, Input, useDebounce, useLazyEffect } from 'snackui'
 
 import { tagLenses } from '../../../constants/localTags'
@@ -17,294 +17,317 @@ import { RestaurantReviewProps } from './RestaurantReview'
 
 // add votable prop
 
-export const ReviewTagsRow = graphql(
-  ({
-    review,
-    list,
-    restaurantSlug,
-    listTheme,
-    label = 'Tags:',
-    votable = true,
-    hideGeneralTags,
-    wrapTagsRow,
-    ...props
-  }: RestaurantReviewProps & {
-    label?: string
-    hideGeneralTags?: boolean
-  }) => {
-    const [search, setSearch] = useState('')
-    const setSearchDbc = useDebounce(setSearch, 350)
-    const [isFocused, setIsFocused] = useState(false)
-    const [filtered, setFiltered] = useState<TagButtonProps[]>([])
-    const refetch = useRefetch()
-    const user = useUserStore().user
-    const isOwnList = user && review && review.user_id && review.user_id === user.id
-    const showTagButton = isOwnList || !review
+export const ReviewTagsRow = memo(
+  graphql(
+    ({
+      review,
+      list,
+      restaurantSlug,
+      listTheme,
+      label = 'Tags:',
+      votable = true,
+      hideGeneralTags,
+      onFocusChange,
+      wrapTagsRow,
+      ...props
+    }: RestaurantReviewProps & {
+      label?: string
+      hideGeneralTags?: boolean
+      onFocusChange?: (next: boolean) => any
+    }) => {
+      const [search, setSearch] = useState('')
+      const setSearchDbc = useDebounce(setSearch, 350)
+      const [isFocused, setIsFocused] = useState(false)
+      const [filtered, setFiltered] = useState<TagButtonProps[]>([])
+      const refetch = useRefetch()
+      const user = useUserStore().user
+      const isOwnList = user
+        ? review
+          ? review.user_id && review.user_id === user.id
+          : list
+          ? list.user_id === user.id
+          : null
+        : null
+      const showTagButton = isOwnList || !review
 
-    const reviewUserTags = review?.reviews({
-      limit: 50,
-      where: {
-        _and: [
-          {
-            tag_id: {
-              _neq: ZeroUUID,
-            },
-          },
-          {
-            tag_id: {
-              _is_null: false,
-            },
-          },
-          {
-            type: {
-              _eq: 'vote',
-            },
-          },
-        ],
-      },
-      order_by: [{ updated_at: order_by.desc }],
-    })
+      useLazyEffect(() => {
+        if (!isFocused) {
+          try {
+            refetch(userTags)
+          } catch (err) {
+            console.log('ok', err)
+            // ok
+          }
+        }
 
-    const restaurantSlugUserTags = restaurantSlug
-      ? list?.user?.reviews({
-          limit: 50,
-          order_by: [{ updated_at: order_by.desc }],
-          where: {
-            _and: [
-              {
-                tag_id: {
-                  _neq: ZeroUUID,
-                },
+        onFocusChange?.(isFocused)
+      }, [isFocused])
+      // setRefetchKey(`${Math.random()}`)
+
+      const reviewUserTags = review?.reviews({
+        limit: 50,
+        where: {
+          _and: [
+            {
+              tag_id: {
+                _neq: ZeroUUID,
               },
-              {
-                tag_id: {
-                  _is_null: false,
-                },
+            },
+            {
+              tag_id: {
+                _is_null: false,
               },
-              {
-                type: {
-                  _eq: 'vote',
-                },
+            },
+            {
+              type: {
+                _eq: 'vote',
               },
-              {
-                restaurant: {
-                  slug: {
-                    _eq: restaurantSlug,
+            },
+          ],
+        },
+        order_by: [{ updated_at: order_by.desc }],
+      })
+
+      const restaurantSlugUserTags = restaurantSlug
+        ? list?.user?.reviews({
+            limit: 50,
+            order_by: [{ updated_at: order_by.desc }],
+            where: {
+              _and: [
+                {
+                  tag_id: {
+                    _neq: ZeroUUID,
                   },
                 },
-              },
-            ],
-          },
-        })
-      : null
-
-    const userTags = reviewUserTags || restaurantSlugUserTags || []
-
-    // review?.reviews({
-    //     limit: 20,
-    //     // where: {
-    //     //   user_id: {
-    //     //     _eq: userId,
-    //     //   },
-    //     // },
-    //   }) || []
-
-    useLazyEffect(() => {
-      refetch(userTags)
-      // setRefetchKey(`${Math.random()}`)
-    }, [isFocused])
-
-    // console.log('userTags', userTags?.[0]?.tag?.name)
-
-    // const userTags = userId
-    //   ? query.review({
-    //       limit: 100,
-    //       where: {
-    //         user_id: {
-    //           _eq: userId,
-    //         },
-    //         ...(listSlug && {
-    //           list: {
-    //             slug: {
-    //               _eq: listSlug,
-    //             },
-    //           },
-    //         }),
-    //         restaurant: {
-    //           slug: {
-    //             _eq: restaurantSlug,
-    //           },
-    //         },
-    //       },
-    //     })
-    //   : []
-
-    const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
-
-    const rawTags =
-      isFocused || (!review && !hideGeneralTags)
-        ? [
-            ...tagLenses,
-            ...userTags,
-            //
-            ...((!!restaurant &&
-              getRestaurantDishes({
-                restaurant,
-                max: 10,
-                tagSlugs: [''],
-              })) ||
-              []),
-          ]
-        : userTags
-
-    let tags = filtered.length
-      ? filtered
-      : rawTags
-          .filter(isPresent)
-          .map(getTagButtonProps)
-          .filter((x) => {
-            if (x.slug === 'global__global') return false
-            if (!x.name) return false
-            return true
-          })
-    tags = uniqBy(tags, (x) => x.name || x.slug)
-    tags = sortBy(tags, (x) => {
-      const rating = x?.rating || x?.vote || 0
-      return x.type === 'lense' ? `a${1 / rating}` : `b${1 / rating}`
-    })
-
-    const tagsKey = tags.map((x) => x.slug).join('')
-
-    useAsyncEffect(
-      async (mounted) => {
-        if (!search) {
-          setFiltered([])
-          return
-        }
-        const foundTagsWithNames = await resolved(() =>
-          query
-            .tag({
-              where: {
-                name: {
-                  _ilike: `${search}%`,
+                {
+                  tag_id: {
+                    _is_null: false,
+                  },
                 },
-              },
-              limit: 15,
-            })
+                {
+                  type: {
+                    _eq: 'vote',
+                  },
+                },
+                {
+                  restaurant: {
+                    slug: {
+                      _eq: restaurantSlug,
+                    },
+                  },
+                },
+              ],
+            },
+          })
+        : null
+
+      const userTags = reviewUserTags || restaurantSlugUserTags || []
+
+      // review?.reviews({
+      //     limit: 20,
+      //     // where: {
+      //     //   user_id: {
+      //     //     _eq: userId,
+      //     //   },
+      //     // },
+      //   }) || []
+
+      // console.log('userTags', userTags?.[0]?.tag?.name)
+
+      // const userTags = userId
+      //   ? query.review({
+      //       limit: 100,
+      //       where: {
+      //         user_id: {
+      //           _eq: userId,
+      //         },
+      //         ...(listSlug && {
+      //           list: {
+      //             slug: {
+      //               _eq: listSlug,
+      //             },
+      //           },
+      //         }),
+      //         restaurant: {
+      //           slug: {
+      //             _eq: restaurantSlug,
+      //           },
+      //         },
+      //       },
+      //     })
+      //   : []
+
+      const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
+
+      const rawTags =
+        isFocused || (!review && !hideGeneralTags)
+          ? [
+              ...tagLenses,
+              ...userTags,
+              //
+              ...((!!restaurant &&
+                getRestaurantDishes({
+                  restaurant,
+                  max: 10,
+                  tagSlugs: [''],
+                })) ||
+                []),
+            ]
+          : userTags
+
+      let tags = filtered.length
+        ? filtered
+        : rawTags
+            .filter(isPresent)
             .map(getTagButtonProps)
-        )
-        if (!mounted()) return
-        const filtered = await fuzzySearch({
-          items: [...tags, ...foundTagsWithNames],
-          query: search,
-          keys: ['name'],
-        })
-        setFiltered(filtered)
-      },
-      [search, tagsKey]
-    )
+            .filter((x) => {
+              if (x.slug === 'global__global') return false
+              if (!x.name) return false
+              return true
+            })
+      tags = uniqBy(tags, (x) => x.name || x.slug)
+      tags = sortBy(tags, (x) => {
+        const rating = x?.rating || x?.vote || 0
+        return x.type === 'lense'
+          ? x.slug === 'lenses__gems'
+            ? 'a0'
+            : `a${1 / rating}`
+          : `b${1 / rating}`
+      })
 
-    if (hideGeneralTags && !isOwnList && !tags.length) {
-      return null
-    }
+      const tagsKey = tags.map((x) => x.slug).join('')
 
-    return (
-      <HStack maxWidth="100%" alignItems="center" pointerEvents="auto" zIndex={1000} {...props}>
-        <HStack
-          alignItems="center"
-          spacing="sm"
-          paddingRight={10}
-          {...(wrapTagsRow && {
-            flexWrap: 'wrap',
-            marginBottom: -3,
-            flex: 1,
-            overflow: 'hidden',
-          })}
-        >
-          {isFocused && (
-            <>
-              <HStack onPress={() => setIsFocused(false)} opacity={isFocused ? 1 : 0}>
-                <X size={16} color="#777" />
-              </HStack>
+      useAsyncEffect(
+        async (mounted) => {
+          if (!search) {
+            setFiltered([])
+            return
+          }
+          const foundTagsWithNames = await resolved(() =>
+            query
+              .tag({
+                where: {
+                  name: {
+                    _ilike: `${search}%`,
+                  },
+                },
+                limit: 15,
+              })
+              .map(getTagButtonProps)
+          )
+          if (!mounted()) return
+          const filtered = await fuzzySearch({
+            items: [...tags, ...foundTagsWithNames],
+            query: search,
+            keys: ['name'],
+          })
+          setFiltered(filtered)
+        },
+        [search, tagsKey]
+      )
 
-              <HStack
-                marginRight={-10}
-                marginLeft={10}
-                alignItems="center"
-                opacity={isFocused ? 0.5 : 0}
-              >
-                <Search size={16} color="#777" />
-              </HStack>
-            </>
-          )}
+      if (hideGeneralTags && !isOwnList && !tags.length) {
+        return null
+      }
 
-          {showTagButton && !isFocused && (
-            <SmallButton
-              onPress={() => setIsFocused(true)}
-              icon={<Tag opacity={0.5} size={16} color="#888" />}
-              marginRight={15}
-            ></SmallButton>
-          )}
+      return (
+        <HStack flex={1} alignItems="center" pointerEvents="auto" zIndex={1000} {...props}>
+          <HStack
+            alignItems="center"
+            spacing="sm"
+            paddingRight={10}
+            {...(wrapTagsRow && {
+              flexWrap: 'wrap',
+              marginBottom: -3,
+              flex: 1,
+              overflow: 'hidden',
+            })}
+          >
+            {isFocused && (
+              <>
+                <HStack onPress={() => setIsFocused(false)} opacity={isFocused ? 1 : 0}>
+                  <X size={16} color="#777" />
+                </HStack>
 
-          {isFocused && (
-            <Input
-              placeholder="Dishes, tags:"
-              autoFocus
-              opacity={isFocused ? 1 : 0}
-              zIndex={10}
-              onFocus={() => setIsFocused(true)}
-              color="#777"
-              fontSize={13}
-              width={isFocused ? 130 : 50}
-              borderColor="transparent"
-              onChangeText={(text) => setSearchDbc(text)}
-            />
-          )}
+                <HStack
+                  marginRight={-10}
+                  marginLeft={10}
+                  alignItems="center"
+                  opacity={isFocused ? 0.5 : 0}
+                >
+                  <Search size={16} color="#777" />
+                </HStack>
+              </>
+            )}
 
-          {tags.map((tbp, i) => {
-            const isLense = tbp.type === 'lense'
-            const lastItem = tags[i - 1]
-            return (
-              <TagButton
-                fadeLowlyVoted
-                noLink
-                size="sm"
-                restaurant={restaurant}
-                hideRank
-                key={tbp.slug || 0}
-                // refetchKey={refetchKey}
-                {...tbp}
-                // backgroundColor="transparent"
-                {...(isLense && {
-                  name: '',
-                  marginRight: -4,
-                  tooltip: tbp.name,
-                  circular: true,
-                })}
-                {...(tbp.slug === 'lenses__gems' && {
-                  name: 'Overall',
-                  icon: '',
-                  circular: false,
-                })}
-                {...(!isLense && {
-                  backgroundColor: 'transparent',
-                })}
-                {...(lastItem?.type === 'lense' &&
-                  !isLense && {
-                    marginLeft: 20,
-                  })}
-                {...(wrapTagsRow && {
-                  marginBottom: 3,
-                })}
-                votable={votable}
+            {showTagButton && !isFocused && (
+              <SmallButton
+                onPress={() => setIsFocused(true)}
+                icon={<Tag opacity={0.5} size={16} color="#888" />}
+                marginRight={15}
+              ></SmallButton>
+            )}
+
+            {isFocused && (
+              <Input
+                placeholder="Dishes, tags:"
+                autoFocus
+                opacity={isFocused ? 1 : 0}
+                zIndex={10}
+                onFocus={() => setIsFocused(true)}
+                color="#777"
+                fontSize={13}
+                width={isFocused ? 130 : 50}
+                borderColor="transparent"
+                onChangeText={(text) => setSearchDbc(text)}
               />
-            )
-          })}
+            )}
+
+            {tags.map((tbp, i) => {
+              const isLense = tbp.type === 'lense'
+              const lastItem = tags[i - 1]
+              return (
+                <TagButton
+                  fadeLowlyVoted
+                  noLink
+                  size="sm"
+                  restaurant={restaurant}
+                  hideRank
+                  key={tbp.slug || 0}
+                  // refetchKey={refetchKey}
+                  {...tbp}
+                  // backgroundColor="transparent"
+                  {...(isLense && {
+                    name: '',
+                    marginRight: -4,
+                    tooltip: tbp.name,
+                    circular: true,
+                  })}
+                  {...(tbp.slug === 'lenses__gems' && {
+                    name: 'Overall',
+                    icon: '',
+                    circular: false,
+                  })}
+                  {...(!isLense && {
+                    backgroundColor: 'transparent',
+                  })}
+                  {...(lastItem?.type === 'lense' &&
+                    !isLense && {
+                      marginLeft: 20,
+                    })}
+                  {...(wrapTagsRow && {
+                    marginBottom: 3,
+                  })}
+                  votable={votable}
+                />
+              )
+            })}
+          </HStack>
         </HStack>
-      </HStack>
-    )
-  },
-  { suspense: false }
+      )
+    },
+    { suspense: false }
+  )
 )
 
 // const userTags = query.review({
