@@ -135,7 +135,7 @@ export const ListItemContentMinimal = memo(
                 </HStack>
               </HStack>
 
-              <HStack spacing alignItems="center" marginTop={-12} marginLeft={0}>
+              <HStack spacing alignItems="center" marginTop={media.sm ? -12 : -4} marginLeft={0}>
                 <HStack alignItems="center">
                   <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
 
