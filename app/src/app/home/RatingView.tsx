@@ -15,7 +15,7 @@ export const RatingView = ({ rating = 0, count, size, floating, stacked }: Ratin
     ratingStr = '?'
   }
   const content = (
-    <Paragraph ellipse size={size * (floating ? 0.02 : 0.03)} fontWeight="700" letterSpacing={-1}>
+    <Paragraph ellipse size={size * (floating ? 0.02 : 0.03)} fontWeight="700" letterSpacing={-0.5}>
       {ratingStr}
       <Text marginLeft={1} letterSpacing={-1} fontWeight="300" opacity={0.4}>
         /5
