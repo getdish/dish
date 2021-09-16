@@ -78,6 +78,7 @@ const RestaurantDeliveryButton = ({
                 width: showLabels ? 16 : 24,
                 height: showLabels ? 16 : 24,
                 marginHorizontal: showLabels ? -2 : -6,
+                opacity: showLabels ? 1 : 0.5,
                 marginVertical: -6,
                 borderRadius: 40,
                 borderWidth: 1,

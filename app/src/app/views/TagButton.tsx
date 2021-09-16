@@ -241,7 +241,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       spacing={fontSize * 0.5}
       borderRadius={8}
       backgroundColor={theme.backgroundColor}
-      borderWidth={1}
+      borderWidth={0.5}
       borderColor={bordered ? theme.borderColor : 'transparent'}
       hoverStyle={{
         backgroundColor: theme.backgroundColorSecondary,

@@ -99,9 +99,9 @@ const RestaurantHeaderContent = memo(
 
                 <HStack
                   y={10}
-                  marginRight={-30}
+                  marginRight={-25}
                   pointerEvents="auto"
-                  paddingHorizontal={30}
+                  paddingHorizontal={25}
                   paddingVertical={9}
                   alignItems="center"
                   position="relative"
@@ -115,10 +115,11 @@ const RestaurantHeaderContent = memo(
                     backgroundColor={colors.themeColorAlt}
                     zIndex={-1}
                     opacity={0.96}
-                    borderRadius={100}
+                    borderRadius={6}
                     shadowColor="#000"
                     shadowOpacity={0.1}
                     shadowRadius={5}
+                    skewX="-12deg"
                     shadowOffset={{ height: 3, width: 0 }}
                   />
                   <HStack>
@@ -212,6 +213,7 @@ const RestaurantHeaderContent = memo(
                         spacing={10}
                         maxItems={8}
                         tagButtonProps={{
+                          // borderWidth: 0,
                           hideRank: false,
                           hideRating: false,
                           votable: true,
