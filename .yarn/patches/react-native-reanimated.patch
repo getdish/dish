@@ -1,0 +1,33 @@
+diff --git a/lib/createAnimatedComponent.js b/lib/createAnimatedComponent.js
+index 0c92332647fcc2404dc5364e56aacd6307e75977..2d02e06c7a51feda9e270770b2c3eeab50e344f6 100644
+--- a/lib/createAnimatedComponent.js
++++ b/lib/createAnimatedComponent.js
+@@ -150,7 +150,7 @@ export default function createAnimatedComponent(Component, options = {}) {
+     _detachStyles() {
+       if (Platform.OS === 'web') {
+         for (const style of this._styles) {
+-          if (style.viewsRef) {
++          if (style && style.viewsRef) {
+             style.viewsRef.remove(this);
+           }
+         }
+diff --git a/plugin.js b/plugin.js
+index 9916f615914512295b3d81755c59bf6858d0c90d..3301e1db5135577e355993bf814e1cdbc6a220e2 100644
+--- a/plugin.js
++++ b/plugin.js
+@@ -273,12 +273,13 @@ function buildWorkletString(t, fun, closureVariables, name) {
+     },
+   });
+ 
++  const body = fun.program.body[fun.program.body.length - 1]
+   const workletFunction = t.functionExpression(
+     t.identifier(name),
+-    fun.program.body[0].expression.params,
++    body.expression.params,
+     prependClosureVariablesIfNecessary(
+       closureVariables,
+-      fun.program.body[0].expression.body
++      body.expression.body
+     )
+   );
+ 

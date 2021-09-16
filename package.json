@@ -71,7 +71,7 @@
     "snackui:push": "git subrepo clean snackui && git subrepo push snackui"
   },
   "resolutions": {
-    "react-native-reanimated": "2.3.0-alpha.3",
+    "react-native-reanimated": "patch:react-native-reanimated@npm:2.3.0-alpha.3#.yarn/patches/react-native-reanimated.patch",
     "metro": "0.66.2",
     "metro-babel-register": "0.66.2",
     "metro-cache": "0.66.2",
