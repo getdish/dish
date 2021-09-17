@@ -8,6 +8,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import moment, { Moment } from 'moment'
 
+import { DISH_DEBUG } from './constants'
 import { isGoogleGeocoderID } from './google/GoogleGeocoder'
 
 const exec = util.promisify(require('child_process').exec)
@@ -361,6 +362,9 @@ export function decodeEntities(encodedString) {
 
 export async function curl_cli(url: string, args: string = '') {
   const command = `curl '${url}' ${args}`
+  if (DISH_DEBUG >= 3) {
+    console.log(command)
+  }
   const { stdout, stderr } = await exec(command, { maxBuffer: 1024 * 3000 })
   return stdout
 }

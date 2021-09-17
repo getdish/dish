@@ -1,5 +1,6 @@
 import '@dish/common'
 
+import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
@@ -15,16 +16,21 @@ import { GoogleGeocoder } from '../google/GoogleGeocoder'
 import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, curl_cli, decodeEntities, geocode } from '../utils'
 
-const TRIPADVISOR_OG_DOMAIN = 'https://www.tripadvisor.com/'
-const TRIPADVISOR_DOMAIN = process.env.TRIPADVISOR_PROXY || TRIPADVISOR_OG_DOMAIN
+const TRIPADVISOR_OG_DOMAIN = 'https://www.tripadvisor.com'
+const TRIPADVISOR_AWS_DOMAIN = process.env.TRIPADVISOR_PROXY || ''
 const AXIOS_HEADERS = {
   'X-My-X-Forwarded-For': TRIPADVISOR_OG_DOMAIN,
-  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0',
+  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/92.0',
   'Accept-Language': 'en-GB,en;q=0.5',
   'accept-encoding': 'deflate, gzip, zstd',
 }
 
-const tripadvisorAPI = new ProxiedRequests(TRIPADVISOR_OG_DOMAIN, '', {}, false)
+const tripadvisorAPI = new ProxiedRequests(
+  TRIPADVISOR_OG_DOMAIN,
+  process.env.TRIPADVISOR_PROXY || '',
+  { timeout: null },
+  true
+)
 
 export class Tripadvisor extends WorkerJob {
   public scrape_id!: string
@@ -46,7 +52,7 @@ export class Tripadvisor extends WorkerJob {
   }
 
   async allForCity(city_name: string) {
-    console.log('Starting Tripadvisor crawler. Using domain: ' + TRIPADVISOR_DOMAIN)
+    console.log('Starting Tripadvisor crawler. Using domain: ' + TRIPADVISOR_AWS_DOMAIN)
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(
       aroundCoords(coords[0], coords[1], this.MAPVIEW_SIZE, this.SEARCH_RADIUS_MULTIPLIER)
@@ -63,7 +69,7 @@ export class Tripadvisor extends WorkerJob {
       '&pinSel=v2&finalRequest=false&includeMeta=false&trackPageView=false'
     const dimensions = `&mz=17&mw=${this.MAPVIEW_SIZE}&mh=${this.MAPVIEW_SIZE}`
     const coords = `&mc=${lat},${lon}`
-    const uri = TRIPADVISOR_DOMAIN + base + dimensions + coords
+    const uri = TRIPADVISOR_AWS_DOMAIN + base + dimensions + coords
     const response = await axios.get(uri, { headers: AXIOS_HEADERS })
 
     for (const data of response.data.restaurants) {
@@ -74,10 +80,8 @@ export class Tripadvisor extends WorkerJob {
 
   async getRestaurant(path: string) {
     this.detail_id = this.extractDetailID(path)
-    const html = await this.curl_cli_retries(
-      path,
-      "--compressed -H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0'"
-    )
+    const response = await tripadvisorAPI.get(path)
+    const html = await response.text()
     let data = this._extractEmbeddedJSONData(html)
     const scrape_id = await this.saveRestaurant(data)
     if (!scrape_id) throw new Error("Tripadvisor crawler couldn't save restaurant")
@@ -132,12 +136,8 @@ export class Tripadvisor extends WorkerJob {
   }
 
   async saveReviews(path: string, scrape_id: string, page: number, html: string = '') {
-    if (html == '') {
-      html = await this.curl_cli_retries(
-        path,
-        "-H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0'"
-      )
-    }
+    const response = await tripadvisorAPI.get(path)
+    html = await response.text()
     const more = await this._persistReviewData(html, scrape_id, page, path)
     if (more) {
       page++
@@ -150,6 +150,9 @@ export class Tripadvisor extends WorkerJob {
     }
   }
 
+  // I wrote this when it seemed Tripadvisor had fully detected and blocked our AWS proxy.
+  // But now it seems AWS works again, so leaving this here in case AWS gets blocked again.
+  // But then you'll definitely want to look into adding cookies to improve the success rate.
   async curl_cli_retries(path: string, args: string = '') {
     let html = ''
     let tries = 0
@@ -208,7 +211,7 @@ export class Tripadvisor extends WorkerJob {
       this.log(`Fetching photo page ${page}`)
     }
     const path = this.buildGalleryURL(page)
-    const response = await axios.get(TRIPADVISOR_DOMAIN + path, {
+    const response = await axios.get(TRIPADVISOR_AWS_DOMAIN + path, {
       headers: Object.assign(AXIOS_HEADERS, { 'X-Requested-With': 'XMLHttpRequest' }),
     })
     const html = response.data
@@ -311,14 +314,14 @@ export class Tripadvisor extends WorkerJob {
     if (ids.length == 0) {
       return { more: false, data: null }
     }
-    const path = 'OverlayWidgetAjax?Mode=EXPANDED_HOTEL_REVIEWS_RESP&metaReferer='
+    const path = '/OverlayWidgetAjax?Mode=EXPANDED_HOTEL_REVIEWS_RESP&metaReferer='
     const updated_html = await this.curlFullReviews(path, referer_path, ids)
-    // const updated_html = await this.playrightFullReviews(TRIPADVISOR_OG_DOMAIN + path, referer_path, ids)
+    // const updated_html = await this.playrightFullReviews(path, referer_path, ids)
     try {
       if (!$('.ui_pagination > a.next')!.attr('class')!.includes('disabled')) {
         more = true
       }
-    } catch (error) {
+    } catch (error: any) {
       // TODO it seems this is only triggered when there are 0 reviews
       sentryException(error)
     }
@@ -327,28 +330,32 @@ export class Tripadvisor extends WorkerJob {
 
   private async curlFullReviews(path: string, referer_path: string, ids: string[]) {
     const args = [
-      "-H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0'",
-      "-H 'Accept: text/html, */*; q=0.01'",
-      "-H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'",
+      "-H 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/91.0'",
+      "-H 'Accept-Language: en-GB,en;q=0.5'",
       "-H 'X-Requested-With: XMLHttpRequest'",
-      `-H 'Referer: ${referer_path}'`,
+      '--compressed',
+      `-H 'Referer: ${TRIPADVISOR_OG_DOMAIN}${referer_path}'`,
       `--data-raw 'reviews=${ids.join(',')}'`,
     ].join(' ')
-    return await this.curl_cli_retries(path, args)
+    const html = await curl_cli(TRIPADVISOR_AWS_DOMAIN + path, args)
+    return html
   }
 
-  // Is Playwright setup to skip the AWS proxy?
+  // For some reason this can only resturn empty responses??
   private async playrightFullReviews(url: string, referer_path: string, ids: string[]) {
     const options = {
       method: 'POST',
-      data: ids.join('%2C'),
+      body: `reviews=${ids.join('%2C')}`,
       timeout: null,
       headers: {
+        ...AXIOS_HEADERS,
+        'X-Requested-With': 'XMLHttpRequest',
         Referer: TRIPADVISOR_OG_DOMAIN + referer_path,
       },
     }
     const response = await tripadvisorAPI.get(url, options)
-    return await response.text()
+    const html = await response.text()
+    return html
   }
 
   private _getRatingFromClasses(review: any) {
