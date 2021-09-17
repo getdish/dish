@@ -1,7 +1,7 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import { Loader, Search, X } from '@dish/react-feather'
-import { getStore, reaction } from '@dish/use-store'
+import { getStore, reaction, selector } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { HStack, Spacer, VStack, getMedia, useDebounce, useMedia, useOnMount } from 'snackui'
@@ -93,11 +93,21 @@ export const AppSearchInput = memo(() => {
   const outerHeight = height - 1
   const innerHeight = height - 1
 
+  const setSearchInputValue = (value: string) => {
+    const input = textInput$.current
+    if (!input) return
+    if (input.setNativeProps) {
+      input.setNativeProps({
+        value: homeStore.currentSearchQuery,
+      })
+    } else if (input) {
+      ;(input as any).value = value
+    }
+  }
+
   useOnMount(() => {
     searchBar = inputStore.node
-    textInput$.current?.setNativeProps({
-      value: homeStore.currentSearchQuery,
-    })
+    setSearchInputValue(homeStore.currentSearchQuery)
     return series([
       () => fullyIdle({ checks: 3, max: 100 }),
       () => {
@@ -110,16 +120,12 @@ export const AppSearchInput = memo(() => {
 
   // one way sync down for more perf
   useEffect(() => {
-    return reaction(
-      homeStore,
-      (x) => x.currentSearchQuery,
-      function searchQuerySync(value) {
-        setSearch(value)
-        textInput$.current?.setNativeProps({
-          value,
-        })
-      }
-    )
+    return selector(function searchQuerySync() {
+      const value = homeStore.currentSearchQuery
+      console.log('reacting to current search query', value, textInput$)
+      setSearch(value)
+      setSearchInputValue(value)
+    })
   }, [])
 
   const input = inputStore.node
@@ -363,6 +369,10 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
           homeStore.clearSearch()
           homeStore.navigate({
             tags: [item],
+            state: {
+              ...homeStore.currentState,
+              searchQuery: '',
+            },
           })
         }
       }
