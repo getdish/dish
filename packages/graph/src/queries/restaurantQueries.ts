@@ -35,6 +35,8 @@ export async function restaurantFindOneWithTags(restaurant: Partial<RestaurantWi
           ...selectFields(rest, '*'),
           menu_items: selectFields(rest?.menu_items(), '*'),
           rating_factors: rest?.rating_factors,
+          hours: rest?.hours,
+          price_range: rest?.price_range,
           sources: rest?.sources,
           photos: rest?.photos,
           tags: rest?.tags().map((tagV) => {

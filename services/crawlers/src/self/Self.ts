@@ -338,28 +338,27 @@ export class Self extends WorkerJob {
   }
 
   async addPriceTags() {
-    if (this.restaurant.price_range?.includes('$')) {
-      let word: string = ''
-      switch (this.restaurant.price_range) {
-        case '$':
-          word = 'low'
-          break
-        case '$$':
-          word = 'mid'
-          break
-        case '$$$':
-          word = 'high'
-          break
-        case '$$$$':
-          word = 'higher'
-          break
-        case '$$$$$':
-          word = 'highest'
-          break
-      }
-      if (word != '') {
-        await this.tagging.addSimpleTags(['price-' + word])
-      }
+    if (!this.restaurant.price_range?.includes('$')) return
+    let word: string = ''
+    switch (this.restaurant.price_range) {
+      case '$':
+        word = 'low'
+        break
+      case '$$':
+        word = 'mid'
+        break
+      case '$$$':
+        word = 'high'
+        break
+      case '$$$$':
+        word = 'higher'
+        break
+      case '$$$$$':
+        word = 'highest'
+        break
+    }
+    if (word != '') {
+      await this.tagging.addSimpleTags(['price-' + word])
     }
   }
 
@@ -472,11 +471,10 @@ export class Self extends WorkerJob {
 
   addPriceRange() {
     this.restaurant.price_range = scrapeGetData(this.google, (x) => x.pricing)
-
     if (!this.restaurant.price_range?.includes('$')) {
       const text = scrapeGetData(
         this.tripadvisor,
-        (x) => x.overview.detailCard.tagTexts.priceRange.tags[0].tagValue
+        (x) => x?.overview?.detailCard?.tagTexts?.priceRange?.tags[0]?.tagValue
       )
       if (text.includes('Low')) this.restaurant.price_range = '$'
       if (text.includes('Mid')) this.restaurant.price_range = '$$'
@@ -486,7 +484,7 @@ export class Self extends WorkerJob {
     if (!this.restaurant.price_range?.includes('$')) {
       this.restaurant.price_range = scrapeGetData(
         this.yelp,
-        (x) => x.data_from_search_list_item.priceRange
+        (x) => x?.data_from_search_list_item?.priceRange
       )
     }
   }
@@ -494,7 +492,7 @@ export class Self extends WorkerJob {
   async addHours() {
     this.restaurant.hours = scrapeGetData(
       this.yelp,
-      (x) => x.dynamic.legacyProps.props.moreInfoProps.bizInfo.bizHours,
+      (x) => x.dynamic?.legacyProps?.props?.moreInfoProps?.bizInfo?.bizHours,
       []
     )
 

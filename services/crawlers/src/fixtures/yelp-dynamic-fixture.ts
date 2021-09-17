@@ -194,7 +194,7 @@ export default {
             { formattedDate: 'Thu-Fri', formattedTime: '4:00 pm - 2:00 am' },
             { formattedDate: 'Sat', formattedTime: '2:00 pm - 2:00 am' },
             { formattedDate: 'Sun', formattedTime: '2:00 pm - 10:00 pm' },
-          ],
+          ] as { formattedDate: string; formattedTime: string }[],
           bizSpecialHours: [],
           bizAttributes: [
             { title: 'Takes Reservations', label: 'Yes' },
