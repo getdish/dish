@@ -1,4 +1,4 @@
-import { route, useRouteBodyParser } from '@dish/api'
+import { CACHE_KEY_PREFIX, route, useRouteBodyParser } from '@dish/api'
 import { DISH_DEBUG, GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Request } from 'express'
@@ -443,7 +443,8 @@ const getKey = (obj: FieldNode | SelectionNode, variables?: any, avoidRecursion 
     key += typeof val === 'string' ? val : Object.entries(val).flat().join('.')
   }
   if (obj.name.value !== key) {
-    return `${obj.name.value}-${key}`
+    key = `${obj.name.value}-${key}`
   }
+  key = `${CACHE_KEY_PREFIX}${key}`
   return key
 }

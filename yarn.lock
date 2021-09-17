@@ -1888,6 +1888,7 @@ __metadata:
   dependencies:
     "@dish/esdx": "*"
     "@types/express": ^4.17.11
+    ava: ^3.15.0
     body-parser: ^1.19.0
     express: ^4.17.1
   languageName: unknown
@@ -1947,6 +1948,7 @@ __metadata:
     "@unimodules/react-native-adapter": ^6.1.0
     "@welldone-software/why-did-you-render": ^6.1.1
     apple-sign-in-rest: ^1.0.2
+    ava: ^3.15.0
     aws-sdk: ^2.762.0
     babel-plugin-transform-inline-environment-variables: ^0.4.3
     bcryptjs: ^2.4.3
@@ -7858,7 +7860,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ava@npm:*, ava@npm:^3.14.0":
+"ava@npm:*, ava@npm:^3.14.0, ava@npm:^3.15.0":
   version: 3.15.0
   resolution: "ava@npm:3.15.0"
   dependencies:

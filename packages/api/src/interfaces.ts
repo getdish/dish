@@ -16,3 +16,5 @@ export class RouteExit extends Error {
     super(message ?? '')
   }
 }
+
+export const CACHE_KEY_PREFIX = 'dish-app-api-cache-'
