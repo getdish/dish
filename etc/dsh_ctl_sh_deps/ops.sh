@@ -228,3 +228,20 @@ function worker_cli() {
   worker=$(docker ps -qf "name=dish_worker" | head -n1)
   docker exec -it $worker "$@"
 }
+
+function auto_force_restart_service() {
+  service=$1
+  period=${2-900}
+  while true; do
+    echo "Restarting $service..."
+    scale=$(
+      docker service inspect \
+        --format='{{.Spec.Mode.Replicated.Replicas}}' \
+        $service
+    )
+    docker service scale $service=0
+    docker service scale $service=$scale
+    echo "Waiting $period seconds until next restart"
+    sleep $period
+  done
+}
