@@ -173,7 +173,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawerStore._setY(curSnapY + Math.round(dy))
       },
       onPanResponderRelease: (e, { vy }) => {
-        console.log('released')
         isPanActive = false
         const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
         drawerStore.pan.flattenOffset()

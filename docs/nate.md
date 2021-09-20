@@ -1,3 +1,10 @@
+- small tech fixes:
+    - useSyncExternalStore
+        - https://github.com/reactwg/react-18/discussions/86
+        - https://github.com/facebook/react/commit/806aaa2e21edf9e1b9317c4bf4157e422b693d14
+
+- lists with any location
+    - https://developer.apple.com/documentation/mapkitjs/mapkit/search/2974016-autocomplete
 - fix mobile web bugs
 - slow profile load
 - unrate tag

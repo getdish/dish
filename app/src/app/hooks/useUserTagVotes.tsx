@@ -14,7 +14,7 @@ import { Toast, useLazyEffect } from 'snackui'
 import { getFullTags } from '../../helpers/getFullTags'
 import { useUserStore, userStore } from '../userStore'
 
-export type VoteNumber = 1 | 2 | 3 | 4 | 5
+export type VoteNumber = -1 | 0 | 1 | 2 | 3 | 4 | 5
 
 const tagVotesStore = createStore(
   class TagVotesStore extends Store {

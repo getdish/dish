@@ -1,28 +1,19 @@
+- gpt3 summaries (elethuer)
+  - table style
+  - restaurant + tags + source_breakdown
+
+- profile page queries incredibly slow
+
 - speed of search / discuss putting search.sql into the graph
 
 - todo: merge with next.md
-- HASURA_GRAPHQL_JWT_SECRET seems like its just 12346... ? should secure that
-- restaurant page loads slowly - check which query/ies are causing
-- get top cuisine/dish query into hasura itself so we get caching for free + can subquery anything we want without multiple trips to server + simplify it a bit perhaps so its a bit faster
 
-- crawlers get working on bay area:
-  - test on a handful of restaurants and ensure they are reliable/accurate
-  - fix any issues due to changing api's, etc
-  - we need closed restaurant detection of some sort
-    - if no yelp data, y = getYelpRestaurant, p = loadPage(y.yelpUrl), p.contains('IS CLOSED')) && y.markClosed()
-  - discuss any potential improvements with team
-    - photos + tag detection on photos + tag sentiment
-    - rating sub-factors: showing ambience/vibe/service/deal split out
-  - re-run crawl bay area
-    - start with partial crawl and fix any issues at scale
+- HASURA_GRAPHQL_JWT_SECRET seems like its just 12346... ? should secure that
+
+- auto generate a few lists per region, basically re-create the top/unique tags for each region and then generate lists for them (under DishBot or similar fake user)
 
 - homepage
   - ensure the tags we have in the initial search autocomplete dropdown exist in db for next crawl (can just replace with tags that exist to save time step 1)
-  - we have a new hasura fn `list_populated`, ensure this is decent/fast
-    - may want to discuss this query quickly with team and make sure good
-
-- performance
-  - some queries are somewhat slow, lets investigate search especially
 
 - infra
   - get backups back working
@@ -30,20 +21,13 @@
   - goal for first month is not to get lost in here, focus on product
 
 - beta features
+  - email only login option
   - email setup for generally keeping up to date with users
 
 - speeding up/simplifying dev
-  - being able to run the stack with no docker would be a big boost for apple, i think its possible now but we should smooth it out
-  - i'm generally pro reducing our services
-    - cron/migrate/worker/run-tests seem closely related could become one thing
-    - search could fold into just app (more monolithic)
-    - crawlers is more of a package than a service
+  - cron/migrate/worker/run-tests seem closely related could become one thing
+  - search could fold into just app (more monolithic)
+  - crawlers is more of a package than a service
   - ci/release improvements
     - having the [name]/dev branches release to a pr-based staging ENV *before* running tests would be a huge win for quickly testing
     - any obvious speed wins in CI really help
-
-- search
-  - search is most likely area that will need improvement
-  - we should test somehow using the app "for real", as in search the area i'm in see if it sorts right, shows places somewhat quickly, etc
-  - especially tags could use love i assume
-  - just getting a good idea of how we'd like to upgrade it over time

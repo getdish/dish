@@ -122,7 +122,6 @@ export const AppSearchInput = memo(() => {
   useEffect(() => {
     return selector(function searchQuerySync() {
       const value = homeStore.currentSearchQuery
-      console.log('reacting to current search query', value, textInput$)
       setSearch(value)
       setSearchInputValue(value)
     })

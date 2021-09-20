@@ -12,7 +12,7 @@ import {
   useDebounceEffect,
 } from 'snackui'
 
-import { cardFrameWidthLg } from '../../constants/constants'
+import { cardFrameWidth, cardFrameWidthLg } from '../../constants/constants'
 import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
@@ -229,10 +229,10 @@ export const HomePageFeed = memo(
 
           <VStack paddingHorizontal={10} position="relative">
             <AbsoluteVStack zIndex={100} top={-15} left={10}>
-              <SlantedTitle size="xs">Top Lists</SlantedTitle>
+              <SlantedTitle size="xxs">Top Playlists</SlantedTitle>
             </AbsoluteVStack>
 
-            <Grid itemMinWidth={cardFrameWidthLg}>
+            <Grid itemMinWidth={cardFrameWidth}>
               {trendingLists.map((list, i) => {
                 const listSlug = list.slug
                 return (

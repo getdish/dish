@@ -16,6 +16,7 @@ export type StoreTracker = {
   component?: any
   firstRun: boolean
   last?: any
+  lastKeys?: any
 }
 
 export const disableTracking = new WeakMap()
@@ -54,15 +55,21 @@ export class Store<Props extends Object | null = null> {
     }
   }
 
-  [TRACK](key: string) {
-    if (key.charAt(0) === '_' || key.charAt(0) === '$' || key === 'props' || key === 'toJSON') {
+  [TRACK](key: string, debug?: boolean) {
+    if (key[0] === '_' || key[0] === '$' || key === 'props' || key === 'toJSON') {
       return
     }
-    this._trackers.forEach((tracker) => {
+    if (debug) {
+      console.log('(debug) CHECK TRACKERS FOR', key)
+    }
+    for (const tracker of this._trackers) {
       if (tracker.isTracking) {
         tracker.tracked.add(key)
+        if (debug) {
+          console.log('(debug) TRACK', key, tracker)
+        }
       }
-    })
+    }
   }
 
   [SHOULD_DEBUG]() {

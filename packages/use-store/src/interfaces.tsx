@@ -10,7 +10,6 @@ export type UseStoreOptions<Store = any, SelectorRes = any> = {
 export type StoreInfo<A = any> = {
   // proxied store
   store: A
-  source: any
   storeInstance: any
   getters: { [key: string]: any }
   actions: any

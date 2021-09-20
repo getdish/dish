@@ -567,6 +567,9 @@ const normalizeItemName = {
 export const homeStore = createStore(HomeStore)
 
 export const useHomeStore = (debug?: boolean): HomeStore => {
+  if (debug) {
+    debugger
+  }
   return useStoreInstance(homeStore, debug)
 }
 
@@ -574,13 +577,11 @@ export const useHomeStoreSelector = <A extends (store: HomeStore) => any>(
   selector: A,
   debug?: boolean
 ): A extends (store: HomeStore) => infer B ? B : unknown => {
-  return useStoreInstanceSelector(homeStore, selector, [], debug)
+  return useStoreInstanceSelector(homeStore, selector, debug)
 }
 
 export const useLastHomeState = <Type extends HomeStateItem['type']>(type: Type) => {
-  return useStoreInstanceSelector(homeStore, (x) => _.findLast(x.states, (s) => s.type === type), [
-    type,
-  ])
+  return useStoreInstanceSelector(homeStore, (x) => _.findLast(x.states, (s) => s.type === type))
 }
 
 export const useHomeCurrentHomeType = () => {
@@ -588,11 +589,11 @@ export const useHomeCurrentHomeType = () => {
 }
 
 export const useIsHomeTypeActive = (type?: HomeStateItem['type']) => {
-  return useStoreInstanceSelector(homeStore, (x) => x.currentState.type === type, [type])
+  return useStoreInstanceSelector(homeStore, (x) => x.currentState.type === type)
 }
 
 export const useHomeStateById = <Type extends HomeStateItem>(id: string) => {
-  return useStoreInstanceSelector(homeStore, (x) => x.allStates[id], [id]) as Type
+  return useStoreInstanceSelector(homeStore, (x) => x.allStates[id]) as Type
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')

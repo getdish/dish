@@ -114,8 +114,8 @@ class SearchPageStore extends Store<{ id: string }> {
         console.warn('not right type?')
         return
       }
-      if (process.env.NODE_ENV === 'development') {
-        if (fail) console.warn('cancelling search')
+      if (fail && process.env.NODE_ENV === 'development') {
+        console.warn('cancelling search')
       }
       if (fail) {
         this.isSearching = false

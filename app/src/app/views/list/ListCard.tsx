@@ -40,7 +40,7 @@ const ListCardContent = graphql((props: ListCardProps) => {
   const { list } = useList(props)
   const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
   const listColors = getListColors(list?.color)
-  const listThemeName = (list?.theme || 0) === 0 ? 'modern' : 'minimal'
+  // const listThemeName = (list?.theme || 0) === 0 ? 'modern' : 'minimal'
   return (
     <ListCardFrame
       title={list?.name ?? ''}

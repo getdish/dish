@@ -2389,7 +2389,7 @@ __metadata:
     lodash: ^4.17.21
     react: "*"
     react-dom: "*"
-    use-sync-external-store: ^0.0.0-experimental-45898dacb2-20210828
+    use-sync-external-store: 0.0.0-experimental-3ee7a004e-20210920
   languageName: unknown
   linkType: soft
 
@@ -21547,16 +21547,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:0.0.0-experimental-d75105fa9":
-  version: 0.0.0-experimental-d75105fa9
-  resolution: "react-dom@npm:0.0.0-experimental-d75105fa9"
+"react-dom@npm:0.0.0-experimental-3ee7a004e-20210920":
+  version: 0.0.0-experimental-3ee7a004e-20210920
+  resolution: "react-dom@npm:0.0.0-experimental-3ee7a004e-20210920"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-    scheduler: 0.0.0-experimental-d75105fa9
+    scheduler: 0.0.0-experimental-3ee7a004e-20210920
   peerDependencies:
-    react: 0.0.0-experimental-d75105fa9
-  checksum: da438d4e706e9b11e9f22675d0eb3e439eec200081952bacd2a2be1cd5af475d23ba8a4eb0fb8b6818e7986c89133ebdab54f9b09a9ec9ea13d2c938443a1220
+    react: 0.0.0-experimental-3ee7a004e-20210920
+  checksum: 612c4cdeb3f53cbc800db1d4e418927e2d07f6091cfcf55adfc07d6a554adfc39c5ebc74dd4f15ea2cb21e0d82e8bcdde8f33b0c1335e11b693cdbc9bc4d4db6
   languageName: node
   linkType: hard
 
@@ -22065,13 +22065,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:0.0.0-experimental-d75105fa9":
-  version: 0.0.0-experimental-d75105fa9
-  resolution: "react@npm:0.0.0-experimental-d75105fa9"
+"react@npm:0.0.0-experimental-3ee7a004e-20210920":
+  version: 0.0.0-experimental-3ee7a004e-20210920
+  resolution: "react@npm:0.0.0-experimental-3ee7a004e-20210920"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 1a5b32554fe71e6d31ce83ba7822d8e40be1d82f4056a552a190ea840c23e50442b30bfb6e8c8f632ed4d1f7b6618cff34a48d57248b501560c7b7d20db7f059
+  checksum: d04ff05927646d6706e08e4cdcee5a2a5283eedb80beda37ddf341803a125e105f899fb379b9f8463f80dba4d160a794da97a041a893cdd9367d9a37ecd60b5d
   languageName: node
   linkType: hard
 
@@ -22991,13 +22991,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"scheduler@npm:0.0.0-experimental-d75105fa9":
-  version: 0.0.0-experimental-d75105fa9
-  resolution: "scheduler@npm:0.0.0-experimental-d75105fa9"
+"scheduler@npm:0.0.0-experimental-3ee7a004e-20210920":
+  version: 0.0.0-experimental-3ee7a004e-20210920
+  resolution: "scheduler@npm:0.0.0-experimental-3ee7a004e-20210920"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: d62ac68f9722d99067ead5f6b195365bba7a46da9d2ead3b3d9b0aed8a784dbbf69ec4438c71dcef2d74a1b9fa69549f4b432f850ea9c9419ed5811c961f5ad4
+  checksum: 6edbce95ba4e0973c7975edadc568d47b047405190d07f63c1d2634eb5a93374336e1308c414839acc193b6b97d9c08bf36df94702871e046128a441b917b143
   languageName: node
   linkType: hard
 
@@ -26123,12 +26123,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^0.0.0-experimental-45898dacb2-20210828":
-  version: 0.0.0-experimental-67f38366a-20210830
-  resolution: "use-sync-external-store@npm:0.0.0-experimental-67f38366a-20210830"
+"use-sync-external-store@npm:0.0.0-experimental-3ee7a004e-20210920":
+  version: 0.0.0-experimental-3ee7a004e-20210920
+  resolution: "use-sync-external-store@npm:0.0.0-experimental-3ee7a004e-20210920"
   peerDependencies:
-    react: 0.0.0-experimental-67f38366a-20210830
-  checksum: aa42de3b86f4bce4cce46a16a0916b834eead48579036734feb50a8430783c0352a286c2f60e20e558f5d8e133b9ebd21eddc81261903a2d564aeffeaa055cd7
+    react: 0.0.0-experimental-3ee7a004e-20210920
+  checksum: 5fb45a934d11483236e1258fcdee223b054ec70e475577fd067c85e1860f34da69b029a7decea24e502f4faea746d2a758270011188697c9fc71f695e3a458b8
   languageName: node
   linkType: hard
 

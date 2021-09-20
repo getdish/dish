@@ -294,9 +294,12 @@ const useActiveTagSlugs = (props: SearchProps) => {
 
 const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
   const drawerWidth = useAppDrawerWidth()
-  const searchPageStore = useSearchPageStore({
-    id: props.item.id,
-  })
+  const searchPageStore = useSearchPageStore(
+    {
+      id: props.item.id,
+    }
+  )
+
   const activeTagSlugs = useActiveTagSlugs(props)
   const { status } = searchPageStore
 
