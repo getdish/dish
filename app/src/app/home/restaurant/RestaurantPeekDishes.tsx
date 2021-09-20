@@ -100,7 +100,18 @@ export const RestaurantPeekDishes = memo(
                             tags: [dish],
                           })}
                     >
-                      <TagButton maxWidth={190} width="100%" noLink votable size="lg" {...dish} />
+                      <TagButton
+                        hideRank
+                        hideIcon
+                        hideVote
+                        fadeLowlyVoted
+                        maxWidth={190}
+                        width="100%"
+                        noLink
+                        votable
+                        size="lg"
+                        {...dish}
+                      />
                     </Link>
                   </VStack>
                 )

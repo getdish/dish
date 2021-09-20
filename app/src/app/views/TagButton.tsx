@@ -82,36 +82,37 @@ export const getTagButtonProps = (review_or_tag?: TagLike | review | null): TagB
 
 export type TagButtonProps = StackProps &
   Omit<TagButtonTagProps, 'rgb'> & {
-    noLink?: boolean
-    theme?: ThemeName
-    rgb?: RGB | null
-    refetchKey?: string
-    slug?: string
-    restaurant?: restaurant | null
-    size?: 'lg' | 'md' | 'sm'
-    votable?: boolean
+    after?: any
+    bordered?: boolean
+    circular?: boolean
     closable?: boolean
-    onClose?: Function
-    onlyIcon?: boolean
     color?: any
-    hideIcon?: boolean
-    subtleIcon?: boolean
+    fadeLowlyVoted?: boolean
+    floating?: boolean
     fontSize?: TextProps['fontSize']
     fontWeight?: TextProps['fontWeight']
+    hideIcon?: boolean
+    hideRank?: boolean
+    hideRating?: boolean
+    hideVote?: boolean
+    isActive?: boolean
+    noLink?: boolean
+    onClose?: Function
+    onlyIcon?: boolean
+    ratingStyle?: 'points' | 'pie'
+    refetchKey?: string
     replace?: boolean
     replaceSearch?: boolean
-    after?: any
-    floating?: boolean
-    hideRating?: boolean
-    hideRank?: boolean
-    ratingStyle?: 'points' | 'pie'
-    transparent?: boolean
-    bordered?: boolean
-    isActive?: boolean
+    restaurant?: restaurant | null
+    rgb?: RGB | null
     showSearchButton?: boolean
+    size?: 'lg' | 'md' | 'sm'
+    slug?: string
+    subtleIcon?: boolean
+    theme?: ThemeName
     tooltip?: string
-    fadeLowlyVoted?: boolean
-    circular?: boolean
+    transparent?: boolean
+    votable?: boolean
   }
 
 const typeColors = {
@@ -135,41 +136,42 @@ export const TagButton = memo((props: TagButtonProps) => {
 
 const TagButtonInner = (props: TagButtonProps) => {
   const {
-    rank,
-    name,
-    type,
-    size,
-    slug,
-    rating,
-    floating,
-    closable,
-    bordered,
-    onClose,
-    replaceSearch,
-    votable,
-    onlyIcon,
-    fontSize: fontSizeProp,
-    fontWeight,
-    color,
-    icon,
-    fadeLowlyVoted,
-    rgb,
-    score,
-    subtleIcon,
-    hideIcon,
-    isActive,
     after,
-    showSearchButton,
-    replace,
-    restaurant,
-    hideRating,
-    hideRank,
-    ratingStyle = 'pie',
-    transparent,
-    noLink,
-    tooltip,
+    bordered,
     children,
     circular,
+    closable,
+    color,
+    fadeLowlyVoted,
+    floating,
+    fontSize: fontSizeProp,
+    fontWeight,
+    hideIcon,
+    hideRank,
+    hideRating,
+    hideVote,
+    icon,
+    isActive,
+    name,
+    noLink,
+    onClose,
+    onlyIcon,
+    rank,
+    rating,
+    ratingStyle = 'pie',
+    replace,
+    replaceSearch,
+    restaurant,
+    rgb,
+    score,
+    showSearchButton,
+    size,
+    slug,
+    subtleIcon,
+    tooltip,
+    transparent,
+    type,
+    votable,
     ...rest
   } = props
 
@@ -278,33 +280,6 @@ const TagButtonInner = (props: TagButtonProps) => {
       {rankElement}
       {iconElement}
 
-      {!onlyIcon && !circular && (
-        <Text
-          ellipse
-          fontSize={fontSize}
-          fontWeight={fontWeight || '400'}
-          lineHeight={isSmall ? 15 : 22}
-          color={color || theme.color}
-          pointerEvents="none"
-          // borderBottomColor={theme.backgroundColor}
-          // borderBottomWidth={floating ? 0 : 1}
-          opacity={0.8}
-          {...(floating && {
-            color: '#fff',
-            textShadowColor: theme.shadowColorLighter,
-            textShadowOffset: { height: 3, width: 0 },
-            textShadowRadius: 3,
-          })}
-          hoverStyle={{
-            opacity: 1,
-          }}
-        >
-          {tagDisplayName(name)}
-        </Text>
-      )}
-
-      {children}
-
       {!hideRating && typeof rating !== 'undefined' && (
         <>
           {ratingStyle === 'pie' && (
@@ -341,7 +316,34 @@ const TagButtonInner = (props: TagButtonProps) => {
         </>
       )}
 
-      {!!slug && !!votable && !!props.restaurant && (
+      {!onlyIcon && !circular && (
+        <Text
+          ellipse
+          fontSize={fontSize}
+          fontWeight={fontWeight || '400'}
+          lineHeight={isSmall ? 15 : 22}
+          color={color || theme.color}
+          pointerEvents="none"
+          // borderBottomColor={theme.backgroundColor}
+          // borderBottomWidth={floating ? 0 : 1}
+          opacity={0.8}
+          {...(floating && {
+            color: '#fff',
+            textShadowColor: theme.shadowColorLighter,
+            textShadowOffset: { height: 3, width: 0 },
+            textShadowRadius: 3,
+          })}
+          hoverStyle={{
+            opacity: 1,
+          }}
+        >
+          {tagDisplayName(name)}
+        </Text>
+      )}
+
+      {children}
+
+      {(hideVote && !vote ? false : true) && !!slug && !!votable && !!props.restaurant && (
         <TagButtonVote
           {...props}
           vote={vote}
