@@ -66,7 +66,7 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
           width={40}
           x={-20}
           // this makes react native work...
-          backgroundColor="red"
+          backgroundColor="rgba(0,0,0,0.001)"
           shadowColor="#000"
           shadowOpacity={0.5}
           shadowRadius={20}

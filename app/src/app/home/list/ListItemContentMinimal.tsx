@@ -56,7 +56,7 @@ export const ListItemContentMinimal = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 28 : 32) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 26 : 30) * titleFontScale)
     const theme = useTheme()
 
     const restaurantReviewListProps = useRestaurantReviewListProps({
@@ -84,110 +84,123 @@ export const ListItemContentMinimal = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <HStack
-          paddingVertical={16}
+          paddingVertical={18}
           paddingHorizontal={18}
+          paddingLeft={28}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
           width="100%"
           overflow="hidden"
+          flex={1}
         >
-          <HStack paddingLeft={10} flex={1}>
-            <VStack flex={1}>
-              <HStack
-                className="hover-faded-in-parent"
-                alignItems="center"
-                flexGrow={1}
-                position="relative"
-              >
-                <VStack opacity={0.5} y={3} marginLeft={-38} marginRight={10} width={35}>
-                  <RankView rank={rank} />
-                </VStack>
+          <VStack flex={1}>
+            <HStack
+              className="hover-faded-in-parent"
+              alignItems="center"
+              flexGrow={1}
+              position="relative"
+            >
+              <VStack opacity={0.5} y={3} marginLeft={-38} marginRight={10} width={35}>
+                <RankView rank={rank} />
+              </VStack>
 
-                <HStack marginHorizontal={-10} alignItems="center">
-                  <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
-                    <HStack
-                      paddingVertical={4}
-                      marginVertical={-4}
-                      borderRadius={8}
-                      alignItems="center"
-                      hoverStyle={{
-                        backgroundColor: theme.backgroundColorSecondary,
-                      }}
-                      pressStyle={{
-                        backgroundColor: theme.backgroundColorTertiary,
-                      }}
-                      flex={1}
-                      overflow="hidden"
-                    >
-                      <Text
-                        fontSize={titleFontSize}
-                        color={theme.color}
-                        fontWeight="400"
-                        letterSpacing={-0.25}
-                        paddingHorizontal={10} // prevents clipping due to letter-spacing
-                        ellipse
-                        maxWidth="100%"
-                      >
-                        {restaurantName}
-                      </Text>
-                    </HStack>
-                  </Link>
-                </HStack>
-              </HStack>
-
-              <HStack spacing alignItems="center" marginTop={media.sm ? -12 : -4} marginLeft={0}>
-                <HStack alignItems="center">
-                  <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
-
-                  {!!restaurant.address && (
-                    <RestaurantAddress size={'xs'} address={restaurant.address} />
-                  )}
-                </HStack>
-
-                <RestaurantRatingView restaurant={restaurant} size={26} />
-
-                <Text fontSize={14} color={theme.colorTertiary}>
-                  {price_range ?? '?'}
-                </Text>
-
-                {!!open.nextTime && (
-                  <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
+              <HStack marginHorizontal={-10} alignItems="center">
+                <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
+                  <HStack
+                    paddingVertical={4}
+                    marginVertical={-4}
+                    borderRadius={8}
+                    alignItems="center"
+                    hoverStyle={{
+                      backgroundColor: theme.backgroundColorSecondary,
+                    }}
+                    pressStyle={{
+                      backgroundColor: theme.backgroundColorTertiary,
+                    }}
+                    flex={1}
+                    overflow="hidden"
+                  >
                     <Text
-                      paddingHorizontal={5}
-                      opacity={0.8}
-                      fontSize={13}
-                      color={theme.colorTertiary}
+                      fontSize={titleFontSize}
+                      color={theme.color}
+                      fontWeight="400"
+                      letterSpacing={-0.25}
+                      paddingHorizontal={10} // prevents clipping due to letter-spacing
+                      ellipse
+                      maxWidth="100%"
                     >
-                      {open.nextTime || ''}
+                      {restaurantName}
                     </Text>
-                  </Link>
-                )}
+                  </HStack>
+                </Link>
+              </HStack>
+            </HStack>
 
-                <Suspense fallback={null}>
-                  <RestaurantDeliveryButtons
-                    showLabels={false}
-                    label={false}
-                    restaurantSlug={restaurant.slug || ''}
-                  />
-                </Suspense>
+            <HStack spacing="lg" alignItems="center" marginTop={media.sm ? -12 : -4} marginLeft={0}>
+              <HStack alignItems="center">
+                <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
+
+                {!!restaurant.address && (
+                  <RestaurantAddress size={'xs'} address={restaurant.address} />
+                )}
               </HStack>
 
-              {/* START CONTENT ROW */}
-              <HStack
-                alignItems="center"
-                // below the add comment button
-                zIndex={0}
+              <VStack opacity={0.5}>
+                <RestaurantRatingView restaurant={restaurant} size={28} />
+              </VStack>
+
+              <Text opacity={0.5} fontSize={14} color={theme.colorTertiary}>
+                {price_range ?? '?'}
+              </Text>
+
+              {!!open.nextTime && (
+                <Link opacity={0.5} name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
+                  <Text
+                    paddingHorizontal={5}
+                    opacity={0.8}
+                    fontSize={13}
+                    color={theme.colorTertiary}
+                  >
+                    {open.nextTime || ''}
+                  </Text>
+                </Link>
+              )}
+
+              {!isFocused && (
+                <RestaurantFavoriteButton
+                  backgroundColor="transparent"
+                  size="sm"
+                  borderWidth={0}
+                  opacity={0.5}
+                  restaurantSlug={restaurant.slug || ''}
+                />
+              )}
+
+              <Suspense fallback={null}>
+                <RestaurantDeliveryButtons
+                  showLabels={false}
+                  label={false}
+                  restaurantSlug={restaurant.slug || ''}
+                />
+              </Suspense>
+            </HStack>
+
+            {/* START CONTENT ROW */}
+            <HStack
+              alignItems="center"
+              // below the add comment button
+              zIndex={0}
+              position="relative"
+            >
+              {/* ROW: OVERVIEW */}
+              <VStack
+                maxWidth={media.sm ? '100%' : '100%'}
+                justifyContent="center"
+                flex={1}
                 position="relative"
               >
-                {/* ROW: OVERVIEW */}
-                <VStack
-                  maxWidth={media.sm ? '100%' : '100%'}
-                  justifyContent="center"
-                  flex={1}
-                  position="relative"
-                >
-                  <Suspense fallback={null}>
-                    {/* {!isEditing && !review && (
+                <Suspense fallback={null}>
+                  {/* {!isEditing && !review && (
                       <RestaurantOverallAndTagReviews
                         borderless
                         showScoreTable
@@ -196,90 +209,79 @@ export const ListItemContentMinimal = memo(
                       />
                     )} */}
 
-                    {(review || isEditing) && (
-                      <VStack marginTop={10} paddingLeft={0} paddingRight={10}>
-                        <RestaurantReview
-                          size="lg"
-                          marginTop={-18}
-                          marginBottom={-10}
-                          hideTagsRow
-                          wrapTagsRow
-                          expandable={false}
-                          ellipseContentAbove={Infinity}
-                          listTheme="minimal"
-                          isEditing={isEditing}
-                          hideMeta={!isExternalReview}
-                          {...restaurantReviewListProps}
-                          hideRestaurantName
-                          restaurantSlug={restaurant.slug || ''}
-                          review={review}
-                          list={list}
-                          listSlug={props.listSlug}
-                        />
-                      </VStack>
-                    )}
-                  </Suspense>
-                </VStack>
-              </HStack>
-              {/* END CONTENT ROW */}
-
-              <HStack paddingTop={5} alignItems="center">
-                <HStack spacing="sm" alignItems="center">
-                  {!isFocused && !!editable && (
-                    <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
+                  {(review || isEditing) && (
+                    <VStack marginTop={10} marginBottom={10} paddingLeft={0} paddingRight={20}>
+                      <RestaurantReview
+                        size="lg"
+                        marginTop={-18}
+                        marginBottom={-10}
+                        hideTagsRow
+                        wrapTagsRow
+                        expandable={false}
+                        ellipseContentAbove={Infinity}
+                        listTheme="minimal"
+                        isEditing={isEditing}
+                        hideMeta={!isExternalReview}
+                        {...restaurantReviewListProps}
+                        hideRestaurantName
+                        restaurantSlug={restaurant.slug || ''}
+                        review={review}
+                        list={list}
+                        listSlug={props.listSlug}
+                      />
+                    </VStack>
                   )}
+                </Suspense>
+              </VStack>
+            </HStack>
+            {/* END CONTENT ROW */}
 
-                  {!isFocused && !!editable && !isEditing && (
-                    <SmallButton
-                      tooltip="Write comment"
-                      icon={<PenTool size={14} color="#888" />}
-                      onPress={() => setIsEditing(true)}
-                    />
-                  )}
+            <VStack flex={1} />
 
-                  {!!editable && isEditing && (
-                    <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
-                  )}
+            <HStack paddingTop={5} alignItems="center" spacing="sm">
+              {!isFocused && !!editable && (
+                <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
+              )}
 
-                  {!isFocused && (
-                    <RestaurantFavoriteButton
-                      backgroundColor="transparent"
-                      size="md"
-                      restaurantSlug={restaurant.slug || ''}
-                    />
-                  )}
-                </HStack>
-
-                <Spacer size="sm" />
-
-                <ReviewTagsRow
-                  hideGeneralTags
-                  wrapTagsRow
-                  list={list}
-                  review={review}
-                  restaurantSlug={restaurant.slug || ''}
-                  onFocusChange={setIsFocused}
+              {!isFocused && !!editable && !isEditing && (
+                <SmallButton
+                  tooltip="Write comment"
+                  icon={<PenTool size={14} color="#888" />}
+                  onPress={() => setIsEditing(true)}
                 />
-              </HStack>
-            </VStack>
+              )}
 
-            <VStack
-              marginTop={-25}
-              marginBottom={-10}
-              display={media.sm ? 'none' : 'flex'}
-              marginRight={-215}
-              x={-40}
-            >
-              <RestaurantPhotosRow
-                restaurant={restaurant}
-                // spacing="md"
-                floating
-                max={2}
-                width={150}
-                height={190}
+              {!!editable && isEditing && (
+                <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
+              )}
+
+              <ReviewTagsRow
+                hideGeneralTags
+                wrapTagsRow
+                list={list}
+                review={review}
+                restaurantSlug={restaurant.slug || ''}
+                onFocusChange={setIsFocused}
               />
-            </VStack>
-          </HStack>
+            </HStack>
+          </VStack>
+
+          <VStack
+            marginTop={-30}
+            marginBottom={-30}
+            display={media.sm ? 'none' : 'flex'}
+            marginRight={-215}
+            x={-50}
+          >
+            <RestaurantPhotosRow
+              restaurant={restaurant}
+              // spacing="md"
+              floating
+              max={3}
+              width={130}
+              height={140}
+            />
+          </VStack>
         </HStack>
       </HoverToZoom>
     )

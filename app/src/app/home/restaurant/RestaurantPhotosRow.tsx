@@ -23,17 +23,9 @@ type Props = {
 
 export const RestaurantPhotosRow = (props: Props) => {
   return (
-    <VStack
-      position="relative"
-      zIndex={0}
-      overflow="hidden"
-      height={props.height}
-      minWidth={props.width}
-    >
-      <Suspense fallback={null}>
-        <RestaurantPhotosRowContent {...props} />
-      </Suspense>
-    </VStack>
+    <Suspense fallback={null}>
+      <RestaurantPhotosRowContent {...props} />
+    </Suspense>
   )
 }
 
@@ -68,79 +60,69 @@ export const RestaurantPhotosRowContent = memo(
       return (
         // an attempt to get native to scroll but not working
         <HStack spacing={spacing} minWidth={fullWidth}>
-          {!photos.length && (
-            <SkewedCardCarousel>
-              <PhotoCard {...photoCardProps} />
-              <PhotoCard {...photoCardProps} />
-              <PhotoCard {...photoCardProps} />
-              <PhotoCard {...photoCardProps} />
-            </SkewedCardCarousel>
-          )}
-          {!!photos.length && (
-            <SkewedCardCarousel>
-              {[
-                ...photosData,
-                // @ts-ignore
-                max > 2
-                  ? {
-                      content: (
-                        <LinkButton
-                          width={width}
-                          height={height}
-                          name="gallery"
-                          alignSelf="center"
-                          params={{ restaurantSlug }}
-                          textProps={{
-                            textAlign: 'center',
-                            fontSize: 28,
-                            fontWeight: '800',
-                          }}
-                        >
-                          Gallery 🖼
-                        </LinkButton>
-                      ),
-                    }
-                  : null,
-              ]
-                .filter(isPresent)
-                .map((item, index) => {
-                  return (
-                    <PhotoCard
-                      {...photoCardProps}
-                      marginRight={-width * 0.3}
-                      zIndex={1000 - index}
-                      isBehind={index > 0}
-                      key={index}
-                    >
-                      {(() => {
-                        if ('content' in item) {
-                          return item.content
-                        }
-                        const { uri, width, height, isEscalated } = item
-                        return (
-                          <>
-                            {(!isEscalated || showEscalated) && (
-                              <Link name="gallery" params={{ restaurantSlug, offset: index }}>
-                                <Image
-                                  source={{
-                                    uri,
-                                  }}
-                                  style={{
-                                    height,
-                                    width,
-                                  }}
-                                  resizeMode="cover"
-                                />
-                              </Link>
-                            )}
-                          </>
-                        )
-                      })()}
-                    </PhotoCard>
-                  )
-                })}
-            </SkewedCardCarousel>
-          )}
+          <SkewedCardCarousel>
+            {[
+              ...photosData,
+              // @ts-ignore
+              max > 3
+                ? {
+                    content: (
+                      <LinkButton
+                        width={width}
+                        height={height}
+                        name="gallery"
+                        alignSelf="center"
+                        params={{ restaurantSlug }}
+                        textProps={{
+                          textAlign: 'center',
+                          fontSize: 28,
+                          fontWeight: '800',
+                        }}
+                      >
+                        Gallery 🖼
+                      </LinkButton>
+                    ),
+                  }
+                : null,
+            ]
+              .filter(isPresent)
+              .map((item, index) => {
+                return (
+                  <PhotoCard
+                    {...photoCardProps}
+                    marginRight={-width * 0.3}
+                    zIndex={1000 - index}
+                    isBehind={index > 0}
+                    key={index}
+                  >
+                    {(() => {
+                      if ('content' in item) {
+                        return item.content
+                      }
+                      const { uri, width, height, isEscalated } = item
+                      return (
+                        <>
+                          {(!isEscalated || showEscalated) && (
+                            <Link name="gallery" params={{ restaurantSlug, offset: index }}>
+                              <Image
+                                source={{
+                                  uri,
+                                }}
+                                style={{
+                                  height,
+                                  width,
+                                }}
+                                resizeMode="cover"
+                              />
+                            </Link>
+                          )}
+                        </>
+                      )
+                    })()}
+                  </PhotoCard>
+                )
+              })}
+          </SkewedCardCarousel>
         </HStack>
       )
     }

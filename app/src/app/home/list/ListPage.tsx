@@ -362,7 +362,7 @@ const ListPageContent = memo(
                     width="100%"
                     flex={1}
                   >
-                    <VStack minHeight={90} flex={1} backgroundColor="red" />
+                    <VStack minHeight={90} flex={1} />
                     <Title
                       color={colors.color}
                       lineHeight={fontSize * 1.4}
