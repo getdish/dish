@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Paragraph, Text } from 'snackui'
+import { Box, Paragraph, Text, Theme, ThemeInverse } from 'snackui'
 
 export type RatingViewProps = {
   size: number
@@ -15,27 +15,31 @@ export const RatingView = ({ rating = 0, count, size, floating, stacked }: Ratin
     ratingStr = '?'
   }
   const content = (
-    <Paragraph ellipse size={size * (floating ? 0.02 : 0.03)} fontWeight="700" letterSpacing={-0.5}>
+    <Paragraph
+      ellipse
+      size={size * (floating ? 0.027 : 0.03)}
+      fontWeight="800"
+      letterSpacing={-0.75}
+    >
       {ratingStr}
-      <Text marginLeft={1} marginRight={1.5} letterSpacing={-1} fontWeight="300" opacity={0.4}>
-        /5
-      </Text>
     </Paragraph>
   )
   if (!floating) {
     return content
   }
   return (
-    <Box
-      width={size}
-      height={size}
-      elevation={1}
-      borderRadius={1000}
-      alignItems="center"
-      justifyContent="center"
-    >
-      {content}
-    </Box>
+    <ThemeInverse>
+      <Box
+        width={size}
+        height={size}
+        elevation={1}
+        borderRadius={1000}
+        alignItems="center"
+        justifyContent="center"
+      >
+        {content}
+      </Box>
+    </ThemeInverse>
   )
 }
 

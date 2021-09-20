@@ -46,6 +46,7 @@ import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours, priceRange } from './RestaurantDetailRow'
 import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantListItemScoreBreakdown } from './RestaurantListItemScoreBreakdown'
+import { RestaurantOverallAndTagReviews } from './RestaurantOverallAndTagReviews'
 import { RestaurantPeekDishes } from './RestaurantPeekDishes'
 import { useTotalReviews } from './useTotalReviews'
 
@@ -313,7 +314,7 @@ const RestaurantListItemContent = memo(
                     />
                   </VStack>
 
-                  <VStack marginRight={-10} y={3} marginLeft={-5}>
+                  <VStack opacity={0.25} marginRight={-10} y={3} marginLeft={-5}>
                     <RankView rank={rank} />
                   </VStack>
 
@@ -375,8 +376,13 @@ const RestaurantListItemContent = memo(
                 justifyContent="center"
                 flex={1}
                 zIndex={100}
+                paddingHorizontal={20}
+                {...(media.notSm && {
+                  y: -10,
+                })}
               >
                 {/* ROW: OVERVIEW */}
+
                 <RestaurantOverview
                   isDishBot
                   isEditingDescription={state.editing}
@@ -418,8 +424,9 @@ const RestaurantListItemContent = memo(
             height={50}
             marginTop={-5}
             paddingBottom={6}
+            marginLeft={-10}
             alignItems="center"
-            spacing
+            spacing="lg"
           >
             <HStack
               paddingLeft={20}
@@ -432,32 +439,6 @@ const RestaurantListItemContent = memo(
               })}
             >
               {beforeBottomRow}
-
-              {!!editableDescription && !state.editing && (
-                <SmallButton onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
-                  Edit
-                </SmallButton>
-              )}
-
-              {!!restaurant.address && (
-                <RestaurantAddress
-                  size={shouldShowOneLine ? 'xxs' : 'xs'}
-                  curLocInfo={curLocInfo!}
-                  address={restaurant.address}
-                />
-              )}
-
-              {!!editableDescription && state.editing && (
-                <Button
-                  themeInverse
-                  onPress={() => {
-                    setState((prev) => ({ ...prev, editing: false }))
-                    onChangeDescription?.(state.description ?? '')
-                  }}
-                >
-                  Save
-                </Button>
-              )}
 
               <InteractiveContainer>
                 <Link
@@ -472,25 +453,25 @@ const RestaurantListItemContent = memo(
                     borderWidth={0}
                     marginRight={-0.5}
                     tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                    width={90}
                     icon={
                       <MessageSquare
                         style={{
                           opacity: 0.5,
                           marginLeft: -8,
                         }}
-                        size={12}
+                        size={14}
                         color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
                       />
                     }
                   >
-                    {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                    {/* {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')} */}
                   </SmallButton>
                 </Link>
 
                 <Suspense fallback={<Spacer size={44} />}>
                   <VStack marginRight={-0.5}>
                     <RestaurantFavoriteButton
+                      opacity={0.5}
                       borderRadius={0}
                       borderWidth={0}
                       size="md"
@@ -501,6 +482,7 @@ const RestaurantListItemContent = memo(
 
                 <Suspense fallback={<Spacer size={44} />}>
                   <RestaurantAddToListButton
+                    opacity={0.4}
                     borderRadius={0}
                     borderWidth={0}
                     restaurantSlug={restaurantSlug}
@@ -509,22 +491,32 @@ const RestaurantListItemContent = memo(
                 </Suspense>
               </InteractiveContainer>
 
-              <Text
-                width={42}
-                textAlign="center"
-                fontSize={14}
-                fontWeight="700"
-                color={theme.colorTertiary}
-              >
-                {price_range ?? '-'}
-              </Text>
+              <HStack alignItems="center">
+                <Text
+                  width={42}
+                  textAlign="center"
+                  fontSize={14}
+                  fontWeight="700"
+                  color={theme.colorTertiary}
+                >
+                  {price_range ?? '-'}
+                </Text>
 
-              <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
+                <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
 
-              {!!open.nextTime && (
-                <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                  <SmallButton textProps={{ opacity: 0.6 }}>{open.nextTime || '~~'}</SmallButton>
-                </Link>
+                {!!restaurant.address && (
+                  <RestaurantAddress
+                    size={shouldShowOneLine ? 'xxs' : 'xs'}
+                    curLocInfo={curLocInfo!}
+                    address={restaurant.address}
+                  />
+                )}
+              </HStack>
+
+              {!!editableDescription && !state.editing && (
+                <SmallButton onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
+                  Edit
+                </SmallButton>
               )}
 
               <Suspense fallback={null}>
@@ -534,10 +526,38 @@ const RestaurantListItemContent = memo(
                 />
               </Suspense>
 
+              <RestaurantOverallAndTagReviews
+                borderless
+                hideDescription
+                size="sm"
+                showScoreTable
+                key={restaurantSlug}
+                restaurant={restaurant}
+              />
+
+              {!!editableDescription && state.editing && (
+                <Button
+                  themeInverse
+                  onPress={() => {
+                    setState((prev) => ({ ...prev, editing: false }))
+                    onChangeDescription?.(state.description ?? '')
+                  }}
+                >
+                  Save
+                </Button>
+              )}
+
+              {!!open.nextTime && (
+                <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                  <SmallButton textProps={{ opacity: 0.6 }}>{open.nextTime || '~~'}</SmallButton>
+                </Link>
+              )}
+
               {!hideTagRow && (
                 <Suspense fallback={null}>
                   <RestaurantTagsRow
                     exclude={excludeTags}
+                    excludeOverall
                     size="sm"
                     restaurant={restaurant}
                     spacing={0}
@@ -546,7 +566,7 @@ const RestaurantListItemContent = memo(
                     tagButtonProps={{
                       votable: true,
                       borderWidth: 0,
-                      hideIcon: true,
+                      // hideIcon: true,
                       hideRating: false,
                       backgroundColor: 'transparent',
                     }}

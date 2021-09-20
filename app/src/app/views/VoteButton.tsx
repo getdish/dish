@@ -43,10 +43,17 @@ export const VoteButton = ({
       }}
       {...props}
     >
-      <Icon
-        size={size * (voted ? 1.2 : 1)}
-        color={hovered ? hoverColor ?? theme.colorSecondary : color ?? '#ccc'}
-      />
+      <VStack
+        opacity={voted ? 1 : 0.25}
+        hoverStyle={{
+          opacity: 1,
+        }}
+      >
+        <Icon
+          size={size * (voted ? 1.2 : 1)}
+          color={!voted && hovered ? hoverColor ?? theme.colorSecondary : color ?? '#ccc'}
+        />
+      </VStack>
       <AbsoluteVStack
         top={translateDir * 8}
         left={-8}

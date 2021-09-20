@@ -1,8 +1,8 @@
 import { fullyIdle, series } from '@dish/async'
+import { sleep } from '@dish/async'
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { sleep } from 'react-query/types/core/utils'
 import { LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
@@ -186,6 +186,16 @@ const RestaurantPage = memo(
                     restaurantSlug={restaurantSlug}
                   />
 
+                  <VStack zIndex={0}>
+                    <RestaurantOverallAndTagReviews
+                      tagSlug={selectedDish}
+                      borderless
+                      showScoreTable
+                      key={restaurantSlug}
+                      restaurant={restaurant}
+                    />
+                  </VStack>
+
                   <View ref={setDishesSection}>
                     <RestaurantDishRow
                       max={35}
@@ -197,16 +207,6 @@ const RestaurantPage = memo(
                       // themeName={`${colors.name}-dark`}
                     />
                   </View>
-
-                  <VStack zIndex={0} marginHorizontal={-20} marginBottom={-20}>
-                    <RestaurantOverallAndTagReviews
-                      tagSlug={selectedDish}
-                      borderless
-                      showScoreTable
-                      id={restaurantSlug}
-                      restaurant={restaurant}
-                    />
-                  </VStack>
 
                   <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
 

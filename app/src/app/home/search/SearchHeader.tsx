@@ -49,28 +49,25 @@ export const SearchHeader = memo(() => {
                     marginBottom={0}
                     height={28}
                     fontWeight="700"
-                    fontSize={title.length < 20 ? 27 : 24}
+                    fontSize={title.length < 20 ? 40 : 34}
                     {...(media.sm && {
-                      fontSize: title.length < 20 ? 24 : 18,
+                      fontSize: title.length < 20 ? 36 : 30,
                     })}
                     lineHeight={28}
                   >
                     {title.trim()}
-                  </Text>
-                  {!!subTitle && (
-                    <>
-                      <Spacer size="xs" />
+                    {!!subTitle && (
                       <Text
                         color={rgbString(lenseColor)}
                         opacity={0.8}
                         className="nobreak"
-                        fontSize={title.length < 25 ? 20 : 16}
+                        fontSize={title.length < 25 ? 24 : 20}
                         fontWeight="300"
                       >
-                        {subTitle.trim()}
+                        &nbsp; in {subTitle.trim()}
                       </Text>
-                    </>
-                  )}
+                    )}
+                  </Text>
                 </VStack>
               </VStack>
               <Spacer size="xs" />

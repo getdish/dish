@@ -14,6 +14,7 @@ type TagRowProps = {
   size?: TagButtonProps['size']
   maxLines?: number
   divider?: any
+  excludeOverall?: boolean
   tags?: TagButtonTagProps[]
   spacing?: number
   spacingHorizontal?: number
@@ -41,7 +42,7 @@ export const RestaurantTagsRow = (props: TagRowProps) => {
 
 const RestaurantTagsRowContent = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
-    const { size = 'sm', restaurant, showMore } = props
+    const { size = 'sm', restaurant, showMore, excludeOverall } = props
     if (!restaurant) {
       return null
     }
@@ -59,6 +60,9 @@ const RestaurantTagsRowContent = memo(
       tags = tags.slice(0, 2)
     }
     tags = uniqBy(tags.slice(0, props.maxItems ?? Infinity), (x) => x.slug)
+    if (excludeOverall) {
+      tags = tags.filter((x) => x.slug !== 'lenses__gems')
+    }
     return (
       <>
         {sortBy(tags, (tag) =>

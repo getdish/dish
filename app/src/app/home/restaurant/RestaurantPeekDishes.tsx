@@ -70,16 +70,15 @@ export const RestaurantPeekDishes = memo(
           <VStack flexWrap="wrap" maxHeight="100%">
             {!!dishes[0]?.name &&
               dishes.map((dish, i) => {
-                // const isEven = i % 2 === 0
-                const baseSize = foundMatchingSearchedDish
-                  ? i == 0
-                    ? dishSize
-                    : dishSize * 0.95
-                  : dishSize
-
                 const preventLoad = !isLoaded && i > showInitial
                 return (
-                  <VStack pointerEvents="auto" marginRight={2} marginBottom={2} key={dish.slug}>
+                  <VStack
+                    flex={1}
+                    pointerEvents="auto"
+                    marginRight={2}
+                    marginBottom={2}
+                    key={dish.slug}
+                  >
                     {/* <DishView
                       preventLoad={preventLoad}
                       size={baseSize}
@@ -101,7 +100,7 @@ export const RestaurantPeekDishes = memo(
                             tags: [dish],
                           })}
                     >
-                      <TagButton noLink votable size="lg" {...dish} />
+                      <TagButton maxWidth={190} width="100%" noLink votable size="lg" {...dish} />
                     </Link>
                   </VStack>
                 )

@@ -265,7 +265,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         },
       })}
       alignItems="center"
-      justifyContent="center"
+      // justifyContent="center"
       paddingHorizontal={isSmall ? 5 : 10}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 36 : 38}
@@ -309,29 +309,25 @@ const TagButtonInner = (props: TagButtonProps) => {
         <>
           {ratingStyle === 'pie' && (
             <VStack marginVertical={-2} position="relative">
-              {rating === 0 ? null : rating * 10 < 18 ? (
+              {/* {rating === 0 ? null : rating * 10 < 18 ? (
                 <Text fontSize={16}>😕</Text>
               ) : rating * 10 > 90 ? (
                 <Text fontSize={16}>💎</Text>
-              ) : (
-                <VStack
-                  position="relative"
-                  backgroundColor={theme.backgroundColorQuartenary}
-                  borderRadius={100}
-                  width={pieSize}
-                  height={pieSize}
-                  transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
-                  // borderWidth={1}
-                  borderColor={theme.backgroundColorAlt}
-                  opacity={floating ? 1 : 0.7}
-                >
-                  <Pie
-                    size={pieSize}
-                    percent={rating * 10}
-                    color={floating ? `#fff` : theme.color}
-                  />
-                </VStack>
-              )}
+              ) : ( */}
+              <VStack
+                position="relative"
+                backgroundColor={theme.backgroundColorQuartenary}
+                borderRadius={100}
+                width={pieSize}
+                height={pieSize}
+                transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
+                // borderWidth={1}
+                borderColor={theme.backgroundColorAlt}
+                opacity={floating ? 1 : 0.7}
+              >
+                <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
+              </VStack>
+              {/* )} */}
             </VStack>
           )}
 
