@@ -6,6 +6,8 @@ import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { DishView } from '../../views/dish/DishView'
+import { Link } from '../../views/Link'
+import { TagButton } from '../../views/TagButton'
 import { SkewedCardCarousel } from '../SimpleCard'
 import { EditRestaurantTagsButton } from './EditRestaurantTagsButton'
 
@@ -65,7 +67,7 @@ export const RestaurantPeekDishes = memo(
               onChange={props.onChangeTags}
             />
           )}
-          <SkewedCardCarousel>
+          <VStack flexWrap="wrap" maxHeight="100%">
             {!!dishes[0]?.name &&
               dishes.map((dish, i) => {
                 // const isEven = i % 2 === 0
@@ -77,18 +79,34 @@ export const RestaurantPeekDishes = memo(
 
                 const preventLoad = !isLoaded && i > showInitial
                 return (
-                  <VStack marginRight={2} key={dish.slug} zIndex={100 - i}>
-                    <DishView
+                  <VStack pointerEvents="auto" marginRight={2} marginBottom={2} key={dish.slug}>
+                    {/* <DishView
                       preventLoad={preventLoad}
                       size={baseSize}
                       restaurant={restaurant || undefined}
                       {...dish}
                       showSearchButton={!props.editable}
-                    />
+                    /> */}
+                    <Link
+                      {...(restaurant
+                        ? {
+                            name: 'restaurant',
+                            params: {
+                              slug: restaurant.slug || '',
+                              section: 'reviews',
+                              sectionSlug: dish.slug,
+                            },
+                          }
+                        : {
+                            tags: [dish],
+                          })}
+                    >
+                      <TagButton noLink votable size="lg" {...dish} />
+                    </Link>
                   </VStack>
                 )
               })}
-          </SkewedCardCarousel>
+          </VStack>
         </HStack>
       </>
     )

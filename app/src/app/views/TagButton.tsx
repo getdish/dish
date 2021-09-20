@@ -197,7 +197,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         color={theme.color}
         letterSpacing={-1}
         marginRight={-3}
-        opacity={0.8}
+        opacity={0.2}
       >
         {rank}
       </Text>

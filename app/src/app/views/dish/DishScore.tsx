@@ -41,5 +41,5 @@ const Content = graphql((props: Props) => {
     restaurant,
   })
 
-  return <Score showVoteOnHover setVote={setVote} {...rest} score={intScore + vote} />
+  return <Score showVoteOnHover setVote={setVote} {...rest} score={intScore / 2} />
 })

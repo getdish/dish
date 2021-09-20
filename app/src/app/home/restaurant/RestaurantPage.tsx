@@ -2,6 +2,7 @@ import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
+import { sleep } from 'react-query/types/core/utils'
 import { LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
@@ -13,6 +14,7 @@ import { router } from '../../../router'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMap'
 import { drawerStore } from '../../drawerStore'
+import { useAsyncEffect } from '../../hooks/useAsync'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { PageHead } from '../../views/PageHead'
@@ -68,6 +70,13 @@ const RestaurantPage = memo(
       const [scrollView, setScrollView] = useState<ScrollView | null>(null)
       const [reviewsSection, setReviewsSection] = useState<View | HTMLElement | null>(null)
       const [dishesSection, setDishesSection] = useState<View | null>(null)
+      const [hasLoadedAboveFold, setHasLoadedAboveFold] = useState(false)
+
+      useAsyncEffect(async (go) => {
+        await sleep(500)
+        if (!go()) return
+        setHasLoadedAboveFold(true)
+      }, [])
 
       // preload from search
       const restaurantFromSearch = getSearchPageStore().results.find(
@@ -204,7 +213,7 @@ const RestaurantPage = memo(
                   <Spacer />
 
                   <Suspense fallback={null}>
-                    <RestaurantLists restaurantSlug={restaurantSlug} />
+                    {hasLoadedAboveFold && <RestaurantLists restaurantSlug={restaurantSlug} />}
                   </Suspense>
 
                   <Spacer size="xl" />
@@ -217,7 +226,7 @@ const RestaurantPage = memo(
 
               <VStack ref={setReviewsSection}>
                 <Suspense fallback={null}>
-                  <RestaurantReviewsList restaurantSlug={restaurantSlug} />
+                  {hasLoadedAboveFold && <RestaurantReviewsList restaurantSlug={restaurantSlug} />}
                 </Suspense>
               </VStack>
 
@@ -225,7 +234,7 @@ const RestaurantPage = memo(
 
               <VStack flex={1} marginBottom={20} width="100%" alignSelf="center">
                 <Suspense fallback={null}>
-                  <RestaurantMenu restaurantSlug={restaurantSlug} />
+                  {hasLoadedAboveFold && <RestaurantMenu restaurantSlug={restaurantSlug} />}
                 </Suspense>
               </VStack>
             </PageContentWithFooter>

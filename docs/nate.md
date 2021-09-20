@@ -11,6 +11,8 @@
     - discussions within lists
     - auto-lists based on your votes
     - communities
+    - more interesting dishes to explore
+        - quesabirria
     - this flow:
         - favorite dishes like quesabirria
         - home now shows relevant favorites nearby thats open_now by default
@@ -18,6 +20,7 @@
 - align columns for tag ratings
 - Reset password: SyntaxError: The string did not match the expected pattern.
 - import osm and integrate into list search
+
 - [m] [0] (restaurantpage) tap: address, phone, website get working
 - search autocomplete lists
 - beta / invite features
