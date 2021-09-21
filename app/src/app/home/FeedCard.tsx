@@ -31,28 +31,12 @@ export const FeedCard = ({
   theme = 'modern',
   ...cardProps
 }: FeedCardProps) => {
-  const isMinimal = theme === 'minimal'
   const { chromeless, emphasizeTag, flat } = cardProps
-  const colorString = !isMinimal ? undefined : color || rgbString(tags[0]?.rgb ?? [200, 150, 150])
-  const longTitle = typeof title === 'string' && title.length > 15 ? true : false
-
-  const fontSize = Math.round(
-    emphasizeTag
-      ? size === 'sm' || size.endsWith('xs')
-        ? 12
-        : longTitle
-        ? 12
-        : 18
-      : size === 'sm' || size.endsWith('xs')
-      ? 15
-      : longTitle
-      ? 18
-      : 24
-  )
-
-  // const dimensions = getCardDimensions({
-  //   size,
-  // })
+  const colorString = color || rgbString(tags[0]?.rgb ?? [150, 150, 150])
+  const titleLen = typeof title === 'string' ? title.length : 20
+  const lenScale = titleLen > 40 ? 0.8 : titleLen > 30 ? 0.9 : titleLen > 20 ? 1 : 1.2
+  const tagScale = emphasizeTag ? 0.8 : 1
+  const fontSize = Math.round(26 * lenScale * tagScale)
 
   return (
     <Card
@@ -124,30 +108,15 @@ export const FeedCard = ({
             <VStack flex={1} />
 
             <VStack overflow="hidden" spacing={size}>
-              {isMinimal ? (
-                <Text
-                  letterSpacing={-1}
-                  className="hover-100-opacity-child"
-                  fontWeight="300"
-                  opacity={1}
-                  fontSize={fontSize * 1.1}
-                  color={colorString}
-                >
-                  {title}
-                </Text>
-              ) : (
-                <Paragraph
-                  letterSpacing={-0.25}
-                  className="hover-100-opacity-child"
-                  fontWeight={emphasizeTag ? '500' : '800'}
-                  numberOfLines={2}
-                  opacity={0.8}
-                  fontSize={fontSize * 0.9}
-                  // color="#fff"
-                >
-                  {title}
-                </Paragraph>
-              )}
+              <Text
+                letterSpacing={-1}
+                className="hover-100-opacity-child"
+                fontWeight="300"
+                fontSize={fontSize}
+                color={colorString}
+              >
+                {title}
+              </Text>
 
               {!!(author || typeof numItems !== 'undefined') && (
                 <Paragraph

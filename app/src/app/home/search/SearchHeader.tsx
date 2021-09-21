@@ -39,8 +39,8 @@ export const SearchHeader = memo(() => {
       <ContentScrollViewHorizontalFitted width={width} setWidth={setWidthDebounce}>
         <VStack width="100%">
           <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
-          <HStack position="relative">
-            <VStack zIndex={10} x={-10}>
+          <HStack position="relative" zIndex={100}>
+            <VStack position="relative" zIndex={100} x={-10}>
               <VStack paddingHorizontal={16} paddingVertical={8} marginBottom={-3}>
                 <VStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 15 : 20}>
                   <Text

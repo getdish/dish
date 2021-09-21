@@ -42,7 +42,7 @@ export const AppMapControls = memo(() => {
           justifyContent="center"
         >
           <AbsoluteHStack
-            top={media.sm ? 8 : searchBarHeight + 16}
+            top={8}
             right={0}
             minHeight={50}
             left={0}
@@ -50,6 +50,10 @@ export const AppMapControls = memo(() => {
             justifyContent="center"
             flexWrap="wrap"
             pointerEvents="none"
+            {...(media.notSm && {
+              top: 'auto',
+              bottom: 20,
+            })}
           >
             {/* {isWeb && <ToggleRegionButton />} */}
 

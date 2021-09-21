@@ -11,6 +11,9 @@ import { LinkButton } from './views/LinkButton'
 
 export const AppMapRestaurantPeek = memo(
   graphql((props: any) => {
+    // disable as we're adding floating bar until we decide if/how to restore
+    return null
+
     const home = useHomeStore()
     const [slug, setSlug] = useState('')
     const { selectedSlug, hoveredSlug } = useStoreInstanceSelector(appMapStore, (x) => ({

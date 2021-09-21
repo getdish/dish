@@ -65,17 +65,15 @@ export const AppMenuButtonFloating = memo(() => {
           }}
           onPress={appMenu.show}
         >
-          <BlurView borderRadius={24} fallbackBackgroundColor="rgba(0,0,0,0.5)">
-            <HStack
-              width={50}
-              height={50}
-              alignItems="center"
-              justifyContent="center"
-              borderRadius={100}
-            >
-              <Menu color="#fff" size={24} />
-            </HStack>
-          </BlurView>
+          <HStack
+            width={50}
+            height={50}
+            alignItems="center"
+            justifyContent="center"
+            borderRadius={100}
+          >
+            <Menu color="#fff" size={24} />
+          </HStack>
         </VStack>
       </AbsoluteVStack>
     </>

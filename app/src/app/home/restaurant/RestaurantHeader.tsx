@@ -55,9 +55,9 @@ const RestaurantHeaderContent = memo(
       // const { width, drawerWidth, minWidth, setWidthDebounce } = useContentScrollHorizontalFitter()
       const scale = 1
       // const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
-      const fontScale = size === 'sm' ? 1 : 1.25
+      const fontScale = size === 'sm' ? 1 : 1.5
       const fontSizeBase =
-        nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 26 : nameLen > 16 ? 28 : 32
+        nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 24 : nameLen > 16 ? 26 : 32
       const fontSize = Math.round(scale * fontSizeBase * fontScale)
       const restaurantId = restaurant.id
       const [hasScrolled, setHasScrolled] = useState(false)
@@ -110,7 +110,7 @@ const RestaurantHeaderContent = memo(
                   minWidth={100}
                   // skewX="-12deg"
                 >
-                  <AbsoluteVStack
+                  {/* <AbsoluteVStack
                     fullscreen
                     backgroundColor={colors.themeColorAlt}
                     zIndex={-1}
@@ -121,15 +121,15 @@ const RestaurantHeaderContent = memo(
                     shadowRadius={5}
                     skewX="-12deg"
                     shadowOffset={{ height: 3, width: 0 }}
-                  />
+                  /> */}
                   <HStack>
                     <Text
-                      color="#fff"
+                      color={theme.color}
                       alignSelf="flex-start"
                       selectable
-                      letterSpacing={-1}
+                      letterSpacing={-1.5}
                       fontSize={fontSize}
-                      fontWeight="800"
+                      fontWeight="900"
                     >
                       {restaurant.name || ' '}
                     </Text>
@@ -228,7 +228,7 @@ const RestaurantHeaderContent = memo(
                 </HStack>
               </ContentScrollViewHorizontal>
 
-              <VStack pointerEvents="auto">
+              <VStack marginBottom={10} pointerEvents="auto">
                 <RestaurantOverview
                   isDishBot
                   maxLines={3}

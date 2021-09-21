@@ -110,7 +110,7 @@ function useSearchQueryEffect(
         if (cuisineName) {
           results = await resolved(() => {
             return [
-              ...searchDishTags(query, cuisineName),
+              ...searchTags(query, cuisineName),
               ...searchRestaurants(query, postion.center, postion.span, cuisineName),
             ]
           })
@@ -184,7 +184,7 @@ function searchAutocomplete(
 ): Promise<AutocompleteItemFull[]> {
   return resolved(() => {
     return [
-      ...searchDishTags(searchQuery),
+      ...searchTags(searchQuery),
       ...searchRestaurants(searchQuery, center, span),
       ...searchCuisines(searchQuery),
     ]
@@ -226,9 +226,9 @@ function searchCuisines(searchQuery: string) {
     })
 }
 
-function searchDishTags(searchQuery: string, cuisine?: string) {
+function searchTags(searchQuery: string, cuisine?: string) {
   return [
-    ...searchDishes(
+    ...searchTagsQuery(
       {
         ...(searchQuery && {
           name: {
@@ -254,7 +254,7 @@ function searchDishTags(searchQuery: string, cuisine?: string) {
           }
     ),
     ...(searchQuery
-      ? searchDishes({
+      ? searchTagsQuery({
           name: {
             _ilike: getFuzzyMatchQuery(searchQuery),
           },
@@ -278,13 +278,13 @@ function searchDishTags(searchQuery: string, cuisine?: string) {
   )
 }
 
-const searchDishes = (whereCondition: any, extraQuery: any = {}, limit = 5) => {
+const searchTagsQuery = (whereCondition: any, extraQuery: any = {}, limit = 5) => {
   return query.tag({
     ...extraQuery,
     where: {
       ...whereCondition,
       type: {
-        _eq: 'dish',
+        _neq: 'country',
       },
     },
     order_by: [{ popularity: order_by.desc }],

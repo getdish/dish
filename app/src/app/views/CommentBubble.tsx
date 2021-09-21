@@ -136,6 +136,7 @@ function CommentBubbleContents({
     return <AbsoluteVStack fullscreen backgroundColor="pink" />
   }
 
+  const hasContents = !!text
   const contents = (
     <>
       {title ? (
@@ -241,10 +242,9 @@ function CommentBubbleContents({
                     name="user"
                     params={{ username: username || '' }}
                     pointerEvents="auto"
-                    fontSize={13}
                     ellipse
                   >
-                    {name}
+                    <Text fontSize={16}>{name}</Text>
                   </Link>
                 )}
               </VStack>
@@ -282,7 +282,7 @@ function CommentBubbleContents({
       {/* {chromeless && metaContents} */}
 
       {/* main card */}
-      {!!contents && (
+      {hasContents && (
         <VStack
           paddingHorizontal={15}
           paddingVertical={15}

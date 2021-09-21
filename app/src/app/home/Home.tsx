@@ -165,7 +165,6 @@ const HomeContainerLarge = (props) => {
           maxWidth: drawerWidthMax,
         })}
       >
-        <UnderFade />
         <AppAutocompleteSearch />
 
         {props.children}
@@ -175,23 +174,3 @@ const HomeContainerLarge = (props) => {
     </VStack>
   )
 }
-
-const UnderFade = memo(() => {
-  const theme = useTheme()
-  const media = useMedia()
-  return (
-    <AbsoluteVStack
-      opacity={media.sm ? 0 : 1}
-      pointerEvents="none"
-      fullscreen
-      zIndex={1}
-      bottom="auto"
-      height={searchBarHeight + 20}
-    >
-      <LinearGradient
-        colors={[theme.backgroundColor, theme.backgroundColorTransparent]}
-        style={[StyleSheet.absoluteFill]}
-      />
-    </AbsoluteVStack>
-  )
-})

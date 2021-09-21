@@ -225,8 +225,6 @@ export const HomePageFeed = memo(
             </ContentScrollViewHorizontal>
           </HStack>
 
-          <Spacer />
-
           <VStack paddingHorizontal={10} position="relative">
             <AbsoluteVStack zIndex={100} top={-15} left={10}>
               <SlantedTitle size="xxs">Top Playlists</SlantedTitle>
@@ -242,7 +240,7 @@ export const HomePageFeed = memo(
                     key={`${list.id ?? i}`}
                     marginBottom={10}
                   >
-                    <Spacer size="xs" />
+                    <Spacer size="xxs" />
                     <ListCard
                       userSlug={list.user?.username ?? ''}
                       onDelete={refetch}
@@ -257,7 +255,7 @@ export const HomePageFeed = memo(
                         onHoverOut: setHoverCancel,
                       })}
                     />
-                    <Spacer size="xs" />
+                    <Spacer size="xxs" />
                   </HStack>
                 )
               })}

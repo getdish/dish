@@ -34,6 +34,7 @@ import {
   scrollLastY,
   scrollViews,
 } from '../views/ContentScrollView'
+import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 
 let isTouchingHandle = false
 let isPanActive = false
@@ -235,33 +236,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         },
       ]}
     >
-      {/* handle */}
-      <View
-        pointerEvents="auto"
-        style={styles.handle}
-        onTouchStart={() => {
-          isTouchingHandle = true
-        }}
-        onTouchEnd={() => {
-          isTouchingHandle = false
-        }}
-        {...pan.panHandlers}
-      >
-        <VStack
-          pointerEvents="auto"
-          paddingHorizontal={20}
-          paddingVertical={20}
-          onPress={drawerStore.toggleDrawerPosition}
-          alignSelf="center"
-        >
-          <VStack
-            backgroundColor="rgba(100,100,100,0.35)"
-            width={60}
-            height={8}
-            borderRadius={100}
-          />
-        </VStack>
-      </View>
+      <AppFloatingTagMenuBar />
 
       {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
       {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}

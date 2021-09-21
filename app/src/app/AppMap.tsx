@@ -54,6 +54,7 @@ import { AppMapPosition, MapResultItem } from '../types/mapTypes'
 import { AppAutocompleteLocation } from './AppAutocompleteLocation'
 import { AppMapControls } from './AppMapControls'
 import { drawerStore } from './drawerStore'
+import { AppFloatingTagMenuBar } from './home/AppFloatingTagMenuBar'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { homeStore } from './homeStore'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
@@ -365,6 +366,16 @@ const AppMapContents = memo(function AppMapContents() {
           <>
             <AppAutocompleteLocation />
             <AppMapControls />
+
+            <AbsoluteVStack
+              pointerEvents="none"
+              top={searchBarHeight}
+              left={0}
+              right={0}
+              zIndex={1000}
+            >
+              <AppFloatingTagMenuBar />
+            </AbsoluteVStack>
           </>
         )}
         {media.sm && <AppMapBottomFade />}

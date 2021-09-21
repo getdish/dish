@@ -91,6 +91,7 @@ export const RestaurantDishRowContent = memo(
                     backgroundColor: 'transparent',
                   })}
                   noLink
+                  hideRank
                   restaurant={restaurant}
                   showSearchButton
                   votable

@@ -1,53 +1,31 @@
 import React from 'react'
 import { HStack, useTheme } from 'snackui'
 
-import { RGB, rgbString } from '../../helpers/rgb'
+import { RGB } from '../../helpers/rgb'
 
-export function GradientButton({
-  rgb,
-  children,
-  bordered,
-}: {
-  rgb: RGB
-  children?: any
-  bordered?: boolean
-}) {
-  // const themeName = useThemeName()
+export function GradientButton({ children }: { children?: any }) {
   const theme = useTheme()
-  // const isDark = themeName === 'dark'
   return (
     <HStack
       paddingVertical={12}
-      paddingHorizontal={22}
+      paddingHorizontal={18}
       alignItems="center"
       justifyContent="center"
-      borderRadius={6}
-      borderWidth={bordered ? 1 : 0}
-      borderColor={theme.backgroundColorSecondary}
-      backgroundColor="transparent"
-      className="safari-fix-overflow"
+      borderRadius={1000}
+      shadowRadius={6}
+      shadowOffset={{ height: 2, width: 0 }}
+      shadowColor={theme.shadowColor}
       position="relative"
       overflow="hidden"
+      backgroundColor={theme.backgroundColor}
       // flexShrink={1}
       hoverStyle={{
-        backgroundColor: rgbString(rgb, 0.15),
+        backgroundColor: theme.backgroundColorSecondary,
       }}
       pressStyle={{
         transform: [{ scale: 0.98 }],
       }}
     >
-      {/* {useMemo(() => {
-        return (
-          <AbsoluteVStack opacity={0} className="hover-50-opacity-child" fullscreen>
-            <LinearGradient
-              colors={[rgbString(rgb, 0.35), rgbString(rgb, 0.5)]}
-              start={[0, 1]}
-              end={[0, 0]}
-              style={StyleSheet.absoluteFill}
-            />
-          </AbsoluteVStack>
-        )
-      }, [rgb])} */}
       {children}
     </HStack>
   )

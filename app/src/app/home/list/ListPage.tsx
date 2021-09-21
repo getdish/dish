@@ -267,15 +267,10 @@ const ListPageContent = memo(
       const isMinimal = listTheme === 'minimal'
 
       const userCommentEl = (
-        <VStack
-          width="100%"
-          {...(!isMinimal && {
-            maxWidth: Math.min(getWindowWidth(), drawerWidthMax) * 0.95,
-          })}
-        >
+        <VStack width="100%">
           <CommentBubble
             color={colors.color}
-            chromeless={isMinimal}
+            chromeless={!isEditing && !list.description}
             paddingHorizontal={isMinimal ? 0 : 20}
             marginLeft={-5}
             date={list.created_at}
@@ -347,42 +342,39 @@ const ListPageContent = memo(
       )
 
       const listHeaderEl = (
-        <Theme name={colors.isLight ? 'dark' : 'light'}>
+        <>
           {/* START HEADER */}
           <VStack
-            minHeight={isMinimal ? 260 : 40}
-            paddingHorizontal={20}
+            paddingHorizontal={10}
             paddingBottom={20}
             position="relative"
-            backgroundColor={colors.backgroundColor}
+            // backgroundColor={colors.backgroundColor}
           >
-            {isMinimal && (
-              <>
-                <HStack paddingHorizontal={20}>
-                  <VStack
-                    maxWidth={660}
-                    // minWidth={380}
-                    alignItems="flex-start"
-                    justifyContent="flex-end"
-                    width="100%"
-                    flex={1}
-                  >
-                    <VStack minHeight={90} flex={1} />
-                    <Title
-                      color={colors.color}
-                      lineHeight={fontSize * 1.4}
-                      fontWeight="800"
-                      fontSize={fontSize}
-                      {...(isEditing && {
-                        width: '100%',
-                      })}
-                    >
-                      {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
-                    </Title>
-                    {userCommentEl}
-                  </VStack>
+            <HStack paddingHorizontal={20}>
+              <VStack
+                // maxWidth={660}
+                // minWidth={380}
+                alignItems="flex-start"
+                justifyContent="flex-end"
+                width="100%"
+                flex={1}
+              >
+                <VStack minHeight={90} flex={1} />
+                <Title
+                  color={colors.backgroundColor}
+                  lineHeight={fontSize * 1.4}
+                  fontWeight="800"
+                  fontSize={fontSize}
+                  {...(isEditing && {
+                    width: '100%',
+                  })}
+                >
+                  {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
+                </Title>
+                {userCommentEl}
+              </VStack>
 
-                  {/* <VStack width={380} marginRight={-180}>
+              {/* <VStack width={380} marginRight={-180}>
                     <RestaurantPhotosRow
                       height={270}
                       width={200}
@@ -391,53 +383,7 @@ const ListPageContent = memo(
                       max={2}
                     />
                   </VStack> */}
-                </HStack>
-              </>
-            )}
-
-            {listTheme === 'modern' && (
-              <HStack
-                paddingVertical={14}
-                marginHorizontal="auto"
-                alignItems="center"
-                justifyContent="center"
-                width="100%"
-                maxWidth={680}
-                zIndex={100}
-                position="relative"
-              >
-                <HStack
-                  flex={1}
-                  maxWidth={media.notSm ? '90%' : '75%'}
-                  minWidth={220}
-                  alignItems="center"
-                  justifyContent="center"
-                  spacing
-                >
-                  <Link name="user" params={{ username }}>
-                    <UserAvatar
-                      size={52}
-                      avatar={list.user?.avatar ?? ''}
-                      charIndex={list.user?.charIndex ?? 0}
-                    />
-                  </Link>
-
-                  <Text ellipse lineHeight={22} textAlign="left">
-                    <Link name="user" params={{ username }}>
-                      <Title size="sm" fontWeight="400" opacity={0.5}>
-                        {list.user?.name || username || '...'}'s&nbsp;
-                      </Title>
-                    </Link>
-                    <Title size="sm" fontWeight="800" zIndex={0}>
-                      {titleContents}&nbsp;
-                    </Title>
-                    <Title size="sm" fontWeight="200" opacity={0.5}>
-                      {locationName ?? ''}
-                    </Title>
-                  </Text>
-                </HStack>
-              </HStack>
-            )}
+            </HStack>
 
             {isMyList && isEditing && (
               <HStack
@@ -529,7 +475,7 @@ const ListPageContent = memo(
             )}
           </VStack>
           {/* END HEADER */}
-        </Theme>
+        </>
       )
 
       const renderItem = useCallback(

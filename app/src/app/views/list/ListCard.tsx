@@ -1,7 +1,7 @@
 import { getUserName, graphql, mutate, query, resolved } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useState } from 'react'
-import { AbsoluteVStack, Hoverable, Toast, VStack } from 'snackui'
+import { AbsoluteVStack, Hoverable, Toast, VStack, useThemeName } from 'snackui'
 
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
@@ -40,6 +40,7 @@ const ListCardContent = graphql((props: ListCardProps) => {
   const { list } = useList(props)
   const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
   const listColors = getListColors(list?.color)
+  const themeName = useThemeName()
   // const listThemeName = (list?.theme || 0) === 0 ? 'modern' : 'minimal'
   return (
     <ListCardFrame
@@ -58,7 +59,7 @@ const ListCardContent = graphql((props: ListCardProps) => {
       }
       photo={getListPhoto(list)}
       {...(props.colored && {
-        color: listColors.color,
+        color: themeName === 'dark' ? listColors.darkColor : listColors.lightColor,
         backgroundColor: listColors.backgroundColor,
         chromeless: true,
         flat: true,

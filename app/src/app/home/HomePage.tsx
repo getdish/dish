@@ -23,7 +23,6 @@ import { queryClient } from '../../helpers/queryClient'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { cancelUpdateRegion } from '../AppMap'
-import { autocompletesStore } from '../AutocompletesStore'
 import { homeStore, useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
@@ -36,14 +35,14 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 import { Link } from '../views/Link'
 import { PageHead } from '../views/PageHead'
 import { PaneControlButtons } from '../views/PaneControlButtons'
-import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
 import { homePageStore } from './homePageStore'
+import { HomeRegionTitle } from './HomeRegionTitle'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { HomeTopSearches } from './HomeTopSearches'
 import { PageContentWithFooter } from './PageContentWithFooter'
 
-type Props = HomeStackViewProps<HomeStateItemHome>
+export type Props = HomeStackViewProps<HomeStateItemHome>
 
 export default memo(function HomePage(props: Props) {
   const media = useMedia()
@@ -72,9 +71,8 @@ const HomePageContent = (props: Props) => {
     enabled,
     suspense: true,
   })
-  // const [position, setPosition] = useState<MapPosition>(initialPosition)
-  const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
+  // const [position, setPosition] = useState<MapPosition>(initialPosition)
   const { results } = useStoreInstance(homePageStore)
 
   // region based effects
@@ -133,50 +131,10 @@ const HomePageContent = (props: Props) => {
     }
   }, [isActive, state.region])
 
-  const regionName = region?.name || state.curLocName || '...'
-  const media = useMedia()
-
   // if (process.env.NODE_ENV === 'development') {
   //   // prettier-ignore
   //   console.log('👀 HomePage', { enabled, regionResponse, position, item, region, state, isActive })
   // }
-
-  const homeHeaderContent = useMemo(() => {
-    return (
-      <>
-        <HomeTopSpacer />
-
-        <HStack marginVertical={-16}>
-          <ContentScrollViewHorizontal>
-            <HStack alignItems="center" paddingVertical={media.sm ? 10 : 15} paddingHorizontal={10}>
-              <Link onPress={() => autocompletesStore.setTarget('location')}>
-                <SlantedTitle
-                  color={regionColors.color}
-                  alignSelf="center"
-                  size={
-                    regionName.length > 24
-                      ? 'xxxs'
-                      : regionName.length > 17
-                      ? 'xxs'
-                      : regionName.length > 14
-                      ? 'xs'
-                      : regionName.length > 8
-                      ? 'sm'
-                      : 'md'
-                  }
-                >
-                  {regionName}
-                </SlantedTitle>
-              </Link>
-
-              <HomeTopSearches />
-            </HStack>
-          </ContentScrollViewHorizontal>
-        </HStack>
-        <Spacer size="md" />
-      </>
-    )
-  }, [regionColors.color, regionName])
 
   const wasEverActive = useLastValueWhen(() => props.isActive, !props.isActive)
 
@@ -189,6 +147,8 @@ const HomePageContent = (props: Props) => {
     span: state.span,
     region: state.region,
   }
+
+  const media = useMedia()
 
   // {/* TODO pass isActive once gqty supports skeleton loading */}
 
@@ -229,9 +189,11 @@ const HomePageContent = (props: Props) => {
         alignSelf="flex-end"
       >
         <ContentScrollView id="home">
-          {homeHeaderContent}
-
+          <HomeTopSpacer />
           <PageContentWithFooter>
+            <VStack display={media.sm ? 'none' : 'flex'} marginTop={-20} marginBottom={5}>
+              <HomeRegionTitle />
+            </VStack>
             {wasEverActive && <HomePageFeed {...homePageFeedProps} />}
           </PageContentWithFooter>
         </ContentScrollView>
@@ -300,5 +262,5 @@ const Inner = () => {
 
 const HomeTopSpacer = () => {
   const media = useMedia()
-  return <VStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight + 10} />
+  return <VStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight + 20} />
 }

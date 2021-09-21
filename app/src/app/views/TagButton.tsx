@@ -243,8 +243,8 @@ const TagButtonInner = (props: TagButtonProps) => {
       spacing={fontSize * 0.5}
       borderRadius={8}
       backgroundColor={theme.backgroundColor}
-      borderWidth={0.5}
-      borderColor={bordered ? theme.borderColor : 'transparent'}
+      borderWidth={bordered ? 0.5 : 0}
+      borderColor={theme.borderColor}
       hoverStyle={{
         backgroundColor: theme.backgroundColorSecondary,
       }}
@@ -252,6 +252,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         backgroundColor: theme.backgroundColorTertiary,
       }}
       {...(transparent && {
+        borderColor: 'transparent',
         backgroundColor: 'transparent',
         hoverStyle: {
           backgroundColor: 'transparent',
