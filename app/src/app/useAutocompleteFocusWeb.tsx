@@ -1,4 +1,4 @@
-import { reaction } from '@dish/use-store'
+import { UNWRAP_PROXY, reaction } from '@dish/use-store'
 import { useEffect } from 'react'
 
 import { autocompletesStore } from './AutocompletesStore'
@@ -7,14 +7,13 @@ import { InputStore } from './inputStore'
 export const useAutocompleteFocusWebNonTouch = (inputStore: InputStore) => {
   useEffect(() => {
     return reaction(
-      inputStore as any,
+      inputStore,
       (x) => x.node,
       (node) => {
         if (!node) {
-          return
+          return false
         }
         let mouseDownAt = Date.now()
-        let wasFocused = false
         let moveInit = [0, 0]
         let moveAt = [0, 0]
 
@@ -24,7 +23,7 @@ export const useAutocompleteFocusWebNonTouch = (inputStore: InputStore) => {
 
         const onMouseUp = () => {
           window.removeEventListener('mousemove', mouseMove)
-          const isFocused = inputStore.isFocused
+          const isFocused = inputStore[UNWRAP_PROXY].isFocused
           if (!isFocused) {
             return
           }
@@ -37,7 +36,6 @@ export const useAutocompleteFocusWebNonTouch = (inputStore: InputStore) => {
         }
 
         const mouseDown = (e: MouseEvent) => {
-          wasFocused = inputStore.isFocused
           mouseDownAt = Date.now()
           moveInit = [e.pageX, e.pageY]
           moveAt = moveInit

@@ -36,6 +36,7 @@ import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
+import { weakKey } from '../../../helpers/weakKey'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../AppMap'
@@ -294,11 +295,9 @@ const useActiveTagSlugs = (props: SearchProps) => {
 
 const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
   const drawerWidth = useAppDrawerWidth()
-  const searchPageStore = useSearchPageStore(
-    {
-      id: props.item.id,
-    }
-  )
+  const searchPageStore = useSearchPageStore({
+    id: props.item.id,
+  })
 
   const activeTagSlugs = useActiveTagSlugs(props)
   const { status } = searchPageStore
@@ -358,6 +357,7 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
   return (
     <RecyclerListView
       style={sheet.listStyle}
+      key={weakKey(results)}
       canChangeSize
       externalScrollView={SearchPageScrollView as any}
       scrollViewProps={{
@@ -416,7 +416,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       return reaction(
         searchPageStore,
         (x) => [x.index, x.event] as const,
-        function searchPageIndexToSCroll([index, event]) {
+        function searchPageIndexToScroll([index, event]) {
           if (event === 'pin' || event === 'key') {
             scrollRef.current?.scrollTo({
               x: 0,

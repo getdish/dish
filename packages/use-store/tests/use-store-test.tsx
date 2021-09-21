@@ -251,7 +251,7 @@ describe('basic tests', () => {
       fireEvent.click(getCurrentByTitle('changeAlt'))
     })
     // new react fires a couple more
-    expect(renderCount).toEqual(4)
+    expect(renderCount).toEqual(3)
   })
 
   it('only re-renders tracked properties (selectors + singleton)', async () => {
@@ -274,7 +274,7 @@ describe('basic tests', () => {
     // fixed by not doing setState(prev => {}) but actually avoiding calling setState
     // NOTE: its 3 because react does one extra render to be sure (for some reason)
     // see: https://reactjs.org/docs/hooks-reference.html#bailing-out-of-a-state-update
-    expect(renderCount).toEqual(3)
+    expect(renderCount).toEqual(2)
   })
 })
 

@@ -1,6 +1,6 @@
 import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import _, { clamp, findLast, reverse } from 'lodash'
+import _, { clamp, findLast } from 'lodash'
 import { Keyboard } from 'react-native'
 import { Toast } from 'snackui'
 

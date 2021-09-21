@@ -42,13 +42,13 @@ export const AppFloatingTagMenuBar = memo(() => {
         <HStack
           alignItems="center"
           paddingVertical={20}
-          paddingHorizontal={5}
+          paddingHorizontal={15}
           {...(media.sm && {
             paddingVertical: 10,
             paddingHorizontal: 10,
           })}
         >
-          {media.sm && <HomeRegionTitle />}
+          <HomeRegionTitle />
           <HomeTopSearches />
         </HStack>
       </ScrollView>

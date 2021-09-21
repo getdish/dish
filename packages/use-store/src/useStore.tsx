@@ -268,6 +268,11 @@ const selectKeys = (obj: any, keys: string[]) => {
   return res
 }
 
+let isInReaction = false
+export const setIsInReaction = (val: boolean) => {
+  isInReaction = val
+}
+
 function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefined): any {
   const { store } = info
   if (!store) {
@@ -356,6 +361,10 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
     get(target, key) {
       // be sure to touch the value for tracking purposes
       const curVal = Reflect.get(target, key)
+      // while in reactions, don't proxy to old state as they aren't inside of react render
+      if (isInReaction) {
+        return curVal
+      }
       if (Reflect.has(state, key)) {
         return Reflect.get(state, key)
       }
@@ -526,12 +535,6 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
   const proxiedStore = new Proxy(storeInstance, {
     // GET
     get(_, key) {
-      const shouldPrintDebug = process.env.NODE_ENV === 'development' && DebugStores.has(constr)
-      if (shouldPrintDebug) {
-        console.log('wht is', constr)
-        debugger
-      }
-
       // setup action one time
       if (key in wrappedActions) {
         return wrappedActions[key]
@@ -558,6 +561,8 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
           t(storeInstance)
         }
       }
+
+      const shouldPrintDebug = process.env.NODE_ENV === 'development' && DebugStores.has(constr)
 
       if (gettersState.isGetting) {
         gettersState.curGetKeys.add(key)

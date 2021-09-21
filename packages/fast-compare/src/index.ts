@@ -8,10 +8,15 @@ export const EQUALITY_KEY = Symbol('EQUALITY_KEY')
 export type IsEqualOptions = {
   ignoreKeys?: { [key: string]: boolean }
   simpleCompareKeys?: { [key: string]: boolean }
-  log: boolean
+  log?: boolean
+  maxDepth?: number
 }
 
 export function isEqual(a: any, b: any, options?: IsEqualOptions) {
+  // we convert this so its easier to logically recurse but also makes sense (maxDepth = 1 = go one level deep)
+  // if (options && options.maxDepth) {
+  //   options.maxDepth++
+  // }
   if (process.env.NODE_ENV !== 'development') {
     return isEqualInner(a, b, options)
   }
@@ -35,6 +40,18 @@ export function isEqual(a: any, b: any, options?: IsEqualOptions) {
   }
 }
 
+// sanity check maxDepth
+// console.log(
+//   'isEqual',
+//   isEqual(
+//     { a: { b: 2 }, c: 1 },
+//     { a: { b: 3 }, c: 1 },
+//     {
+//       maxDepth: 2,
+//     }
+//   )
+// )
+
 // const weakCache = new WeakMap<any, number>()
 // const isEqualWeak = (a: any, b: any) => {
 //   if (weakCache.has(a) && weakCache.has(b)) {
@@ -48,8 +65,12 @@ export function isEqual(a: any, b: any, options?: IsEqualOptions) {
 // }
 
 function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
-  // fast-deep-equal index.js 2.0.1
   if (a === b) return true
+
+  const maxDepth = options?.maxDepth
+  if (options && options.maxDepth) {
+    options.maxDepth -= 1
+  }
 
   if (a && b && typeof a == 'object' && typeof b == 'object') {
     if (a[EQUALITY_KEY] && a[EQUALITY_KEY] === b[EQUALITY_KEY]) return true
@@ -67,8 +88,12 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
         console.warn('comparing large props! ignoring this, may want to fix')
         return false
       }
+      // object, check recursion
+      if (maxDepth === 0) {
+        return true
+      }
       for (i = length; i-- !== 0; ) {
-        if (!isEqualInner(a[i], b[i])) return false
+        if (!isEqualInner(a[i], b[i], options)) return false
       }
       return true
     }
@@ -90,6 +115,10 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
     if (setA != setB) return false
     if (setA && setB) {
       if (a.size !== b.size) return false
+      // object, check recursion
+      if (maxDepth === 0) {
+        return true
+      }
       for (let item of a) {
         if (!b.has(item)) return false
       }
@@ -120,6 +149,11 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
       return a === b
     }
 
+    // object, check recursion
+    if (maxDepth === 0) {
+      return true
+    }
+
     for (i = length; i-- !== 0; ) {
       key = keys[i]
       if (options) {
@@ -144,7 +178,7 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
         continue
       } else {
         // all other properties should be traversed as usual
-        if (!isEqualInner(a[key], b[key])) {
+        if (!isEqualInner(a[key], b[key], options)) {
           if (log) {
             console.log('diff', key, a[key], b[key])
           }

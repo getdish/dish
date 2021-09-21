@@ -191,9 +191,6 @@ const HomePageContent = (props: Props) => {
         <ContentScrollView id="home">
           <HomeTopSpacer />
           <PageContentWithFooter>
-            <VStack display={media.sm ? 'none' : 'flex'} marginTop={-20} marginBottom={5}>
-              <HomeRegionTitle />
-            </VStack>
             {wasEverActive && <HomePageFeed {...homePageFeedProps} />}
           </PageContentWithFooter>
         </ContentScrollView>

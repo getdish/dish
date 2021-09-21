@@ -12,8 +12,6 @@ export const useCurrentComponent = () => {
 export function useDebugStoreComponent(StoreCons: any) {
   const cmp = useCurrentComponent()
 
-  debugger
-
   // add in outer loop to pickup immediately
   DebugStores.add(StoreCons)
   if (!DebugComponents.has(cmp)) {

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { UNWRAP_PROXY } from './constants'
 import { isEqualSubsetShallow } from './isEqualShallow'
 import { subscribe, trackStoresAccess } from './useStore'
+import { setIsInReaction } from '.'
 
 // TODO i think we can just replace reaction() with this, its not worse in any way
 
@@ -30,27 +31,32 @@ export function selector(fn: () => any) {
   let disposeValue: Function | null = null
   const subscribe = () => {
     return subscribeToStores([...prev.stores], () => {
-      disposeValue?.()
-      const next = runStoreSelector(fn)
-      if (typeof next.value === 'function') {
-        disposeValue = next.value
-        if (process.env.NODE_ENV === 'development') {
-          logUpdate!(fn, [...next.stores], '(fn)', '(fn)')
+      try {
+        disposeValue?.()
+        setIsInReaction(true)
+        const next = runStoreSelector(fn)
+        if (typeof next.value === 'function') {
+          disposeValue = next.value
+          if (process.env.NODE_ENV === 'development') {
+            logUpdate!(fn, [...next.stores], '(fn)', '(fn)')
+          }
+          return
         }
-        return
+        if (
+          isEqualSubsetShallow(prev.stores, next.stores) &&
+          isEqualSubsetShallow(prev.value, next.value)
+        ) {
+          return
+        }
+        if (process.env.NODE_ENV === 'development') {
+          logUpdate!(fn, [...next.stores], prev.value, next.value)
+        }
+        prev = next
+        dispose()
+        dispose = subscribe()
+      } finally {
+        setIsInReaction(false)
       }
-      if (
-        isEqualSubsetShallow(prev.stores, next.stores) &&
-        isEqualSubsetShallow(prev.value, next.value)
-      ) {
-        return
-      }
-      if (process.env.NODE_ENV === 'development') {
-        logUpdate!(fn, [...next.stores], prev.value, next.value)
-      }
-      prev = next
-      dispose()
-      dispose = subscribe()
     })
   }
   let dispose = subscribe()
@@ -99,6 +105,7 @@ export function useSelector<A>(fn: () => A): A {
 
   return state.value
 }
+
 function runStoreSelector<A>(selector: () => A): { value: A; stores: Set<any> } {
   const stores = new Set()
   const dispose = trackStoresAccess((store) => {
@@ -111,6 +118,7 @@ function runStoreSelector<A>(selector: () => A): { value: A; stores: Set<any> } 
     stores,
   }
 }
+
 function subscribeToStores(stores: any[], onUpdate: () => any) {
   const disposes: Function[] = []
   for (const store of stores) {
