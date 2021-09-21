@@ -183,7 +183,7 @@ const RestaurantListItemContent = memo(
         ? 1
         : 1
     const titleFontSize =
-      Math.round((media.sm ? 20 : 23) * titleFontScale) * (shouldShowOneLine ? 0.8 : 1)
+      Math.round((media.sm ? 18 : 22) * titleFontScale) * (shouldShowOneLine ? 0.8 : 1)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
@@ -342,8 +342,8 @@ const RestaurantListItemContent = memo(
                         lineHeight={titleHeight}
                         height={titleHeight}
                         color={theme.color}
-                        fontWeight="400"
-                        letterSpacing={-0.25}
+                        fontWeight="600"
+                        letterSpacing={-0.5}
                         paddingHorizontal={1} // prevents clipping due to letter-spacing
                         ellipse
                       >
@@ -423,15 +423,15 @@ const RestaurantListItemContent = memo(
             position="relative"
             height={50}
             marginTop={-5}
-            paddingBottom={6}
-            marginLeft={-10}
+            paddingBottom={20}
+            marginLeft={-30}
             alignItems="center"
             spacing="lg"
           >
             <HStack
               paddingLeft={20}
               alignItems="center"
-              spacing
+              spacing="lg"
               {...(shouldShowOneLine && {
                 paddingLeft: 0,
                 minWidth: 460,
@@ -440,7 +440,7 @@ const RestaurantListItemContent = memo(
             >
               {beforeBottomRow}
 
-              <InteractiveContainer>
+              <InteractiveContainer paddingLeft={10}>
                 <Link
                   name="restaurant"
                   params={{
@@ -491,18 +491,22 @@ const RestaurantListItemContent = memo(
                 </Suspense>
               </InteractiveContainer>
 
-              <HStack alignItems="center">
+              <HStack marginLeft={-5} alignItems="center">
                 <Text
                   width={42}
                   textAlign="center"
                   fontSize={14}
-                  fontWeight="700"
+                  fontWeight="500"
                   color={theme.colorTertiary}
                 >
                   {price_range ?? '-'}
                 </Text>
 
-                <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
+                <Circle
+                  size={6}
+                  marginHorizontal={4}
+                  backgroundColor={open.isOpen ? green : `${red}55`}
+                />
 
                 {!!restaurant.address && (
                   <RestaurantAddress
@@ -566,7 +570,7 @@ const RestaurantListItemContent = memo(
                     tagButtonProps={{
                       votable: true,
                       borderWidth: 0,
-                      // hideIcon: true,
+                      hideIcon: true,
                       hideRating: false,
                       backgroundColor: 'transparent',
                     }}

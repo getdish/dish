@@ -1,4 +1,4 @@
-import { series } from '@dish/async'
+import { series, sleep } from '@dish/async'
 import { List, getUserName, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { Move, Plus, Trash, X } from '@dish/react-feather'
@@ -31,6 +31,7 @@ import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
 import { homeStore, useHomeStateById } from '../../homeStore'
+import { useAsyncEffect } from '../../hooks/useAsync'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
@@ -164,6 +165,11 @@ const ListPageContent = memo(
       const forceUpdate = useForceUpdate()
       const listTheme = listThemes[1] as ListTheme //listThemeIndex === 0 ? listThemes[0] :
       const listSlug = props.item.slug
+
+      // useAsyncEffect(async () => {
+      //   await sleep(1000)
+      //   forceUpdate()
+      // }, [])
 
       console.warn('wut', list.name, list.color)
 
@@ -732,7 +738,7 @@ const ListPageContent = memo(
       )
     },
     {
-      suspense: false,
+      suspense: true,
     }
   )
 )

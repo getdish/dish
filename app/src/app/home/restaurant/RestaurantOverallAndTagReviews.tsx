@@ -92,7 +92,6 @@ const Content = memo(
       })
       const spacing = size === 'sm' ? 5 : 12
       const theme = useTheme()
-      const sources = restaurant.sources ?? {}
       const items = (
         (tagName
           ? getTagSourceBreakdowns(
@@ -104,9 +103,10 @@ const Content = memo(
                     },
                   },
                 },
-              })[0]?.source_breakdown
+              })[0]?.source_breakdown,
+              restaurant.sources
             )
-          : getSourceBreakdowns(restaurant.source_breakdown?.sources)) ?? []
+          : getSourceBreakdowns(restaurant.source_breakdown?.sources, restaurant.sources)) ?? []
       ).filter(isPresent)
 
       const imgSizes = {
@@ -123,27 +123,22 @@ const Content = memo(
 
       if (size === 'sm') {
         return (
-          <HStack marginVertical="auto" spacing="lg">
-            {items.map(({ name, sentence, image, positive, negative }) => {
-              const ratio = positive / (Math.abs(negative) + positive)
+          <HStack paddingHorizontal={10} marginVertical="auto" spacing="lg">
+            {items.map((props) => {
+              const { name, image, rating } = props
               return (
                 <HStack alignItems="center" spacing="sm" key={name}>
                   <Image
                     source={{ uri: image }}
                     style={{
-                      width: 24,
-                      height: 24,
+                      width: 20,
+                      height: 20,
                       borderRadius: 100,
                     }}
                   />
 
-                  <Text
-                    letterSpacing={-1}
-                    fontSize={ratingFontSizes[size]}
-                    fontWeight="700"
-                    color={theme.color}
-                  >
-                    {Math.round(ratio * 5 * 10) / 10}
+                  <Text letterSpacing={-1} fontSize={ratingFontSizes[size]} color={theme.color}>
+                    {rating}
                   </Text>
                 </HStack>
               )
@@ -180,9 +175,7 @@ const Content = memo(
           >
             <ContentScrollViewHorizontal height={scrollHeight}>
               <HStack>
-                {items.map(({ name, sentence, image, positive, negative }) => {
-                  const ratio = positive / (Math.abs(negative) + positive)
-
+                {items.map(({ name, sentence, image, rating, url }) => {
                   return (
                     <VStack key={name}>
                       <VStack
@@ -219,7 +212,7 @@ const Content = memo(
 
                         <HStack paddingHorizontal={20} flex={1} maxHeight="100%">
                           <VStack spacing alignItems="center">
-                            <Link href={sources[name.toLowerCase()]?.url}>
+                            <Link href={url}>
                               <Image
                                 source={{ uri: image }}
                                 style={{
@@ -236,7 +229,7 @@ const Content = memo(
                               fontWeight="700"
                               color={theme.color}
                             >
-                              {Math.round(ratio * 5 * 10) / 10}
+                              {rating}
                             </Text>
 
                             {/* <HStack spacing="xs">
@@ -343,6 +336,13 @@ type SourceBreakdownItem = {
   }
 }
 
+type RestaurantSources = {
+  [key: string]: {
+    url: string
+    rating: number
+  }
+}
+
 type SourceBreakdowns = {
   all: SourceBreakdownItem
   dish: SourceBreakdownItem
@@ -365,12 +365,12 @@ type TagSourceBreakdown = {
 
 const rankingKeys = ['_1', '_2', '_3', '_4', '_5'] as const
 
-function getSourceBreakdowns(breakdowns?: SourceBreakdowns) {
-  if (!breakdowns) {
+function getSourceBreakdowns(sourceBreakdowns?: SourceBreakdowns, sources?: RestaurantSources) {
+  if (!sourceBreakdowns) {
     return null
   }
-  const { all, ...sourceBreakdowns } = breakdowns
-  const sourceNames = Object.keys(sourceBreakdowns) as string[]
+  const { all, ...rest } = sourceBreakdowns
+  const sourceNames = Object.keys(rest) as string[]
 
   return sourceNames
     .map((sourceName) => {
@@ -402,13 +402,16 @@ function getSourceBreakdowns(breakdowns?: SourceBreakdowns) {
             maxLength: 115,
           })
         : null
-      return { name, image, sentence, positive, negative }
+
+      const rating = sources?.[sourceName]?.rating || 0
+      const url = sources?.[sourceName]?.url || ''
+
+      return { name, image, sentence, positive, negative, rating, url }
     })
     .filter((x) => !!x?.sentence)
 }
 
-function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown) {
-  console.log('breakdowns, breakdowns', breakdowns)
+function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown, sources?: RestaurantSources) {
   if (!breakdowns) {
     return null
   }
@@ -437,13 +440,18 @@ function getTagSourceBreakdowns(breakdowns?: TagSourceBreakdown) {
       const defaultSummary = positive > negative ? 'positive' : 'negative'
       const oppositeSummary = positive > negative ? 'negative' : 'positive'
       const summary =
-        breakdown.summary[defaultSummary]?.[0] ?? breakdown.summary[oppositeSummary]?.[0]
+        breakdown.summary[defaultSummary]?.[0] || breakdown.summary[oppositeSummary]?.[0]
       const sentence = summary
         ? ellipseText(summary, {
             maxLength: 115,
           })
         : null
-      return { name, image, sentence, positive, negative }
+
+      const url = sources?.[sourceName]?.url || ''
+      const ratio = positive / (Math.abs(negative) + positive)
+      const rating = Math.round(ratio * 5 * 10) / 10
+
+      return { name, image, sentence, positive, negative, url, rating }
     })
     .filter((x) => !!x && x.sentence)
 }
