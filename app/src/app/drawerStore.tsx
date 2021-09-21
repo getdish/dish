@@ -5,8 +5,6 @@ import { Animated } from 'react-native'
 import { isWeb } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
 import { autocompletesStore } from './AutocompletesStore'
-import { InputStore } from './inputStore'
-import { ScrollStore } from './views/ContentScrollView'
 
 type DrawerSnapPoint = 'bottom' | 'middle' | 'top'
 

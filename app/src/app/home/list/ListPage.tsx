@@ -160,13 +160,12 @@ const ListPageContent = memo(
       const [colors, setColors] = useStateSynced(listColorsMemo)
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
       const listItems = useListItems(list)
-      // const [isLoaded, setIsLoaded] = useState(false)
       const region = useRegionQuery(props.item.region)
-      // disable for now
-      // const listThemeIndex = list.theme ?? 0
       const forceUpdate = useForceUpdate()
       const listTheme = listThemes[1] as ListTheme //listThemeIndex === 0 ? listThemes[0] :
       const listSlug = props.item.slug
+
+      console.warn('wut', list.name, list.color)
 
       const setTheme = async (val: number) => {
         list.theme = val
@@ -192,7 +191,7 @@ const ListPageContent = memo(
         refetch()
       }
 
-      useSnapToFullscreenOnMount()
+      // useSnapToFullscreenOnMount()
 
       useSetAppMap({
         id: props.item.id,

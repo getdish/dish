@@ -40,8 +40,11 @@ let isPanActive = false
 
 // export const getIsTouchingHandle = () => isTouchingHandle
 
+const getActiveParentId = () => {
+  return getStore(ContentParentStore).activeId
+}
+
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
-  const contentParent = useStore(ContentParentStore)
   const panViewRef = useRef()
   // const preventScrolling = usePreventVerticalScroll(contentParent.activeId)
 
@@ -73,9 +76,9 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       }
       // is touching main area
       try {
-        const isScrolledToTop = isScrollAtTop.get(contentParent.activeId) ?? true
+        const isScrolledToTop = isScrollAtTop.get(getActiveParentId()) ?? true
         const { snapIndexName } = drawerStore
-        const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
+        const scrollStore = getStore(ScrollStore, { id: getActiveParentId() })
         const isScrollingUpFromTop = isScrolledToTop && snapIndexName === 'top' && dy > 6
         // prettier-ignore
         // console.log('should?', scroll.lock, { isScrolledToTop, snapIndexName, dy, dx, isScrollingUpFromTop })
@@ -129,7 +132,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         console.log('curSnapY', curSnapY)
         drawerStore.pan.setOffset(0)
         drawerStore._setY(curSnapY)
-        const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
+        const scrollStore = getStore(ScrollStore, { id: getActiveParentId() })
         if (scrollStore.lock !== 'drawer') {
           scrollStore.setLock('drawer')
         }
@@ -150,14 +153,14 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       onPanResponderMove: (e, { dy }) => {
         const y = curSnapY + dy
         // limit movement (TODO make it "resist" at edge)
-        const scroller = scrollViews.get(contentParent.activeId)
+        const scroller = scrollViews.get(getActiveParentId())
         if (y < minY || curScrollerYMove >= 0) {
           if (!scroller) return
           // drawerStore.isAtTop = true
-          const curY = scrollLastY.get(contentParent.activeId) ?? 0
+          const curY = scrollLastY.get(getActiveParentId()) ?? 0
           curScrollerYMove = curY + minY - y
           scroller.scrollTo({ y: curScrollerYMove, animated: false })
-          const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
+          const scrollStore = getStore(ScrollStore, { id: getActiveParentId() })
           if (scrollStore.lock === 'none') {
             scrollStore.setLock('vertical')
           }
@@ -174,12 +177,12 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       },
       onPanResponderRelease: (e, { vy }) => {
         isPanActive = false
-        const scrollStore = getStore(ScrollStore, { id: contentParent.activeId })
+        const scrollStore = getStore(ScrollStore, { id: getActiveParentId() })
         drawerStore.pan.flattenOffset()
         const scrolledY = curScrollerYMove
         curScrollerYMove = -1
         if (scrolledY > 0) {
-          const scroller = scrollViews.get(contentParent.activeId)
+          const scroller = scrollViews.get(getActiveParentId())
           window['scroller'] = scroller
           if (scroller) {
             const y = Math.round(scrolledY + -vy * 10)
