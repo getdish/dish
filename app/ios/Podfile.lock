@@ -19,6 +19,9 @@ PODS:
     - React-Core
     - UMCore
     - UMImageLoaderInterface
+  - EXImagePicker (10.2.3):
+    - ExpoModulesCore
+    - UMCore
   - EXKeepAwake (9.2.0):
     - UMCore
   - EXLinearGradient (9.0.0):
@@ -35,7 +38,7 @@ PODS:
   - ExpoModulesCore/Interfaces (0.2.0):
     - ExpoModulesCore/Core
     - UMCore
-  - EXScreenOrientation (3.2.1):
+  - EXScreenOrientation (3.3.0):
     - React-Core
     - UMCore
   - EXSplashScreen (0.11.2):
@@ -465,6 +468,7 @@ DEPENDENCIES:
   - "EXFileSystem (from `../node_modules/@dish/app/node_modules/expo-file-system/ios`)"
   - "EXFont (from `../node_modules/@dish/app/node_modules/expo-font/ios`)"
   - "EXImageLoader (from `../node_modules/@dish/app/node_modules/expo-image-loader/ios`)"
+  - "EXImagePicker (from `../node_modules/@dish/app/node_modules/expo-image-picker/ios`)"
   - "EXKeepAwake (from `../node_modules/@dish/app/node_modules/expo-keep-awake/ios`)"
   - "EXLinearGradient (from `../node_modules/@dish/app/node_modules/expo-linear-gradient/ios`)"
   - "EXPermissions (from `../node_modules/@dish/app/node_modules/expo-permissions/ios`)"
@@ -578,6 +582,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@dish/app/node_modules/expo-font/ios"
   EXImageLoader:
     :path: "../node_modules/@dish/app/node_modules/expo-image-loader/ios"
+  EXImagePicker:
+    :path: "../node_modules/@dish/app/node_modules/expo-image-picker/ios"
   EXKeepAwake:
     :path: "../node_modules/@dish/app/node_modules/expo-keep-awake/ios"
   EXLinearGradient:
@@ -699,11 +705,12 @@ SPEC CHECKSUMS:
   EXFileSystem: 0a04aba8da751b9ac954065911bcf166503f8267
   EXFont: 9846ba1bb6f5f5aed44e20eea3ac70693323832d
   EXImageLoader: f96ec9992733a4224418bbd9382e5485c8948944
+  EXImagePicker: 414a3663910fd6604248e84c9c77a0501ae0d18b
   EXKeepAwake: f4105ef469be7b283f66ce2d7234bb71ac80cd26
   EXLinearGradient: ffc008d7ddcce356534cfdf9bd7fbcdedec4c438
   EXPermissions: 17d4846ad1880f6891c74ae58ca1acb43e47ed47
   ExpoModulesCore: 2734852616127a6c1fc23012197890a6f3763dc7
-  EXScreenOrientation: d94f791c7ade3639352f34fcf5353f7c554b7d69
+  EXScreenOrientation: 09fe6b6b87899ae0c9320255bda7b7513cdfc8ec
   EXSplashScreen: 6208ca88470ff5979fd49a08ef3feb01143a2b79
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
   FBReactNativeSpec: 8cc7c75b7b4ae4232c074e011ece5332197fe2ae

@@ -1,13 +1,13 @@
 import { Store, createUseStore } from '@dish/use-store'
 
-class ColumnSelectionStore extends Store<{ id: string }> {
+export class ColumnSelectionStore extends Store<{ id: string }> {
   column = 0
   setColumn(column: number) {
     this.column = column
   }
 }
 
-class RowSelectionStore extends Store<{ id: string; column: number }> {
+export class RowSelectionStore extends Store<{ id: string; column: number }> {
   row = 0
   setRow(row: number) {
     this.row = row
