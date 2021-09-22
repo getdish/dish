@@ -1,17 +1,12 @@
 - [c] [0] test on ~10 restaurants
 - [c] [0] recrawl bay area
 - [c] [1] dedupe images
-- [c] [1] tags move to single-primary image (highest quality)
-- [c] [2] closed restaurants detection (i've seen a number of variants)
-- [c] [2] get cron crawling every few days
-- [i] [0] get backups uploading (postgres)
-- [d] [1] test runthrough searching with keyboard at least ~3 fixes
 - [m] [1] upload photos from app
 <!-- - [m] [2] add ratings from photo upload -->
 - [m] [1] get regions working (better)
 - [m] [1] swipe back to go back on drawer cards
 - [m] get login/signup working
-- [m] [3] add apple sign in
+- [m] [3] add apple sign in (expo has library)
 - [m] [3] hover to color map circles in a group
 - [a] [4] opengraph / meta / seo
 
@@ -19,39 +14,17 @@
 
 # inbox
 
-- add crawler step to try and find instagram page link
-  - can show it in various places
-  - can use it later to then scan for images
-
-- summary for each top reviewer place: take top X reviews and run through summarizer, then potentially secondly through gpt3 or eleuthers gpt service if they have
-
-- need to validate ratings aren't above 5, below 0
-
-- rate limit mutations
-
-- login link + email option button (lower)
-
 - adding in OSM data for any location
 
 - auto create lists on voting will flesh out profiles
-
-- getting search into graph will make a much better homepage possible and easier caching
 
 - directions:
     - making lists more into articles
     - adding any type of item to the map
 
-- duplicate image check, i beleive i started on this by adding a hash function that we could check against but didnt finish
-
-- lists need a way to change the slug since we auto-generate it first. it should probably just do it one time, so need to track that in db (or some other way?).
-
 - show little map markers with color/rating/(sometimes emoji)
 
 - related good restaurants nearby on restaurantpage
-
-- comments (list page, review)
-
-- may want lists to have inline mentions in the body, or integrate the visual of listpage into the body (would also make a good listcard)
 
 - location search show current region + parent region as an icon
 
@@ -59,38 +32,11 @@
 
 - list.region => list.regions with insert hook to set using restaurants to power home showing more results
 
-- discuss strict region on search page
+- hooking sentiment analysis realtime as people are writing reviews so it pulls out suggested tag ratings for them
 
 - discuss final lenses: add "food" lense ?
 
-- discuss merge app, worker, cron so we can test and run jobs while developing easily
-
 - search by region on search pages is an seo upgrade
-
-- searching tags should default to a grouped higher order tag, try "oysters" and you see a ton of different cuisine based categories, but there should be a meta category, just "Oysters", and the rest probably shouldn't show (but search should probably include all of them!)
-
-- can likely merge all docker intranet apps into one .yml
-
-- seeing the front of the restaruant in a wide angle shot is so key to intuitively finding a place you've been to !!
-
-- validating/improving dish images
-  - generally validate our image tag matching, document our current stats somewhere of "tagged images"
-  - image quality API seems to not be super great
-  - add admin panel page for tracking some stats:
-    - show count of # images found per-dish (avg per dish to start + total)
-  - test case to ensure lily image tag matching:
-    - https://www.yelp.com/biz/lily-san-francisco
-
-- admin panel for crawling a specific subset of results using search or sql or list of tags
-- fix/add final crawlers (google, uber eats, caviar?) on subset
-- see if any easy bugs to fix on user profiles
-
-- script to export all dish-tagged images into local folders
-  - folder name for each "cuisine__dish"
-
-- redo GPT3 summaries
-  - table style:
-    - | dish | rating | short summary |
 
 ---
 
@@ -219,7 +165,6 @@ making it actually a cool:
 big impact changes
 
 - show comments everywhere (search, home, lists)
-- showing the icons for top/vibe/bar/green on list items with one click vote
 - threading on comments is the only way you get discussion which leads to clarfiication, which is both what keeps people around and what allows us to get much richer info
 - make map more alive
   - colors by category (cuisine?)
@@ -227,9 +172,6 @@ big impact changes
   - hover restaurant show it on map (but without moving it, maybe marker zoom)
   - liking a restuarant could drop a heart
   - emoji icons once you get to a zoom level
-  - speeding it up in general
-- adding in hot & new / popups / instagram
-  - basically, social features
 - home needs to feel more like a discussion
   - so do all other pages
   - basically do a sprint on bringing out discussions
@@ -242,35 +184,6 @@ big impact changes
 
 ---
 
-
-### Generally making the stack a lot easier to work with.
-
-On a high level:
-
-#### Reducing complexity
-
-- reduce services/images:
-  - worker, cron, run-tests: these images have big overlap, combine into one
-  - search => dish-app
-  - make base image lighter ? avoiding deps building in the beginning
-
-#### Improving access
-
-- UI for databases: timescale + postgres thats ideally in dish-app/admin
-
-#### Local development
-
-- mounting local code folders and hot reloading
-- Ideally should be able to run against some sort of "personal" instance thats in the cloud but you have shell access into
-
-#### Automate failure and recovery modes better
-
-- Crawls should detect when failures are happening at a high rate and cancel the rest of the crawl
-
----
-
-
-- importing instagram and other feed data to have more aliveness
 - top dishes <=> map pins + easily moving around cities.
   - then easily filter it down to any cuisine (top right input opposite "Uniquely Good")
 
