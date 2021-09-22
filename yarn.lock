@@ -1990,10 +1990,11 @@ __metadata:
     react-native-codegen: ^0.0.7
     react-native-dotenv: ^2.5.3
     react-native-draggable-flatlist: ^2.6.2
-    react-native-fast-image: ^8.3.4
+    react-native-fast-image: ^8.5.8
     react-native-gesture-handler: ^1.10.3
     react-native-reanimated: ^2.2.0
     react-native-safe-area-context: ^3.1.9
+    react-native-screens: ^3.7.2
     react-native-svg: ^12.1.1
     react-native-unimodules: ^0.14.6
     react-query: ^3.23.0
@@ -21723,13 +21724,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-fast-image@npm:^8.3.4":
-  version: 8.3.7
-  resolution: "react-native-fast-image@npm:8.3.7"
+"react-native-fast-image@npm:^8.5.8":
+  version: 8.5.8
+  resolution: "react-native-fast-image@npm:8.5.8"
   peerDependencies:
     react: ^16.8.6 || ^17.0.0
     react-native: ">=0.60.0"
-  checksum: 8f38dd0fe1147ffffe12f5ca4e4ba8eb935cb493a62ba74edf9eacf8295dd39762da582c7d95c63f5b1134e9a7808304c6f706eaa742daba0694396ffbbd038a
+  checksum: 3cbb12c44e38176331e66eb9c82cfb1627e532cb43d29b92684008aee2b0292e5ea202d1e19e6210aeb6abdb407b849b36f6d9344c5adbf09cc6404af11597af
   languageName: node
   linkType: hard
 
@@ -21792,7 +21793,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^3.4.0":
+"react-native-screens@npm:^3.4.0, react-native-screens@npm:^3.7.2":
   version: 3.7.2
   resolution: "react-native-screens@npm:3.7.2"
   dependencies:

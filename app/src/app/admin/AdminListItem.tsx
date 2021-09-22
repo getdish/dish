@@ -1,6 +1,6 @@
 import { fullyIdle, series } from '@dish/async'
 import { X } from '@dish/react-feather'
-import { useStoreSelector } from '@dish/use-store/types'
+import { useStoreSelector } from '@dish/use-store'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { TextInput } from 'react-native'
 import { HStack, Text, VStack } from 'snackui'

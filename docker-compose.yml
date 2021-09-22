@@ -125,10 +125,9 @@ services:
     #   retries: 5
 
   hasura:
-    image: ${DOCKER_HASURA_IMAGE:-registry.dishapp.com/dish-hasura:latest}
+    image: ${DOCKER_HASURA_IMAGE:-hasura/graphql-engine:v1.3.3}
     build:
-      context: .
-      dockerfile: ./services/hasura/Dockerfile
+      context: ${DOCKER_HASURA_FOLDER:-./services/hasura}
     restart: on-failure:3
     networks:
       - traefik-public

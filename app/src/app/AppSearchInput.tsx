@@ -28,25 +28,7 @@ import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 
 const isWebTouch = isWeb && supportsTouchWeb
 
-const placeholders = [
-  'pho',
-  'tacos',
-  'dim sum',
-  'gyro',
-  'bibimbap',
-  'poke',
-  'dosa',
-  'onigiri',
-  'banh mi',
-  'bbq',
-  'caesar salad',
-  'sushi',
-  'sisig',
-  'szechuan',
-  'italian',
-]
-
-const placeHolder = `Search ${placeholders[Math.floor(placeholders.length * Math.random())]}`
+const placeHolder = `Search`
 
 // avoid first one on iniital focus
 let avoidNextFocus = true
@@ -197,9 +179,7 @@ export const AppSearchInput = memo(() => {
                   // }
                 }}
                 onKeyPress={handleKeyPressInner}
-                {...(!isWeb && {
-                  placeholderTextColor: '#999',
-                })}
+                placeholderTextColor="#999"
                 onFocus={(e) => {
                   inputStore.setIsFocused(true)
                   if (isDesktop) {
