@@ -1,5 +1,4 @@
 - fix:
-    - list description
     - list edit review refetch
     - delete tag rating
     - edit review fix not populating
