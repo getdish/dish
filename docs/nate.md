@@ -1,10 +1,16 @@
 - fix:
+    - drag drawer from bottom ipad
     - list description
     - list edit review refetch
     - delete tag rating
+    - edit review fix not populating
     - profile edit image/avatar/name
     - add to list insert at bottom not top
     - drag to sort needs some fixes
+
+- voting for tagbutton on ipad not working (hoverable only)
+
+- photo upload for reviews
 
 - lists with any location
     - https://developer.apple.com/documentation/mapkitjs/mapkit/search/2974016-autocomplete

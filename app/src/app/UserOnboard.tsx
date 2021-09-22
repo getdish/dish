@@ -43,6 +43,7 @@ export const UserOnboard = graphql(
             Toast.error('Error saving  image!')
           }
         } catch (err) {
+          console.error('error', err.message, err.stack)
           Toast.show(`Error saving image: ${err.message.slice(0, 100)}...`)
         }
       }
