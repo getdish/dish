@@ -1,4 +1,4 @@
-import { restaurant } from '@dish/graph/types'
+import { restaurant } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 
 import { selectRishDishViewSimple } from '../helpers/selectDishViewSimple'

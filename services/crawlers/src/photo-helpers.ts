@@ -78,7 +78,7 @@ export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
 }
 
 function archiveURLInOrigin(photos: Partial<PhotoXref>[]) {
-  photos.map((p) => {
+  photos.forEach((p) => {
     if (!p.photo || !p.photo.url) throw 'Photo must have URL'
     p.photo.origin = clone(p.photo?.url)
     delete p.photo.url

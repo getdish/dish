@@ -10,26 +10,12 @@ import { useCurrentUserQuery } from '../../hooks/useUserReview'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantReview, RestaurantReviewProps } from './RestaurantReview'
 
-// const sentiments = review?.sentiments?.() ?? []
-//                 {!!sentiments?.length &&
-//                   uniqBy(sentiments, (x) => x.tag.name).map((x, i) => {
-//                     const snt = x.ml_sentiment
-//                     return (
-//                       <React.Fragment key={i}>
-//                         <SentimentText sentiment={snt}>{x.tag.name}</SentimentText>
-//                         <Text>&nbsp;</Text>
-//                       </React.Fragment>
-//                     )
-//                   })}
-
 export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
   const { review, onEdit, onDelete } = props
   const [user] = useCurrentUserQuery()
   const [reviewText, setReviewText] = useStateSynced('')
   const [isSaved, setIsSaved] = useState(false)
   // const [height, setHeight] = useState(lineHeight)
-
-  console.log('review?.text', review?.text)
 
   useEffect(() => {
     if (review?.text) {

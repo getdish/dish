@@ -24,7 +24,7 @@ function RestaurantReviewPageContent() {
   const store = useStoreInstance(homeStore)
   const state = store.getLastStateByType('restaurantReview')
   return (
-    <Modal width="98%" maxWidth={720} visible>
+    <Modal width="98%" maxHeight="100%" maxWidth={720} visible>
       <PaneControlButtons>
         <StackViewCloseButton />
       </PaneControlButtons>

@@ -1,4 +1,4 @@
-import { restaurant } from '@dish/graph/types'
+import { restaurant } from '@dish/graph'
 import { supportsTouchWeb } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'

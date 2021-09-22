@@ -1,5 +1,5 @@
 - args:
     cascade: false
     read_only: false
-    sql: ALTER TABLE foo DROP CONSTRAINT IF EXISTS review_type_user_id_list_id_key;
+    sql: ALTER TABLE review DROP CONSTRAINT review_type_user_id_list_id_key;
   type: run_sql

@@ -2,8 +2,8 @@ import { ZeroUUID, graphql, order_by, query, resolved, useRefetch } from '@dish/
 import { isPresent } from '@dish/helpers'
 import { Search, Tag, X } from '@dish/react-feather'
 import { sortBy, uniqBy } from 'lodash'
-import React, { memo, useEffect, useState } from 'react'
-import { AbsoluteHStack, HStack, Input, useDebounce, useLazyEffect } from 'snackui'
+import React, { memo, useState } from 'react'
+import { HStack, Input, useDebounce, useLazyEffect } from 'snackui'
 
 import { tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
