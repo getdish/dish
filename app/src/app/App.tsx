@@ -1,7 +1,6 @@
-import { Circle } from '@dish/react-feather'
 import loadable from '@loadable/component'
-import React, { Suspense, useEffect } from 'react'
-import { AbsoluteVStack, LoadingItems, ToastRoot, useTheme } from 'snackui'
+import React, { Suspense, useEffect, useLayoutEffect } from 'react'
+import { AbsoluteVStack, LoadingItems, ToastRoot, isWeb, useTheme } from 'snackui'
 
 import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
@@ -18,6 +17,22 @@ import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
 export function App() {
+  // i see sometimes the new body collapse bar trick gets things in weird state
+  // was testing preventing scroll but need to see if i can do it only on <body>
+  if (isWeb) {
+    useLayoutEffect(() => {
+      const preventDefault = (e: Event) => {
+        e.preventDefault()
+      }
+      document.body.addEventListener('touchmove', preventDefault)
+      window.addEventListener('touchmove', preventDefault)
+      return () => {
+        document.body.removeEventListener('touchmove', preventDefault)
+        window.addEventListener('touchmove', preventDefault)
+      }
+    }, [])
+  }
+
   // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {
     useEffect(() => {
@@ -55,6 +70,11 @@ export function App() {
 
 function AppHomeContent(props: { children?: any }) {
   const theme = useTheme()
+  // const isMobileWeb = useIsMobilePhone()
+
+  // if (isMobileWeb) {
+  //   return <AppHomeWeb />
+  // }
 
   return (
     <>

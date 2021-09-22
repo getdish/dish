@@ -102,15 +102,15 @@ export const ValidatedInput = ({
           return (
             <Input
               color={isWeb ? 'var(--color)' : '#777'}
-              onFocus={() => {
-                if (drawerStore.snapIndexName !== 'top') {
-                  drawerStore.setSnapIndex(0)
-                }
-                const scrollStore = getStore(ScrollStore, { id: scrollId })
-                if (scrollStore) {
-                  scrollStore.scrollTo({ y: 10000000 })
-                }
-              }}
+              // onFocus={() => {
+              //   // if (drawerStore.snapIndexName !== 'top') {
+              //   //   drawerStore.setSnapIndex(0)
+              //   // }
+              //   // const scrollStore = getStore(ScrollStore, { id: scrollId })
+              //   // if (scrollStore) {
+              //   //   scrollStore.scrollTo({ y: 10000000 })
+              //   // }
+              // }}
               {...(!isWeb && {
                 placeholderTextColor: theme.colorTertiary,
               })}

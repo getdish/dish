@@ -141,7 +141,7 @@ export default memo(function AppMap() {
   )
 })
 
-const AppMapContents = memo(function AppMapContents() {
+export const AppMapContents = memo(function AppMapContents() {
   const appMapStore = useAppMapStore()
   const { features, results, showRank, region, hovered, zoomOnHover } = appMapStore
   const isOnHome = useStoreInstanceSelector(homeStore, (x) => x.currentStateType === 'home')

@@ -15,6 +15,7 @@ import { isWeb } from '../../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { drawerStore } from '../drawerStore'
+import { useIsMobilePhone } from '../useIsMobilePhone'
 
 export type ScrollLock = 'horizontal' | 'vertical' | 'drawer' | 'none'
 
@@ -115,6 +116,12 @@ type ContentScrollViewProps = ScrollViewProps & {
 
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, bidirectional, ...props }, ref) => {
+    // const isMobilePhone = useIsMobilePhone()
+
+    // if (isMobilePhone) {
+    //   return children
+    // }
+
     // this updates when drawer moves to top
     // this is already handled in useScrollActive i think
     // const isActive = useStoreSelector(ContentParentStore, x => x.activeId === id, { id })
