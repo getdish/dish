@@ -65,6 +65,9 @@ export const useUserReviewQuery = (restaurantSlug: string) => {
   return user
     ? query.review({
         where: {
+          type: {
+            _eq: 'comment',
+          },
           text: {
             _neq: '',
           },
@@ -78,6 +81,7 @@ export const useUserReviewQuery = (restaurantSlug: string) => {
           },
         },
         limit: 1,
+        order_by: [{ authored_at: order_by.desc }],
       })
     : []
 }
@@ -117,12 +121,15 @@ export const useUserReviewQueryMutations = ({
         restaurant_id: restaurantId,
       }
       const result = await upsertUserReview(next, reviewQuery)
+      refetch(reviewQuery)
       return result
     },
     async deleteReview() {
       if (ogReview) {
         // @ts-ignore
-        return await deleteUserReview(ogReview, reviewQuery)
+        const res = await deleteUserReview(ogReview, reviewQuery)
+        refetch(reviewQuery)
+        return res
       }
     },
   }

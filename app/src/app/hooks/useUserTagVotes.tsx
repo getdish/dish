@@ -166,7 +166,7 @@ const queryUserTagVote = ({
               },
             },
           },
-          order_by: [{ authored_at: order_by.asc }],
+          order_by: [{ authored_at: order_by.desc }],
         })
       : null
 
