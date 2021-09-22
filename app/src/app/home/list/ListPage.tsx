@@ -265,12 +265,13 @@ const ListPageContent = memo(
       ) : (
         list.name
       )
-      const locationName = region.data?.name ?? props.item.region
+      // const locationName = region.data?.name ?? props.item.region
       const isMinimal = listTheme === 'minimal'
 
       const userCommentEl = (
         <VStack width="100%" zIndex={100} position="relative" marginTop={-5}>
           <CommentBubble
+            showChildren={isEditing}
             size="lg"
             color={colors.color}
             chromeless={!isEditing && !list.description}

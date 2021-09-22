@@ -44,6 +44,7 @@ export type CommentBubbleProps = Omit<StackProps, 'children'> & {
   chromeless?: boolean
   hideMeta?: boolean
   source?: string
+  showChildren?: boolean
   size?: 'lg' | 'md'
   color?: string
 }
@@ -122,6 +123,7 @@ function CommentBubbleContents({
   source,
   avatarBackgroundColor,
   scrollable,
+  showChildren,
   children,
   color,
 }: CommentBubbleProps & {
@@ -136,7 +138,7 @@ function CommentBubbleContents({
     return <AbsoluteVStack fullscreen backgroundColor="pink" />
   }
 
-  const hasContents = !!text
+  const hasContents = !!text || showChildren
   const contents = (
     <>
       {title ? (
