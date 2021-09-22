@@ -1,4 +1,5 @@
 import React, { memo } from 'react'
+import { ThemeInverse } from 'snackui'
 
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { HomeStateItemHome } from '../../types/homeTypes'
@@ -20,25 +21,27 @@ export const HomeRegionTitle = memo(() => {
 
   return (
     <Link onPress={() => autocompletesStore.setTarget('location')}>
-      <SlantedTitle
-        // backgroundColor="#000"
-        // color="#fff"
-        alignSelf="center"
-        fontWeight="900"
-        size={
-          regionName.length > 24
-            ? 'xxxs'
-            : regionName.length > 17
-            ? 'xxs'
-            : regionName.length > 14
-            ? 'xs'
-            : regionName.length > 8
-            ? 'sm'
-            : 'md'
-        }
-      >
-        {regionName}
-      </SlantedTitle>
+      <ThemeInverse>
+        <SlantedTitle
+          // backgroundColor="#000"
+          // color="#fff"
+          alignSelf="center"
+          fontWeight="900"
+          size={
+            regionName.length > 24
+              ? 'xxxs'
+              : regionName.length > 17
+              ? 'xxs'
+              : regionName.length > 14
+              ? 'xs'
+              : regionName.length > 8
+              ? 'sm'
+              : 'md'
+          }
+        >
+          {regionName}
+        </SlantedTitle>
+      </ThemeInverse>
     </Link>
   )
 })

@@ -1954,6 +1954,7 @@ __metadata:
     eas-cli: ^0.21.0
     expo: ^42.0.3
     expo-app-loading: ^1.1.2
+    expo-image-picker: ^10.2.3
     expo-linear-gradient: ^9.2.0
     expo-splash-screen: ^0.11.2
     expo-yarn-workspaces: ^1.5.2
@@ -12383,6 +12384,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-image-picker@npm:^10.2.3":
+  version: 10.2.3
+  resolution: "expo-image-picker@npm:10.2.3"
+  dependencies:
+    "@expo/config-plugins": ^3.0.0
+    expo-modules-core: ~0.2.0
+    uuid: 7.0.2
+  checksum: 131cdd58c104725c135d0b3cfc29bd1d452587f22468c70bab0d29f897078063017da478544e69fe86a89a142e59d76dd72b17b40e5ec730c30ab9fb112855b6
+  languageName: node
+  linkType: hard
+
 "expo-keep-awake@npm:~9.2.0":
   version: 9.2.0
   resolution: "expo-keep-awake@npm:9.2.0"
@@ -12417,16 +12429,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-screen-orientation@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "expo-screen-orientation@npm:2.1.0"
-  dependencies:
-    fbjs: 1.0.0
-  checksum: f8d0e96aed3c7733ef3b338b3a5f4c16f1d3693240370f8cac02dc6c23a3c64977ecbff0b2bde209e18d33dc8bd545014573e6cf03c9317f666c21cb8f68a83a
-  languageName: node
-  linkType: hard
-
-"expo-screen-orientation@npm:^3.1.0":
+"expo-screen-orientation@npm:3.2.1":
   version: 3.2.1
   resolution: "expo-screen-orientation@npm:3.2.1"
   dependencies:
@@ -23554,7 +23557,7 @@ __metadata:
     css-mediaquery: ^0.1.2
     esbuild: ^0.11.20
     expo-linear-gradient: ^9.1.0
-    expo-screen-orientation: ^3.1.0
+    expo-screen-orientation: ^3.2.1
     normalize-css-color: "*"
     react: "*"
     react-dom: "*"
@@ -26201,6 +26204,15 @@ __metadata:
   bin:
     uuid: ./bin/uuid
   checksum: 8793629d2799f500aeea9fcd0aec6c4e9fbcc4d62ed42159ad96be345c3fffac1bbf61a23e18e2782600884fee05e6d4012ce4b70d0037c8e987533ae6a77870
+  languageName: node
+  linkType: hard
+
+"uuid@npm:7.0.2":
+  version: 7.0.2
+  resolution: "uuid@npm:7.0.2"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: f80af114b67e1f66020c70897be9ba889b1996fbfde8fc46eb7405e95d3448908a793bab36d16d11a082a16ca7e1d27ab5203e505dd3c1bab7efbb647bd94823
   languageName: node
   linkType: hard
 

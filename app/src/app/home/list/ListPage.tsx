@@ -297,7 +297,7 @@ const ListPageContent = memo(
               <Input
                 placeholder="..."
                 multiline
-                numberOfLines={3}
+                numberOfLines={4}
                 lineHeight={30}
                 fontSize={20}
                 marginVertical={-10}
@@ -365,7 +365,7 @@ const ListPageContent = memo(
                 width="100%"
                 flex={1}
               >
-                <VStack minHeight={55} flex={1} />
+                <VStack minHeight={75} flex={1} />
                 <VStack display={isWeb ? 'block' : 'flex'}>
                   <TitleStyled
                     backgroundColor={colors.backgroundColor}
