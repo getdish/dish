@@ -21,12 +21,19 @@ export function App() {
   // was testing preventing scroll but need to see if i can do it only on <body>
   if (isWeb) {
     useLayoutEffect(() => {
+      // theoretically locks body in case ios safari tries to scroll that 1px
+      const io = new IntersectionObserver(() => {
+        document.body.scrollTop = 0
+      })
+      io.observe(document.body)
+
       const preventDefault = (e: Event) => {
         e.preventDefault()
       }
       document.body.addEventListener('touchmove', preventDefault)
       window.addEventListener('touchmove', preventDefault)
       return () => {
+        io.disconnect()
         document.body.removeEventListener('touchmove', preventDefault)
         window.addEventListener('touchmove', preventDefault)
       }
