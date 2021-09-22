@@ -14,6 +14,7 @@ import {
   Spacer,
   VStack,
   useLazyEffect,
+  useMedia,
   useTheme,
 } from 'snackui'
 
@@ -413,6 +414,7 @@ const UserHeader = memo(
       const user = queryUser(username)
       const isOwnProfile = userStore.user?.username === username
       const date = user.created_at
+      const media = useMedia()
 
       if (!user) {
         return null
@@ -429,17 +431,17 @@ const UserHeader = memo(
             <UserSubscribeButton elevation={1} username={username} />
           </PaneControlButtonsLeft>
 
-          <VStack flex={1} paddingHorizontal={20} paddingTop={30}>
+          <VStack flex={1} paddingHorizontal={20} paddingTop={40}>
             <HStack alignItems="flex-end" flex={1} position="relative">
-              <VStack marginBottom={-30} marginRight={10}>
-                <UserAvatar size={160} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
+              <VStack marginLeft={media.sm ? -50 : 0} marginBottom={-10} marginRight={10}>
+                <UserAvatar size={140} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
               </VStack>
-              <VStack flex={1}>
+              <VStack paddingTop={20} flex={1}>
                 <TitleStyled size="xxxxl" paddingRight={30}>
                   {user.name || user.username}
                 </TitleStyled>
                 <Spacer size="xl" />
-                <HStack>
+                <HStack flexWrap="wrap">
                   <Paragraph opacity={0.5}>{user.username}</Paragraph>
 
                   {!!user.location && (
