@@ -13,6 +13,11 @@ export type AutocompleteItemRestuarant = Base & {
   slug: string
 }
 
+export type AutocompleteItemUser = Base & {
+  type: 'user'
+  slug: string
+}
+
 export type AutocompleteItemLocation = Base & {
   type: 'place'
   center?: LngLat
@@ -23,8 +28,9 @@ export type AutocompleteItemLocation = Base & {
 export type AutocompleteItem =
   | (Base & { type: 'orphan' })
   | (Base & { type: 'dish' | 'cuisine' | 'country'; slug: string })
-  | (Base & AutocompleteItemRestuarant)
-  | (Base & AutocompleteItemLocation)
+  | AutocompleteItemRestuarant
+  | AutocompleteItemLocation
+  | AutocompleteItemUser
 
 export type AutocompleteItemFull = AutocompleteItem & {
   is: 'autocomplete'

@@ -91,17 +91,7 @@ export const AutocompleteItemView = memo(
         }}
         stopPropagation
         preventNavigate={preventNavigate}
-        {...(!showLocation &&
-          result?.type !== 'orphan' && {
-            tag: result,
-          })}
-        {...(result.type == 'restaurant' && {
-          tag: null,
-          name: 'restaurant',
-          params: {
-            slug: result.slug,
-          },
-        })}
+        {...getLinkForAutocomplete(result)}
         noTextWrap
       >
         <HStack alignItems="center" width="100%">
@@ -137,3 +127,28 @@ export const AutocompleteItemView = memo(
     )
   }
 )
+
+function getLinkForAutocomplete(item: AutocompleteItem) {
+  if (item.type == 'user') {
+    return {
+      name: 'user',
+      params: {
+        username: item.slug,
+      },
+    } as const
+  }
+  if (item.type == 'restaurant') {
+    return {
+      name: 'restaurant',
+      params: {
+        slug: item.slug,
+      },
+    } as const
+  }
+  if (item?.type !== 'orphan') {
+    return {
+      tag: item,
+    } as const
+  }
+  return null
+}
