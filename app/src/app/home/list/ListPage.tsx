@@ -6,6 +6,7 @@ import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from '
 import { Pressable, Switch } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
 import {
+  AbsoluteVStack,
   Button,
   HStack,
   Input,
@@ -162,7 +163,7 @@ const ListPageContent = memo(
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
       const listItems = useListItems(list)
       const region = useRegionQuery(props.item.region)
-      const forceUpdate = useForceUpdate()
+      // const forceUpdate = useForceUpdate()
       const listTheme = listThemes[1] as ListTheme //listThemeIndex === 0 ? listThemes[0] :
       const listSlug = props.item.slug
 
@@ -171,31 +172,29 @@ const ListPageContent = memo(
       //   forceUpdate()
       // }, [])
 
-      console.warn('wut', list.name, list.color)
-
-      const setTheme = async (val: number) => {
-        list.theme = val
-        forceUpdate()
-        const affectedRows = await mutate((mutation) => {
-          return mutation.update_list({
-            where: {
-              id: {
-                _eq: list.id,
-              },
-            },
-            _set: {
-              theme: val,
-            },
-          })?.affected_rows
-        })
-        console.log('affectedRows', affectedRows)
-        if (affectedRows) {
-          Toast.show(`Saved`)
-        } else {
-          Toast.show(`Error saving`)
-        }
-        refetch()
-      }
+      // const setTheme = async (val: number) => {
+      //   list.theme = val
+      //   forceUpdate()
+      //   const affectedRows = await mutate((mutation) => {
+      //     return mutation.update_list({
+      //       where: {
+      //         id: {
+      //           _eq: list.id,
+      //         },
+      //       },
+      //       _set: {
+      //         theme: val,
+      //       },
+      //     })?.affected_rows
+      //   })
+      //   console.log('affectedRows', affectedRows)
+      //   if (affectedRows) {
+      //     Toast.show(`Saved`)
+      //   } else {
+      //     Toast.show(`Error saving`)
+      //   }
+      //   refetch()
+      // }
 
       // useSnapToFullscreenOnMount()
 
@@ -269,6 +268,7 @@ const ListPageContent = memo(
       const userCommentEl = (
         <VStack width="100%">
           <CommentBubble
+            size="lg"
             color={colors.color}
             chromeless={!isEditing && !list.description}
             paddingHorizontal={isMinimal ? 0 : 20}
@@ -344,12 +344,8 @@ const ListPageContent = memo(
       const listHeaderEl = (
         <>
           {/* START HEADER */}
-          <VStack
-            paddingHorizontal={10}
-            paddingBottom={20}
-            position="relative"
-            // backgroundColor={colors.backgroundColor}
-          >
+          <VStack paddingHorizontal={10} paddingBottom={5} position="relative">
+            <AbsoluteVStack fullscreen zIndex={-1} backgroundColor={colors.color} opacity={0.1} />
             <HStack paddingHorizontal={20}>
               <VStack
                 // maxWidth={660}

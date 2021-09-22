@@ -1,5 +1,5 @@
 // @ts-ignore
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store'
 
 import { configureOpts } from './configureUseStore'
@@ -252,9 +252,6 @@ function getOrCreateStoreInfo(
 }
 
 export const allStores = {}
-export const subscribe = (store: Store, callback: () => any) => {
-  return store.subscribe(callback)
-}
 
 const emptyObj = {}
 const selectKeys = (obj: any, keys: string[]) => {
@@ -554,7 +551,8 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
       if (typeof key !== 'string') {
         return Reflect.get(storeInstance, key)
       }
-      // non-actions
+
+      // non-actions...
 
       if (storeAccessTrackers.size && !storeAccessTrackers.has(storeInstance)) {
         for (const t of storeAccessTrackers) {
@@ -574,7 +572,6 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         if (getCache.has(key)) {
           return getCache.get(key)
         }
-
         // track get deps
         curGetKeys.clear()
         const isSubGetter = gettersState.isGetting
@@ -621,6 +618,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         if (process.env.NODE_ENV === 'development' && DebugStores.has(constr)) {
           console.log('SET...', { key, value, isInAction })
         }
+        console.log('isInAction', isInAction)
         if (isInAction) {
           didSet = true
         } else {
@@ -637,12 +635,12 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
     if (!getters) {
       return
     }
-    getters.forEach((gk) => {
+    for (const gk of getters) {
       getCache.delete(gk)
       if (depsToGetter.has(gk)) {
         clearGetterCache(gk)
       }
-    })
+    }
   }
 
   return proxiedStore

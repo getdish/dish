@@ -2389,7 +2389,7 @@ __metadata:
     lodash: ^4.17.21
     react: "*"
     react-dom: "*"
-    use-sync-external-store: 0.0.0-experimental-3ee7a004e-20210920
+    use-sync-external-store: 0.0.0-experimental-5b57bc6e3-20210921
   languageName: unknown
   linkType: soft
 
@@ -5633,7 +5633,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^8.0.0":
+"@testing-library/dom@npm:^8.5.0":
   version: 8.5.0
   resolution: "@testing-library/dom@npm:8.5.0"
   dependencies:
@@ -5649,16 +5649,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@https://pkg.csb.dev/testing-library/react-testing-library/commit/0e2cf7da/@testing-library/react#.tgz":
-  version: 0.0.0-semantically-released
-  resolution: "@testing-library/react@https://pkg.csb.dev/testing-library/react-testing-library/commit/0e2cf7da/@testing-library/react#.tgz"
+"@testing-library/react@npm:13.0.0-alpha.1":
+  version: 13.0.0-alpha.1
+  resolution: "@testing-library/react@npm:13.0.0-alpha.1"
   dependencies:
     "@babel/runtime": ^7.12.5
-    "@testing-library/dom": ^8.0.0
+    "@testing-library/dom": ^8.5.0
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: bd19be480709aa16292c18e03c95ff6d89f7ed094c80fcc0e922eae9ff5767f01344536d4e06c1583cbe752cf5c4152b187862d25c155af5a1db53c9f785076e
+  checksum: 9028528156ef03549d44b27b9f49fb3efb1f532488268c49dc532db20b6b2bebf34c5a0ea6bee2df695173990299ca9cc236407af3887287caadcc58f948150c
   languageName: node
   linkType: hard
 
@@ -26119,12 +26119,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:0.0.0-experimental-3ee7a004e-20210920":
-  version: 0.0.0-experimental-3ee7a004e-20210920
-  resolution: "use-sync-external-store@npm:0.0.0-experimental-3ee7a004e-20210920"
+"use-sync-external-store@npm:0.0.0-experimental-5b57bc6e3-20210921":
+  version: 0.0.0-experimental-5b57bc6e3-20210921
+  resolution: "use-sync-external-store@npm:0.0.0-experimental-5b57bc6e3-20210921"
   peerDependencies:
-    react: 0.0.0-experimental-3ee7a004e-20210920
-  checksum: 5fb45a934d11483236e1258fcdee223b054ec70e475577fd067c85e1860f34da69b029a7decea24e502f4faea746d2a758270011188697c9fc71f695e3a458b8
+    react: 0.0.0-experimental-5b57bc6e3-20210921
+  checksum: 44d3660851d7b907891db77d3fef779885079908224436ea8e015a136eab5e268a867eb7897e21154791d24472b4e2344c68cf3234349987d0aeff39af4dc503
   languageName: node
   linkType: hard
 

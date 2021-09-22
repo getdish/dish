@@ -1,7 +1,7 @@
 import { UNWRAP_PROXY } from './constants'
 import { isEqualSubsetShallow } from './isEqualShallow'
 import { Store } from './Store'
-import { setIsInReaction } from '.'
+import { setIsInReaction } from './useStore'
 
 const dispose = (d: any) => {
   if (typeof d === 'function') {

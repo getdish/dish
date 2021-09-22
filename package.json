@@ -88,7 +88,7 @@
     "react-fetch": "0.0.0-experimental-3ee7a004e-20210920",
     "react-refresh": "0.0.0-experimental-5b57bc6e3-20210921",
     "react-test-renderer": "0.0.0-experimental-5b57bc6e3-20210921",
-    "@testing-library/react": "https://pkg.csb.dev/testing-library/react-testing-library/commit/0e2cf7da/@testing-library/react#.tgz",
+    "@testing-library/react": "13.0.0-alpha.1",
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.1",
     "fs-extra": "10.0.0",
     "react-native": "0.64.2",

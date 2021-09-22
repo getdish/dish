@@ -44,7 +44,9 @@ export class Store<Props extends Object | null = null> {
     this._version = (this._version + 1) % Number.MAX_SAFE_INTEGER
     // this can't be wholesale...
     // startTransition(() => {
-    this._listeners.forEach((cb) => cb())
+    for (const cb of this._listeners) {
+      cb()
+    }
     // })
   }
 

@@ -238,7 +238,7 @@ export const ListItemContentMinimal = memo(
 
             <VStack flex={1} />
 
-            <HStack paddingTop={5} alignItems="center" spacing="sm">
+            <HStack alignItems="center" spacing="sm">
               {!isFocused && !!editable && (
                 <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
               )}
@@ -270,16 +270,16 @@ export const ListItemContentMinimal = memo(
             marginTop={-30}
             marginBottom={-30}
             display={media.sm ? 'none' : 'flex'}
-            marginRight={-215}
-            x={-50}
+            marginRight={-200}
+            x={-60}
           >
             <RestaurantPhotosRow
               restaurant={restaurant}
-              // spacing="md"
+              // spacing="xxl"
               floating
-              max={3}
-              width={130}
-              height={140}
+              max={2}
+              width={100}
+              height={120}
             />
           </VStack>
         </HStack>

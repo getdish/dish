@@ -175,8 +175,8 @@ function CommentBubbleContents({
     </>
   )
 
-  const circleSize = 44
-  const extImgSize = 38
+  const circleSize = size === 'lg' ? 52 : 44
+  const extImgSize = size === 'lg' ? 44 : 38
   const charSize = 22
   // const colors = getColorsForName(`${name}`)
 
@@ -194,6 +194,7 @@ function CommentBubbleContents({
             <VStack
               width={circleSize}
               height={circleSize}
+              marginVertical={size === 'lg' ? -4 : 0}
               borderRadius={100}
               backgroundColor={backgroundColor}
               alignItems="center"
@@ -244,7 +245,9 @@ function CommentBubbleContents({
                     pointerEvents="auto"
                     ellipse
                   >
-                    <Text fontSize={16}>{name}</Text>
+                    <Text color={theme.color} fontSize={size === 'lg' ? 18 : 14} fontWeight="800">
+                      {name}
+                    </Text>
                   </Link>
                 )}
               </VStack>

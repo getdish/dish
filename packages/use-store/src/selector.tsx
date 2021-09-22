@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { UNWRAP_PROXY } from './constants'
 import { isEqualSubsetShallow } from './isEqualShallow'
-import { subscribe, trackStoresAccess } from './useStore'
-import { setIsInReaction } from '.'
+import { setIsInReaction, trackStoresAccess } from './useStore'
 
 // TODO i think we can just replace reaction() with this, its not worse in any way
 
@@ -122,7 +121,7 @@ function runStoreSelector<A>(selector: () => A): { value: A; stores: Set<any> } 
 function subscribeToStores(stores: any[], onUpdate: () => any) {
   const disposes: Function[] = []
   for (const store of stores) {
-    disposes.push(subscribe(store, onUpdate))
+    disposes.push(store.subscribe(onUpdate))
   }
   return () => {
     disposes.forEach((x) => x())
