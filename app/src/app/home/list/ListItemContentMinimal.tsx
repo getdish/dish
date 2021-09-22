@@ -35,6 +35,7 @@ export const ListItemContentMinimal = memo(
       onDelete,
       onUpdate,
       isExternalReview,
+      minimal,
     } = props
     const review = reviewQuery?.[0]
     const media = useMedia()
@@ -87,6 +88,7 @@ export const ListItemContentMinimal = memo(
           paddingVertical={25}
           paddingHorizontal={18}
           paddingLeft={28}
+          backgroundColor={theme.backgroundColor}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
           width="100%"
@@ -137,167 +139,125 @@ export const ListItemContentMinimal = memo(
               </HStack>
             </HStack>
 
-            <HStack spacing="md" alignItems="center" marginTop={media.sm ? -12 : -2}>
-              {!isFocused && !!editable && (
-                <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
-              )}
+            {!minimal && (
+              <HStack spacing="md" alignItems="center" marginTop={media.sm ? -12 : -2}>
+                {!isFocused && !!editable && (
+                  <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
+                )}
 
-              {!isFocused && !!editable && !isEditing && (
-                <SmallButton
-                  tooltip="Write comment"
-                  icon={<PenTool size={14} color="#888" />}
-                  onPress={() => setIsEditing(true)}
-                >
-                  Edit
-                </SmallButton>
-              )}
-
-              {!!editable && isEditing && (
-                <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
-              )}
-
-              {!!restaurant.address && (
-                <RestaurantAddress size={'xs'} address={restaurant.address} />
-              )}
-
-              <HStack marginRight={10}>
-                <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
-              </HStack>
-
-              <VStack opacity={0.5}>
-                <RestaurantRatingView restaurant={restaurant} size={28} />
-              </VStack>
-
-              <Text opacity={0.5} fontSize={14} color={theme.colorTertiary}>
-                {price_range ?? '?'}
-              </Text>
-
-              {!!open.nextTime && (
-                <Link opacity={0.5} name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
-                  <Text
-                    paddingHorizontal={5}
-                    opacity={0.8}
-                    fontSize={13}
-                    color={theme.colorTertiary}
+                {!minimal && !isFocused && !!editable && !isEditing && (
+                  <SmallButton
+                    tooltip="Write comment"
+                    icon={<PenTool size={14} color="#888" />}
+                    onPress={() => setIsEditing(true)}
                   >
-                    {open.nextTime || ''}
-                  </Text>
-                </Link>
-              )}
+                    Edit
+                  </SmallButton>
+                )}
 
-              {!isFocused && (
-                <RestaurantFavoriteButton
-                  backgroundColor="transparent"
-                  size="sm"
-                  borderWidth={0}
-                  opacity={0.5}
-                  restaurantSlug={restaurant.slug || ''}
-                />
-              )}
+                {!!editable && isEditing && (
+                  <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
+                )}
 
-              <Suspense fallback={null}>
-                <RestaurantDeliveryButtons
-                  showLabels={false}
-                  label={false}
-                  restaurantSlug={restaurant.slug || ''}
-                />
-              </Suspense>
-            </HStack>
+                {!!restaurant.address && (
+                  <RestaurantAddress size={'xs'} address={restaurant.address} />
+                )}
 
-            {/* START CONTENT ROW */}
-            <HStack
-              alignItems="center"
-              // below the add comment button
-              zIndex={0}
-              position="relative"
-            >
-              {/* ROW: OVERVIEW */}
-              <VStack
-                maxWidth={media.sm ? '100%' : '100%'}
-                justifyContent="center"
-                flex={1}
-                position="relative"
-              >
+                <HStack marginRight={10}>
+                  <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
+                </HStack>
+
+                <VStack opacity={0.5}>
+                  <RestaurantRatingView restaurant={restaurant} size={28} />
+                </VStack>
+
+                <Text opacity={0.5} fontSize={14} color={theme.colorTertiary}>
+                  {price_range ?? '?'}
+                </Text>
+
+                {!!open.nextTime && (
+                  <Link
+                    opacity={0.5}
+                    name="restaurantHours"
+                    params={{ slug: restaurant.slug || '' }}
+                  >
+                    <Text
+                      paddingHorizontal={5}
+                      opacity={0.8}
+                      fontSize={13}
+                      color={theme.colorTertiary}
+                    >
+                      {open.nextTime || ''}
+                    </Text>
+                  </Link>
+                )}
+
+                {!isFocused && (
+                  <RestaurantFavoriteButton
+                    backgroundColor="transparent"
+                    size="sm"
+                    borderWidth={0}
+                    opacity={0.5}
+                    restaurantSlug={restaurant.slug || ''}
+                  />
+                )}
+
                 <Suspense fallback={null}>
-                  {/* {!isEditing && !review && (
-                      <RestaurantOverallAndTagReviews
-                        borderless
-                        showScoreTable
-                        id={restaurant.slug || ''}
-                        restaurant={restaurant}
-                      />
-                    )} */}
-
-                  {(review || isEditing) && (
-                    <VStack>
-                      <RestaurantReview
-                        size="lg"
-                        marginTop={0}
-                        marginBottom={10}
-                        hideImagesRow
-                        hideTagsRow
-                        expandable={false}
-                        ellipseContentAbove={Infinity}
-                        listTheme="minimal"
-                        isEditing={isEditing}
-                        hideMeta={!isExternalReview}
-                        {...restaurantReviewListProps}
-                        hideRestaurantName
-                        restaurantSlug={restaurant.slug || ''}
-                        review={review}
-                        list={list}
-                        listSlug={props.listSlug}
-                      />
-                    </VStack>
-                  )}
+                  <RestaurantDeliveryButtons
+                    showLabels={false}
+                    label={false}
+                    restaurantSlug={restaurant.slug || ''}
+                  />
                 </Suspense>
-              </VStack>
-            </HStack>
+              </HStack>
+            )}
+
+            {/* ROW: review */}
+            {!minimal && (review || isEditing) && (
+              <Suspense fallback={null}>
+                <VStack className="hide-while-unselectable">
+                  <RestaurantReview
+                    size="lg"
+                    marginTop={0}
+                    marginBottom={10}
+                    hideImagesRow
+                    hideTagsRow
+                    expandable={false}
+                    ellipseContentAbove={Infinity}
+                    listTheme="minimal"
+                    isEditing={isEditing}
+                    hideMeta={!isExternalReview}
+                    {...restaurantReviewListProps}
+                    hideRestaurantName
+                    restaurantSlug={restaurant.slug || ''}
+                    review={review}
+                    list={list}
+                    listSlug={props.listSlug}
+                  />
+                </VStack>
+              </Suspense>
+            )}
             {/* END CONTENT ROW */}
 
             <VStack flex={1} />
 
-            <HStack alignItems="center" spacing="sm">
-              <ReviewTagsRow
-                hideGeneralTags
-                wrapTagsRow
-                list={list}
-                review={review}
-                restaurantSlug={restaurant.slug || ''}
-                onFocusChange={setIsFocused}
-              />
-            </HStack>
+            {!minimal && (
+              <VStack>
+                <HStack alignItems="center" spacing="sm">
+                  <ReviewTagsRow
+                    hideGeneralTags
+                    wrapTagsRow
+                    list={list}
+                    review={review}
+                    restaurantSlug={restaurant.slug || ''}
+                    onFocusChange={setIsFocused}
+                  />
+                </HStack>
 
-            <ReviewImagesRow isEditing={editable} marginTop={20} list={list} review={review} />
-
-            {/* <VStack maxWidth="100%" overflow="hidden">
-              <RestaurantPhotosRow
-                restaurant={restaurant}
-                // spacing="xxl"
-                floating
-                max={5}
-                width={180}
-                height={140}
-              />
-            </VStack> */}
+                <ReviewImagesRow isEditing={editable} marginTop={20} list={list} review={review} />
+              </VStack>
+            )}
           </VStack>
-
-          {/* <VStack
-            marginTop={-30}
-            marginBottom={-30}
-            display={media.sm ? 'none' : 'flex'}
-            marginRight={-200}
-            x={-60}
-          >
-            <RestaurantPhotosRow
-              restaurant={restaurant}
-              // spacing="xxl"
-              floating
-              max={2}
-              width={100}
-              height={120}
-            />
-          </VStack> */}
         </HStack>
       </HoverToZoom>
     )

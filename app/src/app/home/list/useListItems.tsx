@@ -100,8 +100,8 @@ export function useListItems(list?: list) {
         const listRestaurant = items.find((x) => x.restaurantId === restaurantId)
         return mutation.insert_list_restaurant_one({
           object: {
-            // space it out (insert at top = -1)
-            position: -items.length * Math.round((1000 - items.length) * Math.random()),
+            // space it out (insert at bottom)
+            position: items.length * 1000,
             list_id: listId,
             restaurant_id: restaurantId,
             user_id: userStore.user.id,

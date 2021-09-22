@@ -9,6 +9,7 @@ export type ListItemProps = {
   restaurant: restaurant
   listSlug?: string
   hideRate?: boolean
+  minimal?: boolean
   rank: number
   activeTagSlugs?: string[]
   onFinishRender?: Function
