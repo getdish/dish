@@ -1,7 +1,7 @@
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Plus } from '@dish/react-feather'
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import { Home, Plus } from '@dish/react-feather'
+import React, { memo, useState } from 'react'
 import {
   AbsoluteVStack,
   Grid,
@@ -12,11 +12,10 @@ import {
   useDebounceEffect,
 } from 'snackui'
 
-import { cardFrameWidth, cardFrameWidthLg } from '../../constants/constants'
+import { cardFrameWidth } from '../../constants/constants'
 import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
-import { selectTagDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { UseSetAppMapProps, useSetAppMap } from '../AppMap'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
@@ -24,9 +23,7 @@ import { ListCard } from '../views/list/ListCard'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { TitleStyled } from '../views/TitleStyled'
 import { FeedCard } from './FeedCard'
-import { getListPhoto } from './getListPhoto'
 import { homePageStore } from './homePageStore'
-import { HomeRegionTitle } from './HomeRegionTitle'
 
 const getListPlaces = async (listSlug: string) => {
   return await resolved(() =>
@@ -153,87 +150,28 @@ export const HomePageFeed = memo(
           <HStack position="relative">
             <ContentScrollViewHorizontal>
               <HStack alignItems="center" spacing="xl" paddingHorizontal={16}>
-                <HomeRegionTitle />
+                <SlantedTitle alignSelf="center">
+                  <Home size={24} color={'#777'} />
+                </SlantedTitle>
                 {tagLenses.map((lense, i) => {
-                  const list = lenseLists[i]
-                  const listSlug = list?.slug
                   return (
-                    <Link
-                      key={i}
-                      tag={lense}
-                      // {...(list && {
-                      //   name: 'list',
-                      //   params: {
-                      //     slug: list?.slug ?? '',
-                      //     userSlug: list?.user?.username ?? '',
-                      //   },
-                      // })}
-                      // {...(!list && {
-                      //   tag: lense,
-                      // })}
-                    >
-                      {/* <FeedCard
-                          flat
-                          chromeless
-                          size="xs"
-                          // size={foundList?.name ? 'sm' : 'xs'}
-                          square
-                          tags={[lense]}
-                          backgroundColor={rgbString(lense.rgb, 0.2)}
-                          emphasizeTag
-                          {...(!!listSlug && {
-                            photo: getListPhoto(list),
-                            title: list.name,
-                            onHoverIn: async () => {
-                              setHoveredDbc(await getListPlaces(listSlug))
-                            },
-                            onHoverOut: setHoverCancel,
-                          })}
-                        /> */}
-
+                    <Link key={i} tag={lense}>
                       <TitleStyled
                         color={rgbString(lense.rgb)}
-                        fontSize={22}
+                        hoverStyle={{
+                          color: rgbString(lense.rgb, 0.6),
+                        }}
+                        fontSize={24}
                         lineHeight={40}
                         paddingVertical={5}
                       >
                         {lense.icon}
-                        &nbsp;
+                        &nbsp;&nbsp;
                         {lense.name}
                       </TitleStyled>
                     </Link>
                   )
                 })}
-
-                {/* {tagLists.map((list, i) => {
-                  const listSlug = list.slug
-                  const tags = list
-                    .tags({ limit: 2 })
-                    .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
-                    .filter(isPresent)
-                  return (
-                    <VStack alignItems="center" flex={1} key={i}>
-                      <Link tags={tags}>
-                        <FeedCard
-                          flat
-                          chromeless
-                          square
-                          size="xs"
-                          title={list.name}
-                          tags={tags}
-                          // photo={restaurants[i]?.image}
-                          emphasizeTag
-                          {...(!!listSlug && {
-                            onHoverIn: async () => {
-                              setHoveredDbc(await getListPlaces(listSlug))
-                            },
-                            onHoverOut: setHoverCancel,
-                          })}
-                        />
-                      </Link>
-                    </VStack>
-                  )
-                })} */}
               </HStack>
             </ContentScrollViewHorizontal>
           </HStack>
@@ -318,95 +256,3 @@ export const HomePageFeed = memo(
     }
   )
 )
-
-// const restaurants = query
-//   .restaurant({
-//     order_by: [{ upvotes: order_by.desc }],
-//     where: {
-//       image: {
-//         _is_null: false,
-//       },
-//     },
-//     limit: 10,
-//   })
-//   ?.map((r) => ({ image: r.image, name: r.name }))
-
-// const cuisinesQuery = query.tag({
-//   where: {
-//     type: {
-//       _eq: 'country',
-//     },
-//   },
-//   limit: 10,
-// })
-// const cuisines = cuisinesQuery.map(selectTagDishViewSimple)
-// const topCuisines = useTopCuisines(props.item.center || initialLocation.center)
-
-{
-  /* <HStack position="relative">
-                <AbsoluteVStack zIndex={10} top={-10} left={10}>
-                  <SlantedTitle size="xxs">Topics</SlantedTitle>
-                </AbsoluteVStack>
-
-                <ContentScrollViewHorizontal>
-                  <HStack
-                    spacing="xs"
-                    paddingVertical={10}
-                    marginBottom={20}
-                    paddingHorizontal={16}
-                  >
-                    {tagLists.map((list, i) => {
-                      const tags = list
-                        .tags({ limit: 2 })
-                        .map((x) => (x.tag ? selectTagDishViewSimple(x.tag) : null))
-                        .filter(isPresent)
-                      return (
-                        <VStack alignItems="center" flex={1} key={i}>
-                          <Link tags={tags}>
-                            <FeedCard
-                              flat
-                              chromeless
-                              square
-                              size="sm"
-                              title={list.name}
-                              tags={tags}
-                              photo={restaurants[i]?.image}
-                              emphasizeTag
-                            />
-                          </Link>
-                        </VStack>
-                      )
-                    })}
-                    {!tagLists.length &&
-                      tagDefaultAutocomplete.map((tag, i) => (
-                        <VStack alignItems="center" flex={1} key={i}>
-                          <Link tag={tag}>
-                            <FeedCard flat chromeless square tags={[tag]} emphasizeTag />
-                          </Link>
-                        </VStack>
-                      ))}
-                  </HStack>
-                </ContentScrollViewHorizontal>
-              </HStack> */
-}
-
-// getting from search we'd want this in graph
-// const [lenseRestaurants, setLenseRestaurants] = useState<RestaurantSe/archItem[]>([])
-// console.warn('TODO link to hover lense button etc', lenseRestaurants)
-// useDebounceEffect(
-//   () => {
-//     const { currentState } = homeStore
-//     search({
-//       center: currentState.center!,
-//       span: currentState.span!,
-//       query: '',
-//       limit: 20,
-//       main_tag: 'lenses__gems',
-//     }).then((res) => {
-//       console.warn('res', res)
-//       setLenseRestaurants(res.restaurants || [])
-//     })
-//   },
-//   100,
-//   []
-// )

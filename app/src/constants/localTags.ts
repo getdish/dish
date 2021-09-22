@@ -191,7 +191,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🍷',
     slug: 'lenses__drinks',
-    rgb: ['163', ' 90', ' 90'],
+    rgb: ['153', ' 75', ' 75'],
   },
   {
     id: '5da93fbe-5715-43b4-8b15-6521e3897bd9',
@@ -199,7 +199,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🌃',
     slug: 'lenses__vibe',
-    rgb: ['30', ' 83', ' 141'],
+    rgb: ['50', ' 93', ' 161'],
   },
   {
     id: '4768116c-bca3-4936-970b-5f2570a9e8f8',

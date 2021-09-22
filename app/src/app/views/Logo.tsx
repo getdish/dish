@@ -10,8 +10,15 @@ import {
   logoXsHeight,
   logoXsWidth,
 } from '../../constants/constants'
+import { TitleStyled } from './TitleStyled'
 
 export const LogoColor = ({ scale = 1, color }: { scale?: number; color?: string }) => {
+  // return (
+  //   <TitleStyled fontSize={scale * 40} padding={20 * scale}>
+  //     dish
+  //   </TitleStyled>
+  // )
+
   return (
     <Svg
       width={logoSmWidth * scale}

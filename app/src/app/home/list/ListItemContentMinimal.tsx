@@ -1,8 +1,8 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import { MessageSquare, PenTool, Upload, X } from '@dish/react-feather'
+import { PenTool, X } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Circle, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
+import { Circle, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { green, red } from '../../../constants/colors'
 import { Link } from '../../views/Link'
@@ -14,12 +14,11 @@ import { RestaurantAddress } from '../restaurant/RestaurantAddress'
 import { RestaurantDeliveryButtons } from '../restaurant/RestaurantDeliveryButtons'
 import { openingHours, priceRange } from '../restaurant/RestaurantDetailRow'
 import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton'
-import { RestaurantPhotosRow } from '../restaurant/RestaurantPhotosRow'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
+import { ReviewImagesRow } from '../restaurant/ReviewImagesRow'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
 import { RestaurantRatingView } from '../RestaurantRatingView'
-import { Column } from './Column'
 import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 
@@ -138,13 +137,31 @@ export const ListItemContentMinimal = memo(
               </HStack>
             </HStack>
 
-            <HStack spacing="lg" alignItems="center" marginTop={media.sm ? -12 : -4} marginLeft={0}>
-              <HStack alignItems="center">
-                <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
+            <HStack spacing="md" alignItems="center" marginTop={media.sm ? -12 : -2}>
+              {!isFocused && !!editable && (
+                <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
+              )}
 
-                {!!restaurant.address && (
-                  <RestaurantAddress size={'xs'} address={restaurant.address} />
-                )}
+              {!isFocused && !!editable && !isEditing && (
+                <SmallButton
+                  tooltip="Write comment"
+                  icon={<PenTool size={14} color="#888" />}
+                  onPress={() => setIsEditing(true)}
+                >
+                  Edit
+                </SmallButton>
+              )}
+
+              {!!editable && isEditing && (
+                <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
+              )}
+
+              {!!restaurant.address && (
+                <RestaurantAddress size={'xs'} address={restaurant.address} />
+              )}
+
+              <HStack marginRight={10}>
+                <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
               </HStack>
 
               <VStack opacity={0.5}>
@@ -217,8 +234,8 @@ export const ListItemContentMinimal = memo(
                         size="lg"
                         marginTop={0}
                         marginBottom={10}
+                        hideImagesRow
                         hideTagsRow
-                        wrapTagsRow
                         expandable={false}
                         ellipseContentAbove={Infinity}
                         listTheme="minimal"
@@ -241,22 +258,6 @@ export const ListItemContentMinimal = memo(
             <VStack flex={1} />
 
             <HStack alignItems="center" spacing="sm">
-              {!isFocused && !!editable && (
-                <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
-              )}
-
-              {!isFocused && !!editable && !isEditing && (
-                <SmallButton
-                  tooltip="Write comment"
-                  icon={<PenTool size={14} color="#888" />}
-                  onPress={() => setIsEditing(true)}
-                />
-              )}
-
-              {!!editable && isEditing && (
-                <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
-              )}
-
               <ReviewTagsRow
                 hideGeneralTags
                 wrapTagsRow
@@ -267,7 +268,9 @@ export const ListItemContentMinimal = memo(
               />
             </HStack>
 
-            <VStack maxWidth="100%" overflow="hidden">
+            <ReviewImagesRow isEditing={editable} marginTop={20} list={list} review={review} />
+
+            {/* <VStack maxWidth="100%" overflow="hidden">
               <RestaurantPhotosRow
                 restaurant={restaurant}
                 // spacing="xxl"
@@ -276,7 +279,7 @@ export const ListItemContentMinimal = memo(
                 width={180}
                 height={140}
               />
-            </VStack>
+            </VStack> */}
           </VStack>
 
           {/* <VStack

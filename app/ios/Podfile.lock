@@ -35,7 +35,7 @@ PODS:
   - ExpoModulesCore/Interfaces (0.2.0):
     - ExpoModulesCore/Core
     - UMCore
-  - EXScreenOrientation (2.1.0):
+  - EXScreenOrientation (3.2.1):
     - React-Core
     - UMCore
   - EXSplashScreen (0.11.2):
@@ -393,7 +393,7 @@ PODS:
     - SDWebImageWebPCoder (~> 0.6.1)
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNReanimated (2.2.0):
+  - RNReanimated (2.3.0-alpha.3):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -703,7 +703,7 @@ SPEC CHECKSUMS:
   EXLinearGradient: ffc008d7ddcce356534cfdf9bd7fbcdedec4c438
   EXPermissions: 17d4846ad1880f6891c74ae58ca1acb43e47ed47
   ExpoModulesCore: 2734852616127a6c1fc23012197890a6f3763dc7
-  EXScreenOrientation: 74ec9be3963b613eb37730d41ef0954e014b08ff
+  EXScreenOrientation: d94f791c7ade3639352f34fcf5353f7c554b7d69
   EXSplashScreen: 6208ca88470ff5979fd49a08ef3feb01143a2b79
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
   FBReactNativeSpec: 8cc7c75b7b4ae4232c074e011ece5332197fe2ae
@@ -749,7 +749,7 @@ SPEC CHECKSUMS:
   ReactCommon: 149906e01aa51142707a10665185db879898e966
   RNFastImage: a7384db75df352500261e8e8f1ac2026def26102
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNReanimated: 9c13c86454bfd54dab7505c1a054470bfecd2563
+  RNReanimated: 8df8a4f5fb1ae48b8378ad4bbc38e47ae0c41e9f
   RNSentry: 68644ef607b780551cc555f084869764f2566652
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
