@@ -1,10 +1,11 @@
 import { series, sleep } from '@dish/async'
 import { List, getUserName, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
-import { Move, Plus, Trash, X } from '@dish/react-feather'
+import { List as ListIcon, Move, Plus, Trash, X } from '@dish/react-feather'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Pressable, Switch } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
+import { FlatList } from 'react-native-gesture-handler'
 import {
   AbsoluteVStack,
   Button,
@@ -155,6 +156,7 @@ const ListPageContent = memo(
       const user = useUserStore()
       const isMyList = userStore.isAdmin || props.item.userSlug === slugify(user.user?.username)
       const isEditing = props.item.state === 'edit'
+      const [isSorting, setIsSorting] = useState(false)
       const [showAddModal, setShowAddModal] = useState(false)
       const draft = useRef<Partial<List>>({})
       const { list, isFavorited, toggleFavorite, reviewsCount, refetch } = useListFavorite({
@@ -334,7 +336,7 @@ const ListPageContent = memo(
             )}
           </CommentBubble>
 
-          {isMyList && (
+          {isMyList && isSorting && (
             <HStack spacing alignSelf="center">
               <Move size={16} color={colors.color} />
               <Paragraph opacity={0.6} size="sm">
@@ -487,6 +489,7 @@ const ListPageContent = memo(
               listTheme={listTheme}
               restaurant={restaurant}
               listSlug={listSlug}
+              minimal={isSorting}
               rank={index + 1}
               hideRate
               editable={isEditing || isMyList}
@@ -505,6 +508,16 @@ const ListPageContent = memo(
 
           return (
             <Pressable
+              style={
+                isActive
+                  ? {
+                      shadowColor: '#000',
+                      shadowRadius: 10,
+                      shadowOffset: { height: 4, width: 0 },
+                      shadowOpacity: 0.2,
+                    }
+                  : null
+              }
               // style={{
               //   // height: 100,
               //   // backgroundColor: isActive ? 'red' : undefined,
@@ -516,8 +529,10 @@ const ListPageContent = memo(
             </Pressable>
           )
         },
-        [isMyList, isEditing, listTheme]
+        [isMyList, isEditing, isSorting, listTheme]
       )
+
+      const ListViewElement = isSorting ? DraggableFlatList : FlatList
 
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
@@ -578,11 +593,20 @@ const ListPageContent = memo(
                 </FavoriteButton>
 
                 {isMyList && !isEditing && (
-                  <HStack alignItems="center" flexWrap="wrap" spacing>
-                    <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
-                      Edit
-                    </SmallButton>
-                  </HStack>
+                  <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
+                    Edit
+                  </SmallButton>
+                )}
+
+                {isMyList && (
+                  <SmallButton
+                    icon={isSorting ? null : <ListIcon size={16} color="#888" />}
+                    elevation={1}
+                    theme={isSorting ? 'active' : null}
+                    onPress={() => setIsSorting((x) => !x)}
+                  >
+                    {isSorting ? 'Done' : 'Sort'}
+                  </SmallButton>
                 )}
 
                 {isEditing && (
@@ -643,11 +667,25 @@ const ListPageContent = memo(
                 )}
 
                 <VStack flex={1}>
-                  <DraggableFlatList
+                  <ListViewElement
                     keyExtractor={(item, index) => `draggable-item-${item?.key}-${isMyList}`}
+                    disableVirtualization
                     data={listItems.items}
                     renderItem={renderItem}
-                    onDragEnd={listItems.sort}
+                    onDragBegin={() => {
+                      console.log('do')
+                      if (isWeb) {
+                        window.getSelection?.()?.empty?.()
+                        window.getSelection?.()?.removeAllRanges?.()
+                        document.body.classList.add('unselectable-all')
+                      }
+                    }}
+                    onDragEnd={(items) => {
+                      listItems.sort(items)
+                      if (isWeb) {
+                        document.body.classList.remove('unselectable-all')
+                      }
+                    }}
                   />
                 </VStack>
 
