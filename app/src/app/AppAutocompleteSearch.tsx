@@ -187,8 +187,39 @@ function searchAutocomplete(
       ...searchTags(searchQuery),
       ...searchRestaurants(searchQuery, center, span),
       ...searchCuisines(searchQuery),
+      ...searchUsers(searchQuery),
     ]
   })
+}
+
+function searchUsers(searchQuery: string) {
+  return query
+    .user({
+      where: {
+        _or: [
+          {
+            name: {
+              _ilike: searchQuery,
+            },
+          },
+          {
+            username: {
+              _ilike: searchQuery,
+            },
+          },
+        ],
+      },
+      limit: 3,
+    })
+    .map((r) => {
+      return createAutocomplete({
+        name: r.name || r.username || '',
+        type: 'user',
+        icon: r.avatar || '',
+        description: r.username,
+        slug: r.username || '',
+      })
+    })
 }
 
 function searchCuisines(searchQuery: string) {
