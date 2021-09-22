@@ -23,12 +23,13 @@ import { RestaurantReview, RestaurantReviewProps } from './RestaurantReview'
 //                   })}
 
 export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
+  const { review, onEdit, onDelete } = props
   const [user] = useCurrentUserQuery()
   const [reviewText, setReviewText] = useStateSynced('')
   const [isSaved, setIsSaved] = useState(false)
   // const [height, setHeight] = useState(lineHeight)
 
-  const { review, onEdit, onDelete } = props
+  console.log('review?.text', review?.text)
 
   useEffect(() => {
     if (review?.text) {

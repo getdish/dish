@@ -1,10 +1,9 @@
 - fix:
-    - list edit review refetch
     - delete tag rating
-    - edit review fix not populating
     - profile edit image/avatar/name
     - add to list insert at bottom not top
     - drag to sort needs some fixes
+    - fix scroll to top to pull down transition
 
 - lists need a way to change the slug since we auto-generate it first. it should probably just do it one time, so need to track that in db (or some other way?).
 
