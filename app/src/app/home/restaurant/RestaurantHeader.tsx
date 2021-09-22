@@ -125,7 +125,7 @@ const RestaurantHeaderContent = memo(
                   <HStack>
                     <Text
                       className="font-title"
-                      backgroundColor="rgba(0,0,0,0.6)"
+                      backgroundColor={theme.backgroundColorTransluscent}
                       paddingHorizontal={10}
                       color={theme.color}
                       alignSelf="flex-start"

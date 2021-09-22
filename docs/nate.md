@@ -1,5 +1,4 @@
 - fix:
-    - drag drawer from bottom ipad
     - list description
     - list edit review refetch
     - delete tag rating
