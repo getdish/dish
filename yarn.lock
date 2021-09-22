@@ -2114,7 +2114,7 @@ __metadata:
     execa: ^5.0.0
     fast-glob: ^3.2.5
     fs-extra: ^9.1.0
-    rollup-plugin-flat-dts: ^1.2.4
+    rollup-plugin-flat-dts: ^1.3.0
     typescript: ^4.2.4
   bin:
     esdx: esdx.js
@@ -12429,12 +12429,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-screen-orientation@npm:3.2.1":
-  version: 3.2.1
-  resolution: "expo-screen-orientation@npm:3.2.1"
+"expo-screen-orientation@npm:3.3.0":
+  version: 3.3.0
+  resolution: "expo-screen-orientation@npm:3.3.0"
   dependencies:
     "@expo/config-plugins": ^3.0.0
-  checksum: f5e995ecfe46368d80de3bd6c9186386a7f5e891a9d5b00189de20594d89d82c714d6a81889bf339ce710faf6702a66d8b9e00cf97915b07e854c2d69f0e557d
+  checksum: 307a78cde08da2d048eda204b3e9206dce21172fa1917189962fcd2fcd5617fa4696140c317f1a1fd06021375d4622bc77b476d179893411b18fa2126af15795
   languageName: node
   linkType: hard
 
@@ -22843,20 +22843,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-flat-dts@npm:^1.2.4":
-  version: 1.2.4
-  resolution: "rollup-plugin-flat-dts@npm:1.2.4"
+"rollup-plugin-flat-dts@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "rollup-plugin-flat-dts@npm:1.3.0"
   dependencies:
     is-glob: ^4.0.1
     micromatch: ^4.0.4
     source-map: ^0.7.3
   peerDependencies:
-    rollup: ^2.56.2
-    typescript: 4.1.5 - 4.4
+    rollup: ^2.56.3
+    typescript: 4.3.5 - 4.5
   peerDependenciesMeta:
     rollup:
       optional: true
-  checksum: 0b1970d71963b3bc3d441869a5527e508d7941fdb72e9bfd287e219c391a84b384b9e09174127699cbc0bb1270ae352811165a0730362ffae78b20354e4fa199
+  checksum: bab874f222fdde92ba7ec46084c5281a1254a70ddca8706a313f761d6bb2cc546291aa6b632955daeba83a88796eac76f58c3d30fad30ae3fbd855a1c720c62e
   languageName: node
   linkType: hard
 

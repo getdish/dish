@@ -68,9 +68,8 @@ export default memo(function SearchPage(props: SearchProps) {
   const { title } = getTitleForState(state, {
     lowerCase: true,
   })
-  const route = useLastValueWhen<HistoryItem<'search'>>(
-    // @ts-expect-error
-    () => router.curPage,
+  const route = useLastValueWhen(
+    () => router.curPage as HistoryItem<'search'>,
     router.curPage.name !== 'search'
   )
 

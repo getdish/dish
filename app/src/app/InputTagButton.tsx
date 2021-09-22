@@ -13,14 +13,6 @@ export const InputTagButton = (props: TagButtonProps & { isActive?: boolean }) =
       size="sm"
       closable
       subtleIcon
-      // color="#222"
-      // backgroundColor="#fff"
-      // hoverStyle={{
-      //   backgroundColor: '#ffffffee',
-      // }}
-      // pressStyle={{
-      //   backgroundColor: '#ffffff99',
-      // }}
       elevation={1}
       hideRating
       hideRank

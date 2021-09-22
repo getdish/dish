@@ -77,8 +77,7 @@ export const useIsRouteActive = (...names: DRouteName[]) => {
 export const useRoute = <N extends DRouteName>(name: N): HistoryItem<N> => {
   return useStoreInstanceSelector(
     router,
-    (router) => (router.curPage.name === name ? router.curPage : null) as HistoryItem<N>,
-    [name]
+    (router) => (router.curPage.name === name ? router.curPage : null) as HistoryItem<N>
   )
 }
 

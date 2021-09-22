@@ -2,15 +2,15 @@
   "name": "@dish/fast-compare",
   "version": "2.7.6",
   "description": "none",
-  "types": "types.d.ts",
+  "types": "types",
   "publishConfig": {
     "access": "public"
   },
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch"
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy"
   },
   "devDependencies": {
     "@dish/esdx": "*"
