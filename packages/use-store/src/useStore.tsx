@@ -618,7 +618,6 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         if (process.env.NODE_ENV === 'development' && DebugStores.has(constr)) {
           console.log('SET...', { key, value, isInAction })
         }
-        console.log('isInAction', isInAction)
         if (isInAction) {
           didSet = true
         } else {

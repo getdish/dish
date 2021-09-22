@@ -13,7 +13,7 @@ export const defaultLenseColor = {
 
 export const defaultLenseColorDark = {
   name: 'dark',
-  rgb: [20, 20, 20, 1] as RGB,
+  rgb: [0, 0, 0, 1] as RGB,
 }
 
 const lenseColors = {

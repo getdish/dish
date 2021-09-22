@@ -5,7 +5,7 @@ const colorSetSize = lightColors.length
 export const listColors = [...lightColors, ...Colors.colors400, ...Colors.colors600]
 
 export const getIsListColorLight = (index?: number | null) => {
-  return (index || 100) > lightColors.length
+  return (index || 100) < lightColors.length
 }
 
 export function getListColors(index: number | null = colorSetSize) {
@@ -13,7 +13,7 @@ export function getListColors(index: number | null = colorSetSize) {
   const colorOffset = index % colorSetSize
   const backgroundColor = listColors[index ?? 0] ?? Colors.grey
   const isLight = getIsListColorLight(index)
-  const darkColor = Colors.colors100[colorOffset]
+  const darkColor = Colors.colors50[colorOffset]
   const lightColor = Colors.colors600[colorOffset]
   const color = (isLight ? darkColor : lightColor) ?? '#cccccc'
   return {

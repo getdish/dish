@@ -22,9 +22,11 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
 import { SlantedTitle } from '../views/SlantedTitle'
+import { TitleStyled } from '../views/TitleStyled'
 import { FeedCard } from './FeedCard'
 import { getListPhoto } from './getListPhoto'
 import { homePageStore } from './homePageStore'
+import { HomeRegionTitle } from './HomeRegionTitle'
 
 const getListPlaces = async (listSlug: string) => {
   return await resolved(() =>
@@ -150,26 +152,27 @@ export const HomePageFeed = memo(
         <>
           <HStack position="relative">
             <ContentScrollViewHorizontal>
-              <HStack spacing="xs" paddingHorizontal={16}>
+              <HStack alignItems="center" spacing="xl" paddingHorizontal={16}>
+                <HomeRegionTitle />
                 {tagLenses.map((lense, i) => {
                   const list = lenseLists[i]
                   const listSlug = list?.slug
                   return (
-                    <VStack alignItems="center" flex={1} key={i} marginBottom={20}>
-                      <Link
-                        tag={lense}
-                        // {...(list && {
-                        //   name: 'list',
-                        //   params: {
-                        //     slug: list?.slug ?? '',
-                        //     userSlug: list?.user?.username ?? '',
-                        //   },
-                        // })}
-                        // {...(!list && {
-                        //   tag: lense,
-                        // })}
-                      >
-                        <FeedCard
+                    <Link
+                      key={i}
+                      tag={lense}
+                      // {...(list && {
+                      //   name: 'list',
+                      //   params: {
+                      //     slug: list?.slug ?? '',
+                      //     userSlug: list?.user?.username ?? '',
+                      //   },
+                      // })}
+                      // {...(!list && {
+                      //   tag: lense,
+                      // })}
+                    >
+                      {/* <FeedCard
                           flat
                           chromeless
                           size="xs"
@@ -186,13 +189,23 @@ export const HomePageFeed = memo(
                             },
                             onHoverOut: setHoverCancel,
                           })}
-                        />
-                      </Link>
-                    </VStack>
+                        /> */}
+
+                      <TitleStyled
+                        color={rgbString(lense.rgb)}
+                        fontSize={22}
+                        lineHeight={40}
+                        paddingVertical={5}
+                      >
+                        {lense.icon}
+                        &nbsp;
+                        {lense.name}
+                      </TitleStyled>
+                    </Link>
                   )
                 })}
 
-                {tagLists.map((list, i) => {
+                {/* {tagLists.map((list, i) => {
                   const listSlug = list.slug
                   const tags = list
                     .tags({ limit: 2 })
@@ -220,10 +233,12 @@ export const HomePageFeed = memo(
                       </Link>
                     </VStack>
                   )
-                })}
+                })} */}
               </HStack>
             </ContentScrollViewHorizontal>
           </HStack>
+
+          <Spacer size="xl" />
 
           <VStack paddingHorizontal={10} position="relative">
             <AbsoluteVStack zIndex={100} top={-15} left={10}>
@@ -238,7 +253,7 @@ export const HomePageFeed = memo(
                     alignItems="center"
                     flexShrink={0}
                     key={`${list.id ?? i}`}
-                    marginBottom={10}
+                    marginBottom={5}
                   >
                     <Spacer size="xxs" />
                     <ListCard
@@ -267,7 +282,7 @@ export const HomePageFeed = memo(
                     alignItems="center"
                     flex={1}
                     key={index}
-                    marginBottom={10}
+                    marginBottom={5}
                   >
                     <Link
                       promptLogin

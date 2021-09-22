@@ -55,13 +55,13 @@ const RestaurantHeaderContent = memo(
       // const { width, drawerWidth, minWidth, setWidthDebounce } = useContentScrollHorizontalFitter()
       const scale = 1
       // const scale = width < 601 ? 0.7 : drawerWidth < 700 ? 0.85 : 1
-      const fontScale = size === 'sm' ? 1 : 1.5
+      const fontScale = size === 'sm' ? 0.8 : 1.5
       const fontSizeBase =
         nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 24 : nameLen > 16 ? 26 : 32
       const fontSize = Math.round(scale * fontSizeBase * fontScale)
-      const restaurantId = restaurant.id
+      // const restaurantId = restaurant.id
       const [hasScrolled, setHasScrolled] = useState(false)
-      const colors = useColorsFor(restaurantSlug)
+      // const colors = useColorsFor(restaurantSlug)
       const theme = useTheme()
 
       const content = (
@@ -124,10 +124,13 @@ const RestaurantHeaderContent = memo(
                   /> */}
                   <HStack>
                     <Text
+                      className="font-title"
+                      backgroundColor="rgba(0,0,0,0.6)"
+                      paddingHorizontal={10}
                       color={theme.color}
                       alignSelf="flex-start"
                       selectable
-                      letterSpacing={-1.5}
+                      letterSpacing={-1}
                       fontSize={fontSize}
                       fontWeight="900"
                     >
@@ -141,6 +144,7 @@ const RestaurantHeaderContent = memo(
 
               <AbsoluteVStack fullscreen left="45%">
                 <RestaurantPhotosRow
+                  slanted
                   restaurant={restaurant}
                   spacing="md"
                   floating

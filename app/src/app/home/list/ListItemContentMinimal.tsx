@@ -7,6 +7,7 @@ import { Circle, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snacku
 import { green, red } from '../../../constants/colors'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
+import { TitleStyled } from '../../views/TitleStyled'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
 import { RankView } from '../restaurant/RankView'
 import { RestaurantAddress } from '../restaurant/RestaurantAddress'
@@ -56,7 +57,7 @@ export const ListItemContentMinimal = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 26 : 30) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 26 : 32) * titleFontScale)
     const theme = useTheme()
 
     const restaurantReviewListProps = useRestaurantReviewListProps({
@@ -84,7 +85,7 @@ export const ListItemContentMinimal = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <HStack
-          paddingVertical={18}
+          paddingVertical={25}
           paddingHorizontal={18}
           paddingLeft={28}
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
@@ -93,7 +94,7 @@ export const ListItemContentMinimal = memo(
           overflow="hidden"
           flex={1}
         >
-          <VStack flex={1}>
+          <VStack maxWidth="100%" flex={1}>
             <HStack
               className="hover-faded-in-parent"
               alignItems="center"
@@ -120,17 +121,18 @@ export const ListItemContentMinimal = memo(
                     flex={1}
                     overflow="hidden"
                   >
-                    <Text
+                    <TitleStyled
                       fontSize={titleFontSize}
+                      lineHeight={titleFontSize * 1.2}
                       color={theme.color}
-                      fontWeight="400"
-                      letterSpacing={-0.25}
+                      fontWeight="700"
+                      letterSpacing={-0.5}
                       paddingHorizontal={10} // prevents clipping due to letter-spacing
                       ellipse
                       maxWidth="100%"
                     >
                       {restaurantName}
-                    </Text>
+                    </TitleStyled>
                   </HStack>
                 </Link>
               </HStack>
@@ -210,11 +212,11 @@ export const ListItemContentMinimal = memo(
                     )} */}
 
                   {(review || isEditing) && (
-                    <VStack marginTop={10} marginBottom={10} paddingLeft={0} paddingRight={20}>
+                    <VStack>
                       <RestaurantReview
                         size="lg"
-                        marginTop={-18}
-                        marginBottom={-10}
+                        marginTop={0}
+                        marginBottom={10}
                         hideTagsRow
                         wrapTagsRow
                         expandable={false}
@@ -264,9 +266,20 @@ export const ListItemContentMinimal = memo(
                 onFocusChange={setIsFocused}
               />
             </HStack>
+
+            <VStack maxWidth="100%" overflow="hidden">
+              <RestaurantPhotosRow
+                restaurant={restaurant}
+                // spacing="xxl"
+                floating
+                max={5}
+                width={180}
+                height={140}
+              />
+            </VStack>
           </VStack>
 
-          <VStack
+          {/* <VStack
             marginTop={-30}
             marginBottom={-30}
             display={media.sm ? 'none' : 'flex'}
@@ -281,7 +294,7 @@ export const ListItemContentMinimal = memo(
               width={100}
               height={120}
             />
-          </VStack>
+          </VStack> */}
         </HStack>
       </HoverToZoom>
     )

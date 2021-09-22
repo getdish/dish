@@ -21,10 +21,11 @@ import {
   useForceUpdate,
   useMedia,
   useTheme,
+  useThemeName,
 } from 'snackui'
 
 import { grey, red400 } from '../../../constants/colors'
-import { drawerWidthMax } from '../../../constants/constants'
+import { drawerWidthMax, isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { getWindowHeight, getWindowWidth } from '../../../helpers/getWindow'
@@ -48,6 +49,7 @@ import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
+import { TitleStyled } from '../../views/TitleStyled'
 import { StackItemProps } from '../HomeStackView'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { UserAvatar } from '../user/UserAvatar'
@@ -236,10 +238,11 @@ const ListPageContent = memo(
       const nameLen = (list.name || '').length
       const media = useMedia()
       const theme = useTheme()
-      let fontSize = nameLen > 38 ? 26 : nameLen > 30 ? 36 : nameLen > 22 ? 40 : 48
+      let fontSize = 1.5 * (nameLen > 40 ? 26 : nameLen > 30 ? 32 : nameLen > 24 ? 40 : 48)
       if (media.sm) {
         fontSize = fontSize * 0.8
       }
+      fontSize = Math.round(fontSize)
 
       const titleContents = isEditing ? (
         <Input
@@ -266,7 +269,7 @@ const ListPageContent = memo(
       const isMinimal = listTheme === 'minimal'
 
       const userCommentEl = (
-        <VStack width="100%">
+        <VStack width="100%" zIndex={100} position="relative" marginTop={-5}>
           <CommentBubble
             size="lg"
             color={colors.color}
@@ -341,11 +344,18 @@ const ListPageContent = memo(
         </VStack>
       )
 
+      const themeName = useThemeName()
+
       const listHeaderEl = (
         <>
           {/* START HEADER */}
           <VStack paddingHorizontal={10} paddingBottom={5} position="relative">
-            <AbsoluteVStack fullscreen zIndex={-1} backgroundColor={colors.color} opacity={0.1} />
+            <AbsoluteVStack
+              fullscreen
+              zIndex={-1}
+              backgroundColor={themeName === 'dark' ? colors.lightColor : colors.darkColor}
+              opacity={0.1}
+            />
             <HStack paddingHorizontal={20}>
               <VStack
                 // maxWidth={660}
@@ -355,30 +365,23 @@ const ListPageContent = memo(
                 width="100%"
                 flex={1}
               >
-                <VStack minHeight={90} flex={1} />
-                <Title
-                  color={colors.backgroundColor}
-                  lineHeight={fontSize * 1.4}
-                  fontWeight="800"
-                  fontSize={fontSize}
-                  {...(isEditing && {
-                    width: '100%',
-                  })}
-                >
-                  {titleContents} <Text opacity={0.5}>{locationName || ''}</Text>
-                </Title>
+                <VStack minHeight={55} flex={1} />
+                <VStack display={isWeb ? 'block' : 'flex'}>
+                  <TitleStyled
+                    backgroundColor={colors.backgroundColor}
+                    color={colors.isLight ? '#000' : '#fff'}
+                    lineHeight={fontSize * 1.4}
+                    fontWeight="800"
+                    fontSize={fontSize}
+                    {...(isEditing && {
+                      width: '100%',
+                    })}
+                  >
+                    {titleContents}
+                  </TitleStyled>
+                </VStack>
                 {userCommentEl}
               </VStack>
-
-              {/* <VStack width={380} marginRight={-180}>
-                    <RestaurantPhotosRow
-                      height={270}
-                      width={200}
-                      floating
-                      restaurant={listItems.items[0].restaurant}
-                      max={2}
-                    />
-                  </VStack> */}
             </HStack>
 
             {isMyList && isEditing && (
@@ -566,16 +569,14 @@ const ListPageContent = memo(
             </Modal>
           )}
 
-          {listTheme === 'modern' ? listHeaderEl : null}
-
-          <ContentScrollView bidirectional={listTheme === 'modern'} id="list">
+          <ContentScrollView id="list">
             <>
               <PaneControlButtonsLeft>
                 <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
                   {reviewsCount}
                 </FavoriteButton>
 
-                {!isEditing && (
+                {isMyList && !isEditing && (
                   <HStack alignItems="center" flexWrap="wrap" spacing>
                     <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
                       Edit

@@ -37,6 +37,7 @@ import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
+import { TitleStyled } from '../../views/TitleStyled'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
@@ -311,7 +312,7 @@ const UserPageContent = memo(
               {!pane && !!lists.length && (
                 <VStack position="relative">
                   <AbsoluteVStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="xs">Lists</SlantedTitle>
+                    <SlantedTitle size="xs">Playlists</SlantedTitle>
                   </AbsoluteVStack>
                   <CardCarousel>
                     {lists.map((list, i) => {
@@ -434,9 +435,9 @@ const UserHeader = memo(
                 <UserAvatar size={160} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
               </VStack>
               <VStack flex={1}>
-                <ParagraphSkeleton size="xxxxl" paddingRight={30}>
+                <TitleStyled size="xxxxl" paddingRight={30}>
                   {user.name || user.username}
-                </ParagraphSkeleton>
+                </TitleStyled>
                 <Spacer size="xl" />
                 <HStack>
                   <Paragraph opacity={0.5}>{user.username}</Paragraph>

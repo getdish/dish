@@ -377,8 +377,9 @@ const RestaurantListItemContent = memo(
                 flex={1}
                 zIndex={100}
                 paddingHorizontal={20}
+                opacity={0.65}
                 {...(media.notSm && {
-                  y: -10,
+                  y: -12,
                 })}
               >
                 {/* ROW: OVERVIEW */}
