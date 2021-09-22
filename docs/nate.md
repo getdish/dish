@@ -8,6 +8,8 @@
     - add to list insert at bottom not top
     - drag to sort needs some fixes
 
+- lists need a way to change the slug since we auto-generate it first. it should probably just do it one time, so need to track that in db (or some other way?).
+
 - voting for tagbutton on ipad not working (hoverable only)
 
 - photo upload for reviews

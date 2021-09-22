@@ -126,8 +126,8 @@ services:
 
   hasura:
     image: ${DOCKER_HASURA_IMAGE:-hasura/graphql-engine:v1.3.3}
-    build:
-      context: ${DOCKER_HASURA_FOLDER:-./services/hasura}
+    # build:
+    #   context: ${DOCKER_HASURA_FOLDER:-./services/hasura}
     restart: on-failure:3
     networks:
       - traefik-public
