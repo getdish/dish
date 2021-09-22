@@ -14,9 +14,9 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS unaccent;
 CREATE EXTENSION IF NOT EXISTS btree_gist;
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
-CREATE FUNCTION public.f_opening_hours_hours(_from timestamp with time zone, _to timestamp with time zone) RETURNS TABLE(opening_hours_range tsrange)
-    LANGUAGE plpgsql IMMUTABLE COST 1000 ROWS 1
-    AS $$
+CREATE OR REPLACE FUNCTION f_opening_hours_hours(_from timestamptz, _to timestamptz)
+  RETURNS TABLE (opening_hours_range tsrange) AS
+$func$
 DECLARE
    ts_from timestamp := f_opening_hours_normalised_time(_from);
    ts_to   timestamp := f_opening_hours_normalised_time(_to);
@@ -27,6 +27,7 @@ BEGIN
    ELSIF _to > _from + interval '1 week' THEN
       RAISE EXCEPTION '%', 'Interval cannot span more than a week!';
    END IF;
+
    IF ts_from > ts_to THEN  -- split range at Mon 00:00
       RETURN QUERY
       VALUES (tsrange('1996-01-01 0:0', ts_to  , '[]'))
@@ -35,9 +36,10 @@ BEGIN
       opening_hours_range := tsrange(ts_from, ts_to, '[]');
       RETURN NEXT;
    END IF;
+
    RETURN;
 END
-$$;
+$func$ LANGUAGE plpgsql IMMUTABLE COST 1000 ROWS 1;
 CREATE FUNCTION public.f_opening_hours_normalised_time(timestamp with time zone) RETURNS timestamp without time zone
     LANGUAGE sql IMMUTABLE
     AS $_$
