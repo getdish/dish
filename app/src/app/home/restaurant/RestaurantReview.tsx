@@ -1,6 +1,6 @@
 import { getUserName, graphql, list, review } from '@dish/graph'
 import React, { memo } from 'react'
-import { HStack, Text, VStack } from 'snackui'
+import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { CommentBubble, CommentBubbleProps } from '../../views/CommentBubble'
 import { Link } from '../../views/Link'
@@ -120,7 +120,12 @@ export const RestaurantReview = memo(
 
             {tagsRowEl}
 
-            {!hideImagesRow && <ReviewImagesRow />}
+            {!hideImagesRow && (
+              <>
+                <Spacer />
+                <ReviewImagesRow isEditing={isEditing || showEmptyReview} />
+              </>
+            )}
           </VStack>
         </>
       )

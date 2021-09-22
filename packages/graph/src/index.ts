@@ -23,6 +23,7 @@ export * from './helpers/queryResolvers'
 export * from './helpers/slugify'
 
 export * from './queries/listQueries'
+export * from './queries/photoQueries'
 export * from './queries/menuItemQueries'
 export * from './queries/restaurantQueries'
 export * from './queries/restaurantTagQueries'

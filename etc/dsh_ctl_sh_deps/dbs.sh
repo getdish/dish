@@ -66,11 +66,9 @@ function migrate_hasura() {
 
   # ensure hasura v2 "default" database in postgres
   # dsh psql_main -c "SELECT 1 FROM pg_database WHERE datname = 'default'" | grep -q 1 || dsh psql_main -c "CREATE DATABASE default"
-
-  echo "hasura version"
+  
   hasura version
-  echo "POSTGRES_DB $POSTGRES_DB"
-  echo "hasura migrate $HASURA_ENDPOINT"
+  echo "hasura migrate $HASURA_ENDPOINT / $POSTGRES_DB"
   pushd "$PROJECT_ROOT/services/hasura"
   hasura --skip-update-check migrate apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   echo "hasura metadata"
