@@ -1,7 +1,10 @@
-- small tech fixes:
-    - useSyncExternalStore
-        - https://github.com/reactwg/react-18/discussions/86
-        - https://github.com/facebook/react/commit/806aaa2e21edf9e1b9317c4bf4157e422b693d14
+- fix:
+    - list description
+    - list edit review refetch
+    - delete tag rating
+    - profile edit image/avatar/name
+    - add to list insert at bottom not top
+    - drag to sort needs some fixes
 
 - lists with any location
     - https://developer.apple.com/documentation/mapkitjs/mapkit/search/2974016-autocomplete

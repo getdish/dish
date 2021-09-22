@@ -191,7 +191,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🍷',
     slug: 'lenses__drinks',
-    rgb: ['153', ' 76', ' 76'],
+    rgb: ['163', ' 90', ' 90'],
   },
   {
     id: '5da93fbe-5715-43b4-8b15-6521e3897bd9',
