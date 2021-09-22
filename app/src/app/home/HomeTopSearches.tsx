@@ -11,8 +11,6 @@ import { TagsText } from './TagsText'
 export const HomeTopSearches = memo(() => {
   const activeTags = useHomeStoreSelector((x) => x.currentState['activeTags'] || {})
 
-  console.log('activeTags', activeTags)
-
   return (
     <HStack
       paddingHorizontal={10}

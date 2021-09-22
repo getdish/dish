@@ -25,7 +25,6 @@ export const AutocompleteResults = memo(
     const results = [...prefixResults, ...ogResults]
     const loaded = usePageFinishedLoading()
     const media = useMedia()
-    console.log('results', results, loaded)
 
     if (!loaded) {
       return null
