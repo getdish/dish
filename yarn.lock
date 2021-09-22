@@ -2399,7 +2399,7 @@ __metadata:
     express: ^4.17.1
     flexsearch: ^0.6.32
     fs-extra: ^9.1.0
-    gqty: 2.0.1
+    gqty: 2.0.2-experimental.0
     graphql: ^15.5.0
     graphql-tag: ^2.11.0
     immer: ^8.0.0
@@ -2522,7 +2522,7 @@ __metadata:
     csv-parse: ^4.9.0
     fast-levenshtein: ^3.0.0
     form-data: ^4.0.0
-    gqty: 2.0.1
+    gqty: 2.0.2-experimental.0
     graphql: ^15.5.0
     imghash: ^0.0.9
     js-base64: ^2.5.2
@@ -2589,13 +2589,13 @@ __metadata:
     "@dish/helpers-node": "*"
     "@dish/react-test-env": "*"
     "@dish/use-store": "*"
-    "@gqty/cli": ^2.0.1
-    "@gqty/logger": ^2.0.0
-    "@gqty/react": ^2.0.0
+    "@gqty/cli": ^2.0.2-experimental.0
+    "@gqty/logger": ^2.0.1-experimental.0
+    "@gqty/react": ^2.0.1-experimental.0
     "@types/node": "*"
     ava: ^3.14.0
     esbuild-register: "*"
-    gqty: 2.0.1
+    gqty: 2.0.2-experimental.0
     graphql: ^15.5.0
     isomorphic-unfetch: ^3.1.0
     lodash: "*"
@@ -3560,51 +3560,51 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gqty/cli@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@gqty/cli@npm:2.0.1"
+"@gqty/cli@npm:^2.0.2-experimental.0":
+  version: 2.0.2-experimental.0
+  resolution: "@gqty/cli@npm:2.0.2-experimental.0"
   dependencies:
     "@graphql-codegen/core": ^2.1.0
     "@graphql-codegen/typescript": ^2.2.2
     "@graphql-tools/delegate": ^8.2.1
-    "@graphql-tools/utils": ^8.2.2
-    "@graphql-tools/wrap": ^8.1.0
+    "@graphql-tools/utils": ^8.2.3
+    "@graphql-tools/wrap": ^8.1.1
     commander: ^8.2.0
     cosmiconfig: ^7.0.1
     cross-fetch: ^3.1.4
-    gqty: ^2.0.1
+    gqty: ^2.0.2-experimental.0
     mkdirp: ^1.0.4
     prettier: ^2.4.1
   peerDependencies:
     graphql: "*"
   bin:
     gqty: bin/gqty.cjs
-  checksum: 0a4bddc858ee2e92a1b66cbf2e5d9b0db0c44675d79a0662f001aed4633058e5dee086dd1567b1d21cf387ebaad7c04e6e37b4948987722b750b0add0f8b5cf2
+  checksum: eba5db56ca54fb551459fbd495188f8f4d961e5865b26280ecafc5b1b723aba41d0e0f4f21f6e3359e66f92fc9572e8cd2134bbcc45d46bacd61f64e99c764ca
   languageName: node
   linkType: hard
 
-"@gqty/logger@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@gqty/logger@npm:2.0.0"
+"@gqty/logger@npm:^2.0.1-experimental.0":
+  version: 2.0.1-experimental.0
+  resolution: "@gqty/logger@npm:2.0.1-experimental.0"
   dependencies:
     prettier: ^2.4.1
     serialize-error: ^8.1.0
   peerDependencies:
-    gqty: ^2.0.0
-  checksum: f929d0524480cdfa2d08126b828755aba0ffb193a1812cecd1f95101c016772c31c87b9be97f27be8758b13a3674c7da67a09496807abbe65657ee00ee528ed3
+    gqty: ^2.0.2-experimental.0
+  checksum: 3db1cb84250320491e809540a2d9329c0b18e9c77ccd0604cf6f78567dc5ccd0775a77cd9b57ec9189f13c09d1b2bc5c47c58c46930547b9a6e1df29e9766044
   languageName: node
   linkType: hard
 
-"@gqty/react@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@gqty/react@npm:2.0.0"
+"@gqty/react@npm:^2.0.1-experimental.0":
+  version: 2.0.1-experimental.0
+  resolution: "@gqty/react@npm:2.0.1-experimental.0"
   dependencies:
     react-ssr-prepass: ^1.4.0
   peerDependencies:
-    gqty: ^2.0.0
+    gqty: ^2.0.2-experimental.0
     graphql: "*"
     react: ">=16.8"
-  checksum: 27277391f577fbc5030d428a0d58a4077eff9971a6ca24635849b555540dc5a187480a239d54eaa45405174a0c008a9676082b81b3ea449a890215c8def3bd74
+  checksum: c65adf839282154a8c5ab93417e975e279799058b860838cf4836b5eff8cb28f9266a9b884dc29e8d5bed1ec920d89fc85a3387646597cd4aaa131c49b6d32c3
   languageName: node
   linkType: hard
 
@@ -3763,7 +3763,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/wrap@npm:^8.1.0":
+"@graphql-tools/utils@npm:^8.2.3":
+  version: 8.2.3
+  resolution: "@graphql-tools/utils@npm:8.2.3"
+  dependencies:
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 4d6a04f2129b7a7f913c86f4581c260ae94988ac572302bab9a519e28c12c224d31394ee9c1c8ecc63df98e52f1739ced9d36b0eb06a9d8944a14fa7ad7dbfe4
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/wrap@npm:^8.1.1":
   version: 8.1.1
   resolution: "@graphql-tools/wrap@npm:8.1.1"
   dependencies:
@@ -14175,15 +14186,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gqty@npm:2.0.1, gqty@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "gqty@npm:2.0.1"
+"gqty@npm:2.0.2-experimental.0, gqty@npm:^2.0.2-experimental.0":
+  version: 2.0.2-experimental.0
+  resolution: "gqty@npm:2.0.2-experimental.0"
   dependencies:
     lodash: ^4.17.21
     lodash-es: ^4.17.21
   peerDependencies:
     graphql: "*"
-  checksum: dbb30137ff54d24777919dd121abfa4a97406be8cbee72e2f4c75d55830228a0983997c0a94953beb717f959a8b9860caf1dc11a671993967775c0e0b77c0dca
+  checksum: f32aabac9110b7470c2ca5c79d20101ddeeccfdcb99d80c0bd785b7c8aac5ec61bd5698fb72f58fba609cb9398eaa9b38085f8462899dcb6029b08dc4102ffe5
   languageName: node
   linkType: hard
 
