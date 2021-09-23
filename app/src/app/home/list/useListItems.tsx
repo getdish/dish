@@ -90,9 +90,14 @@ export function useListItems(list?: list) {
 
   // console.log('itemsFinal', itemsFinal, orderOverride, orderNow, items)
 
+  const refetchAll = async () => {
+    await Promise.all([refetch(list), refetch(list_restaurants)])
+  }
+
   return {
     items: itemsFinal,
     setOrder,
+    refetchAll,
     async add(restaurantId: string) {
       await mutate((mutation) => {
         assertPresent(list, 'no list')
@@ -121,7 +126,7 @@ export function useListItems(list?: list) {
         })?.__typename
       })
       console.log('added, refreshing')
-      await Promise.all([refetch(list), refetch(list_restaurants)])
+      refetchAll()
     },
     async sort({ data }: DragEndParams<typeof items>) {
       await setOrder(data.flat().map((x) => x.restaurantId))
@@ -140,7 +145,7 @@ export function useListItems(list?: list) {
         }
         return affected
       })
-      await Promise.all([refetch(list), refetch(list_restaurants)])
+      refetchAll()
     },
   }
 }

@@ -780,6 +780,14 @@ tables:
     using:
       foreign_key_constraint_on: user_id
   array_relationships:
+  - name: photos
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: photo_xref
+        column_mapping:
+          id: review_id
   - name: reviews
     using:
       manual_configuration:

@@ -49,6 +49,8 @@ export default route(async (req, res) => {
         } as PhotoXrefQuery
       })
 
+    console.log('photoXrefs', photoXrefs)
+
     const upserted = await PhotoXrefQueryHelpers.upsert(
       photoXrefs,
       photo_xref_constraint.photos_xref_photos_id_restaurant_id_tag_id_key,

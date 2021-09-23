@@ -20,7 +20,7 @@ export const ListItem = memo(
 
     // we need to be sure to render them all first pass so they fetch once,
     // then second pass it will hide all but one
-    const Element = props.listTheme === 'minimal' ? ListItemContentMinimal : ListItemContentModern
+    const Element = ListItemContentMinimal
 
     // controlled
     if (props.reviewQuery) {

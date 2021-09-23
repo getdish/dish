@@ -1,5 +1,14 @@
 import { series, sleep } from '@dish/async'
-import { List, getUserName, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
+import {
+  List,
+  getUserName,
+  graphql,
+  listInsert,
+  listUpdate,
+  mutate,
+  slugify,
+  useRefetch,
+} from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { List as ListIcon, Move, Plus, Trash, X } from '@dish/react-feather'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -11,6 +20,7 @@ import {
   Button,
   HStack,
   Input,
+  InteractiveContainer,
   Modal,
   Paragraph,
   Spacer,
@@ -140,16 +150,6 @@ const setIsEditing = (val: boolean) => {
   }
 }
 
-enum ListTheme {
-  modern = 'modern',
-  minimal = 'minimal',
-}
-
-const listThemes = {
-  0: ListTheme.modern,
-  1: ListTheme.minimal,
-} as const
-
 const ListPageContent = memo(
   graphql(
     (props: Props) => {
@@ -167,8 +167,9 @@ const ListPageContent = memo(
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
       const listItems = useListItems(list)
       const region = useRegionQuery(props.item.region)
-      // const forceUpdate = useForceUpdate()
-      const listTheme = listThemes[1] as ListTheme //listThemeIndex === 0 ? listThemes[0] :
+      const forceUpdate = useForceUpdate()
+      const isMinimal = !!list?.theme
+      console.log('list?.theme', list?.theme, isMinimal)
       const listSlug = props.item.slug
 
       // useAsyncEffect(async () => {
@@ -176,29 +177,29 @@ const ListPageContent = memo(
       //   forceUpdate()
       // }, [])
 
-      // const setTheme = async (val: number) => {
-      //   list.theme = val
-      //   forceUpdate()
-      //   const affectedRows = await mutate((mutation) => {
-      //     return mutation.update_list({
-      //       where: {
-      //         id: {
-      //           _eq: list.id,
-      //         },
-      //       },
-      //       _set: {
-      //         theme: val,
-      //       },
-      //     })?.affected_rows
-      //   })
-      //   console.log('affectedRows', affectedRows)
-      //   if (affectedRows) {
-      //     Toast.show(`Saved`)
-      //   } else {
-      //     Toast.show(`Error saving`)
-      //   }
-      //   refetch()
-      // }
+      const setTheme = async (val: number) => {
+        console.log('setting theme to', val)
+        list.theme = val
+        forceUpdate()
+        const affectedRows = await mutate((mutation) => {
+          return mutation.update_list({
+            where: {
+              id: {
+                _eq: list.id,
+              },
+            },
+            _set: {
+              theme: val,
+            },
+          })?.affected_rows
+        })
+        if (affectedRows) {
+          Toast.show(`Saved`)
+        } else {
+          Toast.show(`Error saving`)
+        }
+        listItems.refetchAll()
+      }
 
       // useSnapToFullscreenOnMount()
 
@@ -249,14 +250,9 @@ const ListPageContent = memo(
       const titleContents = isEditing ? (
         <Input
           fontSize={fontSize}
-          fontWeight="600"
-          width="auto"
-          textAlign="center"
-          {...(listTheme === 'minimal' && {
-            fontWeight: '400',
-            width: '100%',
-            textAlign: 'left',
-          })}
+          fontWeight="800"
+          width="100%"
+          textAlign="left"
           defaultValue={list.name || ''}
           onChangeText={(val) => {
             draft.current.name = val
@@ -267,8 +263,6 @@ const ListPageContent = memo(
       ) : (
         list.name
       )
-      // const locationName = region.data?.name ?? props.item.region
-      const isMinimal = listTheme === 'minimal'
 
       const userCommentEl = (
         <VStack width="100%" zIndex={100} position="relative" marginTop={-5}>
@@ -277,7 +271,7 @@ const ListPageContent = memo(
             size="lg"
             color={colors.color}
             chromeless={!isEditing && !list.description}
-            paddingHorizontal={isMinimal ? 0 : 20}
+            paddingHorizontal={0}
             marginLeft={-5}
             date={list.created_at}
             after={
@@ -415,7 +409,7 @@ const ListPageContent = memo(
                         setColors(getListColors(index))
                       }}
                     />
-                    {/* <InteractiveContainer alignItems="center">
+                    <InteractiveContainer alignItems="center">
                       <Paragraph
                         size="sm"
                         opacity={0.5}
@@ -425,12 +419,12 @@ const ListPageContent = memo(
                         paddingVertical={6}
                         paddingHorizontal={12}
                       >
-                        Modern
+                        Full
                       </Paragraph>
                       <Switch
                         value={list.theme === 1}
                         onValueChange={(isOn) => {
-                          console.log('?')
+                          console.log('?', isOn)
                           setTheme(isOn ? 1 : 0)
                         }}
                       />
@@ -445,7 +439,7 @@ const ListPageContent = memo(
                       >
                         Minimal
                       </Paragraph>
-                    </InteractiveContainer> */}
+                    </InteractiveContainer>
                     <HStack>
                       <Paragraph>Public:&nbsp;</Paragraph>
                       <Switch value={isPublic} onValueChange={setPublic} />
@@ -486,10 +480,9 @@ const ListPageContent = memo(
           const content = (
             <ListItem
               list={list}
-              listTheme={listTheme}
               restaurant={restaurant}
               listSlug={listSlug}
-              minimal={isSorting}
+              minimal={isMinimal || isSorting}
               rank={index + 1}
               hideRate
               editable={isEditing || isMyList}
@@ -529,7 +522,7 @@ const ListPageContent = memo(
             </Pressable>
           )
         },
-        [isMyList, isEditing, isSorting, listTheme]
+        [isMyList, isEditing, isSorting, isMinimal, list]
       )
 
       const ListViewElement = isSorting ? DraggableFlatList : FlatList
@@ -656,9 +649,7 @@ const ListPageContent = memo(
                 )}
               </PaneControlButtonsLeft>
               <VStack width="100%" minHeight={getWindowHeight()}>
-                {listTheme === 'modern' ? null : listHeaderEl}
-
-                {listTheme === 'modern' ? userCommentEl : null}
+                {listHeaderEl}
 
                 {!listItems.items.length && (
                   <VStack padding={20} margin={20} borderRadius={10}>
@@ -671,6 +662,7 @@ const ListPageContent = memo(
                     keyExtractor={(item, index) => `draggable-item-${item?.key}-${isMyList}`}
                     disableVirtualization
                     data={listItems.items}
+                    // @ts-ignore
                     renderItem={renderItem}
                     onDragBegin={() => {
                       console.log('do')
