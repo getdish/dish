@@ -25,7 +25,7 @@ const sets = [
   { to: 'x', from: '[ẍ]' },
   { to: 'y', from: '[ÝŶŸỲỴỶỸ]' },
   { to: 'z', from: '[ŹŻŽ]' },
-  { to: '-', from: "[·/_,:;']" },
+  { to: '-', from: "[·/,:;']" },
 ]
 
 const cache = new Map()

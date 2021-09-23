@@ -117,17 +117,6 @@ class AuthModel {
     }
   }
 
-  async uploadAvatar(body: FormData) {
-    const response = await this.api('POST', '/user/uploadAvatar', body, {
-      rawData: true,
-    })
-    if (response.status !== 200) {
-      console.error(`Error updating: ${response.status} ${response.statusText}`)
-      return null
-    }
-    return await response.json()
-  }
-
   async register(username: string, email: string, password: string) {
     const response = await this.api('POST', '/user/new', {
       username,

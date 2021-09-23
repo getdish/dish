@@ -2,14 +2,14 @@
   "name": "@dish/react-feather",
   "version": "0.0.1",
   "description": "React Native component for Feather icons",
-  "types": "types.d.ts",
+  "types": "types",
   "tsmain": "src",
   "main": "dist",
   "module": "_",
   "sideEffects": false,
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch",
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy",
     "generate": "node ./bin/build"
   },
   "license": "MIT",

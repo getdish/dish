@@ -122,7 +122,6 @@ export function createUseStore<Props, Store>(
     options?: UseStoreOptions
     // super hacky workaround for now, ts is unknown to me tbh
   ): C extends Selector<any, infer B> ? (B extends Object ? B : Store) : Store {
-    // @ts-expect-error
     return useStore(StoreKlass, props, options)
   }
 }

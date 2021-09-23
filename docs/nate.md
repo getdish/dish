@@ -3,12 +3,12 @@
 - lists need a way to change the slug since we auto-generate it first. it should probably just do it one time, so need to track that in db (or some other way?).
 - voting for tagbutton on ipad not working (hoverable only)
 - photo upload for reviews
+- auto create list regions from restaurants
 
 - lists with any location
     - https://developer.apple.com/documentation/mapkitjs/mapkit/search/2974016-autocomplete
 - fix mobile web bugs
 - slow profile load
-- unrate tag
 - 0.5 ratings or granular ratings
 - make map work with custom point data structure
     - (represent restaurant, OSM, other types of points)

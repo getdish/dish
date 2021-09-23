@@ -46,7 +46,7 @@ export class GoogleGeocoder {
     while (retries < 3) {
       try {
         return await this._searchForID()
-      } catch (e) {
+      } catch (e: any) {
         if (e.message == ID_NOT_FOUND || e.message == SEARCH_ENDPOINT_EXPIRED) {
           console.log(
             `GOOGLE GEOCODER (retry ${retries}) failed for: "${query}". Error: ${e.message}`

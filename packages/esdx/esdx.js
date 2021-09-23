@@ -17,11 +17,14 @@ async function go({ legacy, skipTypes }) {
 
   async function buildTsc() {
     if (process.env.JS_ONLY || skipTypes) return
+
     if (legacy) {
       await exec('tsc', ['--emitDeclarationOnly', '--declarationMap', '--declarationDir', 'types'])
       return
     }
+
     await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
+
     // if its already a single-file we need to handle it diff
     if (await fs.pathExists('index.d.ts')) {
       await fs.remove('types.d.ts')

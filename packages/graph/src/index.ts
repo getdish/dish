@@ -11,6 +11,7 @@ export * from './types'
 export * from './typesExtra'
 export * from './constants'
 export * from './Auth'
+export * from './uploadFile'
 
 export * from './getAuth'
 export * from './helpers/userHelpers'

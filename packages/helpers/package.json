@@ -1,7 +1,7 @@
 {
   "name": "@dish/helpers",
   "version": "0.0.1",
-  "types": "types.d.ts",
+  "types": "types",
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
@@ -9,8 +9,8 @@
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch"
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy"
   },
   "dependencies": {
     "@dish/fast-compare": "*",

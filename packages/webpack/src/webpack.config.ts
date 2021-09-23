@@ -63,7 +63,7 @@ export function createWebpackConfig({
   const isProduction = env === 'production'
   const isDevelopment = env === 'development'
   const isSSR = target === 'node'
-  const isHot = !isProduction && !isSSR && !disableHot && target !== 'node'
+  const isHot = !isProduction && !isSSR && !disableHot
   const isStaticExtracted = !process.env.NO_EXTRACT
   const isVerbose = process.env.ANALYZE_BUNDLE || process.env.INSPECT
   const minimize = !isSSR && !noMinify
