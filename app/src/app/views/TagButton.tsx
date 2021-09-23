@@ -323,6 +323,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           fontSize={fontSize}
           fontWeight={fontWeight || '400'}
           lineHeight={isSmall ? 15 : 22}
+          paddingLeft={3}
           color={color || theme.color}
           pointerEvents="none"
           // borderBottomColor={theme.backgroundColor}
