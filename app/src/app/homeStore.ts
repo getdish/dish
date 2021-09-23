@@ -565,6 +565,7 @@ const normalizeItemName = {
 }
 
 export const homeStore = createStore(HomeStore)
+window['homeStore'] = homeStore
 
 export const useHomeStore = (debug?: boolean): HomeStore => {
   if (debug) {

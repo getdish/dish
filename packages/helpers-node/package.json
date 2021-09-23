@@ -2,12 +2,12 @@
   "name": "@dish/helpers-node",
   "version": "0.0.1",
   "sideEffects": false,
-  "types": "types.d.ts",
+  "types": "types",
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch"
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy"
   },
   "dependencies": {
     "@dish/async": "*",

@@ -206,6 +206,7 @@ class UserStore extends Store {
 }
 
 export const userStore = createStore(UserStore)
+window['userStore'] = userStore
 export const useUserStore = () => {
   return useStoreInstance(userStore)
 }

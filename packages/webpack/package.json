@@ -2,12 +2,12 @@
   "name": "@dish/webpack",
   "version": "0.0.1",
   "sideEffects": false,
-  "types": "types.d.ts",
+  "types": "types",
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch"
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

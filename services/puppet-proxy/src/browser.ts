@@ -99,7 +99,7 @@ async function ensureInstance(
       }
     }
     return instances[url.origin]!
-  } catch (err) {
+  } catch (err: any) {
     console.log(`Error creating browser instance`, err.message, err.stack)
     throw err
   }
@@ -141,7 +141,7 @@ export async function fetchBrowser(
       return await fetchBrowserHTML(uri, retry)
     }
     return await fetchBrowserJSON(uri, headers, retry)
-  } catch (err) {
+  } catch (err: any) {
     if (retry > 0) {
       console.log('error fetching', err)
       console.log(`Trying again (retry ${retry})`)
@@ -182,7 +182,7 @@ export async function fetchBrowserJSON(uri: string, headers?: { [key: string]: a
           ),
           10_000
         )
-      } catch (err) {
+      } catch (err: any) {
         console.error(`Error inline fetching, will try navigating: ${err.message}`)
         // allow to continue
       }

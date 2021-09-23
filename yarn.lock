@@ -2106,7 +2106,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/esdx@*, @dish/esdx@^0.0.9, @dish/esdx@workspace:packages/esdx":
+"@dish/esdx@*, @dish/esdx@^0.1.0, @dish/esdx@workspace:packages/esdx":
   version: 0.0.0-use.local
   resolution: "@dish/esdx@workspace:packages/esdx"
   dependencies:
@@ -2232,7 +2232,7 @@ __metadata:
   dependencies:
     "@dish/esdx": "*"
     express: ^4.17.1
-    playwright-webkit: ^1.10.0
+    playwright-webkit: ^1.15.0
     typescript: ^4.2.4
   languageName: unknown
   linkType: soft
@@ -2469,13 +2469,12 @@ __metadata:
     "@dish/common": "*"
     "@dish/esdx": "*"
     "@types/bull": ^3.15.1
-    "@types/make-fetch-happen": ^8.0.0
     ava: ^3.14.0
     axios: ^0.19.2
     bull: ^3.22.8
     https-proxy-agent: ^5.0.0
     lodash: "*"
-    make-fetch-happen: ^8.0.14
+    make-fetch-happen: ^9.1.0
     react: ^17.0.1
     redis: ^3.1.2
   languageName: unknown
@@ -3147,6 +3146,13 @@ __metadata:
   version: 0.1.0
   resolution: "@gaearon/lag-radar@npm:0.1.0"
   checksum: cc6199595ad9a3513e90766b9f6b5f90754c2623ecfb7f2370d16620bd287b9f250cce2a2c935aa8cd8876c24dc3749ea10ad1180677ef228f9db9a9f2ea9dd7
+  languageName: node
+  linkType: hard
+
+"@gar/promisify@npm:^1.0.1":
+  version: 1.1.2
+  resolution: "@gar/promisify@npm:1.1.2"
+  checksum: d05081e0887a49c178b75ee3067bd6ee086f73c154d121b854fb2e044e8a89cb1cbb6de3a0dd93a519b80f0531fda68b099dd7256205f7fbb3490324342f2217
   languageName: node
   linkType: hard
 
@@ -4524,6 +4530,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@npmcli/fs@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@npmcli/fs@npm:1.0.0"
+  dependencies:
+    "@gar/promisify": ^1.0.1
+    semver: ^7.3.5
+  checksum: f2b4990107dd2a5b18794c89aaff6f62f3a67883d49a20602fdfc353cbc7f8c5fd50edeffdc769e454900e01b8b8e43d0b9eb524d00963d69f3c829be1a2e8ac
+  languageName: node
+  linkType: hard
+
 "@npmcli/map-workspaces@npm:^0.0.0-pre.1":
   version: 0.0.0-pre.1
   resolution: "@npmcli/map-workspaces@npm:0.0.0-pre.1"
@@ -5545,7 +5561,7 @@ __metadata:
     "@babel/template": "*"
     "@babel/traverse": "*"
     "@babel/types": "*"
-    "@dish/esdx": ^0.0.9
+    "@dish/esdx": ^0.1.0
     "@snackui/static": ^0.16.1
   languageName: unknown
   linkType: soft
@@ -5554,7 +5570,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@snackui/helpers@workspace:snackui/packages/helpers"
   dependencies:
-    "@dish/esdx": ^0.0.9
+    "@dish/esdx": ^0.1.0
   languageName: unknown
   linkType: soft
 
@@ -5581,7 +5597,7 @@ __metadata:
     "@babel/traverse": ^7.12.9
     "@babel/types": ^7.12.7
     "@dish/babel-preset": ^0.0.2
-    "@dish/esdx": ^0.0.9
+    "@dish/esdx": ^0.1.0
     "@dish/proxy-worm": "*"
     "@dish/react-test-env": ^0.0.7
     "@dish/testy": "*"
@@ -6266,18 +6282,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/make-fetch-happen@npm:^8.0.0":
-  version: 8.0.2
-  resolution: "@types/make-fetch-happen@npm:8.0.2"
-  dependencies:
-    "@types/node": "*"
-    "@types/node-fetch": "*"
-    "@types/retry": "*"
-    "@types/ssri": "*"
-  checksum: 98c155e7888f436042938e6178b514ee81d3b877fb03d11db0c255c33cac4801ae34679eda9a548523e415558590aac8ef8bc058361663c82b76db7f114ebffd
-  languageName: node
-  linkType: hard
-
 "@types/mapbox-gl@npm:^2.4.0":
   version: 2.4.0
   resolution: "@types/mapbox-gl@npm:2.4.0"
@@ -6345,7 +6349,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-fetch@npm:*, @types/node-fetch@npm:^2.5.10":
+"@types/node-fetch@npm:^2.5.10":
   version: 2.5.12
   resolution: "@types/node-fetch@npm:2.5.12"
   dependencies:
@@ -6538,13 +6542,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/retry@npm:*":
-  version: 0.12.1
-  resolution: "@types/retry@npm:0.12.1"
-  checksum: 5f46b2556053655f78262bb33040dc58417c900457cc63ff37d6c35349814471453ef511af0cec76a540c601296cd2b22f64bab1ab649c0dacc0223765ba876c
-  languageName: node
-  linkType: hard
-
 "@types/rimraf@npm:^2.0.2":
   version: 2.0.5
   resolution: "@types/rimraf@npm:2.0.5"
@@ -6576,15 +6573,6 @@ __metadata:
   version: 0.1.2
   resolution: "@types/source-list-map@npm:0.1.2"
   checksum: fda8f37537aca9d3ed860d559289ab1dddb6897e642e6f53e909bbd18a7ac3129a8faa2a7d093847c91346cf09c86ef36e350c715406fba1f2271759b449adf6
-  languageName: node
-  linkType: hard
-
-"@types/ssri@npm:*":
-  version: 7.1.1
-  resolution: "@types/ssri@npm:7.1.1"
-  dependencies:
-    "@types/node": "*"
-  checksum: 0327eb212a8d52e09f0fe4df5e0f580db9daaf2e03fc9dbbc5c1356c92fd870084588e5b0b9b58546e1a5cae9a825097a74100c463b241f38dafb49043569de3
   languageName: node
   linkType: hard
 
@@ -8787,6 +8775,32 @@ __metadata:
     tar: ^6.0.2
     unique-filename: ^1.1.1
   checksum: 34d0fba6030dd3f1f9de4d9fb486cfa8f6ec836ab00d75b846b40c06f96e64898e781f715d19a2c357a601a899c339a44446f94dd328f173605af165a295dd29
+  languageName: node
+  linkType: hard
+
+"cacache@npm:^15.2.0":
+  version: 15.3.0
+  resolution: "cacache@npm:15.3.0"
+  dependencies:
+    "@npmcli/fs": ^1.0.0
+    "@npmcli/move-file": ^1.0.1
+    chownr: ^2.0.0
+    fs-minipass: ^2.0.0
+    glob: ^7.1.4
+    infer-owner: ^1.0.4
+    lru-cache: ^6.0.0
+    minipass: ^3.1.1
+    minipass-collect: ^1.0.2
+    minipass-flush: ^1.0.5
+    minipass-pipeline: ^1.2.2
+    mkdirp: ^1.0.3
+    p-map: ^4.0.0
+    promise-inflight: ^1.0.1
+    rimraf: ^3.0.2
+    ssri: ^8.0.1
+    tar: ^6.0.2
+    unique-filename: ^1.1.1
+  checksum: a07327c27a4152c04eb0a831c63c00390d90f94d51bb80624a66f4e14a6b6360bbf02a84421267bd4d00ca73ac9773287d8d7169e8d2eafe378d2ce140579db8
   languageName: node
   linkType: hard
 
@@ -17821,6 +17835,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"make-fetch-happen@npm:^9.1.0":
+  version: 9.1.0
+  resolution: "make-fetch-happen@npm:9.1.0"
+  dependencies:
+    agentkeepalive: ^4.1.3
+    cacache: ^15.2.0
+    http-cache-semantics: ^4.1.0
+    http-proxy-agent: ^4.0.1
+    https-proxy-agent: ^5.0.0
+    is-lambda: ^1.0.1
+    lru-cache: ^6.0.0
+    minipass: ^3.1.3
+    minipass-collect: ^1.0.2
+    minipass-fetch: ^1.3.2
+    minipass-flush: ^1.0.5
+    minipass-pipeline: ^1.2.4
+    negotiator: ^0.6.2
+    promise-retry: ^2.0.1
+    socks-proxy-agent: ^6.0.0
+    ssri: ^8.0.0
+  checksum: 0eb371c85fdd0b1584fcfdf3dc3c62395761b3c14658be02620c310305a9a7ecf1617a5e6fb30c1d081c5c8aaf177fa133ee225024313afabb7aa6a10f1e3d04
+  languageName: node
+  linkType: hard
+
 "makeerror@npm:1.0.x":
   version: 1.0.11
   resolution: "makeerror@npm:1.0.11"
@@ -18881,7 +18919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"negotiator@npm:0.6.2":
+"negotiator@npm:0.6.2, negotiator@npm:^0.6.2":
   version: 0.6.2
   resolution: "negotiator@npm:0.6.2"
   checksum: dfddaff6c06792f1c4c3809e29a427b8daef8cd437c83b08dd51d7ee11bbd1c29d9512d66b801144d6c98e910ffd8723f2432e0cbf8b18d41d2a09599c975ab3
@@ -20370,9 +20408,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-webkit@npm:^1.10.0":
-  version: 1.13.1
-  resolution: "playwright-webkit@npm:1.13.1"
+"playwright-webkit@npm:^1.15.0":
+  version: 1.15.0
+  resolution: "playwright-webkit@npm:1.15.0"
   dependencies:
     commander: ^6.1.0
     debug: ^4.1.1
@@ -20390,7 +20428,7 @@ __metadata:
     yazl: ^2.5.1
   bin:
     playwright: lib/cli/cli.js
-  checksum: f3a4bc1acab98c063ac9a8c878372537a50c057187696ac7e25f2c1234019cfd2fdb5d7f6ec2da0e017502d0ae9606e6db3e97113801fae4376804557cd7be46
+  checksum: 4557283d4bc59ab8aa1d3452941b8ad6754d3542553672c097cbb4a0edc698a2472d9c8bc1ae6baf439e167ef6a1e0f4025c78eebbc12a1cccc77ddc86860dd5
   languageName: node
   linkType: hard
 
@@ -23542,7 +23580,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "snackui-loader@workspace:snackui/packages/snackui-loader"
   dependencies:
-    "@dish/esdx": ^0.0.9
+    "@dish/esdx": ^0.1.0
     "@snackui/static": ^0.16.1
     fs-extra: ^9.1.0
     loader-utils: ^2.0.0
@@ -23555,7 +23593,7 @@ __metadata:
   resolution: "snackui@workspace:snackui/packages/snackui"
   dependencies:
     "@dish/async": ^0.0.1
-    "@dish/esdx": ^0.0.9
+    "@dish/esdx": ^0.1.0
     "@dish/fast-compare": ^2.7.6
     "@dish/proxy-worm": ^0.0.4
     "@react-native-community/blur": ^3.6.0
@@ -23638,7 +23676,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socks@npm:^2.3.3":
+"socks-proxy-agent@npm:^6.0.0":
+  version: 6.1.0
+  resolution: "socks-proxy-agent@npm:6.1.0"
+  dependencies:
+    agent-base: ^6.0.2
+    debug: ^4.3.1
+    socks: ^2.6.1
+  checksum: 32ea0d62c848b5c246955e8d6c34832fe6cd8c5f3b66f5ace3a9bd7387bafae3e67d96474d41291723ba7135e2da46d65e008a8a35a793dfa5cb0f4ac05429df
+  languageName: node
+  linkType: hard
+
+"socks@npm:^2.3.3, socks@npm:^2.6.1":
   version: 2.6.1
   resolution: "socks@npm:2.6.1"
   dependencies:

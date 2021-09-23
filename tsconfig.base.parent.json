@@ -15,17 +15,18 @@
     "noImplicitReturns": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "useUnknownInCatchVariables": false,
     "preserveConstEnums": true,
     "removeComments": true,
     "skipLibCheck": true,
     "sourceMap": false,
-    "strict": true,
+    // "strict": true,
     "strictNullChecks": true,
     "target": "es2019",
     "types": ["node", "jest"],
     "lib": ["es2019", "dom", "esnext"]
   },
-  "exclude": ["_", "test/**/*"],
+  "exclude": ["_"],
   "typeAcquisition": {
     "enable": true
   }

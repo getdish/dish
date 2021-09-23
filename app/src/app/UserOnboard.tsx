@@ -1,5 +1,5 @@
-import { Auth, graphql, useRefetch } from '@dish/graph'
-import React, { useEffect, useRef, useState } from 'react'
+import { graphql, uploadFile, useRefetch } from '@dish/graph'
+import React, { useEffect, useRef } from 'react'
 import { HStack, Input, Paragraph, Spacer, Text, TextArea, Toast, VStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
@@ -10,6 +10,8 @@ import { useStateSynced } from './hooks/useStateSynced'
 import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
 import { SmallButton } from './views/SmallButton'
+
+const useImageUploader = () => {}
 
 export const UserOnboard = graphql(
   ({ hideLogo, onFinish }: { hideLogo?: boolean; onFinish?: Function }) => {
@@ -37,7 +39,7 @@ export const UserOnboard = graphql(
         const formData = new FormData(form!)
         try {
           Toast.show('Uploading...')
-          const avatar = await Auth.uploadAvatar(formData)
+          const avatar = await uploadFile('avatar', formData)
           if (avatar) {
             userStore.refresh()
             refetch()
