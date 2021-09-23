@@ -24,6 +24,14 @@ tables:
           name: review
         column_mapping:
           id: list_id
+  - name: regions
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: list_region
+        column_mapping:
+          id: list_id
   - name: restaurants
     using:
       foreign_key_constraint_on:
@@ -119,6 +127,9 @@ tables:
       filter:
         user_id:
           _eq: X-Hasura-User-Id
+- table:
+    schema: public
+    name: list_region
 - table:
     schema: public
     name: list_restaurant

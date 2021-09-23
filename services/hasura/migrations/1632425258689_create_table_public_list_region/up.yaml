@@ -1,0 +1,16 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE TABLE "public"."list_region"("restaurant_id" UUID NOT NULL, "list_id"
+      uuid NOT NULL, "region" text NOT NULL, "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+      PRIMARY KEY ("id") );
+  type: run_sql
+- args:
+    name: list_region
+    schema: public
+  type: add_existing_table_or_view
