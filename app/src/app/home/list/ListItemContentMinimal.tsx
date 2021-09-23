@@ -1,5 +1,5 @@
 import { fullyIdle, series } from '@dish/async'
-import { graphql } from '@dish/graph'
+import { graphql, useRefetch } from '@dish/graph'
 import { PenTool, X } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Circle, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
@@ -37,6 +37,7 @@ export const ListItemContentMinimal = memo(
       isExternalReview,
       minimal,
     } = props
+    const refetch = useRefetch()
     const review = reviewQuery?.[0]
     const media = useMedia()
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
@@ -151,7 +152,7 @@ export const ListItemContentMinimal = memo(
                     icon={<PenTool size={14} color="#888" />}
                     onPress={() => setIsEditing(true)}
                   >
-                    Edit
+                    Review
                   </SmallButton>
                 )}
 
@@ -233,6 +234,11 @@ export const ListItemContentMinimal = memo(
                     review={review}
                     list={list}
                     listSlug={props.listSlug}
+                    onEdit={(text) => {
+                      if (review) review.text = text
+                      refetch(reviewQuery)
+                      restaurantReviewListProps.onEdit?.(text)
+                    }}
                   />
                 </VStack>
               </Suspense>
