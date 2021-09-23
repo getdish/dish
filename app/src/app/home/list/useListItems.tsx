@@ -106,7 +106,7 @@ export function useListItems(list?: list) {
         return mutation.insert_list_restaurant_one({
           object: {
             // space it out (insert at bottom)
-            position: items.length * 1000,
+            position: Math.round(itemsFinal.length * 1000 + Math.random() * 100),
             list_id: listId,
             restaurant_id: restaurantId,
             user_id: userStore.user.id,
