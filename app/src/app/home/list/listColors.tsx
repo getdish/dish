@@ -26,7 +26,7 @@ export function getListColors(index: number | null = colorSetSize) {
   const color = (isLight ? darkColor : lightColor) ?? '#cccccc'
   return {
     isLight,
-    textColor: color,
+    textColor: isLight ? '#000' : '#fff',
     color,
     darkColor,
     lightColor,

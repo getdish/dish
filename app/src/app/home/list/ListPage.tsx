@@ -258,7 +258,7 @@ const ListPageContent = memo(
       const userCommentEl = (
         <VStack width="100%" zIndex={100} position="relative" marginTop={-5}>
           <CommentBubble
-            showChildren={isEditing}
+            showChildren={!!(isEditing || list.description)}
             size="lg"
             color={listColors.color}
             chromeless={!isEditing && !list.description}
