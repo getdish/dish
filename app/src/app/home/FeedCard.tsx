@@ -39,7 +39,8 @@ export const FeedCard = ({
   const titleLen = typeof title === 'string' ? title.length : 20
   const lenScale = titleLen > 40 ? 0.7 : titleLen > 30 ? 0.8 : titleLen > 20 ? 0.9 : 1.2
   const tagScale = emphasizeTag ? 0.8 : 1
-  const fontSize = Math.round(26 * lenScale * tagScale)
+  const sizeScale = size === 'xs' ? 0.7 : size === 'sm' ? 0.8 : size === 'lg' ? 1.2 : 1
+  const fontSize = Math.round(26 * lenScale * tagScale * sizeScale)
   const imgSize = size === 'lg' ? 85 : 70
   const theme = useTheme()
 

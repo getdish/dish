@@ -4,7 +4,7 @@ import { Toast } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { queryList } from '../../../queries/queryList'
-import { getListColors } from '../../home/list/listColors'
+import { useListColors } from '../../home/list/listColors'
 import { useUserStore, userStore } from '../../userStore'
 import { ListIDProps } from './ListCard'
 
@@ -23,7 +23,7 @@ export const useList = ({ slug }: ListIDProps) => {
       },
     })
     .map((x) => x.restaurant.image)
-  const backgroundColor = getListColors(list?.color) ?? colors.color
+  const backgroundColor = useListColors(list?.color) ?? colors.color
   return { list, colors, photos, backgroundColor }
 }
 

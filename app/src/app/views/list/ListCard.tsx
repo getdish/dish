@@ -6,7 +6,7 @@ import { AbsoluteVStack, Hoverable, Toast, VStack, useThemeName } from 'snackui'
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
 import { getListPhoto } from '../../home/getListPhoto'
-import { getListColors } from '../../home/list/listColors'
+import { useListColors } from '../../home/list/listColors'
 import { ListFavoriteButton } from '../../home/restaurant/ListFavoriteButton'
 import { useUserStore } from '../../userStore'
 import { CloseButton } from '../CloseButton'
@@ -39,7 +39,7 @@ export const ListCard = memo((props: ListCardProps) => {
 const ListCardContent = graphql((props: ListCardProps) => {
   const { list } = useList(props)
   const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
-  const listColors = getListColors(list?.color)
+  const listColors = useListColors(list?.color)
   const themeName = useThemeName()
   // const listThemeName = (list?.theme || 0) === 0 ? 'modern' : 'minimal'
   return (

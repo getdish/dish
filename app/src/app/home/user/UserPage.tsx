@@ -431,7 +431,7 @@ const UserHeader = memo(
             <UserSubscribeButton elevation={1} username={username} />
           </PaneControlButtonsLeft>
 
-          <VStack flex={1} paddingHorizontal={20} paddingTop={40}>
+          <VStack flex={1} paddingHorizontal={20} paddingTop={55}>
             <HStack alignItems="flex-end" flex={1} position="relative">
               <VStack marginLeft={media.sm ? -50 : 0} marginBottom={-10} marginRight={10}>
                 <UserAvatar size={140} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />

@@ -1,17 +1,8 @@
-import { series, sleep } from '@dish/async'
-import {
-  List,
-  getUserName,
-  graphql,
-  listInsert,
-  listUpdate,
-  mutate,
-  slugify,
-  useRefetch,
-} from '@dish/graph'
+import { series } from '@dish/async'
+import { List, getUserName, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { List as ListIcon, Move, Plus, Trash, X } from '@dish/react-feather'
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Pressable, Switch } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
 import { FlatList } from 'react-native-gesture-handler'
@@ -25,8 +16,6 @@ import {
   Paragraph,
   Spacer,
   Text,
-  Theme,
-  Title,
   Toast,
   VStack,
   useForceUpdate,
@@ -35,16 +24,15 @@ import {
   useThemeName,
 } from 'snackui'
 
-import { grey, red400 } from '../../../constants/colors'
-import { drawerWidthMax, isWeb } from '../../../constants/constants'
+import { red400 } from '../../../constants/colors'
+import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
-import { getWindowHeight, getWindowWidth } from '../../../helpers/getWindow'
+import { getWindowHeight } from '../../../helpers/getWindow'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
 import { homeStore, useHomeStateById } from '../../homeStore'
-import { useAsyncEffect } from '../../hooks/useAsync'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
@@ -52,7 +40,6 @@ import { CloseButton } from '../../views/CloseButton'
 import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { FavoriteButton } from '../../views/FavoriteButton'
-import { Link } from '../../views/Link'
 import { useListFavorite } from '../../views/list/useList'
 import { PageHead } from '../../views/PageHead'
 import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
@@ -62,11 +49,14 @@ import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { TitleStyled } from '../../views/TitleStyled'
 import { StackItemProps } from '../HomeStackView'
-import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
-import { UserAvatar } from '../user/UserAvatar'
 import { ColorPicker } from './ColorPicker'
 import { ListAddRestuarant } from './ListAddRestuarant'
-import { getListColors, listColors, randomListColor } from './listColors'
+import {
+  listColors as allListColors,
+  getListColors,
+  randomListColor,
+  useListColors,
+} from './listColors'
 import { ListItem } from './ListItem'
 import { useListItems } from './useListItems'
 
@@ -162,8 +152,8 @@ const ListPageContent = memo(
       const { list, isFavorited, toggleFavorite, reviewsCount, refetch } = useListFavorite({
         slug: props.item.slug,
       })
-      const listColorsMemo = useMemo(() => getListColors(list?.color), [list?.color])
-      const [colors, setColors] = useStateSynced(listColorsMemo)
+      const listColorInitial = useListColors(list?.color)
+      const [listColors, setListColors] = useStateSynced(listColorInitial)
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
       const listItems = useListItems(list)
       const region = useRegionQuery(props.item.region)
@@ -258,10 +248,11 @@ const ListPageContent = memo(
             draft.current.name = val
           }}
           multiline
+          numberOfLines={2}
           marginVertical={-5}
         />
       ) : (
-        list.name
+        list.name?.trim() || ''
       )
 
       const userCommentEl = (
@@ -269,7 +260,7 @@ const ListPageContent = memo(
           <CommentBubble
             showChildren={isEditing}
             size="lg"
-            color={colors.color}
+            color={listColors.color}
             chromeless={!isEditing && !list.description}
             paddingHorizontal={0}
             marginLeft={-5}
@@ -332,7 +323,7 @@ const ListPageContent = memo(
 
           {isMyList && isSorting && (
             <HStack spacing alignSelf="center">
-              <Move size={16} color={colors.color} />
+              <Move size={16} color={listColors.color} />
               <Paragraph opacity={0.6} size="sm">
                 press and hold on any item to sort
               </Paragraph>
@@ -341,8 +332,6 @@ const ListPageContent = memo(
         </VStack>
       )
 
-      const themeName = useThemeName()
-
       const listHeaderEl = (
         <>
           {/* START HEADER */}
@@ -350,8 +339,8 @@ const ListPageContent = memo(
             <AbsoluteVStack
               fullscreen
               zIndex={-1}
-              backgroundColor={themeName === 'dark' ? colors.lightColor : colors.darkColor}
-              opacity={0.1}
+              backgroundColor={theme.backgroundColorDarker}
+              opacity={0.5}
             />
             <HStack paddingHorizontal={20}>
               <VStack
@@ -365,8 +354,8 @@ const ListPageContent = memo(
                 <VStack minHeight={75} flex={1} />
                 <VStack display={isWeb ? 'block' : 'flex'}>
                   <TitleStyled
-                    backgroundColor={colors.backgroundColor}
-                    color={colors.isLight ? '#000' : '#fff'}
+                    backgroundColor={listColors.backgroundColor}
+                    color={listColors.textColor}
                     lineHeight={fontSize * 1.4}
                     fontWeight="800"
                     fontSize={fontSize}
@@ -402,11 +391,11 @@ const ListPageContent = memo(
                   >
                     <Paragraph>Color:</Paragraph>
                     <ColorPicker
-                      colors={listColors}
-                      color={colors.backgroundColor}
+                      colors={allListColors}
+                      color={listColors.backgroundColor}
                       onChange={(backgroundColor) => {
-                        const index = listColors.indexOf(backgroundColor)
-                        setColors(getListColors(index))
+                        const index = allListColors.indexOf(backgroundColor)
+                        setListColors(getListColors(index))
                       }}
                     />
                     <InteractiveContainer alignItems="center">
@@ -487,6 +476,7 @@ const ListPageContent = memo(
               hideRate
               editable={isEditing || isMyList}
               username={username}
+              listColors={listColors}
               onDelete={() => {
                 if (confirm('Delete item?')) {
                   listItems.delete(restaurant.id)
@@ -522,7 +512,7 @@ const ListPageContent = memo(
             </Pressable>
           )
         },
-        [isMyList, isEditing, isSorting, isMinimal, list]
+        [isMyList, isEditing, isSorting, isMinimal, list, listColors]
       )
 
       const ListViewElement = isSorting ? DraggableFlatList : FlatList
@@ -544,7 +534,7 @@ const ListPageContent = memo(
                 height={55}
                 alignItems="center"
                 justifyContent="center"
-                elevation={1}
+                elevation={3}
                 noTextWrap
                 onPress={() => {
                   setShowAddModal(true)
@@ -614,8 +604,8 @@ const ListPageContent = memo(
                           {
                             id: list.id,
                             ...draft.current,
-                            ...(colors.backgroundColor && {
-                              color: listColors.indexOf(colors.backgroundColor),
+                            ...(listColors.backgroundColor && {
+                              color: allListColors.indexOf(listColors.backgroundColor),
                             }),
                             public: isPublic,
                           },
@@ -642,7 +632,7 @@ const ListPageContent = memo(
                         setIsEditing(false)
                       }}
                     >
-                      <X color={colors.color} size={24} />
+                      <X color={listColors.color} size={24} />
                     </VStack>
                     <Spacer size="lg" />
                   </>

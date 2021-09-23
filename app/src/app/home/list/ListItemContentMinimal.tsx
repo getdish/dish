@@ -5,6 +5,7 @@ import React, { Suspense, memo, useEffect, useState } from 'react'
 import { Circle, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { green, red } from '../../../constants/colors'
+import { isWeb } from '../../../constants/constants'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { TitleStyled } from '../../views/TitleStyled'
@@ -25,6 +26,7 @@ import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 export const ListItemContentMinimal = memo(
   graphql((props: ListItemContentProps) => {
     const {
+      listColors,
       rank,
       restaurant,
       editable,
@@ -58,7 +60,7 @@ export const ListItemContentMinimal = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 26 : 32) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 24 : 28) * titleFontScale)
     const theme = useTheme()
 
     const restaurantReviewListProps = useRestaurantReviewListProps({
@@ -110,26 +112,29 @@ export const ListItemContentMinimal = memo(
               <HStack marginHorizontal={-10} alignItems="center">
                 <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
                   <HStack
-                    paddingVertical={4}
                     marginVertical={-4}
-                    borderRadius={8}
                     alignItems="center"
-                    hoverStyle={{
-                      backgroundColor: theme.backgroundColorSecondary,
-                    }}
-                    pressStyle={{
-                      backgroundColor: theme.backgroundColorTertiary,
-                    }}
+                    // hoverStyle={{
+                    //   backgroundColor: theme.backgroundColorSecondary,
+                    // }}
+                    // pressStyle={{
+                    //   backgroundColor: theme.backgroundColorTertiary,
+                    // }}
                     flex={1}
                     overflow="hidden"
+                    display={isWeb ? 'block' : 'flex'}
                   >
                     <TitleStyled
                       fontSize={titleFontSize}
-                      lineHeight={titleFontSize * 1.2}
-                      color={theme.color}
+                      lineHeight={titleFontSize * 1.56}
+                      backgroundColor={listColors.color}
+                      color={listColors.backgroundColor}
+                      hoverStyle={{
+                        backgroundColor: `${listColors.color}99`,
+                        color: theme.color,
+                      }}
                       fontWeight="700"
-                      letterSpacing={-0.5}
-                      paddingHorizontal={10} // prevents clipping due to letter-spacing
+                      paddingHorizontal={3} // prevents clipping due to letter-spacing
                       ellipse
                       maxWidth="100%"
                     >
