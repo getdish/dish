@@ -1,4 +1,4 @@
-import { graphql, uploadFile, useRefetch } from '@dish/graph'
+import { graphql, useRefetch } from '@dish/graph'
 import React, { useEffect, useRef } from 'react'
 import { HStack, Input, Paragraph, Spacer, Text, TextArea, Toast, VStack } from 'snackui'
 
@@ -7,24 +7,22 @@ import { queryUser } from '../queries/queryUser'
 import { characters } from './home/user/characters'
 import { UserAvatar } from './home/user/UserAvatar'
 import { useStateSynced } from './hooks/useStateSynced'
+import { useImageUploadForm } from './useImageUploadForm'
 import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
 import { SmallButton } from './views/SmallButton'
-
-const useImageUploader = () => {}
 
 export const UserOnboard = graphql(
   ({ hideLogo, onFinish }: { hideLogo?: boolean; onFinish?: Function }) => {
     const refetch = useRefetch()
     const userStore = useUserStore()
-    const imageFormRef = useRef(null)
+    const uploadForm = useImageUploadForm('avatar')
     const formState = useRef({
       name: userStore.user?.name ?? '',
       about: userStore.user?.about ?? '',
       location: userStore.user?.location ?? '',
     })
     const userCharIndex = userStore.user?.charIndex ?? 0
-    console.log('userStore.user?.charIndex ?? 0', userStore.user?.charIndex ?? 0)
     const [charIndex, setCharIndex] = useStateSynced(userCharIndex)
     const username = userStore.user?.username ?? ''
     const user = queryUser(username)
@@ -32,14 +30,11 @@ export const UserOnboard = graphql(
 
     useEffect(() => {
       const avatar = inputAvatar.current
-      const form = imageFormRef.current
-      if (!avatar || !form) return
+      if (!avatar) return
 
       const handleUpload = async (e) => {
-        const formData = new FormData(form!)
         try {
-          Toast.show('Uploading...')
-          const avatar = await uploadFile('avatar', formData)
+          const avatar = await uploadForm.upload()
           if (avatar) {
             userStore.refresh()
             refetch()
@@ -58,7 +53,7 @@ export const UserOnboard = graphql(
       return () => {
         avatar.removeEventListener('change', handleUpload)
       }
-    }, [imageFormRef.current, inputAvatar.current])
+    }, [inputAvatar.current])
 
     return (
       <>
@@ -89,7 +84,7 @@ export const UserOnboard = graphql(
             {isWeb && (
               <form
                 id="userform"
-                ref={imageFormRef}
+                ref={uploadForm.ref}
                 style={{
                   maxWidth: 150,
                 }}

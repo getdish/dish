@@ -19,11 +19,17 @@ async function go({ legacy, skipTypes }) {
     if (process.env.JS_ONLY || skipTypes) return
 
     if (legacy) {
-      await exec('tsc', ['--emitDeclarationOnly', '--declarationMap', '--declarationDir', 'types'])
+      await exec('npx', [
+        'tsc',
+        '--emitDeclarationOnly',
+        '--declarationMap',
+        '--declarationDir',
+        'types',
+      ])
       return
     }
 
-    await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
+    await exec('npx', ['tsc', '--emitDeclarationOnly', '--declarationMap'])
 
     // if its already a single-file we need to handle it diff
     if (await fs.pathExists('index.d.ts')) {
