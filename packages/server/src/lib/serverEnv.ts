@@ -1,4 +1,4 @@
-Error.stackTraceLimit = 25
+Error.stackTraceLimit = Infinity
 
 process.env.TARGET = process.env.TARGET || 'node'
 

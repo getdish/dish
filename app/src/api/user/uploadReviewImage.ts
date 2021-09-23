@@ -1,4 +1,4 @@
-import { runMiddleware, useRouteBodyParser } from '@dish/api'
+import { route, runMiddleware, useRouteBodyParser } from '@dish/api'
 import {
   PhotoXrefQuery,
   PhotoXrefQueryHelpers,
@@ -8,15 +8,16 @@ import {
 import { isPresent } from '@dish/helpers'
 
 import { createMulterUploader, ensureBucket } from './_multerUploader'
-import { getUserFromRoute, secureRoute } from './_user'
+import { ensureSecureRoute, getUserFromRoute } from './_user'
 
 const BUCKET_NAME = 'review-images'
 ensureBucket(BUCKET_NAME)
 const upload = createMulterUploader(BUCKET_NAME).array('review-images', 1)
 
-export default secureRoute('user', async (req, res) => {
+export default route(async (req, res) => {
   try {
-    await useRouteBodyParser(req, res, { raw: { limit: '4MB' } })
+    await useRouteBodyParser(req, res, { raw: { limit: '62mb' } })
+    await ensureSecureRoute(req, res, 'user')
     await runMiddleware(req, res, upload)
     const user = await getUserFromRoute(req)
     if (!user) {
