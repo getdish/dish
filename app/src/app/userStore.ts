@@ -165,9 +165,6 @@ class UserStore extends Store {
                 id: {
                   _eq: id,
                 },
-                // name: {
-                //   _neq: `${Math.random()}`,
-                // },
               },
             })
             .map((u) => ({
@@ -178,6 +175,7 @@ class UserStore extends Store {
               about: u.about,
               location: u.location,
               has_onboarded: u.has_onboarded,
+              charIndex: u.charIndex,
             }))[0],
         {
           refetch: true,

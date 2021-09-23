@@ -6,6 +6,7 @@ import { isWeb } from '../constants/constants'
 import { queryUser } from '../queries/queryUser'
 import { characters } from './home/user/characters'
 import { UserAvatar } from './home/user/UserAvatar'
+import { useStateSynced } from './hooks/useStateSynced'
 import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
 import { SmallButton } from './views/SmallButton'
@@ -20,7 +21,9 @@ export const UserOnboard = graphql(
       about: userStore.user?.about ?? '',
       location: userStore.user?.location ?? '',
     })
-    const [charIndex, setCharIndex] = useState(userStore.user?.charIndex ?? 0)
+    const userCharIndex = userStore.user?.charIndex ?? 0
+    console.log('userStore.user?.charIndex ?? 0', userStore.user?.charIndex ?? 0)
+    const [charIndex, setCharIndex] = useStateSynced(userCharIndex)
     const username = userStore.user?.username ?? ''
     const user = queryUser(username)
     const inputAvatar = useRef<HTMLInputElement>(null)
@@ -120,7 +123,6 @@ export const UserOnboard = graphql(
             defaultValue={formState.current.name}
             width="100%"
             onChangeText={(text) => {
-              console.log('changing name to be', text)
               formState.current.name = text
             }}
           />
@@ -144,7 +146,6 @@ export const UserOnboard = graphql(
                     backgroundColor: i === charIndex ? '#fff' : '#444',
                   }}
                   onPress={() => {
-                    console.log('setting', i)
                     setCharIndex(i) // TODO can remove if gqty works
                   }}
                 >
