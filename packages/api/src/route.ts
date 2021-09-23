@@ -28,7 +28,8 @@ type BodyParseOptsURLEncoded = {
 
 function getBodyParser(opts: BodyParseOpts) {
   const key = opts ? Object.keys(opts)[0] : 'json'
-  return bodyParser[key](opts?.[key] ?? { limit: '2048mb' })
+  const finalOpts = opts?.[key] ?? { limit: '2048mb' }
+  return bodyParser[key](finalOpts)
 }
 
 export async function useRouteBodyParser(req: Request, res: Response, opts: BodyParseOpts) {
@@ -61,7 +62,7 @@ export function handleErrors(fn: Handler) {
       if (handlerRes instanceof Promise) {
         await handlerRes
       }
-    } catch (err) {
+    } catch (err: any) {
       // TODO theres duplicate versions of @dish/api we need to dedupe
       // then revert this back to instanceof checks
       if (err.name == 'RouteNext') {
@@ -87,7 +88,6 @@ export async function runMiddleware(req: Request, res: Response, fn: ExpressHand
       if (result instanceof Error) {
         return reject(result)
       }
-
       return resolve(result)
     })
   })

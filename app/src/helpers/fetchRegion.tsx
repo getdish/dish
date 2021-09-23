@@ -15,8 +15,8 @@ export const fetchRegion = async (slug?: string | null) => {
   if (!slug) {
     return null
   }
+  const url = `${DISH_API_ENDPOINT}/region?slug=${encodeURIComponent(slug)}`
   try {
-    const url = `${DISH_API_ENDPOINT}/region?slug=${encodeURIComponent(slug)}`
     const res: RegionApiResponse = await fetch(url).then((x) => x.json())
     const centerAt = res?.centroid?.coordinates
     // console.log('got region response', res, centerAt)
@@ -41,7 +41,7 @@ export const fetchRegion = async (slug?: string | null) => {
     }
     return null
   } catch (err) {
-    console.error(err)
+    console.error('error fetching region', err, url)
     return null
   }
 }

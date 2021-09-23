@@ -43,7 +43,7 @@ const hasuraHeaders = {
 }
 
 export default route(async (req, res) => {
-  await useRouteBodyParser(req, res, { text: { type: '*/*', limit: '8192mb' } })
+  await useRouteBodyParser(req, res, { text: { type: '*/*', limit: '8mb' } })
   const { body, method } = req
   let cache: GQLCacheResponse | null = null
 

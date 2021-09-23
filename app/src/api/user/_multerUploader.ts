@@ -22,6 +22,9 @@ const s3 = new AWS.S3({
 
 export const createMulterUploader = (bucketName: string) =>
   multer({
+    limits: {
+      fileSize: 1_024 * 1_024 * 80, // 80 mb
+    },
     storage: multerS3({
       s3,
       bucket: bucketName,

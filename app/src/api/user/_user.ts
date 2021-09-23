@@ -1,5 +1,5 @@
-import { Handler, Req, Res, RouteExit, handleErrors } from '@dish/api'
-import { DISH_API_ENDPOINT, userFindOne } from '@dish/graph'
+import { Req, Res, RouteExit } from '@dish/api'
+import { userFindOne } from '@dish/graph'
 import { JWT_SECRET } from '@dish/helpers-node'
 import * as jwt from 'jsonwebtoken'
 
@@ -11,12 +11,9 @@ const access = {
   user: ['user'],
 }
 
-export function secureRoute(minimumPermission: PermissionLevel, route: Handler) {
-  return handleErrors(async (req, res) => {
-    ensureJWT(req, res)
-    await ensureRole(req, res, minimumPermission)
-    await route(req, res)
-  })
+export async function ensureSecureRoute(req: Req, res: Res, minimumPermission: PermissionLevel) {
+  ensureJWT(req, res)
+  await ensureRole(req, res, minimumPermission)
 }
 
 export async function getUserFromEmailOrUsername(login: string) {
