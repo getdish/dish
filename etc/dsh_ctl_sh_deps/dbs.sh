@@ -58,6 +58,13 @@ function hasura_admin() {
   popd
 }
 
+# helper to run hasura commands
+function hasura_cmd() {
+  pushd services/hasura
+  hasura --skip-update-check "$@" --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+  popd
+}
+
 function migrate_hasura() {
   echo "migrating hasura"
   if ! [ -x "$(command -v hasura)" ]; then

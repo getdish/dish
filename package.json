@@ -63,6 +63,7 @@
     "clean:build": "./dsh clean_build",
     "hasura:migrate": "./dsh migrate_hasura",
     "hasura:migrate:test": "DISH_ENV=test yarn hasura:migrate",
+    "hasura:migrate:create": "./dsh hasura_cmd migrate create",
     "hasura:admin": "./dsh hasura_admin",
     "prettier": "prettier --write \"**/*.(ts,tsx)\" || true",
     "expo:check-deps": "expo-yarn-workspaces check-workspace-dependencies",
