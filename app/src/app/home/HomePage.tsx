@@ -1,13 +1,11 @@
 import { slugify } from '@dish/graph'
 import { useStore, useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo, useEffect, useMemo } from 'react'
+import React, { Suspense, memo, useEffect } from 'react'
 import {
   AbsoluteVStack,
   AnimatedVStack,
-  HStack,
   LoadingItems,
   Paragraph,
-  Spacer,
   Text,
   Theme,
   VStack,
@@ -18,7 +16,6 @@ import {
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { getDefaultLocation, setDefaultLocation } from '../../constants/initialHomeState'
 import { useRegionQuery } from '../../helpers/fetchRegion'
-import { getColorsForName } from '../../helpers/getColorsForName'
 import { queryClient } from '../../helpers/queryClient'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
@@ -31,15 +28,12 @@ import { IntroModalStore } from '../IntroModalStore'
 import { PortalItem } from '../Portal'
 import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
-import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { PageHead } from '../views/PageHead'
 import { PaneControlButtons } from '../views/PaneControlButtons'
 import { HomePageFeed } from './HomePageFeed'
 import { homePageStore } from './homePageStore'
-import { HomeRegionTitle } from './HomeRegionTitle'
 import { HomeStackViewProps } from './HomeStackViewProps'
-import { HomeTopSearches } from './HomeTopSearches'
 import { PageContentWithFooter } from './PageContentWithFooter'
 
 export type Props = HomeStackViewProps<HomeStateItemHome>
@@ -148,7 +142,7 @@ const HomePageContent = (props: Props) => {
     region: state.region,
   }
 
-  const media = useMedia()
+  console.log('home', regionResponse, homePageFeedProps)
 
   // {/* TODO pass isActive once gqty supports skeleton loading */}
 

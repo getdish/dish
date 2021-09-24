@@ -9,6 +9,7 @@ import { GeneratedSchema, generatedSchema, scalarsEnumsHash } from './schema.gen
 export * from './schema.generated'
 
 export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Promise<Response> => {
+  console.log('wut', input, init)
   if (isManualDebugMode || process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(` [gqty]
       fetch('${input}', ${
@@ -34,7 +35,8 @@ function clear() {
 clear()
 
 export const queryFetcher: QueryFetcher = async function (query, variables) {
-  if (process.env.NODE_ENV !== 'test' && process.env.TARGET === 'web') {
+  console.log('run query fetch...', GRAPH_API, query)
+  if (process.env.NODE_ENV !== 'test') {
     requests++
     if (requests > 50) {
       console.warn(

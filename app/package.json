@@ -10,9 +10,10 @@
     "etc:colorize": "../dsh run 'DEBUG=1 node -r esbuild-register ./etc/add_colors_to_tiles.ts'",
     "postinstall": "./etc/postinstall.sh",
     "etc:colorize:staging": "NODE_ENV=staging yarn etc:colorize",
-    "app:start": "DISH_DEBUG=1 LOCAL_HOST=$(ipconfig getifaddr en0) LOG_LEVEL=1 TARGET=native react-native start",
-    "app": "NODE_ENV=development yarn app:start",
-    "app:prod": "NODE_ENV=production yarn app:start",
+    "app:start": "BABEL_ENV=production DISH_DEBUG=1 LOCAL_HOST=$(ipconfig getifaddr en0) LOG_LEVEL=1 TARGET=native react-native start",
+    "app": "DISH_ENV=development dsh run 'yarn app:start'",
+    "app:prod": "DISH_ENV=production dsh run 'yarn app:start --reset-cache'",
+    "app:prod:dev": "DISH_ENV=development IS_LIVE=1 dsh run 'yarn app:start --reset-cache'",
     "app:build": "GIT_COMMIT=$(git rev-parse --short HEAD) npx eas build --platform ios --non-interactive",
     "app:reset": "yarn app --reset-cache",
     "app:reset:hard": "watchman watch-del-all && yarn app:reset",
@@ -132,6 +133,7 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
+    "@dish/babel-plugin-inline-env": "*",
     "@dish/babel-preset": "*",
     "@snackui/babel-plugin": "*",
     "@types/lodash": "^4.14.165",
