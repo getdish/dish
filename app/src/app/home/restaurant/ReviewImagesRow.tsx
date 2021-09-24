@@ -31,6 +31,7 @@ const createImageFormData = (name: string, uri: string) => {
   } else {
     // @ts-ignore
     formData.append('photo', {
+      // @ts-ignore
       uri,
       name: `photo.${fileType}`,
       type: `image/${fileType}`,

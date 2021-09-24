@@ -33,7 +33,6 @@ export default route(async (req, res) => {
     }
 
     const { files, headers } = req
-    console.log('got', headers)
 
     if (!Array.isArray(files) || !files.length || !headers.restaurantid || !user.id) {
       res.status(500).json({
@@ -51,8 +50,6 @@ export default route(async (req, res) => {
       select: (v: photo[]) => v.map((p) => selectFields(p, '*', 1)),
     })
 
-    console.log('insertedPhotos', insertedPhotos)
-
     // set into photo_xref
     const photoXrefs = insertedPhotos.map(({ id }) => {
       return {
@@ -62,10 +59,8 @@ export default route(async (req, res) => {
         tag_id: globalTagId,
         type: 'user-review',
         photo_id: id,
-      } as PhotoXrefQuery
+      } as const
     })
-
-    console.log('photoXrefs', photoXrefs)
 
     const upserted = await PhotoXrefQueryHelpers.upsert(
       photoXrefs,
@@ -74,8 +69,6 @@ export default route(async (req, res) => {
         select: (v: photo_xref[]) => v.map((p) => selectFields(p, '*', 1)),
       }
     )
-
-    console.log('now', upserted)
 
     // return array
     res.json(upserted)

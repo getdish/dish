@@ -486,7 +486,7 @@ function setUnloadCondition(alert: RouteAlert<any> | null) {
 
 // sanity check types
 
-type NavigableItems<Table extends RoutesTable> = {
+export type NavigableItems<Table extends RoutesTable> = {
   [Property in keyof Table]: Table[Property]['params'] extends void
     ? {
         name: Property

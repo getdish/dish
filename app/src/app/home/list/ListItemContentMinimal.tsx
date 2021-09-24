@@ -1,7 +1,7 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, useRefetch } from '@dish/graph'
 import { PenTool, X } from '@dish/react-feather'
-import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import {
   Circle,
   HStack,
@@ -15,9 +15,9 @@ import {
 } from 'snackui'
 
 import { green, red } from '../../../constants/colors'
-import { drawerWidthMax, isWeb } from '../../../constants/constants'
+import { isWeb } from '../../../constants/constants'
 import { getWindowWidth } from '../../../helpers/getWindow'
-import { getAppDrawerWidth, useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
+import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
@@ -37,22 +37,22 @@ import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 
 export const ListItemContentMinimal = (props: ListItemContentProps) => {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const handleScrollMemo = useCallback(() => {
-    setIsLoaded(true)
-  }, [])
-  const handleScroll = isLoaded ? undefined : handleScrollMemo
+  // const [isLoaded, setIsLoaded] = useState(false)
+  // const handleScrollMemo = useCallback(() => {
+  //   setIsLoaded(true)
+  // }, [])
+  // const handleScroll = isLoaded ? undefined : handleScrollMemo
   const [width, setWidth] = useState(getWindowWidth())
 
   return (
     <ContentScrollViewHorizontalFitted
       width={width}
       setWidth={setWidth}
-      onScroll={handleScroll}
+      // onScroll={handleScroll}
       scrollEventThrottle={100}
     >
       <Suspense fallback={<LoadingItem size="lg" />}>
-        <ListItemContentMinimalContent isLoaded={isLoaded} {...props} />
+        <ListItemContentMinimalContent {...props} />
       </Suspense>
     </ContentScrollViewHorizontalFitted>
   )
