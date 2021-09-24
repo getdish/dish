@@ -136,3 +136,4 @@ app/test/screenshots
 data/
 
 etc/docker/config.json
+*.hprof
