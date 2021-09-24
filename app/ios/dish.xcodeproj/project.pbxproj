@@ -318,7 +318,7 @@
 				CODE_SIGN_ENTITLEMENTS = dish/dishapp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = 399WY8X9HY;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = "";
@@ -366,7 +366,7 @@
 				CODE_SIGN_ENTITLEMENTS = dish/dishapp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 45;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = 399WY8X9HY;
 				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = dish/Info.plist;
