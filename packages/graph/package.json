@@ -25,7 +25,7 @@
     "@gqty/logger": "^2.0.1-experimental.0",
     "@gqty/react": "^2.0.1-experimental.0",
     "esbuild-register": "*",
-    "gqty": "2.0.2-experimental.0",
+    "gqty": "2.0.2-experimental.1",
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "lodash": "*",
