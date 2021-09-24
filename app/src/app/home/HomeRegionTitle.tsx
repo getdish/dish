@@ -18,6 +18,7 @@ export const HomeRegionTitle = memo(() => {
     enabled,
     suspense: false,
   })
+  console.log('regionResponse', regionResponse)
   const region = regionResponse.data
   const regionName = region?.name || state.curLocName || '...'
 
