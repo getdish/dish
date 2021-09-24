@@ -265,7 +265,9 @@ export const ReviewTagsRow = memo(
                 onPress={() => setIsFocused(true)}
                 icon={<Tag opacity={0.5} size={16} color="#888" />}
                 marginRight={15}
-              ></SmallButton>
+              >
+                Rate tags
+              </SmallButton>
             )}
 
             {isFocused && (

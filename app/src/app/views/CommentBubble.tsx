@@ -183,7 +183,7 @@ function CommentBubbleContents({
   const charSize = 22
   // const colors = getColorsForName(`${name}`)
 
-  const externalSource = source ? thirdPartyCrawlSources[source] : null
+  const externalSource = source && source !== 'dish' ? thirdPartyCrawlSources[source] : null
   const backgroundColor = avatarBackgroundColor || grey
   const avatar = avatarProp?.image || ''
   const isExternalUser = name === '_dish_external_user'
@@ -225,7 +225,7 @@ function CommentBubbleContents({
                 </>
               )}
             </VStack>
-            {!!externalSource && (
+            {!!externalSource?.image && (
               <VStack
                 shadowColor={theme.shadowColor}
                 shadowRadius={4}

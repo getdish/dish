@@ -15,7 +15,6 @@ export type ListItemProps = {
   minimal?: boolean
   rank: number
   activeTagSlugs?: string[]
-  onFinishRender?: Function
   editable?: boolean
   hideTagRow?: boolean
   above?: any

@@ -60,7 +60,6 @@ export type RestaurantListItemProps = {
   rank: number
   meta?: RestaurantItemMeta
   activeTagSlugs?: string[]
-  onFinishRender?: Function
   description?: string | null
   editableDescription?: boolean
   onChangeDescription?: (next: string) => void
@@ -145,13 +144,6 @@ const RestaurantListItemContent = memo(
         description,
       }))
     }, [description])
-
-    useEffect(() => {
-      if (!restaurant) return
-      if (!!restaurant.name && props.onFinishRender) {
-        return series([() => fullyIdle({ min: 16 }), props.onFinishRender!])
-      }
-    }, [restaurant?.name])
 
     if (!restaurant) {
       return <Paragraph>missing restaurant {restaurantSlug}</Paragraph>
