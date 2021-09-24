@@ -22,10 +22,10 @@
   "dependencies": {
     "@dish/helpers": "*",
     "@dish/use-store": "*",
-    "@gqty/logger": "^2.0.1-experimental.0",
-    "@gqty/react": "^2.0.1-experimental.0",
+    "@gqty/logger": "^2.0.0",
+    "@gqty/react": "^2.0.0",
     "esbuild-register": "*",
-    "gqty": "2.0.2-experimental.0",
+    "gqty": "2.0.1",
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "lodash": "*",
@@ -36,7 +36,7 @@
     "@dish/esdx": "*",
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
-    "@gqty/cli": "^2.0.2-experimental.0",
+    "@gqty/cli": "^2.0.1",
     "@types/node": "*",
     "ava": "^3.14.0"
   }

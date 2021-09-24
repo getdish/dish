@@ -1,11 +1,3 @@
-function docker_exec() {
-  app=${1:-app}
-  shift
-  cmd=$*
-  echo "exec $app: running $cmd"
-  docker exec -it $(docker ps | grep $app | head -n1 | awk '{print $1}') $cmd
-}
-
 function dish_app_generate_tags() {
   export HASURA_ENDPOINT=https://hasura.dishapp.com
   export IS_LIVE=1
