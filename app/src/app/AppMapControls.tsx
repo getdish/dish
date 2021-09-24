@@ -3,10 +3,9 @@ import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/u
 import React, { memo } from 'react'
 import { AbsoluteHStack, AbsoluteVStack, Theme, VStack, useMedia } from 'snackui'
 
-import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
+import { isWeb, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
-import * as AppMapStore from './AppMap'
-import * as appMapStore from './appMapStore'
+import { appMapStore } from './appMapStore'
 import { getSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { useSafeArea } from './hooks/useSafeArea'
@@ -17,9 +16,9 @@ export const AppMapControls = memo(() => {
   const media = useMedia()
   const safeArea = useSafeArea()
   const showSearchHere = useShowSearchHere()
-  const appMapStore = useStoreInstance(appMapStore_1.appMapStore)
+  const appMap = useStoreInstance(appMapStore)
   const isHoverZoomed = useStoreInstanceSelector(
-    appMapStore_1.appMapStore,
+    appMapStore,
     (x) => x.hovered?.via === 'list' && x.zoomOnHover
   )
   return (
@@ -58,17 +57,17 @@ export const AppMapControls = memo(() => {
           >
             {/* {isWeb && <ToggleRegionButton />} */}
 
-            {!appMapStore.hideRegions && (
+            {!appMap.hideRegions && (
               <>
                 <OverlayLinkButton
-                  disabled={appMapStore.currentZoomLevel === 'far'}
+                  disabled={appMap.currentZoomLevel === 'far'}
                   Icon={Minus}
-                  onPress={appMapStore.zoomOut}
+                  onPress={appMap.zoomOut}
                 />
                 <OverlayLinkButton
-                  disabled={appMapStore.currentZoomLevel === 'close'}
+                  disabled={appMap.currentZoomLevel === 'close'}
                   Icon={Plus}
-                  onPress={appMapStore.zoomIn}
+                  onPress={appMap.zoomIn}
                 />
               </>
             )}
@@ -82,7 +81,7 @@ export const AppMapControls = memo(() => {
             {/* <ToggleRegionButton /> */}
 
             {isHoverZoomed && (
-              <OverlayLinkButton Icon={X} onPress={appMapStore.clearHover}>
+              <OverlayLinkButton Icon={X} onPress={appMap.clearHover}>
                 Clear hover
               </OverlayLinkButton>
             )}
@@ -124,7 +123,7 @@ function useShowSearchHere() {
     if (!searchPageStore) return
     const isOnSearch = homeStore.currentStateType === 'search'
     const sp = searchPageStore.searchPosition
-    const { center, span } = appMapStore_1.appMapStore.nextPosition
+    const { center, span } = appMapStore.nextPosition
     if (searchPageStore.status === 'loading') return false
     if (!isOnSearch) return false
     const hasMoved = hasMovedAtLeast(sp, { center, span }, 0.001)

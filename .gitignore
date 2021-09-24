@@ -1,3 +1,5 @@
+app/ios/assets/**/*
+
 etc/docker/canary.json
 etc/docker/features.json
 
