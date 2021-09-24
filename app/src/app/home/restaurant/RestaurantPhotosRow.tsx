@@ -24,7 +24,13 @@ type Props = {
 
 export const RestaurantPhotosRow = (props: Props) => {
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <VStack height={props.height}>
+          <PhotoCard {...props} />
+        </VStack>
+      }
+    >
       <RestaurantPhotosRowContent {...props} />
     </Suspense>
   )
@@ -130,6 +136,8 @@ export const RestaurantPhotosRowContent = memo(
             </PhotoCard>
           )
         })
+
+      console.log('contents', contents)
 
       return (
         // an attempt to get native to scroll but not working
