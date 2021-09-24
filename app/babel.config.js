@@ -28,6 +28,7 @@ module.exports = function (api) {
     plugins: [
       '@babel/plugin-transform-react-jsx',
       'react-native-reanimated/plugin',
+      ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
       [
         '@snackui/babel-plugin',
         {

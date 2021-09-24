@@ -215,7 +215,6 @@ class HomeStore extends Store {
 
   popTo(type: HomeStateItem['type']) {
     const isUpBack = this.getIsUpBack(type)
-    // console.trace('popTo', type, isUpBack)
     if (isUpBack) {
       router.back()
       return
