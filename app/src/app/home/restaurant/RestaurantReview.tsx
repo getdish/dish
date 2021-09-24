@@ -45,7 +45,6 @@ export const RestaurantReview = memo(
         votable,
         after,
         hideGeneralTags,
-        restaurantSlug,
         listSlug,
         listTheme,
         wrapTagsRow,
@@ -60,13 +59,16 @@ export const RestaurantReview = memo(
         return <RestaurantReviewEdit {...props} />
       }
 
+      // todo can we weave this with query?
+      const restaurantSlug = props.restaurantSlug ?? (review?.restaurant?.slug || '')
+
       const tagsRowEl = (
         <>
           {!hideTagsRow && (
             <ReviewTagsRow
               {...props}
               wrapTagsRow={wrapTagsRow}
-              restaurantSlug={props.restaurantSlug ?? (review?.restaurant?.slug || '')}
+              restaurantSlug={restaurantSlug}
               votable={votable}
               hideGeneralTags={hideGeneralTags}
             />
@@ -123,7 +125,11 @@ export const RestaurantReview = memo(
             {!hideImagesRow && (
               <>
                 <Spacer />
-                <ReviewImagesRow isEditing={isEditing || showEmptyReview} />
+                <ReviewImagesRow
+                  restaurantSlug={restaurantSlug}
+                  review={review}
+                  isEditing={isEditing || showEmptyReview}
+                />
               </>
             )}
           </VStack>

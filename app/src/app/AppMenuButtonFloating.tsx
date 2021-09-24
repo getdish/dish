@@ -7,7 +7,9 @@ import { AbsoluteVStack, BlurView, HStack, Modal, VStack, useMedia } from 'snack
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
+import { UserAvatar } from './home/user/UserAvatar'
 import { useSafeArea } from './hooks/useSafeArea'
+import { useUserStore } from './userStore'
 import { CloseButton } from './views/CloseButton'
 import { PaneControlButtons } from './views/PaneControlButtons'
 
@@ -15,6 +17,7 @@ export const AppMenuButtonFloating = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
   const safeArea = useSafeArea()
+  const user = useUserStore()
 
   if (!(media.sm || media.xs)) {
     return null
@@ -72,7 +75,11 @@ export const AppMenuButtonFloating = memo(() => {
             justifyContent="center"
             borderRadius={100}
           >
-            <Menu color="#fff" size={24} />
+            {user.user ? (
+              <UserAvatar size={40} avatar={user.user?.avatar} charIndex={user.user?.charIndex} />
+            ) : (
+              <Menu color="#fff" size={24} />
+            )}
           </HStack>
         </VStack>
       </AbsoluteVStack>

@@ -1,14 +1,15 @@
-import { Auth } from './Auth'
+import { Auth, UserFetchOpts } from './Auth'
 
 export type UploadType = 'avatar' | 'reviewImages'
 
 const endpoints = {
   avatar: '/user/uploadAvatar',
-  reviewImages: '/user/uploadReviewImages',
+  reviewImages: '/user/uploadReviewImage',
 } as const
 
-export async function uploadFile(type: UploadType, body: FormData) {
+export async function uploadFile(type: UploadType, body: FormData, opts?: UserFetchOpts) {
   const response = await Auth.api('POST', endpoints[type], body, {
+    ...opts,
     rawData: true,
   })
   if (response.status !== 200) {

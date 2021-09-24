@@ -40,6 +40,7 @@ import { CloseButton } from '../../views/CloseButton'
 import { CommentBubble } from '../../views/CommentBubble'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { FavoriteButton } from '../../views/FavoriteButton'
+import { Image } from '../../views/Image'
 import { useListFavorite } from '../../views/list/useList'
 import { PageHead } from '../../views/PageHead'
 import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
@@ -48,6 +49,7 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { TitleStyled } from '../../views/TitleStyled'
+import { getListPhoto } from '../getListPhoto'
 import { StackItemProps } from '../HomeStackView'
 import { ColorPicker } from './ColorPicker'
 import { ListAddRestuarant } from './ListAddRestuarant'
@@ -237,232 +239,6 @@ const ListPageContent = memo(
       }
       fontSize = Math.round(fontSize)
 
-      const titleContents = isEditing ? (
-        <Input
-          fontSize={fontSize}
-          fontWeight="800"
-          width="100%"
-          textAlign="left"
-          defaultValue={list.name || ''}
-          onChangeText={(val) => {
-            draft.current.name = val
-          }}
-          multiline
-          numberOfLines={2}
-          marginVertical={-5}
-        />
-      ) : (
-        list.name?.trim() || ''
-      )
-
-      const userCommentEl = (
-        <VStack width="100%" zIndex={100} position="relative" marginTop={-5}>
-          <CommentBubble
-            showChildren={!!(isEditing || list.description)}
-            size="lg"
-            color={listColors.color}
-            chromeless={!isEditing && !list.description}
-            paddingHorizontal={0}
-            marginLeft={-5}
-            date={list.created_at}
-            after={
-              <>
-                {!!tagButtons.length && (
-                  <HStack spacing="sm" justifyContent="center">
-                    {tagButtons}
-                  </HStack>
-                )}
-              </>
-            }
-            username={list.user?.username}
-            avatar={{
-              image: list.user?.avatar || '',
-              charIndex: list.user?.charIndex || 0,
-            }}
-            name={userFullNameOrUsername}
-          >
-            {isEditing ? (
-              <Input
-                placeholder="..."
-                multiline
-                numberOfLines={4}
-                lineHeight={30}
-                fontSize={20}
-                marginVertical={-10}
-                marginHorizontal={-15}
-                defaultValue={list.description ?? ''}
-                onChangeText={(val) => {
-                  draft.current.description = val
-                }}
-              />
-            ) : (
-              (() => {
-                if (!list.description) {
-                  return null
-                }
-                const items = list.description?.split('\n\n') ?? []
-                return (
-                  <>
-                    {items.map((x, i) => {
-                      return (
-                        <Paragraph
-                          paddingBottom={i < items.length - 1 ? 26 : 0}
-                          key={i}
-                          sizeLineHeight={1.1}
-                          size={i == 0 ? 'lg' : 'md'}
-                        >
-                          {x}
-                        </Paragraph>
-                      )
-                    })}
-                  </>
-                )
-              })()
-            )}
-          </CommentBubble>
-
-          {isMyList && isSorting && (
-            <HStack spacing alignSelf="center">
-              <Move size={16} color={listColors.color} />
-              <Paragraph opacity={0.6} size="sm">
-                press and hold on any item to sort
-              </Paragraph>
-            </HStack>
-          )}
-        </VStack>
-      )
-
-      const listHeaderEl = (
-        <>
-          {/* START HEADER */}
-          <VStack paddingHorizontal={10} paddingBottom={5} position="relative">
-            <AbsoluteVStack
-              fullscreen
-              zIndex={-1}
-              backgroundColor={theme.backgroundColorDarker}
-              opacity={0.5}
-            />
-            <HStack paddingHorizontal={20}>
-              <VStack
-                // maxWidth={660}
-                // minWidth={380}
-                alignItems="flex-start"
-                justifyContent="flex-end"
-                width="100%"
-                flex={1}
-              >
-                <VStack minHeight={75} flex={1} />
-                <VStack display={isWeb ? 'block' : 'flex'}>
-                  <TitleStyled
-                    backgroundColor={listColors.backgroundColor}
-                    color={listColors.textColor}
-                    lineHeight={fontSize * 1.4}
-                    fontWeight="800"
-                    fontSize={fontSize}
-                    {...(isEditing && {
-                      width: '100%',
-                    })}
-                  >
-                    {titleContents}
-                  </TitleStyled>
-                </VStack>
-                {userCommentEl}
-              </VStack>
-            </HStack>
-
-            {isMyList && isEditing && (
-              <HStack
-                position="relative"
-                zIndex={1000}
-                marginTop={15}
-                alignItems="center"
-                justifyContent="center"
-              >
-                {isEditing && (
-                  <HStack
-                    backgroundColor={theme.backgroundColor}
-                    padding={5}
-                    paddingHorizontal={20}
-                    borderRadius={100}
-                    elevation={1}
-                    alignItems="center"
-                    flexWrap="wrap"
-                    spacing="xxl"
-                  >
-                    <Paragraph>Color:</Paragraph>
-                    <ColorPicker
-                      colors={allListColors}
-                      color={listColors.backgroundColor}
-                      onChange={(backgroundColor) => {
-                        const index = allListColors.indexOf(backgroundColor)
-                        setListColors(getListColors(index))
-                      }}
-                    />
-                    <InteractiveContainer alignItems="center">
-                      <Paragraph
-                        size="sm"
-                        opacity={0.5}
-                        onPress={() => {
-                          setTheme(0)
-                        }}
-                        paddingVertical={6}
-                        paddingHorizontal={12}
-                      >
-                        Full
-                      </Paragraph>
-                      <Switch
-                        value={list.theme === 1}
-                        onValueChange={(isOn) => {
-                          console.log('?', isOn)
-                          setTheme(isOn ? 1 : 0)
-                        }}
-                      />
-                      <Paragraph
-                        size="sm"
-                        opacity={0.5}
-                        onPress={() => {
-                          setTheme(1)
-                        }}
-                        paddingVertical={6}
-                        paddingHorizontal={12}
-                      >
-                        Minimal
-                      </Paragraph>
-                    </InteractiveContainer>
-                    <HStack>
-                      <Paragraph>Public:&nbsp;</Paragraph>
-                      <Switch value={isPublic} onValueChange={setPublic} />
-                    </HStack>
-                    <SmallButton
-                      tooltip="Delete"
-                      icon={<Trash color={red400} size={20} />}
-                      onPress={async () => {
-                        assertPresent(list.id, 'no list id')
-                        if (confirm('Permanently delete this list?')) {
-                          router.setRouteAlert(null)
-                          await mutate((mutation) => {
-                            return mutation.delete_list({
-                              where: {
-                                id: {
-                                  _eq: list.id,
-                                },
-                              },
-                            })?.__typename
-                          })
-                          Toast.show('Deleted list')
-                          homeStore.popBack()
-                        }
-                      }}
-                    />
-                  </HStack>
-                )}
-              </HStack>
-            )}
-          </VStack>
-          {/* END HEADER */}
-        </>
-      )
-
       const renderItem = useCallback(
         ({ item, index = 0, drag, isActive }: RenderItemParams<any>) => {
           const { restaurantId, restaurant, dishSlugs, position, list_restaurant } = item
@@ -540,7 +316,7 @@ const ListPageContent = memo(
                   setShowAddModal(true)
                 }}
               >
-                <Plus size={42} color="#777" />
+                <Plus size={20} color="#888" />
               </Button>
               <VStack pointerEvents="none" flex={1} />
             </BottomFloatingArea>
@@ -585,7 +361,7 @@ const ListPageContent = memo(
                   <SmallButton
                     icon={isSorting ? null : <ListIcon size={16} color="#888" />}
                     elevation={1}
-                    theme={isSorting ? 'active' : null}
+                    themeInverse
                     onPress={() => setIsSorting((x) => !x)}
                   >
                     {isSorting ? 'Done' : 'Sort'}
@@ -639,7 +415,240 @@ const ListPageContent = memo(
                 )}
               </PaneControlButtonsLeft>
               <VStack width="100%" minHeight={getWindowHeight()}>
-                {listHeaderEl}
+                {/* START HEADER */}
+                <VStack paddingBottom={5} position="relative">
+                  <AbsoluteVStack
+                    fullscreen
+                    zIndex={-1}
+                    backgroundColor={theme.backgroundColorDarker}
+                    opacity={0.5}
+                  />
+                  <HStack paddingHorizontal={20}>
+                    <AbsoluteVStack
+                      overflow="hidden"
+                      zIndex={-1}
+                      borderRadius={1000}
+                      top={-100}
+                      opacity={0.5}
+                      right={-100}
+                    >
+                      <Image
+                        source={{ uri: getListPhoto(list) }}
+                        style={{ width: 400, height: 400 }}
+                      />
+                    </AbsoluteVStack>
+                    <VStack
+                      // maxWidth={660}
+                      // minWidth={380}
+                      alignItems="flex-start"
+                      justifyContent="flex-end"
+                      width="100%"
+                      flex={1}
+                    >
+                      <VStack minHeight={75} flex={1} />
+                      <VStack display={isWeb ? 'block' : 'flex'}>
+                        <TitleStyled
+                          backgroundColor={listColors.backgroundColor}
+                          color={listColors.textColor}
+                          lineHeight={fontSize * 1.4}
+                          fontWeight="800"
+                          fontSize={fontSize}
+                          {...(isEditing && {
+                            width: '100%',
+                          })}
+                        >
+                          {isEditing ? (
+                            <Input
+                              fontSize={fontSize}
+                              fontWeight="800"
+                              width="100%"
+                              textAlign="left"
+                              defaultValue={list.name || ''}
+                              onChangeText={(val) => {
+                                draft.current.name = val
+                              }}
+                              multiline
+                              numberOfLines={2}
+                              marginVertical={-5}
+                            />
+                          ) : (
+                            list.name?.trim() || ''
+                          )}
+                        </TitleStyled>
+                      </VStack>
+                      <VStack
+                        width="100%"
+                        zIndex={100}
+                        position="relative"
+                        marginTop={-5}
+                        marginHorizontal={-10}
+                      >
+                        <CommentBubble
+                          showChildren={!!(isEditing || list.description)}
+                          size="lg"
+                          color={listColors.color}
+                          chromeless={!isEditing && !list.description}
+                          paddingHorizontal={0}
+                          marginLeft={-5}
+                          date={list.created_at}
+                          after={
+                            <>
+                              {!!tagButtons.length && (
+                                <HStack spacing="sm" justifyContent="center">
+                                  {tagButtons}
+                                </HStack>
+                              )}
+                            </>
+                          }
+                          username={list.user?.username}
+                          avatar={{
+                            image: list.user?.avatar || '',
+                            charIndex: list.user?.charIndex || 0,
+                          }}
+                          name={userFullNameOrUsername}
+                        >
+                          {isEditing ? (
+                            <Input
+                              placeholder="..."
+                              multiline
+                              numberOfLines={4}
+                              lineHeight={30}
+                              fontSize={20}
+                              marginVertical={-10}
+                              marginHorizontal={-15}
+                              defaultValue={list.description ?? ''}
+                              onChangeText={(val) => {
+                                draft.current.description = val
+                              }}
+                            />
+                          ) : (
+                            (() => {
+                              if (!list.description) {
+                                return null
+                              }
+                              const items = list.description?.split('\n\n') ?? []
+                              return (
+                                <>
+                                  {items.map((x, i) => {
+                                    return (
+                                      <Paragraph
+                                        paddingBottom={i < items.length - 1 ? 26 : 0}
+                                        key={i}
+                                        sizeLineHeight={1.1}
+                                        size={i == 0 ? 'lg' : 'md'}
+                                      >
+                                        {x}
+                                      </Paragraph>
+                                    )
+                                  })}
+                                </>
+                              )
+                            })()
+                          )}
+                        </CommentBubble>
+
+                        {isMyList && isSorting && (
+                          <HStack spacing alignSelf="center">
+                            <Move size={16} color={listColors.color} />
+                            <Paragraph opacity={0.6} size="sm">
+                              press and hold on any item to sort
+                            </Paragraph>
+                          </HStack>
+                        )}
+                      </VStack>
+                    </VStack>
+                  </HStack>
+
+                  {isMyList && isEditing && (
+                    <HStack
+                      position="relative"
+                      zIndex={1000}
+                      marginTop={15}
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      {isEditing && (
+                        <HStack
+                          backgroundColor={theme.backgroundColor}
+                          padding={5}
+                          paddingHorizontal={20}
+                          borderRadius={100}
+                          elevation={1}
+                          alignItems="center"
+                          flexWrap="wrap"
+                          spacing="xxl"
+                        >
+                          <Paragraph>Color:</Paragraph>
+                          <ColorPicker
+                            colors={allListColors}
+                            color={listColors.backgroundColor}
+                            onChange={(backgroundColor) => {
+                              const index = allListColors.indexOf(backgroundColor)
+                              setListColors(getListColors(index))
+                            }}
+                          />
+                          <InteractiveContainer alignItems="center">
+                            <Paragraph
+                              size="sm"
+                              opacity={0.5}
+                              onPress={() => {
+                                setTheme(0)
+                              }}
+                              paddingVertical={6}
+                              paddingHorizontal={12}
+                            >
+                              Full
+                            </Paragraph>
+                            <Switch
+                              value={list.theme === 1}
+                              onValueChange={(isOn) => {
+                                console.log('?', isOn)
+                                setTheme(isOn ? 1 : 0)
+                              }}
+                            />
+                            <Paragraph
+                              size="sm"
+                              opacity={0.5}
+                              onPress={() => {
+                                setTheme(1)
+                              }}
+                              paddingVertical={6}
+                              paddingHorizontal={12}
+                            >
+                              Minimal
+                            </Paragraph>
+                          </InteractiveContainer>
+                          <HStack>
+                            <Paragraph>Public:&nbsp;</Paragraph>
+                            <Switch value={isPublic} onValueChange={setPublic} />
+                          </HStack>
+                          <SmallButton
+                            tooltip="Delete"
+                            icon={<Trash color={red400} size={20} />}
+                            onPress={async () => {
+                              assertPresent(list.id, 'no list id')
+                              if (confirm('Permanently delete this list?')) {
+                                router.setRouteAlert(null)
+                                await mutate((mutation) => {
+                                  return mutation.delete_list({
+                                    where: {
+                                      id: {
+                                        _eq: list.id,
+                                      },
+                                    },
+                                  })?.__typename
+                                })
+                                Toast.show('Deleted list')
+                                homeStore.popBack()
+                              }
+                            }}
+                          />
+                        </HStack>
+                      )}
+                    </HStack>
+                  )}
+                </VStack>
+                {/* END HEADER */}
 
                 {!listItems.items.length && (
                   <VStack padding={20} margin={20} borderRadius={10}>

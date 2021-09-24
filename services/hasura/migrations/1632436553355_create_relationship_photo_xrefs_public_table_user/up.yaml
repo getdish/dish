@@ -1,0 +1,13 @@
+- args:
+    name: photo_xrefs
+    table:
+      name: user
+      schema: public
+    using:
+      manual_configuration:
+        column_mapping:
+          id: user_id
+        remote_table:
+          name: photo_xref
+          schema: public
+  type: create_array_relationship

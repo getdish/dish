@@ -1,11 +1,24 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql, useRefetch } from '@dish/graph'
 import { PenTool, X } from '@dish/react-feather'
-import React, { Suspense, memo, useEffect, useState } from 'react'
-import { Circle, HStack, Text, VStack, useMedia, useTheme } from 'snackui'
+import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
+import {
+  Circle,
+  HStack,
+  LoadingItem,
+  Spacer,
+  Text,
+  VStack,
+  useMedia,
+  useTheme,
+  useThemeName,
+} from 'snackui'
 
 import { green, red } from '../../../constants/colors'
-import { isWeb } from '../../../constants/constants'
+import { drawerWidthMax, isWeb } from '../../../constants/constants'
+import { getWindowWidth } from '../../../helpers/getWindow'
+import { getAppDrawerWidth, useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
+import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { TitleStyled } from '../../views/TitleStyled'
@@ -23,7 +36,29 @@ import { RestaurantRatingView } from '../RestaurantRatingView'
 import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 
-export const ListItemContentMinimal = memo(
+export const ListItemContentMinimal = (props: ListItemContentProps) => {
+  const [isLoaded, setIsLoaded] = useState(false)
+  const handleScrollMemo = useCallback(() => {
+    setIsLoaded(true)
+  }, [])
+  const handleScroll = isLoaded ? undefined : handleScrollMemo
+  const [width, setWidth] = useState(getWindowWidth())
+
+  return (
+    <ContentScrollViewHorizontalFitted
+      width={width}
+      setWidth={setWidth}
+      onScroll={handleScroll}
+      scrollEventThrottle={100}
+    >
+      <Suspense fallback={<LoadingItem size="lg" />}>
+        <ListItemContentMinimalContent isLoaded={isLoaded} {...props} />
+      </Suspense>
+    </ContentScrollViewHorizontalFitted>
+  )
+}
+
+export const ListItemContentMinimalContent = memo(
   graphql((props: ListItemContentProps) => {
     const {
       listColors,
@@ -60,7 +95,7 @@ export const ListItemContentMinimal = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 24 : 28) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 28 : 34) * titleFontScale)
     const theme = useTheme()
 
     const restaurantReviewListProps = useRestaurantReviewListProps({
@@ -81,36 +116,36 @@ export const ListItemContentMinimal = memo(
 
     const [isFocused, setIsFocused] = useState(false)
 
+    const drawerWidth = useAppDrawerWidth()
+    const themeName = useThemeName()
+    const isDark = themeName === 'dark'
+
     if (!restaurant) {
       return null
     }
 
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
-        <HStack
-          paddingVertical={25}
-          paddingHorizontal={18}
-          paddingLeft={28}
-          backgroundColor={theme.backgroundColor}
-          hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
-          maxWidth="100%"
-          width="100%"
-          overflow="hidden"
-          flex={1}
-        >
-          <VStack maxWidth="100%" flex={1}>
+        <HStack backgroundColor={theme.backgroundColor} overflow="hidden" flex={1}>
+          <VStack
+            hoverStyle={{ backgroundColor: `${listColors.backgroundColor}11` }}
+            paddingVertical={25}
+            paddingHorizontal={18}
+            maxWidth="100%"
+            flex={1}
+          >
             <HStack
               className="hover-faded-in-parent"
               alignItems="center"
               flexGrow={1}
               position="relative"
             >
-              <VStack opacity={0.5} y={3} marginLeft={-38} marginRight={10} width={35}>
+              <VStack opacity={0.5} y={3} marginLeft={-35} marginRight={3} width={35}>
                 <RankView rank={rank} />
               </VStack>
 
-              <HStack marginHorizontal={-10} alignItems="center">
-                <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
+              <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
+                <HStack alignItems="center" flexDirection="row" flexWrap="nowrap" flex={1}>
                   <HStack
                     marginVertical={-4}
                     alignItems="center"
@@ -120,17 +155,17 @@ export const ListItemContentMinimal = memo(
                     // pressStyle={{
                     //   backgroundColor: theme.backgroundColorTertiary,
                     // }}
-                    flex={1}
                     overflow="hidden"
+                    // ⚠️ note block necessary
                     display={isWeb ? 'block' : 'flex'}
                   >
                     <TitleStyled
                       fontSize={titleFontSize}
                       lineHeight={titleFontSize * 1.56}
-                      backgroundColor={listColors.color}
-                      color={listColors.backgroundColor}
+                      backgroundColor={`${listColors.backgroundColor}55`}
+                      color={isDark ? listColors.lightColor : listColors.darkColor}
                       hoverStyle={{
-                        backgroundColor: `${listColors.color}99`,
+                        backgroundColor: `${listColors.backgroundColor}22`,
                         color: theme.color,
                       }}
                       fontWeight="700"
@@ -141,19 +176,31 @@ export const ListItemContentMinimal = memo(
                       {restaurantName}
                     </TitleStyled>
                   </HStack>
-                </Link>
-              </HStack>
+                  <Spacer />
+                  <ReviewTagsRow
+                    hideGeneralTags={!editable}
+                    // wrapTagsRow
+                    list={list}
+                    review={review}
+                    restaurantSlug={restaurant.slug || ''}
+                    onFocusChange={setIsFocused}
+                  />
+                </HStack>
+              </Link>
             </HStack>
 
             {!minimal && (
-              <HStack spacing="md" alignItems="center" marginTop={media.sm ? -12 : -2}>
+              <HStack spacing="xs" alignItems="center" marginTop={4}>
                 {!isFocused && !!editable && (
-                  <SmallButton icon={<X size={15} color="#888" />} onPress={onDelete as any} />
+                  <SmallButton
+                    tooltip="Remove"
+                    icon={<X size={15} color="#888" />}
+                    onPress={onDelete as any}
+                  />
                 )}
 
                 {!minimal && !isFocused && !!editable && !isEditing && (
                   <SmallButton
-                    tooltip="Write comment"
                     icon={<PenTool size={14} color="#888" />}
                     onPress={() => setIsEditing(true)}
                   >
@@ -169,15 +216,15 @@ export const ListItemContentMinimal = memo(
                   <RestaurantAddress size={'xs'} address={restaurant.address} />
                 )}
 
-                <HStack marginRight={10}>
+                <HStack marginHorizontal={10}>
                   <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
                 </HStack>
 
-                <VStack opacity={0.5}>
+                <VStack marginHorizontal={10} opacity={0.5}>
                   <RestaurantRatingView restaurant={restaurant} size={28} />
                 </VStack>
 
-                <Text opacity={0.5} fontSize={14} color={theme.colorTertiary}>
+                <Text marginHorizontal={10} opacity={0.5} fontSize={14} color={theme.colorTertiary}>
                   {price_range ?? '?'}
                 </Text>
 
@@ -221,7 +268,7 @@ export const ListItemContentMinimal = memo(
             {/* ROW: review */}
             {!minimal && (review || isEditing) && (
               <Suspense fallback={null}>
-                <VStack className="hide-while-unselectable">
+                <VStack maxWidth={drawerWidth - 20} className="hide-while-unselectable">
                   <RestaurantReview
                     size="lg"
                     marginTop={0}
@@ -254,18 +301,13 @@ export const ListItemContentMinimal = memo(
 
             {!minimal && (
               <VStack>
-                <HStack alignItems="center" spacing="sm">
-                  <ReviewTagsRow
-                    hideGeneralTags
-                    wrapTagsRow
-                    list={list}
-                    review={review}
-                    restaurantSlug={restaurant.slug || ''}
-                    onFocusChange={setIsFocused}
-                  />
-                </HStack>
-
-                <ReviewImagesRow isEditing={editable} marginTop={20} list={list} review={review} />
+                <ReviewImagesRow
+                  restaurantId={restaurant?.id}
+                  isEditing={editable}
+                  marginTop={20}
+                  list={list}
+                  review={review}
+                />
               </VStack>
             )}
           </VStack>

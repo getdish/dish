@@ -3,12 +3,12 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 import { VStack, isTouchDevice, useDebounce, useGet } from 'snackui'
 
-import { useAppDrawerWidthInner } from '../hooks/useAppDrawerWidth'
+import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
 import { ContentScrollContext, ScrollStore } from './ContentScrollView'
 import { useScrollLock } from './useScrollLock'
 
 export const useContentScrollHorizontalFitter = () => {
-  const drawerWidth = useAppDrawerWidthInner()
+  const drawerWidth = useAppDrawerWidth()
   const minWidth = Math.min(drawerWidth, 600)
   const [width, setWidth] = useState(Math.max(minWidth, drawerWidth))
   const setWidthDebounce = useDebounce(setWidth, 250)
