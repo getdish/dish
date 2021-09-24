@@ -150,6 +150,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         const y = curSnapY + dy
         // limit movement (TODO make it "resist" at edge)
         const scroller = scrollViews.get(getActiveParentId())
+        console.log('scroller', scroller)
         if (y < minY || curScrollerYMove >= 0) {
           if (!scroller) return
           // drawerStore.isAtTop = true
@@ -187,6 +188,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
               console.log('avoiding throw, seemed like it was freezing UI for a while, checking')
               return null
             }
+            console.log('scroller', scroller)
             scroller.scrollTo({ y, x: 0, animated: true })
             // hacky... let it animate a bit before unlocking...
             setTimeout(() => {
@@ -208,7 +210,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
 
   return (
     <Animated.View
-      pointerEvents={isWeb ? 'none' : 'box-none'}
       style={[
         styles.animatedView,
         {

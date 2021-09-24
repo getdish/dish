@@ -73,7 +73,7 @@
   },
   "resolutions": {
     "expo-screen-orientation": "3.3.0",
-    "react-native-reanimated": "patch:react-native-reanimated@npm:2.3.0-alpha.3#.yarn/patches/react-native-reanimated.patch",
+    "react-native-reanimated": "patch:react-native-reanimated@npm:2.3.0-beta.1#.yarn/patches/react-native-reanimated.patch",
     "metro": "0.66.2",
     "metro-babel-register": "0.66.2",
     "@babel/plugin-proposal-decorators": "7.15.4",

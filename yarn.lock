@@ -2850,7 +2850,7 @@ __metadata:
     "@dish/server": "*"
     "@loadable/webpack-plugin": ^5.14.2
     "@mdx-js/loader": ^1.6.22
-    "@pmmmwh/react-refresh-webpack-plugin": ^0.4.3
+    "@pmmmwh/react-refresh-webpack-plugin": ^0.5.1
     "@snackui/babel-plugin": "*"
     "@snackui/static": "*"
     "@types/node": "*"
@@ -22317,9 +22317,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:2.3.0-alpha.3":
-  version: 2.3.0-alpha.3
-  resolution: "react-native-reanimated@npm:2.3.0-alpha.3"
+"react-native-reanimated@npm:2.3.0-beta.1":
+  version: 2.3.0-beta.1
+  resolution: "react-native-reanimated@npm:2.3.0-beta.1"
   dependencies:
     "@babel/plugin-transform-object-assign": ^7.10.4
     invariant: ^2.2.4
@@ -22331,13 +22331,13 @@ __metadata:
     react: "*"
     react-native: "*"
     react-native-gesture-handler: "*"
-  checksum: b55ddce1d07d9cb12284d6004b470fcd9cb9d46af2ac749e8cfe3c733575f557cf3eadd441dfdac662ff38b6f9979ec5e28996016f1ceda506434b56968bc6fb
+  checksum: 204a9b98c166813fc3309169c8d54018f7b6ce00d7469bc76d8e976d1d12d635c1158f74dd7193e1a1a17c7e12e3ad89924371af796f3d01e24743c80c2ca828
   languageName: node
   linkType: hard
 
-"react-native-reanimated@patch:react-native-reanimated@npm:2.3.0-alpha.3#.yarn/patches/react-native-reanimated.patch::locator=dish-monorepo%40workspace%3A.":
-  version: 2.3.0-alpha.3
-  resolution: "react-native-reanimated@patch:react-native-reanimated@npm%3A2.3.0-alpha.3#.yarn/patches/react-native-reanimated.patch::version=2.3.0-alpha.3&hash=7d0fb2&locator=dish-monorepo%40workspace%3A."
+"react-native-reanimated@patch:react-native-reanimated@npm:2.3.0-beta.1#.yarn/patches/react-native-reanimated.patch::locator=dish-monorepo%40workspace%3A.":
+  version: 2.3.0-beta.1
+  resolution: "react-native-reanimated@patch:react-native-reanimated@npm%3A2.3.0-beta.1#.yarn/patches/react-native-reanimated.patch::version=2.3.0-beta.1&hash=c2e066&locator=dish-monorepo%40workspace%3A."
   dependencies:
     "@babel/plugin-transform-object-assign": ^7.10.4
     invariant: ^2.2.4
@@ -22349,7 +22349,7 @@ __metadata:
     react: "*"
     react-native: "*"
     react-native-gesture-handler: "*"
-  checksum: 771d2cdcbc83ca8bb66cee23f08d78d149245ce4e40b8da962838d763d096ba368344ad78c9cf4c6b6bbbfd56b5704877da8a74a03b80fd71596e820d532df07
+  checksum: fd4c63ede3b93b81f37ebe08671d4f8e434f3f758961bfc30a80c8a50c32f3a30e3a46648aaa48ec133fa27b7bcfcb86df4342a075d7920b6b58fd96d54f3b21
   languageName: node
   linkType: hard
 
