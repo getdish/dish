@@ -2,6 +2,7 @@ import React, { memo } from 'react'
 import { ThemeInverse } from 'snackui'
 
 import { useRegionQuery } from '../../helpers/fetchRegion'
+import { getColorsForName } from '../../helpers/getColorsForName'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { autocompletesStore } from '../AutocompletesStore'
 import { useLastHomeState } from '../homeStore'
@@ -12,6 +13,7 @@ export const HomeRegionTitle = memo(() => {
   // const media = useMedia()
   const state = useLastHomeState('home', 'homeRegion') as HomeStateItemHome
   const enabled = !!state.region
+  const regionColors = getColorsForName(state.region)
   const regionResponse = useRegionQuery(state.region, {
     enabled,
     suspense: true,
@@ -23,6 +25,7 @@ export const HomeRegionTitle = memo(() => {
     <Link onPress={() => autocompletesStore.setTarget('location')}>
       <ThemeInverse>
         <SlantedTitle
+          backgroundColor={regionColors.color}
           // backgroundColor="#000"
           // color="#fff"
           alignSelf="center"
