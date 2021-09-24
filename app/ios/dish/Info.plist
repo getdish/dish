@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>45</string>
+	<string>46</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -56,6 +56,11 @@
 			</dict>
 		</dict>
 	</dict> -->
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>
+		 Users can submit photos as part of their review for a restaurant. This data is always
+		 public and indicated as such.
+	</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>
 		 Users can enable their location see and search nearby food.
