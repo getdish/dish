@@ -57,7 +57,8 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
     >
       {/* was broke on larger size too */}
       {/* on native this causes laggy scrolls */}
-      {isWeb && isBehind && (
+      {/* didnt scale properly */}
+      {/* {isWeb && isBehind && (
         <AbsoluteVStack
           className="ease-in-out"
           zIndex={1002}
@@ -74,7 +75,7 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
           shadowRadius={20}
           shadowOffset={{ width: 10, height: 0 }}
         />
-      )}
+      )} */}
       {children}
     </VStack>
   )

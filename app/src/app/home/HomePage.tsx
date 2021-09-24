@@ -63,7 +63,7 @@ const HomePageContent = (props: Props) => {
   const enabled = isActive && !!state.region
   const regionResponse = useRegionQuery(state.region, {
     enabled,
-    suspense: true,
+    suspense: false,
   })
   const region = regionResponse.data
   // const [position, setPosition] = useState<MapPosition>(initialPosition)

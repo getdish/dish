@@ -43,7 +43,7 @@ export class ScrollStore extends Store<{ id: string }> {
   }
 
   scrollTo(val: { x?: number; y?: number; animated?: boolean }) {
-    this.scrollView?.scrollTo(val)
+    this.scrollView?.scrollTo?.(val)
   }
 }
 

@@ -41,14 +41,12 @@ const ListCardContent = graphql((props: ListCardProps) => {
   const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
   const listColors = useListColors(list?.color)
   const themeName = useThemeName()
-  // const listThemeName = (list?.theme || 0) === 0 ? 'modern' : 'minimal'
   return (
     <ListCardFrame
       title={list?.name ?? ''}
       numItems={numItems}
       author={` by ${getUserName(list?.user)}`}
       {...props}
-      // theme={listThemeName}
       tags={
         props.size === 'xs'
           ? []
@@ -91,8 +89,10 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         outside={
           <>
             {outside}
-            {(userStore.isAdmin ||
-              (userSlug && userStore.user?.username === userSlug && deletable)) && (
+            {!!(
+              userStore.isAdmin ||
+              (userSlug && userStore.user?.username === userSlug && deletable)
+            ) && (
               <AbsoluteVStack zIndex={1000} pointerEvents="auto" top={-5} right={-5}>
                 <CloseButton
                   size={40}

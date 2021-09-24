@@ -413,13 +413,14 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const searchPageStore = getSearchPageStore()
     const searchPageChildrenStore = useStore(SearchPageChildrenStore, { id })
 
+    // for now, scrollRef doesnt have scrollTo?
     useEffect(() => {
       return reaction(
         searchPageStore,
         (x) => [x.index, x.event] as const,
         function searchPageIndexToScroll([index, event]) {
           if (event === 'pin' || event === 'key') {
-            scrollRef.current?.scrollTo({
+            scrollRef.current?.scrollTo?.({
               x: 0,
               y: ITEM_HEIGHT * index,
               animated: true,
@@ -437,7 +438,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     })
 
     const scrollToTopHandler = useCallback(() => {
-      scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+      scrollRef.current?.scrollTo?.({ x: 0, y: 0, animated: true })
     }, [])
 
     useLayoutEffect(() => {
@@ -449,35 +450,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         searchPageChildrenStore.setChildren(null)
       }
     }, [])
-
-    // memo is important here, keeps scroll from stopping on ios safari
-    // return useMemo(() => {
-    //   return (
-    //     <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
-    //       <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
-    //         <PageContentWithFooter>
-    //           <SearchHeader />
-    //           <SearchContent id={id} />
-    //           <Suspense fallback={null}>
-    //             <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
-    //           </Suspense>
-    //         </PageContentWithFooter>
-    //       </ContentScrollView>
-    //     </View>
-    //   )
-    // }, [])
-
-    // return (
-    //   <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
-    //     <ScrollView ref={combineRefs(ref, scrollRef) as any} {...props}>
-    //       <SearchHeader />
-    //       <SearchContent id={id} />
-    //       <Suspense fallback={null}>
-    //         <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
-    //       </Suspense>
-    //     </ScrollView>
-    //   </View>
-    // )
 
     return (
       <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
@@ -546,134 +518,3 @@ function useTagsFromRoute(route: HistoryItem<'search'>) {
     suspense: false,
   })
 }
-
-// ... in Map.tsx the fitBounds that runs
-// in some cases comes from `center/span` above which are
-// estimates of the final bounds basically, we can't get that
-// from mapbox (no `map.getFinalBoundsFor(bounds)`)
-// instead of doing complicated things in Map, once center changes,
-// the *next* movement
-// from map we can safely ignore! because it will almost always change
-// worst case is not bad: we miss a movement, but they can just touch
-// map again and it will show "re-search in area button"
-// useEffect(() => {
-//   let runs = 0
-//   const dispose = reaction(
-//     appMapStore,
-//     (x) => x.nextPosition,
-//     function setSearchPosition(x) {
-//       searchPageStore.setSearchPosition(x)
-//       runs++
-//       if (runs > 1) {
-//         dispose()
-//       }
-//     }
-//   )
-//   return dispose
-// }, [props.item.id, center])
-
-// disabled for now, too easy to regress
-// // sync mapStore.selected to activeIndex in results
-// if (isWeb) {
-//   useEffect(() => {
-// should i try without reaction2? that couldve been causing weridness?
-//     return reaction2(() => {
-//       const { searchPosition, status } = searchPageStore
-//       const { nextPosition, isOnRegion } = appMapStore
-//       if (status === 'loading') return
-//       if (isOnRegion) {
-//         return
-//       }
-//       return series([
-//         () => sleep(600),
-//         () => {
-//           const props = getProps()
-//           if (!props.isActive) return
-//           // not on region, set to coordinates
-//           const { center, span } = searchPosition
-//           const pos = [center.lat, center.lng, span.lat, span.lng].map(
-//             (x) => Math.round(x * 1000) / 1000
-//           )
-//           console.warn('should set', pos.join('_'))
-//           // router.setParams({
-//           //   region: pos.join('_'),
-//           // })
-//         },
-//       ])
-//     })
-//   }, [])
-// }
-
-// import is broken maybe i have too recent react-native version?
-// i think the proxies break it, Element type invalid expected
-// return (
-//   <FlatList
-//     ListHeaderComponent={SearchHeader}
-//     ListFooterComponent={SearchFooter}
-//     removeClippedSubviews
-//     initialNumToRender={Math.ceil(getWindowHeight() / ITEM_HEIGHT)}
-//     data={results}
-//     renderItem={({ item, index }) => (
-//       <RestaurantListItem
-//         curLocInfo={props.item.curLocInfo ?? null}
-//         restaurantId={item.id}
-//         restaurantSlug={item.slug}
-//         rank={index + 1}
-//         activeTagSlugs={activeTagSlugs}
-//         meta={item.meta}
-//       />
-//     )}
-//     keyExtractor={(item) => item.id}
-//   />
-// )
-
-// // web was feeling slow with recyclerlistview:
-// // https://github.com/Flipkart/recyclerlistview/issues/601
-// const SearchResultsSimpleScroll = memo((props: Props) => {
-//   const { results, status } = useSearchPageStore()
-//   const activeTagSlugs = useActiveTagSlugs(props)
-//   const scrollRef = useRef<ScrollView>(null)
-//   const scrollToTopHandler = useCallback(() => {
-//     scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
-//   }, [])
-
-//   if (status === 'loading') {
-//     return <LoadingItems />
-//   }
-
-//   if (!results.length) {
-//     return <SearchEmptyResults />
-//   }
-
-//   return (
-//     <ScrollView ref={scrollRef}>
-//       <PageContentWithFooter>
-//         <SearchHeader />
-//         <VStack position="relative" flex={10} minHeight={600}>
-//           <SuspenseList revealOrder="forwards">
-//             {results.map((data, index) => {
-//               return (
-//                 <VStack key={index} height={ITEM_HEIGHT}>
-//                   <RestaurantListItem
-//                     curLocInfo={props.item.curLocInfo ?? null}
-//                     restaurantId={data.id}
-//                     restaurantSlug={data.slug}
-//                     rank={index + 1}
-//                     activeTagSlugs={activeTagSlugs}
-//                     meta={data.meta}
-//                   />
-//                 </VStack>
-//               )
-//             })}
-//           </SuspenseList>
-//         </VStack>
-//         <Suspense fallback={null}>
-//           <SearchFooter
-//             numResults={searchPageStore.results.length}
-//             scrollToTop={scrollToTopHandler}
-//           />
-//         </Suspense>
-//       </PageContentWithFooter>
-//     </ScrollView>
-//   )
-// })

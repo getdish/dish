@@ -137,8 +137,6 @@ export const RestaurantPhotosRowContent = memo(
           )
         })
 
-      console.log('contents', contents)
-
       return (
         // an attempt to get native to scroll but not working
         <HStack spacing={spacing} minWidth={fullWidth}>

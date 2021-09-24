@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
 import { Pressable } from 'react-native'
-import { TouchableOpacity, useForceUpdate } from 'snackui'
+import { useForceUpdate } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { addTagsToCache, allTags, getFullTagFromNameAndType } from '../../helpers/allTags'
@@ -12,7 +12,7 @@ import { filterToNavigable } from '../../helpers/tagHelpers'
 import { NavigateItem, router } from '../../router'
 import { homeStore } from '../homeStore'
 import { userStore } from '../userStore'
-import { LinkButtonProps, LinkProps, LinkSharedProps } from '../views/LinkProps'
+import { LinkButtonProps, LinkProps } from '../views/LinkProps'
 
 export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
   const forceUpdate = useForceUpdate()
