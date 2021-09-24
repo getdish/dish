@@ -13,7 +13,7 @@ export const SmallButton = themeable(
       <Button
         borderRadius={200}
         borderWidth={0.5}
-        borderColor={theme.backgroundColorTertiary}
+        borderColor={theme.borderColor}
         backgroundColor={theme.backgroundColor}
         // borderColor={theme.borderColor}
         // backgroundColor={theme.backgroundColorTransluscent}
