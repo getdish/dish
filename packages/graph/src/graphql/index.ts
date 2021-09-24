@@ -9,8 +9,6 @@ import { GeneratedSchema, generatedSchema, scalarsEnumsHash } from './schema.gen
 export * from './schema.generated'
 
 export const fetchLog = (input: RequestInfo, init?: RequestInit | undefined): Promise<Response> => {
-  console.log('FETCHING!', input, init)
-
   if (isManualDebugMode || process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(` [gqty]
       fetch('${input}', ${
