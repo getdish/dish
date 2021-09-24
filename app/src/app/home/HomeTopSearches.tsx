@@ -25,7 +25,7 @@ export const HomeTopSearches = memo(() => {
       overflow="hidden"
     >
       {recentSearches.map((search, index) => {
-        const rgb = search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
+        // const rgb = search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
         const contents = (
           <Link key={index} tags={search.tags} asyncClick>
             <GradientButton>
@@ -34,7 +34,11 @@ export const HomeTopSearches = memo(() => {
           </Link>
         )
         if (activeTags[search.tags[0]?.slug || '']) {
-          return <Theme name="active">{contents}</Theme>
+          return (
+            <Theme key={index} name="active">
+              {contents}
+            </Theme>
+          )
         }
         return contents
       })}
