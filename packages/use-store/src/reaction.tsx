@@ -1,5 +1,5 @@
+import { isEqualSubsetShallow } from './comparators'
 import { UNWRAP_PROXY } from './constants'
-import { isEqualSubsetShallow } from './isEqualShallow'
 import { Store } from './Store'
 import { setIsInReaction } from './useStore'
 

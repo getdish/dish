@@ -99,28 +99,30 @@ const RestaurantHeaderContent = memo(
             zIndex={10}
           >
             <VStack flex={1}>
-              {/* title row */}
-              <HStack paddingLeft={20} alignItems="flex-end" position="relative">
-                <VStack width={66} height={66} marginRight={-15} marginBottom={-5} zIndex={200}>
-                  <Theme name={themeName}>
-                    <RestaurantRatingView floating size={66} restaurant={restaurant} />
-                  </Theme>
-                </VStack>
+              {/* below title row */}
+              <ContentScrollViewHorizontal>
+                {/* title row */}
+                <HStack paddingLeft={20} alignItems="flex-end" position="relative">
+                  <VStack width={66} height={66} marginRight={-15} marginBottom={0} zIndex={200}>
+                    <Theme name={themeName}>
+                      <RestaurantRatingView floating size={66} restaurant={restaurant} />
+                    </Theme>
+                  </VStack>
 
-                <HStack
-                  y={10}
-                  marginRight={-25}
-                  pointerEvents="auto"
-                  paddingHorizontal={25}
-                  paddingVertical={9}
-                  alignItems="center"
-                  position="relative"
-                  zIndex={199}
-                  justifyContent="center"
-                  minWidth={100}
-                  // skewX="-12deg"
-                >
-                  {/* <AbsoluteVStack
+                  <HStack
+                    y={10}
+                    marginRight={-25}
+                    pointerEvents="auto"
+                    paddingHorizontal={25}
+                    paddingVertical={9}
+                    alignItems="center"
+                    position="relative"
+                    zIndex={199}
+                    justifyContent="center"
+                    minWidth={100}
+                    // skewX="-12deg"
+                  >
+                    {/* <AbsoluteVStack
                     fullscreen
                     backgroundColor={colors.themeColorAlt}
                     zIndex={-1}
@@ -132,46 +134,47 @@ const RestaurantHeaderContent = memo(
                     skewX="-12deg"
                     shadowOffset={{ height: 3, width: 0 }}
                   /> */}
-                  <HStack>
                     <ThemeInverse>
-                      <Text
-                        className="font-title"
-                        backgroundColor={theme.backgroundColor}
-                        color={theme.color}
-                        paddingHorizontal={10}
-                        maxWidth={500}
-                        ellipse
-                        alignSelf="flex-start"
-                        selectable
-                        letterSpacing={-1}
-                        fontSize={fontSize}
-                        fontWeight="900"
+                      <HStack
+                        display={isWeb ? 'block' : 'flex'}
+                        maxWidth={280}
+                        marginRight={30}
+                        paddingTop={50}
                       >
-                        {restaurant.name || ' '}
-                      </Text>
+                        <Text
+                          className="font-title"
+                          // backgroundColor={theme.backgroundColor}
+                          // color={theme.color}
+                          color={theme.backgroundColor}
+                          maxWidth={500}
+                          alignSelf="flex-start"
+                          selectable
+                          letterSpacing={-1}
+                          fontSize={fontSize}
+                          lineHeight={fontSize}
+                          fontWeight="900"
+                        >
+                          {(restaurant.name || '').trim()}
+                        </Text>
+                      </HStack>
                     </ThemeInverse>
                   </HStack>
+
+                  <VStack paddingTop={10}>
+                    <RestaurantPhotosRow
+                      // slanted
+                      restaurant={restaurant}
+                      spacing="sm"
+                      floating
+                      width={130}
+                      height={150}
+                      showEscalated={hasScrolled}
+                    />
+                  </VStack>
                 </HStack>
 
-                <VStack width={170} height={180} />
-              </HStack>
+                <Spacer size="md" />
 
-              <AbsoluteVStack fullscreen left="45%" zIndex={-1}>
-                <RestaurantPhotosRow
-                  // slanted
-                  restaurant={restaurant}
-                  spacing="sm"
-                  floating
-                  width={170}
-                  height={180}
-                  showEscalated={hasScrolled}
-                />
-              </AbsoluteVStack>
-
-              <Spacer size="md" />
-
-              {/* below title row */}
-              <ContentScrollViewHorizontal>
                 <HStack pointerEvents="auto" flex={1} alignItems="center" minWidth={280}>
                   {spacer}
                   <VStack flex={10}>

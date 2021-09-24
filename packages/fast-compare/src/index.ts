@@ -7,7 +7,7 @@ export const EQUALITY_KEY = Symbol('EQUALITY_KEY')
 
 export type IsEqualOptions = {
   ignoreKeys?: { [key: string]: boolean }
-  simpleCompareKeys?: { [key: string]: boolean }
+  keyComparators?: { [key: string]: (a: any, b: any) => boolean }
   log?: boolean
   maxDepth?: number
 }
@@ -157,11 +157,12 @@ function isEqualInner(a: any, b: any, options?: IsEqualOptions) {
     for (i = length; i-- !== 0; ) {
       key = keys[i]
       if (options) {
-        if (options.ignoreKeys && options.ignoreKeys[key]) {
+        if (options.ignoreKeys?.[key]) {
           continue
         }
-        if (options.simpleCompareKeys && options.simpleCompareKeys[key]) {
-          if (a[key] === b[key]) {
+        const compare = options.keyComparators?.[key]
+        if (compare) {
+          if (compare(a[key], b[key])) {
             continue
           } else {
             if (log) console.log('diff simplecomapre', key)
