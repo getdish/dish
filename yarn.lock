@@ -2113,7 +2113,7 @@ __metadata:
     express: ^4.17.1
     flexsearch: ^0.6.32
     fs-extra: ^9.1.0
-    gqty: 2.0.1
+    gqty: 2.0.2-experimental.1
     graphql: ^15.5.0
     graphql-tag: ^2.11.0
     immer: ^8.0.0
@@ -2243,7 +2243,7 @@ __metadata:
     csv-parse: ^4.9.0
     fast-levenshtein: ^3.0.0
     form-data: ^4.0.0
-    gqty: 2.0.1
+    gqty: 2.0.2-experimental.1
     graphql: ^15.5.0
     imghash: ^0.0.9
     js-base64: ^2.5.2
@@ -2316,7 +2316,7 @@ __metadata:
     "@types/node": "*"
     ava: ^3.14.0
     esbuild-register: "*"
-    gqty: 2.0.1
+    gqty: 2.0.2-experimental.1
     graphql: ^15.5.0
     isomorphic-unfetch: ^3.1.0
     lodash: "*"
@@ -13896,7 +13896,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gqty@npm:2.0.1, gqty@npm:^2.0.1":
+"gqty@npm:2.0.2-experimental.1":
+  version: 2.0.2-experimental.1
+  resolution: "gqty@npm:2.0.2-experimental.1"
+  dependencies:
+    lodash: ^4.17.21
+  peerDependencies:
+    graphql: "*"
+  checksum: a8fadc503f12115f66c0bb3c332e622b834ddc68610e67b6a3869f22113779a7b6dbd1c8bf530ad386f0dafaad52d9f637b3a2a7dbc1c9535bb90d4fff809714
+  languageName: node
+  linkType: hard
+
+"gqty@npm:^2.0.1":
   version: 2.0.1
   resolution: "gqty@npm:2.0.1"
   dependencies:
