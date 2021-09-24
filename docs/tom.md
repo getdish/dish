@@ -10,6 +10,15 @@
   - "popup" tag would be fun to add and scan, so we can filter and show pop-up restuarants near you
 
 - bigger:
+  - we need generic tags to work:
+    - global__coffee instead of mediterranean coffee
+    - global__curry instead of malaysian curry
+    - global__oysters instead of namibian__oysters
+    - global__wine instead of italian__wine
+    - global__tea
+    - global__boba
+  - make sure global tags scan across all restaurants?
+
   - restoring infatuation / michelin crawlers
 
   - instagram images
