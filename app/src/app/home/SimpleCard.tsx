@@ -30,7 +30,7 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
       shadowOffset={{ height: 3, width: 3 }}
       position="relative"
       opacity={1}
-      scale={0.85}
+      scale={0.95}
       {...(slanted && {
         scale: 0.85,
         perspective: 800,

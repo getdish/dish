@@ -98,7 +98,7 @@ export const RestaurantPhotosRowContent = memo(
           return (
             <PhotoCard
               {...photoCardProps}
-              marginRight={slanted ? -width * 0.3 : 0}
+              // marginRight={slanted ? -width * 0.3 : 0}
               zIndex={1000 - index}
               isBehind={index > 0}
               key={index}

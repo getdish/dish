@@ -1,7 +1,17 @@
 import { graphql } from '@dish/graph'
 import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
-import { AbsoluteVStack, HStack, Spacer, Text, Theme, VStack, useMedia, useTheme } from 'snackui'
+import {
+  AbsoluteVStack,
+  HStack,
+  Spacer,
+  Text,
+  Theme,
+  ThemeInverse,
+  VStack,
+  useMedia,
+  useTheme,
+} from 'snackui'
 
 import { drawerBorderRadius, isWeb } from '../../../constants/constants'
 import { useColorsFor } from '../../../helpers/useColorsFor'
@@ -123,30 +133,34 @@ const RestaurantHeaderContent = memo(
                     shadowOffset={{ height: 3, width: 0 }}
                   /> */}
                   <HStack>
-                    <Text
-                      className="font-title"
-                      backgroundColor={theme.backgroundColorTransluscent}
-                      paddingHorizontal={10}
-                      color={theme.color}
-                      alignSelf="flex-start"
-                      selectable
-                      letterSpacing={-1}
-                      fontSize={fontSize}
-                      fontWeight="900"
-                    >
-                      {restaurant.name || ' '}
-                    </Text>
+                    <ThemeInverse>
+                      <Text
+                        className="font-title"
+                        backgroundColor={theme.backgroundColor}
+                        color={theme.color}
+                        paddingHorizontal={10}
+                        maxWidth={500}
+                        ellipse
+                        alignSelf="flex-start"
+                        selectable
+                        letterSpacing={-1}
+                        fontSize={fontSize}
+                        fontWeight="900"
+                      >
+                        {restaurant.name || ' '}
+                      </Text>
+                    </ThemeInverse>
                   </HStack>
                 </HStack>
 
                 <VStack width={170} height={180} />
               </HStack>
 
-              <AbsoluteVStack fullscreen left="45%">
+              <AbsoluteVStack fullscreen left="45%" zIndex={-1}>
                 <RestaurantPhotosRow
-                  slanted
+                  // slanted
                   restaurant={restaurant}
-                  spacing="md"
+                  spacing="sm"
                   floating
                   width={170}
                   height={180}
@@ -154,7 +168,7 @@ const RestaurantHeaderContent = memo(
                 />
               </AbsoluteVStack>
 
-              <Spacer size="xl" />
+              <Spacer size="md" />
 
               {/* below title row */}
               <ContentScrollViewHorizontal>
@@ -220,6 +234,7 @@ const RestaurantHeaderContent = memo(
                           // borderWidth: 0,
                           hideRank: false,
                           hideRating: false,
+                          borderWidth: 0,
                           votable: true,
                         }}
                       />

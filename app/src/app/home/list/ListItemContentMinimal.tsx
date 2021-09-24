@@ -312,6 +312,7 @@ export const Body = memo(
           <RestaurantReview
             size="lg"
             marginTop={-20}
+            marginLeft={-10}
             hideImagesRow
             hideTagsRow
             expandable={false}
