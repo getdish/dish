@@ -157,12 +157,12 @@ export const ReviewImagesRow = ({
 
   return (
     <HStack alignItems="center" spacing {...stackProps}>
-      {allImages.map((uri) => {
+      {allImages.map((uri, index) => {
         if (uri === '') {
-          return <ImageFrame key={uri} />
+          return <ImageFrame key={uri || index} />
         }
         return (
-          <ImageFrame key={uri}>
+          <ImageFrame key={uri || index}>
             <Image source={{ uri: uri || '' }} style={{ width: imgWidth, height: imgHeight }} />
           </ImageFrame>
         )
