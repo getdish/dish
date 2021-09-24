@@ -5,7 +5,7 @@ import { Button, HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
 
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { queryRestaurant } from '../../queries/queryRestaurant'
-import { appMapStore } from '../AppMap'
+import { appMapStore } from '../appMapStore'
 import { Image } from '../views/Image'
 import { Link } from '../views/Link'
 import { RestaurantRatingView } from './RestaurantRatingView'

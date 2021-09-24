@@ -6,6 +6,7 @@ import { AbsoluteHStack, AbsoluteVStack, Theme, VStack, useMedia } from 'snackui
 import { isWeb, searchBarHeight, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import * as AppMapStore from './AppMap'
+import * as appMapStore from './appMapStore'
 import { getSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { useSafeArea } from './hooks/useSafeArea'
@@ -16,9 +17,9 @@ export const AppMapControls = memo(() => {
   const media = useMedia()
   const safeArea = useSafeArea()
   const showSearchHere = useShowSearchHere()
-  const appMapStore = useStoreInstance(AppMapStore.appMapStore)
+  const appMapStore = useStoreInstance(appMapStore_1.appMapStore)
   const isHoverZoomed = useStoreInstanceSelector(
-    AppMapStore.appMapStore,
+    appMapStore_1.appMapStore,
     (x) => x.hovered?.via === 'list' && x.zoomOnHover
   )
   return (
@@ -123,7 +124,7 @@ function useShowSearchHere() {
     if (!searchPageStore) return
     const isOnSearch = homeStore.currentStateType === 'search'
     const sp = searchPageStore.searchPosition
-    const { center, span } = AppMapStore.appMapStore.nextPosition
+    const { center, span } = appMapStore_1.appMapStore.nextPosition
     if (searchPageStore.status === 'loading') return false
     if (!isOnSearch) return false
     const hasMoved = hasMovedAtLeast(sp, { center, span }, 0.001)

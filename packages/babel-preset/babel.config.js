@@ -31,7 +31,6 @@ module.exports = function (api) {
             'babel-plugin-lodash',
             '@babel/plugin-transform-react-inline-elements',
             '@babel/plugin-transform-react-constant-elements',
-            // '@eps1lon/babel-plugin-optimize-react',
           ]
         : []),
       '@babel/plugin-proposal-class-properties',

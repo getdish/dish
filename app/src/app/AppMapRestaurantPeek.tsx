@@ -4,7 +4,7 @@ import React, { memo, useEffect, useState } from 'react'
 import { Box, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { queryRestaurant } from '../queries/queryRestaurant'
-import { appMapStore } from './AppMap'
+import { appMapStore } from './appMapStore'
 import { useHomeStore } from './homeStore'
 import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'

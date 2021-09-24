@@ -10,7 +10,9 @@
     "etc:colorize": "../dsh run 'DEBUG=1 node -r esbuild-register ./etc/add_colors_to_tiles.ts'",
     "postinstall": "./etc/postinstall.sh",
     "etc:colorize:staging": "NODE_ENV=staging yarn etc:colorize",
-    "app": "DISH_DEBUG=1 LOCAL_HOST=$(ipconfig getifaddr en0) LOG_LEVEL=1 TARGET=native NODE_ENV=development react-native start",
+    "app:start": "DISH_DEBUG=1 LOCAL_HOST=$(ipconfig getifaddr en0) LOG_LEVEL=1 TARGET=native react-native start",
+    "app": "NODE_ENV=development yarn app:start",
+    "app:prod": "NODE_ENV=production yarn app:start",
     "app:build": "GIT_COMMIT=$(git rev-parse --short HEAD) npx eas build --platform ios --non-interactive",
     "app:reset": "yarn app --reset-cache",
     "app:reset:hard": "watchman watch-del-all && yarn app:reset",
@@ -35,6 +37,7 @@
     "ios:device": "yarn ios:run --device",
     "ios:device:prod": "yarn ios:run --device --configuration Release",
     "ios:bundle": "TARGET=native react-native bundle --entry-file='index.js' --bundle-output='./ios/dish/main.jsbundle' --dev=false --platform='ios' --assets-dest='./iOS'",
+    "ios:bundle:prod": "TARGET=native react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
     "android": "TARGET=native DISH_ENV=development react-native run-android --no-packager",
     "dev:react": "npx react-devtools",
     "test": "true",
@@ -49,7 +52,7 @@
     "tags:generate": "../dsh dish_app_generate_tags"
   },
   "dependencies": {
-    "@babel/core": "^7.13.8",
+    "@babel/core": "^7.15.5",
     "@dish/api": "*",
     "@dish/async": "*",
     "@dish/fast-compare": "2.7.6",
