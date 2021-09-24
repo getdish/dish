@@ -186,6 +186,15 @@ function CommentBubbleContents({
   const externalSource = source ? thirdPartyCrawlSources[source] : null
   const backgroundColor = avatarBackgroundColor || grey
   const avatar = avatarProp?.image || ''
+  const isExternalUser = name === '_dish_external_user'
+
+  const wrapLink = (children: any) => {
+    return (
+      <Link name="user" params={{ username: username || '' }} pointerEvents="auto" ellipse>
+        {children}
+      </Link>
+    )
+  }
 
   const metaContents = (
     <HStack alignItems="center" pointerEvents="auto">
@@ -203,13 +212,17 @@ function CommentBubbleContents({
               alignItems="center"
               justifyContent="center"
             >
-              {!avatar && <User color={theme.color} size={charSize} />}
-              {!!avatar && (
-                <UserAvatar
-                  charIndex={avatarProp?.charIndex || 0}
-                  size={circleSize}
-                  avatar={avatar}
-                />
+              {wrapLink(
+                <>
+                  {!avatar && <User color={theme.color} size={charSize} />}
+                  {!!avatar && (
+                    <UserAvatar
+                      charIndex={avatarProp?.charIndex || 0}
+                      size={circleSize}
+                      avatar={avatar}
+                    />
+                  )}
+                </>
               )}
             </VStack>
             {!!externalSource && (
@@ -237,21 +250,10 @@ function CommentBubbleContents({
           <HStack flex={1} pointerEvents="auto" alignItems="center" spacing>
             {!!name && (
               <VStack>
-                {name === '_dish_external_user' ? (
-                  <Paragraph opacity={0.7} size="sm">
-                    via {externalSource?.name || '-'}
-                  </Paragraph>
-                ) : (
-                  <Link
-                    name="user"
-                    params={{ username: username || '' }}
-                    pointerEvents="auto"
-                    ellipse
-                  >
-                    <Text color={theme.color} fontSize={size === 'lg' ? 18 : 14} fontWeight="800">
-                      {name}
-                    </Text>
-                  </Link>
+                {wrapLink(
+                  <Text color={theme.color} fontSize={size === 'lg' ? 18 : 14} fontWeight="800">
+                    {isExternalUser ? `via ${externalSource?.name || '-'}` : name}
+                  </Text>
                 )}
               </VStack>
             )}

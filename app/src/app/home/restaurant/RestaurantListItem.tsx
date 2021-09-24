@@ -77,11 +77,11 @@ export type RestaurantListItemProps = {
 
 export const RestaurantListItem = (props: RestaurantListItemProps) => {
   const [isLoaded, setIsLoaded] = useState(false)
-  const [width, setWidth] = useState(getWindowWidth())
   const handleScrollMemo = useCallback(() => {
     setIsLoaded(true)
   }, [])
   const handleScroll = isLoaded ? undefined : handleScrollMemo
+  const [width, setWidth] = useState(getWindowWidth())
 
   return (
     <ContentScrollViewHorizontalFitted

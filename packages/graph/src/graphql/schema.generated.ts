@@ -365,6 +365,7 @@ export interface list_bool_exp {
   name?: Maybe<String_comparison_exp>
   public?: Maybe<Boolean_comparison_exp>
   region?: Maybe<String_comparison_exp>
+  regions?: Maybe<list_region_bool_exp>
   restaurants?: Maybe<list_restaurant_bool_exp>
   slug?: Maybe<String_comparison_exp>
   tags?: Maybe<list_tag_bool_exp>
@@ -400,6 +401,7 @@ export interface list_insert_input {
   name?: Maybe<Scalars['String']>
   public?: Maybe<Scalars['Boolean']>
   region?: Maybe<Scalars['String']>
+  regions?: Maybe<list_region_arr_rel_insert_input>
   restaurants?: Maybe<list_restaurant_arr_rel_insert_input>
   slug?: Maybe<Scalars['String']>
   tags?: Maybe<list_tag_arr_rel_insert_input>
@@ -464,6 +466,7 @@ export interface list_order_by {
   name?: Maybe<order_by>
   public?: Maybe<order_by>
   region?: Maybe<order_by>
+  regions_aggregate?: Maybe<list_region_aggregate_order_by>
   restaurants_aggregate?: Maybe<list_restaurant_aggregate_order_by>
   slug?: Maybe<order_by>
   tags_aggregate?: Maybe<list_tag_aggregate_order_by>
@@ -480,6 +483,118 @@ export interface list_pk_columns_input {
 
 export interface list_populated_args {
   min_items?: Maybe<Scalars['Int']>
+}
+
+/** order by aggregate values of table "list_region" */
+export interface list_region_aggregate_order_by {
+  count?: Maybe<order_by>
+  max?: Maybe<list_region_max_order_by>
+  min?: Maybe<list_region_min_order_by>
+}
+
+/** input type for inserting array relation for remote table "list_region" */
+export interface list_region_arr_rel_insert_input {
+  data: Array<list_region_insert_input>
+  on_conflict?: Maybe<list_region_on_conflict>
+}
+
+/** Boolean expression to filter rows from the table "list_region". All fields are combined with a logical 'AND'. */
+export interface list_region_bool_exp {
+  _and?: Maybe<Array<Maybe<list_region_bool_exp>>>
+  _not?: Maybe<list_region_bool_exp>
+  _or?: Maybe<Array<Maybe<list_region_bool_exp>>>
+  id?: Maybe<uuid_comparison_exp>
+  list_id?: Maybe<uuid_comparison_exp>
+  region?: Maybe<String_comparison_exp>
+  restaurant_id?: Maybe<uuid_comparison_exp>
+}
+
+/** unique or primary key constraints on table "list_region" */
+export enum list_region_constraint {
+  /** unique or primary key constraint */
+  list_region_pkey = 'list_region_pkey',
+}
+
+/** input type for inserting data into table "list_region" */
+export interface list_region_insert_input {
+  id?: Maybe<Scalars['uuid']>
+  list_id?: Maybe<Scalars['uuid']>
+  region?: Maybe<Scalars['String']>
+  restaurant_id?: Maybe<Scalars['uuid']>
+}
+
+/** order by max() on columns of table "list_region" */
+export interface list_region_max_order_by {
+  id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
+  region?: Maybe<order_by>
+  restaurant_id?: Maybe<order_by>
+}
+
+/** order by min() on columns of table "list_region" */
+export interface list_region_min_order_by {
+  id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
+  region?: Maybe<order_by>
+  restaurant_id?: Maybe<order_by>
+}
+
+/** input type for inserting object relation for remote table "list_region" */
+export interface list_region_obj_rel_insert_input {
+  data: list_region_insert_input
+  on_conflict?: Maybe<list_region_on_conflict>
+}
+
+/** on conflict condition type for table "list_region" */
+export interface list_region_on_conflict {
+  constraint: list_region_constraint
+  update_columns: Array<list_region_update_column>
+  where?: Maybe<list_region_bool_exp>
+}
+
+/** ordering options when selecting data from "list_region" */
+export interface list_region_order_by {
+  id?: Maybe<order_by>
+  list_id?: Maybe<order_by>
+  region?: Maybe<order_by>
+  restaurant_id?: Maybe<order_by>
+}
+
+/** primary key columns input for table: "list_region" */
+export interface list_region_pk_columns_input {
+  id: Scalars['uuid']
+}
+
+/** select columns of table "list_region" */
+export enum list_region_select_column {
+  /** column name */
+  id = 'id',
+  /** column name */
+  list_id = 'list_id',
+  /** column name */
+  region = 'region',
+  /** column name */
+  restaurant_id = 'restaurant_id',
+}
+
+/** input type for updating data in table "list_region" */
+export interface list_region_set_input {
+  id?: Maybe<Scalars['uuid']>
+  list_id?: Maybe<Scalars['uuid']>
+  region?: Maybe<Scalars['String']>
+  restaurant_id?: Maybe<Scalars['uuid']>
+}
+
+/** update columns of table "list_region" */
+export enum list_region_update_column {
+  /** column name */
+  id = 'id',
+  /** column name */
+  list_id = 'list_id',
+  /** column name */
+  region = 'region',
+  /** column name */
+  restaurant_id = 'restaurant_id',
 }
 
 /** order by aggregate values of table "list_restaurant" */
@@ -1666,6 +1781,7 @@ export interface photo_bool_exp {
   quality?: Maybe<numeric_comparison_exp>
   updated_at?: Maybe<timestamptz_comparison_exp>
   url?: Maybe<String_comparison_exp>
+  user_id?: Maybe<uuid_comparison_exp>
 }
 
 /** unique or primary key constraints on table "photo" */
@@ -1707,6 +1823,7 @@ export interface photo_insert_input {
   quality?: Maybe<Scalars['numeric']>
   updated_at?: Maybe<Scalars['timestamptz']>
   url?: Maybe<Scalars['String']>
+  user_id?: Maybe<Scalars['uuid']>
 }
 
 /** order by max() on columns of table "photo" */
@@ -1717,6 +1834,7 @@ export interface photo_max_order_by {
   quality?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   url?: Maybe<order_by>
+  user_id?: Maybe<order_by>
 }
 
 /** order by min() on columns of table "photo" */
@@ -1727,6 +1845,7 @@ export interface photo_min_order_by {
   quality?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   url?: Maybe<order_by>
+  user_id?: Maybe<order_by>
 }
 
 /** input type for inserting object relation for remote table "photo" */
@@ -1751,6 +1870,7 @@ export interface photo_order_by {
   quality?: Maybe<order_by>
   updated_at?: Maybe<order_by>
   url?: Maybe<order_by>
+  user_id?: Maybe<order_by>
 }
 
 /** primary key columns input for table: "photo" */
@@ -1779,6 +1899,8 @@ export enum photo_select_column {
   updated_at = 'updated_at',
   /** column name */
   url = 'url',
+  /** column name */
+  user_id = 'user_id',
 }
 
 /** input type for updating data in table "photo" */
@@ -1790,6 +1912,7 @@ export interface photo_set_input {
   quality?: Maybe<Scalars['numeric']>
   updated_at?: Maybe<Scalars['timestamptz']>
   url?: Maybe<Scalars['String']>
+  user_id?: Maybe<Scalars['uuid']>
 }
 
 /** order by stddev() on columns of table "photo" */
@@ -1828,6 +1951,8 @@ export enum photo_update_column {
   updated_at = 'updated_at',
   /** column name */
   url = 'url',
+  /** column name */
+  user_id = 'user_id',
 }
 
 /** order by var_pop() on columns of table "photo" */
@@ -1866,10 +1991,12 @@ export interface photo_xref_bool_exp {
   id?: Maybe<uuid_comparison_exp>
   photo?: Maybe<photo_bool_exp>
   photo_id?: Maybe<uuid_comparison_exp>
+  restaurant?: Maybe<restaurant_bool_exp>
   restaurant_id?: Maybe<uuid_comparison_exp>
   review_id?: Maybe<uuid_comparison_exp>
   tag_id?: Maybe<uuid_comparison_exp>
   type?: Maybe<String_comparison_exp>
+  user_id?: Maybe<uuid_comparison_exp>
 }
 
 /** unique or primary key constraints on table "photo_xref" */
@@ -1885,10 +2012,12 @@ export interface photo_xref_insert_input {
   id?: Maybe<Scalars['uuid']>
   photo?: Maybe<photo_obj_rel_insert_input>
   photo_id?: Maybe<Scalars['uuid']>
+  restaurant?: Maybe<restaurant_obj_rel_insert_input>
   restaurant_id?: Maybe<Scalars['uuid']>
   review_id?: Maybe<Scalars['uuid']>
   tag_id?: Maybe<Scalars['uuid']>
   type?: Maybe<Scalars['String']>
+  user_id?: Maybe<Scalars['uuid']>
 }
 
 /** order by max() on columns of table "photo_xref" */
@@ -1899,6 +2028,7 @@ export interface photo_xref_max_order_by {
   review_id?: Maybe<order_by>
   tag_id?: Maybe<order_by>
   type?: Maybe<order_by>
+  user_id?: Maybe<order_by>
 }
 
 /** order by min() on columns of table "photo_xref" */
@@ -1909,6 +2039,7 @@ export interface photo_xref_min_order_by {
   review_id?: Maybe<order_by>
   tag_id?: Maybe<order_by>
   type?: Maybe<order_by>
+  user_id?: Maybe<order_by>
 }
 
 /** input type for inserting object relation for remote table "photo_xref" */
@@ -1929,10 +2060,12 @@ export interface photo_xref_order_by {
   id?: Maybe<order_by>
   photo?: Maybe<photo_order_by>
   photo_id?: Maybe<order_by>
+  restaurant?: Maybe<restaurant_order_by>
   restaurant_id?: Maybe<order_by>
   review_id?: Maybe<order_by>
   tag_id?: Maybe<order_by>
   type?: Maybe<order_by>
+  user_id?: Maybe<order_by>
 }
 
 /** primary key columns input for table: "photo_xref" */
@@ -1954,6 +2087,8 @@ export enum photo_xref_select_column {
   tag_id = 'tag_id',
   /** column name */
   type = 'type',
+  /** column name */
+  user_id = 'user_id',
 }
 
 /** input type for updating data in table "photo_xref" */
@@ -1964,6 +2099,7 @@ export interface photo_xref_set_input {
   review_id?: Maybe<Scalars['uuid']>
   tag_id?: Maybe<Scalars['uuid']>
   type?: Maybe<Scalars['String']>
+  user_id?: Maybe<Scalars['uuid']>
 }
 
 /** update columns of table "photo_xref" */
@@ -1980,6 +2116,8 @@ export enum photo_xref_update_column {
   tag_id = 'tag_id',
   /** column name */
   type = 'type',
+  /** column name */
+  user_id = 'user_id',
 }
 
 /** order by aggregate values of table "restaurant" */
@@ -4209,6 +4347,7 @@ export interface user_bool_exp {
   password?: Maybe<String_comparison_exp>
   password_reset_date?: Maybe<timestamptz_comparison_exp>
   password_reset_token?: Maybe<String_comparison_exp>
+  photo_xrefs?: Maybe<photo_xref_bool_exp>
   reviews?: Maybe<review_bool_exp>
   role?: Maybe<String_comparison_exp>
   updated_at?: Maybe<timestamptz_comparison_exp>
@@ -4249,6 +4388,7 @@ export interface user_insert_input {
   password?: Maybe<Scalars['String']>
   password_reset_date?: Maybe<Scalars['timestamptz']>
   password_reset_token?: Maybe<Scalars['String']>
+  photo_xrefs?: Maybe<photo_xref_arr_rel_insert_input>
   reviews?: Maybe<review_arr_rel_insert_input>
   role?: Maybe<Scalars['String']>
   updated_at?: Maybe<Scalars['timestamptz']>
@@ -4331,6 +4471,7 @@ export interface user_order_by {
   password?: Maybe<order_by>
   password_reset_date?: Maybe<order_by>
   password_reset_token?: Maybe<order_by>
+  photo_xrefs_aggregate?: Maybe<photo_xref_aggregate_order_by>
   reviews_aggregate?: Maybe<review_aggregate_order_by>
   role?: Maybe<order_by>
   updated_at?: Maybe<order_by>
@@ -4705,6 +4846,9 @@ export const scalarsEnumsHash: import('gqty').ScalarsEnumsHash = {
   hrr_update_column: true,
   jsonb: true,
   list_constraint: true,
+  list_region_constraint: true,
+  list_region_select_column: true,
+  list_region_update_column: true,
   list_restaurant_constraint: true,
   list_restaurant_select_column: true,
   list_restaurant_tag_constraint: true,
@@ -4831,6 +4975,27 @@ export const generatedSchema = {
         where: 'list_bool_exp',
       },
     },
+    list_region: {
+      __type: '[list_region!]!',
+      __args: {
+        distinct_on: '[list_region_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_region_order_by!]',
+        where: 'list_region_bool_exp',
+      },
+    },
+    list_region_aggregate: {
+      __type: 'list_region_aggregate!',
+      __args: {
+        distinct_on: '[list_region_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_region_order_by!]',
+        where: 'list_region_bool_exp',
+      },
+    },
+    list_region_by_pk: { __type: 'list_region', __args: { id: 'uuid!' } },
     list_restaurant: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -5289,6 +5454,11 @@ export const generatedSchema = {
     delete_hrr_by_pk: { __type: 'hrr', __args: { ogc_fid: 'Int!' } },
     delete_list: { __type: 'list_mutation_response', __args: { where: 'list_bool_exp!' } },
     delete_list_by_pk: { __type: 'list', __args: { id: 'uuid!' } },
+    delete_list_region: {
+      __type: 'list_region_mutation_response',
+      __args: { where: 'list_region_bool_exp!' },
+    },
+    delete_list_region_by_pk: { __type: 'list_region', __args: { id: 'uuid!' } },
     delete_list_restaurant: {
       __type: 'list_restaurant_mutation_response',
       __args: { where: 'list_restaurant_bool_exp!' },
@@ -5377,6 +5547,14 @@ export const generatedSchema = {
     insert_list_one: {
       __type: 'list',
       __args: { object: 'list_insert_input!', on_conflict: 'list_on_conflict' },
+    },
+    insert_list_region: {
+      __type: 'list_region_mutation_response',
+      __args: { objects: '[list_region_insert_input!]!', on_conflict: 'list_region_on_conflict' },
+    },
+    insert_list_region_one: {
+      __type: 'list_region',
+      __args: { object: 'list_region_insert_input!', on_conflict: 'list_region_on_conflict' },
     },
     insert_list_restaurant: {
       __type: 'list_restaurant_mutation_response',
@@ -5557,6 +5735,14 @@ export const generatedSchema = {
         _set: 'list_set_input',
         pk_columns: 'list_pk_columns_input!',
       },
+    },
+    update_list_region: {
+      __type: 'list_region_mutation_response',
+      __args: { _set: 'list_region_set_input', where: 'list_region_bool_exp!' },
+    },
+    update_list_region_by_pk: {
+      __type: 'list_region',
+      __args: { _set: 'list_region_set_input', pk_columns: 'list_region_pk_columns_input!' },
     },
     update_list_restaurant: {
       __type: 'list_restaurant_mutation_response',
@@ -5915,6 +6101,27 @@ export const generatedSchema = {
         where: 'list_bool_exp',
       },
     },
+    list_region: {
+      __type: '[list_region!]!',
+      __args: {
+        distinct_on: '[list_region_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_region_order_by!]',
+        where: 'list_region_bool_exp',
+      },
+    },
+    list_region_aggregate: {
+      __type: 'list_region_aggregate!',
+      __args: {
+        distinct_on: '[list_region_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_region_order_by!]',
+        where: 'list_region_bool_exp',
+      },
+    },
+    list_region_by_pk: { __type: 'list_region', __args: { id: 'uuid!' } },
     list_restaurant: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -6622,6 +6829,26 @@ export const generatedSchema = {
     name: { __type: 'String!' },
     public: { __type: 'Boolean!' },
     region: { __type: 'String' },
+    regions: {
+      __type: '[list_region!]!',
+      __args: {
+        distinct_on: '[list_region_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_region_order_by!]',
+        where: 'list_region_bool_exp',
+      },
+    },
+    regions_aggregate: {
+      __type: 'list_region_aggregate!',
+      __args: {
+        distinct_on: '[list_region_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[list_region_order_by!]',
+        where: 'list_region_bool_exp',
+      },
+    },
     restaurants: {
       __type: '[list_restaurant!]!',
       __args: {
@@ -6724,6 +6951,7 @@ export const generatedSchema = {
     name: { __type: 'String_comparison_exp' },
     public: { __type: 'Boolean_comparison_exp' },
     region: { __type: 'String_comparison_exp' },
+    regions: { __type: 'list_region_bool_exp' },
     restaurants: { __type: 'list_restaurant_bool_exp' },
     slug: { __type: 'String_comparison_exp' },
     tags: { __type: 'list_tag_bool_exp' },
@@ -6744,6 +6972,7 @@ export const generatedSchema = {
     name: { __type: 'String' },
     public: { __type: 'Boolean' },
     region: { __type: 'String' },
+    regions: { __type: 'list_region_arr_rel_insert_input' },
     restaurants: { __type: 'list_restaurant_arr_rel_insert_input' },
     slug: { __type: 'String' },
     tags: { __type: 'list_tag_arr_rel_insert_input' },
@@ -6831,6 +7060,7 @@ export const generatedSchema = {
     name: { __type: 'order_by' },
     public: { __type: 'order_by' },
     region: { __type: 'order_by' },
+    regions_aggregate: { __type: 'list_region_aggregate_order_by' },
     restaurants_aggregate: { __type: 'list_restaurant_aggregate_order_by' },
     slug: { __type: 'order_by' },
     tags_aggregate: { __type: 'list_tag_aggregate_order_by' },
@@ -6841,6 +7071,104 @@ export const generatedSchema = {
   },
   list_pk_columns_input: { id: { __type: 'uuid!' } },
   list_populated_args: { min_items: { __type: 'Int' } },
+  list_region: {
+    __typename: { __type: 'String!' },
+    id: { __type: 'uuid!' },
+    list_id: { __type: 'uuid!' },
+    region: { __type: 'String!' },
+    restaurant_id: { __type: 'uuid!' },
+  },
+  list_region_aggregate: {
+    __typename: { __type: 'String!' },
+    aggregate: { __type: 'list_region_aggregate_fields' },
+    nodes: { __type: '[list_region!]!' },
+  },
+  list_region_aggregate_fields: {
+    __typename: { __type: 'String!' },
+    count: {
+      __type: 'Int',
+      __args: { columns: '[list_region_select_column!]', distinct: 'Boolean' },
+    },
+    max: { __type: 'list_region_max_fields' },
+    min: { __type: 'list_region_min_fields' },
+  },
+  list_region_aggregate_order_by: {
+    count: { __type: 'order_by' },
+    max: { __type: 'list_region_max_order_by' },
+    min: { __type: 'list_region_min_order_by' },
+  },
+  list_region_arr_rel_insert_input: {
+    data: { __type: '[list_region_insert_input!]!' },
+    on_conflict: { __type: 'list_region_on_conflict' },
+  },
+  list_region_bool_exp: {
+    _and: { __type: '[list_region_bool_exp]' },
+    _not: { __type: 'list_region_bool_exp' },
+    _or: { __type: '[list_region_bool_exp]' },
+    id: { __type: 'uuid_comparison_exp' },
+    list_id: { __type: 'uuid_comparison_exp' },
+    region: { __type: 'String_comparison_exp' },
+    restaurant_id: { __type: 'uuid_comparison_exp' },
+  },
+  list_region_insert_input: {
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    region: { __type: 'String' },
+    restaurant_id: { __type: 'uuid' },
+  },
+  list_region_max_fields: {
+    __typename: { __type: 'String!' },
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    region: { __type: 'String' },
+    restaurant_id: { __type: 'uuid' },
+  },
+  list_region_max_order_by: {
+    id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
+    region: { __type: 'order_by' },
+    restaurant_id: { __type: 'order_by' },
+  },
+  list_region_min_fields: {
+    __typename: { __type: 'String!' },
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    region: { __type: 'String' },
+    restaurant_id: { __type: 'uuid' },
+  },
+  list_region_min_order_by: {
+    id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
+    region: { __type: 'order_by' },
+    restaurant_id: { __type: 'order_by' },
+  },
+  list_region_mutation_response: {
+    __typename: { __type: 'String!' },
+    affected_rows: { __type: 'Int!' },
+    returning: { __type: '[list_region!]!' },
+  },
+  list_region_obj_rel_insert_input: {
+    data: { __type: 'list_region_insert_input!' },
+    on_conflict: { __type: 'list_region_on_conflict' },
+  },
+  list_region_on_conflict: {
+    constraint: { __type: 'list_region_constraint!' },
+    update_columns: { __type: '[list_region_update_column!]!' },
+    where: { __type: 'list_region_bool_exp' },
+  },
+  list_region_order_by: {
+    id: { __type: 'order_by' },
+    list_id: { __type: 'order_by' },
+    region: { __type: 'order_by' },
+    restaurant_id: { __type: 'order_by' },
+  },
+  list_region_pk_columns_input: { id: { __type: 'uuid!' } },
+  list_region_set_input: {
+    id: { __type: 'uuid' },
+    list_id: { __type: 'uuid' },
+    region: { __type: 'String' },
+    restaurant_id: { __type: 'uuid' },
+  },
   list_restaurant: {
     __typename: { __type: 'String!' },
     comment: { __type: 'String' },
@@ -7803,6 +8131,7 @@ export const generatedSchema = {
     quality: { __type: 'numeric' },
     updated_at: { __type: 'timestamptz!' },
     url: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   photo_aggregate: {
     __typename: { __type: 'String!' },
@@ -7854,6 +8183,7 @@ export const generatedSchema = {
     quality: { __type: 'numeric_comparison_exp' },
     updated_at: { __type: 'timestamptz_comparison_exp' },
     url: { __type: 'String_comparison_exp' },
+    user_id: { __type: 'uuid_comparison_exp' },
   },
   photo_delete_at_path_input: { categories: { __type: '[String]' } },
   photo_delete_elem_input: { categories: { __type: 'Int' } },
@@ -7867,6 +8197,7 @@ export const generatedSchema = {
     quality: { __type: 'numeric' },
     updated_at: { __type: 'timestamptz' },
     url: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   photo_max_fields: {
     __typename: { __type: 'String!' },
@@ -7876,6 +8207,7 @@ export const generatedSchema = {
     quality: { __type: 'numeric' },
     updated_at: { __type: 'timestamptz' },
     url: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   photo_max_order_by: {
     created_at: { __type: 'order_by' },
@@ -7884,6 +8216,7 @@ export const generatedSchema = {
     quality: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     url: { __type: 'order_by' },
+    user_id: { __type: 'order_by' },
   },
   photo_min_fields: {
     __typename: { __type: 'String!' },
@@ -7893,6 +8226,7 @@ export const generatedSchema = {
     quality: { __type: 'numeric' },
     updated_at: { __type: 'timestamptz' },
     url: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   photo_min_order_by: {
     created_at: { __type: 'order_by' },
@@ -7901,6 +8235,7 @@ export const generatedSchema = {
     quality: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     url: { __type: 'order_by' },
+    user_id: { __type: 'order_by' },
   },
   photo_mutation_response: {
     __typename: { __type: 'String!' },
@@ -7924,6 +8259,7 @@ export const generatedSchema = {
     quality: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
     url: { __type: 'order_by' },
+    user_id: { __type: 'order_by' },
   },
   photo_pk_columns_input: { id: { __type: 'uuid!' } },
   photo_prepend_input: { categories: { __type: 'jsonb' } },
@@ -7935,6 +8271,7 @@ export const generatedSchema = {
     quality: { __type: 'numeric' },
     updated_at: { __type: 'timestamptz' },
     url: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   photo_stddev_fields: { __typename: { __type: 'String!' }, quality: { __type: 'Float' } },
   photo_stddev_order_by: { quality: { __type: 'order_by' } },
@@ -7955,10 +8292,12 @@ export const generatedSchema = {
     id: { __type: 'uuid!' },
     photo: { __type: 'photo!' },
     photo_id: { __type: 'uuid!' },
+    restaurant: { __type: 'restaurant!' },
     restaurant_id: { __type: 'uuid!' },
     review_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid!' },
     type: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   photo_xref_aggregate: {
     __typename: { __type: 'String!' },
@@ -7990,19 +8329,23 @@ export const generatedSchema = {
     id: { __type: 'uuid_comparison_exp' },
     photo: { __type: 'photo_bool_exp' },
     photo_id: { __type: 'uuid_comparison_exp' },
+    restaurant: { __type: 'restaurant_bool_exp' },
     restaurant_id: { __type: 'uuid_comparison_exp' },
     review_id: { __type: 'uuid_comparison_exp' },
     tag_id: { __type: 'uuid_comparison_exp' },
     type: { __type: 'String_comparison_exp' },
+    user_id: { __type: 'uuid_comparison_exp' },
   },
   photo_xref_insert_input: {
     id: { __type: 'uuid' },
     photo: { __type: 'photo_obj_rel_insert_input' },
     photo_id: { __type: 'uuid' },
+    restaurant: { __type: 'restaurant_obj_rel_insert_input' },
     restaurant_id: { __type: 'uuid' },
     review_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
     type: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   photo_xref_max_fields: {
     __typename: { __type: 'String!' },
@@ -8012,6 +8355,7 @@ export const generatedSchema = {
     review_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
     type: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   photo_xref_max_order_by: {
     id: { __type: 'order_by' },
@@ -8020,6 +8364,7 @@ export const generatedSchema = {
     review_id: { __type: 'order_by' },
     tag_id: { __type: 'order_by' },
     type: { __type: 'order_by' },
+    user_id: { __type: 'order_by' },
   },
   photo_xref_min_fields: {
     __typename: { __type: 'String!' },
@@ -8029,6 +8374,7 @@ export const generatedSchema = {
     review_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
     type: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   photo_xref_min_order_by: {
     id: { __type: 'order_by' },
@@ -8037,6 +8383,7 @@ export const generatedSchema = {
     review_id: { __type: 'order_by' },
     tag_id: { __type: 'order_by' },
     type: { __type: 'order_by' },
+    user_id: { __type: 'order_by' },
   },
   photo_xref_mutation_response: {
     __typename: { __type: 'String!' },
@@ -8056,10 +8403,12 @@ export const generatedSchema = {
     id: { __type: 'order_by' },
     photo: { __type: 'photo_order_by' },
     photo_id: { __type: 'order_by' },
+    restaurant: { __type: 'restaurant_order_by' },
     restaurant_id: { __type: 'order_by' },
     review_id: { __type: 'order_by' },
     tag_id: { __type: 'order_by' },
     type: { __type: 'order_by' },
+    user_id: { __type: 'order_by' },
   },
   photo_xref_pk_columns_input: { id: { __type: 'uuid!' } },
   photo_xref_set_input: {
@@ -8069,6 +8418,7 @@ export const generatedSchema = {
     review_id: { __type: 'uuid' },
     tag_id: { __type: 'uuid' },
     type: { __type: 'String' },
+    user_id: { __type: 'uuid' },
   },
   restaurant: {
     __typename: { __type: 'String!' },
@@ -10416,6 +10766,26 @@ export const generatedSchema = {
     password: { __type: 'String!' },
     password_reset_date: { __type: 'timestamptz' },
     password_reset_token: { __type: 'String' },
+    photo_xrefs: {
+      __type: '[photo_xref!]!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
+    photo_xrefs_aggregate: {
+      __type: 'photo_xref_aggregate!',
+      __args: {
+        distinct_on: '[photo_xref_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[photo_xref_order_by!]',
+        where: 'photo_xref_bool_exp',
+      },
+    },
     reviews: {
       __type: '[review!]!',
       __args: {
@@ -10499,6 +10869,7 @@ export const generatedSchema = {
     password: { __type: 'String_comparison_exp' },
     password_reset_date: { __type: 'timestamptz_comparison_exp' },
     password_reset_token: { __type: 'String_comparison_exp' },
+    photo_xrefs: { __type: 'photo_xref_bool_exp' },
     reviews: { __type: 'review_bool_exp' },
     role: { __type: 'String_comparison_exp' },
     updated_at: { __type: 'timestamptz_comparison_exp' },
@@ -10523,6 +10894,7 @@ export const generatedSchema = {
     password: { __type: 'String' },
     password_reset_date: { __type: 'timestamptz' },
     password_reset_token: { __type: 'String' },
+    photo_xrefs: { __type: 'photo_xref_arr_rel_insert_input' },
     reviews: { __type: 'review_arr_rel_insert_input' },
     role: { __type: 'String' },
     updated_at: { __type: 'timestamptz' },
@@ -10642,6 +11014,7 @@ export const generatedSchema = {
     password: { __type: 'order_by' },
     password_reset_date: { __type: 'order_by' },
     password_reset_token: { __type: 'order_by' },
+    photo_xrefs_aggregate: { __type: 'photo_xref_aggregate_order_by' },
     reviews_aggregate: { __type: 'review_aggregate_order_by' },
     role: { __type: 'order_by' },
     updated_at: { __type: 'order_by' },
@@ -10895,6 +11268,21 @@ export interface Query {
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
+  list_region: (args?: {
+    distinct_on?: Maybe<Array<list_region_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<list_region_order_by>>
+    where?: Maybe<list_region_bool_exp>
+  }) => Array<list_region>
+  list_region_aggregate: (args?: {
+    distinct_on?: Maybe<Array<list_region_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<list_region_order_by>>
+    where?: Maybe<list_region_bool_exp>
+  }) => list_region_aggregate
+  list_region_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list_region>
   list_restaurant: (args?: {
     distinct_on?: Maybe<Array<list_restaurant_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -11231,6 +11619,10 @@ export interface Mutation {
   delete_hrr_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<hrr>
   delete_list: (args: { where: list_bool_exp }) => Maybe<list_mutation_response>
   delete_list_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list>
+  delete_list_region: (args: {
+    where: list_region_bool_exp
+  }) => Maybe<list_region_mutation_response>
+  delete_list_region_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list_region>
   delete_list_restaurant: (args: {
     where: list_restaurant_bool_exp
   }) => Maybe<list_restaurant_mutation_response>
@@ -11302,6 +11694,14 @@ export interface Mutation {
     object: list_insert_input
     on_conflict?: Maybe<list_on_conflict>
   }) => Maybe<list>
+  insert_list_region: (args: {
+    objects: Array<list_region_insert_input>
+    on_conflict?: Maybe<list_region_on_conflict>
+  }) => Maybe<list_region_mutation_response>
+  insert_list_region_one: (args: {
+    object: list_region_insert_input
+    on_conflict?: Maybe<list_region_on_conflict>
+  }) => Maybe<list_region>
   insert_list_restaurant: (args: {
     objects: Array<list_restaurant_insert_input>
     on_conflict?: Maybe<list_restaurant_on_conflict>
@@ -11458,6 +11858,14 @@ export interface Mutation {
     _set?: Maybe<list_set_input>
     pk_columns: list_pk_columns_input
   }) => Maybe<list>
+  update_list_region: (args: {
+    _set?: Maybe<list_region_set_input>
+    where: list_region_bool_exp
+  }) => Maybe<list_region_mutation_response>
+  update_list_region_by_pk: (args: {
+    _set?: Maybe<list_region_set_input>
+    pk_columns: list_region_pk_columns_input
+  }) => Maybe<list_region>
   update_list_restaurant: (args: {
     _inc?: Maybe<list_restaurant_inc_input>
     _set?: Maybe<list_restaurant_set_input>
@@ -11728,6 +12136,21 @@ export interface Subscription {
     order_by?: Maybe<Array<list_order_by>>
     where?: Maybe<list_bool_exp>
   }) => list_aggregate
+  list_region: (args?: {
+    distinct_on?: Maybe<Array<list_region_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<list_region_order_by>>
+    where?: Maybe<list_region_bool_exp>
+  }) => Array<list_region>
+  list_region_aggregate: (args?: {
+    distinct_on?: Maybe<Array<list_region_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<list_region_order_by>>
+    where?: Maybe<list_region_bool_exp>
+  }) => list_region_aggregate
+  list_region_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<list_region>
   list_restaurant: (args?: {
     distinct_on?: Maybe<Array<list_restaurant_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -12268,6 +12691,56 @@ export interface list {
   /**
    * An array relationship
    */
+  regions: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<list_region_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<list_region_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<list_region_bool_exp>
+  }) => Array<list_region>
+  /**
+   * An aggregated array relationship
+   */
+  regions_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<list_region_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<list_region_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<list_region_bool_exp>
+  }) => list_region_aggregate
+  /**
+   * An array relationship
+   */
   restaurants: (args?: {
     /**
      * distinct select on columns
@@ -12463,6 +12936,76 @@ export interface list_mutation_response {
    * data of the affected rows by the mutation
    */
   returning: Array<list>
+}
+
+/**
+ * columns and relationships of "list_region"
+ */
+export interface list_region {
+  __typename?: 'list_region'
+  id: ScalarsEnums['uuid']
+  list_id: ScalarsEnums['uuid']
+  region: ScalarsEnums['String']
+  restaurant_id: ScalarsEnums['uuid']
+}
+
+/**
+ * aggregated selection of "list_region"
+ */
+export interface list_region_aggregate {
+  __typename?: 'list_region_aggregate'
+  aggregate?: Maybe<list_region_aggregate_fields>
+  nodes: Array<list_region>
+}
+
+/**
+ * aggregate fields of "list_region"
+ */
+export interface list_region_aggregate_fields {
+  __typename?: 'list_region_aggregate_fields'
+  count: (args?: {
+    columns?: Maybe<Array<list_region_select_column>>
+    distinct?: Maybe<Scalars['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max?: Maybe<list_region_max_fields>
+  min?: Maybe<list_region_min_fields>
+}
+
+/**
+ * aggregate max on columns
+ */
+export interface list_region_max_fields {
+  __typename?: 'list_region_max_fields'
+  id?: Maybe<ScalarsEnums['uuid']>
+  list_id?: Maybe<ScalarsEnums['uuid']>
+  region?: Maybe<ScalarsEnums['String']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+}
+
+/**
+ * aggregate min on columns
+ */
+export interface list_region_min_fields {
+  __typename?: 'list_region_min_fields'
+  id?: Maybe<ScalarsEnums['uuid']>
+  list_id?: Maybe<ScalarsEnums['uuid']>
+  region?: Maybe<ScalarsEnums['String']>
+  restaurant_id?: Maybe<ScalarsEnums['uuid']>
+}
+
+/**
+ * response of any mutation on the table "list_region"
+ */
+export interface list_region_mutation_response {
+  __typename?: 'list_region_mutation_response'
+  /**
+   * number of affected rows by the mutation
+   */
+  affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
+  returning: Array<list_region>
 }
 
 /**
@@ -13395,6 +13938,7 @@ export interface photo {
   quality?: Maybe<ScalarsEnums['numeric']>
   updated_at: ScalarsEnums['timestamptz']
   url?: Maybe<ScalarsEnums['String']>
+  user_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 /**
@@ -13446,6 +13990,7 @@ export interface photo_max_fields {
   quality?: Maybe<ScalarsEnums['numeric']>
   updated_at?: Maybe<ScalarsEnums['timestamptz']>
   url?: Maybe<ScalarsEnums['String']>
+  user_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 /**
@@ -13459,6 +14004,7 @@ export interface photo_min_fields {
   quality?: Maybe<ScalarsEnums['numeric']>
   updated_at?: Maybe<ScalarsEnums['timestamptz']>
   url?: Maybe<ScalarsEnums['String']>
+  user_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 /**
@@ -13543,10 +14089,15 @@ export interface photo_xref {
    */
   photo: photo
   photo_id: ScalarsEnums['uuid']
+  /**
+   * An object relationship
+   */
+  restaurant: restaurant
   restaurant_id: ScalarsEnums['uuid']
   review_id?: Maybe<ScalarsEnums['uuid']>
   tag_id: ScalarsEnums['uuid']
   type?: Maybe<ScalarsEnums['String']>
+  user_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 /**
@@ -13582,6 +14133,7 @@ export interface photo_xref_max_fields {
   review_id?: Maybe<ScalarsEnums['uuid']>
   tag_id?: Maybe<ScalarsEnums['uuid']>
   type?: Maybe<ScalarsEnums['String']>
+  user_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 /**
@@ -13595,6 +14147,7 @@ export interface photo_xref_min_fields {
   review_id?: Maybe<ScalarsEnums['uuid']>
   tag_id?: Maybe<ScalarsEnums['uuid']>
   type?: Maybe<ScalarsEnums['String']>
+  user_id?: Maybe<ScalarsEnums['uuid']>
 }
 
 /**
@@ -15542,6 +16095,56 @@ export interface user {
   /**
    * An array relationship
    */
+  photo_xrefs: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<photo_xref_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<photo_xref_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<photo_xref_bool_exp>
+  }) => Array<photo_xref>
+  /**
+   * An aggregated array relationship
+   */
+  photo_xrefs_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<photo_xref_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<photo_xref_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<photo_xref_bool_exp>
+  }) => photo_xref_aggregate
+  /**
+   * An array relationship
+   */
   reviews: (args?: {
     /**
      * distinct select on columns
@@ -15927,6 +16530,12 @@ export interface SchemaObjectTypes {
   list_max_fields: list_max_fields
   list_min_fields: list_min_fields
   list_mutation_response: list_mutation_response
+  list_region: list_region
+  list_region_aggregate: list_region_aggregate
+  list_region_aggregate_fields: list_region_aggregate_fields
+  list_region_max_fields: list_region_max_fields
+  list_region_min_fields: list_region_min_fields
+  list_region_mutation_response: list_region_mutation_response
   list_restaurant: list_restaurant
   list_restaurant_aggregate: list_restaurant_aggregate
   list_restaurant_aggregate_fields: list_restaurant_aggregate_fields
@@ -16158,6 +16767,12 @@ export type SchemaObjectTypesNames =
   | 'list_max_fields'
   | 'list_min_fields'
   | 'list_mutation_response'
+  | 'list_region'
+  | 'list_region_aggregate'
+  | 'list_region_aggregate_fields'
+  | 'list_region_max_fields'
+  | 'list_region_min_fields'
+  | 'list_region_mutation_response'
   | 'list_restaurant'
   | 'list_restaurant_aggregate'
   | 'list_restaurant_aggregate_fields'
@@ -16379,6 +16994,9 @@ export interface ScalarsEnums extends MakeNullable<Scalars> {
   hrr_select_column: hrr_select_column | undefined
   hrr_update_column: hrr_update_column | undefined
   list_constraint: list_constraint | undefined
+  list_region_constraint: list_region_constraint | undefined
+  list_region_select_column: list_region_select_column | undefined
+  list_region_update_column: list_region_update_column | undefined
   list_restaurant_constraint: list_restaurant_constraint | undefined
   list_restaurant_select_column: list_restaurant_select_column | undefined
   list_restaurant_tag_constraint: list_restaurant_tag_constraint | undefined

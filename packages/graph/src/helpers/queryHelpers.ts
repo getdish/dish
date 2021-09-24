@@ -231,7 +231,15 @@ function removeReadOnlyProperties<T extends Object>(table: string, objects: T[])
   return objects.map((cur) => {
     const res: T = {} as any
     for (const key in cur) {
-      const schemaType = generatedSchema[table][key]['__type']
+      const schemaInfo = generatedSchema[table][key]
+      if (!schemaInfo) {
+        throw new Error(
+          `No schema info, invalid key for schema: ${key} in table: ${table}, valid keys: ${Object.keys(
+            generatedSchema[table]
+          )}`
+        )
+      }
+      const schemaType = schemaInfo['__type']
       const { pureType: typeName } = parseSchemaType(schemaType)
       if (isMutatableField(key, typeName)) {
         res[key] = cur[key]

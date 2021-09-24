@@ -72,9 +72,9 @@ const RestaurantPage = memo(
       const [dishesSection, setDishesSection] = useState<View | null>(null)
       const [hasLoadedAboveFold, setHasLoadedAboveFold] = useState(false)
 
-      useAsyncEffect(async (go) => {
+      useAsyncEffect(async (mounted) => {
         await sleep(500)
-        if (!go()) return
+        if (!mounted()) return
         setHasLoadedAboveFold(true)
       }, [])
 

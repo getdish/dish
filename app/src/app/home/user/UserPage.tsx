@@ -1,8 +1,9 @@
+import { sleep } from '@dish/async'
 import { ReviewQuery, graphql, order_by, query, useQuery, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { useRouterSelector } from '@dish/router'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
   AbsoluteVStack,
   Divider,
@@ -13,6 +14,7 @@ import {
   ParagraphProps,
   Spacer,
   VStack,
+  useForceUpdate,
   useLazyEffect,
   useMedia,
   useTheme,
@@ -24,6 +26,7 @@ import { queryUser } from '../../../queries/queryUser'
 import { router } from '../../../router'
 import { HomeStateItemUser } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../AppMap'
+import { useAsyncEffect } from '../../hooks/useAsync'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -79,18 +82,44 @@ const getReviewRestuarants = (x: ReviewQuery) => {
   }
 }
 
+function useQueryIsLoaded<A>(cb: (isLoaded: boolean) => A, opts?: { skeleton?: number }): A {
+  const [loaded, setLoaded] = useState(false)
+  const query = cb(loaded)
+  // const skeleton = useMemo(() => query, [])
+  const item = query?.[0]
+  const exists = typeof item[Object.keys(item)[0]] !== 'undefined'
+  if (!Array.isArray(query)) {
+    return query
+  }
+  const numSkeletons = Math.min(0, 10 - query.length)
+  // useEffect(() => {
+  //   if (exists) {
+  //     setLoaded(true)
+  //   }
+  // }, [exists])
+  // @ts-ignore
+  return query //[...query, ...(numSkeletons ? new Array(numSkeletons).fill(skeleton) : [])]
+}
+
 const UserPageContent = memo(
   graphql(
     (props: StackItemProps<HomeStateItemUser> & { pane: UserPane | null; setPane: Function }) => {
       const refetch = useRefetch()
-      // const query = useQuery({
-      //   suspense: false,
-      // })
       const { item, isActive, pane, setPane } = props
       const username = item.username
       const user = queryUser(username)
+
+      const [hasLoadedAboveFold, setHasLoadedAboveFold] = useState(false)
+
+      useAsyncEffect(async (mounted) => {
+        await sleep(500)
+        if (!mounted()) return
+        setHasLoadedAboveFold(true)
+      }, [])
+
+      // slow query hasLoadedAboveFold
       const lists = user?.lists({
-        limit: 10,
+        limit: 25,
         where: {
           public: {
             _eq: true,
@@ -98,10 +127,28 @@ const UserPageContent = memo(
         },
         order_by: [{ created_at: order_by.desc }],
       })
+      // useQueryIsLoaded(
+      //   (loaded) =>
+      //     user?.lists({
+      //       limit: loaded ? 10 : 2,
+      //       where: {
+      //         public: {
+      //           _eq: true,
+      //         },
+      //       },
+      //       order_by: [{ created_at: order_by.desc }],
+      //     }),
+      //   {
+      //     skeleton: 10,
+      //   }
+      // )
+      // // always === 10, keeps skeletons
+      // console.log('>>>>', lists)
+      // lists.length === 10
 
       const favoriteLists = user
         ?.reviews({
-          limit: 10,
+          limit: 3,
           where: {
             list_id: {
               _neq: null,
@@ -137,7 +184,7 @@ const UserPageContent = memo(
             text: { _eq: '' },
           }),
         },
-        limit: !pane ? 10 : 40,
+        limit: !pane ? 3 : 40,
         order_by: [{ updated_at: order_by.desc }],
       })
 
@@ -153,40 +200,40 @@ const UserPageContent = memo(
         results: reviews.map(getReviewRestuarants).filter((x) => x.id),
       })
 
-      const favoritesCount =
-        user
-          ?.reviews_aggregate({
-            where: {
-              favorited: {
-                _eq: true,
-              },
-            },
-          })
-          .aggregate?.count({}) ?? 0
+      // const favoritesCount =
+      //   user
+      //     ?.reviews_aggregate({
+      //       where: {
+      //         favorited: {
+      //           _eq: true,
+      //         },
+      //       },
+      //     })
+      //     .aggregate?.count({}) ?? 0
 
-      const votesCount =
-        user
-          ?.reviews_aggregate({
-            where: {
-              text: { _eq: '' },
-              restaurant_id: {
-                _is_null: false,
-              },
-            },
-          })
-          .aggregate?.count({}) ?? 0
+      // const votesCount =
+      //   user
+      //     ?.reviews_aggregate({
+      //       where: {
+      //         text: { _eq: '' },
+      //         restaurant_id: {
+      //           _is_null: false,
+      //         },
+      //       },
+      //     })
+      //     .aggregate?.count({}) ?? 0
 
-      const reviewsCount =
-        user
-          ?.reviews_aggregate({
-            where: {
-              text: { _neq: '' },
-              restaurant_id: {
-                _is_null: false,
-              },
-            },
-          })
-          .aggregate?.count({}) ?? 0
+      // const reviewsCount =
+      //   user
+      //     ?.reviews_aggregate({
+      //       where: {
+      //         text: { _neq: '' },
+      //         restaurant_id: {
+      //           _is_null: false,
+      //         },
+      //       },
+      //     })
+      //     .aggregate?.count({}) ?? 0
 
       const refetchAll = () => {
         refetch(user)
@@ -249,7 +296,7 @@ const UserPageContent = memo(
                   setPane('review')
                 }}
               >
-                Reviews ({reviewsCount})
+                Reviews
               </SmallButton>
               <SmallButton
                 textProps={{
@@ -277,7 +324,7 @@ const UserPageContent = memo(
 
             <Spacer size="lg" />
 
-            <VStack>
+            {/* <VStack>
               <Divider />
               <Spacer />
               <HStack spacing alignItems="center" justifyContent="center">
@@ -298,9 +345,9 @@ const UserPageContent = memo(
               </HStack>
               <Spacer />
               <Divider />
-            </VStack>
+            </VStack> */}
 
-            <Spacer size="lg" />
+            {/* <Spacer size="lg" /> */}
 
             <VStack spacing="lg" paddingVertical={20}>
               {!pane && !!user.about && (

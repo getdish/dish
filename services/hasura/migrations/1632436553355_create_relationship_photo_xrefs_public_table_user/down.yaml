@@ -1,0 +1,6 @@
+- args:
+    relationship: photo_xrefs
+    table:
+      name: user
+      schema: public
+  type: drop_relationship
