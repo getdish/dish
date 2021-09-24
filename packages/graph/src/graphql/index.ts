@@ -93,7 +93,7 @@ export const client = createClient<GeneratedSchema>({
   queryFetcher,
   catchSelectionsTimeMS: 50,
   // turning on fixed infinite loop on loading lily restaurantpage list items
-  normalization: false,
+  normalization: true,
   retry: false,
 })
 

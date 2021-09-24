@@ -161,7 +161,6 @@ const ListPageContent = memo(
       const region = useRegionQuery(props.item.region)
       const forceUpdate = useForceUpdate()
       const isMinimal = !!list?.theme
-      console.log('list?.theme', list?.theme, isMinimal)
       const listSlug = props.item.slug
 
       // useAsyncEffect(async () => {
@@ -414,7 +413,7 @@ const ListPageContent = memo(
                   </>
                 )}
               </PaneControlButtonsLeft>
-              <VStack width="100%" minHeight={getWindowHeight()}>
+              <VStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
                 {/* START HEADER */}
                 <VStack paddingBottom={5} position="relative">
                   <AbsoluteVStack
@@ -429,7 +428,7 @@ const ListPageContent = memo(
                       zIndex={-1}
                       borderRadius={1000}
                       top={-100}
-                      opacity={0.5}
+                      opacity={0.1}
                       right={-100}
                     >
                       <Image
@@ -659,12 +658,10 @@ const ListPageContent = memo(
                 <VStack flex={1}>
                   <ListViewElement
                     keyExtractor={(item, index) => `draggable-item-${item?.key}-${isMyList}`}
-                    disableVirtualization
                     data={listItems.items}
                     // @ts-ignore
                     renderItem={renderItem}
                     onDragBegin={() => {
-                      console.log('do')
                       if (isWeb) {
                         window.getSelection?.()?.empty?.()
                         window.getSelection?.()?.removeAllRanges?.()

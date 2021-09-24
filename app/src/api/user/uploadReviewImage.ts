@@ -8,6 +8,8 @@ import {
   photo_constraint,
   photo_xref,
   photo_xref_constraint,
+  query,
+  resolved,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { selectFields } from 'gqty'
@@ -34,7 +36,22 @@ export default route(async (req, res) => {
 
     const { files, headers } = req
 
-    if (!Array.isArray(files) || !files.length || !headers.restaurantid || !user.id) {
+    // headers come lowercased
+    const restaurant_slug = `${headers.restaurantslug}`
+    const review_id = headers.reviewid
+    const restaurant_id = await resolved(
+      () =>
+        query.restaurant({
+          where: {
+            slug: {
+              _eq: restaurant_slug,
+            },
+          },
+        })[0]?.id
+    )
+
+    if (!Array.isArray(files) || !files.length || !restaurant_slug || !user.id || !restaurant_id) {
+      console.error(`error with upload`, { files, restaurant_slug, restaurant_id })
       res.status(500).json({
         error: 'no files / restuarant',
       })
@@ -54,8 +71,8 @@ export default route(async (req, res) => {
     const photoXrefs = insertedPhotos.map(({ id }) => {
       return {
         user_id: user.id,
-        restaurant_id: headers.restaurantid,
-        review_id: headers.reviewid,
+        restaurant_id,
+        review_id,
         tag_id: globalTagId,
         type: 'user-review',
         photo_id: id,

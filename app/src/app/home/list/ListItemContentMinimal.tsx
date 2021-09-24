@@ -22,6 +22,7 @@ import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollView
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { TitleStyled } from '../../views/TitleStyled'
+import { ensureFlexText } from '../restaurant/ensureFlexText'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
 import { RankView } from '../restaurant/RankView'
 import { RestaurantAddress } from '../restaurant/RestaurantAddress'
@@ -128,188 +129,206 @@ export const ListItemContentMinimalContent = memo(
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <HStack backgroundColor={theme.backgroundColor} overflow="hidden" flex={1}>
           <VStack
-            hoverStyle={{ backgroundColor: `${listColors.backgroundColor}11` }}
+            // hoverStyle={{ backgroundColor: `${listColors.backgroundColor}11` }}
+            hoverStyle={{
+              backgroundColor: theme.backgroundColorTransluscentHover,
+            }}
             paddingVertical={25}
             paddingHorizontal={18}
             maxWidth="100%"
             flex={1}
           >
-            <HStack
-              className="hover-faded-in-parent"
-              alignItems="center"
-              flexGrow={1}
-              position="relative"
-            >
-              <VStack opacity={0.5} y={3} marginLeft={-35} marginRight={3} width={35}>
-                <RankView rank={rank} />
-              </VStack>
+            <HStack>
+              <VStack maxWidth={Math.min(drawerWidth - 120, 540)}>
+                {ensureFlexText}
+                <HStack
+                  className="hover-faded-in-parent"
+                  alignItems="center"
+                  flexGrow={1}
+                  position="relative"
+                >
+                  <VStack opacity={0.5} y={3} marginLeft={-35} marginRight={3} width={35}>
+                    <RankView rank={rank} />
+                  </VStack>
 
-              <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
-                <HStack alignItems="center" flexDirection="row" flexWrap="nowrap" flex={1}>
-                  <HStack
-                    marginVertical={-4}
-                    alignItems="center"
-                    // hoverStyle={{
-                    //   backgroundColor: theme.backgroundColorSecondary,
-                    // }}
-                    // pressStyle={{
-                    //   backgroundColor: theme.backgroundColorTertiary,
-                    // }}
-                    overflow="hidden"
-                    // ⚠️ note block necessary
-                    display={isWeb ? 'block' : 'flex'}
-                  >
-                    <TitleStyled
-                      fontSize={titleFontSize}
-                      lineHeight={titleFontSize * 1.56}
-                      backgroundColor={`${listColors.backgroundColor}55`}
-                      color={isDark ? listColors.lightColor : listColors.darkColor}
-                      hoverStyle={{
-                        backgroundColor: `${listColors.backgroundColor}22`,
-                        color: theme.color,
-                      }}
-                      fontWeight="700"
-                      paddingHorizontal={3} // prevents clipping due to letter-spacing
-                      ellipse
-                      maxWidth="100%"
+                  <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
+                    <HStack
+                      marginVertical={-4}
+                      alignItems="center"
+                      // hoverStyle={{
+                      //   backgroundColor: theme.backgroundColorSecondary,
+                      // }}
+                      // pressStyle={{
+                      //   backgroundColor: theme.backgroundColorTertiary,
+                      // }}
+                      overflow="hidden"
+                      // ⚠️ note block necessary
+                      display={isWeb ? 'block' : 'flex'}
                     >
-                      {restaurantName}
-                    </TitleStyled>
-                  </HStack>
-                  <Spacer />
-                  <ReviewTagsRow
-                    hideGeneralTags={!editable}
-                    // wrapTagsRow
-                    list={list}
-                    review={review}
-                    restaurantSlug={restaurant.slug || ''}
-                    onFocusChange={setIsFocused}
-                  />
-                </HStack>
-              </Link>
-            </HStack>
-
-            {!minimal && (
-              <HStack spacing="xs" alignItems="center" marginTop={4}>
-                {!isFocused && !!editable && (
-                  <SmallButton
-                    tooltip="Remove"
-                    icon={<X size={15} color="#888" />}
-                    onPress={onDelete as any}
-                  />
-                )}
-
-                {!minimal && !isFocused && !!editable && !isEditing && (
-                  <SmallButton
-                    icon={<PenTool size={14} color="#888" />}
-                    onPress={() => setIsEditing(true)}
-                  >
-                    Review
-                  </SmallButton>
-                )}
-
-                {!!editable && isEditing && (
-                  <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
-                )}
-
-                {!!restaurant.address && (
-                  <RestaurantAddress size={'xs'} address={restaurant.address} />
-                )}
-
-                <HStack marginHorizontal={10}>
-                  <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
+                      <TitleStyled
+                        fontSize={titleFontSize}
+                        lineHeight={titleFontSize * 1.56}
+                        backgroundColor={`${listColors.backgroundColor}55`}
+                        color={isDark ? listColors.lightColor : listColors.darkColor}
+                        hoverStyle={{
+                          backgroundColor: `${listColors.backgroundColor}22`,
+                          color: theme.color,
+                        }}
+                        fontWeight="700"
+                        paddingHorizontal={3} // prevents clipping due to letter-spacing
+                        ellipse
+                        maxWidth="100%"
+                      >
+                        {restaurantName}
+                      </TitleStyled>
+                    </HStack>
+                  </Link>
                 </HStack>
 
-                <VStack marginHorizontal={10} opacity={0.5}>
-                  <RestaurantRatingView restaurant={restaurant} size={28} />
-                </VStack>
+                {!minimal && (
+                  <HStack spacing="xs" alignItems="center" marginTop={4} marginLeft={-10}>
+                    {!isFocused && !!editable && (
+                      <SmallButton
+                        tooltip="Remove"
+                        icon={<X size={15} color="#888" />}
+                        onPress={onDelete as any}
+                      />
+                    )}
 
-                <Text marginHorizontal={10} opacity={0.5} fontSize={14} color={theme.colorTertiary}>
-                  {price_range ?? '?'}
-                </Text>
+                    {!minimal && !isFocused && !!editable && !isEditing && (
+                      <SmallButton
+                        icon={<PenTool size={14} color="#888" />}
+                        onPress={() => setIsEditing(true)}
+                      >
+                        Review
+                      </SmallButton>
+                    )}
 
-                {!!open.nextTime && (
-                  <Link
-                    opacity={0.5}
-                    name="restaurantHours"
-                    params={{ slug: restaurant.slug || '' }}
-                  >
+                    {!!editable && isEditing && (
+                      <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
+                    )}
+
+                    {!!restaurant.address && (
+                      <RestaurantAddress size={'xs'} address={restaurant.address} />
+                    )}
+
+                    <HStack marginHorizontal={10}>
+                      <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
+                    </HStack>
+
+                    <VStack marginHorizontal={10} opacity={0.5}>
+                      <RestaurantRatingView restaurant={restaurant} size={28} />
+                    </VStack>
+
                     <Text
-                      paddingHorizontal={5}
-                      opacity={0.8}
-                      fontSize={13}
+                      marginHorizontal={10}
+                      opacity={0.5}
+                      fontSize={14}
                       color={theme.colorTertiary}
                     >
-                      {open.nextTime || ''}
+                      {price_range ?? '?'}
                     </Text>
-                  </Link>
+
+                    {!!open.nextTime && (
+                      <Link
+                        opacity={0.5}
+                        name="restaurantHours"
+                        params={{ slug: restaurant.slug || '' }}
+                      >
+                        <Text
+                          paddingHorizontal={5}
+                          opacity={0.8}
+                          fontSize={13}
+                          color={theme.colorTertiary}
+                        >
+                          {open.nextTime || ''}
+                        </Text>
+                      </Link>
+                    )}
+
+                    {!isFocused && (
+                      <RestaurantFavoriteButton
+                        backgroundColor="transparent"
+                        size="sm"
+                        borderWidth={0}
+                        opacity={0.5}
+                        restaurantSlug={restaurant.slug || ''}
+                      />
+                    )}
+
+                    <Suspense fallback={null}>
+                      <RestaurantDeliveryButtons
+                        showLabels={false}
+                        label={false}
+                        restaurantSlug={restaurant.slug || ''}
+                      />
+                    </Suspense>
+                  </HStack>
                 )}
+              </VStack>
 
-                {!isFocused && (
-                  <RestaurantFavoriteButton
-                    backgroundColor="transparent"
-                    size="sm"
-                    borderWidth={0}
-                    opacity={0.5}
-                    restaurantSlug={restaurant.slug || ''}
-                  />
-                )}
-
-                <Suspense fallback={null}>
-                  <RestaurantDeliveryButtons
-                    showLabels={false}
-                    label={false}
-                    restaurantSlug={restaurant.slug || ''}
-                  />
-                </Suspense>
-              </HStack>
-            )}
-
-            {/* ROW: review */}
-            {!minimal && (review || isEditing) && (
-              <Suspense fallback={null}>
-                <VStack maxWidth={drawerWidth - 20} className="hide-while-unselectable">
-                  <RestaurantReview
-                    size="lg"
-                    marginTop={0}
-                    marginBottom={10}
-                    hideImagesRow
-                    hideTagsRow
-                    expandable={false}
-                    ellipseContentAbove={Infinity}
-                    listTheme="minimal"
-                    isEditing={isEditing}
-                    hideMeta={!isExternalReview}
-                    {...restaurantReviewListProps}
-                    hideRestaurantName
-                    restaurantSlug={restaurant.slug || ''}
-                    review={review}
-                    list={list}
-                    listSlug={props.listSlug}
-                    onEdit={(text) => {
-                      if (review) review.text = text
-                      refetch(reviewQuery)
-                      restaurantReviewListProps.onEdit?.(text)
-                    }}
-                  />
-                </VStack>
-              </Suspense>
-            )}
-            {/* END CONTENT ROW */}
-
-            <VStack flex={1} />
-
-            {!minimal && (
-              <VStack>
+              <VStack marginTop={-20}>
                 <ReviewImagesRow
-                  restaurantId={restaurant?.id}
+                  marginTop={10}
+                  showGenericImages
+                  restaurantSlug={restaurant.slug || ''}
                   isEditing={editable}
-                  marginTop={20}
+                  imgWidth={140}
+                  imgHeight={100}
                   list={list}
                   review={review}
                 />
               </VStack>
+            </HStack>
+
+            <ReviewTagsRow
+              hideGeneralTags={!editable}
+              // wrapTagsRow
+              list={list}
+              review={review}
+              restaurantSlug={restaurant.slug || ''}
+              onFocusChange={setIsFocused}
+              marginBottom={10}
+              marginTop={10}
+            />
+
+            {/* START center */}
+            {!minimal && (
+              <Suspense fallback={null}>
+                {(review || isEditing) && (
+                  <VStack
+                    maxWidth={Math.min(drawerWidth - 100, 840)}
+                    className="hide-while-unselectable"
+                  >
+                    {ensureFlexText}
+                    <RestaurantReview
+                      size="lg"
+                      marginTop={0}
+                      marginBottom={10}
+                      hideImagesRow
+                      hideTagsRow
+                      expandable={false}
+                      ellipseContentAbove={Infinity}
+                      listTheme="minimal"
+                      isEditing={isEditing}
+                      hideMeta={!isExternalReview}
+                      {...restaurantReviewListProps}
+                      hideRestaurantName
+                      restaurantSlug={restaurant.slug || ''}
+                      review={review}
+                      list={list}
+                      listSlug={props.listSlug}
+                      onEdit={(text) => {
+                        if (review) review.text = text
+                        refetch(reviewQuery)
+                        restaurantReviewListProps.onEdit?.(text)
+                      }}
+                    />
+                  </VStack>
+                )}
+              </Suspense>
             )}
+            {/* END center */}
           </VStack>
         </HStack>
       </HoverToZoom>

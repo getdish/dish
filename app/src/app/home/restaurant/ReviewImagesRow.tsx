@@ -1,68 +1,41 @@
-import { uploadFile, useRefetch } from '@dish/graph'
+import { query, uploadFile, useRefetch } from '@dish/graph'
 import * as ImagePicker from 'expo-image-picker'
 import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
 import { uniqBy } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { Button, HStack, StackProps, Toast, VStack, useTheme } from 'snackui'
+import { AbsoluteVStack, Button, HStack, StackProps, Toast, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { useIsMountedRef } from '../../../helpers/useIsMountedRef'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { useUserStore } from '../../userStore'
 import { Image } from '../../views/Image'
+import { Link } from '../../views/Link'
+import { SmallButton } from '../../views/SmallButton'
+import { createImageFormData } from './createImageFormData'
 import { RestaurantReviewProps } from './RestaurantReview'
-
-const imgWidth = 170
-const imgHeight = 130
-
-const getImageFileType = (imageUrl: string) => {
-  if (imageUrl.startsWith('data:')) {
-    return imageUrl.match(/image\/([a-z]+)/i)?.[1]
-  }
-  const uriParts = imageUrl.split('.')
-  return uriParts[uriParts.length - 1]
-}
-
-const createImageFormData = (name: string, uri: string) => {
-  const formData = new FormData()
-  const fileType = getImageFileType(uri)
-  if (uri.startsWith('data:')) {
-    const file = DataURIToBlob(uri)
-    formData.append('review-image', file, `${name}.${fileType}`)
-  } else {
-    // @ts-ignore
-    formData.append('photo', {
-      // @ts-ignore
-      uri,
-      name: `photo.${fileType}`,
-      type: `image/${fileType}`,
-    })
-  }
-  return formData
-}
-
-function DataURIToBlob(dataURI: string) {
-  const splitDataURI = dataURI.split(',')
-  const byteString =
-    splitDataURI[0].indexOf('base64') >= 0 ? atob(splitDataURI[1]) : decodeURI(splitDataURI[1])
-  const mimeString = splitDataURI[0].split(':')[1].split(';')[0]
-  const ia = new Uint8Array(byteString.length)
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i)
-  }
-  return new Blob([ia], { type: mimeString })
-}
+import { useRestaurantPhotos } from './useRestaurantPhotos'
 
 export const ReviewImagesRow = ({
   list,
   review,
   isEditing,
-  restaurantId,
   restaurantSlug,
+  showGenericImages,
+  imgWidth = 170,
+  imgHeight = 130,
   ...stackProps
 }: RestaurantReviewProps & {
-  restaurantId?: string
+  imgWidth?: number
+  imgHeight?: number
+  showGenericImages?: boolean
 }) => {
   const refetch = useRefetch()
+  const genericPhotos =
+    showGenericImages && restaurantSlug
+      ? useRestaurantPhotos(queryRestaurant(restaurantSlug)[0], 5)?.photos || []
+      : []
+
   const photos = restaurantSlug
     ? list?.user
         ?.photo_xrefs({
@@ -83,14 +56,14 @@ export const ReviewImagesRow = ({
         .map((xref) => xref.photo.url) || []
 
   const [newPhotos, setNewPhotos] = useState<string[]>([])
-  const allImages = uniqBy([...newPhotos, ...photos], (x) => x?.['uri'])
+  const myImages = [...newPhotos, ...photos]
+  const allImages = [...new Set([...myImages, ...genericPhotos])]
 
   // newPhotos.length ? newPhotos : isEditing ? [{ uri: '' }] : []
   const isMounted = useIsMountedRef()
   // const imageUploadForm = useImageUploadForm('reviewImages')
 
   // headers have different constraints
-  const restaurantid = restaurantId ?? review?.restaurant_id
   const reviewid = review?.id
 
   const pickImage = async () => {
@@ -102,9 +75,8 @@ export const ReviewImagesRow = ({
       quality: 1,
     })
 
+    console.log('result', result)
     if (!isMounted.current) return
-
-    console.log(result)
 
     if (!('selected' in result)) {
       Toast.show(`No images selected`)
@@ -120,19 +92,19 @@ export const ReviewImagesRow = ({
       Toast.show(`Adding photos #${index + 1}`, { duration: 60_000 * 3 })
       const headers = {
         // sending undefined sends an undefined string
-        ...(restaurantid && {
-          restaurantid,
+        ...(restaurantSlug && {
+          restaurantslug: restaurantSlug,
         }),
         ...(!!reviewid && {
           reviewid,
         }),
       }
-      console.log('sending headers', headers)
       const res = await uploadFile('reviewImages', formData, {
         headers,
       })
       if (!res) {
         Toast.error(`Couldn't upload :(`)
+        setNewPhotos([])
         return
       }
       if (!isMounted.current) return
@@ -149,7 +121,9 @@ export const ReviewImagesRow = ({
   }, [])
 
   const addButton = (
-    <>{(isEditing || !allImages.length) && <Button onPress={pickImage}>Add photos</Button>}</>
+    <>
+      {(isEditing || !myImages.length) && <SmallButton onPress={pickImage}>Add photos</SmallButton>}
+    </>
   )
 
   if (!allImages.length) {
@@ -157,16 +131,36 @@ export const ReviewImagesRow = ({
   }
 
   return (
-    <HStack alignItems="center" spacing {...stackProps}>
+    <HStack position="relative" alignItems="center" spacing {...stackProps}>
+      <AbsoluteVStack top={5} left={0} zIndex={100}>
+        {isEditing ? addButton : null}
+      </AbsoluteVStack>
       {allImages.map((uri, index) => {
         if (uri === '') {
           return <ImageFrame key={uri || index} />
         }
-        return (
-          <ImageFrame key={uri || index}>
+        const offset = index - myImages.length
+        console.log('offset', offset)
+        const content = (
+          <ImageFrame
+            key={uri || index}
+            width={imgWidth}
+            height={imgHeight}
+            // opacity={isEditing && index > myImages.length - 1 ? 0.5 : 1}
+          >
             <Image source={{ uri: uri || '' }} style={{ width: imgWidth, height: imgHeight }} />
           </ImageFrame>
         )
+
+        if (offset >= 0) {
+          return (
+            <Link name="gallery" params={{ restaurantSlug: restaurantSlug || '', offset }}>
+              {content}
+            </Link>
+          )
+        }
+
+        return content
       })}
     </HStack>
   )
@@ -174,12 +168,5 @@ export const ReviewImagesRow = ({
 
 const ImageFrame = (props: StackProps) => {
   const theme = useTheme()
-  return (
-    <VStack
-      backgroundColor={theme.backgroundColorSecondary}
-      width={imgWidth}
-      height={imgHeight}
-      {...props}
-    />
-  )
+  return <VStack backgroundColor={theme.backgroundColorSecondary} {...props} />
 }

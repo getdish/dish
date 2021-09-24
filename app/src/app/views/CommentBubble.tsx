@@ -153,7 +153,7 @@ function CommentBubbleContents({
           maxWidth="100%"
           overflow="hidden"
           sizeLineHeight={1.15}
-          fontSize={size === 'lg' ? 20 : 14}
+          fontSize={size === 'lg' ? 18 : 14}
           color={color ? color : theme.colorSecondary}
         >
           {ellipseContentAbove && text && text.length > ellipseContentAbove ? (
