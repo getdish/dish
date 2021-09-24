@@ -2338,6 +2338,7 @@ __metadata:
     "@babel/core": ^7.15.5
     "@dish/api": "*"
     "@dish/async": "*"
+    "@dish/babel-plugin-inline-env": "*"
     "@dish/babel-preset": "*"
     "@dish/fast-compare": 2.7.6
     "@dish/graph": "*"
@@ -2454,6 +2455,12 @@ __metadata:
   dependencies:
     "@dish/esdx": "*"
     "@types/requestidlecallback": 0.3.1
+  languageName: unknown
+  linkType: soft
+
+"@dish/babel-plugin-inline-env@*, @dish/babel-plugin-inline-env@workspace:packages/babel-plugin-inline-env":
+  version: 0.0.0-use.local
+  resolution: "@dish/babel-plugin-inline-env@workspace:packages/babel-plugin-inline-env"
   languageName: unknown
   linkType: soft
 

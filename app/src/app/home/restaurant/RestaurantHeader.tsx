@@ -144,6 +144,7 @@ const RestaurantHeaderContent = memo(
                         >
                           <Text
                             className="font-title"
+                            fontFamily="WhyteHeavy"
                             // backgroundColor={theme.backgroundColor}
                             // color={theme.color}
                             color={theme.backgroundColor}

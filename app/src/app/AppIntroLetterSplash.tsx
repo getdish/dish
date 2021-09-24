@@ -18,7 +18,7 @@ import {
   useTheme,
 } from 'snackui'
 
-import iphoneScreen from '../assets/iphone-home-screen.jpg'
+// import iphoneScreen from '../assets/iphone-home-screen.jpg'
 import { blue, green, pink } from '../constants/colors'
 import { useQueryLoud } from '../helpers/useQueryLoud'
 import { useRouterCurPage } from '../router'
@@ -193,7 +193,7 @@ export const AppIntroLetter = memo(() => {
           </Text>
 
           <Spacer size="md" />
-
+          {/* 
           <HStack marginBottom={-20} flexWrap="wrap" alignItems="center" justifyContent="center">
             <GridItem
               title="Discover"
@@ -218,7 +218,7 @@ export const AppIntroLetter = memo(() => {
               image={iphoneScreen}
               position="right"
             />
-          </HStack>
+          </HStack> */}
         </VStack>
       </DarkModal>
     </>

@@ -21,7 +21,7 @@ export function useQueryLoud<TData = unknown, TError = unknown, TQueryFnData = T
     async (...args) => {
       try {
         const res = await queryFn(...args)
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development' || process.env.DEBUG || process.env.LOG_FETCH) {
           console.groupCollapsed(`🔦 ${queryKey.slice(0, 50)}`)
           console.log(res)
           console.groupEnd()

@@ -3,18 +3,19 @@ const useOurBabel = process.env.TARGET === 'web' || process.env.TARGET === 'node
 module.exports = function (api) {
   api.cache(true)
 
+  if (process.env.BABEL_ENV !== process.env.NODE_ENV) {
+    console.log(
+      `BABEL_ENV !== NODE_ENV, this will cause errors in metro babel preset, changing to NODE_ENV val`
+    )
+    process.env.BABEL_ENV = process.env.NODE_ENV
+  }
+
   if (process.env.NODE_ENV === 'test') {
     return {}
   }
 
-  if (process.env.SNACKUI_ONLY) {
-    return {
-      presets: ['@dish/babel-preset'],
-      plugins: ['@snackui/babel-plugin'],
-    }
-  }
-
   if (useOurBabel) {
+    console.log('using our babel', process.env.TARGET)
     return {
       presets: ['@dish/babel-preset'],
     }
@@ -35,7 +36,7 @@ module.exports = function (api) {
           exclude: /node_modules/,
         },
       ],
-      'transform-inline-environment-variables',
+      '@dish/babel-plugin-inline-env',
     ],
   }
 }

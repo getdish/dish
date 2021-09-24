@@ -37,25 +37,9 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-			<key>NSAllowsArbitraryLoads</key>
-			<true/>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 	</dict>
-	<!-- <key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>d1sh.com</key>
-			<dict>
-				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict> -->
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>
 		 Users can submit photos as part of their review for a restaurant. This data is always
@@ -88,5 +72,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>WhyteHeavy.otf</string>
+		<string>WhyteHeavy.woff</string>
+		<string>WhyteHeavy.woff2</string>
+	</array>
 </dict>
 </plist>

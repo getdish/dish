@@ -1,10 +1,21 @@
- function docker_exec() {
-   app=${1:-app}
-   shift
-   cmd=$*
-   echo "exec $app: running $cmd"
-   docker exec -it $(docker ps | grep $app | head -n1 | awk '{print $1}') $cmd
- }
+function run() {
+  set -a
+  source_env
+  if [ "$DISH_DEBUG" -gt "2" ]; then
+    echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
+  fi
+  pushd "$CWD_DIR"
+  bash -c "$ORIGINAL_ARGS"
+  popd
+}
+
+function docker_exec() {
+  app=${1:-app}
+  shift
+  cmd=$*
+  echo "exec $app: running $cmd"
+  docker exec -it $(docker ps | grep $app | head -n1 | awk '{print $1}') $cmd
+}
 
 function dish_app_generate_tags() {
   export HASURA_ENDPOINT=https://hasura.dishapp.com
@@ -29,18 +40,6 @@ function clean() {
   clean_build
   find $PROJECT_ROOT -name "node_modules" -type d -prune -exec rm -rf '{}' \;
   find $PROJECT_ROOT -name "yarn-error.log" -prune -exec rm -rf '{}' \;
-}
-
-function run() {
-  if [ ! -z "$DEV_USER" ]; then
-    source .env.local
-  fi
-  if [ "$DISH_DEBUG" -gt "2" ]; then
-    echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
-  fi
-  pushd "$CWD_DIR"
-  bash -c "$ORIGINAL_ARGS"
-  popd
 }
 
 function sync_to() {

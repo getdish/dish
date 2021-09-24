@@ -45,6 +45,7 @@ export const SearchHeader = memo(() => {
                 <VStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 15 : 20}>
                   <Text
                     className="font-title"
+                    fontFamily="WhyteHeavy"
                     color={theme.color}
                     marginTop={-4}
                     marginBottom={0}

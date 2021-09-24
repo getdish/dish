@@ -17,7 +17,7 @@
     "@dish/server": "*",
     "@loadable/webpack-plugin": "^5.14.2",
     "@mdx-js/loader": "^1.6.22",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
     "@snackui/babel-plugin": "*",
     "@snackui/static": "*",
     "@types/node": "*",
