@@ -5,7 +5,7 @@ import { AbsoluteHStack, AbsoluteVStack, Button, HStack, VStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
-import { appMapStore } from './AppMap'
+import { appMapStore } from './appMapStore'
 import { inputTextStyles } from './AppSearchInput'
 import { autocompleteLocationStore, autocompletesStore } from './AutocompletesStore'
 import { useHomeStoreSelector } from './homeStore'

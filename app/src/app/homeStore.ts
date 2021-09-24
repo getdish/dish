@@ -26,7 +26,7 @@ import {
   HomeStatesByType,
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
-import { appMapStore } from './AppMap'
+import { appMapStore } from './appMapStore'
 
 class HomeStore extends Store {
   searchBarTagIndex = 0

@@ -5,7 +5,7 @@ import { useDebounceEffect } from 'snackui'
 import { AbsoluteVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN, isWeb } from '../constants/constants'
-import { useAppMapKey } from './AppMap'
+import { useAppMapKey } from './appMapStore'
 import { useAppShouldShow } from './AppStore'
 import { autocompletesStore } from './AutocompletesStore'
 import { drawerStore } from './drawerStore'

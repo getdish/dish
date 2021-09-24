@@ -14,7 +14,7 @@ import { getFuzzyMatchQuery } from '../../../helpers/getFuzzyMatchQuery'
 import { searchRestaurants } from '../../../helpers/searchRestaurants'
 import { queryList } from '../../../queries/queryList'
 import { RegionApiResponse } from '../../../types/homeTypes'
-import { appMapStore } from '../../AppMap'
+import { appMapStore } from '../../appMapStore'
 import { AutocompleteItemView } from '../../AutocompleteItemView'
 import { SlantedTitle } from '../../views/SlantedTitle'
 

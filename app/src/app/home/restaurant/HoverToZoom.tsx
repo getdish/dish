@@ -2,7 +2,7 @@ import { debounce } from 'lodash'
 import React from 'react'
 import { Hoverable } from 'snackui'
 
-import { appMapStore } from '../../AppMap'
+import { appMapStore } from '../../appMapStore'
 
 /**
  * NOTE
