@@ -49,7 +49,7 @@ export function focusSearchInput() {
     avoidNextFocus = false
     return
   }
-  searchBar?.focus()
+  searchBar?.focus?.()
 }
 
 export function blurSearchInput() {

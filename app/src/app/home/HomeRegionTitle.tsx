@@ -16,7 +16,7 @@ export const HomeRegionTitle = memo(() => {
   const regionColors = getColorsForName(state.region)
   const regionResponse = useRegionQuery(state.region, {
     enabled,
-    suspense: true,
+    suspense: false,
   })
   const region = regionResponse.data
   const regionName = region?.name || state.curLocName || '...'
