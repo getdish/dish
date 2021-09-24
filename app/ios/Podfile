@@ -16,7 +16,7 @@ target 'dish' do
   )
   use_unimodules!
   
-  use_flipper!({ 'Flipper' => flipperkit_version, 'Flipper-Folly' => '2.6.9', 'Flipper-RSocket' => '1.4.3', 'Flipper-DoubleConversion' => '3.1.7', 'Flipper-Glog' => '0.3.9', 'Flipper-PeerTalk' => '0.0.4' })
+  # use_flipper!({ 'Flipper' => flipperkit_version, 'Flipper-Folly' => '2.6.9', 'Flipper-RSocket' => '1.4.3', 'Flipper-DoubleConversion' => '3.1.7', 'Flipper-Glog' => '0.3.9', 'Flipper-PeerTalk' => '0.0.4' })
 
   pre_install do |installer|
     $RNMBGL.pre_install(installer)
