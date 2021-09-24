@@ -45,6 +45,10 @@ export class Store<Props extends Object | null = null> {
     // this can't be wholesale...
     // startTransition(() => {
     for (const cb of this._listeners) {
+      if (typeof cb !== 'function') {
+        console.error('error', cb, this._listeners)
+        continue
+      }
       cb()
     }
     // })

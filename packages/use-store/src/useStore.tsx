@@ -1,6 +1,5 @@
 // @ts-ignore
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
-import { useSyncExternalStore } from 'use-sync-external-store'
 
 import { isEqualSubsetShallow } from './comparators'
 import { configureOpts } from './configureUseStore'
@@ -23,6 +22,7 @@ import {
   useCurrentComponent,
   useDebugStoreComponent,
 } from './useStoreDebug'
+import { useSyncExternalStore } from './useSyncExternalStore'
 
 // sanity check types here
 // class StoreTest extends Store<{ id: number }> {}
@@ -335,7 +335,7 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
     return snap
   }, [])
 
-  const state = useSyncExternalStore(store.subscribe.bind(store), getSnapshot)
+  const state = useSyncExternalStore(store, getSnapshot)
 
   // dispose tracker on unmount
   useEffect(() => {
