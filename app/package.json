@@ -39,6 +39,7 @@
     "dev:react": "npx react-devtools",
     "test": "true",
     "build": "true",
+    "build:eas": "EXPO_NO_CAPABILITY_SYNC=1 yarn eas build",
     "build:docker": "cd .. && docker build -t dish/app -f app/Dockerfile .",
     "build:types": "tsc",
     "build:output": "tsc -p tsconfig.build.json",
