@@ -44,9 +44,10 @@ export const RestaurantReviewsList = memo(
         },
         order_by: [
           {
-            reviews_aggregate: {
-              count: order_by.desc,
-            },
+            authored_at: order_by.asc,
+            // reviews_aggregate: {
+            //   count: order_by.desc,
+            // },
           },
         ],
       })

@@ -3,7 +3,7 @@ import { sleep } from '@dish/async'
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
+import { Circle, LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
@@ -213,7 +213,7 @@ const RestaurantPage = memo(
                   <Spacer />
 
                   <Suspense fallback={null}>
-                    {hasLoadedAboveFold && <RestaurantLists restaurantSlug={restaurantSlug} />}
+                    <RestaurantLists restaurantSlug={restaurantSlug} />
                   </Suspense>
 
                   <Spacer size="xl" />
@@ -234,7 +234,7 @@ const RestaurantPage = memo(
 
               <VStack flex={1} marginBottom={20} width="100%" alignSelf="center">
                 <Suspense fallback={null}>
-                  {hasLoadedAboveFold && <RestaurantMenu restaurantSlug={restaurantSlug} />}
+                  <RestaurantMenu restaurantSlug={restaurantSlug} />
                 </Suspense>
               </VStack>
             </PageContentWithFooter>

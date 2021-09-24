@@ -122,7 +122,8 @@ export const RestaurantReview = memo(
 
             {tagsRowEl}
 
-            {!hideImagesRow && (
+            {/* TEMP TODO REMOVE hideRestaurantName SLOW RPAGE */}
+            {!hideImagesRow && !hideRestaurantName && (
               <>
                 <Spacer />
                 <ReviewImagesRow
