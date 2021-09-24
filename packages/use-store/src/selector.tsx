@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { isEqualSubsetShallow } from './comparators'
 import { UNWRAP_PROXY } from './constants'
-import { isEqualSubsetShallow } from './isEqualShallow'
 import { setIsInReaction, trackStoresAccess } from './useStore'
 
 // TODO i think we can just replace reaction() with this, its not worse in any way

@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { Store, reaction, useStore } from '@dish/use-store'
+import { Store, compare, compareStrict, isEqualStrict, reaction, useStore } from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -332,6 +332,7 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
       index: number
       // extendedState?: object
     ) => {
+      console.log('render', index, data)
       if (data.isPlaceholder) {
         return <LoadingItem size="lg" />
       }
@@ -399,7 +400,9 @@ type SearchPageScrollViewProps = ScrollViewProps & {
 }
 
 class SearchPageChildrenStore extends Store<{ id: string }> {
+  @compareStrict
   children = null
+
   setChildren(next: any) {
     this.children = next
   }

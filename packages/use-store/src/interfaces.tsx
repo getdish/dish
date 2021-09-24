@@ -8,6 +8,9 @@ export type UseStoreOptions<Store = any, SelectorRes = any> = {
 }
 
 export type StoreInfo<A = any> = {
+  keyComparators?: {
+    [key: string]: (a: any, b: any) => boolean
+  }
   // proxied store
   store: A
   storeInstance: any

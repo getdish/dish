@@ -2,11 +2,11 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store'
 
+import { isEqualSubsetShallow } from './comparators'
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
 import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr } from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
-import { isEqualSubsetShallow } from './isEqualShallow'
 import {
   ADD_TRACKER,
   SHOULD_DEBUG,
@@ -215,7 +215,9 @@ function getOrCreateStoreInfo(
     }
   }
 
+  const keyComparators = storeInstance['_comparators']
   const storeInfo = {
+    keyComparators,
     storeInstance,
     getters,
     stateKeys,
@@ -317,7 +319,11 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
       snap = selectKeys(store, keys)
     }
     setDisableStoreTracking(store, false)
-    const isUnchanged = typeof last !== 'undefined' && isEqualSubsetShallow(last, snap)
+    const isUnchanged =
+      typeof last !== 'undefined' &&
+      isEqualSubsetShallow(last, snap, {
+        keyComparators: info.keyComparators,
+      })
     if (shouldPrintDebug) {
       // prettier-ignore
       console.log('💰 getSnapshot', { userSelector, info, isUnchanged, component, keys, snap, curInternal })
