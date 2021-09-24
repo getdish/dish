@@ -140,7 +140,6 @@ export const ReviewImagesRow = ({
           return <ImageFrame key={uri || index} />
         }
         const offset = index - myImages.length
-        console.log('offset', offset)
         const content = (
           <ImageFrame
             key={uri || index}
@@ -154,7 +153,11 @@ export const ReviewImagesRow = ({
 
         if (offset >= 0) {
           return (
-            <Link name="gallery" params={{ restaurantSlug: restaurantSlug || '', offset }}>
+            <Link
+              key={uri || index}
+              name="gallery"
+              params={{ restaurantSlug: restaurantSlug || '', offset }}
+            >
               {content}
             </Link>
           )

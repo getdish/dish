@@ -332,7 +332,6 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
       index: number
       // extendedState?: object
     ) => {
-      console.log('render', index, data)
       if (data.isPlaceholder) {
         return <LoadingItem size="lg" />
       }
