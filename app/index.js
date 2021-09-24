@@ -13,13 +13,14 @@ if (process.env.NODE_ENV === 'production') {
     release: process.env.GIT_COMMIT || 'unreleased',
     environment: process.env.NODE_ENV || 'development',
   })
+} else {
+  console.log('NODE_ENV', process.env.NODE_ENV)
 }
 
 if (process.env.NODE_ENV === 'development') {
   require('@dish/graph').startLogging()
 }
 
-console.log('polyfills')
 navigator.geolocation = require('@react-native-community/geolocation')
 
 // console.log('polyfill..........')

@@ -1,5 +1,5 @@
 import { AssertionError } from '@dish/helpers'
-import { getStore, useStore } from '@dish/use-store'
+import { getStore } from '@dish/use-store'
 import React, { memo, useMemo, useRef } from 'react'
 import {
   Animated,
@@ -38,17 +38,12 @@ import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 
 let isTouchingHandle = false
 let isPanActive = false
-
-// export const getIsTouchingHandle = () => isTouchingHandle
-
 const getActiveParentId = () => {
   return getStore(ContentParentStore).activeId
 }
 
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
   const panViewRef = useRef()
-  // const preventScrolling = usePreventVerticalScroll(contentParent.activeId)
-
   const pan = useMemo(() => {
     let curSnapY = 0
     let curScrollerYMove = -1
@@ -207,17 +202,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'], vy)
       },
     })
-
-    // responder.panHandlers = Object.keys(responder.panHandlers).reduce((acc, cur) => {
-    //   console.log('---', cur)
-    //   const og = responder.panHandlers[cur]
-    //   acc[cur] = (...args) => {
-    //     const res = og(...args)
-    //     console.log('>>>>', cur, args, 'return', res)
-    //     return res
-    //   }
-    //   return acc
-    // }, {})
 
     return responder
   }, [])

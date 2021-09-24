@@ -78,7 +78,7 @@ export const SearchInputNativeDragFix = ({ name }: { name: 'search' | 'location'
             document.body.prepend(fakeInput)
 
             // focus so that subsequent async focus will work
-            fakeInput.focus()
+            fakeInput.focus?.()
             setTimeout(() => {
               document.body.removeChild(fakeInput)
             }, 1000)
