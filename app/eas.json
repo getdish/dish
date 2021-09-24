@@ -1,11 +1,17 @@
 {
-  "builds": {
-    "ios": {
-      "release": {
-        "workflow": "generic",
-        "scheme": "dish-prod",
-        "distribution": "internal"
+  "build": {
+    "release": {},
+    "development": {
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
       }
     }
+  },
+  "submit": {
+    "release": {}
   }
 }
