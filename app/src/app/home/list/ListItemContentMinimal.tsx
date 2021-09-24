@@ -1,12 +1,10 @@
-import { fullyIdle, series } from '@dish/async'
 import { graphql, useRefetch } from '@dish/graph'
 import { PenTool, X } from '@dish/react-feather'
-import React, { Suspense, memo, useEffect, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import {
   Circle,
   HStack,
   LoadingItem,
-  Spacer,
   Text,
   VStack,
   useMedia,
@@ -32,7 +30,6 @@ import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { ReviewImagesRow } from '../restaurant/ReviewImagesRow'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
-import { useTotalReviews } from '../restaurant/useTotalReviews'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
@@ -248,29 +245,33 @@ const Header = memo(
               )}
             </VStack>
 
-            <VStack marginTop={-20}>
-              <ReviewImagesRow
-                marginTop={10}
-                showGenericImages
-                restaurantSlug={restaurant.slug || ''}
-                isEditing={editable}
-                imgWidth={140}
-                imgHeight={100}
-                list={list}
-                review={review}
-              />
-            </VStack>
+            {!minimal && (
+              <VStack marginTop={-20}>
+                <ReviewImagesRow
+                  marginTop={10}
+                  showGenericImages
+                  restaurantSlug={restaurant.slug || ''}
+                  isEditing={editable}
+                  imgWidth={140}
+                  imgHeight={100}
+                  list={list}
+                  review={review}
+                />
+              </VStack>
+            )}
           </HStack>
 
-          <ReviewTagsRow
-            hideGeneralTags={!editable}
-            // wrapTagsRow
-            list={list}
-            review={review}
-            restaurantSlug={restaurant.slug || ''}
-            onFocusChange={setIsFocused}
-            marginTop={10}
-          />
+          {!minimal && (
+            <ReviewTagsRow
+              hideGeneralTags={!editable}
+              // wrapTagsRow
+              list={list}
+              review={review}
+              restaurantSlug={restaurant.slug || ''}
+              onFocusChange={setIsFocused}
+              marginTop={10}
+            />
+          )}
         </VStack>
       </HoverToZoom>
     )
