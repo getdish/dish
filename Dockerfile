@@ -36,7 +36,7 @@ RUN yarn install --immutable-cache \
   && yarn cache clean
 
 COPY tsconfig.json tsconfig.build.json \
-      tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
+       tsconfig.base.json ava.config.js ./
 COPY packages packages
 # only services that depend on yarn build for testing
 COPY services/crawlers services/crawlers
