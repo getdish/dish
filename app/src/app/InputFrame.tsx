@@ -7,7 +7,7 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
   return (
     <HStack
       alignItems="center"
-      borderRadius={6}
+      borderRadius={2}
       width="100%"
       flex={1}
       maxWidth="100%"
