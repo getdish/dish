@@ -141,7 +141,7 @@ export const tagLenses = [
     id: '4768116c-bca3-4936-970b-5f2570a9e8f8',
     name: 'Veg',
     type: 'lense',
-    icon: '🥬',
+    icon: '🌱',
     slug: 'lenses__veg',
     rgb: ['51', ' 153', ' 51'],
   },
