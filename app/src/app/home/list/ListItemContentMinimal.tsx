@@ -118,7 +118,7 @@ const Header = memo(
             backgroundColor: theme.backgroundColorTransluscentHover,
           }}
           paddingVertical={20}
-          paddingHorizontal={18}
+          paddingHorizontal={24}
           maxWidth="100%"
           pointerEvents="auto"
           flex={1}
@@ -132,7 +132,7 @@ const Header = memo(
                 flexGrow={1}
                 position="relative"
               >
-                <VStack opacity={0.5} y={3} marginLeft={-35} marginRight={3} width={35}>
+                <VStack y={3} marginLeft={-35} marginRight={3} width={35}>
                   <RankView rank={rank} />
                 </VStack>
 
@@ -140,6 +140,7 @@ const Header = memo(
                   <HStack
                     marginVertical={-4}
                     alignItems="center"
+                    maxWidth="100%"
                     // hoverStyle={{
                     //   backgroundColor: theme.backgroundColorSecondary,
                     // }}
@@ -150,21 +151,19 @@ const Header = memo(
                     // ⚠️ note block necessary
                     display={isWeb ? 'block' : 'flex'}
                   >
-                    <Title
+                    <TitleStyled
                       fontSize={titleFontSize}
-                      lineHeight={titleFontSize * 1.56}
+                      lineHeight={titleFontSize * 1.35}
                       color={colors.color}
-                      letterSpacing={-0.5}
                       hoverStyle={{
                         backgroundColor: colors.backgroundColor,
                       }}
                       fontWeight="200"
                       paddingHorizontal={3} // prevents clipping due to letter-spacing
-                      ellipse
                       maxWidth="100%"
                     >
                       {restaurantName}
-                    </Title>
+                    </TitleStyled>
                   </HStack>
                 </Link>
               </HStack>
@@ -196,13 +195,14 @@ const Header = memo(
                     <RestaurantAddress size={'xs'} address={restaurant.address} />
                   )}
 
+                  {/* 
                   <HStack marginHorizontal={10}>
                     <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
                   </HStack>
 
                   <VStack marginHorizontal={10} opacity={0.5}>
                     <RestaurantRatingView restaurant={restaurant} size={28} />
-                  </VStack>
+                  </VStack> */}
 
                   <Text
                     marginHorizontal={10}
@@ -317,7 +317,6 @@ export const Body = memo(
       >
         <Suspense fallback={null}>
           <RestaurantReview
-            size="lg"
             marginTop={-20}
             marginLeft={-10}
             hideImagesRow
