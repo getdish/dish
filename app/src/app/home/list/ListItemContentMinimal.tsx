@@ -6,6 +6,7 @@ import {
   HStack,
   LoadingItem,
   Text,
+  Title,
   VStack,
   useMedia,
   useTheme,
@@ -93,7 +94,7 @@ const Header = memo(
         ? 0.9
         : 1
 
-    const titleFontSize = Math.round((media.sm ? 28 : 34) * titleFontScale)
+    const titleFontSize = Math.round((media.sm ? 32 : 36) * titleFontScale)
     const theme = useTheme()
     const [isFocused, setIsFocused] = useState(false)
     const drawerWidth = useAppDrawerWidth()
@@ -149,20 +150,21 @@ const Header = memo(
                     // ⚠️ note block necessary
                     display={isWeb ? 'block' : 'flex'}
                   >
-                    <TitleStyled
+                    <Title
                       fontSize={titleFontSize}
                       lineHeight={titleFontSize * 1.56}
                       color={colors.color}
+                      letterSpacing={-0.5}
                       hoverStyle={{
                         backgroundColor: colors.backgroundColor,
                       }}
-                      fontWeight="700"
+                      fontWeight="200"
                       paddingHorizontal={3} // prevents clipping due to letter-spacing
                       ellipse
                       maxWidth="100%"
                     >
                       {restaurantName}
-                    </TitleStyled>
+                    </Title>
                   </HStack>
                 </Link>
               </HStack>
