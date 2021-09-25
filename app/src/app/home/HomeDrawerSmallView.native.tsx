@@ -126,7 +126,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         drawerStore.spring?.stop()
         drawerStore.spring = null
         curSnapY = drawerStore.currentSnapPx //Math.max(minY, Math.min(maxY, drawerStore.pan['_value']))
-        console.log('curSnapY', curSnapY)
         drawerStore.pan.setOffset(0)
         drawerStore._setY(curSnapY)
         const scrollStore = getStore(ScrollStore, { id: getActiveParentId() })
@@ -151,7 +150,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         const y = curSnapY + dy
         // limit movement (TODO make it "resist" at edge)
         const scroller = scrollViews.get(getActiveParentId())
-        console.log('scroller', scroller)
         if (y < minY || curScrollerYMove >= 0) {
           if (!scroller) return
           // drawerStore.isAtTop = true

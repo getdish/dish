@@ -16,23 +16,7 @@ import { Shortcuts } from './Shortcuts'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
-function usePreventPullToRefresh() {
-  useEffect(() => {
-    const preventDefault = (e) => e.preventDefault()
-    document.body.addEventListener('touchmove', preventDefault, { passive: false })
-    return () => {
-      document.body.removeEventListener('touchmove', preventDefault)
-    }
-  }, [])
-}
-
 export function App() {
-  // i see sometimes the new body collapse bar trick gets things in weird state
-  // was testing preventing scroll but need to see if i can do it only on <body>
-  if (isWeb) {
-    usePreventPullToRefresh()
-  }
-
   // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {
     useEffect(() => {
