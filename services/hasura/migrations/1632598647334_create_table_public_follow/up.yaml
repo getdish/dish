@@ -1,0 +1,18 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  type: run_sql
+- args:
+    cascade: false
+    read_only: false
+    sql: CREATE TABLE "public"."follow"("id" uuid NOT NULL DEFAULT gen_random_uuid(),
+      "follower_id" uuid NOT NULL, "following_id" uuid NOT NULL, PRIMARY KEY ("id")
+      , FOREIGN KEY ("follower_id") REFERENCES "public"."user"("id") ON UPDATE cascade
+      ON DELETE cascade, FOREIGN KEY ("following_id") REFERENCES "public"."user"("id")
+      ON UPDATE cascade ON DELETE cascade, UNIQUE ("follower_id", "following_id"));
+  type: run_sql
+- args:
+    name: follow
+    schema: public
+  type: add_existing_table_or_view

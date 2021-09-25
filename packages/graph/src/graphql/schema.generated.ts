@@ -67,6 +67,110 @@ export interface String_comparison_exp {
   _similar?: Maybe<Scalars['String']>
 }
 
+/** order by aggregate values of table "follow" */
+export interface follow_aggregate_order_by {
+  count?: Maybe<order_by>
+  max?: Maybe<follow_max_order_by>
+  min?: Maybe<follow_min_order_by>
+}
+
+/** input type for inserting array relation for remote table "follow" */
+export interface follow_arr_rel_insert_input {
+  data: Array<follow_insert_input>
+  on_conflict?: Maybe<follow_on_conflict>
+}
+
+/** Boolean expression to filter rows from the table "follow". All fields are combined with a logical 'AND'. */
+export interface follow_bool_exp {
+  _and?: Maybe<Array<Maybe<follow_bool_exp>>>
+  _not?: Maybe<follow_bool_exp>
+  _or?: Maybe<Array<Maybe<follow_bool_exp>>>
+  follower_id?: Maybe<uuid_comparison_exp>
+  following_id?: Maybe<uuid_comparison_exp>
+  id?: Maybe<uuid_comparison_exp>
+}
+
+/** unique or primary key constraints on table "follow" */
+export enum follow_constraint {
+  /** unique or primary key constraint */
+  follow_follower_id_following_id_key = 'follow_follower_id_following_id_key',
+  /** unique or primary key constraint */
+  follow_pkey = 'follow_pkey',
+}
+
+/** input type for inserting data into table "follow" */
+export interface follow_insert_input {
+  follower_id?: Maybe<Scalars['uuid']>
+  following_id?: Maybe<Scalars['uuid']>
+  id?: Maybe<Scalars['uuid']>
+}
+
+/** order by max() on columns of table "follow" */
+export interface follow_max_order_by {
+  follower_id?: Maybe<order_by>
+  following_id?: Maybe<order_by>
+  id?: Maybe<order_by>
+}
+
+/** order by min() on columns of table "follow" */
+export interface follow_min_order_by {
+  follower_id?: Maybe<order_by>
+  following_id?: Maybe<order_by>
+  id?: Maybe<order_by>
+}
+
+/** input type for inserting object relation for remote table "follow" */
+export interface follow_obj_rel_insert_input {
+  data: follow_insert_input
+  on_conflict?: Maybe<follow_on_conflict>
+}
+
+/** on conflict condition type for table "follow" */
+export interface follow_on_conflict {
+  constraint: follow_constraint
+  update_columns: Array<follow_update_column>
+  where?: Maybe<follow_bool_exp>
+}
+
+/** ordering options when selecting data from "follow" */
+export interface follow_order_by {
+  follower_id?: Maybe<order_by>
+  following_id?: Maybe<order_by>
+  id?: Maybe<order_by>
+}
+
+/** primary key columns input for table: "follow" */
+export interface follow_pk_columns_input {
+  id: Scalars['uuid']
+}
+
+/** select columns of table "follow" */
+export enum follow_select_column {
+  /** column name */
+  follower_id = 'follower_id',
+  /** column name */
+  following_id = 'following_id',
+  /** column name */
+  id = 'id',
+}
+
+/** input type for updating data in table "follow" */
+export interface follow_set_input {
+  follower_id?: Maybe<Scalars['uuid']>
+  following_id?: Maybe<Scalars['uuid']>
+  id?: Maybe<Scalars['uuid']>
+}
+
+/** update columns of table "follow" */
+export enum follow_update_column {
+  /** column name */
+  follower_id = 'follower_id',
+  /** column name */
+  following_id = 'following_id',
+  /** column name */
+  id = 'id',
+}
+
 /** Expression to compare the result of casting a column of type geography. Multiple cast targets are combined with logical 'AND'. */
 export interface geography_cast_exp {
   geometry?: Maybe<geometry_comparison_exp>
@@ -4339,6 +4443,8 @@ export interface user_bool_exp {
   charIndex?: Maybe<Int_comparison_exp>
   created_at?: Maybe<timestamptz_comparison_exp>
   email?: Maybe<String_comparison_exp>
+  followers?: Maybe<follow_bool_exp>
+  following?: Maybe<follow_bool_exp>
   has_onboarded?: Maybe<Boolean_comparison_exp>
   id?: Maybe<uuid_comparison_exp>
   lists?: Maybe<list_bool_exp>
@@ -4380,6 +4486,8 @@ export interface user_insert_input {
   charIndex?: Maybe<Scalars['Int']>
   created_at?: Maybe<Scalars['timestamptz']>
   email?: Maybe<Scalars['String']>
+  followers?: Maybe<follow_arr_rel_insert_input>
+  following?: Maybe<follow_arr_rel_insert_input>
   has_onboarded?: Maybe<Scalars['Boolean']>
   id?: Maybe<Scalars['uuid']>
   lists?: Maybe<list_arr_rel_insert_input>
@@ -4463,6 +4571,8 @@ export interface user_order_by {
   charIndex?: Maybe<order_by>
   created_at?: Maybe<order_by>
   email?: Maybe<order_by>
+  followers_aggregate?: Maybe<follow_aggregate_order_by>
+  following_aggregate?: Maybe<follow_aggregate_order_by>
   has_onboarded?: Maybe<order_by>
   id?: Maybe<order_by>
   lists_aggregate?: Maybe<list_aggregate_order_by>
@@ -4839,6 +4949,9 @@ export const scalarsEnumsHash: import('gqty').ScalarsEnumsHash = {
   ID: true,
   Int: true,
   String: true,
+  follow_constraint: true,
+  follow_select_column: true,
+  follow_update_column: true,
   geography: true,
   geometry: true,
   hrr_constraint: true,
@@ -4911,6 +5024,27 @@ export const scalarsEnumsHash: import('gqty').ScalarsEnumsHash = {
 export const generatedSchema = {
   query: {
     __typename: { __type: 'String!' },
+    follow: {
+      __type: '[follow!]!',
+      __args: {
+        distinct_on: '[follow_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[follow_order_by!]',
+        where: 'follow_bool_exp',
+      },
+    },
+    follow_aggregate: {
+      __type: 'follow_aggregate!',
+      __args: {
+        distinct_on: '[follow_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[follow_order_by!]',
+        where: 'follow_bool_exp',
+      },
+    },
+    follow_by_pk: { __type: 'follow', __args: { id: 'uuid!' } },
     hrr: {
       __type: '[hrr!]!',
       __args: {
@@ -5450,6 +5584,8 @@ export const generatedSchema = {
   },
   mutation: {
     __typename: { __type: 'String!' },
+    delete_follow: { __type: 'follow_mutation_response', __args: { where: 'follow_bool_exp!' } },
+    delete_follow_by_pk: { __type: 'follow', __args: { id: 'uuid!' } },
     delete_hrr: { __type: 'hrr_mutation_response', __args: { where: 'hrr_bool_exp!' } },
     delete_hrr_by_pk: { __type: 'hrr', __args: { ogc_fid: 'Int!' } },
     delete_list: { __type: 'list_mutation_response', __args: { where: 'list_bool_exp!' } },
@@ -5532,6 +5668,14 @@ export const generatedSchema = {
     delete_user_by_pk: { __type: 'user', __args: { id: 'uuid!' } },
     delete_zcta5: { __type: 'zcta5_mutation_response', __args: { where: 'zcta5_bool_exp!' } },
     delete_zcta5_by_pk: { __type: 'zcta5', __args: { ogc_fid: 'Int!' } },
+    insert_follow: {
+      __type: 'follow_mutation_response',
+      __args: { objects: '[follow_insert_input!]!', on_conflict: 'follow_on_conflict' },
+    },
+    insert_follow_one: {
+      __type: 'follow',
+      __args: { object: 'follow_insert_input!', on_conflict: 'follow_on_conflict' },
+    },
     insert_hrr: {
       __type: 'hrr_mutation_response',
       __args: { objects: '[hrr_insert_input!]!', on_conflict: 'hrr_on_conflict' },
@@ -5715,6 +5859,14 @@ export const generatedSchema = {
     insert_zcta5_one: {
       __type: 'zcta5',
       __args: { object: 'zcta5_insert_input!', on_conflict: 'zcta5_on_conflict' },
+    },
+    update_follow: {
+      __type: 'follow_mutation_response',
+      __args: { _set: 'follow_set_input', where: 'follow_bool_exp!' },
+    },
+    update_follow_by_pk: {
+      __type: 'follow',
+      __args: { _set: 'follow_set_input', pk_columns: 'follow_pk_columns_input!' },
     },
     update_hrr: {
       __type: 'hrr_mutation_response',
@@ -6037,6 +6189,27 @@ export const generatedSchema = {
   },
   subscription: {
     __typename: { __type: 'String!' },
+    follow: {
+      __type: '[follow!]!',
+      __args: {
+        distinct_on: '[follow_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[follow_order_by!]',
+        where: 'follow_bool_exp',
+      },
+    },
+    follow_aggregate: {
+      __type: 'follow_aggregate!',
+      __args: {
+        distinct_on: '[follow_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[follow_order_by!]',
+        where: 'follow_bool_exp',
+      },
+    },
+    follow_by_pk: { __type: 'follow', __args: { id: 'uuid!' } },
     hrr: {
       __type: '[hrr!]!',
       __args: {
@@ -6612,6 +6785,92 @@ export const generatedSchema = {
     _nlike: { __type: 'String' },
     _nsimilar: { __type: 'String' },
     _similar: { __type: 'String' },
+  },
+  follow: {
+    __typename: { __type: 'String!' },
+    follower_id: { __type: 'uuid!' },
+    following_id: { __type: 'uuid!' },
+    id: { __type: 'uuid!' },
+  },
+  follow_aggregate: {
+    __typename: { __type: 'String!' },
+    aggregate: { __type: 'follow_aggregate_fields' },
+    nodes: { __type: '[follow!]!' },
+  },
+  follow_aggregate_fields: {
+    __typename: { __type: 'String!' },
+    count: { __type: 'Int', __args: { columns: '[follow_select_column!]', distinct: 'Boolean' } },
+    max: { __type: 'follow_max_fields' },
+    min: { __type: 'follow_min_fields' },
+  },
+  follow_aggregate_order_by: {
+    count: { __type: 'order_by' },
+    max: { __type: 'follow_max_order_by' },
+    min: { __type: 'follow_min_order_by' },
+  },
+  follow_arr_rel_insert_input: {
+    data: { __type: '[follow_insert_input!]!' },
+    on_conflict: { __type: 'follow_on_conflict' },
+  },
+  follow_bool_exp: {
+    _and: { __type: '[follow_bool_exp]' },
+    _not: { __type: 'follow_bool_exp' },
+    _or: { __type: '[follow_bool_exp]' },
+    follower_id: { __type: 'uuid_comparison_exp' },
+    following_id: { __type: 'uuid_comparison_exp' },
+    id: { __type: 'uuid_comparison_exp' },
+  },
+  follow_insert_input: {
+    follower_id: { __type: 'uuid' },
+    following_id: { __type: 'uuid' },
+    id: { __type: 'uuid' },
+  },
+  follow_max_fields: {
+    __typename: { __type: 'String!' },
+    follower_id: { __type: 'uuid' },
+    following_id: { __type: 'uuid' },
+    id: { __type: 'uuid' },
+  },
+  follow_max_order_by: {
+    follower_id: { __type: 'order_by' },
+    following_id: { __type: 'order_by' },
+    id: { __type: 'order_by' },
+  },
+  follow_min_fields: {
+    __typename: { __type: 'String!' },
+    follower_id: { __type: 'uuid' },
+    following_id: { __type: 'uuid' },
+    id: { __type: 'uuid' },
+  },
+  follow_min_order_by: {
+    follower_id: { __type: 'order_by' },
+    following_id: { __type: 'order_by' },
+    id: { __type: 'order_by' },
+  },
+  follow_mutation_response: {
+    __typename: { __type: 'String!' },
+    affected_rows: { __type: 'Int!' },
+    returning: { __type: '[follow!]!' },
+  },
+  follow_obj_rel_insert_input: {
+    data: { __type: 'follow_insert_input!' },
+    on_conflict: { __type: 'follow_on_conflict' },
+  },
+  follow_on_conflict: {
+    constraint: { __type: 'follow_constraint!' },
+    update_columns: { __type: '[follow_update_column!]!' },
+    where: { __type: 'follow_bool_exp' },
+  },
+  follow_order_by: {
+    follower_id: { __type: 'order_by' },
+    following_id: { __type: 'order_by' },
+    id: { __type: 'order_by' },
+  },
+  follow_pk_columns_input: { id: { __type: 'uuid!' } },
+  follow_set_input: {
+    follower_id: { __type: 'uuid' },
+    following_id: { __type: 'uuid' },
+    id: { __type: 'uuid' },
   },
   geography_cast_exp: { geometry: { __type: 'geometry_comparison_exp' } },
   geography_comparison_exp: {
@@ -10739,6 +10998,46 @@ export const generatedSchema = {
     charIndex: { __type: 'Int!' },
     created_at: { __type: 'timestamptz!' },
     email: { __type: 'String' },
+    followers: {
+      __type: '[follow!]!',
+      __args: {
+        distinct_on: '[follow_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[follow_order_by!]',
+        where: 'follow_bool_exp',
+      },
+    },
+    followers_aggregate: {
+      __type: 'follow_aggregate!',
+      __args: {
+        distinct_on: '[follow_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[follow_order_by!]',
+        where: 'follow_bool_exp',
+      },
+    },
+    following: {
+      __type: '[follow!]!',
+      __args: {
+        distinct_on: '[follow_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[follow_order_by!]',
+        where: 'follow_bool_exp',
+      },
+    },
+    following_aggregate: {
+      __type: 'follow_aggregate!',
+      __args: {
+        distinct_on: '[follow_select_column!]',
+        limit: 'Int',
+        offset: 'Int',
+        order_by: '[follow_order_by!]',
+        where: 'follow_bool_exp',
+      },
+    },
     has_onboarded: { __type: 'Boolean!' },
     id: { __type: 'uuid!' },
     lists: {
@@ -10861,6 +11160,8 @@ export const generatedSchema = {
     charIndex: { __type: 'Int_comparison_exp' },
     created_at: { __type: 'timestamptz_comparison_exp' },
     email: { __type: 'String_comparison_exp' },
+    followers: { __type: 'follow_bool_exp' },
+    following: { __type: 'follow_bool_exp' },
     has_onboarded: { __type: 'Boolean_comparison_exp' },
     id: { __type: 'uuid_comparison_exp' },
     lists: { __type: 'list_bool_exp' },
@@ -10886,6 +11187,8 @@ export const generatedSchema = {
     charIndex: { __type: 'Int' },
     created_at: { __type: 'timestamptz' },
     email: { __type: 'String' },
+    followers: { __type: 'follow_arr_rel_insert_input' },
+    following: { __type: 'follow_arr_rel_insert_input' },
     has_onboarded: { __type: 'Boolean' },
     id: { __type: 'uuid' },
     lists: { __type: 'list_arr_rel_insert_input' },
@@ -11006,6 +11309,8 @@ export const generatedSchema = {
     charIndex: { __type: 'order_by' },
     created_at: { __type: 'order_by' },
     email: { __type: 'order_by' },
+    followers_aggregate: { __type: 'follow_aggregate_order_by' },
+    following_aggregate: { __type: 'follow_aggregate_order_by' },
     has_onboarded: { __type: 'order_by' },
     id: { __type: 'order_by' },
     lists_aggregate: { __type: 'list_aggregate_order_by' },
@@ -11222,6 +11527,21 @@ export const generatedSchema = {
 
 export interface Query {
   __typename?: 'Query'
+  follow: (args?: {
+    distinct_on?: Maybe<Array<follow_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<follow_order_by>>
+    where?: Maybe<follow_bool_exp>
+  }) => Array<follow>
+  follow_aggregate: (args?: {
+    distinct_on?: Maybe<Array<follow_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<follow_order_by>>
+    where?: Maybe<follow_bool_exp>
+  }) => follow_aggregate
+  follow_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<follow>
   hrr: (args?: {
     distinct_on?: Maybe<Array<hrr_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -11615,6 +11935,8 @@ export interface Query {
 
 export interface Mutation {
   __typename?: 'Mutation'
+  delete_follow: (args: { where: follow_bool_exp }) => Maybe<follow_mutation_response>
+  delete_follow_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<follow>
   delete_hrr: (args: { where: hrr_bool_exp }) => Maybe<hrr_mutation_response>
   delete_hrr_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<hrr>
   delete_list: (args: { where: list_bool_exp }) => Maybe<list_mutation_response>
@@ -11678,6 +12000,14 @@ export interface Mutation {
   delete_user_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<user>
   delete_zcta5: (args: { where: zcta5_bool_exp }) => Maybe<zcta5_mutation_response>
   delete_zcta5_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<zcta5>
+  insert_follow: (args: {
+    objects: Array<follow_insert_input>
+    on_conflict?: Maybe<follow_on_conflict>
+  }) => Maybe<follow_mutation_response>
+  insert_follow_one: (args: {
+    object: follow_insert_input
+    on_conflict?: Maybe<follow_on_conflict>
+  }) => Maybe<follow>
   insert_hrr: (args: {
     objects: Array<hrr_insert_input>
     on_conflict?: Maybe<hrr_on_conflict>
@@ -11838,6 +12168,14 @@ export interface Mutation {
     object: zcta5_insert_input
     on_conflict?: Maybe<zcta5_on_conflict>
   }) => Maybe<zcta5>
+  update_follow: (args: {
+    _set?: Maybe<follow_set_input>
+    where: follow_bool_exp
+  }) => Maybe<follow_mutation_response>
+  update_follow_by_pk: (args: {
+    _set?: Maybe<follow_set_input>
+    pk_columns: follow_pk_columns_input
+  }) => Maybe<follow>
   update_hrr: (args: {
     _inc?: Maybe<hrr_inc_input>
     _set?: Maybe<hrr_set_input>
@@ -12090,6 +12428,21 @@ export interface Mutation {
 
 export interface Subscription {
   __typename?: 'Subscription'
+  follow: (args?: {
+    distinct_on?: Maybe<Array<follow_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<follow_order_by>>
+    where?: Maybe<follow_bool_exp>
+  }) => Array<follow>
+  follow_aggregate: (args?: {
+    distinct_on?: Maybe<Array<follow_select_column>>
+    limit?: Maybe<Scalars['Int']>
+    offset?: Maybe<Scalars['Int']>
+    order_by?: Maybe<Array<follow_order_by>>
+    where?: Maybe<follow_bool_exp>
+  }) => follow_aggregate
+  follow_by_pk: (args: { id: Scalars['uuid'] }) => Maybe<follow>
   hrr: (args?: {
     distinct_on?: Maybe<Array<hrr_select_column>>
     limit?: Maybe<Scalars['Int']>
@@ -12479,6 +12832,73 @@ export interface Subscription {
     where?: Maybe<zcta5_bool_exp>
   }) => zcta5_aggregate
   zcta5_by_pk: (args: { ogc_fid: Scalars['Int'] }) => Maybe<zcta5>
+}
+
+/**
+ * columns and relationships of "follow"
+ */
+export interface follow {
+  __typename?: 'follow'
+  follower_id: ScalarsEnums['uuid']
+  following_id: ScalarsEnums['uuid']
+  id: ScalarsEnums['uuid']
+}
+
+/**
+ * aggregated selection of "follow"
+ */
+export interface follow_aggregate {
+  __typename?: 'follow_aggregate'
+  aggregate?: Maybe<follow_aggregate_fields>
+  nodes: Array<follow>
+}
+
+/**
+ * aggregate fields of "follow"
+ */
+export interface follow_aggregate_fields {
+  __typename?: 'follow_aggregate_fields'
+  count: (args?: {
+    columns?: Maybe<Array<follow_select_column>>
+    distinct?: Maybe<Scalars['Boolean']>
+  }) => Maybe<ScalarsEnums['Int']>
+  max?: Maybe<follow_max_fields>
+  min?: Maybe<follow_min_fields>
+}
+
+/**
+ * aggregate max on columns
+ */
+export interface follow_max_fields {
+  __typename?: 'follow_max_fields'
+  follower_id?: Maybe<ScalarsEnums['uuid']>
+  following_id?: Maybe<ScalarsEnums['uuid']>
+  id?: Maybe<ScalarsEnums['uuid']>
+}
+
+/**
+ * aggregate min on columns
+ */
+export interface follow_min_fields {
+  __typename?: 'follow_min_fields'
+  follower_id?: Maybe<ScalarsEnums['uuid']>
+  following_id?: Maybe<ScalarsEnums['uuid']>
+  id?: Maybe<ScalarsEnums['uuid']>
+}
+
+/**
+ * response of any mutation on the table "follow"
+ */
+export interface follow_mutation_response {
+  __typename?: 'follow_mutation_response'
+  /**
+   * number of affected rows by the mutation
+   */
+  affected_rows: ScalarsEnums['Int']
+  /**
+   * data of the affected rows by the mutation
+   */
+  returning: Array<follow>
 }
 
 /**
@@ -16035,6 +16455,106 @@ export interface user {
   charIndex: ScalarsEnums['Int']
   created_at: ScalarsEnums['timestamptz']
   email?: Maybe<ScalarsEnums['String']>
+  /**
+   * An array relationship
+   */
+  followers: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<follow_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<follow_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<follow_bool_exp>
+  }) => Array<follow>
+  /**
+   * An aggregated array relationship
+   */
+  followers_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<follow_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<follow_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<follow_bool_exp>
+  }) => follow_aggregate
+  /**
+   * An array relationship
+   */
+  following: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<follow_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<follow_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<follow_bool_exp>
+  }) => Array<follow>
+  /**
+   * An aggregated array relationship
+   */
+  following_aggregate: (args?: {
+    /**
+     * distinct select on columns
+     */
+    distinct_on?: Maybe<Array<follow_select_column>>
+    /**
+     * limit the number of rows returned
+     */
+    limit?: Maybe<Scalars['Int']>
+    /**
+     * skip the first n rows. Use only with order_by
+     */
+    offset?: Maybe<Scalars['Int']>
+    /**
+     * sort the rows by one or more columns
+     */
+    order_by?: Maybe<Array<follow_order_by>>
+    /**
+     * filter the rows returned
+     */
+    where?: Maybe<follow_bool_exp>
+  }) => follow_aggregate
   has_onboarded: ScalarsEnums['Boolean']
   id: ScalarsEnums['uuid']
   /**
@@ -16509,6 +17029,12 @@ export interface SchemaObjectTypes {
   Query: Query
   Mutation: Mutation
   Subscription: Subscription
+  follow: follow
+  follow_aggregate: follow_aggregate
+  follow_aggregate_fields: follow_aggregate_fields
+  follow_max_fields: follow_max_fields
+  follow_min_fields: follow_min_fields
+  follow_mutation_response: follow_mutation_response
   hrr: hrr
   hrr_aggregate: hrr_aggregate
   hrr_aggregate_fields: hrr_aggregate_fields
@@ -16746,6 +17272,12 @@ export type SchemaObjectTypesNames =
   | 'Query'
   | 'Mutation'
   | 'Subscription'
+  | 'follow'
+  | 'follow_aggregate'
+  | 'follow_aggregate_fields'
+  | 'follow_max_fields'
+  | 'follow_min_fields'
+  | 'follow_mutation_response'
   | 'hrr'
   | 'hrr_aggregate'
   | 'hrr_aggregate_fields'
@@ -16990,6 +17522,9 @@ export type MakeNullable<T> = {
 }
 
 export interface ScalarsEnums extends MakeNullable<Scalars> {
+  follow_constraint: follow_constraint | undefined
+  follow_select_column: follow_select_column | undefined
+  follow_update_column: follow_update_column | undefined
   hrr_constraint: hrr_constraint | undefined
   hrr_select_column: hrr_select_column | undefined
   hrr_update_column: hrr_update_column | undefined
