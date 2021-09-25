@@ -30,6 +30,7 @@ import { useAsyncEffect } from '../../hooks/useAsync'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { ListCard } from '../../views/list/ListCard'
 import { Middot } from '../../views/Middot'
@@ -108,6 +109,7 @@ const UserPageContent = memo(
       const { item, isActive, pane, setPane } = props
       const username = item.username
       const user = queryUser(username)
+      const theme = useTheme()
 
       const [hasLoadedAboveFold, setHasLoadedAboveFold] = useState(false)
 
@@ -350,6 +352,36 @@ const UserPageContent = memo(
             {/* <Spacer size="lg" /> */}
 
             <VStack spacing="lg" paddingVertical={20}>
+              {/* PHOTOS FEED */}
+              <HStack spacing>
+                {user
+                  .reviews({
+                    order_by: [{ authored_at: order_by.desc }],
+                    where: {
+                      photos: {
+                        _not: null,
+                      },
+                    },
+                  })
+                  .map((review, index) => {
+                    return (
+                      <VStack
+                        key={review.id || index}
+                        borderRadius={1000}
+                        overflow="hidden"
+                        borderWidth={2}
+                        borderColor={theme.borderColor}
+                      >
+                        <Image
+                          source={{ uri: review.photos({ limit: 1 })[0]?.photo?.url || '' }}
+                          style={{ width: 60, height: 60 }}
+                        />
+                      </VStack>
+                    )
+                  })}
+              </HStack>
+
+              {/* ABOUT */}
               {!pane && !!user.about && (
                 <VStack>
                   <SmallTitle>About</SmallTitle>
@@ -357,6 +389,7 @@ const UserPageContent = memo(
                 </VStack>
               )}
 
+              {/* PLAYLISTS */}
               {!pane && !!lists.length && (
                 <VStack position="relative">
                   <AbsoluteVStack zIndex={100} top={-15} left={10}>
@@ -379,10 +412,11 @@ const UserPageContent = memo(
                 </VStack>
               )}
 
+              {/* FAVORITE LISTS */}
               {!pane && !!favoriteLists.length && (
                 <VStack position="relative">
                   <AbsoluteVStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="xs">Favorite lists</SlantedTitle>
+                    <SlantedTitle size="xs">Liked lists</SlantedTitle>
                   </AbsoluteVStack>
                   <CardCarousel>
                     {favoriteLists.map((list, i) => {

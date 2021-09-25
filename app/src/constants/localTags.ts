@@ -145,7 +145,8 @@ export const tagLenses = [
     slug: 'lenses__veg',
     rgb: ['51', ' 153', ' 51'],
   },
-]
+] as const
+
 export const tagFilters = [
   {
     id: '507e6614-3265-4857-8911-a9ffbd45e212',
@@ -187,7 +188,8 @@ export const tagFilters = [
     slug: 'filters__open',
     rgb: null,
   },
-]
+] as const
+
 export const tagCategoriesPopular = [
   {
     id: 'c0bf32d2-427d-44ca-913c-2c8f15ce79d2',
@@ -269,4 +271,4 @@ export const tagCategoriesPopular = [
     slug: 'categories__noodle',
     rgb: null,
   },
-]
+] as const

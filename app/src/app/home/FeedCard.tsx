@@ -51,6 +51,7 @@ export const FeedCard = ({
       borderless={!!cardProps.backgroundColor}
       hoverEffect="background"
       size={size}
+      {...cardProps}
       outside={
         <>
           {outside}
@@ -127,7 +128,6 @@ export const FeedCard = ({
           {/* <ListFavoriteButton {...props} />*/}
         </>
       }
-      {...cardProps}
     />
   )
 }

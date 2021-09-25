@@ -1,36 +1,38 @@
-import { query, uploadFile, useRefetch } from '@dish/graph'
-import * as ImagePicker from 'expo-image-picker'
-import { ImageInfo } from 'expo-image-picker/build/ImagePicker.types'
-import { uniqBy } from 'lodash'
-import React, { useEffect, useState } from 'react'
+import { useRefetch } from '@dish/graph'
+import { Camera } from '@dish/react-feather'
+import React, { useEffect } from 'react'
 import { AbsoluteVStack, Button, HStack, StackProps, Toast, VStack, useTheme } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
-import { useIsMountedRef } from '../../../helpers/useIsMountedRef'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { useUserStore } from '../../userStore'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
-import { createImageFormData } from './createImageFormData'
 import { RestaurantReviewProps } from './RestaurantReview'
+import { usePickImage } from './usePickImage'
 import { useRestaurantPhotos } from './useRestaurantPhotos'
 
 export const ReviewImagesRow = ({
   list,
   review,
   isEditing,
+  floating,
   restaurantSlug,
   showGenericImages,
   imgWidth = 170,
   imgHeight = 130,
   ...stackProps
 }: RestaurantReviewProps & {
+  floating?: boolean
   imgWidth?: number
   imgHeight?: number
   showGenericImages?: boolean
 }) => {
   const refetch = useRefetch()
+  // headers get lowercased over the wire
+  const pickImage = usePickImage({
+    restaurantSlug,
+    reviewId: review?.id,
+  })
   const genericPhotos =
     showGenericImages && restaurantSlug
       ? useRestaurantPhotos(queryRestaurant(restaurantSlug)[0], 5)?.photos || []
@@ -55,64 +57,11 @@ export const ReviewImagesRow = ({
         })
         .map((xref) => xref.photo.url) || []
 
-  const [newPhotos, setNewPhotos] = useState<string[]>([])
-  const myImages = [...newPhotos, ...photos]
+  const myImages = [...pickImage.photos, ...photos]
   const allImages = [...new Set([...myImages, ...genericPhotos])]
 
   // newPhotos.length ? newPhotos : isEditing ? [{ uri: '' }] : []
-  const isMounted = useIsMountedRef()
   // const imageUploadForm = useImageUploadForm('reviewImages')
-
-  // headers have different constraints
-  const reviewid = review?.id
-
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      allowsMultipleSelection: true,
-      aspect: [4, 3],
-      quality: 1,
-    })
-
-    console.log('result', result)
-    if (!isMounted.current) return
-
-    if (!('selected' in result)) {
-      Toast.show(`No images selected`)
-      return
-    }
-
-    if (!result.cancelled) {
-      setNewPhotos(result.selected.map((x) => x.uri))
-    }
-
-    for (const [index, { uri, height, width }] of result.selected.entries()) {
-      const formData = createImageFormData(`image-${index}`, uri)
-      Toast.show(`Adding photos #${index + 1}`, { duration: 60_000 * 3 })
-      const headers = {
-        // sending undefined sends an undefined string
-        ...(restaurantSlug && {
-          restaurantslug: restaurantSlug,
-        }),
-        ...(!!reviewid && {
-          reviewid,
-        }),
-      }
-      const res = await uploadFile('reviewImages', formData, {
-        headers,
-      })
-      if (!res) {
-        Toast.error(`Couldn't upload :(`)
-        setNewPhotos([])
-        return
-      }
-      if (!isMounted.current) return
-    }
-
-    Toast.show(`All images uploaded`)
-    refetch(photos)
-  }
 
   useEffect(() => {
     return () => {
@@ -120,9 +69,26 @@ export const ReviewImagesRow = ({
     }
   }, [])
 
-  const addButton = (
+  const addButton = floating ? (
+    <Button
+      pointerEvents="auto"
+      themeInverse
+      borderRadius={100}
+      width={55}
+      height={55}
+      alignItems="center"
+      justifyContent="center"
+      elevation={3}
+      noTextWrap
+      onPress={pickImage.pick}
+    >
+      <Camera size={20} color="#888" />
+    </Button>
+  ) : (
     <>
-      {(isEditing || !myImages.length) && <SmallButton onPress={pickImage}>Add photos</SmallButton>}
+      {(isEditing || !myImages.length) && (
+        <SmallButton onPress={pickImage.pick}>Add photos</SmallButton>
+      )}
     </>
   )
 

@@ -419,10 +419,11 @@ const ListPageContent = memo(
               <VStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
                 {/* START HEADER */}
                 <VStack paddingBottom={5} position="relative">
+                  {/* BACKGROUND */}
                   <AbsoluteVStack
                     fullscreen
                     zIndex={-1}
-                    backgroundColor={theme.backgroundColorDarker}
+                    backgroundColor={listColors.backgroundColor}
                     opacity={0.5}
                   />
                   <HStack paddingHorizontal={20}>
@@ -431,7 +432,7 @@ const ListPageContent = memo(
                       zIndex={-1}
                       borderRadius={1000}
                       top={-100}
-                      opacity={0.1}
+                      opacity={0.5}
                       right={-100}
                     >
                       <Image
@@ -452,7 +453,7 @@ const ListPageContent = memo(
                         <TitleStyled
                           backgroundColor={listColors.backgroundColor}
                           color={listColors.textColor}
-                          lineHeight={fontSize * 1.4}
+                          lineHeight={fontSize * 1.1}
                           fontWeight="800"
                           fontSize={fontSize}
                           {...(isEditing && {
@@ -478,18 +479,13 @@ const ListPageContent = memo(
                           )}
                         </TitleStyled>
                       </VStack>
-                      <VStack
-                        width="100%"
-                        zIndex={100}
-                        position="relative"
-                        marginTop={-5}
-                        marginHorizontal={-10}
-                      >
+                      <Spacer />
+                      <VStack width="100%" zIndex={100} position="relative" paddingHorizontal={10}>
                         <CommentBubble
                           showChildren={!!(isEditing || list.description)}
                           size="lg"
                           color={listColors.color}
-                          chromeless={!isEditing && !list.description}
+                          chromeless
                           paddingHorizontal={0}
                           marginLeft={-5}
                           date={list.created_at}

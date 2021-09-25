@@ -5,7 +5,7 @@ import { sortBy, uniqBy } from 'lodash'
 import React, { memo, useState } from 'react'
 import { HStack, Input, useDebounce, useLazyEffect } from 'snackui'
 
-import { tagLenses } from '../../../constants/localTags'
+import { tagCategoriesPopular, tagFilters, tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -160,7 +160,7 @@ export const ReviewTagsRow = memo(
       const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
 
       const rawTags =
-        isFocused || (!review && !hideGeneralTags)
+        isFocused || !hideGeneralTags
           ? [
               ...tagLenses,
               ...userTags,
@@ -172,6 +172,8 @@ export const ReviewTagsRow = memo(
                   tagSlugs: [''],
                 })) ||
                 []),
+              tagFilters.find((x) => x.slug === 'filters__price-low'),
+              tagFilters.find((x) => x.slug === 'filters__delivery'),
             ]
           : userTags
 
@@ -262,11 +264,12 @@ export const ReviewTagsRow = memo(
 
             {showTagButton && !isFocused && (
               <SmallButton
+                borderWidth={0}
                 onPress={() => setIsFocused(true)}
-                icon={<Tag opacity={0.5} size={16} color="#888" />}
+                icon={<Search opacity={0.5} size={16} color="#888" />}
                 marginRight={15}
               >
-                Rate tags
+                search
               </SmallButton>
             )}
 
@@ -274,7 +277,6 @@ export const ReviewTagsRow = memo(
               <Input
                 placeholder="Dishes, tags:"
                 autoFocus
-                opacity={isFocused ? 1 : 0}
                 zIndex={10}
                 onFocus={() => setIsFocused(true)}
                 color="#777"

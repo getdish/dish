@@ -39,18 +39,20 @@ export default route(async (req, res) => {
     // headers come lowercased
     const restaurant_slug = `${headers.restaurantslug}`
     const review_id = headers.reviewid
-    const restaurant_id = await resolved(
-      () =>
-        query.restaurant({
-          where: {
-            slug: {
-              _eq: restaurant_slug,
-            },
-          },
-        })[0]?.id
-    )
+    const restaurant_id = restaurant_slug
+      ? await resolved(
+          () =>
+            query.restaurant({
+              where: {
+                slug: {
+                  _eq: restaurant_slug,
+                },
+              },
+            })[0]?.id
+        )
+      : null
 
-    if (!Array.isArray(files) || !files.length || !restaurant_slug || !user.id || !restaurant_id) {
+    if (!Array.isArray(files) || !files.length || !user.id) {
       console.error(`error with upload`, { files, restaurant_slug, restaurant_id })
       res.status(500).json({
         error: 'no files / restuarant',

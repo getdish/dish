@@ -2,8 +2,9 @@ import { useMemo } from 'react'
 
 import * as Colors from '../../../constants/colors'
 
-const lightColors = Colors.colors200
-const darkColors = Colors.colors600
+// neon colors
+const lightColors = [...Colors.colors200, '#ffffff', '#31e90b']
+const darkColors = [...Colors.colors600, '#000000']
 const colorSetSize = lightColors.length
 export const listColors = [...lightColors, ...Colors.colors400, ...darkColors]
 
