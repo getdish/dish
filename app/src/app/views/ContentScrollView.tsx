@@ -146,7 +146,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       if (isAtTop) {
         if (!scrollStore.isAtTop) {
           scrollStore.setIsAtTop(true)
-          scrollStore.setLock('none')
+          // this breaks scroll to pull
+          // scrollStore.setLock('none')
         }
         // safari desktop wants this
         // if (scrollStore.lock === 'vertical') {

@@ -154,7 +154,7 @@ const ListPageContent = memo(
       const draft = useRef<Partial<List>>({})
       const listQuery = queryList(props.item.slug)
       const { list, isFavorited, toggleFavorite, reviewsCount, refetch } = useListFavorite({
-        listQuery,
+        query: listQuery,
         list: listQuery[0],
       })
       const listColorInitial = useListColors(list?.color)
