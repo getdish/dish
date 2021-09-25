@@ -1,8 +1,9 @@
 env:
   BUILDKITE_TIMEOUT: "40"
-  DISH_ENV: 'test'
-  DOCKER_BUILDKIT: 0
-  COMPOSE_DOCKER_CLI_BUILD: 0
+  DISH_ENV: 'production'
+  DOCKER_BUILDKIT: 1
+  LOG_ENV: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
 
 steps:
   # images that tests need

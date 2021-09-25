@@ -62,7 +62,7 @@ popd >/dev/null
 
 function_to_run=$1
 
-if [ "$DISH_DEBUG" -gt "0" ]; then
+if [ "$DISH_DEBUG" -gt "0" ] || [ "$LOG_ENV" -gt "0" ]; then
   echo "dsh -- env $DISH_ENV in $PROJECT_ROOT running $function_to_run $GIT_COMMIT"
 fi
 
