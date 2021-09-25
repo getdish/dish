@@ -129,26 +129,11 @@ export default function ListPage(props: Props) {
   )
 }
 
-const setIsEditing = (val: boolean) => {
-  router.navigate({
-    name: 'list',
-    replace: true,
-    params: {
-      ...router.curPage.params,
-      state: val ? 'edit' : undefined,
-    },
-  })
-  if (val === false) {
-    router.setRouteAlert(null)
-  }
-}
-
 const ListPageContent = memo(
   graphql(
     (props: Props) => {
       const user = useUserStore()
       const isMyList = userStore.isAdmin || props.item.userSlug === slugify(user.user?.username)
-      const isEditing = props.item.state === 'edit'
       const [isSorting, setIsSorting] = useState(false)
       const [showAddModal, setShowAddModal] = useState(false)
       const draft = useRef<Partial<List>>({})
@@ -157,6 +142,7 @@ const ListPageContent = memo(
         query: listQuery,
         list: listQuery[0],
       })
+      const [isEditing, setIsEditing] = useState(false)
       const listColorInitial = useListColors(list?.color)
       const [listColors, setListColors] = useStateSynced(listColorInitial)
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
@@ -165,6 +151,7 @@ const ListPageContent = memo(
       const forceUpdate = useForceUpdate()
       const isMinimal = !!list?.theme
       const listSlug = props.item.slug
+      const themeName = useThemeName()
 
       // useAsyncEffect(async () => {
       //   await sleep(1000)
@@ -294,8 +281,11 @@ const ListPageContent = memo(
       )
 
       const ListViewElement = isSorting ? DraggableFlatList : FlatList
-      const themeName = useThemeName()
-      const isDark = themeName === 'dark'
+
+      const titleColors = {
+        color: listColors.colorForTheme,
+        backgroundColor: listColors.backgroundForTheme,
+      }
 
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
@@ -433,9 +423,9 @@ const ListPageContent = memo(
                       overflow="hidden"
                       zIndex={-1}
                       borderRadius={1000}
-                      top={-100}
-                      opacity={0.5}
-                      right={-100}
+                      bottom={50}
+                      opacity={0.3}
+                      right={-150}
                     >
                       <Image
                         source={{ uri: getListPhoto(list) }}
@@ -453,9 +443,8 @@ const ListPageContent = memo(
                       <VStack minHeight={75} flex={1} />
                       <VStack display={isWeb ? 'block' : 'flex'}>
                         <TitleStyled
-                          color={listColors.colorForTheme}
-                          backgroundColor={listColors.backgroundForTheme}
-                          lineHeight={fontSize * 1.1}
+                          {...titleColors}
+                          lineHeight={fontSize * 1.3}
                           fontWeight="800"
                           fontSize={fontSize}
                           {...(isEditing && {
@@ -465,6 +454,7 @@ const ListPageContent = memo(
                           {isEditing ? (
                             <Input
                               fontSize={fontSize}
+                              {...titleColors}
                               fontWeight="800"
                               width="100%"
                               textAlign="left"
@@ -482,10 +472,16 @@ const ListPageContent = memo(
                         </TitleStyled>
                       </VStack>
                       <Spacer />
-                      <VStack width="100%" zIndex={100} position="relative" paddingHorizontal={10}>
+                      <VStack
+                        maxWidth={800}
+                        alignSelf="center"
+                        width="100%"
+                        zIndex={100}
+                        position="relative"
+                        paddingHorizontal={10}
+                      >
                         <CommentBubble
                           showChildren={!!(isEditing || list.description)}
-                          size="lg"
                           color={listColors.color}
                           chromeless
                           paddingHorizontal={0}
@@ -584,7 +580,7 @@ const ListPageContent = memo(
                             color={listColors.backgroundColor}
                             onChange={(backgroundColor) => {
                               const index = allListColors.indexOf(backgroundColor)
-                              setListColors(getListColors(index))
+                              setListColors(getListColors(index, themeName))
                             }}
                           />
                           <InteractiveContainer alignItems="center">
