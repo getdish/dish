@@ -1,8 +1,9 @@
 import { uploadFile, useRefetch } from '@dish/graph'
+import { supportsTouchWeb } from '@dish/helpers/dist'
 import { Loader } from '@dish/react-feather'
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
-import { Toast, VStack } from 'snackui'
+import { HStack, Text, Toast, VStack } from 'snackui'
 
 import { useIsMountedRef } from '../../../helpers/useIsMountedRef'
 import { createImageFormData } from './createImageFormData'
@@ -41,9 +42,9 @@ export const usePickImage = ({
       Toast.show(
         <HStack>
           <VStack className={supportsTouchWeb ? '' : 'rotating'} opacity={1}>
-            <Loader color={color} size={16} />
+            <Loader color="#fff" size={16} />
           </VStack>
-          <Text></Text>
+          <Text>Uploading...</Text>
         </HStack>,
         { duration: 60000 * 3 }
       )
