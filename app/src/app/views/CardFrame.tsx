@@ -24,7 +24,7 @@ export type CardFrameProps = {
   flat?: boolean
   flexible?: boolean
   floating?: boolean
-  hoverEffect?: 'scale' | 'background' | false
+  hoverEffect?: 'scale' | 'background' | null
   pressable?: boolean
   size?: 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
   skew?: boolean
@@ -34,7 +34,6 @@ export type CardFrameProps = {
 
 export const CardFrame = ({
   aspectFixed,
-  backgroundColor,
   borderColor,
   borderless,
   children,
@@ -156,20 +155,6 @@ export const CardFrame = ({
         flexGrow: 1,
       })}
     >
-      {/* background */}
-      {!!backgroundColor && (
-        <AbsoluteVStack
-          fullscreen
-          className="hover-75-opacity-child chrome-fix-overflow safari-fix-overflow"
-          scale={1}
-          overflow="hidden"
-          borderRadius={flat ? 0 : cardFrameBorderRadius}
-          backgroundColor={backgroundColor}
-          {...(hoverEffect === 'background' && {
-            opacity: 0.5,
-          })}
-        />
-      )}
       {children}
     </VStack>
   )

@@ -71,7 +71,7 @@ const RestaurantHeaderContent = memo(
       const fontSize = Math.round(scale * fontSizeBase * fontScale)
       // const restaurantId = restaurant.id
       const [hasScrolled, setHasScrolled] = useState(false)
-      // const colors = useColorsFor(restaurantSlug)
+      const colors = useColorsFor(restaurantSlug)
       const theme = useTheme()
 
       const content = (
@@ -147,7 +147,7 @@ const RestaurantHeaderContent = memo(
                             fontFamily="WhyteHeavy"
                             // backgroundColor={theme.backgroundColor}
                             // color={theme.color}
-                            color={theme.backgroundColor}
+                            color={colors.color}
                             maxWidth={500}
                             alignSelf="flex-start"
                             selectable

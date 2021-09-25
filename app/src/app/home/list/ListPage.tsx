@@ -294,6 +294,8 @@ const ListPageContent = memo(
       )
 
       const ListViewElement = isSorting ? DraggableFlatList : FlatList
+      const themeName = useThemeName()
+      const isDark = themeName === 'dark'
 
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
@@ -420,12 +422,12 @@ const ListPageContent = memo(
                 {/* START HEADER */}
                 <VStack paddingBottom={5} position="relative">
                   {/* BACKGROUND */}
-                  <AbsoluteVStack
+                  {/* <AbsoluteVStack
                     fullscreen
                     zIndex={-1}
                     backgroundColor={listColors.backgroundColor}
                     opacity={0.5}
-                  />
+                  /> */}
                   <HStack paddingHorizontal={20}>
                     <AbsoluteVStack
                       overflow="hidden"
@@ -451,8 +453,8 @@ const ListPageContent = memo(
                       <VStack minHeight={75} flex={1} />
                       <VStack display={isWeb ? 'block' : 'flex'}>
                         <TitleStyled
-                          backgroundColor={listColors.backgroundColor}
-                          color={listColors.textColor}
+                          color={listColors.colorForTheme}
+                          backgroundColor={listColors.backgroundForTheme}
                           lineHeight={fontSize * 1.1}
                           fontWeight="800"
                           fontSize={fontSize}

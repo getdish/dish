@@ -86,6 +86,7 @@ export function Card(props: CardProps) {
     aspectFixed,
     hideInfo,
     isBehind,
+    backgroundColor,
     dimImage,
     afterTitle,
     onHoverIn,
@@ -94,7 +95,6 @@ export function Card(props: CardProps) {
     size = 'md',
     ...cardFrameProps
   } = props
-  const { backgroundColor } = props
   const hoverable = !!(onHoverIn || onHoverMove || onHoverOut)
   const colors = backgroundColor
     ? getColorsForColor(backgroundColor)
@@ -119,6 +119,27 @@ export function Card(props: CardProps) {
 
   const content = (
     <CardFrame size={size} {...cardFrameProps}>
+      {/* background */}
+      {!!backgroundColor && (
+        <AbsoluteVStack
+          fullscreen
+          className={
+            (cardFrameProps.hoverEffect === 'background' ? 'hover-100-opacity-child ' : '') +
+            ' chrome-fix-overflow safari-fix-overflow'
+          }
+          scale={1}
+          overflow="hidden"
+          borderRadius={cardFrameProps.flat ? 0 : cardFrameBorderRadius}
+          backgroundColor={backgroundColor}
+          {...(cardFrameProps.hoverEffect === 'background' && {
+            opacity: 0.6,
+          })}
+          // {...theme.name === 'light' && {
+          //   opacity: 0.2
+          // }}
+        />
+      )}
+
       {!!photo && (
         <AbsoluteVStack
           borderWidth={4}

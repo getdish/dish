@@ -35,7 +35,6 @@ export const getRestaurantDishes = ({
   if (!restaurant) {
     return []
   }
-  console.log('restaurant', restaurant)
   let topTags = restaurant.top_tags({
     args: {
       tag_slugs: tagSlugs.filter(isPresent).join(','),

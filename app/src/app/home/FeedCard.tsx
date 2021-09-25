@@ -9,6 +9,7 @@ import { rgbString } from '../../helpers/rgb'
 import { Image } from '../views/Image'
 import { TagButton } from '../views/TagButton'
 import { TitleStyled } from '../views/TitleStyled'
+import { ListColors } from './list/listColors'
 import { Card, CardOverlay, CardProps } from './restaurant/Card'
 
 export type FeedCardProps = CardProps & {
@@ -20,6 +21,7 @@ export type FeedCardProps = CardProps & {
   emphasizeTag?: boolean
   color?: string
   theme?: 'modern' | 'minimal'
+  listColors?: ListColors
 }
 
 export const FeedCard = ({
@@ -27,6 +29,7 @@ export const FeedCard = ({
   author,
   tags = [],
   color,
+  listColors,
   size = 'sm',
   children,
   numItems,
@@ -37,10 +40,10 @@ export const FeedCard = ({
 }: FeedCardProps) => {
   const { chromeless, emphasizeTag, flat } = cardProps
   const titleLen = typeof title === 'string' ? title.length : 20
-  const lenScale = titleLen > 40 ? 0.7 : titleLen > 30 ? 0.8 : titleLen > 20 ? 0.9 : 1.2
+  const lenScale = titleLen > 40 ? 0.68 : titleLen > 30 ? 0.75 : titleLen > 20 ? 0.85 : 1.2
   const tagScale = emphasizeTag ? 0.8 : 1
   const sizeScale = size === 'xs' ? 0.7 : size === 'sm' ? 0.8 : size === 'lg' ? 1.1 : 1
-  const fontSize = Math.round(26 * lenScale * tagScale * sizeScale)
+  const fontSize = Math.round(24 * lenScale * tagScale * sizeScale)
   const imgSize = size === 'lg' ? 85 : 70
   const theme = useTheme()
 
@@ -49,7 +52,12 @@ export const FeedCard = ({
       className="hover-parent"
       dimImage
       borderless={!!cardProps.backgroundColor}
-      hoverEffect="background"
+      hoverEffect={
+        'background'
+        // listColors?.backgroundColor === '#000000' || listColors?.backgroundColor === '#ffffff'
+        //   ? null
+        // : 'background'
+      }
       size={size}
       {...cardProps}
       outside={
@@ -95,18 +103,31 @@ export const FeedCard = ({
             <VStack flex={1} />
 
             <VStack overflow="hidden" spacing={size}>
-              <VStack display={isWeb ? 'block' : 'flex'}>
+              <VStack position="relative" display={isWeb ? 'block' : 'flex'}>
                 <TitleStyled
                   // backgroundColor={cardProps.backgroundColor as any}
                   letterSpacing={-1}
-                  className="hover-100-opacity-child"
                   fontWeight="300"
                   fontSize={fontSize}
-                  lineHeight={fontSize * 1.2}
-                  color={theme.color}
+                  lineHeight={fontSize * 1.455}
+                  color={listColors?.colorForTheme}
+                  // backgroundColor={listColors?.lightColor}
                 >
                   {title}
                 </TitleStyled>
+                <AbsoluteHStack zIndex={-1} fullscreen display={isWeb ? 'block' : 'flex'}>
+                  <TitleStyled
+                    // backgroundColor={cardProps.backgroundColor as any}
+                    letterSpacing={-1}
+                    fontWeight="300"
+                    fontSize={fontSize}
+                    lineHeight={fontSize * 1.455}
+                    color="transparent"
+                    backgroundColor={`${listColors?.backgroundForTheme}cc`}
+                  >
+                    {title}
+                  </TitleStyled>
+                </AbsoluteHStack>
               </VStack>
 
               {!!(author || typeof numItems !== 'undefined') && (

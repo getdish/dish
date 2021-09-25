@@ -104,6 +104,11 @@ const Header = memo(
       return null
     }
 
+    const colors = {
+      color: isDark ? listColors.lightColor : listColors.darkColor,
+      backgroundColor: `${isDark ? listColors.lightColor : listColors.darkColor}11`,
+    }
+
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <VStack
@@ -111,7 +116,7 @@ const Header = memo(
           hoverStyle={{
             backgroundColor: theme.backgroundColorTransluscentHover,
           }}
-          paddingVertical={25}
+          paddingVertical={20}
           paddingHorizontal={18}
           maxWidth="100%"
           flex={1}
@@ -146,11 +151,9 @@ const Header = memo(
                     <TitleStyled
                       fontSize={titleFontSize}
                       lineHeight={titleFontSize * 1.56}
-                      backgroundColor={`${listColors.backgroundColor}55`}
-                      color={isDark ? listColors.lightColor : listColors.darkColor}
+                      color={colors.color}
                       hoverStyle={{
-                        backgroundColor: `${listColors.backgroundColor}22`,
-                        color: theme.color,
+                        backgroundColor: colors.backgroundColor,
                       }}
                       fontWeight="700"
                       paddingHorizontal={3} // prevents clipping due to letter-spacing
@@ -164,7 +167,7 @@ const Header = memo(
               </HStack>
 
               {!minimal && (
-                <HStack spacing="xs" alignItems="center" marginTop={4} marginLeft={-10}>
+                <HStack spacing="xs" alignItems="center" marginVertical={-7} marginLeft={-10}>
                   {!isFocused && !!editable && (
                     <SmallButton
                       tooltip="Remove"

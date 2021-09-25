@@ -33,14 +33,12 @@ export const ListCard = memo((props: ListCardProps) => {
 
 const ListCardContent = graphql((props: ListCardProps) => {
   const { list } = useList(props)
-  const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
-  const listColors = useListColors(list?.color)
-  const themeName = useThemeName()
+  const numItems = props.numItems ?? list?.restaurants_aggregate().aggregate?.count() ?? 0
   return (
     <ListCardFrame
       title={list?.name ?? ''}
-      numItems={numItems}
       author={` by ${getUserName(list?.user)}`}
+      numItems={numItems}
       {...props}
       tags={
         props.size === 'xs'
@@ -51,12 +49,6 @@ const ListCardContent = graphql((props: ListCardProps) => {
               .filter(isPresent)
       }
       photo={getListPhoto(list)}
-      {...(props.colored && {
-        color: themeName === 'dark' ? listColors.darkColor : listColors.lightColor,
-        backgroundColor: listColors.backgroundColor,
-        chromeless: true,
-        flat: true,
-      })}
     />
   )
 })
@@ -64,7 +56,9 @@ const ListCardContent = graphql((props: ListCardProps) => {
 export const ListCardFrame = graphql((props: ListCardProps) => {
   const [hidden, setHidden] = useState(false)
   const { list, onHover, outside, deletable, onDelete, theme, ...feedCardProps } = props
+  const listColors = useListColors(list?.color)
   const userStore = useUserStore()
+  const themeName = useThemeName()
 
   if (hidden) {
     return null
@@ -74,7 +68,14 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
   const contents = (
     <Link width="100%" asyncClick name="list" params={{ slug: list.slug || '', userSlug }}>
       <FeedCard
+        listColors={listColors}
         theme={theme}
+        {...(props.colored && {
+          color: listColors.colorForTheme,
+          backgroundColor: `${listColors.backgroundColor}44`,
+          chromeless: true,
+          flat: true,
+        })}
         outside={
           <>
             {outside}
