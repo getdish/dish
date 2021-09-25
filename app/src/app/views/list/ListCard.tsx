@@ -1,4 +1,4 @@
-import { getUserName, graphql, mutate, query, resolved } from '@dish/graph'
+import { getUserName, graphql, mutate, query, resolved, slugify } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useState } from 'react'
 import { AbsoluteVStack, Hoverable, Toast, VStack, useThemeName } from 'snackui'
@@ -12,9 +12,9 @@ import { useUserStore } from '../../userStore'
 import { CloseButton } from '../CloseButton'
 import { Link } from '../Link'
 import { SuspenseFallback } from '../SuspenseFallback'
-import { useList } from './useList'
+import { ListQueryProps, useList } from './useList'
 
-export type ListCardProps = ListIDProps &
+export type ListCardProps = ListQueryProps &
   FeedCardProps & {
     onHover?: (is: boolean) => any
     floating?: boolean
@@ -22,11 +22,6 @@ export type ListCardProps = ListIDProps &
     deletable?: boolean
     onDelete?: () => void
   }
-
-export type ListIDProps = {
-  slug: string
-  userSlug: string
-}
 
 export const ListCard = memo((props: ListCardProps) => {
   return (
@@ -68,22 +63,16 @@ const ListCardContent = graphql((props: ListCardProps) => {
 
 export const ListCardFrame = graphql((props: ListCardProps) => {
   const [hidden, setHidden] = useState(false)
-  const { slug, userSlug, onHover, outside, deletable, onDelete, theme, ...feedCardProps } = props
+  const { list, onHover, outside, deletable, onDelete, theme, ...feedCardProps } = props
   const userStore = useUserStore()
 
   if (hidden) {
     return null
   }
 
+  const userSlug = slugify(list.user?.username)
   const contents = (
-    <Link
-      width="100%"
-      asyncClick
-      {...(!!(slug && userSlug) && {
-        name: 'list',
-        params: { slug, userSlug },
-      })}
-    >
+    <Link width="100%" asyncClick name="list" params={{ slug: list.slug || '', userSlug }}>
       <FeedCard
         theme={theme}
         outside={
@@ -126,7 +115,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
                               _and: [
                                 {
                                   slug: {
-                                    _eq: slug,
+                                    _eq: list.slug,
                                   },
                                 },
                                 {
@@ -161,7 +150,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         {!props.size?.endsWith('xs') && (
           <VStack x={-5}>
             <Suspense fallback={null}>
-              <ListFavoriteButton slug={props.slug} />
+              <ListFavoriteButton list={props.list} query={props.query} />
             </Suspense>
           </VStack>
         )}

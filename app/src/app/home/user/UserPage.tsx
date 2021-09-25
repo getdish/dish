@@ -367,12 +367,11 @@ const UserPageContent = memo(
                       return (
                         <ListCard
                           colored
-                          // zIndex={1000 - i}
                           size="lg"
                           floating
                           key={list.slug || i}
-                          userSlug={list.user?.username || ''}
-                          slug={list.slug || ''}
+                          list={list}
+                          query={lists}
                         />
                       )
                     })}
@@ -390,12 +389,10 @@ const UserPageContent = memo(
                       return (
                         <ListCard
                           colored
-                          // zIndex={1000 - i}
-                          // size="lg"
                           floating
                           key={list.slug || i}
-                          userSlug={list.user?.username || ''}
-                          slug={list.slug || ''}
+                          list={list}
+                          query={favoriteLists}
                         />
                       )
                     })}

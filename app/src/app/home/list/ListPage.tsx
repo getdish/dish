@@ -29,6 +29,7 @@ import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
 import { getWindowHeight } from '../../../helpers/getWindow'
+import { queryList } from '../../../queries/queryList'
 import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../appMapStore'
@@ -151,8 +152,10 @@ const ListPageContent = memo(
       const [isSorting, setIsSorting] = useState(false)
       const [showAddModal, setShowAddModal] = useState(false)
       const draft = useRef<Partial<List>>({})
+      const listQuery = queryList(props.item.slug)
       const { list, isFavorited, toggleFavorite, reviewsCount, refetch } = useListFavorite({
-        slug: props.item.slug,
+        listQuery,
+        list: listQuery[0],
       })
       const listColorInitial = useListColors(list?.color)
       const [listColors, setListColors] = useStateSynced(listColorInitial)

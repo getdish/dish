@@ -195,9 +195,9 @@ export const HomePageFeed = memo(
                   >
                     <Spacer size="xxs" />
                     <ListCard
-                      userSlug={list.user?.username ?? ''}
                       onDelete={refetch}
-                      slug={list?.slug ?? ''}
+                      query={trendingLists}
+                      list={list}
                       size="lg"
                       colored
                       flexible
