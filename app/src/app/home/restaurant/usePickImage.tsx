@@ -1,7 +1,8 @@
 import { uploadFile, useRefetch } from '@dish/graph'
+import { Loader } from '@dish/react-feather'
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
-import { Toast } from 'snackui'
+import { Toast, VStack } from 'snackui'
 
 import { useIsMountedRef } from '../../../helpers/useIsMountedRef'
 import { createImageFormData } from './createImageFormData'
@@ -37,7 +38,15 @@ export const usePickImage = ({
     }
     for (const [index, { uri, height, width }] of result.selected.entries()) {
       const formData = createImageFormData(`image-${index}`, uri)
-      Toast.show(`uploading... ${index + 1}`, { duration: 60000 * 3 })
+      Toast.show(
+        <HStack>
+          <VStack className={supportsTouchWeb ? '' : 'rotating'} opacity={1}>
+            <Loader color={color} size={16} />
+          </VStack>
+          <Text></Text>
+        </HStack>,
+        { duration: 60000 * 3 }
+      )
       const res = await uploadFile('reviewImages', formData, {
         headers: {
           // sending undefined sends an undefined string

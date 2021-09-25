@@ -82,7 +82,7 @@ export const RestaurantReview = memo(
       return (
         <>
           {/* {showAddTag && <RateRestaurantTagsModal onDismiss={() => setShowAddTag(false)} />} */}
-          <VStack maxWidth={800} alignSelf="center" width="100%">
+          <VStack maxWidth={720} alignSelf="center" width="100%">
             {!!(review || showEmptyReview) && (
               <CommentBubble
                 chromeless={listTheme === 'minimal'}

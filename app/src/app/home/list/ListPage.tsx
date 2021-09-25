@@ -412,12 +412,12 @@ const ListPageContent = memo(
                 {/* START HEADER */}
                 <VStack paddingBottom={5} position="relative">
                   {/* BACKGROUND */}
-                  {/* <AbsoluteVStack
+                  <AbsoluteVStack
                     fullscreen
                     zIndex={-1}
                     backgroundColor={listColors.backgroundColor}
-                    opacity={0.5}
-                  /> */}
+                    opacity={0.05}
+                  />
                   <HStack paddingHorizontal={20}>
                     <AbsoluteVStack
                       overflow="hidden"

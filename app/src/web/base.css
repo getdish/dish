@@ -30,28 +30,28 @@ body {
 }
 
 html, body, #root {
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
   max-width: 100vw;
   max-height: 100vh;
-  height: 100vh;
   height: -webkit-fill-available;
   max-height: -webkit-fill-available;
-  width: 100vw;
 }
 
 html {
   -webkit-overflow-scrolling: none;
 }
 
-body {
+/*  */
+/* body {
   max-height: calc(100vh + 0.5px);
   height: calc(100vh + 0.5px);
-}
-
+} */
+/* 
 body.modal-open {
   max-height: 100%;
   height: 100%;
-}
+} */
 
 #root {
   flex-shrink: 0;
