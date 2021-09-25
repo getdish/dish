@@ -1,6 +1,5 @@
 {
   "name": "@dish/async",
-  "types": "types",
   "version": "0.0.1",
   "sideEffects": false,
   "publishConfig": {

@@ -1,7 +1,6 @@
 {
   "name": "@dish/crawlers",
   "version": "0.0.1",
-  "types": "types",
   "main": "dist",
   "sideEffects": false,
   "testConfig": {

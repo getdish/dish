@@ -2,7 +2,6 @@
   "name": "@dish/common",
   "version": "0.0.1",
   "sideEffects": false,
-  "types": "types",
   "private": true,
   "main": "dist",
   "module": "_",

@@ -19,6 +19,7 @@ async function go({ legacy, skipTypes }) {
     if (process.env.JS_ONLY || skipTypes) return
 
     if (legacy) {
+      // so we can publish types
       await exec('npx', [
         'tsc',
         '--emitDeclarationOnly',
@@ -26,6 +27,9 @@ async function go({ legacy, skipTypes }) {
         '--declarationDir',
         'types',
       ])
+      // intellisense will find this
+      // keep types around so we can publish them
+      await fs.copy('types', 'dist')
       return
     }
 

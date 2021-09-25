@@ -1,7 +1,6 @@
 {
   "name": "@dish/api",
   "version": "0.0.1",
-  "types": "types",
   "main": "dist",
   "module": "_",
   "sideEffects": false,

@@ -29,8 +29,8 @@ export function HomeStackView<A extends HomeStateItem>(props: { children: GetChi
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
-  // // prettier-ignore
-  // console.log('HomeStackView', breadcrumbs, JSON.stringify({ isAdding, isRemoving }), items.map((x) => x.type))
+  // prettier-ignore
+  console.log('HomeStackView', breadcrumbs, JSON.stringify({ isAdding, isRemoving }), items.map((x) => x.type))
 
   return (
     <>
@@ -38,7 +38,7 @@ export function HomeStackView<A extends HomeStateItem>(props: { children: GetChi
         const isActive = i === items.length - 1
         return (
           <AppStackViewItem
-            key={`${item.type}${i}`}
+            key={`${item.id}`}
             item={item}
             index={i}
             isActive={isActive}

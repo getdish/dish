@@ -1,6 +1,6 @@
 {
   "name": "@dish/esdx",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "bin": {
     "esdx": "esdx.js",
     "esdx-watch": "esdx-watch.js"

@@ -157,9 +157,9 @@ export const HomePageFeed = memo(
                   return (
                     <Link key={i} tag={lense}>
                       <TitleStyled
-                        color={rgbString(lense.rgb)}
+                        color={rgbString(lense.rgb as any)}
                         hoverStyle={{
-                          color: rgbString(lense.rgb, 0.6),
+                          color: rgbString(lense.rgb as any, 0.6),
                         }}
                         fontSize={24}
                         lineHeight={40}

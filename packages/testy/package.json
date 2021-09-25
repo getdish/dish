@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "sideEffects": false,
   "bin": "jest",
-  "types": "types",
   "main": "dist",
   "module": "_",
   "scripts": {
