@@ -1,8 +1,9 @@
 import loadable from '@loadable/component'
-import React, { Suspense, useEffect, useLayoutEffect } from 'react'
-import { AbsoluteVStack, LoadingItems, ToastRoot, isWeb, useTheme } from 'snackui'
+import React, { Suspense, useEffect } from 'react'
+import { AbsoluteVStack, LoadingItems, ToastRoot, useTheme } from 'snackui'
 
 import { isSSR } from '../constants/constants'
+import { geoSearch } from '../web/geosearch'
 import AdminPage from './admin/AdminPage'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
@@ -11,12 +12,22 @@ import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AppSearchBarFloating } from './AppSearchBarFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
 import { Home } from './home/Home'
+import { homeStore } from './homeStore'
 import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
 export function App() {
+  useEffect(() => {
+    geoSearch({
+      query: 'boba',
+      ...homeStore.lastHomeOrSearchState.center!,
+    }).then((res) => {
+      console.log('got', res)
+    })
+  }, [])
+
   // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {
     useEffect(() => {
