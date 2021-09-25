@@ -83,7 +83,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
           overlayDismisses
           visible
           width="98%"
-          maxWidth={800}
+          maxWidth={760}
           maxHeight="90%"
           onDismiss={() => setIsExpanded(false)}
         >

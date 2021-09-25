@@ -2,7 +2,16 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { Store, compare, compareStrict, isEqualStrict, reaction, useStore } from '@dish/use-store'
+import {
+  Store,
+  compare,
+  compareStrict,
+  isEqualStrict,
+  reaction,
+  useStore,
+  useStoreInstanceSelector,
+  useStoreSelector,
+} from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -40,6 +49,7 @@ import { weakKey } from '../../../helpers/weakKey'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../appMapStore'
+import { drawerStore } from '../../drawerStore'
 import { homeStore, useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValue } from '../../hooks/useLastValue'
@@ -247,6 +257,11 @@ const SearchPageContent = memo(function SearchPageContent(
 
 const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
   const media = useMedia()
+  const isDrawerAtBottom = useStoreInstanceSelector(
+    drawerStore,
+    (x) => x.snapIndexName === 'bottom'
+  )
+  console.log('is', isDrawerAtBottom)
   let contents = isActive ? <SearchPageNavBar /> : null
 
   if (!media.sm) {
@@ -261,7 +276,19 @@ const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
     )
   }
 
-  return <RootPortalItem key={`${isActive}`}>{contents}</RootPortalItem>
+  return (
+    <RootPortalItem key={`${isActive}${isDrawerAtBottom}`}>
+      <AbsoluteVStack
+        className="ease-in-out-slower"
+        zIndex={100000}
+        pointerEvents="none"
+        fullscreen
+        y={isDrawerAtBottom ? 50 : 0}
+      >
+        {contents}
+      </AbsoluteVStack>
+    </RootPortalItem>
+  )
 })
 
 // prevent warning

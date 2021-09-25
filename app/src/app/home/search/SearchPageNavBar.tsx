@@ -32,17 +32,15 @@ export const SearchPageNavBar = memo(() => {
     content = (
       <Theme name="dark">
         <VStack position="absolute" bottom={0} left={0} right={0} zIndex={1000}>
-          {/* super slow dragging when on mobile safari! */}
-          {!(isSafari && isTouchDevice) && (
-            <>
-              <AbsoluteVStack top={-20} right={0}>
-                <InverseRoundedEdge />
-              </AbsoluteVStack>
-              <AbsoluteVStack top={-20} left={0} scaleX={-1}>
-                <InverseRoundedEdge />
-              </AbsoluteVStack>
-            </>
-          )}
+          {/* *may have been slow dragging when on mobile safari! */}
+          <>
+            <AbsoluteVStack top={-20} right={0}>
+              <InverseRoundedEdge />
+            </AbsoluteVStack>
+            <AbsoluteVStack top={-20} left={0} scaleX={-1}>
+              <InverseRoundedEdge />
+            </AbsoluteVStack>
+          </>
           <VStack backgroundColor="#000" paddingBottom={safeArea.bottom}>
             <SearchPageNavBarContent />
           </VStack>

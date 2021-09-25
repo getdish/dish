@@ -105,7 +105,7 @@ export const RestaurantCardContent = graphql(
             restaurantPhoto ? getImageUrl(restaurantPhoto, cardFrameWidth, cardFrameHeight) : null
           }
           aspectFixed={aspectFixed}
-          hoverEffect={hoverable ? 'scale' : false}
+          hoverEffect={hoverable ? 'scale' : null}
           padTitleSide={padTitleSide}
         />
       </Link>
