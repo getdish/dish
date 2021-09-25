@@ -426,6 +426,7 @@ class HomeStore extends Store {
       if (!nextState) {
         console.warn('warning! no state found in history, perhaps from old refresh')
         Toast.show('page not found')
+        debugger
         // allow it then to continue to push
         // probably should just move the index +1/-1 to if possible to fallback to something
       } else {

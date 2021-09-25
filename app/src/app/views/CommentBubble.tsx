@@ -152,8 +152,8 @@ function CommentBubbleContents({
           className="preserve-whitespace break-word"
           maxWidth="100%"
           overflow="hidden"
-          sizeLineHeight={1.15}
           fontSize={size === 'lg' ? 18 : 14}
+          lineHeight={size === 'lg' ? 24 : 20}
           color={color ? color : theme.colorSecondary}
         >
           {ellipseContentAbove && text && text.length > ellipseContentAbove ? (
