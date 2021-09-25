@@ -119,6 +119,7 @@ const Header = memo(
           paddingVertical={20}
           paddingHorizontal={18}
           maxWidth="100%"
+          pointerEvents="auto"
           flex={1}
         >
           <HStack>
