@@ -2,6 +2,9 @@ version: 2
 tables:
 - table:
     schema: public
+    name: follow
+- table:
+    schema: public
     name: hrr
 - table:
     schema: public
@@ -1189,6 +1192,20 @@ tables:
     schema: public
     name: user
   array_relationships:
+  - name: followers
+    using:
+      foreign_key_constraint_on:
+        column: follower_id
+        table:
+          schema: public
+          name: follow
+  - name: following
+    using:
+      foreign_key_constraint_on:
+        column: following_id
+        table:
+          schema: public
+          name: follow
   - name: lists
     using:
       manual_configuration:

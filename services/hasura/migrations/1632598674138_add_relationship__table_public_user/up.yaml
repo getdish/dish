@@ -1,0 +1,12 @@
+- args:
+    name: following
+    table:
+      name: user
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: following_id
+        table:
+          name: follow
+          schema: public
+  type: create_array_relationship
