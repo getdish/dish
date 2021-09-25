@@ -25,7 +25,7 @@ export const AppFloatingTagMenuBar = memo(() => {
       y={shouldHide ? -80 : 0}
       maxWidth="100%"
     >
-      <AbsoluteVStack fullscreen bottom={-50} top={-10} zIndex={-1}>
+      <AbsoluteVStack left={0} right={0} bottom={-50} top={-10} zIndex={-1}>
         <LinearGradient
           pointerEvents="none"
           style={StyleSheet.absoluteFill}

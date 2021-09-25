@@ -63,12 +63,13 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       }
       const dyAbs = Math.abs(dy)
       const dxAbs = Math.abs(dx)
-      const isMovingHorizontal = dxAbs > 8 && dxAbs > dyAbs
+      const MIN_DISTANCE = isWeb ? 6 : 10
+      const isMovingHorizontal = dxAbs > MIN_DISTANCE && dxAbs > dyAbs
       if (isMovingHorizontal) {
         return false
       }
       if (isTouchingSearchBar) {
-        return dyAbs > 8
+        return dyAbs > MIN_DISTANCE
       }
       // is touching main area
       try {

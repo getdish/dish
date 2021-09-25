@@ -16,28 +16,21 @@ import { Shortcuts } from './Shortcuts'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
+function usePreventPullToRefresh() {
+  useEffect(() => {
+    const preventDefault = (e) => e.preventDefault()
+    document.body.addEventListener('touchmove', preventDefault, { passive: false })
+    return () => {
+      document.body.removeEventListener('touchmove', preventDefault)
+    }
+  }, [])
+}
+
 export function App() {
   // i see sometimes the new body collapse bar trick gets things in weird state
   // was testing preventing scroll but need to see if i can do it only on <body>
   if (isWeb) {
-    useLayoutEffect(() => {
-      // theoretically locks body in case ios safari tries to scroll that 1px
-      const io = new IntersectionObserver(() => {
-        document.body.scrollTop = 0
-      })
-      io.observe(document.body)
-
-      const preventDefault = (e: Event) => {
-        e.preventDefault()
-      }
-      document.body.addEventListener('touchmove', preventDefault)
-      window.addEventListener('touchmove', preventDefault)
-      return () => {
-        io.disconnect()
-        document.body.removeEventListener('touchmove', preventDefault)
-        window.addEventListener('touchmove', preventDefault)
-      }
-    }, [])
+    usePreventPullToRefresh()
   }
 
   // helper that warns on root level unmounts (uncaught suspense)

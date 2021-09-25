@@ -39,9 +39,13 @@ html, body, #root {
   width: 100vw;
 }
 
+html {
+  -webkit-overflow-scrolling: none;
+}
+
 body {
-  max-height: calc(100vh + 1px);
-  height: calc(100vh + 1px);
+  max-height: calc(100vh + 0.5px);
+  height: calc(100vh + 0.5px);
 }
 
 body.modal-open {
