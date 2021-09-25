@@ -1,6 +1,6 @@
 env:
   BUILDKITE_TIMEOUT: "40"
-  DISH_ENV: 'production'
+  DISH_ENV: 'test'
   DOCKER_BUILDKIT: 1
   LOG_ENV: 1
   COMPOSE_DOCKER_CLI_BUILD: 1
@@ -10,12 +10,12 @@ steps:
 
   - label: ":docker: build base"
     key: base
-    command: ./dsh compose_build base
+    command: DISH_ENV=production ./dsh compose_build base
 
   - label: ":docker: build app"
     key: app
     depends_on: base
-    command: ./dsh compose_build app
+    command: DISH_ENV=production ./dsh compose_build app
 
   # base can get slowed down, clogging the rest
   # - wait
@@ -23,59 +23,59 @@ steps:
   - label: ":docker: build worker"
     key: worker
     depends_on: base
-    command: ./dsh compose_build_and_push worker
+    command: DISH_ENV=production ./dsh compose_build_and_push worker
 
   - label: ":docker: build run-tests"
     key: run-tests
     depends_on: worker
-    command: ./dsh compose_build run-tests
+    command: DISH_ENV=production ./dsh compose_build run-tests
 
   - label: ":docker: build hooks"
     key: hooks
     depends_on: base
-    command: ./dsh compose_build hooks
+    command: DISH_ENV=production ./dsh compose_build hooks
 
   - label: ":docker: build site"
     key: site
     depends_on: base
-    command: ./dsh compose_build site
+    command: DISH_ENV=production ./dsh compose_build site
 
   - label: ":docker: build puppet-proxy"
     key: puppet-proxy
-    command: ./dsh compose_build puppet-proxy
+    command: DISH_ENV=production ./dsh compose_build puppet-proxy
 
   - label: ":docker: build search"
     key: search
-    command: ./dsh compose_build_and_push search
+    command: DISH_ENV=production ./dsh compose_build_and_push search
 
   - label: ":docker: build hasura"
     key: hasura
-    command: ./dsh compose_build_and_push hasura
+    command: DISH_ENV=production ./dsh compose_build_and_push hasura
 
   - label: ":docker: build timescale"
     key: timescale
-    command: ./dsh compose_build_and_push timescale
+    command: DISH_ENV=production ./dsh compose_build_and_push timescale
 
   - label: ":docker: build tileserver"
     key: tileserver
-    command: ./dsh compose_build_and_push tileserver
+    command: DISH_ENV=production ./dsh compose_build_and_push tileserver
 
   - label: ":docker: build postgres"
     key: postgres
-    command: ./dsh compose_build_and_push postgres
+    command: DISH_ENV=production ./dsh compose_build_and_push postgres
 
   - label: ":docker: build image-quality"
     key: image-quality
-    command: ./dsh compose_build_and_push image-quality
+    command: DISH_ENV=production ./dsh compose_build_and_push image-quality
 
   - label: ":docker: build bert"
     key: bert
     depends_on: base
-    command: ./dsh compose_build_and_push bert
+    command: DISH_ENV=production ./dsh compose_build_and_push bert
 
   # - label: ":docker: build gorse"
   #   key: gorse
-  #   command: ./dsh compose_build_and_push gorse
+  #   command: DISH_ENV=production ./dsh compose_build_and_push gorse
 
   - label: "done with test images"
     command: "true"
@@ -98,11 +98,11 @@ steps:
   - label: ":docker: build cron"
     key: cron
     depends_on: base
-    command: ./dsh compose_build_and_push cron
+    command: DISH_ENV=production ./dsh compose_build_and_push cron
 
   - label: ":docker: build summarizer"
     key: summarizer
-    command: ./dsh compose_build_and_push summarizer
+    command: DISH_ENV=production ./dsh compose_build_and_push summarizer
 
   # tests
 
