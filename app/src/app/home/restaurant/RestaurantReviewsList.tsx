@@ -91,7 +91,9 @@ export const RestaurantReviewsList = memo(
               </VStack>
             )}
             <Grid itemMinWidth={320}>
-              {!!review && <RestaurantReview wrapTagsRow hideRestaurantName review={review} />}
+              {!!review && (
+                <RestaurantReview hideGeneralTags wrapTagsRow hideRestaurantName review={review} />
+              )}
 
               {topReviews.map((review, i) => {
                 return (
