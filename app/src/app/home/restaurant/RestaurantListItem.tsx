@@ -1,4 +1,3 @@
-import { fullyIdle, series } from '@dish/async'
 import { RestaurantItemMeta, graphql } from '@dish/graph'
 import { MessageSquare } from '@dish/react-feather'
 import { useStoreInstanceSelector } from '@dish/use-store'
@@ -25,7 +24,6 @@ import { brandColor, green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getWindowWidth } from '../../../helpers/getWindow'
-import { numberFormat } from '../../../helpers/numberFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
 import { GeocodePlace } from '../../../types/homeTypes'
@@ -126,6 +124,7 @@ const RestaurantListItemContent = memo(
     } = props
     const media = useMedia()
     const [restaurant] = queryRestaurant(restaurantSlug)
+    // const colors = useColorsFor(restaurantSlug)
     const [state, setState] = useState({
       editing: false,
       description: null as null | string,
