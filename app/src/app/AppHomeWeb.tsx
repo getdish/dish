@@ -9,6 +9,7 @@ import { useHomeStore } from './homeStore'
 
 export const AppHomeWeb = () => {
   const { currentState } = useHomeStore()
+  console.log('currentState', currentState)
 
   useLayoutEffect(() => {
     document.querySelector('html')!.classList.add('mobile-layout')
@@ -20,7 +21,9 @@ export const AppHomeWeb = () => {
         <VStack height={260} position="relative">
           <AppMapContents />
         </VStack>
-        <HomeStackViewPages key={currentState.id} isActive item={currentState} index={0} />
+        <VStack position="relative">
+          <HomeStackViewPages key={currentState.id} isActive item={currentState} index={0} />
+        </VStack>
       </Suspense>
     </>
   )

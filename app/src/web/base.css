@@ -52,20 +52,18 @@ body.modal-open {
 } */
 
 #root {
-  flex-shrink: 0;
-  flex-basis: auto;
-  flex-grow: 1;
   display: flex;
-  flex: 1;
   z-index: 0;
   overflow: hidden;
   position: relative;
-  inset: 0;
 }
 
 html.mobile-layout, html.mobile-layout body, html.mobile-layout #root {
+  min-height: 100vh;
   height: auto !important;
-  max-height: 100000px;
+  max-height: max-content;
+  pointer-events: auto;
+  overflow: visible;
 }
 
 html.mobile-layout, html.mobile-layout body {
@@ -75,6 +73,8 @@ html.mobile-layout, html.mobile-layout body {
 html.mobile-layout #root {
   overflow: visible;
   flex: 0;
+  max-width: 100vh;
+  overflow: hidden;
 }
 
 * {

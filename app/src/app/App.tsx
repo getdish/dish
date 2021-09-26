@@ -70,7 +70,12 @@ function AppHomeContent(props: { children?: any }) {
   const isMobileWeb = useIsMobilePhone()
 
   if (isMobileWeb) {
-    return <AppHomeWeb />
+    return (
+      <>
+        <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
+        <AppHomeWeb />
+      </>
+    )
   }
 
   return (
