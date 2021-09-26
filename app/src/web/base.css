@@ -38,15 +38,15 @@ html, body, #root {
   max-height: -webkit-fill-available;
 }
 
-html {
+html, body {
   -webkit-overflow-scrolling: none;
 }
-
-/*  */
-/* body {
+/* 
+body {
   max-height: calc(100vh + 0.5px);
   height: calc(100vh + 0.5px);
 } */
+
 /* 
 body.modal-open {
   max-height: 100%;
