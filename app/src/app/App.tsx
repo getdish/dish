@@ -21,6 +21,7 @@ import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
 export function App() {
+
   // useEffect(() => {
   //   geoSearch({
   //     query: 'boba',
