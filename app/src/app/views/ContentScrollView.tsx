@@ -116,11 +116,11 @@ type ContentScrollViewProps = ScrollViewProps & {
 
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, bidirectional, ...props }, ref) => {
-    // const isMobilePhone = useIsMobilePhone()
+    const isMobilePhone = useIsMobilePhone()
 
-    // if (isMobilePhone) {
-    //   return children
-    // }
+    if (isMobilePhone) {
+      return children
+    }
 
     // this updates when drawer moves to top
     // this is already handled in useScrollActive i think

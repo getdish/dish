@@ -17,9 +17,6 @@
   -webkit-user-select: none;
 }
 
-/* tmp bugfix until i can figure out why tis excluded in prod... */
-._paRi-14px{padding-right:14px;}
-
 html,
 body {
   overflow: hidden;
@@ -66,6 +63,20 @@ body.modal-open {
   inset: 0;
 }
 
+html.mobile-layout, html.mobile-layout body, html.mobile-layout #root {
+  height: auto !important;
+  max-height: 100000px;
+}
+
+html.mobile-layout, html.mobile-layout body {
+  -webkit-overflow-scrolling: touch;
+}
+
+html.mobile-layout #root {
+  overflow: visible;
+  flex: 0;
+}
+
 * {
   flex-basis: initial !important;
 }
@@ -87,7 +98,7 @@ html {
 }
 
 body {
-  background: #000;
+  /* background: #000; */
   display: flex;
   overscroll-behavior-y: none;
   -ms-overflow-style: scrollbar;
