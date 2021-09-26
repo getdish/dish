@@ -21,7 +21,6 @@ import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
 export function App() {
-
   // useEffect(() => {
   //   geoSearch({
   //     query: 'boba',
@@ -71,7 +70,12 @@ function AppHomeContent(props: { children?: any }) {
   const isMobileWeb = useIsMobilePhone()
 
   if (isMobileWeb) {
-    return <AppHomeWeb />
+    return (
+      <>
+        <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
+        <AppHomeWeb />
+      </>
+    )
   }
 
   return (

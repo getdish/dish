@@ -35,6 +35,7 @@ import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { mapStyles } from './mapStyles'
 import { useIsInteractive } from './useIsInteractive'
+import { useIsMobilePhone } from './useIsMobilePhone'
 
 export default memo(function AppMap() {
   // lighthouse/slow browser optimization
@@ -350,6 +351,12 @@ export const AppMapContents = memo(function AppMapContents() {
 const AppMapBottomFade = memo(() => {
   const media = useMedia()
   const theme = useTheme()
+  const isPhone = useIsMobilePhone()
+
+  if (isPhone) {
+    return null
+  }
+
   return (
     <AbsoluteVStack
       zIndex={100}

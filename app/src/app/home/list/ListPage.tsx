@@ -287,6 +287,8 @@ const ListPageContent = memo(
         backgroundColor: listColors.backgroundForTheme,
       }
 
+      console.log('rener??')
+
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
         <>
@@ -408,7 +410,13 @@ const ListPageContent = memo(
                   </>
                 )}
               </PaneControlButtonsLeft>
-              <VStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
+
+              <VStack
+                className="test123"
+                overflow="hidden"
+                width="100%"
+                minHeight={getWindowHeight()}
+              >
                 {/* START HEADER */}
                 <VStack paddingBottom={5} position="relative">
                   {/* BACKGROUND */}
