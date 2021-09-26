@@ -20,6 +20,15 @@ import { NotFoundPage } from './views/NotFoundPage'
 
 export function App() {
   useEffect(() => {
+    document
+      .querySelector('#root')!
+      .addEventListener('touchstart', (e) => e.preventDefault(), false)
+    document.querySelector('#root')!.addEventListener('touchmove', (e) => e.preventDefault(), false)
+
+    // const ro = new ResizeObserver()
+  }, [])
+
+  useEffect(() => {
     geoSearch({
       query: 'boba',
       ...homeStore.lastHomeOrSearchState.center!,

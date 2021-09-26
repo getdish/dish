@@ -41,11 +41,12 @@ html, body, #root {
 html, body {
   -webkit-overflow-scrolling: none;
 }
-/* 
+
+
 body {
   max-height: calc(100vh + 0.5px);
   height: calc(100vh + 0.5px);
-} */
+}
 
 /* 
 body.modal-open {
@@ -645,39 +646,41 @@ mark {
   display: none;
 }
 
-.hover-parent:hover .hover-100-opacity-child,
-.hover-parent .hover-100-opacity-child:hover {
-  opacity: 1;
-}
-
-.hover-parent:hover .hover-slide-up-child,
-.hover-parent .hover-slide-up-child:hover {
-  transform: translateY(0);
-}
-
-.hover-parent:hover .hover-75-opacity-child,
-.hover-parent .hover-75-opacity-child:hover {
-  opacity: 0.75;
-}
-
-.hover-parent:hover .hover-90-opacity-child,
-.hover-parent .hover-90-opacity-child:hover {
-  opacity: 0.9;
-}
-
-.hover-parent:hover .hover-50-opacity-child,
-.hover-parent .hover-50-opacity-child:hover {
-  opacity: 0.5;
-}
-
-.hover-parent:hover .hover-25-opacity-child,
-.hover-parent .hover-25-opacity-child:hover {
-  opacity: 0.25;
-}
-
-.hover-parent:hover .hover-0-opacity-child,
-.hover-parent .hover-0-opacity-child:hover {
-  opacity: 0;
+@media not all and (hover: none) {
+  .hover-parent:hover .hover-100-opacity-child,
+  .hover-parent .hover-100-opacity-child:hover {
+    opacity: 1;
+  }
+  
+  .hover-parent:hover .hover-slide-up-child,
+  .hover-parent .hover-slide-up-child:hover {
+    transform: translateY(0);
+  }
+  
+  .hover-parent:hover .hover-75-opacity-child,
+  .hover-parent .hover-75-opacity-child:hover {
+    opacity: 0.75;
+  }
+  
+  .hover-parent:hover .hover-90-opacity-child,
+  .hover-parent .hover-90-opacity-child:hover {
+    opacity: 0.9;
+  }
+  
+  .hover-parent:hover .hover-50-opacity-child,
+  .hover-parent .hover-50-opacity-child:hover {
+    opacity: 0.5;
+  }
+  
+  .hover-parent:hover .hover-25-opacity-child,
+  .hover-parent .hover-25-opacity-child:hover {
+    opacity: 0.25;
+  }
+  
+  .hover-parent:hover .hover-0-opacity-child,
+  .hover-parent .hover-0-opacity-child:hover {
+    opacity: 0;
+  }
 }
 
 .mask-image div {

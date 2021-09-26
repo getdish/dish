@@ -1,11 +1,10 @@
-import React, { isValidElement } from 'react'
-import { AbsoluteHStack, AbsoluteVStack, Paragraph, Text, VStack, useTheme } from 'snackui'
+import React from 'react'
+import { AbsoluteHStack, AbsoluteVStack, Paragraph, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { pluralize } from '../../helpers/pluralize'
-import { rgbString } from '../../helpers/rgb'
 import { Image } from '../views/Image'
 import { TagButton } from '../views/TagButton'
 import { TitleStyled } from '../views/TitleStyled'

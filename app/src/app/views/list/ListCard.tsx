@@ -1,7 +1,7 @@
 import { getUserName, graphql, mutate, query, resolved, slugify } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useState } from 'react'
-import { AbsoluteVStack, Hoverable, Toast, VStack, useThemeName } from 'snackui'
+import { AbsoluteVStack, Hoverable, Toast, VStack, isTouchDevice, useThemeName } from 'snackui'
 
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
@@ -159,7 +159,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
     </Link>
   )
 
-  if (onHover) {
+  if (!isTouchDevice && onHover) {
     return (
       <Hoverable onHoverIn={() => onHover(true)} onHoverOut={() => onHover(true)}>
         {contents}
