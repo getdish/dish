@@ -1,6 +1,5 @@
 import { promisify } from 'util'
 
-import { DISH_DEBUG } from '@dish/graph'
 import redis from 'redis'
 
 const pass = process.env.REDIS_PASSWORD
@@ -8,14 +7,20 @@ const host = process.env.REDIS_HOST || 'redis'
 const port = process.env.REDIS_PORT || 6379
 const url = `redis://${pass ? `:${pass}:` : ''}${host}:${port}`
 
-console.log('redis url', url)
-
 export const redisClient = redis.createClient({
   url,
 })
 
+let isDown = false
 redisClient.on('error', (err) => {
-  console.log('  redis down ', DISH_DEBUG >= 2 ? JSON.stringify(err) : '')
+  if (err.code === 'ECONNREFUSED') {
+    if (!isDown) {
+      console.warn('⚠️ Redis not up, cache disabled')
+      isDown = true
+    }
+  } else {
+    console.log('Redis error:', err)
+  }
 })
 
 const redisGet_ = promisify(redisClient.get).bind(redisClient)

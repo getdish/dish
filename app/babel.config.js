@@ -3,6 +3,9 @@ const useOurBabel = process.env.TARGET === 'web' || process.env.TARGET === 'node
 module.exports = function (api) {
   api.cache(true)
 
+  if (!process.env.BABEL_ENV) {
+    process.env.BABEL_ENV = process.env.NODE_ENV
+  }
   if (process.env.BABEL_ENV !== process.env.NODE_ENV) {
     console.log(
       `BABEL_ENV !== NODE_ENV, this will cause errors in metro babel preset, changing to NODE_ENV val`
