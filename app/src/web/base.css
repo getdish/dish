@@ -17,9 +17,6 @@
   -webkit-user-select: none;
 }
 
-/* tmp bugfix until i can figure out why tis excluded in prod... */
-._paRi-14px{padding-right:14px;}
-
 html,
 body {
   overflow: hidden;
@@ -42,11 +39,11 @@ html, body {
   -webkit-overflow-scrolling: none;
 }
 
-
+/* 
 body {
   max-height: calc(100vh + 0.5px);
   height: calc(100vh + 0.5px);
-}
+} */
 
 /* 
 body.modal-open {
@@ -64,6 +61,20 @@ body.modal-open {
   overflow: hidden;
   position: relative;
   inset: 0;
+}
+
+html.mobile-layout, html.mobile-layout body, html.mobile-layout #root {
+  height: auto !important;
+  max-height: 100000px;
+}
+
+html.mobile-layout, html.mobile-layout body {
+  -webkit-overflow-scrolling: touch;
+}
+
+html.mobile-layout #root {
+  overflow: visible;
+  flex: 0;
 }
 
 * {
@@ -87,7 +98,7 @@ html {
 }
 
 body {
-  background: #000;
+  /* background: #000; */
   display: flex;
   overscroll-behavior-y: none;
   -ms-overflow-style: scrollbar;

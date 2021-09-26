@@ -6,5 +6,6 @@ import { getWindowHeight, getWindowWidth } from '../helpers/getWindow'
 const narrowestWindowSide = Math.min(getWindowWidth(), getWindowHeight())
 
 export const useIsMobilePhone = () => {
+  return false
   return narrowestWindowSide < 480 && isWeb && isTouchDevice
 }

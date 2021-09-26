@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useLayoutEffect } from 'react'
 import { VStack } from 'snackui'
 
 import { AppMapContents } from './AppMap'
@@ -9,6 +9,10 @@ import { useHomeStore } from './homeStore'
 
 export const AppHomeWeb = () => {
   const { currentState } = useHomeStore()
+
+  useLayoutEffect(() => {
+    document.querySelector('html')!.classList.add('mobile-layout')
+  }, [])
 
   return (
     <>

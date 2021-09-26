@@ -5,6 +5,7 @@ import { AbsoluteVStack, LoadingItems, ToastRoot, useTheme } from 'snackui'
 import { isSSR } from '../constants/constants'
 import { geoSearch } from '../web/geosearch'
 import AdminPage from './admin/AdminPage'
+import { AppHomeWeb } from './AppHomeWeb'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
@@ -15,27 +16,20 @@ import { Home } from './home/Home'
 import { homeStore } from './homeStore'
 import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
+import { useIsMobilePhone } from './useIsMobilePhone'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
 export function App() {
-  useEffect(() => {
-    document
-      .querySelector('#root')!
-      .addEventListener('touchstart', (e) => e.preventDefault(), false)
-    document.querySelector('#root')!.addEventListener('touchmove', (e) => e.preventDefault(), false)
 
-    // const ro = new ResizeObserver()
-  }, [])
-
-  useEffect(() => {
-    geoSearch({
-      query: 'boba',
-      ...homeStore.lastHomeOrSearchState.center!,
-    }).then((res) => {
-      console.log('got', res)
-    })
-  }, [])
+  // useEffect(() => {
+  //   geoSearch({
+  //     query: 'boba',
+  //     ...homeStore.lastHomeOrSearchState.center!,
+  //   }).then((res) => {
+  //     console.log('got', res)
+  //   })
+  // }, [])
 
   // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {
@@ -74,11 +68,11 @@ export function App() {
 
 function AppHomeContent(props: { children?: any }) {
   const theme = useTheme()
-  // const isMobileWeb = useIsMobilePhone()
+  const isMobileWeb = useIsMobilePhone()
 
-  // if (isMobileWeb) {
-  //   return <AppHomeWeb />
-  // }
+  if (isMobileWeb) {
+    return <AppHomeWeb />
+  }
 
   return (
     <>
