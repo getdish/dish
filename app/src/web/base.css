@@ -21,8 +21,14 @@ body {
   overflow: hidden;
   margin: 0px;
   padding: 0px;
-  background-color: #000;
+  background-color: #fff;
   pointer-events: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background-color: #000;
+  }
 }
 
 html, body, #root {

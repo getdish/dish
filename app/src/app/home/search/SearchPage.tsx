@@ -2,16 +2,7 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import {
-  Store,
-  compare,
-  compareStrict,
-  isEqualStrict,
-  reaction,
-  useStore,
-  useStoreInstanceSelector,
-  useStoreSelector,
-} from '@dish/use-store'
+import { Store, compareStrict, reaction, useStore, useStoreInstanceSelector } from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -43,6 +34,7 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
+import { getWindow } from '../../../helpers/getWindow'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { weakKey } from '../../../helpers/weakKey'
@@ -56,6 +48,7 @@ import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { RootPortalItem } from '../../Portal'
+import { useIsMobilePhone } from '../../useIsMobilePhone'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { PageHead } from '../../views/PageHead'
@@ -369,15 +362,17 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
     [activeTagSlugs]
   )
 
+  const isMobilePhone = useIsMobilePhone()
+
   if (status !== 'loading' && results.length === 0) {
     return <SearchEmptyResults />
   }
 
   return (
     <RecyclerListView
-      style={sheet.listStyle}
+      // style={sheet.listStyle}
       key={weakKey(results)}
-      canChangeSize
+      // canChangeSize
       externalScrollView={SearchPageScrollView as any}
       scrollViewProps={{
         id: props.item.id,
@@ -387,6 +382,7 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
       dataProvider={dataProvider}
       layoutProvider={layoutProvider}
       deterministic
+      useWindowScroll={isMobilePhone}
     />
   )
 })
@@ -431,6 +427,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, id, ...props }, ref) => {
     const scrollRef = useRef<ScrollView>()
     const searchPageStore = getSearchPageStore()
+    const isMobilePhone = useIsMobilePhone()
     const searchPageChildrenStore = useStore(SearchPageChildrenStore, { id })
 
     // for now, scrollRef doesnt have scrollTo?
@@ -453,9 +450,57 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const layoutProps = useLayout({
       stateless: true,
       onLayout: (x) => {
+        if (isMobilePhone) {
+          // @ts-ignore
+          return onSizeChanged(getWindow())
+        }
         onSizeChanged?.(x.nativeEvent.layout)
       },
     })
+
+    // replicating RecyclerListView useWindow support
+    if (isMobilePhone) {
+      useEffect(() => {
+        const target = layoutProps!.ref!.current! as any
+        if (!target) return
+        const onScroll = () => {
+          if (!props.onScroll) return
+          props.onScroll({
+            // @ts-ignore
+            nativeEvent: {
+              contentOffset: {
+                get x(): number {
+                  return window.scrollX === undefined ? window.pageXOffset : window.scrollX
+                },
+                get y(): number {
+                  return window.scrollY === undefined ? window.pageYOffset : window.scrollY
+                },
+              },
+              contentSize: {
+                get height(): number {
+                  return target.offsetHeight
+                },
+                get width(): number {
+                  return target.offsetWidth
+                },
+              },
+              layoutMeasurement: {
+                get height(): number {
+                  return window.innerHeight
+                },
+                get width(): number {
+                  return window.innerWidth
+                },
+              },
+            },
+          })
+        }
+        window.addEventListener('scroll', onScroll)
+        return () => {
+          window.removeEventListener('scroll', onScroll)
+        }
+      }, [])
+    }
 
     const scrollToTopHandler = useCallback(() => {
       scrollRef.current?.scrollTo?.({ x: 0, y: 0, animated: true })
