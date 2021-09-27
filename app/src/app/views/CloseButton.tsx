@@ -27,7 +27,7 @@ export const SmallCircleButton = forwardRef(
   ({ shadowed, children, width, height, size = 44, ...props }: CircleButtonProps, ref) => {
     return (
       <Button
-        ref={ref}
+        ref={ref as any}
         borderRadius={1000}
         alignItems="center"
         justifyContent="center"
