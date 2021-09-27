@@ -59,8 +59,9 @@ export const Score = memo(
 
     // disable voting on touch device directly on score
     if (votable && !isTouchDevice && userStore.isLoggedIn) {
-      const upvote = (
+      const getUpvote = props => (
         <VoteButton
+          {...props}
           size={btnSize}
           Icon={ArrowUp}
           shadowDirection="up"
@@ -72,8 +73,9 @@ export const Score = memo(
           }}
         />
       )
-      const downvote = (
+      const getDownvote = props  => (
         <VoteButton
+        {..props}
           size={btnSize}
           Icon={ArrowDown}
           voted={vote == -1}
@@ -93,16 +95,16 @@ export const Score = memo(
             marginVertical={-4}
           >
             {subtle ? (
-              upvote
+              getUpvote({})
             ) : (
-              <Tooltip placement="right" trigger={() => upvote} {...isOpenProp}>
+              <Tooltip placement="right" trigger={getUpvote} {...isOpenProp}>
                 {upTooltip ?? 'Upvote'}
               </Tooltip>
             )}
             {subtle ? (
-              downvote
+              getDownvote({})
             ) : (
-              <Tooltip placement="right" trigger={() => downvote} {...isOpenProp}>
+              <Tooltip placement="right" trigger={getDownvote} {...isOpenProp}>
                 {downTooltip ?? 'Downvote'}
               </Tooltip>
             )}
