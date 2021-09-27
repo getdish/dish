@@ -884,8 +884,8 @@ export default function Map(props: MapProps) {
     return () => {
       console.warn('❌ cleaning up effect')
       cancels.forEach((c) => c())
-      if (mapNode) {
-        mapNode.current!.innerHTML = ''
+      if (mapNode.current) {
+        mapNode.current.innerHTML = ''
       }
     }
   }, [themeName])
