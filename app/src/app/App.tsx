@@ -3,9 +3,8 @@ import React, { Suspense, useEffect } from 'react'
 import { AbsoluteVStack, LoadingItems, ToastRoot, useTheme } from 'snackui'
 
 import { isSSR } from '../constants/constants'
-import { geoSearch } from '../web/geosearch'
 import AdminPage from './admin/AdminPage'
-import { AppHomeWeb } from './AppHomeWeb'
+import { AppHomeMobileWeb } from './AppHomeMobileWeb'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
@@ -13,7 +12,6 @@ import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AppSearchBarFloating } from './AppSearchBarFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
 import { Home } from './home/Home'
-import { homeStore } from './homeStore'
 import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
 import { useIsMobilePhone } from './useIsMobilePhone'
@@ -72,8 +70,7 @@ function AppHomeContent(props: { children?: any }) {
   if (isMobileWeb) {
     return (
       <>
-        <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
-        <AppHomeWeb />
+        <AppHomeMobileWeb />
       </>
     )
   }
