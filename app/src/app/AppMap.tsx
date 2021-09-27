@@ -294,8 +294,8 @@ export const AppMapContents = memo(function AppMapContents() {
         height="100%"
         width={width}
         maxWidth="100%"
-        borderTopRightRadius={12}
-        borderBottomRightRadius={12}
+        // borderTopRightRadius={12}
+        // borderBottomRightRadius={12}
         overflow="hidden"
         {...(isTouchDevice && {
           onTouchMove: () => {

@@ -150,9 +150,6 @@ export const HomePageFeed = memo(
           <HStack position="relative">
             <ContentScrollViewHorizontal>
               <HStack alignItems="center" spacing="xl" paddingHorizontal={16}>
-                <SlantedTitle alignSelf="center">
-                  <Home size={24} color={'#777'} />
-                </SlantedTitle>
                 {tagLenses.map((lense, i) => {
                   return (
                     <Link key={i} tag={lense}>
