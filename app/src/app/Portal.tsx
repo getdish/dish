@@ -40,7 +40,6 @@ export function PortalItem(props: PortalItemProps & PortalStoreProps) {
 
 export function PortalProvider({ id }: PortalStoreProps) {
   const portalStore = useStore(PortalStore, { id })
-  console.log('rendering', portalStore.items)
   return (
     <>
       {Object.keys(portalStore.items).map((key) => {

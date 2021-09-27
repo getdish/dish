@@ -167,7 +167,6 @@ export function Root() {
 
                   {process.env.NODE_ENV === 'development' && <DebugHUD />}
                 </Suspense>
-                <RootPortalProvider />
               </QueryClientProvider>
             </ProvideRouter>
           </ThemeProvider>

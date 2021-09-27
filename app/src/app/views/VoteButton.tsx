@@ -44,7 +44,7 @@ export const VoteButton = ({
       {...props}
     >
       <VStack
-        opacity={voted ? 1 : 0.25}
+        opacity={voted ? 1 : 0.5}
         hoverStyle={{
           opacity: 1,
         }}

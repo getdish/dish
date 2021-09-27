@@ -14,6 +14,7 @@ import { HomeStackViewPages } from './home/HomeStackViewPages'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
 import { useHomeStore } from './homeStore'
+import { RootPortalProvider } from './Portal'
 import { Route } from './Route'
 
 // this would be the start of rendering mobile web flat style
@@ -33,33 +34,47 @@ export const AppHomeMobileWeb = () => {
         <ToastRoot />
         <AutocompleteEffects />
       </Suspense>
-      <Suspense fallback={null}>
-        <VStack marginBottom={-10} height={300} position="relative" zIndex={0}>
-          <AbsoluteVStack zIndex={10000} pointerEvents="none" bottom={10}>
+      <AbsoluteVStack
+        // @ts-ignore
+        position="fixed"
+        fullscreen
+        pointerEvents="none"
+        top={0}
+        left={0}
+        right={0}
+        height="100vh"
+        maxHeight="100vh"
+        zIndex={1000000}
+      >
+        <RootPortalProvider />
+      </AbsoluteVStack>
+      <VStack marginBottom={-40} height={310} position="relative" zIndex={0}>
+        <Suspense fallback={null}>
+          <AbsoluteVStack zIndex={10000} pointerEvents="none" bottom={40}>
             <AppFloatingTagMenuBar />
           </AbsoluteVStack>
           <AppMenuButtonFloating />
           <AppMapControls />
           <AppMapContents />
+        </Suspense>
+      </VStack>
+      <VStack
+        shadowColor="#000"
+        shadowRadius={25}
+        shadowOpacity={0.1}
+        zIndex={100}
+        borderRadius={10}
+        overflow="hidden"
+        position="relative"
+      >
+        <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
+        <AppSearchBarInline />
+        <VStack position="relative" minHeight={500}>
+          <AppAutocompleteSearch />
+          <AppAutocompleteLocation />
+          <HomeStackViewPages key={currentState.id} isActive item={currentState} index={0} />
         </VStack>
-        <VStack
-          shadowColor="#000"
-          shadowRadius={25}
-          shadowOpacity={0.1}
-          zIndex={100}
-          borderRadius={10}
-          overflow="hidden"
-          position="relative"
-        >
-          <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
-          <AppSearchBarInline />
-          <VStack position="relative">
-            <AppAutocompleteSearch />
-            <AppAutocompleteLocation />
-            <HomeStackViewPages key={currentState.id} isActive item={currentState} index={0} />
-          </VStack>
-        </VStack>
-      </Suspense>
+      </VStack>
       <Suspense fallback={null}>
         <GalleryPage />
         <RestaurantReviewPage />

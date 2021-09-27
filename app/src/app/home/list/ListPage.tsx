@@ -341,6 +341,12 @@ const ListPageContent = memo(
           )}
 
           <ContentScrollView id="list">
+            <AbsoluteVStack
+              fullscreen
+              zIndex={0}
+              backgroundColor={listColors.backgroundForTheme}
+              opacity={0.25}
+            />
             <>
               <PaneControlButtonsLeft>
                 <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
@@ -411,21 +417,16 @@ const ListPageContent = memo(
                 )}
               </PaneControlButtonsLeft>
 
-              <VStack
-                className="test123"
-                overflow="hidden"
-                width="100%"
-                minHeight={getWindowHeight()}
-              >
+              <VStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
                 {/* START HEADER */}
                 <VStack paddingBottom={5} position="relative">
                   {/* BACKGROUND */}
-                  <AbsoluteVStack
+                  {/* <AbsoluteVStack
                     fullscreen
                     zIndex={-1}
-                    backgroundColor={listColors.backgroundColor}
-                    opacity={0.05}
-                  />
+                    backgroundColor={listColors.backgroundForTheme}
+                    // opacity={0.05}
+                  /> */}
                   <HStack paddingHorizontal={20}>
                     <AbsoluteVStack
                       overflow="hidden"
@@ -705,15 +706,14 @@ const ListPageContent = memo(
                 )}
               </VStack>
 
-              <Spacer size="xxxxxl" />
-              <Spacer size="xxxxxl" />
+              <Spacer size="xxxl" />
             </>
           </ContentScrollView>
         </>
       )
     },
     {
-      suspense: true,
+      suspense: false,
     }
   )
 )

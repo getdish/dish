@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useThemeName } from 'snackui'
 
-import { pink, purple700 } from '../constants/colors'
+import { pink, pink400, pink500, pink700, purple700 } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import * as mapHelpers from '../helpers/mapHelpers'
 import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'
@@ -529,7 +529,7 @@ export default function Map(props: MapProps) {
               // 'text-anchor': 'bottom',
             },
             paint: {
-              'text-color': isDark ? '#fff' : purple700,
+              'text-color': isDark ? pink400 : purple700,
               // 'text-halo-color': blue,
               // 'text-halo-width': 1,
             },
