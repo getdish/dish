@@ -713,7 +713,7 @@ const ListPageContent = memo(
       )
     },
     {
-      suspense: false,
+      suspense: true,
     }
   )
 )
