@@ -1,6 +1,7 @@
-import React, { Suspense, useLayoutEffect } from 'react'
+import React, { Suspense, useEffect, useLayoutEffect } from 'react'
 import { AbsoluteVStack, ToastRoot, VStack, useTheme } from 'snackui'
 
+import { router } from '../router'
 import { AppAutocompleteLocation } from './AppAutocompleteLocation'
 import { AppAutocompleteSearch } from './AppAutocompleteSearch'
 import { AppMapContents } from './AppMap'
@@ -13,7 +14,7 @@ import GalleryPage from './home/gallery/GalleryPage'
 import { HomeStackViewPages } from './home/HomeStackViewPages'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
-import { useHomeStore } from './homeStore'
+import { homeStore, useHomeStore } from './homeStore'
 import { RootPortalProvider } from './Portal'
 import { Route } from './Route'
 
@@ -22,7 +23,17 @@ import { Route } from './Route'
 export const AppHomeMobileWeb = () => {
   const theme = useTheme()
   const { currentState } = useHomeStore()
-  console.log('currentState', currentState)
+
+  // TODO make this "remember" the last height so we can scroll smoothly
+  // otherwise it jumps to empty and so scroll doesnt animate up
+  // on new state, scroll to top
+  useEffect(() => {
+    if (router.curHistory.type !== 'push') {
+      return
+    }
+    console.log('scroll to top')
+    document.documentElement.scrollTo(0, 0)
+  }, [currentState.id])
 
   useLayoutEffect(() => {
     document.querySelector('html')!.classList.add('mobile-layout')
