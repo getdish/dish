@@ -14,18 +14,21 @@ export const AppActionButton = () => {
   const [visible, setVisible] = useState(false)
   return (
     <Popover
-      position="bottom"
+      placement="bottom"
       isOpen={visible}
-      noArrow
       onChangeOpen={setVisible}
-      contents={
-        <Theme name="dark">
-          <AppActionButtonContents hide={() => setVisible(false)} />
-        </Theme>
-      }
-      mountImmediately
+      trigger={(props) => (
+        <AppMenuLinkButton
+          {...props}
+          onPress={() => setVisible((x) => !x)}
+          Icon={Plus}
+          tooltip="Create"
+        />
+      )}
     >
-      <AppMenuLinkButton onPress={() => setVisible((x) => !x)} Icon={Plus} tooltip="Create" />
+      <Theme name="dark">
+        <AppActionButtonContents hide={() => setVisible(false)} />
+      </Theme>
     </Popover>
   )
 }

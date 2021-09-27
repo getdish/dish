@@ -72,14 +72,15 @@ export const RestaurantAddressLinksRow = memo(
           {size === 'sm' ||
             (size === 'xs' && (
               <HoverablePopover
-                position="right"
+                placement="right"
                 allowHoverOnContent
-                noArrow
-                contents={<Box padding={10}>{linkElements}</Box>}
+                trigger={(props) => (
+                  <SmallCircleButton {...props}>
+                    <ExternalLink size={size === 'xs' ? 14 : 10} color={iconColor} />
+                  </SmallCircleButton>
+                )}
               >
-                <SmallCircleButton>
-                  <ExternalLink size={size === 'xs' ? 14 : 10} color={iconColor} />
-                </SmallCircleButton>
+                <Box padding={10}>{linkElements}</Box>
               </HoverablePopover>
             ))}
 

@@ -14,18 +14,23 @@ export const UserMenuButton = () => {
   }
 
   return (
-    <Tooltip contents={user.username ?? 'Profile'}>
-      <LinkButton
-        backgroundColor="transparent"
-        position="relative"
-        name="user"
-        noTextWrap
-        params={{
-          username: slugify(user.username ?? ''),
-        }}
-      >
-        <UserAvatar size={32} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
-      </LinkButton>
+    <Tooltip
+      trigger={(props) => (
+        <LinkButton
+          backgroundColor="transparent"
+          position="relative"
+          name="user"
+          noTextWrap
+          params={{
+            username: slugify(user.username ?? ''),
+          }}
+          {...props}
+        >
+          <UserAvatar size={32} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
+        </LinkButton>
+      )}
+    >
+      {user.username ?? 'Profile'}
     </Tooltip>
   )
 }

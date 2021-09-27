@@ -54,14 +54,15 @@ export const RestaurantRatingView = suspense(
       //     })
       // )
 
-      let ratingViewEl = <RatingView {...ratingViewProps} />
+      const getRatingInnerEl = (props) => <RatingView {...props} {...ratingViewProps} />
+      let getRatingEl = getRatingInnerEl
 
       const theme = useTheme()
 
       if (showBreakdown) {
-        ratingViewEl = (
+        getRatingEl = (props) => (
           <HStack position="relative">
-            {ratingViewEl}
+            {getRatingInnerEl(props)}
             <AbsoluteHStack zIndex={-1} top="-24%" right="-24%">
               <AbsoluteHStack
                 // width={400}
@@ -89,16 +90,14 @@ export const RestaurantRatingView = suspense(
       }
 
       if (!hoverable) {
-        return ratingViewEl
+        return getRatingEl({})
       }
 
       return (
         <VStack pointerEvents="auto">
-          <HoverablePopover
-            allowHoverOnContent
-            anchor="LEFT_BOTTOM"
-            contents={(isOpen) => {
-              if (isOpen) {
+          <HoverablePopover allowHoverOnContent placement="bottom right" trigger={getRatingEl}>
+            {({ open }) => {
+              if (open) {
                 return (
                   <Box padding={15}>
                     <RatingView
@@ -112,8 +111,6 @@ export const RestaurantRatingView = suspense(
               }
               return null
             }}
-          >
-            {ratingViewEl}
           </HoverablePopover>
         </VStack>
       )

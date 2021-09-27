@@ -1,12 +1,11 @@
 import React, { useMemo } from 'react'
-import { AbsoluteVStack, HStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, useMedia, useSafeAreaInsets } from 'snackui'
 
-import { useSafeArea } from '../hooks/useSafeArea'
 import { PortalItem } from '../Portal'
 
 export function BottomFloatingArea(props: { children: any }) {
   const children = useMemo(() => props.children, [props.children])
-  const safeArea = useSafeArea()
+  const safeArea = useSafeAreaInsets()
   const media = useMedia()
   return (
     <PortalItem id={media.sm ? 'root' : 'drawer'}>

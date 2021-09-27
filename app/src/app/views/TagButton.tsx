@@ -97,7 +97,7 @@ export type TagButtonProps = StackProps &
     hideVote?: boolean
     isActive?: boolean
     noLink?: boolean
-    onClose?: Function
+    onClose?: () => void
     onlyIcon?: boolean
     ratingStyle?: 'points' | 'pie'
     refetchKey?: string
@@ -421,11 +421,12 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   if (tooltip) {
-    contents = <Tooltip contents={tooltip}>{contents}</Tooltip>
+    contents = <Tooltip trigger={() => contents}>{tooltip}</Tooltip>
   }
 
   // make entire button votable in this case
   if (noLink && votable) {
+    // @ts-ignore
     return <TagVotePopover {...props}>{contents}</TagVotePopover>
   }
 
@@ -436,8 +437,9 @@ export const TagVotePopover = graphql(
   ({
     slug,
     restaurant,
+    children,
     ...popoverProps
-  }: Omit<Partial<HoverablePopoverProps>, 'position' | 'style'> & TagButtonProps) => {
+  }: Omit<Partial<HoverablePopoverProps>, 'placement' | 'style'> & TagButtonProps) => {
     const hovPopRef = useRef<HoverablePopoverRef>()
     const tagSlug = getTagSlug(slug)
     const { vote, setVote } = useUserTagVotes({
@@ -450,50 +452,51 @@ export const TagVotePopover = graphql(
         // @ts-ignore
         ref={hovPopRef}
         allowHoverOnContent
+        fallbackToPress
         anchor="CENTER"
         animated={false}
+        trigger={() => children}
         {...popoverProps}
-        contents={
-          <Theme name="dark">
-            <Box paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
-              <HStack>
-                {tagRatings.map((rating) => (
-                  <LinkButton
-                    promptLogin
-                    borderRadius={1000}
-                    width={38}
-                    height={38}
-                    paddingHorizontal={0}
-                    textProps={{
-                      letterSpacing: -1,
-                      fontWeight: '600',
-                      paddingHorizontal: 4,
-                    }}
-                    onPress={(e) => {
-                      e.stopPropagation()
-                      setVote(rating)
-                      // give time to see it update
-                      setTimeout(() => {
-                        hovPopRef.current?.close()
-                      }, 200)
-                    }}
-                    key={rating}
-                    {...(vote === rating
-                      ? {
-                          backgroundColor: blue,
-                        }
-                      : {
-                          backgroundColor: 'transparent',
-                        })}
-                  >
-                    {rating}
-                  </LinkButton>
-                ))}
-              </HStack>
-            </Box>
-          </Theme>
-        }
-      />
+      >
+        <Theme name="dark">
+          <Box paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
+            <HStack>
+              {tagRatings.map((rating) => (
+                <LinkButton
+                  promptLogin
+                  borderRadius={1000}
+                  width={38}
+                  height={38}
+                  paddingHorizontal={0}
+                  textProps={{
+                    letterSpacing: -1,
+                    fontWeight: '600',
+                    paddingHorizontal: 4,
+                  }}
+                  onPress={(e) => {
+                    e.stopPropagation()
+                    setVote(rating)
+                    // give time to see it update
+                    setTimeout(() => {
+                      hovPopRef.current?.close()
+                    }, 200)
+                  }}
+                  key={rating}
+                  {...(vote === rating
+                    ? {
+                        backgroundColor: blue,
+                      }
+                    : {
+                        backgroundColor: 'transparent',
+                      })}
+                >
+                  {rating}
+                </LinkButton>
+              ))}
+            </HStack>
+          </Box>
+        </Theme>
+      </HoverablePopover>
     )
   },
   {

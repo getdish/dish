@@ -1,14 +1,14 @@
 import { RoutesTable } from '@dish/router'
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { Button } from 'snackui'
 
 import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkButtonProps } from './LinkProps'
 
-export function LinkButton<Name extends DRouteName = DRouteName>(
-  props: LinkButtonProps<Name, RoutesTable[Name]['params']>
-) {
+export const LinkButton = forwardRef(function LinkButtonContent<
+  Name extends DRouteName = DRouteName
+>(props: LinkButtonProps<Name, RoutesTable[Name]['params']>, ref) {
   // @ts-ignore
   const { wrapWithLinkElement } = useLink(props)
   const {
@@ -31,6 +31,7 @@ export function LinkButton<Name extends DRouteName = DRouteName>(
   // const themeName = useThemeName()
   return wrapWithLinkElement(
     <Button
+      ref={ref}
       {...restProps}
       {...(isActive && activeStyle)}
       textProps={isActive ? props.activeTextStyle : textProps}
@@ -43,7 +44,7 @@ export function LinkButton<Name extends DRouteName = DRouteName>(
       {getChildren(props, isActive)}
     </Button>
   )
-}
+})
 
 const getChildren = (props: LinkButtonProps, isActive?: boolean) => {
   if (typeof props.children === 'function') {

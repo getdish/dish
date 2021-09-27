@@ -1,16 +1,17 @@
 import { RoutesTable } from '@dish/router'
-import React from 'react'
+import React, { forwardRef } from 'react'
 
 import { DRouteName } from '../../router'
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 
-export function OverlayLinkButton<
+export const OverlayLinkButton = forwardRef(function OverlayLinkButtonContent<
   Name extends DRouteName = DRouteName,
   Params = RoutesTable[Name]['params']
->({ Icon, children, ...props }: LinkButtonProps<Name, Params> & { Icon?: any }) {
+>({ Icon, children, ...props }: LinkButtonProps<Name, Params> & { Icon?: any }, ref) {
   return (
     <LinkButton
+      ref={ref}
       paddingVertical={10}
       paddingHorizontal={16}
       marginHorizontal={2}
@@ -31,4 +32,4 @@ export function OverlayLinkButton<
       {children}
     </LinkButton>
   )
-}
+})
