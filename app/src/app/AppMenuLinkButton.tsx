@@ -20,8 +20,9 @@ export const AppMenuLinkButton = memo(
   }) => {
     const { color } = useSearchBarTheme()
 
-    const linkButtonElement = (
+    const getLinkButtonEl = (props?: any) => (
       <LinkButtonAutoActive
+        {...props}
         className="ease-in-out-faster"
         padding={12}
         backgroundColor="transparent"
@@ -53,9 +54,9 @@ export const AppMenuLinkButton = memo(
     )
 
     if (!!tooltip) {
-      return <Tooltip contents={tooltip}>{linkButtonElement}</Tooltip>
+      return <Tooltip trigger={getLinkButtonEl}>{tooltip}</Tooltip>
     }
 
-    return linkButtonElement
+    return getLinkButtonEl()
   }
 )

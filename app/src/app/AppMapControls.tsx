@@ -1,20 +1,27 @@
 import { Minus, Plus, RefreshCcw, X } from '@dish/react-feather'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
-import { AbsoluteHStack, AbsoluteVStack, Theme, VStack, useMedia } from 'snackui'
+import {
+  AbsoluteHStack,
+  AbsoluteVStack,
+  Theme,
+  Tooltip,
+  VStack,
+  useMedia,
+  useSafeAreaInsets,
+} from 'snackui'
 
 import { isWeb, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { appMapStore } from './appMapStore'
 import { getSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
-import { useSafeArea } from './hooks/useSafeArea'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
 
 export const AppMapControls = memo(() => {
   const media = useMedia()
-  const safeArea = useSafeArea()
+  const safeArea = useSafeAreaInsets()
   const showSearchHere = useShowSearchHere()
   const appMap = useStoreInstance(appMapStore)
   const isHoverZoomed = useStoreInstanceSelector(

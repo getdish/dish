@@ -15,35 +15,35 @@ export function ColorPicker({
     <Popover
       isOpen={isOpen}
       onChangeOpen={setIsOpen}
-      contents={() => {
+      trigger={(props) => {
         return (
-          <Box
-            flexDirection="row"
-            padding={20}
-            maxWidth={130}
-            flexWrap="wrap"
-            justifyContent="space-between"
-          >
-            {colors.map((color) => {
-              return (
-                <ColorBubble
-                  key={color}
-                  marginBottom={10}
-                  backgroundColor={color}
-                  onPress={() => {
-                    onChange(color)
-                    setIsOpen(false)
-                  }}
-                />
-              )
-            })}
-          </Box>
+          <VStack {...props} onPress={() => setIsOpen((x) => !x)}>
+            <ColorBubble backgroundColor={color} />
+          </VStack>
         )
       }}
     >
-      <VStack onPress={() => setIsOpen((x) => !x)}>
-        <ColorBubble backgroundColor={color} />
-      </VStack>
+      <Box
+        flexDirection="row"
+        padding={20}
+        maxWidth={130}
+        flexWrap="wrap"
+        justifyContent="space-between"
+      >
+        {colors.map((color) => {
+          return (
+            <ColorBubble
+              key={color}
+              marginBottom={10}
+              backgroundColor={color}
+              onPress={() => {
+                onChange(color)
+                setIsOpen(false)
+              }}
+            />
+          )
+        })}
+      </Box>
     </Popover>
   )
 }

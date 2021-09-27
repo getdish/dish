@@ -95,15 +95,15 @@ export const Score = memo(
             {subtle ? (
               upvote
             ) : (
-              <Tooltip position="right" contents={upTooltip ?? 'Upvote'} {...isOpenProp}>
-                {upvote}
+              <Tooltip placement="right" trigger={() => upvote} {...isOpenProp}>
+                {upTooltip ?? 'Upvote'}
               </Tooltip>
             )}
             {subtle ? (
               downvote
             ) : (
-              <Tooltip position="right" contents={downTooltip ?? 'Downvote'} {...isOpenProp}>
-                {downvote}
+              <Tooltip placement="right" trigger={() => downvote} {...isOpenProp}>
+                {downTooltip ?? 'Downvote'}
               </Tooltip>
             )}
           </InteractiveContainer>

@@ -18,21 +18,25 @@ export const AppMenuButton = memo(() => {
   return (
     <HStack alignItems="center">
       <Popover
-        position="bottom"
+        placement="bottom"
         isOpen={showUserMenu}
-        noArrow
         onChangeOpen={appMenu.setIsVisible}
-        contents={
-          <Theme name="dark">
-            {/* CONTENTS HERE */}
-            <AppMenuContents hideUserMenu={appMenu.hide} />
-          </Theme>
-        }
-        mountImmediately
+        trigger={(props) => {
+          return (
+            <AppMenuLinkButton
+              Icon={Menu}
+              {...props}
+              onPress={() => appMenu.setIsVisible(!showUserMenu)}
+            >
+              <Text display={!userStore.isLoggedIn || media.sm ? 'none' : 'flex'}>Signup</Text>
+            </AppMenuLinkButton>
+          )
+        }}
       >
-        <AppMenuLinkButton Icon={Menu} onPress={() => appMenu.setIsVisible(!showUserMenu)}>
-          <Text display={!userStore.isLoggedIn || media.sm ? 'none' : 'flex'}>Signup</Text>
-        </AppMenuLinkButton>
+        <Theme name="dark">
+          {/* CONTENTS HERE */}
+          <AppMenuContents hideUserMenu={appMenu.hide} />
+        </Theme>
       </Popover>
     </HStack>
   )

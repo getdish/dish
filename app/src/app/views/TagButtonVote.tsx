@@ -3,7 +3,7 @@ import { Circle } from '@dish/react-feather'
 import React from 'react'
 import { Text, VStack, useTheme } from 'snackui'
 
-import { VoteNumber, useUserTagVotes } from '../hooks/useUserTagVotes'
+import { VoteNumber } from '../hooks/useUserTagVotes'
 import { TagButtonProps, TagVotePopover } from './TagButton'
 
 export const TagButtonVote = graphql(

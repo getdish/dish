@@ -1,23 +1,19 @@
-import { globalTagId } from '@dish/graph'
-import { Camera } from '@dish/react-feather'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, Button, HStack, VStack, useMedia } from 'snackui'
+import { AbsoluteVStack, HStack, VStack, useMedia, useSafeAreaInsets } from 'snackui'
 
 import { searchBarHeight, zIndexMapControls } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
 import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
 import { drawerStore } from './drawerStore'
 import { ReviewImagesRow } from './home/restaurant/ReviewImagesRow'
-import { usePickImage } from './home/restaurant/usePickImage'
 import { useMapSize } from './hooks/useMapSize'
-import { useSafeArea } from './hooks/useSafeArea'
 
 export const AppMapControlsOverlay = memo(() => {
   const media = useMedia()
   const { paddingLeft, width } = useMapSize(media.sm)
   const isAtBottom = useStoreInstanceSelector(drawerStore, (x) => x.snapIndexName === 'bottom')
-  const edgeInsets = useSafeArea()
+  const edgeInsets = useSafeAreaInsets()
   let bottom = 0
   if (isAtBottom) {
     bottom = getWindowHeight() - getWindowHeight() * drawerStore.snapPoints[2]
