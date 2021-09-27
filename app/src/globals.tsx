@@ -10,7 +10,8 @@ global['setImmediate'] = global['setImmediate'] || setTimeout
 
 if (process.env.TARGET === 'web' && process.env.NODE_ENV === 'production') {
   // web only stuff, we do native in index.js
-  require('./web/sentry')
+  // load it lazy its huge
+  import('./web/sentry')
 }
 
 global['React'] = React

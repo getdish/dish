@@ -28,8 +28,6 @@
     "web:build": "GIT_COMMIT=$(git rev-parse --short HEAD) NODE_ENV=production dish build",
     "web:build:analyze": "ANALYZE_BUNDLE=1 yarn web:build",
     "web:no-extract": "NO_EXTRACT=1 yarn web",
-    "web:ssr": "PORT=80 node _/web/server.js",
-    "web:ssr:development": "NODE_ENV=development yarn web:ssr",
     "ios:bump-version": "cd ios && xcrun agvtool next-version -all",
     "ios:install": "cd ios && USE_HERMES=1 arch -x86_64 pod install --repo-update",
     "ios:run": "TARGET=native arch -x86_64 react-native run-ios",

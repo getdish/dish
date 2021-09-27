@@ -34,16 +34,12 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
     if (props.stopPropagation) {
       e.stopPropagation()
     }
-
     const shouldPrevent = props.promptLogin ? userStore.promptLogin() : false
-    console.warn('click once', props.promptLogin, props, shouldPrevent)
-
     if (shouldPrevent) {
       e.preventDefault()
       e.stopPropagation()
       return
     }
-
     if (isWeb) {
       if (props.preventNavigate) {
         return
@@ -54,11 +50,8 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
         return
       }
     }
-
     e.preventDefault()
-
     const newLinkProps = getNormalizeLinkProps(props as any, forceUpdate)
-
     if (props.asyncClick) {
       cancel.current = series([
         // just enough time to do a lil animation, but not enough to slow the action, hard to get right
