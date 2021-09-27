@@ -397,6 +397,13 @@ const TagButtonInner = (props: TagButtonProps) => {
     </HStack>
   )
 
+  // make entire button votable in this case
+  // dont combine with link/tooltip
+  const voteOnButton = noLink && votable
+  if (voteOnButton) {
+    return <TagVotePopover {...props}>{contents}</TagVotePopover>
+  }
+
   if (!noLink) {
     contents = (
       <Link
@@ -421,13 +428,11 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   if (tooltip) {
-    contents = <Tooltip trigger={() => contents}>{tooltip}</Tooltip>
-  }
-
-  // make entire button votable in this case
-  if (noLink && votable) {
-    // @ts-ignore
-    return <TagVotePopover {...props}>{contents}</TagVotePopover>
+    contents = (
+      <Tooltip trigger={(props) => React.cloneElement(contents, { ref: props.ref })}>
+        {tooltip}
+      </Tooltip>
+    )
   }
 
   return contents
@@ -449,14 +454,12 @@ export const TagVotePopover = graphql(
 
     return (
       <HoverablePopover
-        // @ts-ignore
-        ref={hovPopRef}
+        ref={hovPopRef as any}
         allowHoverOnContent
         fallbackToPress
-        anchor="CENTER"
-        animated={false}
-        trigger={() => children}
+        placement="top"
         {...popoverProps}
+        trigger={(props) => React.cloneElement(children, props)}
       >
         <Theme name="dark">
           <Box paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
