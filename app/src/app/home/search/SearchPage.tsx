@@ -261,7 +261,6 @@ const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
     drawerStore,
     (x) => x.snapIndexName === 'bottom'
   )
-  console.log('is', isDrawerAtBottom)
   let contents = isActive ? <SearchPageNavBar /> : null
 
   if (!media.sm) {
@@ -278,13 +277,7 @@ const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
 
   return (
     <RootPortalItem key={`${isActive}${isDrawerAtBottom}`}>
-      <AbsoluteVStack
-        className="ease-in-out-slower"
-        zIndex={100000}
-        pointerEvents="none"
-        fullscreen
-        y={isDrawerAtBottom ? 50 : 0}
-      >
+      <AbsoluteVStack className="ease-in-out-slower" fullscreen y={isDrawerAtBottom ? 50 : 0}>
         {contents}
       </AbsoluteVStack>
     </RootPortalItem>

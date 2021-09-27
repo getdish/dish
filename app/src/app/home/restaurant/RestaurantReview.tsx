@@ -138,7 +138,7 @@ export const RestaurantReview = memo(
       )
     },
     {
-      suspense: false,
+      suspense: true,
     }
   )
 )

@@ -10,7 +10,6 @@ import {
   logoXsHeight,
   logoXsWidth,
 } from '../../constants/constants'
-import { TitleStyled } from './TitleStyled'
 
 export const LogoColor = ({ scale = 1, color }: { scale?: number; color?: string }) => {
   // return (

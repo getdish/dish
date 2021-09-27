@@ -1,19 +1,8 @@
 import { graphql, useRefetch } from '@dish/graph'
 import { PenTool, X } from '@dish/react-feather'
 import React, { Suspense, memo, useState } from 'react'
-import {
-  Circle,
-  HStack,
-  LoadingItem,
-  Text,
-  Title,
-  VStack,
-  useMedia,
-  useTheme,
-  useThemeName,
-} from 'snackui'
+import { HStack, LoadingItem, Text, VStack, useMedia, useTheme, useThemeName } from 'snackui'
 
-import { green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getWindowWidth } from '../../../helpers/getWindow'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
@@ -31,7 +20,6 @@ import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { ReviewImagesRow } from '../restaurant/ReviewImagesRow'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
-import { RestaurantRatingView } from '../RestaurantRatingView'
 import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 
@@ -45,7 +33,7 @@ export const ListItemContentMinimal = (props: ListItemContentProps) => {
   const theme = useTheme()
 
   return (
-    <VStack backgroundColor={theme.backgroundColor} overflow="hidden" flex={1}>
+    <VStack overflow="hidden" flex={1}>
       <Suspense fallback={<LoadingItem size="lg" />}>
         <ContentScrollViewHorizontalFitted
           width={width}

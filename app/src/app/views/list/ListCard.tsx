@@ -145,7 +145,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         pressable
         flat
         chromeless
-        floating
+        // floating
         {...feedCardProps}
       >
         {!props.size?.endsWith('xs') && (

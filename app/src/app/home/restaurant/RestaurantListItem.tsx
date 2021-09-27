@@ -432,56 +432,58 @@ const RestaurantListItemContent = memo(
             >
               {beforeBottomRow}
 
-              <InteractiveContainer paddingLeft={10}>
-                <Link
-                  name="restaurant"
-                  params={{
-                    slug: props.restaurantSlug,
-                    section: 'reviews',
-                  }}
-                >
-                  <SmallButton
-                    borderRadius={0}
-                    borderWidth={0}
-                    marginRight={-0.5}
-                    tooltip={`Rating Breakdown (${totalReviews} reviews)`}
-                    icon={
-                      <MessageSquare
-                        style={{
-                          opacity: 0.5,
-                          marginLeft: -8,
-                        }}
-                        size={14}
-                        color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
-                      />
-                    }
+              <HStack display={media.sm ? 'none' : 'flex'}>
+                <InteractiveContainer paddingLeft={10}>
+                  <Link
+                    name="restaurant"
+                    params={{
+                      slug: props.restaurantSlug,
+                      section: 'reviews',
+                    }}
                   >
-                    {/* {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')} */}
-                  </SmallButton>
-                </Link>
-
-                <Suspense fallback={<Spacer size={44} />}>
-                  <VStack marginRight={-0.5}>
-                    <RestaurantFavoriteButton
-                      opacity={0.5}
+                    <SmallButton
                       borderRadius={0}
                       borderWidth={0}
-                      size="md"
-                      restaurantSlug={restaurantSlug}
-                    />
-                  </VStack>
-                </Suspense>
+                      marginRight={-0.5}
+                      tooltip={`Rating Breakdown (${totalReviews} reviews)`}
+                      icon={
+                        <MessageSquare
+                          style={{
+                            opacity: 0.5,
+                            marginLeft: -8,
+                          }}
+                          size={14}
+                          color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                        />
+                      }
+                    >
+                      {/* {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')} */}
+                    </SmallButton>
+                  </Link>
 
-                <Suspense fallback={<Spacer size={44} />}>
-                  <RestaurantAddToListButton
-                    opacity={0.4}
-                    borderRadius={0}
-                    borderWidth={0}
-                    restaurantSlug={restaurantSlug}
-                    noLabel
-                  />
-                </Suspense>
-              </InteractiveContainer>
+                  <Suspense fallback={<Spacer size={44} />}>
+                    <VStack marginRight={-0.5}>
+                      <RestaurantFavoriteButton
+                        opacity={0.5}
+                        borderRadius={0}
+                        borderWidth={0}
+                        size="md"
+                        restaurantSlug={restaurantSlug}
+                      />
+                    </VStack>
+                  </Suspense>
+
+                  <Suspense fallback={<Spacer size={44} />}>
+                    <RestaurantAddToListButton
+                      opacity={0.4}
+                      borderRadius={0}
+                      borderWidth={0}
+                      restaurantSlug={restaurantSlug}
+                      noLabel
+                    />
+                  </Suspense>
+                </InteractiveContainer>
+              </HStack>
 
               <HStack marginLeft={-5} alignItems="center">
                 <Text

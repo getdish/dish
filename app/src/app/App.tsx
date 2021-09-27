@@ -12,6 +12,7 @@ import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AppSearchBarFloating } from './AppSearchBarFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
 import { Home } from './home/Home'
+import { RootPortalProvider } from './Portal'
 import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
 import { useIsMobilePhone } from './useIsMobilePhone'
@@ -79,6 +80,8 @@ function AppHomeContent(props: { children?: any }) {
     <>
       {/* background */}
       <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
+
+      <RootPortalProvider />
 
       <Suspense fallback={null}>
         <Home />
