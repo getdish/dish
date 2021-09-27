@@ -59,7 +59,7 @@ export const Score = memo(
 
     // disable voting on touch device directly on score
     if (votable && !isTouchDevice && userStore.isLoggedIn) {
-      const getUpvote = props => (
+      const getUpvote = (props) => (
         <VoteButton
           {...props}
           size={btnSize}
@@ -73,9 +73,9 @@ export const Score = memo(
           }}
         />
       )
-      const getDownvote = props  => (
+      const getDownvote = (props) => (
         <VoteButton
-        {..props}
+          {...props}
           size={btnSize}
           Icon={ArrowDown}
           voted={vote == -1}
