@@ -268,6 +268,7 @@ export const ReviewTagsRow = memo(
                 onPress={() => setIsFocused(true)}
                 icon={<Search opacity={0.5} size={16} color="#888" />}
                 marginRight={15}
+                backgroundColor="transparent"
               >
                 search
               </SmallButton>
