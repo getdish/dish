@@ -1,5 +1,5 @@
 import { RoutesTable } from '@dish/router'
-import React, { useEffect, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 
 import { DRouteName, router } from '../../router'
 import { LinkButton } from './LinkButton'
@@ -7,11 +7,10 @@ import { LinkButtonProps } from './LinkProps'
 
 // most the logic here comes from useLink
 
-export function LinkButtonAutoActive<Name extends DRouteName = DRouteName>(
-  props: LinkButtonProps<Name, RoutesTable[Name]['params']>
-) {
+export const LinkButtonAutoActive = forwardRef(function LinkButtonAutoActive<
+  Name extends DRouteName = DRouteName
+>(props: LinkButtonProps<Name, RoutesTable[Name]['params']>, ref) {
   const [isActive, setIsActive] = useState(false)
-
   useEffect(() => {
     if (props.name) {
       let last = false
@@ -27,6 +26,5 @@ export function LinkButtonAutoActive<Name extends DRouteName = DRouteName>(
       })
     }
   }, [props.name])
-
-  return <LinkButton isActive={isActive} {...props} />
-}
+  return <LinkButton ref={ref} isActive={isActive} {...props} />
+})

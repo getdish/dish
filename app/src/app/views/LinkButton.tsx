@@ -1,6 +1,6 @@
 import { RoutesTable } from '@dish/router'
 import React, { forwardRef } from 'react'
-import { Button } from 'snackui'
+import { Button, Tooltip, combineRefs } from 'snackui'
 
 import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
@@ -14,6 +14,7 @@ export const LinkButton = forwardRef(function LinkButtonContent<
   const {
     children,
     replace,
+    tooltip,
     disallowDisableWhenActive,
     tags,
     tag,
@@ -28,22 +29,21 @@ export const LinkButton = forwardRef(function LinkButtonContent<
     theme,
     ...restProps
   } = props
-  // const themeName = useThemeName()
-  return wrapWithLinkElement(
-    <Button
-      ref={ref}
-      {...restProps}
-      {...(isActive && activeStyle)}
-      textProps={isActive ? props.activeTextStyle : textProps}
-      // {...(theme &&
-      //   colorNames.includes(theme as any) &&
-      //   themeName === 'dark' && {
-      //     theme: `${theme}-dark`,
-      //   })}
-    >
-      {getChildren(props, isActive)}
-    </Button>
-  )
+  const getElement = (props) =>
+    wrapWithLinkElement(
+      <Button
+        {...restProps}
+        ref={combineRefs(props.ref, ref)}
+        {...(isActive && activeStyle)}
+        textProps={isActive ? props.activeTextStyle : textProps}
+      >
+        {getChildren(props, isActive)}
+      </Button>
+    )
+  if (!!tooltip) {
+    return <Tooltip trigger={getElement}>{tooltip}</Tooltip>
+  }
+  return getElement({})
 })
 
 const getChildren = (props: LinkButtonProps, isActive?: boolean) => {
