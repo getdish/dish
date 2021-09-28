@@ -12,7 +12,6 @@ import { useUserStore } from './userStore'
 
 export const AppActionButton = () => {
   const [visible, setVisible] = useState(false)
-  console.log('visible', visible)
   return (
     <Popover
       placement="bottom"
@@ -27,9 +26,15 @@ export const AppActionButton = () => {
         />
       )}
     >
-      <Theme name="dark">
-        <AppActionButtonContents hide={() => setVisible(false)} />
-      </Theme>
+      {({ open }) =>
+        open ? (
+          <Popover.Content>
+            <Theme name="dark">
+              <AppActionButtonContents hide={() => setVisible(false)} />
+            </Theme>
+          </Popover.Content>
+        ) : null
+      }
     </Popover>
   )
 }
@@ -43,6 +48,7 @@ const AppActionButtonContents = ({ hide }: { hide?: (e: GestureResponderEvent) =
       alignItems="stretch"
       pointerEvents="auto"
       minWidth={240}
+      width={240}
     >
       {/* safari y={} fix overflow */}
       <VStack overflow="hidden" borderRadius={12} y={0.01}>
