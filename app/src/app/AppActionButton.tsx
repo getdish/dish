@@ -12,6 +12,7 @@ import { useUserStore } from './userStore'
 
 export const AppActionButton = () => {
   const [visible, setVisible] = useState(false)
+  console.log('visible', visible)
   return (
     <Popover
       placement="bottom"
