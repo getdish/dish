@@ -284,10 +284,8 @@ const ListPageContent = memo(
 
       const titleColors = {
         color: listColors.colorForTheme,
-        backgroundColor: listColors.backgroundForTheme,
+        // backgroundColor: listColors.backgroundForTheme,
       }
-
-      console.log('rener??')
 
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
@@ -448,6 +446,7 @@ const ListPageContent = memo(
                       justifyContent="flex-end"
                       width="100%"
                       flex={1}
+                      maxWidth={550}
                     >
                       <VStack minHeight={75} flex={1} />
                       <VStack display={isWeb ? 'block' : 'flex'}>

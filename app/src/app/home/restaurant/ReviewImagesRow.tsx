@@ -93,7 +93,7 @@ export const ReviewImagesRow = ({
   )
 
   if (!allImages.length) {
-    return <HStack>{addButton}</HStack>
+    return <HStack flex={1}>{addButton}</HStack>
   }
 
   return (

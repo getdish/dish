@@ -305,6 +305,7 @@ export const Body = memo(
       >
         <Suspense fallback={null}>
           <RestaurantReview
+            size="lg"
             marginTop={-20}
             marginLeft={-10}
             hideImagesRow

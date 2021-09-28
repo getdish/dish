@@ -153,13 +153,11 @@ function CommentBubbleContents({
           maxWidth="100%"
           overflow="hidden"
           color={color ? color : theme.colorSecondary}
+          fontSize={size === 'lg' ? 18 : 14}
+          lineHeight={size === 'lg' ? 32 : 18}
         >
           {ellipseContentAbove && text && text.length > ellipseContentAbove ? (
-            <Text
-              selectable
-              fontSize={size === 'lg' ? 18 : 14}
-              lineHeight={size === 'lg' ? 24 : 18}
-            >
+            <Text selectable>
               {expanded
                 ? text
                 : typeof text === 'string'

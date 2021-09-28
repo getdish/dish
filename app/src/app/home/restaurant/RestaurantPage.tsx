@@ -226,7 +226,11 @@ const RestaurantPage = memo(
 
               <VStack ref={setReviewsSection}>
                 <Suspense fallback={null}>
-                  {hasLoadedAboveFold && <RestaurantReviewsList restaurantSlug={restaurantSlug} />}
+                  {hasLoadedAboveFold ? (
+                    <RestaurantReviewsList restaurantSlug={restaurantSlug} />
+                  ) : (
+                    <LoadingItems />
+                  )}
                 </Suspense>
               </VStack>
 

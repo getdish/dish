@@ -33,8 +33,8 @@ export const FavoriteButton = ({
                     cursor="default"
                     color="red"
                     fontSize={sizePx * 0.9}
-                    width={sizePx * 0.7}
-                    height={sizePx * 0.7}
+                    width={sizePx * 0.5}
+                    height={sizePx * 0.5}
                     lineHeight={sizePx * 0.5}
                     marginTop={1}
                     x={-1.5}
@@ -43,7 +43,7 @@ export const FavoriteButton = ({
                     ♥️
                   </Text>
                 )}
-                {!isFavorite && <Heart size={sizePx * 0.7} color={'#aaa'} />}
+                {!isFavorite && <Heart size={sizePx * 0.5} color={'#aaa'} />}
               </>
             }
             {...props}
