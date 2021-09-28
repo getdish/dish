@@ -1775,7 +1775,7 @@ __metadata:
     "@types/requestidlecallback": 0.3.1
     "@types/uuid": ^8.3.1
     "@unimodules/core": ^7.0.0
-    "@unimodules/react-native-adapter": ^6.1.0
+    "@unimodules/react-native-adapter": ^6.3.9
     "@welldone-software/why-did-you-render": ^6.1.1
     apple-sign-in-rest: ^1.0.2
     aws-sdk: ^2.762.0
@@ -6671,25 +6671,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@unimodules/core@npm:7.0.0":
-  version: 7.0.0
-  resolution: "@unimodules/core@npm:7.0.0"
+"@unimodules/core@npm:7.1.2":
+  version: 7.1.2
+  resolution: "@unimodules/core@npm:7.1.2"
   dependencies:
     compare-versions: ^3.4.0
-  checksum: 575e08e50502336b99302ac006e09f6602d1cbc43afc808bd608d47f89887e9b8e2dc98057a13c030edbcc64c8918d749b98857614ddf8f0f5f3ad88688df665
+  checksum: 59208137127b455db4cd0e67122f29b1ea311780685498beb50e041ac406b0cebf02ba53eff15be318ae820042645f122446290689f28a4401f2b2b049ac512d
   languageName: node
   linkType: hard
 
-"@unimodules/react-native-adapter@npm:6.1.0":
-  version: 6.1.0
-  resolution: "@unimodules/react-native-adapter@npm:6.1.0"
+"@unimodules/react-native-adapter@npm:6.3.9":
+  version: 6.3.9
+  resolution: "@unimodules/react-native-adapter@npm:6.3.9"
   dependencies:
+    expo-modules-autolinking: ^0.0.3
     invariant: ^2.2.4
-    lodash: ^4.5.0
-  peerDependencies:
-    react-native: "*"
-    react-native-web: ~0.13.7
-  checksum: 21717ee8d3eaad50e839e46b2d0a8f2ec9abaaf35b80067602be7e20c57baaba724575ca48f4c48958ab800f56d705b39e206f8a71efbd018a8ce2ee39836a16
+  checksum: a7c18b56d9cfdeadc13f0863864392e916c63b8d4a56f441e950f63bfc5435bf24453d7a0caa1c38895e36b54ff73c869d9b29e86efd582cf5c2ffbb01317c9a
   languageName: node
   linkType: hard
 
@@ -9630,7 +9627,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^7.1.0":
+"commander@npm:^7.1.0, commander@npm:^7.2.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
   checksum: 53501cbeee61d5157546c0bef0fedb6cdfc763a882136284bed9a07225f09a14b82d2a84e7637edfd1a679fb35ed9502fd58ef1d091e6287f60d790147f68ddc
@@ -12319,6 +12316,21 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: e157ff851ead463e58b3e0191a47db3d334f12af609b74ce64952e50d7c49af8f18ce8cc5219d6098fef343c43e0430928686134103b9225b68e44b345ccfcef
+  languageName: node
+  linkType: hard
+
+"expo-modules-autolinking@npm:^0.0.3":
+  version: 0.0.3
+  resolution: "expo-modules-autolinking@npm:0.0.3"
+  dependencies:
+    chalk: ^4.1.0
+    commander: ^7.2.0
+    fast-glob: ^3.2.5
+    find-up: ~5.0.0
+    fs-extra: ^9.1.0
+  bin:
+    expo-modules-autolinking: bin/expo-modules-autolinking.js
+  checksum: e8073c4d418c1e01a19ef825763325567bf8d1a1409f3c83f9b3f2b23a0954d71508c819bb4665eeb69ec180c3ab1f068250b5f4da8fb9b6ecde478c628dee1b
   languageName: node
   linkType: hard
 
@@ -23500,6 +23512,8 @@ __metadata:
     "@types/node": ^14.11.10
     "@types/react": ^16.9.35
     "@types/react-dom": ^16.9.8
+    "@unimodules/core": ^7.1.2
+    "@unimodules/react-native-adapter": ^6.3.9
     esbuild: ^0.11.20
     expo-linear-gradient: ^9.1.0
     normalize-css-color: "*"
