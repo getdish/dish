@@ -1,4 +1,3 @@
-import { sleep } from '@dish/async'
 import {
   list,
   list_restaurant_constraint,
@@ -8,11 +7,11 @@ import {
   useRefetch,
 } from '@dish/graph'
 import { assertPresent, isPresent } from '@dish/helpers'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { DragEndParams } from 'react-native-draggable-flatlist'
 import { Toast, useDebounce, useLazyEffect } from 'snackui'
 
-import { promote } from '../../../helpers/listHelpers'
+import { AutocompleteItemFull } from '../../../helpers/createAutocomplete'
 import { userStore } from '../../userStore'
 
 export function useListItems(list?: list) {
@@ -98,17 +97,34 @@ export function useListItems(list?: list) {
     items: itemsFinal,
     setOrder,
     refetchAll,
-    async add(restaurantId: string) {
+    async add(item: AutocompleteItemFull) {
+      // this means (for now) that its an apple external item, need to insert it first
+      const isAppleExternal = !!item.data?.muid
+      let externalItemId
+      if (isAppleExternal) {
+        const res = await fetch(`/api/addExternalPlace`, {
+          body: JSON.stringify(item),
+        }).then((res) => res.json())
+        if (!res.ok) {
+          console.error(res, item)
+          Toast.error(`Error creating new item`)
+          return
+        } else {
+          externalItemId = res.item.id
+        }
+      }
+
       await mutate((mutation) => {
         assertPresent(list, 'no list')
         assertPresent(userStore.user, 'no user')
-        const listRestaurant = items.find((x) => x.restaurantId === restaurantId)
+        const listRestaurant = items.find((x) => x.restaurantId === item.id)
+
         return mutation.insert_list_restaurant_one({
           object: {
             // space it out (insert at bottom)
             position: Math.round(itemsFinal.length * 1000 + Math.random() * 100),
             list_id: listId,
-            restaurant_id: restaurantId,
+            restaurant_id: item.id,
             user_id: userStore.user.id,
             ...(listRestaurant && {
               id: listRestaurant.id,

@@ -13,6 +13,78 @@ export const breadCrumbTypes = {
   roadmap: true,
 }
 
+export interface ApplePlace {
+  telephone: string
+  /**
+   * The name of the place.
+   */
+  name: string
+  /**
+   * The latitude and longitude for the place.
+   */
+  coordinate: { latitude: number; longitude: number }
+  /**
+   * The address of the place, formatted using its country's conventions.
+   */
+  formattedAddress: string
+  /**
+   * The geographic region associated with the place.
+   */
+  region: any
+  /**
+   * The country code associated with the place.
+   */
+  countryCode: string
+  /**
+   * The category of the place.
+   */
+  pointOfInterestCategory?: any | undefined
+  /**
+   * The country of the place.
+   */
+  country?: string | undefined
+  /**
+   * The state or province of the place.
+   */
+  administrativeArea?: string | undefined
+  /**
+   * The short code for the state or area.
+   */
+  administrativeAreaCode?: string | undefined
+  /**
+   * The city of the place.
+   */
+  locality?: string | undefined
+  /**
+   * The postal code of the place.
+   */
+  postCode?: string | undefined
+  /**
+   * The name of the area within the locality.
+   */
+  subLocality?: string | undefined
+  /**
+   * The street name at the place.
+   */
+  thoroughfare?: string | undefined
+  /**
+   * The number on the street at the place.
+   */
+  subThoroughfare?: string | undefined
+  /**
+   * A combination of thoroughfare and subthoroughfare.
+   */
+  fullThoroughfare?: string | undefined
+  /**
+   * Common names of the area in which the place resides.
+   */
+  areasOfInterest?: string[] | undefined
+  /**
+   * Common names for the local area or neighborhood of the place.
+   */
+  dependentLocalities?: string[] | undefined
+}
+
 export type GeocodePlace = {
   type:
     | 'place'
