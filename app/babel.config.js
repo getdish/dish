@@ -17,13 +17,6 @@ module.exports = function (api) {
     return {}
   }
 
-  if (process.env.TARGET === 'web') {
-    console.log('using just reanimated')
-    return {
-      plugins: ['react-native-reanimated/plugin'],
-    }
-  }
-
   if (useOurBabel) {
     console.log('using our babel', process.env.TARGET)
     return {

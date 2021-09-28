@@ -33,44 +33,24 @@ module.exports = function (api) {
             '@babel/plugin-transform-react-constant-elements',
           ]
         : []),
-      '@babel/plugin-proposal-class-properties',
-      '@babel/plugin-proposal-optional-chaining',
-      ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
       'babel-plugin-react-native-web',
-      '@babel/plugin-syntax-typescript',
-      '@babel/plugin-proposal-nullish-coalescing-operator',
       isProd && require.resolve('./babel.strip-invariant.plugin.js'),
     ]
       .filter(Boolean)
       .map(resolvePlugin),
     presets: [
-      [
-        '@babel/preset-typescript',
-        { onlyRemoveTypeImports: true, isTSX: true, allExtensions: true },
-      ],
-      [
-        '@babel/preset-react',
-        {
-          // auto adds react import if necessaty
-          runtime: 'automatic',
-          useBuiltIns: true,
-          development: isDev,
-          ...(isDev && {
-            importSource: '@welldone-software/why-did-you-render',
-          }),
-        },
-      ],
-      isLegacy && [
-        '@babel/preset-env',
-        {
-          useBuiltIns: 'usage',
-          corejs: 3,
-          targets: {
-            browsers: ['>3%'],
-          },
-          exclude: ['@babel/plugin-transform-regenerator'],
-        },
-      ],
+      // [
+      //   '@babel/preset-react',
+      //   {
+      //     // auto adds react import if necessaty
+      //     runtime: 'automatic',
+      //     useBuiltIns: true,
+      //     development: isDev,
+      //     ...(isDev && {
+      //       importSource: '@welldone-software/why-did-you-render',
+      //     }),
+      //   },
+      // ],
     ]
       .filter(Boolean)
       .map(resolvePlugin),
