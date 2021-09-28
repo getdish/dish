@@ -39,7 +39,8 @@ function delete_duplicate_snack_modules() {
   rm -r snackui/node_modules/react-dom &> /dev/null || true
   rm -r snackui/node_modules/react-native-web &> /dev/null || true
   rm -r snackui/node_modules/esbuild-register &> /dev/null || true
-  rm -r snackui/packages/snackui-static/node_modules/snackui &> /dev/null || true # fix dup install
+  rm -r snackui/packages/snackui-static/node_modules/snackui &> /dev/null || true
+  rm -r snackui/node_modules/react-native-safe-area-context &> /dev/null || true
   popd
 }
 

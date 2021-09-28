@@ -108,25 +108,12 @@ export const FeedCard = ({
                   letterSpacing={-1}
                   fontWeight="300"
                   fontSize={fontSize}
-                  lineHeight={fontSize * 1.455}
+                  lineHeight={fontSize * 1.3}
                   color={listColors?.colorForTheme}
                   // backgroundColor={listColors?.lightColor}
                 >
                   {title}
                 </TitleStyled>
-                <AbsoluteHStack zIndex={-1} fullscreen display={isWeb ? 'block' : 'flex'}>
-                  <TitleStyled
-                    // backgroundColor={cardProps.backgroundColor as any}
-                    letterSpacing={-1}
-                    fontWeight="300"
-                    fontSize={fontSize}
-                    lineHeight={fontSize * 1.455}
-                    color="transparent"
-                    backgroundColor={`${listColors?.backgroundForTheme}cc`}
-                  >
-                    {title}
-                  </TitleStyled>
-                </AbsoluteHStack>
               </VStack>
 
               {!!(author || typeof numItems !== 'undefined') && (
