@@ -4,7 +4,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (3.2.0):
     - UMCore
-  - EXConstants (11.0.1):
+  - EXConstants (11.0.2):
     - ExpoModulesCore
     - UMCore
   - EXErrorRecovery (2.2.0):
@@ -15,20 +15,17 @@ PODS:
   - EXFont (9.2.1):
     - ExpoModulesCore
     - UMCore
-  - EXImageLoader (1.3.0):
+  - EXImageLoader (2.2.0):
+    - ExpoModulesCore
     - React-Core
     - UMCore
-    - UMImageLoaderInterface
   - EXImagePicker (10.2.3):
     - ExpoModulesCore
     - UMCore
   - EXKeepAwake (9.2.0):
     - UMCore
-  - EXLinearGradient (9.0.0):
+  - EXLinearGradient (9.2.0):
     - UMCore
-  - EXPermissions (10.0.0):
-    - UMCore
-    - UMPermissionsInterface
   - ExpoModulesCore (0.2.0):
     - ExpoModulesCore/Core (= 0.2.0)
     - ExpoModulesCore/Interfaces (= 0.2.0)
@@ -109,8 +106,8 @@ PODS:
   - libwebp/mux (1.2.0):
     - libwebp/demux
   - libwebp/webp (1.2.0)
-  - Mapbox-iOS-SDK (6.3.0):
-    - MapboxMobileEvents (~> 0.10.4)
+  - Mapbox-iOS-SDK (6.4.0):
+    - MapboxMobileEvents (~> 0.10.11)
   - MapboxMobileEvents (0.10.12)
   - OpenSSL-Universal (1.1.180)
   - RCT-Folly (2020.01.13.00):
@@ -442,23 +439,14 @@ PODS:
   - Sentry (7.1.4):
     - Sentry/Core (= 7.1.4)
   - Sentry/Core (7.1.4)
-  - UMAppLoader (1.4.0)
-  - UMBarCodeScannerInterface (5.4.0)
-  - UMCameraInterface (5.4.0)
-  - UMConstantsInterface (5.4.0)
+  - UMAppLoader (2.2.0)
   - UMCore (7.1.2)
-  - UMFaceDetectorInterface (5.4.0)
-  - UMFileSystemInterface (5.4.0)
-  - UMFontInterface (5.4.0)
-  - UMImageLoaderInterface (5.4.0)
-  - UMPermissionsInterface (5.4.0):
-    - UMCore
   - UMReactNativeAdapter (6.3.9):
     - ExpoModulesCore
     - React-Core
     - UMCore
-  - UMSensorsInterface (5.4.0)
-  - UMTaskManagerInterface (5.4.0)
+  - UMTaskManagerInterface (6.2.0):
+    - UMCore
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -474,7 +462,6 @@ DEPENDENCIES:
   - "EXImagePicker (from `../node_modules/@dish/app/node_modules/expo-image-picker/ios`)"
   - "EXKeepAwake (from `../node_modules/@dish/app/node_modules/expo-keep-awake/ios`)"
   - "EXLinearGradient (from `../node_modules/@dish/app/node_modules/expo-linear-gradient/ios`)"
-  - "EXPermissions (from `../node_modules/@dish/app/node_modules/expo-permissions/ios`)"
   - "ExpoModulesCore (from `../node_modules/@dish/app/node_modules/expo-modules-core/ios`)"
   - "EXScreenOrientation (from `../node_modules/@dish/app/node_modules/expo-screen-orientation/ios`)"
   - "EXSplashScreen (from `../node_modules/@dish/app/node_modules/expo-splash-screen/ios`)"
@@ -536,17 +523,8 @@ DEPENDENCIES:
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - "UMAppLoader (from `../node_modules/@dish/app/node_modules/unimodules-app-loader/ios`)"
-  - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
-  - "UMCameraInterface (from `../node_modules/@dish/app/node_modules/unimodules-camera-interface/ios`)"
-  - "UMConstantsInterface (from `../node_modules/@dish/app/node_modules/unimodules-constants-interface/ios`)"
   - "UMCore (from `../node_modules/@dish/app/node_modules/@unimodules/core/ios`)"
-  - "UMFaceDetectorInterface (from `../node_modules/@dish/app/node_modules/unimodules-face-detector-interface/ios`)"
-  - "UMFileSystemInterface (from `../node_modules/@dish/app/node_modules/unimodules-file-system-interface/ios`)"
-  - "UMFontInterface (from `../node_modules/@dish/app/node_modules/unimodules-font-interface/ios`)"
-  - "UMImageLoaderInterface (from `../node_modules/@dish/app/node_modules/unimodules-image-loader-interface/ios`)"
-  - "UMPermissionsInterface (from `../node_modules/@dish/app/node_modules/unimodules-permissions-interface/ios`)"
   - "UMReactNativeAdapter (from `../node_modules/@dish/app/node_modules/@unimodules/react-native-adapter/ios`)"
-  - "UMSensorsInterface (from `../node_modules/@dish/app/node_modules/unimodules-sensors-interface/ios`)"
   - "UMTaskManagerInterface (from `../node_modules/@dish/app/node_modules/unimodules-task-manager-interface/ios`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -592,8 +570,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@dish/app/node_modules/expo-keep-awake/ios"
   EXLinearGradient:
     :path: "../node_modules/@dish/app/node_modules/expo-linear-gradient/ios"
-  EXPermissions:
-    :path: "../node_modules/@dish/app/node_modules/expo-permissions/ios"
   ExpoModulesCore:
     :path: "../node_modules/@dish/app/node_modules/expo-modules-core/ios"
   EXScreenOrientation:
@@ -674,28 +650,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   UMAppLoader:
     :path: "../node_modules/@dish/app/node_modules/unimodules-app-loader/ios"
-  UMBarCodeScannerInterface:
-    :path: "../node_modules/unimodules-barcode-scanner-interface/ios"
-  UMCameraInterface:
-    :path: "../node_modules/@dish/app/node_modules/unimodules-camera-interface/ios"
-  UMConstantsInterface:
-    :path: "../node_modules/@dish/app/node_modules/unimodules-constants-interface/ios"
   UMCore:
     :path: "../node_modules/@dish/app/node_modules/@unimodules/core/ios"
-  UMFaceDetectorInterface:
-    :path: "../node_modules/@dish/app/node_modules/unimodules-face-detector-interface/ios"
-  UMFileSystemInterface:
-    :path: "../node_modules/@dish/app/node_modules/unimodules-file-system-interface/ios"
-  UMFontInterface:
-    :path: "../node_modules/@dish/app/node_modules/unimodules-font-interface/ios"
-  UMImageLoaderInterface:
-    :path: "../node_modules/@dish/app/node_modules/unimodules-image-loader-interface/ios"
-  UMPermissionsInterface:
-    :path: "../node_modules/@dish/app/node_modules/unimodules-permissions-interface/ios"
   UMReactNativeAdapter:
     :path: "../node_modules/@dish/app/node_modules/@unimodules/react-native-adapter/ios"
-  UMSensorsInterface:
-    :path: "../node_modules/@dish/app/node_modules/unimodules-sensors-interface/ios"
   UMTaskManagerInterface:
     :path: "../node_modules/@dish/app/node_modules/unimodules-task-manager-interface/ios"
   Yoga:
@@ -706,15 +664,14 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   EXApplication: 9ff2a206009d6e55bca6c20b3f33d07986b51ef3
-  EXConstants: 3babb61f8f4bb7dffe85b8b7d6eaa31d903e4d7e
+  EXConstants: 4cb52b6d8f636c767104a44bf7db3873e9c01a6f
   EXErrorRecovery: 404d827bc7d42f306c062d58a60b06afc4d082b3
   EXFileSystem: 0a04aba8da751b9ac954065911bcf166503f8267
   EXFont: 9846ba1bb6f5f5aed44e20eea3ac70693323832d
-  EXImageLoader: f96ec9992733a4224418bbd9382e5485c8948944
+  EXImageLoader: d3531a3fe530b22925c19977cb53bb43e3821fe6
   EXImagePicker: 414a3663910fd6604248e84c9c77a0501ae0d18b
   EXKeepAwake: f4105ef469be7b283f66ce2d7234bb71ac80cd26
-  EXLinearGradient: ffc008d7ddcce356534cfdf9bd7fbcdedec4c438
-  EXPermissions: 17d4846ad1880f6891c74ae58ca1acb43e47ed47
+  EXLinearGradient: f9ea3259f096b27008860ca50764184225dc71c9
   ExpoModulesCore: 2734852616127a6c1fc23012197890a6f3763dc7
   EXScreenOrientation: 09fe6b6b87899ae0c9320255bda7b7513cdfc8ec
   EXSplashScreen: 6208ca88470ff5979fd49a08ef3feb01143a2b79
@@ -730,7 +687,7 @@ SPEC CHECKSUMS:
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
-  Mapbox-iOS-SDK: 2563ed87ead6ec08f1c2090873977b8a7be335a8
+  Mapbox-iOS-SDK: 7eb24d0f44ee69adb037e5addc3f810db73d47a8
   MapboxMobileEvents: b72b07268586c6fd1f53178f08df15f74070b188
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
@@ -769,19 +726,10 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   Sentry: 1d3eb1a25f8c5333c88dd5603904a6d461cd9fcf
-  UMAppLoader: 92d044af52626af3d81a69796ad666fc7a9a7d78
-  UMBarCodeScannerInterface: 3f6c1b09ef4b867ce752b8c0b3893bcf9cd85f32
-  UMCameraInterface: d516032121192fee9a6c93bdfff0bb2cc7282796
-  UMConstantsInterface: 6825ea3832d26ed392ca6eff2df84edd69968fd0
+  UMAppLoader: 21af63390e55c82e037fb9752d93114a80ecf16e
   UMCore: ce3a4faa010239063b8343895b29a6d97b01069d
-  UMFaceDetectorInterface: 60b36b07faa539205efce30b20c192e058b31c23
-  UMFileSystemInterface: ab01294ce58a3c773aefb4a5b131ce589c199559
-  UMFontInterface: 85fe1b845fb7caab45e04d9ce47e1677a5ce90a5
-  UMImageLoaderInterface: 18f37df089b7e6d301e3acac025a8264d26b66d6
-  UMPermissionsInterface: 807e5733b4c6607f35757b1dd128f370718d2f94
   UMReactNativeAdapter: d03cefd0e4e4179ab8c490408589f1c8a6c8b785
-  UMSensorsInterface: 4df9ec662134de5614ae61acc249d6912db87ca5
-  UMTaskManagerInterface: 4c60b43eaf3cb05a164bc9113258a171c18b7bf7
+  UMTaskManagerInterface: 2be431101b73604e64fbfffcf759336f9d8fccbb
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
