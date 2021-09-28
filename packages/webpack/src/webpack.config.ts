@@ -140,7 +140,7 @@ export function createWebpackConfig({
       // eval-cheap-module-source-map (original lines)
       // eval-cheap-source-map (transformed lines)
       // eval-nosources-cheap-source-map (transformed lines)
-      devtool: isProduction ? 'source-map' : 'eval',
+      devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
       entry: {
         main:
           polyFillPath || isSSR

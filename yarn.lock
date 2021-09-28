@@ -1826,7 +1826,7 @@ __metadata:
     react-native-screens: ^3.7.2
     react-native-svg: ^12.1.1
     react-native-unimodules: ^0.14.6
-    react-query: ^3.23.0
+    react-query: ^3.24.4
     react-reparenting: ^0.6.1
     react-test-renderer: ^17.0.1
     recyclerlistview: ^3.0.5
@@ -20920,9 +20920,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query@npm:^3.23.0":
-  version: 3.23.0
-  resolution: "react-query@npm:3.23.0"
+"react-query@npm:^3.24.4":
+  version: 3.24.4
+  resolution: "react-query@npm:3.24.4"
   dependencies:
     "@babel/runtime": ^7.5.5
     broadcast-channel: ^3.4.1
@@ -20934,7 +20934,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: 1a292c0edae1bf8b3681d84a886c9ea793015f5a0573a9970e43a50df82402633475a418fb458f3a01217a798de3b443fa5008a71dad50d6e6ea935a8f0a2370
+  checksum: 04baa5802a5d4b2ed34eace6dafa87985eb204116f3904a963ca7af3fdecb53f62619141c6964d3f064e41c65fb87c2c7f6e2e33cb15e0c3c63fd40974ba2af1
   languageName: node
   linkType: hard
 

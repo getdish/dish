@@ -33,11 +33,10 @@ export const AppMenuContents = memo(
       <Box
         maxHeight={Math.max(350, getWindowHeight() - searchBarHeight - 30)}
         minHeight={250}
-        padding={0}
         alignItems="stretch"
         pointerEvents="auto"
-        minWidth={240}
-        width={240}
+        minWidth={300}
+        width={300}
         {...props}
       >
         {/* safari y={} fix overflow */}
