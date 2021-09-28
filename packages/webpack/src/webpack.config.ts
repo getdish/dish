@@ -10,6 +10,7 @@ import { ESBuildMinifyPlugin } from 'esbuild-loader'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 // import PnpWebpackPlugin from 'pnp-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 // import nodeExternals from 'webpack-node-externals'
@@ -341,6 +342,8 @@ export function createWebpackConfig({
         ],
       },
       plugins: [
+        new LodashModuleReplacementPlugin(),
+
         new MiniCssExtractPlugin({
           filename: isProduction ? '[name].[contenthash].css' : '[name].css',
         }),
@@ -363,7 +366,10 @@ export function createWebpackConfig({
             rel: 'preload',
             include: 'initial',
             as(entry) {
-              if (/\.jpg$/.test(entry)) return 'image'
+              if (/\.css$/.test(entry)) return 'style'
+              if (/\.(jpg|png)$/.test(entry)) return 'image'
+              if (/\.(woff|woff2|otf|ttf)$/.test(entry)) return 'font'
+              return 'script'
             },
           }),
 
