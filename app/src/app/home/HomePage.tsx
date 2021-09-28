@@ -16,7 +16,6 @@ import {
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { getDefaultLocation, setDefaultLocation } from '../../constants/initialHomeState'
 import { useRegionQuery } from '../../helpers/fetchRegion'
-import { queryClient } from '../../helpers/queryClient'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { cancelUpdateRegion } from '../appMapStore'
@@ -62,9 +61,12 @@ const HomePageContent = (props: Props) => {
   const theme = useTheme()
   const enabled = isActive && !!state.region
   const regionResponse = useRegionQuery(state.region, {
-    enabled,
+    isPaused() {
+      return !enabled
+    },
     suspense: false,
   })
+  console.log('regionResponse', regionResponse)
   const region = regionResponse.data
   // const [position, setPosition] = useState<MapPosition>(initialPosition)
   const { results } = useStoreInstance(homePageStore)
@@ -89,11 +91,11 @@ const HomePageContent = (props: Props) => {
     // }
   }, [isActive, JSON.stringify([region])])
 
-  useEffect(() => {
-    return () => {
-      queryClient.cancelQueries(state.region)
-    }
-  }, [state.region])
+  // useEffect(() => {
+  //   return () => {
+  //     queryClient.cancelQueries(state.region)
+  //   }
+  // }, [state.region])
 
   // set location for next reload + move map on initial load
   useEffect(() => {

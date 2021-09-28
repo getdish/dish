@@ -23,10 +23,11 @@ export function useFormAction<Values extends { [key: string]: any }>({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // will send ultimate form query
-  const response = useQueryLoud([name, send], () => submit(data.current), {
-    enabled: !!send,
+  const response = useQueryLoud(`${name}${send}`, () => submit(data.current), {
+    isPaused() {
+      return !send
+    },
     suspense: false,
-    retry: false,
   })
 
   const onSubmit = handleSubmit(() => {

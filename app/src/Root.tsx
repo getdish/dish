@@ -27,7 +27,6 @@ import { configureUseStore } from '@dish/use-store'
 import AppLoading from 'expo-app-loading'
 import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
-import { QueryClientProvider } from 'react-query'
 import {
   AbsoluteVStack,
   Paragraph,
@@ -47,7 +46,6 @@ import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/local
 import { isHermes } from './constants/platforms'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
-import { queryClient } from './helpers/queryClient'
 import { DRoutesTable, router, routes } from './router'
 
 declare module 'snackui' {
@@ -162,13 +160,11 @@ export function Root() {
     <>
       <SnackUIProvider themes={themes} defaultTheme={userStore.theme ?? colorScheme ?? 'dark'}>
         <ProvideRouter routes={routes}>
-          <QueryClientProvider client={queryClient}>
-            <Suspense fallback={null}>
-              {!isLoaded && <AppLoading />}
-              {isLoaded ? <App /> : null}
-              {process.env.NODE_ENV === 'development' && <DebugHUD />}
-            </Suspense>
-          </QueryClientProvider>
+          <Suspense fallback={null}>
+            {!isLoaded && <AppLoading />}
+            {isLoaded ? <App /> : null}
+            {process.env.NODE_ENV === 'development' && <DebugHUD />}
+          </Suspense>
         </ProvideRouter>
       </SnackUIProvider>
       {showRadar && <Radar />}

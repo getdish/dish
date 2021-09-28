@@ -1,22 +1,18 @@
 import { useEffect } from 'react'
-import {
-  QueryFunction,
-  QueryKey,
-  QueryObserverResult,
-  UseQueryOptions,
-  useQuery,
-} from 'react-query'
 import { Toast } from 'snackui'
+import useSWR, { SWRConfiguration } from 'swr'
 
 // automatically logs errors to toast
 // but allows things to fail without failing entire app
 
+type QueryFunction<A> = (...args: any[]) => A | Promise<A>
+
 export function useQueryLoud<TData = unknown, TError = unknown, TQueryFnData = TData>(
-  queryKey: QueryKey,
+  queryKey: string,
   queryFn: QueryFunction<TQueryFnData | TData>,
-  options?: UseQueryOptions<TData, TError, TQueryFnData>
-): QueryObserverResult<TQueryFnData, TError> {
-  const res = useQuery(
+  options?: SWRConfiguration<TData, TError, QueryFunction<TData>>
+) {
+  const res = useSWR(
     queryKey,
     async (...args) => {
       try {
@@ -28,14 +24,14 @@ export function useQueryLoud<TData = unknown, TError = unknown, TQueryFnData = T
         }
         return res
       } catch (err) {
+        console.error(err)
         Toast.show(`Query error: ${err.message}`)
         throw err
       }
     },
     {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refreshWhenHidden: false,
+      revalidateOnFocus: false,
       ...options,
     }
   )
