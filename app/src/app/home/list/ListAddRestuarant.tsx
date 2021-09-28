@@ -2,9 +2,9 @@ import { series, sleep } from '@dish/async'
 import { graphql, query, resolved, slugify, useRefetch } from '@dish/graph'
 import { Loader } from '@dish/react-feather'
 import { debounce, uniqBy } from 'lodash'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { Input, Spacer, Text, VStack, useDebounce, useTheme } from 'snackui'
+import { Input, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { blue } from '../../../constants/colors'
 import { AutocompleteItemFull } from '../../../helpers/createAutocomplete'
@@ -16,7 +16,6 @@ import { roundCoord } from '../../../helpers/mapHelpers'
 import { searchRestaurants } from '../../../helpers/searchRestaurants'
 import { queryList } from '../../../queries/queryList'
 import { RegionApiResponse } from '../../../types/homeTypes'
-import { geoSearch } from '../../../web/geosearch'
 import { appMapStore } from '../../appMapStore'
 import { AutocompleteItemView } from '../../AutocompleteItemView'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -59,7 +58,7 @@ const searchRestaurantsNearby = async (searchQuery: string) => {
 }
 
 export const ListAddRestuarant = graphql(
-  ({ onAdd, listSlug }: { onAdd: (id: string) => any; listSlug: string }) => {
+  ({ onAdd, listSlug }: { onAdd: (item: AutocompleteItemFull) => any; listSlug: string }) => {
     const refetch = useRefetch()
     const listQuery = queryList(listSlug)
     const list = listQuery[0]
@@ -110,6 +109,7 @@ export const ListAddRestuarant = graphql(
                 100
               )}-${roundCoord(place.coordinate.latitude, 100)}`,
               icon: '',
+              data: place,
             }
           })
           const uniqueResults = uniqBy([...boxRes, ...nearbyRes, ...appleNormalized], (x) => x.key)
@@ -131,17 +131,16 @@ export const ListAddRestuarant = graphql(
       }
     }, [searchQuery, bbox])
 
-    const onAddCb = debounce(async (result: any, index: number) => {
-      const id = result.id
+    const onAddCb = debounce(async (result: AutocompleteItemFull, index: number) => {
       setAddedState((x) => {
         const res = {
           ...x,
-          [id]: !added[id],
+          [result.id]: !added[result.id],
         }
         console.log('res', index, result.id, res)
         return res
       })
-      await onAdd(id)
+      await onAdd(result)
       refetch(listQuery)
     }, 16)
 

@@ -7,6 +7,7 @@ type Base = {
   description?: string
   namePrefix?: string
   key?: string
+  data?: any
 }
 
 export type AutocompleteItemRestuarant = Base & {
@@ -33,9 +34,10 @@ export type AutocompleteItem =
   | AutocompleteItemLocation
   | AutocompleteItemUser
 
-export type AutocompleteItemFull = AutocompleteItem & {
+export type AutocompleteItemFull<A extends { [key: string]: any } = any> = AutocompleteItem & {
   is: 'autocomplete'
   id: string
+  data?: A
 }
 
 export function createAutocomplete<A extends Base = any>(

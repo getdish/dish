@@ -125,6 +125,7 @@
     "@dish/babel-plugin-inline-env": "*",
     "@dish/babel-preset": "*",
     "@snackui/babel-plugin": "*",
+    "@types/apple-mapkit-js": "^5.50.0",
     "@types/lodash": "^4.14.165",
     "@types/mapbox-gl": "^2.4.0",
     "@types/multer": "^1.4.7",

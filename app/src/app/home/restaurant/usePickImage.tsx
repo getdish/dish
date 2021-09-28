@@ -1,5 +1,5 @@
 import { uploadFile, useRefetch } from '@dish/graph'
-import { supportsTouchWeb } from '@dish/helpers/dist'
+import { supportsTouchWeb } from '@dish/helpers'
 import { Loader } from '@dish/react-feather'
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
