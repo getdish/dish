@@ -1,15 +1,15 @@
-@font-face {
+/* @font-face {
   font-family: 'Inter-Bold';
   font-weight: 800;
   src: url('../assets/fonts/Inter-Thin.woff2') format('woff2'),
     url('../assets/fonts/Inter-Thin.woff') format('woff');
-}
-
+} */
+/* 
 @font-face {
   font-family: 'Magnat';
   font-weight: 800;
   src: url('../assets/fonts/MagnatTest-HeadExtraBold.woff') format('woff');
-}
+} */
 
 
 @font-face {

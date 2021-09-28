@@ -1,0 +1,6 @@
+- args:
+    cascade: false
+    read_only: false
+    sql: ALTER TABLE "public"."restaurant" ADD COLUMN "external_source_info" jsonb
+      NULL;
+  type: run_sql

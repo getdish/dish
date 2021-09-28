@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import { graphql, query, resolved, useRefetch } from '@dish/graph'
+import { graphql, query, resolved, slugify, useRefetch } from '@dish/graph'
 import { Loader } from '@dish/react-feather'
 import { debounce, uniqBy } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -10,10 +10,13 @@ import { blue } from '../../../constants/colors'
 import { AutocompleteItemFull } from '../../../helpers/createAutocomplete'
 import { createRestaurantAutocomplete } from '../../../helpers/createRestaurantAutocomplete'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
+import { fuzzySearch } from '../../../helpers/fuzzySearch'
 import { getFuzzyMatchQuery } from '../../../helpers/getFuzzyMatchQuery'
+import { roundCoord } from '../../../helpers/mapHelpers'
 import { searchRestaurants } from '../../../helpers/searchRestaurants'
 import { queryList } from '../../../queries/queryList'
 import { RegionApiResponse } from '../../../types/homeTypes'
+import { geoSearch } from '../../../web/geosearch'
 import { appMapStore } from '../../appMapStore'
 import { AutocompleteItemView } from '../../AutocompleteItemView'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -74,21 +77,50 @@ export const ListAddRestuarant = graphql(
       ...addedState,
     }
 
-    console.log('added', added, addedState)
-
     useEffect(() => {
       const dispose = series([
         () => {
           setIsSearching(true)
         },
-        () => sleep(250),
+        () => sleep(results.length ? 250 : 0),
         () =>
           Promise.all([
+            // disable for now
+            Promise.resolve([]),
+            // searchQuery
+            //   ? geoSearch({
+            //       query: searchQuery,
+            //       ...(appMapStore.nextPosition?.center || appMapStore.position?.center),
+            //     })
+            //   : Promise.resolve([]),
             bbox ? searchRestaurantsInBBox(bbox, searchQuery) : null,
             searchRestaurantsNearby(searchQuery),
           ]),
-        ([boxRes = [], nearbyRes = []]) => {
-          setResults(uniqBy([...boxRes, ...nearbyRes], (x) => x.id))
+        async ([appleSearch = [], boxRes = [], nearbyRes = []]) => {
+          const appleNormalized = (appleSearch.places || []).map((place) => {
+            return {
+              is: 'autocomplete',
+              id: place.muid,
+              name: place.name,
+              slug: slugify(`apple-${place.name}`),
+              type: 'restaurant',
+              description: `${place.fullThoroughfare}`,
+              key: `${place.fullThoroughfare?.split(' ')?.[0] || ''}-${roundCoord(
+                place.coordinate.longitude,
+                100
+              )}-${roundCoord(place.coordinate.latitude, 100)}`,
+              icon: '',
+            }
+          })
+          const uniqueResults = uniqBy([...boxRes, ...nearbyRes, ...appleNormalized], (x) => x.key)
+          return await fuzzySearch({
+            items: uniqueResults,
+            query: searchQuery,
+            keys: ['name', 'description'],
+          })
+        },
+        async (results) => {
+          setResults(results)
           setIsSearching(false)
         },
       ])

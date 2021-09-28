@@ -8,6 +8,7 @@
   - speed of search / discuss putting search.sql into the graph
   - searching tags should default to a grouped higher order tag, try "oysters" and you see a ton of different cuisine based categories, but there should be a meta category, just "Oysters", and the rest probably shouldn't show (but search should probably include all of them!)
   - "popup" tag would be fun to add and scan, so we can filter and show pop-up restuarants near you
+  - add region to each restaurant directly - would be nice to show in the list.add modal and other areas
 
 - bigger:
   - we need generic tags to work:
