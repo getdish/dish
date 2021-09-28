@@ -1821,7 +1821,7 @@ __metadata:
     react-native-draggable-flatlist: ^2.6.2
     react-native-fast-image: ^8.5.8
     react-native-gesture-handler: ^1.10.3
-    react-native-reanimated: ^2.2.0
+    react-native-reanimated: 2.3.0-beta.1
     react-native-safe-area-context: 3.3.0
     react-native-screens: ^3.7.2
     react-native-svg: ^12.1.1
@@ -1854,7 +1854,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/babel-preset@*, @dish/babel-preset@^0.0.2, @dish/babel-preset@workspace:packages/babel-preset":
+"@dish/babel-preset@*, @dish/babel-preset@^0.0.5, @dish/babel-preset@workspace:packages/babel-preset":
   version: 0.0.0-use.local
   resolution: "@dish/babel-preset@workspace:packages/babel-preset"
   dependencies:
@@ -1878,7 +1878,7 @@ __metadata:
     core-js: ^3.10.1
     react: "*"
     react-dom: "*"
-    react-native-reanimated: ^2.2.0
+    react-native-reanimated: 2.3.0-beta.1
     react-refresh: ^0.10.0
   peerDependencies:
     react-native-web: "*"
@@ -2091,7 +2091,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/react-test-env@*, @dish/react-test-env@^0.0.7, @dish/react-test-env@workspace:packages/react-test-env":
+"@dish/react-test-env@*, @dish/react-test-env@^0.0.8, @dish/react-test-env@workspace:packages/react-test-env":
   version: 0.0.0-use.local
   resolution: "@dish/react-test-env@workspace:packages/react-test-env"
   dependencies:
@@ -4900,10 +4900,10 @@ __metadata:
     "@babel/plugin-syntax-typescript": ^7.14.5
     "@babel/traverse": ^7.15.4
     "@babel/types": ^7.15.6
-    "@dish/babel-preset": ^0.0.2
+    "@dish/babel-preset": ^0.0.5
     "@dish/esdx": ^0.2.0
     "@dish/proxy-worm": "*"
-    "@dish/react-test-env": ^0.0.7
+    "@dish/react-test-env": ^0.0.8
     "@dish/testy": "*"
     "@expo/match-media": ^0.1.0
     "@snackui/helpers": ^0.17.0
