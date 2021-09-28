@@ -107,6 +107,7 @@ services:
         max_attempts: 5
     networks:
       - default
+    # getting errors on ci
     build:
       context: ./services/${POSTGRES_NAME:-postgres}
     volumes:
