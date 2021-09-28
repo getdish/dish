@@ -470,7 +470,7 @@ const ListPageContent = memo(
                       <VStack display={isWeb ? 'block' : 'flex'}>
                         <TitleStyled
                           {...titleColors}
-                          fontTheme={!listFont ? 'slab' : 'sans'}
+                          // fontTheme={!listFont ? 'slab' : 'sans'}
                           lineHeight={fontSize * 1.3}
                           fontWeight="800"
                           fontSize={fontSize}

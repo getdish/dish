@@ -1,3 +1,5 @@
+.watchman-cookie*
+
 app/ios/assets/**/*
 
 etc/docker/canary.json

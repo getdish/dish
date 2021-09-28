@@ -7,7 +7,7 @@ const searcher = new MapKit.Search({
 export async function geoSearch(params: { query: string; lng: number; lat: number }) {
   return await new Promise((res, rej) =>
     searcher.search(params.query, (err, data) => (err ? rej(err) : res(data)), {
-      coordinate: new MapKit.Coordinate(params.lat, params.lng),
+      region: new MapKit.CoordinateRegion(new MapKit.Coordinate(params.lat, params.lng)),
     })
   )
 }

@@ -2260,6 +2260,7 @@ export interface restaurant_aggregate_order_by {
 
 /** append existing jsonb value of filtered columns with new jsonb value */
 export interface restaurant_append_input {
+  external_source_info?: Maybe<Scalars['jsonb']>
   headlines?: Maybe<Scalars['jsonb']>
   hours?: Maybe<Scalars['jsonb']>
   og_source_ids?: Maybe<Scalars['jsonb']>
@@ -2298,6 +2299,7 @@ export interface restaurant_bool_exp {
   created_at?: Maybe<timestamptz_comparison_exp>
   description?: Maybe<String_comparison_exp>
   downvotes?: Maybe<numeric_comparison_exp>
+  external_source_info?: Maybe<jsonb_comparison_exp>
   geocoder_id?: Maybe<String_comparison_exp>
   headlines?: Maybe<jsonb_comparison_exp>
   hours?: Maybe<jsonb_comparison_exp>
@@ -2348,6 +2350,7 @@ export enum restaurant_constraint {
 
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 export interface restaurant_delete_at_path_input {
+  external_source_info?: Maybe<Array<Maybe<Scalars['String']>>>
   headlines?: Maybe<Array<Maybe<Scalars['String']>>>
   hours?: Maybe<Array<Maybe<Scalars['String']>>>
   og_source_ids?: Maybe<Array<Maybe<Scalars['String']>>>
@@ -2362,6 +2365,7 @@ export interface restaurant_delete_at_path_input {
 
 /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
 export interface restaurant_delete_elem_input {
+  external_source_info?: Maybe<Scalars['Int']>
   headlines?: Maybe<Scalars['Int']>
   hours?: Maybe<Scalars['Int']>
   og_source_ids?: Maybe<Scalars['Int']>
@@ -2376,6 +2380,7 @@ export interface restaurant_delete_elem_input {
 
 /** delete key/value pair or string element. key/value pairs are matched based on their key value */
 export interface restaurant_delete_key_input {
+  external_source_info?: Maybe<Scalars['String']>
   headlines?: Maybe<Scalars['String']>
   hours?: Maybe<Scalars['String']>
   og_source_ids?: Maybe<Scalars['String']>
@@ -2405,6 +2410,7 @@ export interface restaurant_insert_input {
   created_at?: Maybe<Scalars['timestamptz']>
   description?: Maybe<Scalars['String']>
   downvotes?: Maybe<Scalars['numeric']>
+  external_source_info?: Maybe<Scalars['jsonb']>
   geocoder_id?: Maybe<Scalars['String']>
   headlines?: Maybe<Scalars['jsonb']>
   hours?: Maybe<Scalars['jsonb']>
@@ -2517,6 +2523,7 @@ export interface restaurant_order_by {
   created_at?: Maybe<order_by>
   description?: Maybe<order_by>
   downvotes?: Maybe<order_by>
+  external_source_info?: Maybe<order_by>
   geocoder_id?: Maybe<order_by>
   headlines?: Maybe<order_by>
   hours?: Maybe<order_by>
@@ -2560,6 +2567,7 @@ export interface restaurant_pk_columns_input {
 
 /** prepend existing jsonb value of filtered columns with new jsonb value */
 export interface restaurant_prepend_input {
+  external_source_info?: Maybe<Scalars['jsonb']>
   headlines?: Maybe<Scalars['jsonb']>
   hours?: Maybe<Scalars['jsonb']>
   og_source_ids?: Maybe<Scalars['jsonb']>
@@ -2584,6 +2592,8 @@ export enum restaurant_select_column {
   description = 'description',
   /** column name */
   downvotes = 'downvotes',
+  /** column name */
+  external_source_info = 'external_source_info',
   /** column name */
   geocoder_id = 'geocoder_id',
   /** column name */
@@ -2651,6 +2661,7 @@ export interface restaurant_set_input {
   created_at?: Maybe<Scalars['timestamptz']>
   description?: Maybe<Scalars['String']>
   downvotes?: Maybe<Scalars['numeric']>
+  external_source_info?: Maybe<Scalars['jsonb']>
   geocoder_id?: Maybe<Scalars['String']>
   headlines?: Maybe<Scalars['jsonb']>
   hours?: Maybe<Scalars['jsonb']>
@@ -3098,6 +3109,8 @@ export enum restaurant_update_column {
   description = 'description',
   /** column name */
   downvotes = 'downvotes',
+  /** column name */
+  external_source_info = 'external_source_info',
   /** column name */
   geocoder_id = 'geocoder_id',
   /** column name */
@@ -8754,6 +8767,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz!' },
     description: { __type: 'String' },
     downvotes: { __type: 'numeric' },
+    external_source_info: { __type: 'jsonb' },
     geocoder_id: { __type: 'String' },
     headlines: { __type: 'jsonb' },
     hours: { __type: 'jsonb' },
@@ -8932,6 +8946,7 @@ export const generatedSchema = {
     variance: { __type: 'restaurant_variance_order_by' },
   },
   restaurant_append_input: {
+    external_source_info: { __type: 'jsonb' },
     headlines: { __type: 'jsonb' },
     hours: { __type: 'jsonb' },
     og_source_ids: { __type: 'jsonb' },
@@ -8973,6 +8988,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz_comparison_exp' },
     description: { __type: 'String_comparison_exp' },
     downvotes: { __type: 'numeric_comparison_exp' },
+    external_source_info: { __type: 'jsonb_comparison_exp' },
     geocoder_id: { __type: 'String_comparison_exp' },
     headlines: { __type: 'jsonb_comparison_exp' },
     hours: { __type: 'jsonb_comparison_exp' },
@@ -9009,6 +9025,7 @@ export const generatedSchema = {
     zip: { __type: 'numeric_comparison_exp' },
   },
   restaurant_delete_at_path_input: {
+    external_source_info: { __type: '[String]' },
     headlines: { __type: '[String]' },
     hours: { __type: '[String]' },
     og_source_ids: { __type: '[String]' },
@@ -9021,6 +9038,7 @@ export const generatedSchema = {
     tag_names: { __type: '[String]' },
   },
   restaurant_delete_elem_input: {
+    external_source_info: { __type: 'Int' },
     headlines: { __type: 'Int' },
     hours: { __type: 'Int' },
     og_source_ids: { __type: 'Int' },
@@ -9033,6 +9051,7 @@ export const generatedSchema = {
     tag_names: { __type: 'Int' },
   },
   restaurant_delete_key_input: {
+    external_source_info: { __type: 'String' },
     headlines: { __type: 'String' },
     hours: { __type: 'String' },
     og_source_ids: { __type: 'String' },
@@ -9058,6 +9077,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     downvotes: { __type: 'numeric' },
+    external_source_info: { __type: 'jsonb' },
     geocoder_id: { __type: 'String' },
     headlines: { __type: 'jsonb' },
     hours: { __type: 'jsonb' },
@@ -9212,6 +9232,7 @@ export const generatedSchema = {
     created_at: { __type: 'order_by' },
     description: { __type: 'order_by' },
     downvotes: { __type: 'order_by' },
+    external_source_info: { __type: 'order_by' },
     geocoder_id: { __type: 'order_by' },
     headlines: { __type: 'order_by' },
     hours: { __type: 'order_by' },
@@ -9249,6 +9270,7 @@ export const generatedSchema = {
   },
   restaurant_pk_columns_input: { id: { __type: 'uuid!' } },
   restaurant_prepend_input: {
+    external_source_info: { __type: 'jsonb' },
     headlines: { __type: 'jsonb' },
     hours: { __type: 'jsonb' },
     og_source_ids: { __type: 'jsonb' },
@@ -9266,6 +9288,7 @@ export const generatedSchema = {
     created_at: { __type: 'timestamptz' },
     description: { __type: 'String' },
     downvotes: { __type: 'numeric' },
+    external_source_info: { __type: 'jsonb' },
     geocoder_id: { __type: 'String' },
     headlines: { __type: 'jsonb' },
     hours: { __type: 'jsonb' },
@@ -14674,6 +14697,7 @@ export interface restaurant {
   created_at: ScalarsEnums['timestamptz']
   description?: Maybe<ScalarsEnums['String']>
   downvotes?: Maybe<ScalarsEnums['numeric']>
+  external_source_info?: Maybe<ScalarsEnums['jsonb']>
   geocoder_id?: Maybe<ScalarsEnums['String']>
   headlines?: Maybe<ScalarsEnums['jsonb']>
   hours?: Maybe<ScalarsEnums['jsonb']>
