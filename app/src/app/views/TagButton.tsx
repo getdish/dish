@@ -428,11 +428,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   if (tooltip) {
-    contents = (
-      <Tooltip trigger={(props) => React.cloneElement(contents, { ref: props.ref })}>
-        {tooltip}
-      </Tooltip>
-    )
+    return <Tooltip trigger={(props) => <VStack {...props}>{contents}</VStack>}>{tooltip}</Tooltip>
   }
 
   return contents

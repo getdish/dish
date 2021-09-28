@@ -69,13 +69,14 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
   return {
     onPress,
     navItem,
-    wrapWithLinkElement(children: any) {
+    wrapWithLinkElement(children: any, ref?: any) {
       if (isWeb) {
         const element = props.tagName ?? 'a'
         const href = props.href ?? router.getPathFromParams(navItem)
         return React.createElement(
           element,
           {
+            ref,
             onClick: onPress,
             className: `a-link display-contents cursor-pointer ${props.className ?? ''}`,
             target: props.target,
@@ -91,6 +92,7 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
       // return children
       return (
         <Pressable
+          ref={ref}
           style={styleProps}
           onStartShouldSetResponderCapture={() => true}
           onPress={onPress}

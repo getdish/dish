@@ -1,5 +1,5 @@
 import { RoutesTable } from '@dish/router'
-import React, { useContext } from 'react'
+import React, { forwardRef, useContext } from 'react'
 import { ParagraphContext, Text, useTheme } from 'snackui'
 
 import { red400 } from '../../constants/colors'
@@ -8,8 +8,9 @@ import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkProps } from './LinkProps'
 
-export function Link<Name extends DRouteName = DRouteName>(
-  allProps: LinkProps<Name, RoutesTable[Name]['params']>
+export const Link = forwardRef(function Link<Name extends DRouteName = DRouteName>(
+  allProps: LinkProps<Name, RoutesTable[Name]['params']>,
+  ref
 ) {
   const {
     // non-text props for useLink
@@ -36,7 +37,6 @@ export function Link<Name extends DRouteName = DRouteName>(
   const { wrapWithLinkElement } = useLink(allProps, styleProps)
   const theme = useTheme()
   const isInParagraph = useContext(ParagraphContext)
-
   return wrapWithLinkElement(
     isStringChild(children) ? (
       <Text
@@ -56,6 +56,7 @@ export function Link<Name extends DRouteName = DRouteName>(
       </Text>
     ) : (
       children
-    )
+    ),
+    ref
   )
-}
+})

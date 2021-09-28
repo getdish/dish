@@ -70,7 +70,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
     }
   }, [])
 
-  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore)(view), [])
+  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore, view), [])
   const showLocationTag = !inputStore.isFocused && !!curLocName
 
   return (
