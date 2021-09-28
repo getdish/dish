@@ -38,6 +38,7 @@ import {
 } from 'snackui'
 
 import { App } from './app/App'
+// import { App } from './app/App'
 import { homeStore } from './app/homeStore'
 import { useUserStore, userStore } from './app/userStore'
 import { showRadar } from './constants/constants'
@@ -165,7 +166,6 @@ export function Root() {
             <Suspense fallback={null}>
               {!isLoaded && <AppLoading />}
               {isLoaded ? <App /> : null}
-
               {process.env.NODE_ENV === 'development' && <DebugHUD />}
             </Suspense>
           </QueryClientProvider>
