@@ -41,10 +41,10 @@ export function useFormAction<Values extends { [key: string]: any }>({
   }, [JSON.stringify(initialValues)])
 
   useEffect(() => {
-    if (response.isError || response.data?.error) {
+    if (response.error || response.data?.error) {
       setIsSubmitting(false)
     }
-  }, [response.data, response.isError])
+  }, [response.data, response.error])
 
   let prev = ''
   const onChange = (key: keyof Values) => (val: string) => {
@@ -57,15 +57,14 @@ export function useFormAction<Values extends { [key: string]: any }>({
     }
   }
 
+  const isSuccess = response.data && response.data && !response.data.error
   let errorMessage = ''
 
-  if (response.isSuccess) {
+  if (isSuccess) {
     console.log('🤠 NICE JOB', send, name, data, response)
-  } else {
-    if (response.isError) {
-      console.log('err response', response)
-      errorMessage = `${response.error || ''}`
-    }
+  } else if (response.error) {
+    console.log('err response', response)
+    errorMessage = `${response.error || ''}`
   }
 
   return {
@@ -74,7 +73,7 @@ export function useFormAction<Values extends { [key: string]: any }>({
     isSubmitting,
     control,
     response,
-    isSuccess: response.isSuccess && response.data && !response.data.error,
+    isSuccess,
     onChange,
     onSubmit,
     watch,

@@ -66,7 +66,6 @@ const HomePageContent = (props: Props) => {
     },
     suspense: false,
   })
-  console.log('regionResponse', regionResponse)
   const region = regionResponse.data
   // const [position, setPosition] = useState<MapPosition>(initialPosition)
   const { results } = useStoreInstance(homePageStore)
@@ -100,7 +99,7 @@ const HomePageContent = (props: Props) => {
   // set location for next reload + move map on initial load
   useEffect(() => {
     if (!isActive) return
-    if (regionResponse.status !== 'success') return
+    if (regionResponse.error) return
     if (!region) return
     const next = region.slug ?? slugify(region.name)
     const prev = getDefaultLocation().region

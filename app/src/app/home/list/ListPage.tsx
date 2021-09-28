@@ -152,14 +152,32 @@ const ListPageContent = memo(
       const isMinimal = !!list?.theme
       const listSlug = props.item.slug
       const themeName = useThemeName()
+      const listFont = 1 // list?.font
 
-      // useAsyncEffect(async () => {
-      //   await sleep(1000)
-      //   forceUpdate()
-      // }, [])
+      const setFont = async (val: number) => {
+        list.font = val
+        forceUpdate()
+        const affectedRows = await mutate((mutation) => {
+          return mutation.update_list({
+            where: {
+              id: {
+                _eq: list.id,
+              },
+            },
+            _set: {
+              font: val,
+            },
+          })?.affected_rows
+        })
+        if (affectedRows) {
+          Toast.show(`Saved`)
+        } else {
+          Toast.show(`Error saving`)
+        }
+        listItems.refetchAll()
+      }
 
       const setTheme = async (val: number) => {
-        console.log('setting theme to', val)
         list.theme = val
         forceUpdate()
         const affectedRows = await mutate((mutation) => {
@@ -277,7 +295,7 @@ const ListPageContent = memo(
             </Pressable>
           )
         },
-        [isMyList, isEditing, isSorting, isMinimal, list, listColors]
+        [isMyList, isEditing, isSorting, isMinimal, list.theme, listFont, listColors]
       )
 
       const ListViewElement = isSorting ? DraggableFlatList : FlatList
@@ -452,6 +470,7 @@ const ListPageContent = memo(
                       <VStack display={isWeb ? 'block' : 'flex'}>
                         <TitleStyled
                           {...titleColors}
+                          fontTheme={!listFont ? 'slab' : 'sans'}
                           lineHeight={fontSize * 1.3}
                           fontWeight="800"
                           fontSize={fontSize}
@@ -571,17 +590,19 @@ const ListPageContent = memo(
                       alignItems="center"
                       justifyContent="center"
                     >
-                      {isEditing && (
-                        <HStack
-                          backgroundColor={theme.backgroundColor}
-                          padding={5}
-                          paddingHorizontal={20}
-                          borderRadius={100}
-                          elevation={1}
-                          alignItems="center"
-                          flexWrap="wrap"
-                          spacing="xxl"
-                        >
+                      <HStack
+                        backgroundColor={theme.backgroundColor}
+                        padding={5}
+                        paddingHorizontal={20}
+                        borderRadius={100}
+                        elevation={1}
+                        flex={1}
+                        alignItems="center"
+                        justifyContent="center"
+                        flexWrap="wrap"
+                        spacing="xxl"
+                      >
+                        <HStack alignItems="center" spacing="xs">
                           <Paragraph>Color:</Paragraph>
                           <ColorPicker
                             colors={allListColors}
@@ -591,64 +612,86 @@ const ListPageContent = memo(
                               setListColors(getListColors(index, themeName))
                             }}
                           />
-                          <InteractiveContainer alignItems="center">
-                            <Paragraph
-                              size="sm"
-                              opacity={0.5}
-                              onPress={() => {
-                                setTheme(0)
-                              }}
-                              paddingVertical={6}
-                              paddingHorizontal={12}
-                            >
-                              Full
-                            </Paragraph>
-                            <Switch
-                              value={list.theme === 1}
-                              onValueChange={(isOn) => {
-                                console.log('?', isOn)
-                                setTheme(isOn ? 1 : 0)
-                              }}
-                            />
-                            <Paragraph
-                              size="sm"
-                              opacity={0.5}
-                              onPress={() => {
-                                setTheme(1)
-                              }}
-                              paddingVertical={6}
-                              paddingHorizontal={12}
-                            >
-                              Minimal
-                            </Paragraph>
-                          </InteractiveContainer>
-                          <HStack>
-                            <Paragraph>Public:&nbsp;</Paragraph>
-                            <Switch value={isPublic} onValueChange={setPublic} />
-                          </HStack>
+                        </HStack>
+
+                        <InteractiveContainer alignItems="center">
                           <SmallButton
-                            tooltip="Delete"
-                            icon={<Trash color={red400} size={20} />}
-                            onPress={async () => {
-                              assertPresent(list.id, 'no list id')
-                              if (confirm('Permanently delete this list?')) {
-                                router.setRouteAlert(null)
-                                await mutate((mutation) => {
-                                  return mutation.delete_list({
-                                    where: {
-                                      id: {
-                                        _eq: list.id,
-                                      },
-                                    },
-                                  })?.__typename
-                                })
-                                Toast.show('Deleted list')
-                                homeStore.popBack()
-                              }
+                            borderRadius={0}
+                            theme={!listFont ? 'active' : null}
+                            onPress={() => {
+                              setFont(0)
+                            }}
+                          >
+                            Bold
+                          </SmallButton>
+                          <SmallButton
+                            borderRadius={0}
+                            theme={listFont === 1 ? 'active' : null}
+                            onPress={() => {
+                              setFont(0)
+                            }}
+                          >
+                            Thin
+                          </SmallButton>
+                        </InteractiveContainer>
+
+                        <InteractiveContainer alignItems="center">
+                          <Paragraph
+                            size="sm"
+                            opacity={0.5}
+                            onPress={() => {
+                              setTheme(0)
+                            }}
+                            paddingVertical={6}
+                            paddingHorizontal={12}
+                          >
+                            Full
+                          </Paragraph>
+                          <Switch
+                            value={list.theme === 1}
+                            onValueChange={(isOn) => {
+                              console.log('?', isOn)
+                              setTheme(isOn ? 1 : 0)
                             }}
                           />
+                          <Paragraph
+                            size="sm"
+                            opacity={0.5}
+                            onPress={() => {
+                              setTheme(1)
+                            }}
+                            paddingVertical={6}
+                            paddingHorizontal={12}
+                          >
+                            Minimal
+                          </Paragraph>
+                        </InteractiveContainer>
+                        <HStack alignItems="center" spacing="xs">
+                          <Paragraph>Public:&nbsp;</Paragraph>
+                          <Switch value={isPublic} onValueChange={setPublic} />
                         </HStack>
-                      )}
+                        <SmallButton
+                          tooltip="Delete"
+                          icon={<Trash color={red400} size={20} />}
+                          onPress={async () => {
+                            assertPresent(list.id, 'no list id')
+                            if (confirm('Permanently delete this list?')) {
+                              router.setRouteAlert(null)
+                              await mutate((mutation) => {
+                                return mutation.delete_list({
+                                  where: {
+                                    id: {
+                                      _eq: list.id,
+                                    },
+                                  },
+                                })?.__typename
+                              })
+                              Toast.show('Deleted list')
+                              homeStore.popBack()
+                            }
+                          }}
+                        />
+                      </HStack>
                     </HStack>
                   )}
                 </VStack>

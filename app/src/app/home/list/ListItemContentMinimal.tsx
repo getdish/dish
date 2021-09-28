@@ -160,6 +160,7 @@ const Header = memo(
                 <HStack spacing="xs" alignItems="center" marginVertical={-7} marginLeft={-10}>
                   {!isFocused && !!editable && (
                     <SmallButton
+                      backgroundColor="transparent"
                       tooltip="Remove"
                       icon={<X size={15} color="#888" />}
                       onPress={onDelete as any}
@@ -168,6 +169,7 @@ const Header = memo(
 
                   {!minimal && !isFocused && !!editable && !isEditing && (
                     <SmallButton
+                      backgroundColor="transparent"
                       icon={<PenTool size={14} color="#888" />}
                       onPress={() => setIsEditing(true)}
                     >
@@ -176,7 +178,9 @@ const Header = memo(
                   )}
 
                   {!!editable && isEditing && (
-                    <SmallButton onPress={() => setIsEditing(false)}>Cancel</SmallButton>
+                    <SmallButton backgroundColor="transparent" onPress={() => setIsEditing(false)}>
+                      Cancel
+                    </SmallButton>
                   )}
 
                   {!!restaurant.address && (
