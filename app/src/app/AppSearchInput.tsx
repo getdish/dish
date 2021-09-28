@@ -122,7 +122,7 @@ export const AppSearchInput = memo(() => {
     handleKeyPress(e, inputStore)
   }, [])
 
-  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore)(view), [])
+  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore, view), [])
 
   return (
     <InputFrame>

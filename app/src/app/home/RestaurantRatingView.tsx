@@ -61,8 +61,8 @@ export const RestaurantRatingView = suspense(
 
       if (showBreakdown) {
         getRatingEl = (props) => (
-          <HStack position="relative">
-            {getRatingInnerEl(props)}
+          <HStack position="relative" {...props}>
+            {getRatingInnerEl({})}
             <AbsoluteHStack zIndex={-1} top="-24%" right="-24%">
               <AbsoluteHStack
                 // width={400}
