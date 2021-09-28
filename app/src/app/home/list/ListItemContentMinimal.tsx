@@ -112,7 +112,7 @@ const Header = memo(
           flex={1}
         >
           <HStack>
-            <VStack maxWidth={Math.min(drawerWidth - 120, 540)}>
+            <VStack maxWidth={Math.min(drawerWidth - 100, 680)}>
               {ensureFlexText}
               <HStack
                 className="hover-faded-in-parent"

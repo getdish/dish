@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useThemeName } from 'snackui'
 
-import { pink, pink400, pink500, pink700, purple700 } from '../constants/colors'
+import { pink, pink300, pink400, pink500, pink700, purple700 } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import * as mapHelpers from '../helpers/mapHelpers'
 import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'
@@ -460,7 +460,8 @@ export default function Map(props: MapProps) {
             generateId: true,
           })
 
-          const pointColor = themeName === 'dark' ? `rgba(0,0,0,0.44)` : hexToRGB(pink, 0.44).string
+          const pointColor =
+            themeName === 'dark' ? hexToRGB(pink300, 0.44).string : hexToRGB(pink, 0.44).string
           map.addLayer({
             id: POINT_LAYER_ID,
             type: 'circle',
@@ -469,8 +470,8 @@ export default function Map(props: MapProps) {
               'circle-radius': [
                 'case',
                 ['boolean', ['feature-state', 'hover'], false],
-                15 * (supportsTouchWeb ? 1.2 : 0.75),
-                12 * (supportsTouchWeb ? 1.2 : 0.75),
+                14 * (supportsTouchWeb ? 1.2 : 0.75),
+                11 * (supportsTouchWeb ? 1.2 : 0.75),
               ],
               'circle-color': [
                 'match',
@@ -546,11 +547,11 @@ export default function Map(props: MapProps) {
             layout: {
               'text-allow-overlap': true,
               'icon-allow-overlap': true,
-              'icon-ignore-placement': true,
+              // 'icon-ignore-placement': true,
               'text-field': ['format', ['get', 'searchPosition']],
               'text-font': ['DIN Offc Pro Bold', 'Arial Unicode MS Bold'],
-              'text-size': 13,
-              // 'text-variable-anchor': ['bottom', 'top', 'right', 'left'],
+              'text-size': 26,
+              'text-variable-anchor': ['right', 'left', 'top', 'bottom'],
               'text-anchor': 'center',
             },
             paint: {
