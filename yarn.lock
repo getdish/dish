@@ -2091,9 +2091,29 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dish/react-test-env@*, @dish/react-test-env@^0.0.8, @dish/react-test-env@workspace:packages/react-test-env":
+"@dish/react-test-env@*, @dish/react-test-env@workspace:packages/react-test-env":
   version: 0.0.0-use.local
   resolution: "@dish/react-test-env@workspace:packages/react-test-env"
+  dependencies:
+    "@dish/esdx": "*"
+    "@testing-library/react": 13.0.0-alpha.1
+    "@types/react": ^16.9.44
+    "@types/react-dom": ^16.9.8
+    "@types/react-native": ^0.62.12
+    "@types/react-test-renderer": "*"
+    debug-http: ^1.1.0
+    happy-dom: ^2.23.0
+    mutationobserver-polyfill: ^1.3.0
+    node-localstorage: ^2.1.6
+    react: "*"
+    react-dom: "*"
+    react-test-renderer: ^17.0.1
+  languageName: unknown
+  linkType: soft
+
+"@dish/react-test-env@npm:^0.0.8":
+  version: 0.0.8
+  resolution: "@dish/react-test-env@npm:0.0.8"
   dependencies:
     "@dish/esdx": "*"
     "@testing-library/react": ^11.2.7
@@ -2108,8 +2128,9 @@ __metadata:
     react: "*"
     react-dom: "*"
     react-test-renderer: ^17.0.1
-  languageName: unknown
-  linkType: soft
+  checksum: beb07f8b41bc4cc50ec7a2af259c8ee857b9bb1998175a63d96c6096cf956a9f1d1f23f88486e2fd9e7042c4cb1c15742c88c082425b854034c88927c6effbe2
+  languageName: node
+  linkType: hard
 
 "@dish/router@*, @dish/router@workspace:packages/router":
   version: 0.0.0-use.local
@@ -12895,6 +12916,19 @@ __metadata:
     whatwg-encoding: ^1.0.5
     whatwg-mimetype: ^2.3.0
   checksum: 290569bfacc6c151b711473960db6a49841413e89fec03b072f97a3b09a000774228bcdd310b6f0a27e0b66b27848220f2b18c3ec94dac55d9c89e66bb5a6b9f
+  languageName: node
+  linkType: hard
+
+"happy-dom@npm:^2.23.0":
+  version: 2.23.0
+  resolution: "happy-dom@npm:2.23.0"
+  dependencies:
+    he: ^1.1.1
+    node-fetch: ^2.6.1
+    sync-request: ^6.1.0
+    whatwg-encoding: ^1.0.5
+    whatwg-mimetype: ^2.3.0
+  checksum: 5dea1ff389475d707a74fc460138e1a7510a136132eea089d96b4f11729bb96c22c25bbb9934c214786e2f78ba21440c81921e7e5fbb82e33f4bcba357283435
   languageName: node
   linkType: hard
 

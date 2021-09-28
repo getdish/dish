@@ -1,6 +1,6 @@
 {
   "name": "@dish/react-test-env",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "@dish/esdx": "*",
-    "@testing-library/react": "^11.2.7",
+    "@testing-library/react": "13.0.0-alpha.1",
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "@types/react-native": "^0.62.12",
     "@types/react-test-renderer": "*",
     "debug-http": "^1.1.0",
-    "happy-dom": "^2.19.0",
+    "happy-dom": "^2.23.0",
     "mutationobserver-polyfill": "^1.3.0",
     "node-localstorage": "^2.1.6",
     "react": "*",
