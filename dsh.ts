@@ -35,7 +35,7 @@ async function getFiles(
 
 async function getPackageJsonPaths() {
   return await getFiles('.', {
-    excludeDir: /node_modules|data/,
+    excludeDir: /node_modules|data|snackui/,
     filter: /package.json$/,
   })
 }
