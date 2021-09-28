@@ -555,7 +555,7 @@ export default function Map(props: MapProps) {
               'text-anchor': 'center',
             },
             paint: {
-              'text-color': '#fff',
+              'text-color': isDark ? '#fff' : '#000',
               // 'text-halo-color': 'rgba(255,255,255,0.5)',
               // 'text-halo-width': 1,
             },

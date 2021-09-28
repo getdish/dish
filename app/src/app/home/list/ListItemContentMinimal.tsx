@@ -9,7 +9,7 @@ import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
-import { TitleStyled } from '../../views/TitleStyled'
+import { TitleStyled, getListFontTheme } from '../../views/TitleStyled'
 import { ensureFlexText } from '../restaurant/ensureFlexText'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
 import { RankView } from '../restaurant/RankView'
@@ -141,6 +141,7 @@ const Header = memo(
                   >
                     <TitleStyled
                       fontSize={titleFontSize}
+                      fontTheme={getListFontTheme(list?.font)}
                       lineHeight={titleFontSize * 1.35}
                       color={colors.color}
                       hoverStyle={{
@@ -243,7 +244,7 @@ const Header = memo(
               )}
             </VStack>
 
-            {!minimal && (
+            {!minimal && !!review && (
               <VStack marginTop={-20}>
                 <ReviewImagesRow
                   marginTop={10}

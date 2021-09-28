@@ -49,7 +49,7 @@ import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
-import { TitleStyled } from '../../views/TitleStyled'
+import { TitleStyled, getFontFamily, getListFontFamily } from '../../views/TitleStyled'
 import { getListPhoto } from '../getListPhoto'
 import { StackItemProps } from '../HomeStackView'
 import { ColorPicker } from './ColorPicker'
@@ -152,7 +152,7 @@ const ListPageContent = memo(
       const isMinimal = !!list?.theme
       const listSlug = props.item.slug
       const themeName = useThemeName()
-      const listFont = 1 // list?.font
+      const listFont = list?.font || 0
 
       const setFont = async (val: number) => {
         list.font = val
@@ -470,8 +470,8 @@ const ListPageContent = memo(
                       <VStack display={isWeb ? 'block' : 'flex'}>
                         <TitleStyled
                           {...titleColors}
-                          // fontTheme={!listFont ? 'slab' : 'sans'}
-                          lineHeight={fontSize * 1.3}
+                          fontTheme={listFont === 0 ? 'slab' : 'sans'}
+                          lineHeight={fontSize * 1.2}
                           fontWeight="800"
                           fontSize={fontSize}
                           {...(isEditing && {
@@ -482,7 +482,8 @@ const ListPageContent = memo(
                             <Input
                               fontSize={fontSize}
                               {...titleColors}
-                              fontWeight="800"
+                              fontWeight="700"
+                              fontFamily={getListFontFamily(list.font)}
                               width="100%"
                               textAlign="left"
                               defaultValue={list.name || ''}
@@ -617,21 +618,21 @@ const ListPageContent = memo(
                         <InteractiveContainer alignItems="center">
                           <SmallButton
                             borderRadius={0}
-                            theme={!listFont ? 'active' : null}
+                            theme={listFont === 0 ? 'active' : null}
                             onPress={() => {
                               setFont(0)
                             }}
                           >
-                            Bold
+                            Strong
                           </SmallButton>
                           <SmallButton
                             borderRadius={0}
                             theme={listFont === 1 ? 'active' : null}
                             onPress={() => {
-                              setFont(0)
+                              setFont(1)
                             }}
                           >
-                            Thin
+                            Deco
                           </SmallButton>
                         </InteractiveContainer>
 

@@ -7,11 +7,12 @@ import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { pluralize } from '../../helpers/pluralize'
 import { Image } from '../views/Image'
 import { TagButton } from '../views/TagButton'
-import { TitleStyled } from '../views/TitleStyled'
+import { FontTheme, TitleStyled } from '../views/TitleStyled'
 import { ListColors } from './list/listColors'
 import { Card, CardOverlay, CardProps } from './restaurant/Card'
 
 export type FeedCardProps = CardProps & {
+  fontTheme?: FontTheme
   author?: string
   children?: any
   numItems?: number
@@ -30,6 +31,7 @@ export const FeedCard = ({
   color,
   listColors,
   size = 'sm',
+  fontTheme,
   children,
   numItems,
   outside,
@@ -104,6 +106,7 @@ export const FeedCard = ({
             <VStack overflow="hidden" spacing={size}>
               <VStack position="relative" display={isWeb ? 'block' : 'flex'}>
                 <TitleStyled
+                  fontTheme={fontTheme}
                   // backgroundColor={cardProps.backgroundColor as any}
                   letterSpacing={-1}
                   fontWeight="300"

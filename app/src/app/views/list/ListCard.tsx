@@ -70,6 +70,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
       <FeedCard
         listColors={listColors}
         theme={theme}
+        fontTheme={!list.font ? 'slab' : 'sans'}
         {...(props.colored && {
           color: listColors.colorForTheme,
           backgroundColor: `${listColors.backgroundColor}44`,
