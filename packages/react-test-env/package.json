@@ -1,6 +1,6 @@
 {
   "name": "@dish/react-test-env",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
