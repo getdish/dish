@@ -29,11 +29,11 @@ export const LinkButton = forwardRef(function LinkButtonContent<
     theme,
     ...restProps
   } = props
-  const getElement = (props) =>
+  const getElement = (innerProps) =>
     wrapWithLinkElement(
       <Button
         {...restProps}
-        ref={combineRefs(props.ref, ref)}
+        ref={combineRefs(innerProps.ref, ref)}
         {...(isActive && activeStyle)}
         textProps={isActive ? props.activeTextStyle : textProps}
       >

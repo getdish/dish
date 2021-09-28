@@ -1,7 +1,7 @@
 import { slugify } from '@dish/graph'
 import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@dish/react-feather'
 import { capitalize } from 'lodash'
-import React, { memo, useState } from 'react'
+import React, { forwardRef, memo, useState } from 'react'
 import { ScrollView } from 'react-native'
 import { Box, BoxProps, Divider, Spacer, Toast, VStack, useDebounceEffect } from 'snackui'
 
@@ -15,7 +15,7 @@ import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
 
 export const AppMenuContents = memo(
-  ({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps) => {
+  forwardRef(({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps) => {
     const userStore = useUserStore()
     const { isLoggedIn, user, logout } = userStore
     const [showContents, setShowContents] = useState(false)
@@ -37,6 +37,7 @@ export const AppMenuContents = memo(
         alignItems="stretch"
         pointerEvents="auto"
         minWidth={240}
+        width={240}
         {...props}
       >
         {/* safari y={} fix overflow */}
@@ -172,5 +173,5 @@ export const AppMenuContents = memo(
         </VStack>
       </Box>
     )
-  }
+  })
 )

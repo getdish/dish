@@ -33,10 +33,12 @@ export const AppMenuButton = memo(() => {
           )
         }}
       >
-        <Theme name="dark">
-          {/* CONTENTS HERE */}
-          <AppMenuContents hideUserMenu={appMenu.hide} />
-        </Theme>
+        <Popover.Content>
+          <Theme name="dark">
+            {/* CONTENTS HERE */}
+            <AppMenuContents hideUserMenu={appMenu.hide} />
+          </Theme>
+        </Popover.Content>
       </Popover>
     </HStack>
   )
