@@ -1,6 +1,6 @@
 {
   "name": "@dish/babel-preset",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "main": "babel.config.js",
   "publishConfig": {
     "access": "public"
@@ -30,7 +30,7 @@
     "core-js": "^3.10.1",
     "react": "*",
     "react-dom": "*",
-    "react-native-reanimated": "^2.2.0",
+    "react-native-reanimated": "2.3.0-beta.1",
     "react-refresh": "^0.10.0"
   },
   "peerDependencies": {
