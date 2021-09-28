@@ -5,7 +5,7 @@ import 'expo-asset'
 import '@dish/helpers/polyfill'
 
 import * as Sentry from '@sentry/react-native'
-import { registerRootComponent } from 'expo'
+import { AppRegistry } from 'react-native'
 
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
@@ -23,32 +23,14 @@ if (process.env.NODE_ENV === 'development') {
 
 navigator.geolocation = require('@react-native-community/geolocation')
 
-// console.log('polyfill..........')
-// require('@formatjs/intl-getcanonicallocales/polyfill')
-// require('@formatjs/intl-locale/polyfill')
-// require('@formatjs/intl-numberformat/polyfill')
-// require('@formatjs/intl-displaynames/polyfill')
-// require('@formatjs/intl-displaynames/locale-data/en')
-// require('@formatjs/intl-pluralrules/polyfill')
-// require('@formatjs/intl-pluralrules/locale-data/en')
-// require('@formatjs/intl-datetimeformat/polyfill')
-// require('@formatjs/intl-datetimeformat/locale-data/en')
-// require('@formatjs/intl-relativetimeformat/polyfill')
-// require('@formatjs/intl-relativetimeformat/locale-data/en')
-
-// import { activateKeepAwake } from 'expo-keep-awake'
-
-// if (__DEV__) {
-//   activateKeepAwake()
-// }
-
 try {
-  console.log('🥾 boot', process.env.SENTRY_URL, process.env.NODE_ENV, process.env.DISH_ENV)
   const { Root } = require('./src/Root')
+  // prettier-ignore
+  console.log('🥾 boot', process.env.SENTRY_URL, process.env.NODE_ENV, process.env.DISH_ENV, Root)
   // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
   // It also ensures that whether you load the app in the Expo client or in a native build,
   // the environment is set up appropriately
-  registerRootComponent(Root)
+  AppRegistry.registerComponent('main', () => Root)
 } catch (err) {
   console.error('Error running app:')
   console.error(err.message)
