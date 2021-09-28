@@ -109,7 +109,7 @@ export const RestaurantReview = memo(
                 ellipseContentAbove={200}
                 text={review?.text ?? ''}
                 name={userName}
-                username={userName}
+                username={review?.user.username || ''}
                 after={
                   <HStack flex={1} overflow="hidden" alignItems="center" maxWidth="100%">
                     <VStack flex={1} />
