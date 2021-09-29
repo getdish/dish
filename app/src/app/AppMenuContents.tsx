@@ -2,7 +2,7 @@ import { slugify } from '@dish/graph'
 import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@dish/react-feather'
 import { capitalize } from 'lodash'
 import React, { forwardRef, memo, useState } from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, useColorScheme } from 'react-native'
 import { Box, BoxProps, Divider, Spacer, Toast, VStack, useDebounceEffect } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
@@ -15,10 +15,11 @@ import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
 
 export const AppMenuContents = memo(
-  forwardRef(({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps) => {
+  forwardRef(({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps, ref) => {
     const userStore = useUserStore()
     const { isLoggedIn, user, logout } = userStore
     const [showContents, setShowContents] = useState(false)
+    const colorScheme = useColorScheme()
 
     // dirty web autofocus fix
     useDebounceEffect(
@@ -37,6 +38,7 @@ export const AppMenuContents = memo(
         pointerEvents="auto"
         minWidth={300}
         width={300}
+        ref={ref as any}
         {...props}
       >
         {/* safari y={} fix overflow */}
@@ -105,18 +107,19 @@ export const AppMenuContents = memo(
                       switch (userStore.theme) {
                         // 🏓 auto = null
                         case 'dark':
-                          return null
-                        case 'light':
-                          return 'dark'
-                        case null:
                           return 'light'
+                        case 'light':
+                          return 'auto'
+                        default:
+                        case 'auto':
+                          return colorScheme === 'dark' ? 'light' : 'dark'
                       }
                     })()
                     userStore.setTheme(next)
                   })
                 }}
               >
-                {capitalize(userStore.theme ?? 'auto')}
+                Theme: {capitalize(userStore.theme ?? 'auto')}
               </MenuLinkButton>
 
               {isLoggedIn && (

@@ -156,9 +156,12 @@ export function Root() {
     })
   }, [])
 
+  const defaultTheme =
+    (userStore.theme === 'auto' ? colorScheme : userStore.theme) ?? colorScheme ?? 'dark'
+
   return (
     <>
-      <SnackUIProvider themes={themes} defaultTheme={userStore.theme ?? colorScheme ?? 'dark'}>
+      <SnackUIProvider themes={themes} defaultTheme={defaultTheme}>
         <ProvideRouter routes={routes}>
           <Suspense fallback={null}>
             {!isLoaded && <AppLoading />}

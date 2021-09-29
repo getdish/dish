@@ -6,7 +6,7 @@ import * as Colors from '../../../constants/colors'
 // neon colors
 const lightColors = [...Colors.colors200, '#ffffff', '#31e90b']
 const mediumColors = [...Colors.colors400, '#777777', '#815c0b']
-const darkColors = [...Colors.colors700, '#000000', '#10410a']
+const darkColors = [...Colors.colors600, '#000000', '#10410a']
 const colorSetSize = lightColors.length
 export const listColors = [...lightColors, ...mediumColors, ...darkColors]
 
