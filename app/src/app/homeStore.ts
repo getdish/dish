@@ -550,9 +550,9 @@ class HomeStore extends Store {
   }
 
   updateCurrentState<A extends HomeStateItem>(via: string, val: Partial<Omit<A, 'type'>>) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`🏡 updateCurrentState ${via}`, val)
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log(`🏡 updateCurrentState ${via}`, val)
+    // }
     this.updateHomeState(`updateCurrentState(${via})`, {
       id: this.currentState.id,
       ...val,

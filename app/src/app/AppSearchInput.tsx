@@ -124,8 +124,6 @@ export const AppSearchInput = memo(() => {
 
   const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore, view), [])
 
-  console.log('color', color)
-
   return (
     <InputFrame>
       {/* Loading / Search Icon */}

@@ -143,8 +143,6 @@ const HomePageContent = (props: Props) => {
     region: state.region,
   }
 
-  console.log('home', regionResponse, homePageFeedProps)
-
   // {/* TODO pass isActive once gqty supports skeleton loading */}
 
   return (

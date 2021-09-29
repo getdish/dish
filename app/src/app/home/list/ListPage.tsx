@@ -361,7 +361,7 @@ const ListPageContent = memo(
               fullscreen
               zIndex={0}
               backgroundColor={listColors.backgroundForTheme}
-              opacity={0.25}
+              opacity={0.5}
             />
             <>
               <PaneControlButtonsLeft>

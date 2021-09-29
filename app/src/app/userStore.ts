@@ -17,16 +17,19 @@ import { queryUserQuery } from '../queries/queryUser'
 import { router } from '../router'
 import { appMenuStore } from './AppMenuStore'
 
-type ThemeName = 'dark' | 'light'
+type ThemeName = 'dark' | 'light' | 'auto'
 
 const hasLoggedInBefore = !!localStorage.getItem('has-logged-in')
+
+const THEME_KEY = 'user-theme'
+const currentTheme = localStorage.getItem(THEME_KEY) as ThemeName
 
 class UserStore extends Store {
   user: Partial<User> | null = null
   loading = false
   messages: string[] = []
   allVotes: { [id: string]: Review } = {}
-  theme: ThemeName | null = null
+  theme: ThemeName | null = currentTheme ?? null
 
   get hasLoggedInBefore() {
     return hasLoggedInBefore
@@ -42,6 +45,9 @@ class UserStore extends Store {
   }
 
   setTheme(theme: ThemeName | null) {
+    if (theme) {
+      localStorage.setItem(THEME_KEY, theme)
+    }
     this.theme = theme
   }
 
