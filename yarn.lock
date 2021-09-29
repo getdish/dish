@@ -1748,6 +1748,7 @@ __metadata:
     "@dish/server": "*"
     "@dish/use-store": "*"
     "@dish/webpack": "*"
+    "@envelop/core": ^1.2.0
     "@expo/html-elements": ^0.0.1
     "@loadable/component": ^5.14.1
     "@mdx-js/react": ^1.6.22
@@ -2323,6 +2324,26 @@ __metadata:
   dependencies:
     "@types/hammerjs": ^2.0.36
   checksum: 8945137cec5837edd70af3f2e0ea621543eb0aa3b667e6269ec6485350f4d120c2434b37c7c30b1cf42a65275dd61c1f24626749c616696d3956ac0c008c4766
+  languageName: node
+  linkType: hard
+
+"@envelop/core@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@envelop/core@npm:1.2.0"
+  dependencies:
+    "@envelop/types": 1.1.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 300d28b05ce5cde9866d6c15d78e172480cd9162420971884f0c6d36703393669aa03485d46792bb2afb266ca45bfef8578f12ca41b01ea445788479e7b12510
+  languageName: node
+  linkType: hard
+
+"@envelop/types@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@envelop/types@npm:1.1.0"
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 1ed6c59c5b91ddb35ad8ca01565b7ef3997d13ebfa60b944828ce33cb1215c6d5f920614d5ff256642c4a248dbdd3402f7c07f2774046a4a6ae092221426a84d
   languageName: node
   linkType: hard
 
