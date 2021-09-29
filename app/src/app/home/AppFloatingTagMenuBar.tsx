@@ -32,8 +32,8 @@ export const AppFloatingTagMenuBar = memo(() => {
           style={StyleSheet.absoluteFill}
           colors={
             media.sm
-              ? [`#22222200`, themeName === 'dark' ? '#222222' : `#22222244`]
-              : [`#22222244`, `#22222200`]
+              ? [`#22222200`, themeName === 'dark' ? '#222222' : `#22222233`]
+              : [`#22222233`, `#22222200`]
           }
         />
       </AbsoluteVStack>
