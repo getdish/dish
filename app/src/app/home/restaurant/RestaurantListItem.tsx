@@ -205,7 +205,7 @@ const RestaurantListItemContent = memo(
             alignItems: 'center',
             paddingVertical: 5,
             hoverStyle: {
-              backgroundColor: theme.backgroundColorTransluscent,
+              backgroundColor: theme.backgroundColorTransluscentHover,
             },
           })}
         >
@@ -262,7 +262,7 @@ const RestaurantListItemContent = memo(
 
           <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}>
             <VStack
-              hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
+              hoverStyle={{ backgroundColor: theme.backgroundColorTransluscentHover }}
               width={950}
               {...(shouldShowOneLine && {
                 width: 'auto',

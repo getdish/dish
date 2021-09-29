@@ -30,6 +30,7 @@ body {
   padding: 0px;
   background-color: #fff;
   pointer-events: none;
+  inset: 0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -45,6 +46,10 @@ html, body, #root {
   max-height: 100vh;
   height: -webkit-fill-available;
   max-height: -webkit-fill-available;
+}
+
+#root > div {
+  overflow: hidden;
 }
 
 html, body {

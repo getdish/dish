@@ -1,6 +1,6 @@
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Home, Plus } from '@dish/react-feather'
+import { Plus } from '@dish/react-feather'
 import React, { memo, useState } from 'react'
 import {
   AbsoluteVStack,
@@ -8,11 +8,11 @@ import {
   HStack,
   Spacer,
   VStack,
+  isTouchDevice,
   useDebounce,
   useDebounceEffect,
 } from 'snackui'
 
-import { cardFrameWidth } from '../../constants/constants'
 import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
@@ -56,7 +56,10 @@ export const HomePageFeed = memo(
         hideRegions: false,
         results: hovered ?? useSetAppMapProps.results,
       }
-      // console.log('props are', props)
+
+      // const topCuisines = useTopCuisines(homeStore.currentState.center!)
+      // console.log('topCuisines', topCuisines)
+
       useSetAppMap(props)
 
       // useDebounceEffect(
@@ -180,7 +183,7 @@ export const HomePageFeed = memo(
               <SlantedTitle size="xxs">Top Playlists</SlantedTitle>
             </AbsoluteVStack>
 
-            <Grid itemMinWidth={cardFrameWidth}>
+            <Grid itemMinWidth={isTouchDevice ? 170 : 200}>
               {trendingLists.map((list, i) => {
                 const listSlug = list.slug
                 return (

@@ -269,9 +269,7 @@ export const ReviewTagsRow = memo(
                 icon={<Search opacity={0.5} size={16} color="#888" />}
                 marginRight={15}
                 backgroundColor="transparent"
-              >
-                search
-              </SmallButton>
+              />
             )}
 
             {isFocused && (
@@ -293,15 +291,16 @@ export const ReviewTagsRow = memo(
               const lastItem = tags[i - 1]
               return (
                 <TagButton
+                  hideRating
                   fadeLowlyVoted
                   noLink
-                  size="sm"
+                  size={props.size ?? 'sm'}
                   restaurant={restaurant}
                   hideRank
                   key={tbp.slug || 0}
                   // refetchKey={refetchKey}
                   {...tbp}
-                  // backgroundColor="transparent"
+                  backgroundColor="transparent"
                   {...(isLense && {
                     name: '',
                     marginRight: -4,
@@ -313,9 +312,9 @@ export const ReviewTagsRow = memo(
                     icon: '',
                     circular: false,
                   })}
-                  {...(!isLense && {
-                    backgroundColor: 'transparent',
-                  })}
+                  // {...(!isLense && {
+                  //   backgroundColor: 'transparent',
+                  // })}
                   {...(lastItem?.type === 'lense' &&
                     !isLense && {
                       marginLeft: 20,

@@ -24,7 +24,8 @@ const baseTheme = {
 const lightBase = {
   colorAlt: blue,
   // restaurantitem header + loading effects want this to be off white
-  backgroundColorTransluscent: '#e2e2e233',
+  // this being #fff looks better on list pages....
+  backgroundColorTransluscent: '#ffffff33',
   backgroundColorTransluscentHover: '#e2e2e222',
   backgroundColorDarker: '#f6f6f6',
   backgroundColorAlt: blue200,
