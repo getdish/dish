@@ -129,7 +129,7 @@ export function Card(props: CardProps) {
           }
           scale={1}
           overflow="hidden"
-          borderRadius={cardFrameProps.flat ? 0 : cardFrameBorderRadius}
+          borderRadius={cardFrameProps.flat ? 7 : cardFrameBorderRadius}
           backgroundColor={backgroundColor}
           {...(cardFrameProps.hoverEffect === 'background' && {
             opacity: 0.6,
