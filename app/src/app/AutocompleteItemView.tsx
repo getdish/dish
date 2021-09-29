@@ -39,7 +39,6 @@ export const AutocompleteItemView = memo(
   }) => {
     const showLocation = target === 'location'
     const theme = useTheme()
-    const themeColor = rgbString(useCurrentLenseColor().rgb)
     const hideAutocompleteSlow = useDebounce(() => autocompletesStore.setVisible(false), 50)
     const plusButtonEl = showAddButton ? (
       <>
@@ -73,10 +72,10 @@ export const AutocompleteItemView = memo(
         alignSelf="stretch"
         justifyContent="flex-start"
         minHeight={46}
-        backgroundColor={isActive ? themeColor : 'transparent'}
+        backgroundColor={isActive ? '#000' : 'transparent'}
         borderRadius={0}
         hoverStyle={{
-          backgroundColor: isActive ? themeColor : theme.backgroundColorDarker,
+          backgroundColor: isActive ? '#000' : theme.backgroundColorDarker,
         }}
         {...(hideBackground && {
           backgroundColor: 'transparent',

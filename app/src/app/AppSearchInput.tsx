@@ -109,7 +109,7 @@ export const AppSearchInput = memo(() => {
     })
   }, [])
 
-  const input = inputStore.node
+  // const input = inputStore.node
   const searchInputContainer = useRef<View>()
 
   // focus for web
@@ -123,6 +123,8 @@ export const AppSearchInput = memo(() => {
   }, [])
 
   const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore, view), [])
+
+  console.log('color', color)
 
   return (
     <InputFrame>
@@ -179,7 +181,7 @@ export const AppSearchInput = memo(() => {
                   // }
                 }}
                 onKeyPress={handleKeyPressInner}
-                placeholderTextColor="#999"
+                placeholderTextColor={color}
                 onFocus={(e) => {
                   inputStore.setIsFocused(true)
                   if (isDesktop) {

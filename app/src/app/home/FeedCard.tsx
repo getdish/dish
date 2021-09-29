@@ -121,7 +121,7 @@ export const FeedCard = ({
                   letterSpacing={-1}
                   fontWeight="300"
                   fontSize={fontSize}
-                  lineHeight={fontSize * 1.3}
+                  lineHeight={fontSize * 1.2}
                   color={listColors?.colorForTheme}
                   // backgroundColor={listColors?.lightColor}
                 >
@@ -131,7 +131,7 @@ export const FeedCard = ({
 
               {!!(author || typeof numItems !== 'undefined') && (
                 <Paragraph
-                  size={size === 'xxs' || size === 'xs' || size === 'sm' ? 'sm' : 'md'}
+                  size={size === 'xxs' || size === 'xs' || size === 'sm' ? 'xs' : 'sm'}
                   fontWeight="300"
                   opacity={0.5}
                 >
