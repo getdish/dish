@@ -31,6 +31,7 @@ import { drawerStore } from './drawerStore'
 import { AppFloatingTagMenuBar } from './home/AppFloatingTagMenuBar'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { homeStore } from './homeStore'
+import { useAppDrawerWidth } from './hooks/useAppDrawerWidth'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { mapStyles } from './mapStyles'
@@ -281,10 +282,9 @@ export const AppMapContents = memo(function AppMapContents() {
       alignItems="flex-end"
       justifyContent="flex-end"
       maxWidth={pageWidthMax}
+      margin="auto"
     >
-      <VStack display={media.sm ? 'none' : 'flex'} height="100%" flex={2}>
-        {ensureFlexText}
-      </VStack>
+      <MapFlexItem />
       <VStack
         position="relative"
         pointerEvents="auto"
@@ -324,6 +324,7 @@ export const AppMapContents = memo(function AppMapContents() {
           </>
         )}
         {media.sm && <AppMapBottomFade />}
+        {!media.sm && <AppMapRightFade />}
         <Map
           center={center}
           span={span}
@@ -348,8 +349,36 @@ export const AppMapContents = memo(function AppMapContents() {
   )
 })
 
-const AppMapBottomFade = memo(() => {
+const MapFlexItem = () => {
+  const drawerWidth = useAppDrawerWidth()
   const media = useMedia()
+  return (
+    <VStack maxWidth={drawerWidth} display={media.sm ? 'none' : 'flex'} height="100%" flex={2}>
+      {ensureFlexText}
+    </VStack>
+  )
+}
+
+const AppMapBottomFade = memo(() => {
+  const theme = useTheme()
+  const isPhone = useIsMobilePhone()
+
+  if (isPhone) {
+    return null
+  }
+
+  return (
+    <AbsoluteVStack zIndex={100} pointerEvents="none" bottom={0} left={0} right={0}>
+      <LinearGradient
+        pointerEvents="none"
+        style={StyleSheet.absoluteFill}
+        colors={[`${theme.mapBackground}00`, theme.mapBackground]}
+      />
+    </AbsoluteVStack>
+  )
+})
+
+const AppMapRightFade = memo(() => {
   const theme = useTheme()
   const isPhone = useIsMobilePhone()
 
@@ -359,16 +388,18 @@ const AppMapBottomFade = memo(() => {
 
   return (
     <AbsoluteVStack
-      zIndex={100}
+      zIndex={1000000000000}
       pointerEvents="none"
       bottom={0}
-      left={0}
+      top={0}
       right={0}
-      height={media.sm ? 250 : 100}
+      width={60}
     >
       <LinearGradient
         pointerEvents="none"
         style={StyleSheet.absoluteFill}
+        start={[0, 0]}
+        end={[1, 0]}
         colors={[`${theme.mapBackground}00`, theme.mapBackground]}
       />
     </AbsoluteVStack>

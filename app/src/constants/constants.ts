@@ -26,7 +26,7 @@ export const logoSmHeight = Math.round(894 * 0.069)
 export const logoXsWidth = Math.round(1024 * 0.044)
 export const logoXsHeight = Math.round(1024 * 0.044)
 
-export const pageWidthMax = 2000
+export const pageWidthMax = 1800
 
 export const searchBarBorderRadius = 7
 export const searchBarTopOffset = 3

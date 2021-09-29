@@ -12,7 +12,13 @@ import {
   useTheme,
 } from 'snackui'
 
-import { drawerWidthMax, isWeb, searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import {
+  drawerWidthMax,
+  isWeb,
+  pageWidthMax,
+  searchBarHeight,
+  zIndexDrawer,
+} from '../../constants/constants'
 import { router } from '../../router'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
@@ -137,19 +143,21 @@ const HomeContainerLarge = (props) => {
     <VStack
       fullscreen
       display={media.sm ? 'none' : 'flex'}
+      margin="auto"
+      maxWidth={pageWidthMax}
       // TODO ui-static this fails if i remove conditional above!
-      width={lastWidth}
       flex={1}
       position="absolute"
       top={0}
       pointerEvents="none"
-      alignItems="flex-end"
+      alignItems="flex-start"
       zIndex={zIndexDrawer}
     >
       <HStack
         pointerEvents="auto"
         position="absolute"
         top={0}
+        width={lastWidth}
         bottom={0}
         zIndex={10}
         width="100%"
