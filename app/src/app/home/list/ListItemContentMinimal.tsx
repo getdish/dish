@@ -103,7 +103,7 @@ const Header = memo(
         <VStack
           // hoverStyle={{ backgroundColor: `${listColors.backgroundColor}11` }}
           hoverStyle={{
-            backgroundColor: theme.backgroundColorTransluscentHover,
+            backgroundColor: theme.backgroundColorTransluscent,
           }}
           paddingVertical={20}
           paddingHorizontal={24}
@@ -262,6 +262,7 @@ const Header = memo(
 
           {!minimal && (
             <ReviewTagsRow
+              size="lg"
               hideGeneralTags={!editable}
               // wrapTagsRow
               list={list}
@@ -310,6 +311,7 @@ export const Body = memo(
       >
         <Suspense fallback={null}>
           <RestaurantReview
+            hideMeta
             size="lg"
             marginTop={-20}
             marginLeft={-10}

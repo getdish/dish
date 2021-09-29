@@ -98,7 +98,7 @@ export const useUserTagVotes = (props: UserTagVotesProps) => {
     })
   )
   // use the first one when querying multiple
-  const vote = votesNow ?? votes[0]?.vote ?? 0
+  const vote = votesNow ?? (votes[0]?.vote || null)
 
   // sync down
   useEffect(() => {

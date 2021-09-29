@@ -41,11 +41,12 @@ export const FeedCard = ({
 }: FeedCardProps) => {
   const { chromeless, emphasizeTag, flat } = cardProps
   const titleLen = typeof title === 'string' ? title.length : 20
-  const lenScale = titleLen > 40 ? 0.68 : titleLen > 30 ? 0.75 : titleLen > 20 ? 0.85 : 1.2
+  const lenScale =
+    titleLen > 55 ? 0.6 : titleLen > 40 ? 0.75 : titleLen > 30 ? 0.9 : titleLen > 20 ? 1.05 : 1.5
   const tagScale = emphasizeTag ? 0.8 : 1
   const sizeScale = size === 'xs' ? 0.7 : size === 'sm' ? 0.8 : size === 'lg' ? 1.1 : 1
   const fontSize = Math.round(24 * lenScale * tagScale * sizeScale)
-  const imgSize = size === 'lg' ? 85 : 70
+  const imgSize = size === 'lg' ? 125 : 85
   const theme = useTheme()
 
   return (
@@ -67,7 +68,16 @@ export const FeedCard = ({
 
           {typeof photo === 'string' && (
             <AbsoluteVStack fullscreen overflow="hidden">
-              <AbsoluteVStack borderRadius={100} overflow="hidden" top={-20} right={-20}>
+              <AbsoluteVStack
+                borderRadius={100}
+                overflow="hidden"
+                top={-20}
+                right={-20}
+                {...(size === 'lg' && {
+                  top: -55,
+                  right: -45,
+                })}
+              >
                 <Image
                   source={{ uri: getImageUrl(photo, imgSize, imgSize) }}
                   style={{ width: imgSize, height: imgSize }}

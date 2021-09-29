@@ -273,8 +273,9 @@ const TagButtonInner = (props: TagButtonProps) => {
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 36 : 38}
       {...(fadeLowlyVoted &&
+        typeof vote === 'number' &&
         vote <= 2 && {
-          opacity: 0.5,
+          opacity: 0.4,
         })}
       {...rest}
     >

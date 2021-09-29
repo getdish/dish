@@ -240,7 +240,7 @@ const ListPageContent = memo(
       const nameLen = (list.name || '').length
       const media = useMedia()
       const theme = useTheme()
-      let fontSize = 1.5 * (nameLen > 40 ? 26 : nameLen > 30 ? 32 : nameLen > 24 ? 40 : 48)
+      let fontSize = 1.5 * (nameLen > 40 ? 26 : nameLen > 30 ? 32 : nameLen > 24 ? 42 : 56)
       if (media.sm) {
         fontSize = fontSize * 0.8
       }
@@ -499,16 +499,15 @@ const ListPageContent = memo(
                           )}
                         </TitleStyled>
                       </VStack>
-                      <Spacer />
                       <VStack
                         maxWidth={800}
                         alignSelf="center"
                         width="100%"
                         zIndex={100}
                         position="relative"
-                        paddingHorizontal={10}
                       >
                         <CommentBubble
+                          size="lg"
                           showChildren={!!(isEditing || list.description)}
                           color={listColors.color}
                           chromeless

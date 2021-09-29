@@ -11,7 +11,7 @@ export const TagButtonVote = graphql(
     props: TagButtonProps & {
       scale: number
       disablePopover?: boolean
-      vote: number
+      vote?: number
     }
   ) => {
     const { scale, vote } = props
@@ -34,8 +34,8 @@ export const TagButtonVote = graphql(
         marginVertical={-14 * scale}
         marginHorizontal={-8 * scale}
       >
-        {!props.disablePopover && vote === 0 && <Circle {...iconProps} />}
-        {vote !== 0 && (
+        {!props.disablePopover && !vote && <Circle {...iconProps} />}
+        {!!vote && (
           <VStack
             width={28 * scale}
             paddingLeft={6}
