@@ -67,7 +67,7 @@ export const FeedCard = ({
           {outside}
 
           {typeof photo === 'string' && (
-            <AbsoluteVStack fullscreen overflow="hidden">
+            <AbsoluteVStack borderRadius={8} fullscreen overflow="hidden">
               <AbsoluteVStack
                 borderRadius={100}
                 overflow="hidden"

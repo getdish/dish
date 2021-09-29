@@ -2,6 +2,7 @@ import { Heart } from '@dish/react-feather'
 import React from 'react'
 import { Button, ButtonProps, Text, Tooltip, prevent } from 'snackui'
 
+import { red } from '../../constants/colors'
 import { SmallButton } from './SmallButton'
 
 export type FavoriteButtonProps = ButtonProps & {
@@ -31,14 +32,14 @@ export const FavoriteButton = ({
                 {isFavorite && (
                   <Text
                     cursor="default"
-                    color="red"
-                    fontSize={sizePx * 0.9}
+                    color={red}
+                    fontSize={sizePx * 0.65}
                     width={sizePx * 0.5}
                     height={sizePx * 0.5}
                     lineHeight={sizePx * 0.5}
-                    marginTop={1}
-                    x={-1.5}
-                    y={2}
+                    // marginTop={1}
+                    // x={-1.5}
+                    // y={2}
                   >
                     ♥️
                   </Text>

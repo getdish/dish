@@ -20,7 +20,9 @@ import { UseSetAppMapProps, useSetAppMap } from '../appMapStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
+import { Review } from '../views/Review'
 import { SlantedTitle } from '../views/SlantedTitle'
+import { SuspenseFallback } from '../views/SuspenseFallback'
 import { TitleStyled } from '../views/TitleStyled'
 import { FeedCard } from './FeedCard'
 import { homePageStore } from './homePageStore'
@@ -100,6 +102,17 @@ export const HomePageFeed = memo(
         limit: 16,
       })
 
+      // const reviews = query.review({
+      //   where: {
+      //     restaurant_id: {
+      //       _is_null: false,
+      //     },
+      //     text: { _neq: '' },
+      //   },
+      //   limit: 10,
+      //   order_by: [{ authored_at: order_by.desc }],
+      // })
+
       const queryOneList = (tagSlug: string) => {
         return query.list_populated({
           args: {
@@ -146,13 +159,13 @@ export const HomePageFeed = memo(
         [allRestaurantsKey]
       )
 
-      const numAddButtons = Math.max(1, 10 - trendingLists.length)
+      const numAddButtons = Math.max(0, 8 - trendingLists.length)
 
       return (
         <>
           <HStack position="relative">
             <ContentScrollViewHorizontal>
-              <HStack alignItems="center" spacing="xl" paddingHorizontal={16}>
+              <HStack alignItems="center" spacing="xxl" paddingHorizontal={16}>
                 {tagLenses.map((lense, i) => {
                   return (
                     <Link key={i} tag={lense}>
@@ -161,7 +174,7 @@ export const HomePageFeed = memo(
                         hoverStyle={{
                           color: rgbString(lense.rgb as any, 0.6),
                         }}
-                        fontSize={24}
+                        fontSize={26}
                         lineHeight={40}
                         paddingVertical={5}
                       >
@@ -180,7 +193,7 @@ export const HomePageFeed = memo(
 
           <VStack paddingHorizontal={10} position="relative">
             <AbsoluteVStack zIndex={100} top={-15} left={10}>
-              <SlantedTitle size="xxs">Top Playlists</SlantedTitle>
+              <SlantedTitle size="xs">Top Playlists</SlantedTitle>
             </AbsoluteVStack>
 
             <Grid itemMinWidth={isTouchDevice ? 170 : 200}>
@@ -247,6 +260,14 @@ export const HomePageFeed = memo(
                 )
               )}
             </Grid>
+
+            {/* <VStack>
+              {reviews.map((review, i) => (
+                <SuspenseFallback key={`${i}${review.id}`}>
+                  <Review review={review} />
+                </SuspenseFallback>
+              ))}
+            </VStack> */}
           </VStack>
         </>
       )
