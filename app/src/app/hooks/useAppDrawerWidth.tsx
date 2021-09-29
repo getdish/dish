@@ -16,7 +16,9 @@ export const getAppDrawerWidth = (max = drawerWidthMax): number => {
   } else {
     scaleFactor = 0.6
   }
-  return Math.floor(Math.min(Math.max(100, width * scaleFactor), Math.min(max, width)))
+  const next = Math.floor(Math.min(Math.max(100, width * scaleFactor), Math.min(max, width)))
+  console.log('width', next)
+  return next
 }
 
 export const useAppDrawerWidth = (max?: number) => {
