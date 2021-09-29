@@ -53,7 +53,8 @@ export const HomePageFeed = memo(
         setHoveredDbc.cancel()
       }
 
-      const props = {
+      const props: UseSetAppMapProps = {
+        showRank: !!hovered,
         ...useSetAppMapProps,
         hideRegions: false,
         results: hovered ?? useSetAppMapProps.results,

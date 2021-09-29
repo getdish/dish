@@ -63,6 +63,7 @@
     "@dish/server": "*",
     "@dish/use-store": "*",
     "@dish/webpack": "*",
+    "@envelop/core": "^1.2.0",
     "@expo/html-elements": "^0.0.1",
     "@loadable/component": "^5.14.1",
     "@mdx-js/react": "^1.6.22",

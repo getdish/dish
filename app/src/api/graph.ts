@@ -11,6 +11,7 @@ import {
   print,
 } from 'graphql'
 import gql from 'graphql-tag'
+import { merge } from 'lodash'
 
 import { redisDeletePattern, redisGet, redisSet } from './_rc'
 
@@ -24,7 +25,7 @@ type GQLCacheProps = {
 type CacheKeys = { [key: string]: string }
 
 type GQLCacheResponse =
-  | { type: 'full'; data: Object; parsed?: DocumentNode | null }
+  | { type: 'full'; data: Object; parsed?: DocumentNode | null; aliasToCacheKey: CacheKeys }
   | {
       type: 'partial'
       data: Object
@@ -133,6 +134,8 @@ const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheRespons
   }
   const parsed = gql(props.query)
 
+  console.log('START', print(parsed))
+
   const operation = parsed.definitions.find<OperationDefinitionNode>(
     ((x) => x.kind === 'OperationDefinition') as any
   )
@@ -141,6 +144,7 @@ const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheRespons
     return null
   }
 
+  // clear cache
   if (operation.operation === 'mutation') {
     // brute force
     // TODO can make this better, also can make this happen in a throttled way (also in a worker)
@@ -162,10 +166,8 @@ const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheRespons
         names.push(baseName)
       }
     }
-
     // ensure one of each
     names = [...new Set(names)]
-
     console.log(' [mutation] clearing cache for', names)
     for (const name of names) {
       const pattern = `*${name}*`
@@ -174,7 +176,7 @@ const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheRespons
     return null
   }
 
-  const cacheResult = await getCachedSelections(props, operation.selectionSet)
+  const cacheResult = await getCachedSelections(props, operation.selectionSet, parsed)
 
   if (cacheResult?.type === 'partial') {
     // rebuild new query
@@ -190,7 +192,7 @@ const parseQueryForCache = async (props: GQLCacheProps): Promise<GQLCacheRespons
       // convert to single line
       .replace(/\n/g, ' ')
     if (process.env.DEBUG && process.env.NODE_ENV === 'development') {
-      console.log(' 🐕 fetch ', parsedQuery)
+      console.log(' 🐕 partial fetch ', parsedQuery)
     }
 
     const body = JSON.stringify({
@@ -239,7 +241,8 @@ const getCacheable = (selection: FieldNode, isLoggedIn = false) => {
 
 async function getCachedSelections(
   props: GQLCacheProps,
-  selectionSetIn: SelectionSetNode
+  selectionSetIn: SelectionSetNode,
+  parsed: DocumentNode
 ): Promise<GQLCacheResponse | null> {
   const total = selectionSetIn.selections.length
 
@@ -256,12 +259,14 @@ async function getCachedSelections(
     const name = `${selection.name.value || ''}`
     const selectionSet = selection.selectionSet
     if (shouldSkipCache(name, props.isLoggedIn) || !selectionSet?.selections) {
+      console.log('UNCACHEABLE1', name, selection)
       uncached.push(selection)
       continue
     }
     const [subCacheable, subUncacheable] = getCacheable(selection, props.isLoggedIn)
     if (!subCacheable.length) {
       if (subUncacheable.length) {
+        console.log('UNCACHEABLE2', name, subCacheable)
         uncached.push(selection)
       }
       continue
@@ -284,7 +289,15 @@ async function getCachedSelections(
       console.log(' >--', !!cached ? '✅' : '❌', name, ...(cached && subUncacheable.length ? ['uncached =', printSel(subUncacheable), '\n', cacheKey] : []))
     }
     if (cached) {
-      data[alias] = JSON.parse(cached)
+      // console.log('write to', alias, 'from', selection.alias, printSel(cached))
+      const items = JSON.parse(cached)
+      data[alias] = items.map((item) => {
+        return realiasData({
+          data: item,
+          selectionSet: cacheableSel.selectionSet!,
+        })
+      })
+      console.log('RE ALIASED DATA', JSON.stringify(data[alias]))
       // for partial cache hit
       if (subUncacheable.length) {
         const total = selectionSet.selections.length
@@ -318,13 +331,14 @@ async function getCachedSelections(
 
   // full cache
   if (uncached.length === 0) {
-    return { type: 'full', data } as const
+    return { type: 'full', data, parsed, aliasToCacheKey } as const
   }
 
   return {
     type: 'partial',
     data,
     aliasToCacheKey,
+    parsed,
     selectionSet: {
       ...selectionSetIn,
       selections: uncached,
@@ -332,7 +346,7 @@ async function getCachedSelections(
   } as const
 }
 
-const printSel = (s: SelectionNode[]) => {
+const printSel = (s: readonly SelectionNode[]) => {
   return (
     s?.map((x) => [
       x['alias']?.['value'] ?? x['name']?.['value'],
@@ -346,37 +360,124 @@ const printSel = (s: SelectionNode[]) => {
 const postProcessCache = ({ cache, data }: { data: any; cache: GQLCacheResponse }) => {
   // update cache
   if ('aliasToCacheKey' in cache) {
-    updateCacheWithData({ cacheKeys: cache.aliasToCacheKey, data })
+    updateCacheWithData({ cache, data })
   }
   // merge in cached parts to response
   if ('data' in cache) {
+    console.log('merge', JSON.stringify({ cache: cache.data, data }, null, 2))
     for (const ckey in cache.data) {
       const cval = cache.data[ckey]
       if (!cval) continue
-      if (Array.isArray(cval)) {
-        if (!data[ckey]) {
-          data[ckey] = []
-        }
-        for (const [index, cvs] of cval.entries()) {
-          if (!data[ckey][index]) {
-            data[ckey][index] = {}
-          }
-          Object.assign(data[ckey][index], cvs)
-        }
-      } else {
-        Object.assign(data[ckey], cval)
-      }
+      data[ckey] = data[ckey] || {}
+      merge(data[ckey], cval)
     }
+    console.log('done merging', JSON.stringify(data, null, 2))
   }
 }
 
-const updateCacheWithData = ({ cacheKeys, data }: { data: any; cacheKeys: CacheKeys }) => {
-  for (const key in data) {
-    const cacheKey = cacheKeys[key]
+const SPLIT_CHAR = '$'
+
+const removeSplit = (key: string) => key.slice(0, key.indexOf(SPLIT_CHAR))
+const removeObjectSplits = (val: any) =>
+  val && typeof val === 'object' && !Array.isArray(val)
+    ? Object.fromEntries(Object.entries(val).map(([key, val]) => [removeSplit(key), val]))
+    : val
+
+const realiasData = ({ selectionSet, data }: { data: any; selectionSet: SelectionSetNode }) => {
+  const next = {}
+  const dataKeys = Object.keys(data)
+  for (const [index, key] of dataKeys.entries()) {
+    const val = data[key]
+    const normalKey = removeSplit(key)
+    const selection = selectionSet?.selections.find(
+      (sel) => sel.kind === 'Field' && sel.name.value === normalKey
+    )
+    if (!selection || selection.kind !== 'Field') {
+      console.warn('⚠️ ? no cache?', key, normalKey, removeObjectSplits(val))
+      next[normalKey] = removeObjectSplits(val)
+      continue
+    }
+    // we have to prevent collisions so we use index
+    const setKey = selection.alias?.value || selection.name.value
+    if (!selection.selectionSet) {
+      next[setKey] = removeObjectSplits(val)
+      continue
+    }
+    // recurse
+    if (!Array.isArray(val)) {
+      next[setKey] = realiasData({ selectionSet: selection.selectionSet, data: val })
+      continue
+    }
+    next[setKey] = val.map((item) => {
+      const subSelection = selection.selectionSet
+      if (!subSelection) {
+        console.warn('⚠️ no sub selection', subSelection)
+        return null
+      }
+      return realiasData({ selectionSet: subSelection, data: item })
+    })
+  }
+  return next
+}
+
+const unaliasData = ({ selectionSet, data }: { data: any; selectionSet: SelectionSetNode }) => {
+  const next = {}
+  const dataKeys = Object.keys(data)
+  for (const [index, key] of dataKeys.entries()) {
+    const val = data[key]
+    const selection = selectionSet?.selections.find(
+      (sel) => sel.kind === 'Field' && (sel.alias?.value ?? sel.name.value) === key
+    )
+    if (!selection || selection.kind !== 'Field') {
+      console.warn('⚠️ no cache?', key, selectionSet.selections)
+      continue
+    }
+    // we have to prevent collisions so we use index
+    const setKey = `${selection.name.value}${SPLIT_CHAR}${index}`
+    if (!selection.selectionSet) {
+      next[setKey] = val
+      continue
+    }
+    // recurse
+    if (!Array.isArray(val)) {
+      next[setKey] = unaliasData({ selectionSet: selection.selectionSet, data: val })
+      continue
+    }
+    next[setKey] = val.map((item) => {
+      const subSelection = selection.selectionSet
+      if (!subSelection) {
+        console.warn('⚠️ no sub selection', subSelection)
+        return null
+      }
+      return unaliasData({ selectionSet: subSelection, data: item })
+    })
+  }
+  return next
+}
+
+const updateCacheWithData = (props: { data: any; cache: GQLCacheResponse }) => {
+  const query = props.cache.parsed?.definitions.find(
+    (x) => x.kind === 'OperationDefinition' && x.operation === 'query'
+  ) as OperationDefinitionNode | null
+  if (!query?.selectionSet) {
+    console.error(`⚠️ no selection set?`)
+    return
+  }
+  const dataNormalized = unaliasData({
+    data: props.data,
+    selectionSet: query?.selectionSet,
+  })
+  console.log('dataNormalized', JSON.stringify(dataNormalized))
+  const dataKeys = Object.keys(props.data)
+  const normalKeys = Object.keys(dataNormalized)
+  for (const [index, key] of dataKeys.entries()) {
+    const normalKey = normalKeys[index]
+    const cacheKey = props.cache.aliasToCacheKey[key]
     if (!cacheKey) {
       continue
     }
-    const val = data[key]
+    const val = dataNormalized[normalKey]
+    console.log('setting into redis', cacheKey, normalKey, val)
     redisSet(cacheKey, JSON.stringify(val))
   }
 }

@@ -63,6 +63,8 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
   const json = await response.json()
   if (process.env.NODE_ENV === 'development' && isSafari) {
     console.groupCollapsed(` [gqty] (${Date.now() - startTime}ms)`)
+    console.log(query)
+    console.log(variables)
     console.log(json)
     console.groupEnd()
   }
