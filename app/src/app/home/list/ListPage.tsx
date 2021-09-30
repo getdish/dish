@@ -3,7 +3,7 @@ import { List, getUserName, graphql, listInsert, listUpdate, mutate, slugify } f
 import { assertPresent } from '@dish/helpers'
 import { List as ListIcon, Move, Plus, Trash, X } from '@dish/react-feather'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, Switch } from 'react-native'
+import { Pressable, StyleSheet, Switch } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
 import { FlatList } from 'react-native-gesture-handler'
 import {
@@ -12,6 +12,7 @@ import {
   HStack,
   Input,
   InteractiveContainer,
+  LinearGradient,
   Modal,
   Paragraph,
   Spacer,
@@ -154,6 +155,12 @@ const ListPageContent = memo(
       const themeName = useThemeName()
       const listFont = list?.font || 0
 
+      useEffect(() => {
+        if (router.curPage.params.state === 'edit') {
+          setIsEditing(true)
+        }
+      }, [])
+
       const setFont = async (val: number) => {
         list.font = val
         forceUpdate()
@@ -240,7 +247,7 @@ const ListPageContent = memo(
       const nameLen = (list.name || '').length
       const media = useMedia()
       const theme = useTheme()
-      let fontSize = 1.5 * (nameLen > 40 ? 26 : nameLen > 30 ? 32 : nameLen > 24 ? 42 : 56)
+      let fontSize = 1.5 * (nameLen > 40 ? 26 : nameLen > 30 ? 32 : nameLen > 24 ? 42 : 52)
       if (media.sm) {
         fontSize = fontSize * 0.8
       }
@@ -359,10 +366,18 @@ const ListPageContent = memo(
           <ContentScrollView id="list">
             <AbsoluteVStack
               fullscreen
-              zIndex={0}
+              zIndex={-1}
               backgroundColor={listColors.backgroundForTheme}
               opacity={0.5}
             />
+            <AbsoluteVStack opacity={0.5} fullscreen maxHeight={300} zIndex={0}>
+              <LinearGradient
+                start={[0, 1]}
+                end={[0, 0]}
+                style={StyleSheet.absoluteFill}
+                colors={[`${listColors.backgroundForTheme}00`, listColors.backgroundForTheme]}
+              />
+            </AbsoluteVStack>
             <>
               <PaneControlButtonsLeft>
                 <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
@@ -532,7 +547,7 @@ const ListPageContent = memo(
                         >
                           {isEditing ? (
                             <Input
-                              placeholder="..."
+                              placeholder="Write..."
                               multiline
                               numberOfLines={4}
                               lineHeight={30}
@@ -650,7 +665,6 @@ const ListPageContent = memo(
                           <Switch
                             value={list.theme === 1}
                             onValueChange={(isOn) => {
-                              console.log('?', isOn)
                               setTheme(isOn ? 1 : 0)
                             }}
                           />

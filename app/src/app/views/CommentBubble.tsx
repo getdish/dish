@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
+  Circle,
   HStack,
   Modal,
   Paragraph,
@@ -101,42 +102,41 @@ export const CommentBubble = (props: CommentBubbleProps) => {
   )
 }
 
-function CommentBubbleContents({
-  title,
-  name,
-  username,
-  avatar: avatarProp,
-  ellipseContentAbove,
-  bubbleHeight,
-  expandable,
-  text,
-  before,
-  hideMeta,
-  after,
-  afterName,
-  chromeless,
-  date,
-  onExpand,
-  expanded,
-  size,
-  // belowContent,
-  source,
-  avatarBackgroundColor,
-  scrollable,
-  showChildren,
-  children,
-  color,
-}: CommentBubbleProps & {
-  onExpand?: () => any
-  expanded?: boolean
-  scrollable?: boolean
-}) {
+function CommentBubbleContents(
+  props: CommentBubbleProps & {
+    onExpand?: () => any
+    expanded?: boolean
+    scrollable?: boolean
+  }
+) {
+  const {
+    title,
+    name,
+    username,
+    avatar: avatarProp,
+    ellipseContentAbove,
+    bubbleHeight,
+    expandable,
+    text,
+    before,
+    hideMeta,
+    after,
+    afterName,
+    chromeless,
+    date,
+    onExpand,
+    expanded,
+    size,
+    // belowContent,
+    source,
+    avatarBackgroundColor,
+    scrollable,
+    showChildren,
+    children,
+    color,
+  } = props
   const theme = useTheme()
   const canExpand = !expanded && !!expandable
-
-  if (name && !username) {
-    return <AbsoluteVStack fullscreen backgroundColor="pink" />
-  }
 
   const hasContents = !!text || showChildren
   const contents = (

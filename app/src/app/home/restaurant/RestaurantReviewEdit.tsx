@@ -57,7 +57,7 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
           multiline
           numberOfLines={6}
           lineHeight={22}
-          placeholder="..."
+          placeholder="Write..."
           autoFocus
           marginHorizontal={-10}
           marginVertical={-5}
