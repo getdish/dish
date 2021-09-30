@@ -1749,7 +1749,12 @@ __metadata:
     "@dish/use-store": "*"
     "@dish/webpack": "*"
     "@envelop/core": ^1.2.0
+    "@envelop/parser-cache": ^1.0.1
+    "@envelop/response-cache": ^0.2.0
+    "@envelop/validation-cache": ^1.0.0
     "@expo/html-elements": ^0.0.1
+    "@graphql-ez/nextjs": ^0.10.0
+    "@graphql-tools/wrap": ^8.1.1
     "@loadable/component": ^5.14.1
     "@mdx-js/react": ^1.6.22
     "@nandorojo/anchor": ^0.2.2
@@ -1795,6 +1800,7 @@ __metadata:
     fs-extra: ^9.1.0
     gqty: 2.0.2-experimental.1
     graphql: ^15.5.0
+    graphql-ez: ^0.13.1
     graphql-tag: ^2.11.0
     immer: ^8.0.0
     jsonwebtoken: ^8.4.0
@@ -2327,7 +2333,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@envelop/core@npm:^1.2.0":
+"@envelop/core@npm:^1.1.0, @envelop/core@npm:^1.2.0":
   version: 1.2.0
   resolution: "@envelop/core@npm:1.2.0"
   dependencies:
@@ -2338,12 +2344,45 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@envelop/types@npm:1.1.0":
+"@envelop/parser-cache@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@envelop/parser-cache@npm:1.0.1"
+  dependencies:
+    tiny-lru: 7.0.6
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 01242a6b01ea4cace44d8d2b19621f54039770cbb736f15a67a0384c10aa408be77fde782a9a474878db39356666cb9207695660f29b43a8f07f43f2aa343747
+  languageName: node
+  linkType: hard
+
+"@envelop/response-cache@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@envelop/response-cache@npm:0.2.0"
+  dependencies:
+    lru-cache: ^6.0.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 3bcea3f65b6f63decf539ac43fd84adfe15f8de1b7c50f600890ce7bafaa32adf355fbee22532bf214a601c786d3013d3e1d7aee76bb6f776cb04911f2b46685
+  languageName: node
+  linkType: hard
+
+"@envelop/types@npm:1.1.0, @envelop/types@npm:^1.1.0":
   version: 1.1.0
   resolution: "@envelop/types@npm:1.1.0"
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
   checksum: 1ed6c59c5b91ddb35ad8ca01565b7ef3997d13ebfa60b944828ce33cb1215c6d5f920614d5ff256642c4a248dbdd3402f7c07f2774046a4a6ae092221426a84d
+  languageName: node
+  linkType: hard
+
+"@envelop/validation-cache@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@envelop/validation-cache@npm:1.0.0"
+  dependencies:
+    tiny-lru: 7.0.6
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: b66fbd901fc4677d5c968a8f92e68eb77acc34983d68947224136490d480c127179635fbe90b8f4e30ec0fd959f06c63d6d99ecf2960cc564b1eda49d6c32ce5
   languageName: node
   linkType: hard
 
@@ -2862,6 +2901,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@graphql-ez/nextjs@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@graphql-ez/nextjs@npm:0.10.0"
+  dependencies:
+    "@types/cors": ^2.8.12
+    cors: ^2.8.5
+  peerDependencies:
+    "@types/node": "*"
+    graphql: "*"
+    graphql-ez: ^0.13.0
+    next: ^11.1.2
+  checksum: cd92dbb895e9c5ece2101cf9c63cdd86716bf2818cea0b3288ae607cceb8cba90e0310b299a0a1ef4c01a2728ce47a11f38aa335d07cdcf1237f4864b1f6a15f
+  languageName: node
+  linkType: hard
+
+"@graphql-ez/utils@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "@graphql-ez/utils@npm:0.1.2"
+  peerDependencies:
+    "@types/node": "*"
+    graphql: "*"
+  checksum: a8dbc993f6de22a42ea41b7f6891bbf5f84ae2b1ef01592a951e06d3488e4755473e50b6e54f1a078c7c78c800bca9fcff5b86b807696821fba41f3bc3e5c98d
+  languageName: node
+  linkType: hard
+
 "@graphql-tools/batch-execute@npm:^8.1.0":
   version: 8.1.0
   resolution: "@graphql-tools/batch-execute@npm:8.1.0"
@@ -2953,7 +3017,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/wrap@npm:^8.1.0":
+"@graphql-tools/wrap@npm:^8.1.0, @graphql-tools/wrap@npm:^8.1.1":
   version: 8.1.1
   resolution: "@graphql-tools/wrap@npm:8.1.1"
   dependencies:
@@ -3800,6 +3864,15 @@ __metadata:
     widest-line: ^3.1.0
     wrap-ansi: ^4.0.0
   checksum: 85f4914c0900138978a68daa3dc1b88644bfe96cd87909ee9c6fe0cf5b11d44ca3061d8907ff352d3ee677f0a36d34a5f505f02e0319e2061a8b174d97d6e971
+  languageName: node
+  linkType: hard
+
+"@pablosz/graphql-helix@npm:^2.0.0":
+  version: 2.0.2
+  resolution: "@pablosz/graphql-helix@npm:2.0.2"
+  peerDependencies:
+    graphql: "*"
+  checksum: e01e8d95a0cb43083bf3f6450e1661d9fd4008a254c77fe4828f77743152d92d87911a8edbc6262186e07194a5e5ac031ea1cf34c755a4bdf808b972173b6afe
   languageName: node
   linkType: hard
 
@@ -5321,6 +5394,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: fe81351470f2d3165e8b12ce33542eef89ea893e36dd62e8f7d72566dfb7e448376ae962f9f3ea888547ce8b55a40020ca0e01d637fab5d99567673084542641
+  languageName: node
+  linkType: hard
+
+"@types/cors@npm:^2.8.12":
+  version: 2.8.12
+  resolution: "@types/cors@npm:2.8.12"
+  checksum: 8c45f112c7d1d2d831b4b266f2e6ed33a1887a35dcbfe2a18b28370751fababb7cd045e745ef84a523c33a25932678097bf79afaa367c6cb3fa0daa7a6438257
   languageName: node
   linkType: hard
 
@@ -9268,6 +9348,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cors@npm:^2.8.5":
+  version: 2.8.5
+  resolution: "cors@npm:2.8.5"
+  dependencies:
+    object-assign: ^4
+    vary: ^1
+  checksum: ced838404ccd184f61ab4fdc5847035b681c90db7ac17e428f3d81d69e2989d2b680cc254da0e2554f5ed4f8a341820a1ce3d1c16b499f6e2f47a1b9b07b5006
+  languageName: node
+  linkType: hard
+
 "cosmiconfig@npm:^5.0.5, cosmiconfig@npm:^5.1.0":
   version: 5.2.1
   resolution: "cosmiconfig@npm:5.2.1"
@@ -12830,6 +12920,21 @@ __metadata:
   dependencies:
     lodash: ^4.17.15
   checksum: 1e0db4dea1c8187d59103d5582ecf32008845ebe2103959a51d22cb6dae495e81fb9263e22c922bca3aaecb56064a45cd53424e15a4626cfb5a0c52d0aff61a8
+  languageName: node
+  linkType: hard
+
+"graphql-ez@npm:^0.13.1":
+  version: 0.13.1
+  resolution: "graphql-ez@npm:0.13.1"
+  dependencies:
+    "@envelop/core": ^1.1.0
+    "@envelop/types": ^1.1.0
+    "@graphql-ez/utils": ^0.1.2
+    "@pablosz/graphql-helix": ^2.0.0
+    tiny-lru: 7.0.6
+  peerDependencies:
+    graphql: "*"
+  checksum: 9b5900b37c8b8406c14445544bea5bb1f1531d09f69787111e7b4cee3e75ec8b89180a66f16e9c476b2c55f8829d8c8030023108f30352c547d8206d988365f6
   languageName: node
   linkType: hard
 
@@ -18331,7 +18436,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
+"object-assign@npm:^4, object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: fcc6e4ea8c7fe48abfbb552578b1c53e0d194086e2e6bbbf59e0a536381a292f39943c6e9628af05b5528aa5e3318bb30d6b2e53cadaf5b8fe9e12c4b69af23f
@@ -23934,6 +24039,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tiny-lru@npm:7.0.6":
+  version: 7.0.6
+  resolution: "tiny-lru@npm:7.0.6"
+  checksum: 36a786a9111a3a358a698c9404783ad3f5396f6ed891672ffa4cd7dec4617abb8dfed6af7611bbaf8a3942a9475534c8b80f9bd58d7efa9aa594f395c9805f09
+  languageName: node
+  linkType: hard
+
 "tiny-request-router@npm:^1.2.2":
   version: 1.2.2
   resolution: "tiny-request-router@npm:1.2.2"
@@ -25117,7 +25229,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vary@npm:~1.1.2":
+"vary@npm:^1, vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: ae0123222c6df65b437669d63dfa8c36cee20a504101b2fcd97b8bf76f91259c17f9f2b4d70a1e3c6bbcee7f51b28392833adb6b2770b23b01abec84e369660b

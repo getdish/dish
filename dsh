@@ -29,7 +29,7 @@ if [ "$DEV_USER" = "natewienert@gmail.com" ]; then
   chmod 600 $PROJECT_ROOT/etc/keys/server_rsa
   export CLEAR_JOBS
   RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
-  DISH_DEBUG=${DISH_DEBUG:-"2"}
+  DISH_DEBUG=${DISH_DEBUG:-"0"}
 fi
 
 CWD_DIR=$(pwd)
@@ -62,7 +62,7 @@ popd >/dev/null
 
 function_to_run=$1
 
-if [ "$DISH_DEBUG" -gt 0 ] || [ "$LOG_ENV" -gt 0 ]; then
+if [ "$DISH_DEBUG" == "1" ] || [ "$LOG_ENV" == "0" ]; then
   echo "dsh -- env $DISH_ENV in $PROJECT_ROOT running $function_to_run $GIT_COMMIT"
 fi
 
