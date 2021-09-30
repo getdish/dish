@@ -16,6 +16,7 @@ import {
 import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
+import { StandaloneGallery } from '../../reanimated-gallery'
 import { UseSetAppMapProps, useSetAppMap } from '../appMapStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
@@ -197,7 +198,7 @@ export const HomePageFeed = memo(
               <SlantedTitle size="xs">Top Playlists</SlantedTitle>
             </AbsoluteVStack>
 
-            <Grid itemMinWidth={isTouchDevice ? 170 : 200}>
+            <Grid itemMinWidth={220}>
               {trendingLists.map((list, i) => {
                 const listSlug = list.slug
                 return (

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet } from 'react-native'
 import {
   AbsoluteVStack,
@@ -38,6 +38,7 @@ export type CardProps = CardFrameProps &
     padTitleSide?: boolean
     colorsKey?: string
     afterTitle?: any
+    items?: any[]
   }
 
 const widths = {
@@ -91,7 +92,9 @@ export function Card(props: CardProps) {
     afterTitle,
     onHoverIn,
     onHoverMove,
+    items,
     onHoverOut,
+    children,
     size = 'md',
     ...cardFrameProps
   } = props
@@ -102,12 +105,6 @@ export function Card(props: CardProps) {
     ? getColorsForName(colorsKey || title || '')
     : getColorsForName('')
   const isSm = size === 'sm'
-  const sizes = getCardDimensions(props)
-
-  // const frame = {
-  //   ...sizes,
-  //   width: aspectFixed ? sizes.width : '100%',
-  // }
   const strTitle = typeof title === 'string' ? title : 'hello world'
   const len = strTitle.length
   const lenScale = len > 50 ? 0.7 : len > 40 ? 0.8 : len > 30 ? 0.9 : 1
@@ -119,7 +116,6 @@ export function Card(props: CardProps) {
 
   const content = (
     <CardFrame size={size} {...cardFrameProps}>
-      {/* background */}
       {!!backgroundColor && (
         <AbsoluteVStack
           fullscreen
@@ -134,38 +130,7 @@ export function Card(props: CardProps) {
           {...(cardFrameProps.hoverEffect === 'background' && {
             opacity: 0.6,
           })}
-          // {...theme.name === 'light' && {
-          //   opacity: 0.2
-          // }}
         />
-      )}
-
-      {!!photo && (
-        <AbsoluteVStack
-          borderWidth={4}
-          borderRadius={1000}
-          borderColor={theme.backgroundColorTransluscent}
-          bottom="-4%"
-          right="-4%"
-          zIndex={10}
-        >
-          {typeof photo === 'string' ? (
-            photo ? (
-              <Image
-                resizeMode="cover"
-                {...sizes}
-                style={{
-                  borderRadius: 100,
-                  width: sizes.height * 0.17,
-                  height: sizes.height * 0.17,
-                }}
-                source={{ uri: photo }}
-              />
-            ) : null
-          ) : (
-            photo
-          )}
-        </AbsoluteVStack>
       )}
 
       {/* behind shadow */}
@@ -180,9 +145,6 @@ export function Card(props: CardProps) {
           x={-cardFrameWidth}
           // this makes react native work...
           backgroundColor="rgba(0,0,0,0.1)"
-          // shadowColor={theme.shadowColorLighter}
-          // shadowRadius={20}
-          // shadowOffset={{ width: 4, height: 2 }}
         />
       )}
 
@@ -199,52 +161,54 @@ export function Card(props: CardProps) {
         width="100%"
         height="100%"
       >
-        <VStack
-          className="ease-in-out"
-          opacity={hideInfo ? 0 : 1}
-          paddingHorizontal={size.endsWith('xs') ? 30 : 20}
-          paddingVertical={size.endsWith('xs') ? 15 : 20}
-          flex={1}
-        >
-          <HStack flex={1} width="100%" maxWidth="100%">
-            {!!padTitleSide && !isSm && <VStack minWidth={10} flex={1} />}
-            <VStack flexShrink={1} flex={10} alignItems="flex-end">
-              <VStack position="relative">
-                <Text
-                  // not working below :(
-                  className={size.endsWith('xs') ? 'ellipse' : 'break-word'}
-                  textAlign="right"
-                  textShadowColor={theme.shadowColor}
-                  textShadowRadius={2}
-                  textShadowOffset={{ height: 2, width: 0 }}
-                  fontWeight={size === 'sm' ? '700' : '800'}
-                  letterSpacing={size === 'sm' ? -1 : -0.5}
-                  color={theme.color}
-                  fontSize={fontSize}
-                  numberOfLines={3}
-                  lineHeight={fontSize * 1.1}
-                  // flexShrink={0}
-                >
-                  {title} {!!afterTitle ? <Text fontWeight="300">{afterTitle}</Text> : null}
-                </Text>
-              </VStack>
-              <Spacer size="xs" />
-              {!!subTitle && !size.endsWith('xs') && (
-                <Paragraph
-                  textAlign="right"
-                  fontWeight="800"
-                  textShadowColor={theme.shadowColor}
-                  textShadowRadius={2}
-                  textShadowOffset={{ height: 2, width: 0 }}
-                >
-                  {subTitle}
-                </Paragraph>
-              )}
+        {children ?? (
+          <VStack
+            className="ease-in-out"
+            opacity={hideInfo ? 0 : 1}
+            paddingHorizontal={size.endsWith('xs') ? 30 : 20}
+            paddingVertical={size.endsWith('xs') ? 15 : 20}
+            flex={1}
+          >
+            <HStack flex={1} width="100%" maxWidth="100%">
+              {!!padTitleSide && !isSm && <VStack minWidth={10} flex={1} />}
+              <VStack flexShrink={1} flex={10} alignItems="flex-end">
+                <VStack position="relative">
+                  <Text
+                    // not working below :(
+                    className={size.endsWith('xs') ? 'ellipse' : 'break-word'}
+                    textAlign="right"
+                    textShadowColor={theme.shadowColor}
+                    textShadowRadius={2}
+                    textShadowOffset={{ height: 2, width: 0 }}
+                    fontWeight={size === 'sm' ? '700' : '800'}
+                    letterSpacing={size === 'sm' ? -1 : -0.5}
+                    color={theme.color}
+                    fontSize={fontSize}
+                    numberOfLines={3}
+                    lineHeight={fontSize * 1.1}
+                    // flexShrink={0}
+                  >
+                    {title} {!!afterTitle ? <Text fontWeight="300">{afterTitle}</Text> : null}
+                  </Text>
+                </VStack>
+                <Spacer size="xs" />
+                {!!subTitle && !size.endsWith('xs') && (
+                  <Paragraph
+                    textAlign="right"
+                    fontWeight="800"
+                    textShadowColor={theme.shadowColor}
+                    textShadowRadius={2}
+                    textShadowOffset={{ height: 2, width: 0 }}
+                  >
+                    {subTitle}
+                  </Paragraph>
+                )}
 
-              {typeof below === 'function' ? below(colors) : below}
-            </VStack>
-          </HStack>
-        </VStack>
+                {typeof below === 'function' ? below(colors) : below}
+              </VStack>
+            </HStack>
+          </VStack>
+        )}
       </VStack>
     </CardFrame>
   )
@@ -274,7 +238,7 @@ export const CardOverlay = (props: { children: any; flat?: boolean }) => {
           style={StyleSheet.absoluteFill}
         />
       )}
-      <VStack overflow="hidden" flex={1} paddingHorizontal={14} paddingVertical={16} zIndex={10}>
+      <VStack overflow="hidden" flex={1} paddingHorizontal={10} paddingVertical={10} zIndex={10}>
         {props.children}
       </VStack>
     </AbsoluteVStack>

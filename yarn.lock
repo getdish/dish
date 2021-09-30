@@ -1826,6 +1826,7 @@ __metadata:
     react-native-fast-image: ^8.5.8
     react-native-gesture-handler: ^1.10.3
     react-native-reanimated: 2.3.0-beta.2
+    react-native-redash: ^16.2.2
     react-native-safe-area-context: 3.3.0
     react-native-screens: ^3.7.2
     react-native-svg: ^12.1.1
@@ -6265,6 +6266,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"abs-svg-path@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "abs-svg-path@npm:0.1.1"
+  checksum: af1a167c09e8bdb76c80adca7333f3d828e5b50e37b9702aa03675e271919e7b1eeaa35cce939970ecba14769953b7465ea34c2129ab683ddff9d973a07f164f
+  languageName: node
+  linkType: hard
+
 "absolute-path@npm:^0.0.0":
   version: 0.0.0
   resolution: "absolute-path@npm:0.0.0"
@@ -10241,7 +10249,7 @@ __metadata:
     patch-package: ^6.4.7
     prettier: ^2.3.0
     prettier-plugin-import-sort: ^0.0.6
-    react-native-web: ^0.16.5
+    react-native-web: ^0.17.5
     react-refresh: "*"
     snackui: "*"
     tsconfig-paths: ^3.9.0
@@ -17968,6 +17976,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"normalize-svg-path@npm:^1.0.1":
+  version: 1.1.0
+  resolution: "normalize-svg-path@npm:1.1.0"
+  dependencies:
+    svg-arc-to-cubic-bezier: ^3.0.0
+  checksum: 106e108b2f99e9e222a1c6edfc859523c6c3c2b0a6ba64743ed08af120b23b9bc2c16682bc2ae043a24c011c34c8252376c68525cf11735c6f110b571740eb2e
+  languageName: node
+  linkType: hard
+
 "normalize-url@npm:^4.1.0":
   version: 4.5.1
   resolution: "normalize-url@npm:4.5.1"
@@ -18678,6 +18695,13 @@ __metadata:
   dependencies:
     pngjs: ^3.3.0
   checksum: 0c6b6c42c8830cd16f6f9e9aedafd53111c0ad2ff350ba79c629996887567558f5639ad0c95764f96f7acd1f9ff63d4ac73737e80efa3911a6de9839ee520c96
+  languageName: node
+  linkType: hard
+
+"parse-svg-path@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "parse-svg-path@npm:0.1.2"
+  checksum: bba7d4b4207fcc9eaf553b0d34db96ea8a1173635bc94528b5b66e1581902d4792d8d6229103764f01af4d839274234e97a4fa1c6f0fe7dcce195383848cec56
   languageName: node
   linkType: hard
 
@@ -20512,6 +20536,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-redash@npm:^16.2.2":
+  version: 16.2.2
+  resolution: "react-native-redash@npm:16.2.2"
+  dependencies:
+    abs-svg-path: ^0.1.1
+    normalize-svg-path: ^1.0.1
+    parse-svg-path: ^0.1.2
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: "*"
+    react-native-reanimated: ">=2.0.0-rc.0"
+  checksum: 1f368d10dde13a1d8227d5db17d05f6f3517867fa99fe1eccf69d3f066c6d0b2c1cda4714230af27c8cf106646005ebfd3fcf51353aec59c8eb9809a0c86d609
+  languageName: node
+  linkType: hard
+
 "react-native-safe-area-context@npm:3.3.0":
   version: 3.3.0
   resolution: "react-native-safe-area-context@npm:3.3.0"
@@ -20583,9 +20623,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-web@npm:0.16.5":
-  version: 0.16.5
-  resolution: "react-native-web@npm:0.16.5"
+"react-native-web@npm:0.17.5":
+  version: 0.17.5
+  resolution: "react-native-web@npm:0.17.5"
   dependencies:
     array-find-index: ^1.0.2
     create-react-class: ^15.7.0
@@ -20597,7 +20637,7 @@ __metadata:
   peerDependencies:
     react: ">=17.0.1"
     react-dom: ">=17.0.1"
-  checksum: 10a4b6315e62763e3551fba3f245a991b639ea76b892dc7535305bf7432a3893483b1b352af213df689a66f1283aa42e49f5c90f7f3319a2c7cfb46b2d44d3f3
+  checksum: 548cbba9f8fd081a08d0d882f7db9f5cd38e9706f2261c3f296a8406b2455beba0e80b294b5d052a927b0b2dcfbd5af59a3441ae78a7d407feee59e2f9487232
   languageName: node
   linkType: hard
 
@@ -22901,6 +22941,13 @@ __metadata:
     has-flag: ^4.0.0
     supports-color: ^7.0.0
   checksum: aef04fb41f4a67f1bc128f7c3e88a81b6cf2794c800fccf137006efe5bafde281da3e42e72bf9206c2fcf42e6438f37e3a820a389214d0a88613ca1f2d36076a
+  languageName: node
+  linkType: hard
+
+"svg-arc-to-cubic-bezier@npm:^3.0.0":
+  version: 3.2.0
+  resolution: "svg-arc-to-cubic-bezier@npm:3.2.0"
+  checksum: 55bf17756d558b9c0daddf636a6c9f2fe01fd5ac412229dfa2d4b29740226a82c980bcd3b5eb09ce311cbea282106c7549d97f8c8dba3a5a7b75f786bcb5e155
   languageName: node
   linkType: hard
 

@@ -9,6 +9,8 @@ high level:
   - needs some sort of commenting feature
   - slowly make great lists
 
+- list cards would be really nice on native/mobile if they had a swipe to see them. swipe right to see first item. like instagram gallery photos. would work nicely on desktop too and look pretty nice.
+
 - osm data
 
 - restaurantpage vertical top tags / top dishes lists

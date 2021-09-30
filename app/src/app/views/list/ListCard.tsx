@@ -49,6 +49,19 @@ const ListCardContent = graphql((props: ListCardProps) => {
               .filter(isPresent)
       }
       photo={getListPhoto(list)}
+      items={list.restaurants({ limit: 5 }).map((r) => {
+        return {
+          title: r.restaurant.name,
+          subtitle: r.restaurant.address,
+          image: r.restaurant.image,
+          link: {
+            type: 'restaurant',
+            params: {
+              slug: r.restaurant.slug,
+            },
+          },
+        }
+      })}
     />
   )
 })
@@ -58,7 +71,6 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
   const { list, onHover, outside, deletable, onDelete, theme, ...feedCardProps } = props
   const listColors = useListColors(list?.color)
   const userStore = useUserStore()
-  const themeName = useThemeName()
 
   if (hidden) {
     return null

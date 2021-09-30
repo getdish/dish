@@ -124,7 +124,7 @@
     "@babel/types": "^7.15.6",
     "expo-linear-gradient": "9.2.0",
     "react-native-unimodules": "0.14.8",
-    "react-native-web": "0.16.5",
+    "react-native-web": "0.17.5",
     "expo-constants": "11.0.1"
   },
   "dependencies": {
@@ -135,7 +135,7 @@
     "fs-extra": "^10.0.0",
     "identity-obj-proxy": "^3.0.0",
     "node-fetch": "3.0.0-beta.9",
-    "react-native-web": "^0.16.5",
+    "react-native-web": "^0.17.5",
     "react-refresh": "*",
     "snackui": "*",
     "tsconfig-paths": "^3.9.0",
