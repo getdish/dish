@@ -29,7 +29,7 @@ if [ "$DEV_USER" = "natewienert@gmail.com" ]; then
   chmod 600 $PROJECT_ROOT/etc/keys/server_rsa
   export CLEAR_JOBS
   RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
-  DISH_DEBUG=${DISH_DEBUG:-"0"}
+  DISH_DEBUG=${DISH_DEBUG:-"1"}
 fi
 
 CWD_DIR=$(pwd)
