@@ -12,13 +12,13 @@ steps:
     key: base
     command: DISH_ENV=production ./dsh compose_build base
 
+  # base can get slowed down, clogging the rest
+  - wait
+
   - label: ":docker: build app"
     key: app
     depends_on: base
     command: DISH_ENV=production ./dsh compose_build app
-
-  # base can get slowed down, clogging the rest
-  # - wait
 
   - label: ":docker: build worker"
     key: worker
@@ -27,18 +27,13 @@ steps:
 
   - label: ":docker: build run-tests"
     key: run-tests
-    depends_on: worker
+    depends_on: base
     command: DISH_ENV=production ./dsh compose_build run-tests
 
   - label: ":docker: build hooks"
     key: hooks
     depends_on: base
     command: DISH_ENV=production ./dsh compose_build hooks
-
-  - label: ":docker: build site"
-    key: site
-    depends_on: base
-    command: DISH_ENV=production ./dsh compose_build site
 
   - label: ":docker: build puppet-proxy"
     key: puppet-proxy
@@ -113,9 +108,15 @@ steps:
     depends_on: test-images
     command: ./dsh docker_compose_push_core
 
-  - label: "setup services for tests"
-    key: test-setup
-    command: "./dsh setup_test_services"
+  - label: "prepull images on prod"
+    if: build.branch == "master"
+    key: pull-images
+    depends_on: push-images
+    command: ./dsh pull_on io1
+
+  - label: "setup services & run tests"
+    key: tests
+    command: "./dsh setup_test_services && ./dsh run_idempotent_tests"
     timeout_in_minutes: 10
     depends_on:
       - test-images
@@ -127,15 +128,6 @@ steps:
       DOCKER_CLEAN_ON_FAIL: true
       SHOW_DOCKER_IMAGES: true
       DATA_CLEAR_ON_FAIL: true
-
-  - label: "run tests main"
-    key: tests
-    timeout_in_minutes: 10
-    command: "./dsh run_idempotent_tests"
-    depends_on: test-setup
-    env:
-      LOG_DOCKER: true
-      SHOW_DOCKER_IMAGES: true
 
   - label: "run http-dependent tests"
     key: tests-http-dependent

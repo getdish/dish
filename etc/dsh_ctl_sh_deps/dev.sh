@@ -41,30 +41,3 @@ function clean() {
   find $PROJECT_ROOT -name "node_modules" -type d -prune -exec rm -rf '{}' \;
   find $PROJECT_ROOT -name "yarn-error.log" -prune -exec rm -rf '{}' \;
 }
-
-function sync_to() {
-  hostvar="$1_HOST"
-  host="${!hostvar}"
-  key="$PROJECT_ROOT/etc/keys/server_rsa"
-  if [ "$host" = "" ] || [ ! -f "$key" ]; then
-    echo "no host or private key $host $key"
-    exit 1
-  fi
-  chmod 600 "$key"
-  echo " ⬆️  syncing . to $host:/app"
-  rsync \
-    -avPq --force \
-    --exclude-from="$(
-      git -C . ls-files --exclude-standard -oi --directory >/tmp/excludes
-      echo /tmp/excludes
-    )" \
-    --exclude='- .git' \
-    -e "ssh -o StrictHostKeyChecking=no -i $key" . "root@$host:/app"
-  echo "synced"
-}
-export -f sync_to
-
-function sync_to_watch() {
-  sync_to "$1"
-  fswatch -0 -o path . | xargs -0 -n1 -I{} sh -c "sync_to $1"
-}
