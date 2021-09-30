@@ -86,7 +86,7 @@ async function go({ legacy, skipTypes }) {
         entryPoints: files,
         outdir: '_',
         sourcemap: true,
-        target: 'es2020',
+        target: 'es2019',
         keepNames: true,
         format: 'esm',
         logLevel: 'error',
