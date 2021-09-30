@@ -135,8 +135,8 @@ const HomeDrawerSmall = (props: { children: any }) => {
 
 const HomeContainerLarge = (props) => {
   const media = useMedia()
-  // const drawerWidth = useAppDrawerWidth(Infinity)
-  // const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
+  const drawerWidth = useAppDrawerWidth(Infinity)
+  const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
   const theme = useTheme()
 
   return (
@@ -157,10 +157,9 @@ const HomeContainerLarge = (props) => {
         pointerEvents="auto"
         position="absolute"
         top={0}
-        // width={lastWidth}
+        width={lastWidth}
         bottom={0}
         zIndex={10}
-        width="100%"
         flex={1}
         backgroundColor={theme.backgroundColor}
         shadowColor={theme.shadowColor}
