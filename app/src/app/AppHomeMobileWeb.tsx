@@ -1,5 +1,5 @@
+import { reaction } from '@dish/use-store/dist'
 import React, { Suspense, useEffect, useLayoutEffect } from 'react'
-import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import { AbsoluteVStack, ToastRoot, VStack, useTheme } from 'snackui'
 
 import { router } from '../router'
@@ -9,17 +9,19 @@ import { AppMapContents } from './AppMap'
 import { AppMapControls } from './AppMapControls'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AppSearchBarInline } from './AppSearchBarInline'
-import { AutocompleteEffects } from './AutocompletesStore'
+import { AutocompleteEffects, autocompletesStore } from './AutocompletesStore'
 import { AppFloatingTagMenuBar } from './home/AppFloatingTagMenuBar'
 import GalleryPage from './home/gallery/GalleryPage'
 import { HomeStackViewPages } from './home/HomeStackViewPages'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
-import { homeStore, useHomeStore } from './homeStore'
+import { useHomeStore } from './homeStore'
 import { RootPortalProvider } from './Portal'
 import { Route } from './Route'
 
 // this would be the start of rendering mobile web flat style
+
+const mapHeight = 310
 
 export const AppHomeMobileWeb = () => {
   const theme = useTheme()
@@ -32,9 +34,27 @@ export const AppHomeMobileWeb = () => {
     if (router.curHistory.type !== 'push') {
       return
     }
-    console.log('scroll to top')
     document.documentElement.scrollTo(0, 0)
   }, [currentState.id])
+
+  useEffect(() => {
+    let last
+    return reaction(
+      autocompletesStore,
+      (x) => {
+        console.log('huh?', x)
+        return x?.visible
+      },
+      (visible) => {
+        if (visible) {
+          last = document.documentElement.scrollTop
+          document.documentElement.scrollTo(mapHeight, 0)
+        } else {
+          document.documentElement.scrollTo(last, 0)
+        }
+      }
+    )
+  }, [])
 
   useLayoutEffect(() => {
     document.querySelector('html')!.classList.add('mobile-layout')
@@ -60,7 +80,7 @@ export const AppHomeMobileWeb = () => {
       >
         <RootPortalProvider />
       </AbsoluteVStack>
-      <VStack marginBottom={-40} height={310} position="relative" zIndex={0}>
+      <VStack marginBottom={-40} height={mapHeight} position="relative" zIndex={0}>
         <Suspense fallback={null}>
           <AbsoluteVStack zIndex={10000} pointerEvents="none" bottom={40}>
             <AppFloatingTagMenuBar />
@@ -81,7 +101,7 @@ export const AppHomeMobileWeb = () => {
       >
         <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
         <AppSearchBarInline />
-        <VStack position="relative" minHeight={500}>
+        <VStack position="relative" minHeight={600}>
           <AppAutocompleteSearch />
           <AppAutocompleteLocation />
           <HomeStackViewPages key={currentState.id} isActive item={currentState} index={0} />

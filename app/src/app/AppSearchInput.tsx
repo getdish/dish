@@ -193,7 +193,6 @@ export const AppSearchInput = memo(() => {
                   if (homeStore.searchbarFocusedTag) {
                     homeStore.setSearchBarTagIndex(0)
                   } else {
-                    console.log('open autocomplete search', e.currentTarget)
                     autocompletesStore.setTarget('search')
                   }
                 }}
