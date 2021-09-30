@@ -26,17 +26,11 @@ export function createWebServerDev(
     console.log('debug webpack', compiler)
   }
 
-  const headers = {
-    'Access-Control-Allow-Origin':
-      process.env.NODE_ENV === 'development' ? '*' : 'https://dishapp.com',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-    'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
-  }
-
-  app.use((_req, res, next) => {
-    for (const name in headers) {
-      res.setHeader(name, headers[name])
-    }
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*')
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header('Access-Control-Allow-Headers', '*')
+    res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
     next()
   })
 
