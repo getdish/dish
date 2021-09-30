@@ -114,9 +114,9 @@ steps:
     depends_on: push-images
     command: ./dsh pull_on io1
 
-  - label: "setup services & run tests"
-    key: tests
-    command: "./dsh setup_test_services && ./dsh run_idempotent_tests"
+  - label: "setup services"
+    key: test-setup
+    command: "./dsh setup_test_services"
     timeout_in_minutes: 10
     depends_on:
       - test-images
@@ -128,6 +128,15 @@ steps:
       DOCKER_CLEAN_ON_FAIL: true
       SHOW_DOCKER_IMAGES: true
       DATA_CLEAR_ON_FAIL: true
+
+  - label: "run tests main"
+    key: tests
+    timeout_in_minutes: 10
+    command: "./dsh run_idempotent_tests"
+    depends_on: test-setup
+    env:
+      LOG_DOCKER: true
+      SHOW_DOCKER_IMAGES: true
 
   - label: "run http-dependent tests"
     key: tests-http-dependent
@@ -142,7 +151,7 @@ steps:
 
   - label: "run worker integration tests"
     key: worker-integration-tests
-    timeout_in_minutes: 1
+    timeout_in_minutes: 2
     command: "./dsh test_worker_crawler_integration"
     depends_on: test-setup
     env:
