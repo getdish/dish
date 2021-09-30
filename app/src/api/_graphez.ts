@@ -1,4 +1,4 @@
-import { Handler } from '@dish/api/dist'
+import { Handler } from '@dish/api'
 import { Request, Response } from 'express'
 import {
   AppOptions,
@@ -75,7 +75,6 @@ export function CreateApp(config: DishAppOptions = {}): EZAppBuilder {
     const appPromise = Promise.allSettled([
       appBuilder(buildOptions, async ({ ctx, getEnveloped }) => {
         const nextHandlers: NextHandlerContext['handlers'] = []
-
         const integration: InternalAppBuildIntegrationContext = {
           nextjs: {
             handlers: nextHandlers,
@@ -99,14 +98,12 @@ export function CreateApp(config: DishAppOptions = {}): EZAppBuilder {
 
             if (result.some((v) => v?.stop)) return
           }
-
           const request = {
             body: req.body,
             headers: req.headers,
             method: req.method!,
             query: req.query,
           }
-
           return requestHandler({
             req,
             request,
@@ -124,6 +121,7 @@ export function CreateApp(config: DishAppOptions = {}): EZAppBuilder {
             buildContext,
             onResponse(result) {
               for (const { name, value } of result.headers) {
+                console.log('setting header', name, value)
                 res.setHeader(name, value)
               }
               res.status(result.status).json(result.payload)

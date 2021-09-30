@@ -41,7 +41,7 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     console.log(json)
     console.groupEnd()
   }
-  if (true || process.env.DEBUG || process.env.LOG_FETCH) {
+  if (process.env.DEBUG || process.env.LOG_FETCH) {
     console.log(` [gqty] =>`, JSON.stringify(json, null, 2))
   }
   if (json.errors) {

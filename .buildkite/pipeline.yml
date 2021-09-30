@@ -23,7 +23,7 @@ steps:
   - label: ":docker: build worker"
     key: worker
     depends_on: base
-    command: DISH_ENV=production ./dsh compose_build_and_push worker
+    command: DISH_ENV=production ./dsh compose_build worker
 
   - label: ":docker: build run-tests"
     key: run-tests
