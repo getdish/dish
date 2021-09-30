@@ -85,8 +85,8 @@ export const RestaurantReview = memo(
           <VStack maxWidth={720} alignSelf="center" width="100%">
             {!!(review || showEmptyReview) && (
               <CommentBubble
-                chromeless={listTheme === 'minimal'}
-                expandable
+                // chromeless={listTheme === 'minimal'}
+                expandable={!showEmptyReview}
                 {...(!hideRestaurantName && {
                   title: (
                     <Text fontWeight="800">

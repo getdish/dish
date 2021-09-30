@@ -24,14 +24,7 @@ import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 
 export const ListItemContentMinimal = (props: ListItemContentProps) => {
-  // const [isLoaded, setIsLoaded] = useState(false)
-  // const handleScrollMemo = useCallback(() => {
-  //   setIsLoaded(true)
-  // }, [])
-  // const handleScroll = isLoaded ? undefined : handleScrollMemo
   const [width, setWidth] = useState(getWindowWidth())
-  const theme = useTheme()
-
   return (
     <VStack overflow="hidden" flex={1}>
       <Suspense fallback={<LoadingItem size="lg" />}>
@@ -162,6 +155,7 @@ const Header = memo(
                   {!isFocused && !!editable && (
                     <SmallButton
                       backgroundColor="transparent"
+                      borderWidth={0}
                       tooltip="Remove"
                       icon={<X size={15} color="#888" />}
                       onPress={onDelete as any}
@@ -171,6 +165,7 @@ const Header = memo(
                   {!minimal && !isFocused && !!editable && !isEditing && (
                     <SmallButton
                       backgroundColor="transparent"
+                      borderWidth={0}
                       icon={<PenTool size={14} color="#888" />}
                       onPress={() => setIsEditing(true)}
                     >
@@ -179,7 +174,11 @@ const Header = memo(
                   )}
 
                   {!!editable && isEditing && (
-                    <SmallButton backgroundColor="transparent" onPress={() => setIsEditing(false)}>
+                    <SmallButton
+                      backgroundColor="transparent"
+                      borderWidth={0}
+                      onPress={() => setIsEditing(false)}
+                    >
                       Cancel
                     </SmallButton>
                   )}
@@ -226,8 +225,8 @@ const Header = memo(
                   {!isFocused && (
                     <RestaurantFavoriteButton
                       backgroundColor="transparent"
-                      size="sm"
                       borderWidth={0}
+                      size="sm"
                       opacity={0.5}
                       restaurantSlug={restaurant.slug || ''}
                     />
@@ -319,20 +318,13 @@ export const Body = memo(
             hideTagsRow
             expandable={false}
             ellipseContentAbove={Infinity}
-            // listTheme="minimal"
             isEditing={isEditing}
-            // hideMeta={!isExternalReview}
             {...restaurantReviewListProps}
             hideRestaurantName
             restaurantSlug={restaurant.slug || ''}
             review={review}
             list={list}
             listSlug={props.listSlug}
-            onEdit={(text) => {
-              if (review) review.text = text
-              refetch(reviewQuery)
-              restaurantReviewListProps.onEdit?.(text)
-            }}
           />
         </Suspense>
       </VStack>
