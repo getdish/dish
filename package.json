@@ -73,7 +73,6 @@
   },
   "resolutions": {
     "expo-screen-orientation": "3.3.0",
-    "react-native-reanimated": "https://github.com/software-mansion/react-native-reanimated.git#a4f4c83729899b6f77812294e771deae05b48b9c",
     "metro": "0.66.2",
     "metro-babel-register": "0.66.2",
     "metro-cache": "0.66.2",
@@ -124,7 +123,8 @@
     "@babel/types": "^7.15.6",
     "expo-linear-gradient": "9.2.0",
     "react-native-unimodules": "0.14.8",
-    "react-native-web": "0.16.5"
+    "react-native-web": "0.16.5",
+    "expo-constants": "12.0.0"
   },
   "dependencies": {
     "@dish/app": "*",
