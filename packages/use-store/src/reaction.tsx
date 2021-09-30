@@ -24,11 +24,12 @@ export function reaction<
   function updateReaction() {
     try {
       setIsInReaction(true)
-      const next = selector(store[UNWRAP_PROXY])
+      const storeInstance = store[UNWRAP_PROXY] || store
+      const next = selector(storeInstance)
       if (!equalityFn(last, next)) {
         if (process.env.NODE_ENV === 'development') {
           console.groupCollapsed(
-            `💰  ⏭ %c${receiver.name.padStart(24)} (${store[UNWRAP_PROXY].constructor.name}${
+            `💰  ⏭ %c${receiver.name.padStart(24)} (${storeInstance.constructor.name}${
               store.props?.id ? `:${store.props.id}` : ''
             }) ${last} => ${next}`,
             'color: chocolate;'

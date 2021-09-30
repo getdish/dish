@@ -748,7 +748,7 @@ const ListPageContent = memo(
                 )}
               </VStack>
 
-              <Spacer size="xxxl" />
+              <VStack width={1} height={media.sm ? 600 : 300} />
             </>
           </ContentScrollView>
         </>
