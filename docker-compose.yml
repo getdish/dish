@@ -21,6 +21,7 @@ x-dish-env: &dish-env
   HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET:-password}
   POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+  POSTGRES_DB: ${POSTGRES_DB:-dish}
   TIMESCALE_HOST: ${TIMESCALE_HOST:-timescale}
   TIMESCALE_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
   TIMESCALE_PORT: ${TIMESCALE_PORT:-5433}
@@ -169,9 +170,9 @@ services:
       - DISH_HOOKS_ENDPOINT=${HOOKS_ENDPOINT}
       - GORSE_SYNC_HOOK=${GORSE_ENDPOINT}/gorse_sync
     depends_on:
-      - 'postgres'
+      # - 'postgres'
       - 'redis'
-      - 'hooks'
+      # - 'hooks'
 
   search:
     image: registry.dishapp.com/dish-search${DISH_IMAGE_TAG}
@@ -207,12 +208,9 @@ services:
         - traefik.http.routers.search-https.tls.certresolver=le
         - traefik.http.services.search.loadbalancer.server.port=9999
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-dish}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - POSTGRES_HOST=postgres
-    depends_on:
-      - 'postgres'
+      <<: *dish-env
+    # depends_on:
+    #   - 'postgres'
 
   tileserver:
     image: registry.dishapp.com/dish-tileserver${DISH_IMAGE_TAG}
@@ -252,8 +250,8 @@ services:
     environment:
       - WATCH_MODE=true
       - DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
-    depends_on:
-      - 'postgres'
+    # depends_on:
+    #   - 'postgres'
 
   site:
     image: registry.dishapp.com/dish-site${DISH_IMAGE_TAG}
