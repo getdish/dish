@@ -44,6 +44,7 @@ async function start() {
           ttlPerType: {
             // user: 0,
             reviews_aggregate: 0,
+            list_reviews_aggregate: 0,
           },
           cache,
           enabled: (context: Request) => {
@@ -63,7 +64,7 @@ async function start() {
   }).buildApp({})
 }
 
-const fetchFromGraph = async ({ headers, body }) => {
+const fetchFromGraph = async ({ headers, body }: { headers?: any; body: any }) => {
   const start = Date.now()
   try {
     if (DISH_DEBUG > 1) {
@@ -92,7 +93,6 @@ const fetchFromGraph = async ({ headers, body }) => {
 const executor = async ({ document, variables }: any) => {
   const query = print(document)
   return fetchFromGraph({
-    headers: {},
     body: JSON.stringify({ query, variables }),
   })
 }
