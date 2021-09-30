@@ -4,10 +4,11 @@ import { useLogger } from '@envelop/core'
 import { useParserCache } from '@envelop/parser-cache'
 import { createInMemoryCache, useResponseCache } from '@envelop/response-cache'
 import { useValidationCache } from '@envelop/validation-cache'
-import { CreateApp, EZApp } from '@graphql-ez/nextjs'
 import { introspectSchema, wrapSchema } from '@graphql-tools/wrap'
 import { Request } from 'express'
 import { print } from 'graphql'
+
+import { CreateApp, EZApp } from './_graphez'
 
 const avoidCache = !process.env.NODE_ENV || process.env.NODE_ENV === 'test'
 const hasuraHeaders = {

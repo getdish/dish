@@ -68,7 +68,6 @@
     "@envelop/response-cache": "^0.2.0",
     "@envelop/validation-cache": "^1.0.0",
     "@expo/html-elements": "^0.0.1",
-    "@graphql-ez/nextjs": "^0.10.0",
     "@graphql-tools/wrap": "^8.1.1",
     "@loadable/component": "^5.14.1",
     "@mdx-js/react": "^1.6.22",
