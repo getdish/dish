@@ -29,6 +29,8 @@ export function getListColors(index: number | null = colorSetSize, themeName?: s
   const isLight = getIsListColorLight(index)
   const lightColor = lightColors[colorOffset]
   const darkColor = darkColors[colorOffset]
+  // to allow light theme to go dark
+  // const oppositeColor = backgroundColor === darkColor ? lightColor : darkColor
   const color = (isLight ? darkColor : lightColor) ?? '#cccccc'
   return {
     isLight,
