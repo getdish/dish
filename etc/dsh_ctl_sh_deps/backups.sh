@@ -27,7 +27,7 @@ function get_all_backups() {
 
 function get_latest_main_backup() {
   echo $(
-    s3 ls s3://$DISH_BACKUP_BUCKET | grep 'dish-db' | tail -1 | awk '{ print $4 }'
+    s3 ls s3://$DISH_BACKUP_BUCKET | grep '/dish-production-db' | tail -1 | awk '{ print $4 }'
   )
 }
 

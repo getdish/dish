@@ -174,5 +174,6 @@ steps:
   - label: "done"
     if: build.branch == "master"
     command: "./dsh deploy_done_notify"
+    soft_fail: true
     env:
       DOCKER_CLEAN: true
