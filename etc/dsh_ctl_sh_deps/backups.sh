@@ -42,9 +42,10 @@ function get_latest_scrape_backup() {
 
 # note: to restore the db ideally we'd start an instance of postgres on the side on diff port/data dir
 #       and restore to that, then cp to /var/data/postgresql/production and dsh docker_restart dish_postgres
-function restore_postgres_tmp_backup() {
+function restore_main_backup_from_tmp() {
   # docker run registry.dishapp.com/dish-postgres &
   dump_file="${1:-/tmp/latest_dish_backup.dump}"
+  echo "POSTGRES_HOST $POSTGRES_HOST"
   PGPASSWORD=$POSTGRES_PASSWORD pg_restore \
     -j 6 \
     --no-owner \
@@ -60,7 +61,7 @@ function restore_latest_main_backup() {
   latest_backup=$(get_latest_main_backup)
   dump_file="/tmp/latest_dish_backup.dump"
   log_command s3 get "$latest_backup" "$dump_file"
-  # restore_postgres_tmp_backup
+  # restore_main_backup_from_tmp
 }
 
 function restore_timescale_tmp_backup() {

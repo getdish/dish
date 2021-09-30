@@ -21,7 +21,7 @@ import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizo
 import { Link } from '../../views/Link'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
-import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
+import { RestaurantTagsList } from '../../views/restaurant/RestaurantTagsList'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentReviewButton'
@@ -232,20 +232,21 @@ const RestaurantHeaderContent = memo(
 
                         <Spacer size="sm" />
 
-                        <RestaurantTagsRow
-                          maxLines={2}
-                          exclude={['dish']}
-                          restaurant={restaurant}
-                          spacing={10}
-                          maxItems={8}
-                          tagButtonProps={{
-                            // borderWidth: 0,
-                            hideRank: false,
-                            hideRating: false,
-                            borderWidth: 0,
-                            votable: true,
-                          }}
-                        />
+                        <VStack>
+                          <RestaurantTagsList
+                            exclude={['dish']}
+                            restaurant={restaurant}
+                            spacing={10}
+                            maxItems={8}
+                            tagButtonProps={{
+                              // borderWidth: 0,
+                              hideRank: false,
+                              hideRating: false,
+                              borderWidth: 0,
+                              votable: true,
+                            }}
+                          />
+                        </VStack>
 
                         <Spacer size="sm" />
 

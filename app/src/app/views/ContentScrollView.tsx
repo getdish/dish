@@ -302,7 +302,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                 if (!drawerStore.isDragging) {
                   drawerStore.setIsDragging(true)
                 }
-                drawerStore._setY(y)
+                if (scrollStore.lock === 'vertical') {
+                  drawerStore._setY(y)
+                }
               }}
               onTouchEnd={(e) => {
                 scrollStore.setLock('none')

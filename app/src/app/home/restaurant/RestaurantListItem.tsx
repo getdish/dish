@@ -31,7 +31,7 @@ import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollView
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
-import { RestaurantTagsRow } from '../../views/restaurant/RestaurantTagsRow'
+import { RestaurantTagsList } from '../../views/restaurant/RestaurantTagsList'
 import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
@@ -553,7 +553,7 @@ const RestaurantListItemContent = memo(
 
               {!hideTagRow && (
                 <Suspense fallback={null}>
-                  <RestaurantTagsRow
+                  <RestaurantTagsList
                     exclude={excludeTags}
                     excludeOverall
                     size="sm"

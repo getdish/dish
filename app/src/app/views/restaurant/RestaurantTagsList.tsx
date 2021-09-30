@@ -22,7 +22,7 @@ type TagRowProps = {
   exclude?: QueryRestaurantTagsProps['exclude']
 }
 
-export const RestaurantTagsRow = (props: TagRowProps) => {
+export const RestaurantTagsList = (props: TagRowProps) => {
   const rowHeight = 50 * (props.size === 'lg' ? 1.1 : props.size === 'sm' ? 0.65 : 0.92)
   return (
     <HStack
@@ -95,6 +95,6 @@ const RestaurantTagsRowContent = memo(
   })
 )
 
-RestaurantTagsRow['defaultProps'] = {
+RestaurantTagsList['defaultProps'] = {
   size: 'md',
 }
