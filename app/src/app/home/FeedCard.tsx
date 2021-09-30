@@ -4,6 +4,7 @@ import { AbsoluteHStack, AbsoluteVStack, Paragraph, VStack, useTheme } from 'sna
 import { isWeb } from '../../constants/constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
+import { getWindow, getWindowWidth } from '../../helpers/getWindow'
 import { pluralize } from '../../helpers/pluralize'
 import { Image } from '../views/Image'
 import { TagButton } from '../views/TagButton'
@@ -45,7 +46,9 @@ export const FeedCard = ({
     titleLen > 55 ? 0.6 : titleLen > 40 ? 0.75 : titleLen > 30 ? 0.9 : titleLen > 20 ? 1.05 : 1.5
   const tagScale = emphasizeTag ? 0.8 : 1
   const sizeScale = size === 'xs' ? 0.7 : size === 'sm' ? 0.8 : size === 'lg' ? 1.1 : 1
-  const fontSize = Math.round(24 * lenScale * tagScale * sizeScale)
+  const isSmallDevice = Math.min(getWindowWidth(), getWindowWidth()) < 420
+  const deviceScale = isSmallDevice ? 0.75 : 1
+  const fontSize = Math.round(24 * lenScale * tagScale * sizeScale * deviceScale)
   const imgSize = size === 'lg' ? 125 : 85
   const theme = useTheme()
 
