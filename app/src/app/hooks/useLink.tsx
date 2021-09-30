@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react'
 import { Pressable } from 'react-native'
 import { useForceUpdate } from 'snackui'
 
+import { getLastDrag } from '../../AdvancedGallery'
 import { isWeb } from '../../constants/constants'
 import { addTagsToCache, allTags, getFullTagFromNameAndType } from '../../helpers/allTags'
 import { getNavigateItemForState } from '../../helpers/getNavigateItemForState'
@@ -31,6 +32,13 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
   }, [])
 
   const onPress = (e: any) => {
+    const justDragged = Date.now() - getLastDrag() < 100
+    if (justDragged) {
+      e.preventDefault()
+      e.stopPropagation()
+      console.warn('just dragged')
+      return
+    }
     if (props.stopPropagation) {
       e.stopPropagation()
     }

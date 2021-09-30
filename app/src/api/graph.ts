@@ -22,9 +22,12 @@ export default route(async (req, res) => {
   await useRouteBodyParser(req, res, { text: { type: '*/*', limit: '8mb' } })
   req.body = typeof req.body !== 'string' ? req.body : JSON.parse(req.body)
   if (!ezApp) {
-    console.warn('⚠️ no ezapp')
-    res.json(null)
-    return
+    await start()
+    if (!ezApp) {
+      console.warn('⚠️ no ezapp')
+      res.json(null)
+      return
+    }
   }
   await ezApp!.apiHandler(req, res)
 })

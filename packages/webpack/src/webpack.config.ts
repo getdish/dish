@@ -437,6 +437,12 @@ const excludedRootPaths = [
 ]
 
 function defaultBabelInclude(inputPath) {
+  if (inputPath.includes('react-native-awesome-gallery')) {
+    return true
+  }
+  if (inputPath.includes('react-native-gallery-toolkit')) {
+    return true
+  }
   if (inputPath.includes('react-native-web/dist/exports/View')) {
     return true
   }

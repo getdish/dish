@@ -26,7 +26,6 @@ module.exports = function (api) {
       ...(isDev
         ? ['@babel/plugin-transform-function-name', 'babel-plugin-react-wrapped-display-name']
         : []),
-      !isProd && '@babel/plugin-transform-react-display-name',
       ...(shouldOptimize
         ? [
             'babel-plugin-lodash',

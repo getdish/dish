@@ -24,6 +24,7 @@ export type CardFrameProps = {
   flat?: boolean
   flexible?: boolean
   floating?: boolean
+  overflowHidden?: boolean
   hoverEffect?: 'scale' | 'background' | null
   pressable?: boolean
   size?: 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
@@ -37,6 +38,7 @@ export const CardFrame = ({
   borderColor,
   borderless,
   children,
+  overflowHidden,
   chromeless,
   className,
   expandable,
@@ -65,6 +67,7 @@ export const CardFrame = ({
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"
       alignItems="center"
+      maxWidth="99%"
       justifyContent="center"
       minWidth={cardFrameWidth}
       {...(flat && {
@@ -153,6 +156,9 @@ export const CardFrame = ({
         minWidth: 'auto',
         width: 'auto',
         flexGrow: 1,
+      })}
+      {...(overflowHidden && {
+        overflow: 'hidden',
       })}
     >
       {children}
