@@ -413,7 +413,7 @@ class HomeStore extends Store {
       // find state to jump to
       let nextState: HomeStateItem | null = null
       if (item.direction === 'backward') {
-        const backStates = this.states.slice(0, this.stateIndex)
+        const backStates = this.states.slice(0, this.stateIndex + 1)
         backStates.reverse() // reverse to find most recent match
         nextState = backStates.find((x) => x.id === item.id) ?? null
       } else {
