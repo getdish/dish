@@ -24,7 +24,7 @@ import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { configureUseStore } from '@dish/use-store'
-import AppLoading from 'expo-app-loading'
+// import AppLoading from 'expo-app-loading'
 import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
 import {
@@ -164,7 +164,7 @@ export function Root() {
       <SnackUIProvider themes={themes} defaultTheme={defaultTheme}>
         <ProvideRouter routes={routes}>
           <Suspense fallback={null}>
-            {!isLoaded && <AppLoading />}
+            {/* {!isLoaded && <AppLoading />} */}
             {isLoaded ? <App /> : null}
             {process.env.NODE_ENV === 'development' && <DebugHUD />}
           </Suspense>

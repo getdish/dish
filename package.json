@@ -125,7 +125,7 @@
     "expo-linear-gradient": "9.2.0",
     "react-native-unimodules": "0.14.8",
     "react-native-web": "0.16.5",
-    "expo-constants": "12.0.0"
+    "expo-constants": "11.0.1"
   },
   "dependencies": {
     "@dish/app": "*",

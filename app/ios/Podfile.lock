@@ -1,8 +1,9 @@
 PODS:
   - boost (1.76.0)
   - DoubleConversion (1.1.6)
-  - EXConstants (12.0.0):
+  - EXConstants (11.0.1):
     - ExpoModulesCore
+    - UMCore
   - EXFileSystem (11.1.3):
     - ExpoModulesCore
     - UMCore
@@ -15,14 +16,21 @@ PODS:
     - UMCore
   - EXLinearGradient (9.2.0):
     - UMCore
-  - ExpoModulesCore (0.4.1):
-    - React-Core
+  - ExpoModulesCore (0.2.0):
+    - ExpoModulesCore/Core (= 0.2.0)
+    - ExpoModulesCore/Interfaces (= 0.2.0)
+    - UMCore
+  - ExpoModulesCore/Core (0.2.0):
+    - UMCore
+  - ExpoModulesCore/Interfaces (0.2.0):
+    - ExpoModulesCore/Core
+    - UMCore
   - EXScreenOrientation (3.3.0):
     - React-Core
     - UMCore
-  - EXSplashScreen (0.13.0):
-    - ExpoModulesCore
+  - EXSplashScreen (0.11.4):
     - React-Core
+    - UMCore
   - FBLazyVector (0.66.0-rc.4)
   - FBReactNativeSpec (0.66.0-rc.4):
     - RCT-Folly (= 2021.06.28.00-v2)
@@ -398,9 +406,9 @@ DEPENDENCIES:
   - "EXImageLoader (from `../node_modules/@dish/app/node_modules/expo-image-loader/ios`)"
   - "EXImagePicker (from `../node_modules/@dish/app/node_modules/expo-image-picker/ios`)"
   - "EXLinearGradient (from `../node_modules/@dish/app/node_modules/expo-linear-gradient/ios`)"
-  - "ExpoModulesCore (from `../node_modules/@dish/app/node_modules/expo-app-loading/node_modules/expo-modules-core/ios`)"
+  - "ExpoModulesCore (from `../node_modules/@dish/app/node_modules/expo-modules-core/ios`)"
   - "EXScreenOrientation (from `../node_modules/@dish/app/node_modules/expo-screen-orientation/ios`)"
-  - "EXSplashScreen (from `../node_modules/@dish/app/node_modules/expo-app-loading/node_modules/expo-splash-screen/ios`)"
+  - "EXSplashScreen (from `../node_modules/@dish/app/node_modules/expo-splash-screen/ios`)"
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
@@ -472,11 +480,11 @@ EXTERNAL SOURCES:
   EXLinearGradient:
     :path: "../node_modules/@dish/app/node_modules/expo-linear-gradient/ios"
   ExpoModulesCore:
-    :path: "../node_modules/@dish/app/node_modules/expo-app-loading/node_modules/expo-modules-core/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-modules-core/ios"
   EXScreenOrientation:
     :path: "../node_modules/@dish/app/node_modules/expo-screen-orientation/ios"
   EXSplashScreen:
-    :path: "../node_modules/@dish/app/node_modules/expo-app-loading/node_modules/expo-splash-screen/ios"
+    :path: "../node_modules/@dish/app/node_modules/expo-splash-screen/ios"
   FBLazyVector:
     :path: "../node_modules/react-native/Libraries/FBLazyVector"
   FBReactNativeSpec:
@@ -565,14 +573,14 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: a7c83b31436843459a1961bfd74b96033dc77234
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
-  EXConstants: b14b472da01b8191c1cfe86f29caa1e0c6a46bed
+  EXConstants: 3babb61f8f4bb7dffe85b8b7d6eaa31d903e4d7e
   EXFileSystem: 0a04aba8da751b9ac954065911bcf166503f8267
   EXImageLoader: d3531a3fe530b22925c19977cb53bb43e3821fe6
   EXImagePicker: 414a3663910fd6604248e84c9c77a0501ae0d18b
   EXLinearGradient: f9ea3259f096b27008860ca50764184225dc71c9
-  ExpoModulesCore: 8185e4de18e1e8bdf58e6387af51b7b1cb2ea1b7
+  ExpoModulesCore: 2734852616127a6c1fc23012197890a6f3763dc7
   EXScreenOrientation: 09fe6b6b87899ae0c9320255bda7b7513cdfc8ec
-  EXSplashScreen: 7540be72f47b1e638e21c1b9dffe42b043362f28
+  EXSplashScreen: 847e0d8026731c1090bf269ede3e15ac87d88958
   FBLazyVector: 44c41354a76955864b3d6227b5f338f2ca481ff4
   FBReactNativeSpec: 97b28c619d0e565da0e2d182a703cf1a6d2d0f63
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
