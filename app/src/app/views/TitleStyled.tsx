@@ -18,7 +18,6 @@ export const TitleStyled = (
     <SnackTitle
       {...props}
       fontFamily={getFontFamily(props.fontTheme)}
-      // fontFamily="Magnat"
       className={`font-title ${props.className || ''}`}
     />
   )

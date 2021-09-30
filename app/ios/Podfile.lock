@@ -41,6 +41,8 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.66.0-rc.4)
   - fmt (6.2.1)
   - glog (0.3.5)
+  - hermes-engine (0.9.0)
+  - libevent (2.1.12)
   - libwebp (1.2.1):
     - libwebp/demux (= 1.2.1)
     - libwebp/mux (= 1.2.1)
@@ -64,6 +66,12 @@ PODS:
     - DoubleConversion
     - fmt (~> 6.2.1)
     - glog
+  - RCT-Folly/Futures (2021.06.28.00-v2):
+    - boost
+    - DoubleConversion
+    - fmt (~> 6.2.1)
+    - glog
+    - libevent
   - RCTRequired (0.66.0-rc.4)
   - RCTTypeSafety (0.66.0-rc.4):
     - FBLazyVector (= 0.66.0-rc.4)
@@ -230,6 +238,17 @@ PODS:
     - React-logger (= 0.66.0-rc.4)
     - React-perflogger (= 0.66.0-rc.4)
     - React-runtimeexecutor (= 0.66.0-rc.4)
+  - React-hermes (0.66.0-rc.4):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2021.06.28.00-v2)
+    - RCT-Folly/Futures (= 2021.06.28.00-v2)
+    - React-cxxreact (= 0.66.0-rc.4)
+    - React-jsi (= 0.66.0-rc.4)
+    - React-jsiexecutor (= 0.66.0-rc.4)
+    - React-jsinspector (= 0.66.0-rc.4)
+    - React-perflogger (= 0.66.0-rc.4)
   - React-jsi (0.66.0-rc.4):
     - boost (= 1.76.0)
     - DoubleConversion
@@ -412,6 +431,8 @@ DEPENDENCIES:
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - hermes-engine (~> 0.9.0)
+  - libevent (~> 2.1.12)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -422,6 +443,7 @@ DEPENDENCIES:
   - React-Core/RCTWebSocket (from `../node_modules/react-native/`)
   - React-CoreModules (from `../node_modules/react-native/React/CoreModules`)
   - React-cxxreact (from `../node_modules/react-native/ReactCommon/cxxreact`)
+  - React-hermes (from `../node_modules/react-native/ReactCommon/hermes`)
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
@@ -457,6 +479,8 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - fmt
+    - hermes-engine
+    - libevent
     - libwebp
     - Mapbox-iOS-SDK
     - MapboxMobileEvents
@@ -507,6 +531,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/CoreModules"
   React-cxxreact:
     :path: "../node_modules/react-native/ReactCommon/cxxreact"
+  React-hermes:
+    :path: "../node_modules/react-native/ReactCommon/hermes"
   React-jsi:
     :path: "../node_modules/react-native/ReactCommon/jsi"
   React-jsiexecutor:
@@ -585,6 +611,8 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 97b28c619d0e565da0e2d182a703cf1a6d2d0f63
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 5337263514dd6f09803962437687240c5dc39aa4
+  hermes-engine: bf7577d12ac6ccf53ab8b5af3c6ccf0dd8458c5c
+  libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
   Mapbox-iOS-SDK: 7eb24d0f44ee69adb037e5addc3f810db73d47a8
   MapboxMobileEvents: b72b07268586c6fd1f53178f08df15f74070b188
@@ -596,6 +624,7 @@ SPEC CHECKSUMS:
   React-Core: ca5e82c26ab8627407101698fe4642f941956bdf
   React-CoreModules: a7657bff50180a39d62a0a4cb657693d5cba8e1a
   React-cxxreact: a2ea5dd108c2199f7e1c9a27b7c4b6fd571b00d8
+  React-hermes: 9400761a9963755248abf24a6a31f27412095ae9
   React-jsi: ccc2853d0d9e328e2394e369d7a65c7b1491c87c
   React-jsiexecutor: c463c31a76c32cfaa0c1354ddba8f05d5aaa6a0c
   React-jsinspector: 9b8acfcce07be90f66969b2d9c543bd6b5e90f43
@@ -631,6 +660,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: 2be431101b73604e64fbfffcf759336f9d8fccbb
   Yoga: 993072c74154c30d07c9cae300322348f0f67e25
 
-PODFILE CHECKSUM: bfc2fce593a4dc344d403b0e2633027fc3b64d5a
+PODFILE CHECKSUM: c5034e4e95ab2310d6099b083439b75fedc82d18
 
 COCOAPODS: 1.10.1

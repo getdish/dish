@@ -38,7 +38,7 @@
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
-		<true />
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>dishapp.com</key>
@@ -87,6 +87,8 @@
 		<string>WhyteHeavy.otf</string>
 		<string>WhyteHeavy.woff</string>
 		<string>WhyteHeavy.woff2</string>
+		<string>Magnat.otf</string>
+		<string>Magnat.woff</string>
 	</array>
 </dict>
 </plist>
