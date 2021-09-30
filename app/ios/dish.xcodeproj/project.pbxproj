@@ -18,6 +18,8 @@
 		AED82A0325E47F9700FF17C0 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		B98CBB070CE648E7B1207281 /* WhyteHeavy.woff in Resources */ = {isa = PBXBuildFile; fileRef = 514BBB37B46A42979473DE4C /* WhyteHeavy.woff */; };
 		CF556591E3C64E7CA922EB68 /* WhyteHeavy.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = 927DEC4D3B8444EDB25F948D /* WhyteHeavy.woff2 */; };
+		EFB24C2F88E74CCE9491564D /* Magnat.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3C2ED4E6C4C242F8B697187C /* Magnat.otf */; };
+		9D4CE5A04D2049FE9112B31D /* Magnat.woff in Resources */ = {isa = PBXBuildFile; fileRef = 7E3D5C8E600E42F0A70B6F60 /* Magnat.woff */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		D83D84C5729645819568E3C5 /* WhyteHeavy.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = WhyteHeavy.otf; path = ../src/assets/fonts/WhyteHeavy.otf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		3C2ED4E6C4C242F8B697187C /* Magnat.otf */ = {isa = PBXFileReference; name = "Magnat.otf"; path = "../src/assets/fonts/Magnat.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7E3D5C8E600E42F0A70B6F60 /* Magnat.woff */ = {isa = PBXFileReference; name = "Magnat.woff"; path = "../src/assets/fonts/Magnat.woff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +120,8 @@
 				D83D84C5729645819568E3C5 /* WhyteHeavy.otf */,
 				514BBB37B46A42979473DE4C /* WhyteHeavy.woff */,
 				927DEC4D3B8444EDB25F948D /* WhyteHeavy.woff2 */,
+				3C2ED4E6C4C242F8B697187C /* Magnat.otf */,
+				7E3D5C8E600E42F0A70B6F60 /* Magnat.woff */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -206,6 +212,8 @@
 				2CF094F48C0C4EE0B380BB92 /* WhyteHeavy.otf in Resources */,
 				B98CBB070CE648E7B1207281 /* WhyteHeavy.woff in Resources */,
 				CF556591E3C64E7CA922EB68 /* WhyteHeavy.woff2 in Resources */,
+				EFB24C2F88E74CCE9491564D /* Magnat.otf in Resources */,
+				9D4CE5A04D2049FE9112B31D /* Magnat.woff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,7 +458,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				EXCLUDED_ARCHS = "";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -520,7 +528,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXCLUDED_ARCHS = "";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
