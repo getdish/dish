@@ -144,7 +144,9 @@ export const HomePageFeed = memo(
         <>
           <HomeTagLenses />
 
-          <HomeNearbyRegions lng={center?.lng} lat={center?.lat} />
+          {!window.location.search.includes('disable_regions') && (
+            <HomeNearbyRegions lng={center?.lng} lat={center?.lat} />
+          )}
 
           <Spacer size="xxl" />
 
@@ -220,15 +222,9 @@ export const HomePageFeed = memo(
 
             <Spacer size="xxxl" />
 
-            <HomeTrendingSpots region={region} />
-
-            {/* <VStack>
-              {reviews.map((review, i) => (
-                <SuspenseFallback key={`${i}${review.id}`}>
-                  <Review review={review} />
-                </SuspenseFallback>
-              ))}
-            </VStack> */}
+            {!window.location.search.includes('disable_trending') && (
+              <HomeTrendingSpots region={region} />
+            )}
           </VStack>
         </>
       )
@@ -246,6 +242,7 @@ const HomeTrendingSpots = memo(({ region }: { region: string }) => {
     },
     limit: 8,
   })
+  console.log('trendingSpots', trendingSpots)
 
   return (
     <>
@@ -324,7 +321,7 @@ const HomeNearbyRegions = memo(
               return (
                 <Button key={i}>
                   <Title size="xs" key={i} paddingVertical={5}>
-                    {capitalize(region.hrrcity?.replace(/[a-z]+\-\s*/i, ''))}
+                    {capitalize(region.hrrcity?.replace(/[a-z]+\-\s*/i, '') || '')}
                   </Title>
                 </Button>
               )
