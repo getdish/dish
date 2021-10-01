@@ -1,6 +1,7 @@
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
+import getCenter from '@turf/center'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
 import {
@@ -19,6 +20,7 @@ import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
 import { UseSetAppMapProps, appMapStore, useSetAppMap } from '../appMapStore'
+import { setLocation } from '../setLocation'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
@@ -144,9 +146,7 @@ export const HomePageFeed = memo(
         <>
           <HomeTagLenses />
 
-          {!window.location.search.includes('disable_regions') && (
-            <HomeNearbyRegions lng={center?.lng} lat={center?.lat} />
-          )}
+          <HomeNearbyRegions lng={center?.lng} lat={center?.lat} />
 
           <Spacer size="xxl" />
 
@@ -292,24 +292,25 @@ const HomeTagLenses = memo(() => {
 
 const HomeNearbyRegions = memo(
   graphql(({ lng, lat }: { lng?: number; lat?: number }) => {
-    const nearbyRegions =
-      lng && lat
-        ? query.hrr({
-            limit: 10,
-            where: {
-              wkb_geometry: {
-                _st_d_within: {
-                  // ~5 miles
-                  distance: 0.33,
-                  from: {
-                    type: 'Point',
-                    coordinates: [lng, lat],
-                  },
-                },
-              },
+    if (!lng || !lat) {
+      return null
+    }
+
+    const nearbyRegions = query.hrr({
+      limit: 10,
+      where: {
+        wkb_geometry: {
+          _st_d_within: {
+            // todo: if span is large, make this larger proportionally
+            distance: 0.5,
+            from: {
+              type: 'Point',
+              coordinates: [lng, lat],
             },
-          })
-        : []
+          },
+        },
+      },
+    })
 
     return (
       <>
@@ -317,11 +318,29 @@ const HomeNearbyRegions = memo(
 
         <ContentScrollViewHorizontal>
           <HStack alignItems="center" spacing="sm" paddingHorizontal={16}>
-            {nearbyRegions.map((region, i) => {
+            {nearbyRegions.map((r, i) => {
+              const regionName = capitalize(r.hrrcity?.replace(/[a-z]+\-\s*/i, '') || '')
+              const center = r.wkb_geometry ? getCenter(r.wkb_geometry) : null
+              const region = r.slug || ''
+              console.log('geo', r.wkb_geometry, center)
               return (
-                <Button key={i}>
+                <Button
+                  {...(center && {
+                    onPress: () =>
+                      setLocation({
+                        region,
+                        name: regionName,
+                        center: {
+                          lng: center.geometry.coordinates[1],
+                          lat: center.geometry.coordinates[0],
+                        },
+                        span: appMapStore.nextPosition.span,
+                      }),
+                  })}
+                  key={i}
+                >
                   <Title size="xs" key={i} paddingVertical={5}>
-                    {capitalize(region.hrrcity?.replace(/[a-z]+\-\s*/i, '') || '')}
+                    {regionName}
                   </Title>
                 </Button>
               )

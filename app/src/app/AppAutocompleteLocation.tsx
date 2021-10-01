@@ -1,7 +1,7 @@
 import { series, sleep } from '@dish/async'
 import { isPresent } from '@dish/helpers'
 import { useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo, useCallback, useEffect, useMemo } from 'react'
+import React, { Suspense, memo, useCallback, useEffect } from 'react'
 import { Theme, useDebounceValue } from 'snackui'
 
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
@@ -14,7 +14,7 @@ import { autocompleteLocationStore, autocompletesStore } from './AutocompletesSt
 import { drawerStore } from './drawerStore'
 import { filterAutocompletes } from './filterAutocompletes'
 import { useInputStoreLocation } from './inputStore'
-import { setLocation } from './setLocation'
+import { setLocationFromAutocomplete } from './setLocation'
 
 export const AppAutocompleteLocation = memo(() => {
   return (
@@ -69,7 +69,7 @@ const AutocompleteLocationInner = memo(() => {
   }, [query])
 
   const handleSelect = useCallback((result: AutocompleteItemLocation) => {
-    setLocation(result.name, result.slug)
+    setLocationFromAutocomplete(result.name, result.slug)
     autocompletes.setVisible(false)
     // changing location = change drawer to show
     if (drawerStore.snapIndex === 0) {

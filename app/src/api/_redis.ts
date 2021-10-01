@@ -1,10 +1,10 @@
-import ioredis from 'ioredis'
+import Redis from 'ioredis'
 
 const pass = process.env.REDIS_PASSWORD
 const host = process.env.REDIS_HOST || 'redis'
 const port = process.env.REDIS_PORT ? +process.env.REDIS_PORT : 6379
 
-export const redisClient = ioredis(port, host, {
+export const redisClient = new Redis(port, host, {
   password: pass,
   autoResubscribe: true,
 })
