@@ -63,11 +63,11 @@ async function start() {
         }),
         useParserCache(),
         // useTiming(),
-        useLogger({
-          logFn: (eventName, args) => {
-            console.log('gql', eventName, args)
-          },
-        }),
+        // useLogger({
+        //   logFn: (eventName, args) => {
+        //     console.log('gql', eventName, args)
+        //   },
+        // }),
       ],
     },
   }).buildApp({})

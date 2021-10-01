@@ -1,4 +1,4 @@
-import { RestaurantQuery, query, restaurant } from '@dish/graph'
+import { RestaurantQuery, order_by, query, restaurant } from '@dish/graph'
 
 export const queryRestaurant = (slug: string, _query = query) => {
   if (typeof slug !== 'string') {
@@ -16,5 +16,9 @@ export const queryRestaurant = (slug: string, _query = query) => {
 
 export const queryRestaurantCoverPhoto = (restaurant: RestaurantQuery) => {
   // TODO using photo_table was causing incredibly slow queries
-  return restaurant.image
+  return (
+    restaurant.image ||
+    restaurant.photo_table({ limit: 1, order_by: [{ photo: { quality: order_by.desc } }] })[0]
+      ?.photo?.url
+  )
 }

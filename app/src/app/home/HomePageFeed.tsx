@@ -18,7 +18,7 @@ import {
 import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
-import { UseSetAppMapProps, useSetAppMap } from '../appMapStore'
+import { UseSetAppMapProps, appMapStore, useSetAppMap } from '../appMapStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
@@ -26,6 +26,7 @@ import { SlantedTitle } from '../views/SlantedTitle'
 import { TitleStyled } from '../views/TitleStyled'
 import { FeedCard } from './FeedCard'
 import { homePageStore } from './homePageStore'
+import { RestaurantCard } from './restaurant/RestaurantCard'
 
 const getListPlaces = async (listSlug: string) => {
   return await resolved(() =>
@@ -45,7 +46,7 @@ const getListPlaces = async (listSlug: string) => {
 
 export const HomePageFeed = memo(
   graphql(
-    ({ region, ...useSetAppMapProps }: UseSetAppMapProps & { region: string }) => {
+    ({ region, center, ...useSetAppMapProps }: UseSetAppMapProps & { region: string }) => {
       const [hovered, setHovered] = useState<null | RestaurantOnlyIds[]>(null)
       const refetch = useRefetch()
       const setHoveredDbc = useDebounce(setHovered, 400)
@@ -53,25 +54,13 @@ export const HomePageFeed = memo(
         setHoveredDbc.cancel()
       }
 
-      const props: UseSetAppMapProps = {
+      useSetAppMap({
         showRank: !!hovered,
+        center,
         ...useSetAppMapProps,
         hideRegions: false,
         results: hovered ?? useSetAppMapProps.results,
-      }
-
-      // const topCuisines = useTopCuisines(homeStore.currentState.center!)
-      // console.log('topCuisines', topCuisines)
-
-      useSetAppMap(props)
-
-      // useDebounceEffect(
-      //   () => {
-      //     appMapStore.setHoveredDbc(hovered)
-      //   },
-      //   80,
-      //   [hovered]
-      // )
+      })
 
       const tagLists = query.list({
         where: {
@@ -102,17 +91,6 @@ export const HomePageFeed = memo(
         order_by: [{ updated_at: order_by.asc }],
         limit: 16,
       })
-
-      // const reviews = query.review({
-      //   where: {
-      //     restaurant_id: {
-      //       _is_null: false,
-      //     },
-      //     text: { _neq: '' },
-      //   },
-      //   limit: 10,
-      //   order_by: [{ authored_at: order_by.desc }],
-      // })
 
       const queryOneList = (tagSlug: string) => {
         return query.list_populated({
@@ -162,67 +140,13 @@ export const HomePageFeed = memo(
 
       const numAddButtons = Math.max(0, 8 - trendingLists.length)
 
-      const nearbyRegions = query.hrr({
-        limit: 10,
-        where: {
-          wkb_geometry: {
-            _st_d_within: {
-              // ~5 miles
-              distance: 1,
-              from: {
-                type: 'Point',
-                coordinates: [props.center?.lng, props.center?.lat],
-              },
-            },
-          },
-        },
-      })
-
-      console.log('nearbyRegions', nearbyRegions, props.center)
-
       return (
         <>
-          <ContentScrollViewHorizontal>
-            <HStack alignItems="center" spacing="xxl" paddingHorizontal={16}>
-              {tagLenses.map((lense, i) => {
-                return (
-                  <Link key={i} tag={lense}>
-                    <TitleStyled
-                      color={rgbString(lense.rgb as any)}
-                      hoverStyle={{
-                        color: rgbString(lense.rgb as any, 0.6),
-                      }}
-                      fontSize={26}
-                      lineHeight={40}
-                      paddingVertical={5}
-                    >
-                      {lense.icon}
-                      &nbsp;&nbsp;
-                      {lense.name}
-                    </TitleStyled>
-                  </Link>
-                )
-              })}
-            </HStack>
-          </ContentScrollViewHorizontal>
+          <HomeTagLenses />
 
-          {!!nearbyRegions.length && <Spacer size="sm" />}
+          <HomeNearbyRegions lng={center?.lng} lat={center?.lat} />
 
-          <ContentScrollViewHorizontal>
-            <HStack alignItems="center" spacing="sm" paddingHorizontal={16}>
-              {nearbyRegions.map((region, i) => {
-                return (
-                  <Button key={i}>
-                    <Title size="xs" key={i} paddingVertical={5}>
-                      {capitalize(region.hrrcity?.replace(/[a-z]+\-\s*/i, ''))}
-                    </Title>
-                  </Button>
-                )
-              })}
-            </HStack>
-          </ContentScrollViewHorizontal>
-
-          <Spacer size="xl" />
+          <Spacer size="xxl" />
 
           <VStack paddingHorizontal={10} position="relative">
             <AbsoluteVStack zIndex={100} top={-15} left={10}>
@@ -294,6 +218,10 @@ export const HomePageFeed = memo(
               )}
             </Grid>
 
+            <Spacer size="xxxl" />
+
+            <HomeTrendingSpots region={region} />
+
             {/* <VStack>
               {reviews.map((review, i) => (
                 <SuspenseFallback key={`${i}${review.id}`}>
@@ -309,4 +237,101 @@ export const HomePageFeed = memo(
       suspense: false,
     }
   )
+)
+
+const HomeTrendingSpots = memo(({ region }: { region: string }) => {
+  const trendingSpots = query.restaurant_trending({
+    args: {
+      region_slug: region,
+    },
+    limit: 8,
+  })
+
+  return (
+    <>
+      <VStack position="relative">
+        <AbsoluteVStack zIndex={100} top={-15} left={0}>
+          <SlantedTitle size="xs">Trending Spots</SlantedTitle>
+        </AbsoluteVStack>
+        <ContentScrollViewHorizontal>
+          <HStack alignItems="center" spacing="md" paddingVertical={10}>
+            {trendingSpots.map((spot) => {
+              return <RestaurantCard size="sm" key={spot.id} restaurant={spot} />
+            })}
+          </HStack>
+        </ContentScrollViewHorizontal>
+      </VStack>
+    </>
+  )
+})
+
+const HomeTagLenses = memo(() => {
+  return (
+    <ContentScrollViewHorizontal>
+      <HStack alignItems="center" spacing="xxl" paddingHorizontal={16}>
+        {tagLenses.map((lense, i) => {
+          return (
+            <Link key={i} tag={lense}>
+              <TitleStyled
+                color={rgbString(lense.rgb as any)}
+                hoverStyle={{
+                  color: rgbString(lense.rgb as any, 0.6),
+                }}
+                fontSize={26}
+                lineHeight={40}
+                paddingVertical={5}
+              >
+                {lense.icon}
+                &nbsp;&nbsp;
+                {lense.name}
+              </TitleStyled>
+            </Link>
+          )
+        })}
+      </HStack>
+    </ContentScrollViewHorizontal>
+  )
+})
+
+const HomeNearbyRegions = memo(
+  graphql(({ lng, lat }: { lng?: number; lat?: number }) => {
+    const nearbyRegions =
+      lng && lat
+        ? query.hrr({
+            limit: 10,
+            where: {
+              wkb_geometry: {
+                _st_d_within: {
+                  // ~5 miles
+                  distance: 1,
+                  from: {
+                    type: 'Point',
+                    coordinates: [lng, lat],
+                  },
+                },
+              },
+            },
+          })
+        : []
+
+    return (
+      <>
+        {!!nearbyRegions.length && <Spacer size="sm" />}
+
+        <ContentScrollViewHorizontal>
+          <HStack alignItems="center" spacing="sm" paddingHorizontal={16}>
+            {nearbyRegions.map((region, i) => {
+              return (
+                <Button key={i}>
+                  <Title size="xs" key={i} paddingVertical={5}>
+                    {capitalize(region.hrrcity?.replace(/[a-z]+\-\s*/i, ''))}
+                  </Title>
+                </Button>
+              )
+            })}
+          </HStack>
+        </ContentScrollViewHorizontal>
+      </>
+    )
+  })
 )
