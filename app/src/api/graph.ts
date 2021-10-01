@@ -1,14 +1,16 @@
 import { route, useRouteBodyParser } from '@dish/api'
+import { sleep } from '@dish/async'
 import { DISH_DEBUG, GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
-import { useLogger } from '@envelop/core'
 import { useParserCache } from '@envelop/parser-cache'
 import { createInMemoryCache, useResponseCache } from '@envelop/response-cache'
+import { createRedisCache } from '@envelop/response-cache-redis'
 import { useValidationCache } from '@envelop/validation-cache'
 import { introspectSchema, wrapSchema } from '@graphql-tools/wrap'
 import { Request } from 'express'
 import { print } from 'graphql'
 
 import { CreateApp, EZApp } from './_graphez'
+import { isRedisConnected, redisClient } from './_redis'
 
 const avoidCache = !process.env.NODE_ENV || process.env.NODE_ENV === 'test'
 const hasuraHeaders = {
@@ -35,8 +37,23 @@ export default route(async (req, res) => {
 let ezApp: EZApp | null = null
 
 async function start() {
-  // todo use redis once https://github.com/dotansimha/envelop/pull/685 merged
-  const cache = createInMemoryCache()
+  await Promise.race([
+    sleep(1000),
+    new Promise<void>((res) => redisClient.once('connect', () => res())),
+  ])
+  const redisConnected = isRedisConnected()
+  if (!redisConnected) {
+    console.warn('redis not connected, using in memory cache')
+  } else {
+    console.log('✅ graph using redis cache')
+  }
+  const cache = redisConnected
+    ? createRedisCache({
+        redis: redisClient,
+      })
+    : createInMemoryCache()
+
+  // todo - can have it test both prod/dev and use whichever works
   const schema = wrapSchema({
     schema: await introspectSchema(executor),
     executor,
