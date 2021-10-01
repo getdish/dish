@@ -179,9 +179,9 @@ const FeedCardContent = ({
         )}
         <LinearGradient
           style={StyleSheet.absoluteFill}
-          start={[0, 1]}
-          end={[1, 0]}
-          colors={[`${listColors?.backgroundForTheme}00`, `${listColors?.backgroundForTheme}99`]}
+          start={[0, 0]}
+          end={[1, 1]}
+          colors={[`${listColors?.backgroundForTheme}00`, `${listColors?.backgroundForTheme}33`]}
         />
         <AbsoluteHStack
           top={0}
@@ -226,7 +226,7 @@ const FeedCardContent = ({
               fontSize={fontSize}
               lineHeight={fontSize * 1.2}
               // color="#000"
-              // color={listColors?.colorForTheme}
+              color={listColors?.colorForTheme}
               // backgroundColor={listColors?.backgroundForTheme}
             >
               {title}

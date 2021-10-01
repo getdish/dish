@@ -24,6 +24,7 @@ import {
 import { ColorShades, getColorsForColor, getColorsForName } from '../../../helpers/getColorsForName'
 import { CardFrame, CardFrameProps } from '../../views/CardFrame'
 import { Image } from '../../views/Image'
+import { TitleStyled } from '../../views/TitleStyled'
 
 export type CardProps = CardFrameProps &
   HoverableProps & {
@@ -170,7 +171,7 @@ export function Card(props: CardProps) {
             paddingVertical={size.endsWith('xs') ? 15 : 20}
             flex={1}
           >
-            {!!photo && (
+            {typeof photo === 'string' && (
               <AbsoluteVStack
                 opacity={0.15}
                 pointerEvents="auto"
@@ -204,23 +205,9 @@ export function Card(props: CardProps) {
               <VStack minWidth={10} flex={1} />
               <VStack flexShrink={1} flex={10} alignItems="flex-end">
                 <VStack position="relative">
-                  <Text
-                    // not working below :(
-                    className={size.endsWith('xs') ? 'ellipse' : 'break-word'}
-                    textAlign="right"
-                    textShadowColor={theme.shadowColor}
-                    textShadowRadius={2}
-                    textShadowOffset={{ height: 2, width: 0 }}
-                    fontWeight={size === 'sm' ? '700' : '800'}
-                    letterSpacing={size === 'sm' ? -1 : -0.5}
-                    color={theme.color}
-                    fontSize={fontSize}
-                    numberOfLines={3}
-                    lineHeight={fontSize * 1.1}
-                    // flexShrink={0}
-                  >
+                  <TitleStyled textAlign="right" fontSize={fontSize} lineHeight={fontSize * 1.1}>
                     {title} {!!afterTitle ? <Text fontWeight="300">{afterTitle}</Text> : null}
-                  </Text>
+                  </TitleStyled>
                 </VStack>
                 <Spacer size="xs" />
                 {!!subTitle && !size.endsWith('xs') && (
