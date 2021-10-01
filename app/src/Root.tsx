@@ -26,23 +26,20 @@ import { ProvideRouter } from '@dish/router'
 import { configureUseStore } from '@dish/use-store'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useState } from 'react'
-import { StyleSheet, useColorScheme } from 'react-native'
+import { useColorScheme } from 'react-native'
 import {
   AbsoluteVStack,
   Paragraph,
   SnackUIProvider,
   Toast,
-  VStack,
   configureThemes,
   useSafeAreaInsets,
 } from 'snackui'
 
-import { AdvancedGallery } from './AdvancedGallery'
 import { App } from './app/App'
 // import { App } from './app/App'
 import { homeStore } from './app/homeStore'
 import { useUserStore, userStore } from './app/userStore'
-import { Image } from './app/views/Image'
 import { showRadar } from './constants/constants'
 import { initialHomeState } from './constants/initialHomeState'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
@@ -50,7 +47,6 @@ import { isHermes } from './constants/platforms'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
 import { DRoutesTable, router, routes } from './router'
-import { Gallery } from './TestGallery'
 
 declare module 'snackui' {
   interface ThemeObject extends MyTheme {}

@@ -53,7 +53,6 @@ export const FeedCard = (props: FeedCardProps) => {
     ...cardProps
   } = props
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-  console.log('dimensions', dimensions)
   return (
     <Card
       className="hover-parent"
@@ -146,7 +145,7 @@ const FeedCardContent = ({
   const isSmallDevice = Math.min(getWindowWidth(), getWindowWidth()) < 420
   const deviceScale = isSmallDevice ? 0.75 : 1
   const fontSize = Math.round(24 * lenScale * tagScale * sizeScale * deviceScale)
-  const imgSize = 350
+  const imgSize = 200
   const theme = useTheme()
   return (
     <HStack height="100%" padding={10} alignItems="center">
@@ -154,21 +153,24 @@ const FeedCardContent = ({
         {typeof photo === 'string' && (
           <AbsoluteVStack
             pointerEvents="none"
-            opacity={0.6}
-            borderRadius={8}
-            fullscreen
+            opacity={0.1}
+            borderRadius={100}
+            width={imgSize}
+            height={imgSize}
+            top={-50}
+            right={-40}
             overflow="hidden"
           >
-            {/* <Image
+            <Image
               source={{ uri: getImageUrl(photo, imgSize, imgSize) }}
               style={{ width: imgSize, height: imgSize }}
-            /> */}
-            <LinearGradient
+            />
+            {/* <LinearGradient
               style={StyleSheet.absoluteFill}
               start={[1, 0]}
               end={[0, 0]}
               colors={[`${listColors?.backgroundForTheme}00`, listColors?.backgroundForTheme || '']}
-            />
+            /> */}
           </AbsoluteVStack>
         )}
         <AbsoluteHStack

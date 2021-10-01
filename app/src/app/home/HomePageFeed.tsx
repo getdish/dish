@@ -1,14 +1,16 @@
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
+import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
 import {
   AbsoluteVStack,
+  Button,
   Grid,
   HStack,
   Spacer,
+  Title,
   VStack,
-  isTouchDevice,
   useDebounce,
   useDebounceEffect,
 } from 'snackui'
@@ -16,14 +18,11 @@ import {
 import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { rgbString } from '../../helpers/rgb'
-import { StandaloneGallery } from '../../reanimated-gallery'
 import { UseSetAppMapProps, useSetAppMap } from '../appMapStore'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { ListCard } from '../views/list/ListCard'
-import { Review } from '../views/Review'
 import { SlantedTitle } from '../views/SlantedTitle'
-import { SuspenseFallback } from '../views/SuspenseFallback'
 import { TitleStyled } from '../views/TitleStyled'
 import { FeedCard } from './FeedCard'
 import { homePageStore } from './homePageStore'
@@ -163,33 +162,65 @@ export const HomePageFeed = memo(
 
       const numAddButtons = Math.max(0, 8 - trendingLists.length)
 
+      const nearbyRegions = query.hrr({
+        limit: 10,
+        where: {
+          wkb_geometry: {
+            _st_d_within: {
+              // ~5 miles
+              distance: 1,
+              from: {
+                type: 'Point',
+                coordinates: [props.center?.lng, props.center?.lat],
+              },
+            },
+          },
+        },
+      })
+
+      console.log('nearbyRegions', nearbyRegions, props.center)
+
       return (
         <>
-          <HStack position="relative">
-            <ContentScrollViewHorizontal>
-              <HStack alignItems="center" spacing="xxl" paddingHorizontal={16}>
-                {tagLenses.map((lense, i) => {
-                  return (
-                    <Link key={i} tag={lense}>
-                      <TitleStyled
-                        color={rgbString(lense.rgb as any)}
-                        hoverStyle={{
-                          color: rgbString(lense.rgb as any, 0.6),
-                        }}
-                        fontSize={26}
-                        lineHeight={40}
-                        paddingVertical={5}
-                      >
-                        {lense.icon}
-                        &nbsp;&nbsp;
-                        {lense.name}
-                      </TitleStyled>
-                    </Link>
-                  )
-                })}
-              </HStack>
-            </ContentScrollViewHorizontal>
-          </HStack>
+          <ContentScrollViewHorizontal>
+            <HStack alignItems="center" spacing="xxl" paddingHorizontal={16}>
+              {tagLenses.map((lense, i) => {
+                return (
+                  <Link key={i} tag={lense}>
+                    <TitleStyled
+                      color={rgbString(lense.rgb as any)}
+                      hoverStyle={{
+                        color: rgbString(lense.rgb as any, 0.6),
+                      }}
+                      fontSize={26}
+                      lineHeight={40}
+                      paddingVertical={5}
+                    >
+                      {lense.icon}
+                      &nbsp;&nbsp;
+                      {lense.name}
+                    </TitleStyled>
+                  </Link>
+                )
+              })}
+            </HStack>
+          </ContentScrollViewHorizontal>
+
+          {!!nearbyRegions.length && <Spacer size="sm" />}
+
+          <ContentScrollViewHorizontal>
+            <HStack alignItems="center" spacing="sm" paddingHorizontal={16}>
+              {nearbyRegions.map((region, i) => {
+                return (
+                  <Button key={i}>
+                    <Title size="xs" key={i} paddingVertical={5}>
+                      {capitalize(region.hrrcity?.replace(/[a-z]+\-\s*/i, ''))}
+                    </Title>
+                  </Button>
+                )
+              })}
+            </HStack>
+          </ContentScrollViewHorizontal>
 
           <Spacer size="xl" />
 

@@ -93,7 +93,8 @@ steps:
   - label: ":docker: build cron"
     key: cron
     depends_on: base
-    command: DISH_ENV=production ./dsh compose_build_and_push cron
+    command: echo "disabled for now push was freezing"
+    # command: DISH_ENV=production ./dsh compose_build_and_push cron
 
   - label: ":docker: build summarizer"
     key: summarizer
