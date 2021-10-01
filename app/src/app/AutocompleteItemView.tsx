@@ -4,11 +4,9 @@ import { Image, Keyboard } from 'react-native'
 import { HStack, Spacer, Text, Theme, VStack, useDebounce, useTheme } from 'snackui'
 
 import { AutocompleteItem } from '../helpers/createAutocomplete'
-import { rgbString } from '../helpers/rgb'
 import { AutocompleteSelectCb } from './AutocompleteResults'
 import { ShowAutocomplete, autocompletesStore } from './AutocompletesStore'
 import { CircleButton } from './home/restaurant/CircleButton'
-import { useCurrentLenseColor } from './hooks/useCurrentLenseColor'
 import { LinkButton } from './views/LinkButton'
 
 export const AutocompleteItemView = memo(

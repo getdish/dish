@@ -387,14 +387,7 @@ const AppMapRightFade = memo(() => {
   }
 
   return (
-    <AbsoluteVStack
-      zIndex={1000000000000}
-      pointerEvents="none"
-      bottom={0}
-      top={0}
-      right={0}
-      width={60}
-    >
+    <AbsoluteVStack zIndex={300} pointerEvents="none" bottom={0} top={0} right={0} width={100}>
       <LinearGradient
         pointerEvents="none"
         style={StyleSheet.absoluteFill}
