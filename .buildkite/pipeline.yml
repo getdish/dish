@@ -98,7 +98,8 @@ steps:
 
   - label: ":docker: build summarizer"
     key: summarizer
-    command: DISH_ENV=production ./dsh compose_build_and_push summarizer
+    command: echo "disabled for now push was freezing"
+    # command: DISH_ENV=production ./dsh compose_build_and_push summarizer
 
   # tests
 

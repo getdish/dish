@@ -1,4 +1,4 @@
-import { graphql } from '@dish/graph'
+import { Restaurant, graphql, restaurant } from '@dish/graph'
 import { debounce } from 'lodash'
 import React, { Suspense } from 'react'
 import { AbsoluteVStack, HStack, Hoverable } from 'snackui'
@@ -14,8 +14,7 @@ import { Card, CardProps } from './Card'
 import { priceRange } from './RestaurantDetailRow'
 
 export type RestaurantCardProps = {
-  restaurantSlug: string
-  restaurantId: string
+  restaurant: restaurant
   below?: CardProps['below']
   aspectFixed?: CardProps['aspectFixed']
   size?: CardProps['size']
@@ -32,9 +31,6 @@ const setHovered = debounce(appMapStore.setHovered, 300)
 
 export const RestaurantCard = (props: RestaurantCardProps) => {
   const fallbackCard = <CardFrame aspectFixed size={props.size} />
-  if (!props.restaurantSlug) {
-    return fallbackCard
-  }
   const content = (
     <Suspense fallback={fallbackCard}>
       <RestaurantCardContent {...props} />
@@ -45,8 +41,8 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
       <Hoverable
         onHoverIn={() => {
           setHovered({
-            id: props.restaurantId,
-            slug: props.restaurantSlug,
+            id: props.restaurant.id,
+            slug: props.restaurant.slug || '',
             via: 'list',
           })
         }}
@@ -61,8 +57,7 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
 export const RestaurantCardContent = graphql(
   ({
     size = 'md',
-    restaurantSlug,
-    restaurantId,
+    restaurant,
     isBehind,
     hideScore,
     aspectFixed,
@@ -72,21 +67,28 @@ export const RestaurantCardContent = graphql(
     dimImage = true,
     below,
   }: RestaurantCardProps) => {
-    const [restaurant] = queryRestaurant(restaurantSlug)
     if (!restaurant) {
       return null
     }
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const restaurantPhoto = queryRestaurantCoverPhoto(restaurant)
+    const photo = restaurantPhoto
+      ? getImageUrl(restaurantPhoto, cardFrameWidth, cardFrameHeight)
+      : null
+
+    if (restaurant.name === 'Safeway') {
+      return null
+    }
+
     // const rating = Math.round(restaurant.rating * 2)
-    return (
-      <Link name="restaurant" asyncClick params={{ slug: restaurantSlug }}>
+    const content = (
+      <Link name="restaurant" asyncClick params={{ slug: restaurant.slug || '' }}>
         <Card
           isBehind={isBehind}
           size={size}
           title={restaurant.name}
           subTitle={price_range}
-          colorsKey={restaurantSlug}
+          colorsKey={restaurant.slug || ''}
           dimImage={dimImage}
           backgroundColor={backgroundColor}
           outside={(colors) => (
@@ -96,19 +98,23 @@ export const RestaurantCardContent = graphql(
                   {typeof below === 'function' ? below(colors) : below}
                 </HStack>
               )}
-              <AbsoluteVStack scale={size === 'xs' ? 0.85 : 1} top={-12} right={-12} zIndex={100}>
-                <RestaurantRatingView restaurant={restaurant} floating size={38} />
+              <AbsoluteVStack scale={size === 'xs' ? 0.9 : 1} top={-6} right={-6} zIndex={100}>
+                <RestaurantRatingView restaurant={restaurant} floating size={32} />
               </AbsoluteVStack>
             </>
           )}
-          photo={
-            restaurantPhoto ? getImageUrl(restaurantPhoto, cardFrameWidth, cardFrameHeight) : null
-          }
+          photo={photo}
           aspectFixed={aspectFixed}
           hoverEffect={hoverable ? 'scale' : null}
           padTitleSide={padTitleSide}
         />
       </Link>
     )
+
+    if (!photo) {
+      return null
+    }
+
+    return content
   }
 )

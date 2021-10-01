@@ -160,6 +160,7 @@ export function Card(props: CardProps) {
         overflow="hidden"
         width="100%"
         height="100%"
+        position="relative"
       >
         {children ?? (
           <VStack
@@ -169,8 +170,34 @@ export function Card(props: CardProps) {
             paddingVertical={size.endsWith('xs') ? 15 : 20}
             flex={1}
           >
-            <HStack flex={1} width="100%" maxWidth="100%">
-              {!!padTitleSide && !isSm && <VStack minWidth={10} flex={1} />}
+            {!!photo && (
+              <AbsoluteVStack
+                opacity={0.5}
+                zIndex={0}
+                borderRadius={10}
+                overflow="hidden"
+                fullscreen
+              >
+                <Image source={{ uri: photo }} resizeMode="cover" style={StyleSheet.absoluteFill} />
+                <AbsoluteVStack
+                  fullscreen
+                  alignItems="flex-start"
+                  justifyContent="flex-end"
+                  padding={10}
+                  borderRadius={10}
+                  overflow="hidden"
+                >
+                  <LinearGradient
+                    style={[StyleSheet.absoluteFill, { zIndex: 0 }]}
+                    start={[0, 1]}
+                    end={[0, 0]}
+                    colors={[`#000000`, `#00000000`]}
+                  />
+                </AbsoluteVStack>
+              </AbsoluteVStack>
+            )}
+            <HStack alignItems="flex-end" flex={1} width="100%" maxWidth="100%">
+              <VStack minWidth={10} flex={1} />
               <VStack flexShrink={1} flex={10} alignItems="flex-end">
                 <VStack position="relative">
                   <Text
