@@ -166,7 +166,7 @@ steps:
     timeout_in_minutes: 10
     depends_on:
       - tests
-      - push-images
+      - pull-images
     command: "./dsh deploy all"
     artifact_paths:
       - "*.log"
