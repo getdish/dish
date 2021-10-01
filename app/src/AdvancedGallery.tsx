@@ -25,21 +25,63 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useVector } from 'react-native-redash'
 
-const DOUBLE_TAP_SCALE = 3
-const MAX_SCALE = 6
-const SPACE_BETWEEN_IMAGES = 40
+type Props<T> = EventsCallbacks & {
+  item: T
+  index: number
+  isFirst: boolean
+  isLast: boolean
+  translateX: Animated.SharedValue<number>
+  currentIndex: Animated.SharedValue<number>
+  renderItem: RenderItem<T>
+  width: number
+  height: number
+  length: number
+  emptySpaceWidth: number
+  doubleTapInterval: number
+  doubleTapScale: number
+  maxScale: number
+  pinchEnabled: boolean
+  disableTransitionOnScaledImage: boolean
+  hideAdjacentImagesOnScaledImage: boolean
+  disableTapToZoom: boolean
+  disablePinchToZoom: boolean
+  disableVerticalSwipe: boolean
+  disableSwipeUp?: boolean
+  loop: boolean
+  onScaleChange?: (scale: number) => void
+  onScaleChangeRange?: { start: number; end: number }
+  setRef: (index: number, value: ItemRef) => void
+}
+
+type EventsCallbacks = {
+  onSwipeToClose?: () => void
+  onTap?: () => void
+  onDoubleTap?: () => void
+  onScaleStart?: () => void
+  onPanStart?: () => void
+}
+
+type RenderItem<T> = (imageInfo: RenderItemInfo<T>) => React.ReactElement | null
+type ItemRef = { reset: (animated: boolean) => void }
+
+export type RenderItemInfo<T> = {
+  index: number
+  item: T
+  onLayout: (e: { nativeEvent: { layout: { width: number; height: number } } }) => void
+}
 
 let lastDrag = Date.now()
 export const getLastDrag = () => lastDrag
 
+const DOUBLE_TAP_SCALE = 3
+const MAX_SCALE = 6
+const SPACE_BETWEEN_IMAGES = 40
 const isAndroid = Platform.OS === 'android'
-
 const useRefs = () => {
   const pan = useRef()
   const tap = useRef()
   const doubleTap = useRef()
   const pinch = useRef<PinchGestureHandler>()
-
   return {
     pan,
     tap,
@@ -60,12 +102,6 @@ export const snapPoint = (
   return points.filter((p) => Math.abs(point - p) === minDelta)[0]
 }
 
-export type RenderItemInfo<T> = {
-  index: number
-  item: T
-  onLayout: (e: { nativeEvent: { layout: { width: number; height: number } } }) => void
-}
-
 const defaultRenderImage = ({ item, onLayout }: RenderItemInfo<any>) => {
   return (
     <Image
@@ -76,46 +112,6 @@ const defaultRenderImage = ({ item, onLayout }: RenderItemInfo<any>) => {
     />
   )
 }
-
-type EventsCallbacks = {
-  onSwipeToClose?: () => void
-  onTap?: () => void
-  onDoubleTap?: () => void
-  onScaleStart?: () => void
-  onPanStart?: () => void
-}
-
-type RenderItem<T> = (imageInfo: RenderItemInfo<T>) => React.ReactElement | null
-
-type Props<T> = EventsCallbacks & {
-  item: T
-  index: number
-  isFirst: boolean
-  isLast: boolean
-  translateX: Animated.SharedValue<number>
-  currentIndex: Animated.SharedValue<number>
-  renderItem: RenderItem<T>
-  width: number
-  height: number
-  length: number
-
-  emptySpaceWidth: number
-  doubleTapInterval: number
-  doubleTapScale: number
-  maxScale: number
-  pinchEnabled: boolean
-  disableTransitionOnScaledImage: boolean
-  hideAdjacentImagesOnScaledImage: boolean
-  disableVerticalSwipe: boolean
-  disableSwipeUp?: boolean
-  loop: boolean
-  onScaleChange?: (scale: number) => void
-  onScaleChangeRange?: { start: number; end: number }
-
-  setRef: (index: number, value: ItemRef) => void
-}
-
-type ItemRef = { reset: (animated: boolean) => void }
 
 const ResizableImage = React.memo(
   <T extends any>({
@@ -142,6 +138,8 @@ const ResizableImage = React.memo(
     hideAdjacentImagesOnScaledImage,
     disableVerticalSwipe,
     disableSwipeUp,
+    disableTapToZoom,
+    disablePinchToZoom,
     loop,
     length,
     onScaleChange,
@@ -694,6 +692,7 @@ const ResizableImage = React.memo(
         <Animated.View style={[{ width, height }]}>
           <PinchGestureHandler
             ref={pinch}
+            enabled={!disablePinchToZoom}
             simultaneousHandlers={[pan]}
             onGestureEvent={gestureHandler}
             minPointers={2}
@@ -708,6 +707,7 @@ const ResizableImage = React.memo(
               >
                 <Animated.View style={[{ width, height }, animatedStyle]}>
                   <TapGestureHandler
+                    enabled={!disableTapToZoom}
                     ref={tap}
                     onGestureEvent={doubleTapHandler}
                     numberOfTaps={2}
@@ -735,7 +735,6 @@ export type GalleryReactRef = React.Ref<GalleryRef>
 type GalleryProps<T> = EventsCallbacks & {
   ref?: GalleryReactRef
   data: T[]
-
   renderItem?: RenderItem<T>
   keyExtractor?: (item: T, index: number) => string | number
   initialIndex?: number
@@ -748,6 +747,8 @@ type GalleryProps<T> = EventsCallbacks & {
   style?: ViewStyle
   containerDimensions?: { width: number; height: number }
   pinchEnabled?: boolean
+  disableTapToZoom?: boolean
+  disablePinchToZoom?: boolean
   disableTransitionOnScaledImage?: boolean
   hideAdjacentImagesOnScaledImage?: boolean
   disableVerticalSwipe?: boolean

@@ -71,12 +71,14 @@ export const FeedCard = (props: FeedCardProps) => {
           setDimensions(e.nativeEvent.layout)
         }}
       />
-      {!!dimensions.width && (
+      {false && !!dimensions.width && (
         <AdvancedGallery
           ref={galleryRef}
           disableVerticalSwipe
           disableSwipeUp
-          keyExtractor={(x) => x.id}
+          disablePinchToZoom
+          disableTapToZoom
+          keyExtractor={(x, i) => x.id || i}
           renderItem={({ item, onLayout }) => {
             return (
               <View style={StyleSheet.absoluteFill} onLayout={onLayout}>
