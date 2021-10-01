@@ -1,5 +1,4 @@
 import React from 'react'
-import { Image } from 'react-native'
 import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg'
 import {
   AbsoluteVStack,
@@ -16,6 +15,7 @@ import dontPanic from '../../../assets/dont-panic.svg'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { TagLine } from '../../TagLine'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { LogoColor } from '../../views/Logo'
 import { SmallTitle } from '../../views/SmallTitle'

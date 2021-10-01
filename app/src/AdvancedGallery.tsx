@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { Image, Platform, StyleSheet, View, ViewStyle, useWindowDimensions } from 'react-native'
+import { Platform, StyleSheet, View, ViewStyle, useWindowDimensions } from 'react-native'
 import {
   GestureEvent,
   PanGestureHandler,
@@ -24,6 +24,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useVector } from 'react-native-redash'
+
+import { Image } from './app/views/Image'
 
 type Props<T> = EventsCallbacks & {
   item: T

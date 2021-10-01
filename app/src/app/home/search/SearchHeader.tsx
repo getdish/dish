@@ -1,7 +1,7 @@
 import React, { Suspense, memo, useContext } from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
+import { isNative, isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
@@ -10,10 +10,8 @@ import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewH
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { Arrow } from './Arrow'
-import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPageListsRow } from './SearchPageListsRow'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
-import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 import { SearchPageScoring } from './SearchPageScoring'
 
 export const SearchHeader = memo(() => {
@@ -49,13 +47,17 @@ export const SearchHeader = memo(() => {
                     color={theme.color}
                     marginTop={-4}
                     marginBottom={0}
-                    height={28}
                     fontWeight="700"
                     fontSize={title.length < 20 ? 40 : 34}
                     {...(media.sm && {
                       fontSize: title.length < 20 ? 36 : 30,
                     })}
+                    height={28}
                     lineHeight={28}
+                    {...(isNative && {
+                      height: 38,
+                      lineHeight: 38,
+                    })}
                   >
                     {title.trim()}
                     {!!subTitle && (

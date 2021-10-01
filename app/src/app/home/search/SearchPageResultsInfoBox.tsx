@@ -1,11 +1,11 @@
 import { graphql, order_by, query } from '@dish/graph'
 import React, { memo } from 'react'
-import { Image } from 'react-native'
 import { HStack, Paragraph, Text, VStack, useMedia } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
+import { Image } from '../../views/Image'
 import { TagButton } from '../../views/TagButton'
 
 export const SearchPageResultsInfoBox = memo(({ state }: { state: HomeStateItemSearch }) => {

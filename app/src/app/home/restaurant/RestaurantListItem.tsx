@@ -260,94 +260,94 @@ const RestaurantListItemContent = memo(
 
           {/* ROW: TITLE */}
 
-          <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}>
-            <VStack
-              hoverStyle={{ backgroundColor: theme.backgroundColorTransluscentHover }}
-              width={950}
-              {...(shouldShowOneLine && {
-                width: 'auto',
-                hoverStyle: {
-                  backgroundColor: 'transparent',
-                },
-              })}
-              position="relative"
+          <VStack
+            hoverStyle={{ backgroundColor: theme.backgroundColorTransluscentHover }}
+            width={950}
+            {...(shouldShowOneLine && {
+              width: 'auto',
+              hoverStyle: {
+                backgroundColor: 'transparent',
+              },
+            })}
+            position="relative"
+          >
+            {/* LINK */}
+            <Link
+              flex={2}
+              tagName="div"
+              name="restaurant"
+              params={{ slug: restaurantSlug }}
+              zIndex={2}
             >
-              {/* LINK */}
-              <Link
-                flex={2}
-                tagName="div"
-                name="restaurant"
-                params={{ slug: restaurantSlug }}
-                zIndex={2}
+              <HStack
+                paddingLeft={hideRate ? 10 : 64}
+                paddingTop={shouldShowOneLine ? 10 : 15}
+                position="relative"
+                alignItems="center"
               >
-                <HStack
-                  paddingLeft={hideRate ? 10 : 64}
-                  paddingTop={shouldShowOneLine ? 10 : 15}
-                  position="relative"
-                  alignItems="center"
+                <VStack
+                  backgroundColor={theme.backgroundColorSecondary}
+                  borderRadius={1000}
+                  width={imgSize}
+                  height={imgSize}
+                  marginLeft={shouldShowOneLine ? 0 : hideRate ? -20 : -40}
+                  marginVertical={-18}
+                  marginRight={2}
+                  overflow="hidden"
                 >
-                  <VStack
-                    backgroundColor={theme.backgroundColorSecondary}
-                    borderRadius={1000}
-                    width={imgSize}
-                    height={imgSize}
-                    marginLeft={shouldShowOneLine ? 0 : hideRate ? -20 : -40}
-                    marginVertical={-18}
-                    marginRight={2}
-                    overflow="hidden"
+                  <Image
+                    source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
+                    style={{
+                      width: imgSize,
+                      height: imgSize,
+                    }}
+                  />
+                </VStack>
+
+                <VStack opacity={0.25} marginRight={-10} y={3} marginLeft={-5}>
+                  <RankView rank={rank} />
+                </VStack>
+
+                {/* SECOND LINK WITH actual <a /> */}
+
+                <Link name="restaurant" params={{ slug: restaurantSlug }}>
+                  <HStack
+                    paddingHorizontal={8}
+                    backgroundColor="red"
+                    borderRadius={8}
+                    alignItems="center"
+                    marginVertical={-5}
+                    maxWidth={contentSideProps.maxWidth}
+                    hoverStyle={{
+                      backgroundColor: theme.backgroundColorSecondary,
+                    }}
+                    pressStyle={{
+                      backgroundColor: theme.backgroundColorTertiary,
+                    }}
+                    {...(shouldShowOneLine && {
+                      width: 200,
+                      overflow: 'hidden',
+                    })}
                   >
-                    <Image
-                      source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
-                      style={{
-                        width: imgSize,
-                        height: imgSize,
-                      }}
-                    />
-                  </VStack>
-
-                  <VStack opacity={0.25} marginRight={-10} y={3} marginLeft={-5}>
-                    <RankView rank={rank} />
-                  </VStack>
-
-                  {/* SECOND LINK WITH actual <a /> */}
-                  <Link name="restaurant" params={{ slug: restaurantSlug }}>
-                    <HStack
-                      paddingHorizontal={8}
-                      borderRadius={8}
-                      alignItems="center"
-                      marginVertical={-5}
-                      maxWidth={contentSideProps.maxWidth}
-                      hoverStyle={{
-                        backgroundColor: theme.backgroundColorSecondary,
-                      }}
-                      pressStyle={{
-                        backgroundColor: theme.backgroundColorTertiary,
-                      }}
-                      {...(shouldShowOneLine && {
-                        width: 200,
-                        overflow: 'hidden',
-                      })}
+                    <Text
+                      fontSize={titleFontSize}
+                      lineHeight={titleHeight}
+                      height={titleHeight}
+                      color={theme.color}
+                      fontWeight="600"
+                      letterSpacing={-0.5}
+                      paddingHorizontal={1} // prevents clipping due to letter-spacing
+                      ellipse
                     >
-                      <Text
-                        fontSize={titleFontSize}
-                        lineHeight={titleHeight}
-                        height={titleHeight}
-                        color={theme.color}
-                        fontWeight="600"
-                        letterSpacing={-0.5}
-                        paddingHorizontal={1} // prevents clipping due to letter-spacing
-                        ellipse
-                      >
-                        {restaurantName}
-                      </Text>
-                    </HStack>
-                  </Link>
-                </HStack>
-              </Link>
+                      {restaurantName}
+                    </Text>
+                  </HStack>
+                </Link>
+              </HStack>
+            </Link>
 
-              <Spacer size="md" />
-            </VStack>
-          </HoverToZoom>
+            <Spacer size="md" />
+          </VStack>
 
           {/* ROW: CENTER CONTENT AREA */}
           {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
