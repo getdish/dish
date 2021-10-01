@@ -55,10 +55,6 @@ steps:
     key: tileserver
     command: DISH_ENV=production ./dsh compose_build_and_push tileserver
 
-  - label: ":docker: build postgres"
-    key: postgres
-    command: DISH_ENV=production ./dsh compose_build_and_push postgres
-
   - label: ":docker: build image-quality"
     key: image-quality
     command: DISH_ENV=production ./dsh compose_build_and_push image-quality
@@ -84,7 +80,6 @@ steps:
       - image-quality
       - tileserver
       - run-tests
-      # - postgres
       - worker
       - puppet-proxy
 

@@ -95,6 +95,8 @@ services:
 
   postgres:
     image: registry.dishapp.com/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
+    build:
+      context: ./services/${POSTGRES_NAME:-postgres}
     command: postgres -c config_file=/postgres/postgresql.conf
     deploy:
       update_config:
@@ -108,9 +110,6 @@ services:
         max_attempts: 5
     networks:
       - default
-    # getting errors on ci
-    build:
-      context: ./services/${POSTGRES_NAME:-postgres}
     volumes:
       - ${POSTGRES_DB_DIR?err}:/var/lib/postgresql/data
       - ./services/postgres:/postgres
