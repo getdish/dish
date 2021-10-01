@@ -2,7 +2,7 @@ import { route } from '@dish/api'
 import { SEARCH_DOMAIN_INTERNAL } from '@dish/graph'
 import proxy from 'express-http-proxy'
 
-import { redisGet, redisSet } from './_rc'
+import { redisGet, redisSet } from './_redis'
 
 console.log('SEARCH_DOMAIN_INTERNAL', SEARCH_DOMAIN_INTERNAL)
 

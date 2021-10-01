@@ -1749,7 +1749,8 @@ __metadata:
     "@dish/webpack": "*"
     "@envelop/core": ^1.2.0
     "@envelop/parser-cache": ^1.0.1
-    "@envelop/response-cache": ^0.2.0
+    "@envelop/response-cache": ^0.2.1
+    "@envelop/response-cache-redis": ^0.1.0
     "@envelop/validation-cache": ^1.0.0
     "@expo/html-elements": ^0.0.2
     "@graphql-tools/wrap": ^8.1.1
@@ -1800,6 +1801,7 @@ __metadata:
     graphql-ez: ^0.13.1
     graphql-tag: ^2.11.0
     immer: ^8.0.0
+    ioredis: ^4.27.9
     jsonwebtoken: ^8.4.0
     lodash: "*"
     mapbox-gl: ^2.4.0
@@ -2352,14 +2354,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@envelop/response-cache@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "@envelop/response-cache@npm:0.2.0"
+"@envelop/response-cache-redis@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@envelop/response-cache-redis@npm:0.1.0"
   dependencies:
+    "@envelop/response-cache": ^0.2.1
+    ioredis: ^4.27.9
+  checksum: ef85fa2515437d816a9c629a0447bce845504a786e92fca20268e8817a74fc650b9356a46b318d89ff474b88d66e79989ca65e63f56b897c1cae535720db7cdc
+  languageName: node
+  linkType: hard
+
+"@envelop/response-cache@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@envelop/response-cache@npm:0.2.1"
+  dependencies:
+    fast-json-stable-stringify: ^2.1.0
+    ioredis: ^4.27.9
     lru-cache: ^6.0.0
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
-  checksum: 3bcea3f65b6f63decf539ac43fd84adfe15f8de1b7c50f600890ce7bafaa32adf355fbee22532bf214a601c786d3013d3e1d7aee76bb6f776cb04911f2b46685
+  checksum: 0412273c0a66223d95ccfbc000e342468ac93fbb3d9b05bdf4885a40acd7fb39b087a84995e80053734f47c0ab0d4ff23c45df2ae531ebc1d4d2620da108604c
   languageName: node
   linkType: hard
 
@@ -11649,7 +11663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-json-stable-stringify@npm:^2.0.0":
+"fast-json-stable-stringify@npm:^2.0.0, fast-json-stable-stringify@npm:^2.1.0":
   version: 2.1.0
   resolution: "fast-json-stable-stringify@npm:2.1.0"
   checksum: b191531e36c607977e5b1c47811158733c34ccb3bfde92c44798929e9b4154884378536d26ad90dfecd32e1ffc09c545d23535ad91b3161a27ddbb8ebe0cbecb
@@ -13702,7 +13716,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ioredis@npm:^4.27.0":
+"ioredis@npm:^4.27.0, ioredis@npm:^4.27.9":
   version: 4.27.9
   resolution: "ioredis@npm:4.27.9"
   dependencies:
