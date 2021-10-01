@@ -172,11 +172,15 @@ export function Card(props: CardProps) {
           >
             {!!photo && (
               <AbsoluteVStack
-                opacity={0.5}
+                opacity={0.15}
+                pointerEvents="auto"
                 zIndex={0}
                 borderRadius={10}
                 overflow="hidden"
                 fullscreen
+                hoverStyle={{
+                  opacity: 0.7,
+                }}
               >
                 <Image source={{ uri: photo }} resizeMode="cover" style={StyleSheet.absoluteFill} />
                 <AbsoluteVStack

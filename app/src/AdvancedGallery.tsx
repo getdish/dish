@@ -819,7 +819,14 @@ const GalleryComponent = <T extends any>(
     setIndex(newIndex: number) {
       setIndex(newIndex)
       currentIndex.value = newIndex
-      translateX.value = newIndex * -(dimensions.width + emptySpaceWidth)
+      const index = newIndex * -(dimensions.width + emptySpaceWidth)
+      translateX.value = withSpring(index, {
+        damping: 800,
+        mass: 1,
+        stiffness: 250,
+        restDisplacementThreshold: 0.02,
+        restSpeedThreshold: 4,
+      })
     },
     reset(animated = false) {
       refs.current?.forEach((itemRef) => itemRef.reset(animated))

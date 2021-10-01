@@ -67,7 +67,7 @@ export const CardFrame = ({
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"
       alignItems="center"
-      maxWidth="99%"
+      maxWidth="98%"
       justifyContent="center"
       minWidth={cardFrameWidth}
       {...(flat && {
