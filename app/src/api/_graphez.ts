@@ -98,6 +98,12 @@ export function CreateApp(config: DishAppOptions = {}): EZAppBuilder {
 
             if (result.some((v) => v?.stop)) return
           }
+
+          res.header('Access-Control-Allow-Origin', '*')
+          res.header('Access-Control-Allow-Credentials', 'true')
+          res.header('Access-Control-Allow-Headers', '*')
+          res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
+
           const request = {
             body: req.body,
             headers: req.headers,

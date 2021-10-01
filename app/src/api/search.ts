@@ -12,6 +12,7 @@ const proxyHandler = proxy(SEARCH_DOMAIN_INTERNAL, {
     if (process.env.NODE_ENV === 'test') {
       return val
     }
+    console.log('val', val)
     redisSet(req['_key'], val)
     return val
   },

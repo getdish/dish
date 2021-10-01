@@ -25,11 +25,11 @@ function source_env() {
   else
     echo "Not loading ENV from $ENV_FILE as it doesn't exist"
   fi
-  if [ "$IS_LOCAL" = "1" ]; then
-    source .env.local
-  fi
   if [ "${arch}" = "arm64" ]; then
     source .env.m1
+  fi
+  if [ "$IS_LOCAL" = "1" ]; then
+    source .env.local
   fi
 }
 
