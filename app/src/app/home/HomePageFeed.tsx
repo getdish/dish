@@ -222,9 +222,7 @@ export const HomePageFeed = memo(
 
             <Spacer size="xxxl" />
 
-            {!window.location.search.includes('disable_trending') && (
-              <HomeTrendingSpots region={region} />
-            )}
+            <HomeTrendingSpots region={region} />
           </VStack>
         </>
       )
