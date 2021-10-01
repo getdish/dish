@@ -300,7 +300,7 @@ const HomeNearbyRegions = memo(
               wkb_geometry: {
                 _st_d_within: {
                   // ~5 miles
-                  distance: 1,
+                  distance: 0.33,
                   from: {
                     type: 'Point',
                     coordinates: [lng, lat],

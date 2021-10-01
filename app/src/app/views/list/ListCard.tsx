@@ -85,7 +85,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         fontTheme={!list.font ? 'slab' : 'sans'}
         {...(props.colored && {
           color: listColors.colorForTheme,
-          backgroundColor: `${listColors.backgroundColor}44`,
+          backgroundColor: `${listColors.backgroundColor}22`,
           chromeless: true,
           flat: true,
         })}

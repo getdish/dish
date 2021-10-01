@@ -459,7 +459,7 @@ const ListPageContent = memo(
                     // opacity={0.05}
                   /> */}
                   <HStack paddingHorizontal={20}>
-                    <AbsoluteVStack
+                    {/* <AbsoluteVStack
                       overflow="hidden"
                       zIndex={-1}
                       borderRadius={1000}
@@ -471,7 +471,7 @@ const ListPageContent = memo(
                         source={{ uri: getListPhoto(list) }}
                         style={{ width: 400, height: 400 }}
                       />
-                    </AbsoluteVStack>
+                    </AbsoluteVStack> */}
                     <VStack
                       // maxWidth={660}
                       // minWidth={380}

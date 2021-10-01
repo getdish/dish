@@ -1,5 +1,5 @@
 import { ChevronRight } from '@dish/react-feather'
-import React, { useState } from 'react'
+import React, { Ref, RefObject, useRef, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import {
   AbsoluteHStack,
@@ -8,10 +8,11 @@ import {
   LinearGradient,
   Paragraph,
   VStack,
+  prevent,
   useTheme,
 } from 'snackui'
 
-import { AdvancedGallery } from '../../AdvancedGallery'
+import { AdvancedGallery, GalleryReactRef, GalleryRef } from '../../AdvancedGallery'
 import { isWeb } from '../../constants/constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
@@ -53,6 +54,7 @@ export const FeedCard = (props: FeedCardProps) => {
     ...cardProps
   } = props
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+  const galleryRef = useRef<GalleryRef>(null)
   return (
     <Card
       className="hover-parent"
@@ -71,6 +73,7 @@ export const FeedCard = (props: FeedCardProps) => {
       />
       {!!dimensions.width && (
         <AdvancedGallery
+          ref={galleryRef}
           disableVerticalSwipe
           disableSwipeUp
           keyExtractor={(x) => x.id}
@@ -79,7 +82,7 @@ export const FeedCard = (props: FeedCardProps) => {
               <View style={StyleSheet.absoluteFill} onLayout={onLayout}>
                 {(() => {
                   if (item.id === -1) {
-                    return <FeedCardContent {...props} />
+                    return <FeedCardContent galleryRef={galleryRef} {...props} />
                   }
                   return (
                     <VStack>
@@ -135,8 +138,9 @@ const FeedCardContent = ({
   photo,
   items,
   emphasizeTag,
+  galleryRef,
   theme: cardTheme = 'modern',
-}: FeedCardProps) => {
+}: FeedCardProps & { galleryRef: RefObject<GalleryRef> }) => {
   const titleLen = typeof title === 'string' ? title.length : 20
   const lenScale =
     titleLen > 55 ? 0.6 : titleLen > 40 ? 0.75 : titleLen > 30 ? 0.9 : titleLen > 20 ? 1.05 : 1.5
@@ -145,34 +149,40 @@ const FeedCardContent = ({
   const isSmallDevice = Math.min(getWindowWidth(), getWindowWidth()) < 420
   const deviceScale = isSmallDevice ? 0.75 : 1
   const fontSize = Math.round(24 * lenScale * tagScale * sizeScale * deviceScale)
-  const imgSize = 200
+  const imgSize = 80
   const theme = useTheme()
   return (
-    <HStack height="100%" padding={10} alignItems="center">
-      <VStack maxWidth="80%">
+    <HStack
+      className="safari-fix-overflow"
+      borderRadius={10}
+      overflow="hidden"
+      height="100%"
+      padding={10}
+      alignItems="center"
+    >
+      <VStack marginTop="auto" maxWidth="85%">
         {typeof photo === 'string' && (
           <AbsoluteVStack
             pointerEvents="none"
-            opacity={0.1}
             borderRadius={100}
             width={imgSize}
             height={imgSize}
-            top={-50}
-            right={-40}
+            top={-20}
+            right={-20}
             overflow="hidden"
           >
             <Image
               source={{ uri: getImageUrl(photo, imgSize, imgSize) }}
               style={{ width: imgSize, height: imgSize }}
             />
-            {/* <LinearGradient
-              style={StyleSheet.absoluteFill}
-              start={[1, 0]}
-              end={[0, 0]}
-              colors={[`${listColors?.backgroundForTheme}00`, listColors?.backgroundForTheme || '']}
-            /> */}
           </AbsoluteVStack>
         )}
+        <LinearGradient
+          style={StyleSheet.absoluteFill}
+          start={[0, 1]}
+          end={[1, 0]}
+          colors={[`${listColors?.backgroundForTheme}00`, `${listColors?.backgroundForTheme}99`]}
+        />
         <AbsoluteHStack
           top={0}
           right={0}
@@ -200,9 +210,9 @@ const FeedCardContent = ({
         <VStack flex={1} />
 
         <VStack
-          backgroundColor={`${listColors?.backgroundForTheme}dd`}
+          backgroundColor={`${listColors?.backgroundForTheme}77`}
           padding={10}
-          borderRadius={12}
+          borderRadius={10}
           position="relative"
           overflow="hidden"
           spacing="xs"
@@ -217,7 +227,7 @@ const FeedCardContent = ({
               lineHeight={fontSize * 1.2}
               // color="#000"
               // color={listColors?.colorForTheme}
-              // backgroundColor={listColors?.lightColor}
+              // backgroundColor={listColors?.backgroundForTheme}
             >
               {title}
             </TitleStyled>
@@ -227,6 +237,7 @@ const FeedCardContent = ({
             <Paragraph
               size={size === 'xxs' || size === 'xs' || size === 'sm' ? 'xs' : 'sm'}
               fontWeight="300"
+              opacity={0.6}
               // color="#fff"
             >
               {typeof numItems !== 'undefined' ? (
@@ -240,8 +251,19 @@ const FeedCardContent = ({
         </VStack>
       </VStack>
 
-      <VStack zIndex={100000} position="relative">
-        <ChevronRight color="#fff" size={30} />
+      <VStack flex={1} />
+
+      <VStack
+        onPress={(e) => {
+          prevent(e)
+          galleryRef.current?.setIndex(1)
+        }}
+        opacity={0.4}
+        hoverStyle={{ opacity: 1 }}
+        zIndex={100000}
+        position="relative"
+      >
+        <ChevronRight color="#fff" size={20} />
       </VStack>
     </HStack>
   )
