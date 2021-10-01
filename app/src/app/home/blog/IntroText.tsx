@@ -1,8 +1,8 @@
 import React from 'react'
-import { Image } from 'react-native'
 import { Paragraph, ParagraphProps } from 'snackui'
 
 import markSolid from '../../../assets/d.svg'
+import { Image } from '../../views/Image'
 
 export const IntroText = (props: ParagraphProps) => {
   return (
