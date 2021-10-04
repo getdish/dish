@@ -240,7 +240,6 @@ const HomeTrendingSpots = memo(({ region }: { region: string }) => {
     },
     limit: 8,
   })
-  console.log('trendingSpots', trendingSpots)
 
   return (
     <>
@@ -250,8 +249,8 @@ const HomeTrendingSpots = memo(({ region }: { region: string }) => {
         </AbsoluteVStack>
         <ContentScrollViewHorizontal>
           <HStack alignItems="center" spacing="md" paddingVertical={10}>
-            {trendingSpots.map((spot) => {
-              return <RestaurantCard size="sm" key={spot.id} restaurant={spot} />
+            {trendingSpots.map((spot, index) => {
+              return <RestaurantCard key={spot.id || index} size="sm" restaurant={spot} />
             })}
           </HStack>
         </ContentScrollViewHorizontal>
@@ -320,7 +319,6 @@ const HomeNearbyRegions = memo(
               const regionName = capitalize(r.hrrcity?.replace(/[a-z]+\-\s*/i, '') || '')
               const center = r.wkb_geometry ? getCenter(r.wkb_geometry) : null
               const region = r.slug || ''
-              console.log('geo', r.wkb_geometry, center)
               return (
                 <Button
                   {...(center && {

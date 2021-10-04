@@ -1,5 +1,0 @@
-- args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."list" ADD COLUMN "font" integer NULL DEFAULT 0;
-  type: run_sql

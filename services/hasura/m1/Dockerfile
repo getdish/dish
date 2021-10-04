@@ -1,5 +1,5 @@
 ## Use the following image for ARM
-FROM fedormelexin/graphql-engine-arm64:v2.0.9.cli-migrations-v2
+FROM fedormelexin/graphql-engine-arm64:v2.1.0-beta.1.cli-migrations-v2
 
 RUN apt-get update && apt-get install -y netcat
 
@@ -12,7 +12,6 @@ COPY docker-entrypoint.sh /bin/
 
 ## Use the following image for ARM
 COPY cli-hasura-linux-arm64 /bin/hasura-cli
-
 RUN chmod +x /bin/hasura-cli 
 
 # set an env var to let the cli know that

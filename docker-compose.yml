@@ -126,7 +126,7 @@ services:
     #   retries: 5
 
   hasura:
-    image: ${DOCKER_HASURA_IMAGE:-hasura/graphql-engine:v1.3.3}
+    image: ${DOCKER_HASURA_IMAGE:-hasura/graphql-engine:v2.1.0-beta.1.cli-migrations-v2}
     # build:
     #   context: ${DOCKER_HASURA_FOLDER:-./services/hasura}
     restart: on-failure:3
@@ -168,10 +168,11 @@ services:
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - DISH_HOOKS_ENDPOINT=${HOOKS_ENDPOINT}
       - GORSE_SYNC_HOOK=${GORSE_ENDPOINT}/gorse_sync
-    depends_on:
-      # - 'postgres'
-      - 'redis'
-      # - 'hooks'
+      # - HASURA_GRAPHQL_DEV_MODE=true
+    # depends_on:
+    #   # - 'postgres'
+    #   - 'redis'
+    #   # - 'hooks'
 
   search:
     image: registry.dishapp.com/dish-search${DISH_IMAGE_TAG}

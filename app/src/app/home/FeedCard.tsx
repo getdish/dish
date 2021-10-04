@@ -71,7 +71,7 @@ export const FeedCard = (props: FeedCardProps) => {
           setDimensions(e.nativeEvent.layout)
         }}
       />
-      {false && !!dimensions.width && (
+      {!!dimensions.width && (
         <AdvancedGallery
           ref={galleryRef}
           disableVerticalSwipe

@@ -1,4 +1,0 @@
-- args:
-    name: list_populated
-    schema: public
-  type: untrack_function

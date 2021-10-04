@@ -24,7 +24,7 @@ export const useList = ({ list }: ListQueryProps) => {
       where: {
         restaurant: {
           image: {
-            _neq: null,
+            _is_null: false,
           },
         },
       },
