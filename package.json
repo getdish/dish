@@ -22,6 +22,8 @@
     "bootstrap": "docker-compose build base",
     "start": "DISH_ENV=development ./dsh compose_up",
     "start:test": "COMPOSE_EXCLUDE_EXTRA=\"|app\" DISH_ENV=test ./dsh compose_up",
+    "start:m1": "npm-run-all --parallel start m1:hasura",
+    "m1:hasura": "./dsh run_hasura",
     "site": "yarn workspace @dish/site start",
     "app": "yarn workspace @dish/app app",
     "web": "yarn workspace @dish/app web",

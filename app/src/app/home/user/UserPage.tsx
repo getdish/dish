@@ -153,7 +153,7 @@ const UserPageContent = memo(
           limit: 3,
           where: {
             list_id: {
-              _neq: null,
+              _is_null: false,
             },
             favorited: {
               _eq: true,
