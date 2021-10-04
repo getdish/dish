@@ -11,7 +11,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { useGet, useThemeName } from 'snackui'
 
-import { pink, pink300, pink400, pink500, pink700, purple700 } from '../constants/colors'
+import { pink, pink300, pink400, purple700 } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import * as mapHelpers from '../helpers/mapHelpers'
 import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'

@@ -174,7 +174,7 @@ const RestaurantListItemContent = memo(
         ? 1
         : 1
     const titleFontSize =
-      Math.round((media.sm ? 18 : 22) * titleFontScale) * (shouldShowOneLine ? 0.8 : 1)
+      Math.round((media.sm ? 20 : 24) * titleFontScale) * (shouldShowOneLine ? 0.8 : 1)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
     const theme = useTheme()
@@ -313,7 +313,6 @@ const RestaurantListItemContent = memo(
                 <Link name="restaurant" params={{ slug: restaurantSlug }}>
                   <HStack
                     paddingHorizontal={8}
-                    backgroundColor="red"
                     borderRadius={8}
                     alignItems="center"
                     marginVertical={-5}
