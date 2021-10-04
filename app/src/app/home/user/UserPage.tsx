@@ -359,7 +359,9 @@ const UserPageContent = memo(
                     order_by: [{ authored_at: order_by.desc }],
                     where: {
                       photos: {
-                        _not: null,
+                        photo_id: {
+                          _is_null: false,
+                        },
                       },
                     },
                   })

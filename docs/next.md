@@ -1,6 +1,5 @@
 high level:
   - put money in business account, switch billing to business
-  - hasura 2.0 upgrade
   - snackui docs website and release
   - fix crawlers and get running again
   - get osm data imported for worldwide coverage
