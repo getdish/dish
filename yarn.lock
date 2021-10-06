@@ -1831,7 +1831,7 @@ __metadata:
     react-native-reanimated: 2.3.0-beta.2
     react-native-redash: ^16.2.2
     react-native-safe-area-context: 3.3.0
-    react-native-screens: ^3.7.2
+    react-native-screens: ^3.8.0
     react-native-svg: ^12.1.1
     react-native-unimodules: ^0.14.6
     react-reparenting: ^0.6.1
@@ -20599,7 +20599,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^3.7.2":
+"react-native-screens@npm:^3.8.0":
   version: 3.8.0
   resolution: "react-native-screens@npm:3.8.0"
   dependencies:
