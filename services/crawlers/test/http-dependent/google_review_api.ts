@@ -14,7 +14,7 @@ test.beforeEach(async () => {
 })
 
 // Skipped temporarily whilst we top up the Luminati account
-test.skip('Gets and persists a restaurant', async (t) => {
+test('Gets and persists a restaurant', async (t) => {
   let restaurant = await restaurantFindOne({ name })
   if (!restaurant) {
     await tripadvisorGetFBC()
