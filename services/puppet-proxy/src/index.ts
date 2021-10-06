@@ -36,7 +36,7 @@ function startServer() {
   app.use(async (req, res) => {
     try {
       const headers = req.headers ?? {}
-      console.log('got headers', headers)
+      // console.log('got headers', headers)
       if (!headers['url']) {
         res.status(500).send('no url')
         return

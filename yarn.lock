@@ -2075,7 +2075,7 @@ __metadata:
   dependencies:
     "@dish/esdx": "*"
     express: ^4.17.1
-    playwright-webkit: ^1.15.0
+    playwright-chromium: ^1.15.2
     typescript: ^4.2.4
   languageName: unknown
   linkType: soft
@@ -19187,9 +19187,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-webkit@npm:^1.15.0":
-  version: 1.15.0
-  resolution: "playwright-webkit@npm:1.15.0"
+"playwright-chromium@npm:^1.15.2":
+  version: 1.15.2
+  resolution: "playwright-chromium@npm:1.15.2"
   dependencies:
     commander: ^6.1.0
     debug: ^4.1.1
@@ -19207,7 +19207,7 @@ __metadata:
     yazl: ^2.5.1
   bin:
     playwright: lib/cli/cli.js
-  checksum: 4557283d4bc59ab8aa1d3452941b8ad6754d3542553672c097cbb4a0edc698a2472d9c8bc1ae6baf439e167ef6a1e0f4025c78eebbc12a1cccc77ddc86860dd5
+  checksum: e8a9d557331170c25854196c6da8f0cbfe36ed4c18547eeacff74da3ec5390dce820e120ed0036c1e6eb21af2bf8401289adbe3261b6ea55aee163d3a66a2ece
   languageName: node
   linkType: hard
 

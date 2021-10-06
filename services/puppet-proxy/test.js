@@ -1,7 +1,7 @@
-const { webkit, devices } = require('playwright-webkit')
+const { chromium, devices } = require('playwright-chromium')
 
 ;(async () => {
-  const browser = await webkit.launch({
+  const browser = await chromium.launch({
     headless: false,
   })
   const context = await browser.newContext({

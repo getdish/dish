@@ -1,4 +1,4 @@
-import { RestaurantWithId, ZeroUUID, restaurantFindOne, restaurantInsert } from '@dish/graph'
+import { RestaurantWithId, ZeroUUID, restaurantFindOne, restaurantUpsert } from '@dish/graph'
 
 import { GoogleGeocoder } from './google/GoogleGeocoder'
 import { scrapeFindOneBySourceID } from './scrape-helpers'
@@ -35,7 +35,7 @@ export async function restaurantSaveCanonical(
   if (restaurant_id) {
     return restaurant_id
   }
-  const [restaurant] = await restaurantInsert([
+  const [restaurant] = await restaurantUpsert([
     {
       name,
       address,
