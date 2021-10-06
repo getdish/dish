@@ -51,5 +51,7 @@ export const redisDeletePattern = async (pattern: string) => {
   if (!keys.length) {
     return
   }
-  await redisClient.del(keys)
+  for (const key of keys) {
+    await redisClient.del(key)
+  }
 }
