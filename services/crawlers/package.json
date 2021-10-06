@@ -17,7 +17,8 @@
     "crawl:one:internal": "ENV=dev ./scripts/run_crawl.sh --one-internal",
     "test": "DISH_DEBUG=1 ./scripts/run_tests.sh",
     "test:idempotent": "ava test/idempotent/* --verbose --serial",
-    "test:http": "ava test/http-dependent/* --verbose --serial"
+    "test:http": "ava test/http-dependent/* --verbose --serial",
+    "test:http:one": "ava test/http-dependent/$SERVICE.ts --verbose --serial"
   },
   "dependencies": {
     "@dish/async": "*",
