@@ -12,16 +12,19 @@ export type ToastOptions = {
   type?: 'info' | 'success' | 'error'
 }
 
-let show: (text: string, options?: ToastOptions) => void = (text) => {
-  console.warn('Note:', text)
+let clear = () => {}
+
+let show: (content: any, options?: ToastOptions) => void = (content) => {
+  console.warn('Note:', content)
 }
 
 export const Toast = {
-  show: (text: string, options?: ToastOptions) => show(text, options),
-  error: (text: string, options?: Omit<ToastOptions, 'type'>) =>
-    show(text, { ...options, type: 'error' }),
-  success: (text: string, options?: Omit<ToastOptions, 'type'>) =>
-    show(text, { ...options, type: 'success' }),
+  clear,
+  show: (content: any, options?: ToastOptions) => show(content, options),
+  error: (content: any, options?: Omit<ToastOptions, 'type'>) =>
+    show(content, { ...options, type: 'error' }),
+  success: (content: any, options?: Omit<ToastOptions, 'type'>) =>
+    show(content, { ...options, type: 'success' }),
 }
 
 if (typeof window !== 'undefined') {
@@ -32,7 +35,7 @@ export const ToastRoot = memo(function ToastRoot() {
   const forceUpdate = useForceUpdate()
   const stateRef = useRef({
     show: false,
-    text: '',
+    content: '',
     type: 'info',
     timeout: null,
   })
@@ -47,20 +50,24 @@ export const ToastRoot = memo(function ToastRoot() {
     }
   }, [])
 
+  clear = () => {
+    setState({ show: false, content: '' })
+  }
+
   show = useCallback(
-    (text: string, { duration = 3000, type = 'info' }: ToastOptions = {}) => {
+    (content: any, { duration = 3000, type = 'info' }: ToastOptions = {}) => {
       clearTimeout(stateRef.current.timeout ?? 0)
       const timeout = setTimeout(() => {
         setState({
           show: false,
-          text: '',
+          content: '',
           type,
           timeout: null,
         })
       }, duration)
       setState({
         show: true,
-        text,
+        content,
         type,
         timeout,
       })
@@ -79,7 +86,7 @@ export const ToastRoot = memo(function ToastRoot() {
       zIndex={10000000000}
       padding="5%"
     >
-      {state.show && !!state.text && (
+      {state.show && !!state.content && (
         <AnimatedVStack>
           <VStack
             backgroundColor={
@@ -98,7 +105,7 @@ export const ToastRoot = memo(function ToastRoot() {
             paddingVertical={12}
           >
             <Text color="#fff" fontSize={18} fontWeight="600">
-              {state.text}
+              {state.content}
             </Text>
           </VStack>
         </AnimatedVStack>

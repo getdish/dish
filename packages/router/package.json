@@ -2,13 +2,12 @@
   "name": "@dish/router",
   "version": "0.0.1",
   "sideEffects": false,
-  "types": "types.d.ts",
   "private": true,
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch",
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy",
     "test": "TARGET=node DISH_ENV=test jest --runInBand --forceExit"
   },
   "tests": {

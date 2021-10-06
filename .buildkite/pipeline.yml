@@ -1,80 +1,72 @@
 env:
   BUILDKITE_TIMEOUT: "40"
   DISH_ENV: 'test'
-  DOCKER_BUILDKIT: 0
-  COMPOSE_DOCKER_CLI_BUILD: 0
+  DOCKER_BUILDKIT: 1
+  LOG_ENV: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
 
 steps:
   # images that tests need
 
   - label: ":docker: build base"
     key: base
-    command: ./dsh compose_build base
+    command: DISH_ENV=production ./dsh compose_build base
+
+  # base can get slowed down, clogging the rest
+  - wait
 
   - label: ":docker: build app"
     key: app
     depends_on: base
-    command: ./dsh compose_build app
-
-  # base can get slowed down, clogging the rest
-  # - wait
+    command: DISH_ENV=production ./dsh compose_build app
 
   - label: ":docker: build worker"
     key: worker
     depends_on: base
-    command: ./dsh compose_build_and_push worker
+    command: DISH_ENV=production ./dsh compose_build worker
 
   - label: ":docker: build run-tests"
     key: run-tests
-    depends_on: worker
-    command: ./dsh compose_build run-tests
+    depends_on: base
+    command: DISH_ENV=production ./dsh compose_build run-tests
 
   - label: ":docker: build hooks"
     key: hooks
     depends_on: base
-    command: ./dsh compose_build hooks
-
-  - label: ":docker: build site"
-    key: site
-    depends_on: base
-    command: ./dsh compose_build site
+    command: DISH_ENV=production ./dsh compose_build hooks
 
   - label: ":docker: build puppet-proxy"
     key: puppet-proxy
-    command: ./dsh compose_build puppet-proxy
+    command: DISH_ENV=production ./dsh compose_build puppet-proxy
 
   - label: ":docker: build search"
     key: search
-    command: ./dsh compose_build_and_push search
+    command: DISH_ENV=production ./dsh compose_build_and_push search
 
   - label: ":docker: build hasura"
     key: hasura
-    command: ./dsh compose_build_and_push hasura
+    command: DISH_ENV=production ./dsh compose_build_and_push hasura
 
   - label: ":docker: build timescale"
     key: timescale
-    command: ./dsh compose_build_and_push timescale
+    command: DISH_ENV=production ./dsh compose_build_and_push timescale
 
   - label: ":docker: build tileserver"
     key: tileserver
-    command: ./dsh compose_build_and_push tileserver
-
-  - label: ":docker: build postgres"
-    key: postgres
-    command: ./dsh compose_build_and_push postgres
+    command: DISH_ENV=production ./dsh compose_build_and_push tileserver
 
   - label: ":docker: build image-quality"
     key: image-quality
-    command: ./dsh compose_build_and_push image-quality
+    command: DISH_ENV=production ./dsh compose_build_and_push image-quality
 
   - label: ":docker: build bert"
     key: bert
     depends_on: base
-    command: ./dsh compose_build_and_push bert
+    command: DISH_ENV=production ./dsh compose_build_and_push bert
 
   # - label: ":docker: build gorse"
   #   key: gorse
-  #   command: ./dsh compose_build_and_push gorse
+  #   command: DISH_ENV=production ./dsh compose_build_and_push gorse
 
   - label: "done with test images"
     command: "true"
@@ -88,7 +80,6 @@ steps:
       - image-quality
       - tileserver
       - run-tests
-      - postgres
       - worker
       - puppet-proxy
 
@@ -97,11 +88,13 @@ steps:
   - label: ":docker: build cron"
     key: cron
     depends_on: base
-    command: ./dsh compose_build_and_push cron
+    command: echo "disabled for now push was freezing"
+    # command: DISH_ENV=production ./dsh compose_build_and_push cron
 
   - label: ":docker: build summarizer"
     key: summarizer
-    command: ./dsh compose_build_and_push summarizer
+    command: echo "disabled for now push was freezing"
+    # command: DISH_ENV=production ./dsh compose_build_and_push summarizer
 
   # tests
 
@@ -112,7 +105,13 @@ steps:
     depends_on: test-images
     command: ./dsh docker_compose_push_core
 
-  - label: "setup services for tests"
+  - label: "prepull images on prod"
+    if: build.branch == "master"
+    key: pull-images
+    depends_on: push-images
+    command: ./dsh pull_on io1
+
+  - label: "setup services"
     key: test-setup
     command: "./dsh setup_test_services"
     timeout_in_minutes: 10
@@ -149,7 +148,7 @@ steps:
 
   - label: "run worker integration tests"
     key: worker-integration-tests
-    timeout_in_minutes: 1
+    timeout_in_minutes: 2
     command: "./dsh test_worker_crawler_integration"
     depends_on: test-setup
     env:
@@ -162,7 +161,7 @@ steps:
     timeout_in_minutes: 10
     depends_on:
       - tests
-      - push-images
+      - pull-images
     command: "./dsh deploy all"
     artifact_paths:
       - "*.log"
@@ -172,5 +171,6 @@ steps:
   - label: "done"
     if: build.branch == "master"
     command: "./dsh deploy_done_notify"
+    soft_fail: true
     env:
       DOCKER_CLEAN: true

@@ -2,10 +2,10 @@ import { ZeroUUID, graphql, order_by, query, resolved, useRefetch } from '@dish/
 import { isPresent } from '@dish/helpers'
 import { Search, Tag, X } from '@dish/react-feather'
 import { sortBy, uniqBy } from 'lodash'
-import React, { memo, useEffect, useState } from 'react'
-import { AbsoluteHStack, HStack, Input, useDebounce, useLazyEffect } from 'snackui'
+import React, { memo, useState } from 'react'
+import { HStack, Input, useDebounce, useLazyEffect } from 'snackui'
 
-import { tagLenses } from '../../../constants/localTags'
+import { tagCategoriesPopular, tagFilters, tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -160,7 +160,7 @@ export const ReviewTagsRow = memo(
       const [restaurant] = restaurantSlug ? queryRestaurant(restaurantSlug) : []
 
       const rawTags =
-        isFocused || (!review && !hideGeneralTags)
+        isFocused || !hideGeneralTags
           ? [
               ...tagLenses,
               ...userTags,
@@ -172,6 +172,8 @@ export const ReviewTagsRow = memo(
                   tagSlugs: [''],
                 })) ||
                 []),
+              tagFilters.find((x) => x.slug === 'filters__price-low'),
+              tagFilters.find((x) => x.slug === 'filters__delivery'),
             ]
           : userTags
 
@@ -262,17 +264,18 @@ export const ReviewTagsRow = memo(
 
             {showTagButton && !isFocused && (
               <SmallButton
+                borderWidth={0}
                 onPress={() => setIsFocused(true)}
-                icon={<Tag opacity={0.5} size={16} color="#888" />}
+                icon={<Search opacity={0.5} size={16} color="#888" />}
                 marginRight={15}
-              ></SmallButton>
+                backgroundColor="transparent"
+              />
             )}
 
             {isFocused && (
               <Input
                 placeholder="Dishes, tags:"
                 autoFocus
-                opacity={isFocused ? 1 : 0}
                 zIndex={10}
                 onFocus={() => setIsFocused(true)}
                 color="#777"
@@ -288,15 +291,16 @@ export const ReviewTagsRow = memo(
               const lastItem = tags[i - 1]
               return (
                 <TagButton
+                  hideRating
                   fadeLowlyVoted
                   noLink
-                  size="sm"
+                  size={props.size ?? 'sm'}
                   restaurant={restaurant}
                   hideRank
                   key={tbp.slug || 0}
                   // refetchKey={refetchKey}
                   {...tbp}
-                  // backgroundColor="transparent"
+                  backgroundColor="transparent"
                   {...(isLense && {
                     name: '',
                     marginRight: -4,
@@ -308,9 +312,9 @@ export const ReviewTagsRow = memo(
                     icon: '',
                     circular: false,
                   })}
-                  {...(!isLense && {
-                    backgroundColor: 'transparent',
-                  })}
+                  // {...(!isLense && {
+                  //   backgroundColor: 'transparent',
+                  // })}
                   {...(lastItem?.type === 'lense' &&
                     !isLense && {
                       marginLeft: 20,

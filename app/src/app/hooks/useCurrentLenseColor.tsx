@@ -8,12 +8,12 @@ import { useHomeStoreSelector } from '../homeStore'
 
 export const defaultLenseColor = {
   name: 'light',
-  rgb: [10, 10, 10, 1] as RGB,
+  rgb: [255, 255, 255, 1] as RGB,
 }
 
 export const defaultLenseColorDark = {
   name: 'dark',
-  rgb: [20, 20, 20, 1] as RGB,
+  rgb: [0, 0, 0, 1] as RGB,
 }
 
 const lenseColors = {
@@ -52,10 +52,8 @@ export const useCurrentLenseColor = () => {
     }
     return null
   })
-  const resultDebounced = useDebounceValue(result, 40)
-  const res = resultDebounced || result
-  if (res) {
-    return res
+  if (result) {
+    return result
   }
-  return themeName === 'dark' ? defaultLenseColorDark : defaultLenseColor
+  return themeName.startsWith('dark') ? defaultLenseColorDark : defaultLenseColor
 }

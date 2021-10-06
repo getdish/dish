@@ -19,14 +19,14 @@ function disk_speed() {
 function source_env() {
   source .env
   arch="$(uname -m)"
-  if [ "${arch}" = "arm64" ]; then
-    source .env.m1
-  fi
   # source current env next, .env.production by default
   if [ -f "$ENV_FILE" ]; then
     source "$ENV_FILE"
   else
     echo "Not loading ENV from $ENV_FILE as it doesn't exist"
+  fi
+  if [ "${arch}" = "arm64" ]; then
+    source .env.m1
   fi
   if [ "$IS_LOCAL" = "1" ]; then
     source .env.local

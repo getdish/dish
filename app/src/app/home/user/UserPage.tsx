@@ -1,8 +1,9 @@
+import { sleep } from '@dish/async'
 import { ReviewQuery, graphql, order_by, query, useQuery, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { useRouterSelector } from '@dish/router'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
   AbsoluteVStack,
   Divider,
@@ -13,7 +14,9 @@ import {
   ParagraphProps,
   Spacer,
   VStack,
+  useForceUpdate,
   useLazyEffect,
+  useMedia,
   useTheme,
 } from 'snackui'
 
@@ -22,10 +25,12 @@ import { pluralize } from '../../../helpers/pluralize'
 import { queryUser } from '../../../queries/queryUser'
 import { router } from '../../../router'
 import { HomeStateItemUser } from '../../../types/homeTypes'
-import { useSetAppMap } from '../../AppMap'
+import { useSetAppMap } from '../../appMapStore'
+import { useAsyncEffect } from '../../hooks/useAsync'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useUserStore } from '../../userStore'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { ListCard } from '../../views/list/ListCard'
 import { Middot } from '../../views/Middot'
@@ -37,6 +42,7 @@ import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
+import { TitleStyled } from '../../views/TitleStyled'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantReview } from '../restaurant/RestaurantReview'
@@ -77,18 +83,45 @@ const getReviewRestuarants = (x: ReviewQuery) => {
   }
 }
 
+function useQueryIsLoaded<A>(cb: (isLoaded: boolean) => A, opts?: { skeleton?: number }): A {
+  const [loaded, setLoaded] = useState(false)
+  const query = cb(loaded)
+  // const skeleton = useMemo(() => query, [])
+  const item = query?.[0]
+  const exists = typeof item[Object.keys(item)[0]] !== 'undefined'
+  if (!Array.isArray(query)) {
+    return query
+  }
+  const numSkeletons = Math.min(0, 10 - query.length)
+  // useEffect(() => {
+  //   if (exists) {
+  //     setLoaded(true)
+  //   }
+  // }, [exists])
+  // @ts-ignore
+  return query //[...query, ...(numSkeletons ? new Array(numSkeletons).fill(skeleton) : [])]
+}
+
 const UserPageContent = memo(
   graphql(
     (props: StackItemProps<HomeStateItemUser> & { pane: UserPane | null; setPane: Function }) => {
       const refetch = useRefetch()
-      // const query = useQuery({
-      //   suspense: false,
-      // })
       const { item, isActive, pane, setPane } = props
       const username = item.username
       const user = queryUser(username)
+      const theme = useTheme()
+
+      const [hasLoadedAboveFold, setHasLoadedAboveFold] = useState(false)
+
+      useAsyncEffect(async (mounted) => {
+        await sleep(500)
+        if (!mounted()) return
+        setHasLoadedAboveFold(true)
+      }, [])
+
+      // slow query hasLoadedAboveFold
       const lists = user?.lists({
-        limit: 10,
+        limit: 25,
         where: {
           public: {
             _eq: true,
@@ -96,13 +129,31 @@ const UserPageContent = memo(
         },
         order_by: [{ created_at: order_by.desc }],
       })
+      // useQueryIsLoaded(
+      //   (loaded) =>
+      //     user?.lists({
+      //       limit: loaded ? 10 : 2,
+      //       where: {
+      //         public: {
+      //           _eq: true,
+      //         },
+      //       },
+      //       order_by: [{ created_at: order_by.desc }],
+      //     }),
+      //   {
+      //     skeleton: 10,
+      //   }
+      // )
+      // // always === 10, keeps skeletons
+      // console.log('>>>>', lists)
+      // lists.length === 10
 
       const favoriteLists = user
         ?.reviews({
-          limit: 10,
+          limit: 3,
           where: {
             list_id: {
-              _neq: null,
+              _is_null: false,
             },
             favorited: {
               _eq: true,
@@ -135,7 +186,7 @@ const UserPageContent = memo(
             text: { _eq: '' },
           }),
         },
-        limit: !pane ? 10 : 40,
+        limit: !pane ? 3 : 40,
         order_by: [{ updated_at: order_by.desc }],
       })
 
@@ -151,40 +202,40 @@ const UserPageContent = memo(
         results: reviews.map(getReviewRestuarants).filter((x) => x.id),
       })
 
-      const favoritesCount =
-        user
-          ?.reviews_aggregate({
-            where: {
-              favorited: {
-                _eq: true,
-              },
-            },
-          })
-          .aggregate?.count({}) ?? 0
+      // const favoritesCount =
+      //   user
+      //     ?.reviews_aggregate({
+      //       where: {
+      //         favorited: {
+      //           _eq: true,
+      //         },
+      //       },
+      //     })
+      //     .aggregate?.count({}) ?? 0
 
-      const votesCount =
-        user
-          ?.reviews_aggregate({
-            where: {
-              text: { _eq: '' },
-              restaurant_id: {
-                _is_null: false,
-              },
-            },
-          })
-          .aggregate?.count({}) ?? 0
+      // const votesCount =
+      //   user
+      //     ?.reviews_aggregate({
+      //       where: {
+      //         text: { _eq: '' },
+      //         restaurant_id: {
+      //           _is_null: false,
+      //         },
+      //       },
+      //     })
+      //     .aggregate?.count({}) ?? 0
 
-      const reviewsCount =
-        user
-          ?.reviews_aggregate({
-            where: {
-              text: { _neq: '' },
-              restaurant_id: {
-                _is_null: false,
-              },
-            },
-          })
-          .aggregate?.count({}) ?? 0
+      // const reviewsCount =
+      //   user
+      //     ?.reviews_aggregate({
+      //       where: {
+      //         text: { _neq: '' },
+      //         restaurant_id: {
+      //           _is_null: false,
+      //         },
+      //       },
+      //     })
+      //     .aggregate?.count({}) ?? 0
 
       const refetchAll = () => {
         refetch(user)
@@ -247,7 +298,7 @@ const UserPageContent = memo(
                   setPane('review')
                 }}
               >
-                Reviews ({reviewsCount})
+                Reviews
               </SmallButton>
               <SmallButton
                 textProps={{
@@ -275,7 +326,7 @@ const UserPageContent = memo(
 
             <Spacer size="lg" />
 
-            <VStack>
+            {/* <VStack>
               <Divider />
               <Spacer />
               <HStack spacing alignItems="center" justifyContent="center">
@@ -296,11 +347,43 @@ const UserPageContent = memo(
               </HStack>
               <Spacer />
               <Divider />
-            </VStack>
+            </VStack> */}
 
-            <Spacer size="lg" />
+            {/* <Spacer size="lg" /> */}
 
             <VStack spacing="lg" paddingVertical={20}>
+              {/* PHOTOS FEED */}
+              <HStack spacing>
+                {user
+                  .reviews({
+                    order_by: [{ authored_at: order_by.desc }],
+                    where: {
+                      photos: {
+                        photo_id: {
+                          _is_null: false,
+                        },
+                      },
+                    },
+                  })
+                  .map((review, index) => {
+                    return (
+                      <VStack
+                        key={review.id || index}
+                        borderRadius={1000}
+                        overflow="hidden"
+                        borderWidth={2}
+                        borderColor={theme.borderColor}
+                      >
+                        <Image
+                          source={{ uri: review.photos({ limit: 1 })[0]?.photo?.url || '' }}
+                          style={{ width: 60, height: 60 }}
+                        />
+                      </VStack>
+                    )
+                  })}
+              </HStack>
+
+              {/* ABOUT */}
               {!pane && !!user.about && (
                 <VStack>
                   <SmallTitle>About</SmallTitle>
@@ -308,22 +391,22 @@ const UserPageContent = memo(
                 </VStack>
               )}
 
+              {/* PLAYLISTS */}
               {!pane && !!lists.length && (
                 <VStack position="relative">
                   <AbsoluteVStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="xs">Lists</SlantedTitle>
+                    <SlantedTitle size="xs">Playlists</SlantedTitle>
                   </AbsoluteVStack>
                   <CardCarousel>
                     {lists.map((list, i) => {
                       return (
                         <ListCard
                           colored
-                          // zIndex={1000 - i}
                           size="lg"
                           floating
                           key={list.slug || i}
-                          userSlug={list.user?.username || ''}
-                          slug={list.slug || ''}
+                          list={list}
+                          query={lists}
                         />
                       )
                     })}
@@ -331,22 +414,21 @@ const UserPageContent = memo(
                 </VStack>
               )}
 
+              {/* FAVORITE LISTS */}
               {!pane && !!favoriteLists.length && (
                 <VStack position="relative">
                   <AbsoluteVStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="xs">Favorite lists</SlantedTitle>
+                    <SlantedTitle size="xs">Liked lists</SlantedTitle>
                   </AbsoluteVStack>
                   <CardCarousel>
                     {favoriteLists.map((list, i) => {
                       return (
                         <ListCard
                           colored
-                          // zIndex={1000 - i}
-                          // size="lg"
                           floating
                           key={list.slug || i}
-                          userSlug={list.user?.username || ''}
-                          slug={list.slug || ''}
+                          list={list}
+                          query={favoriteLists}
                         />
                       )
                     })}
@@ -412,6 +494,7 @@ const UserHeader = memo(
       const user = queryUser(username)
       const isOwnProfile = userStore.user?.username === username
       const date = user.created_at
+      const media = useMedia()
 
       if (!user) {
         return null
@@ -428,17 +511,17 @@ const UserHeader = memo(
             <UserSubscribeButton elevation={1} username={username} />
           </PaneControlButtonsLeft>
 
-          <VStack flex={1} paddingHorizontal={20} paddingTop={30}>
+          <VStack flex={1} paddingHorizontal={20} paddingTop={55}>
             <HStack alignItems="flex-end" flex={1} position="relative">
-              <VStack marginBottom={-30} marginRight={10}>
-                <UserAvatar size={160} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
+              <VStack marginLeft={media.sm ? -60 : -40} marginBottom={-10} marginRight={10}>
+                <UserAvatar size={170} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
               </VStack>
-              <VStack flex={1}>
-                <ParagraphSkeleton size="xxxxl" paddingRight={30}>
+              <VStack paddingTop={20} flex={1}>
+                <TitleStyled size="xxxxl" paddingRight={30}>
                   {user.name || user.username}
-                </ParagraphSkeleton>
+                </TitleStyled>
                 <Spacer size="xl" />
-                <HStack>
+                <HStack flexWrap="wrap">
                   <Paragraph opacity={0.5}>{user.username}</Paragraph>
 
                   {!!user.location && (

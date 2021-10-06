@@ -65,6 +65,9 @@ export const useUserReviewQuery = (restaurantSlug: string) => {
   return user
     ? query.review({
         where: {
+          type: {
+            _eq: 'comment',
+          },
           text: {
             _neq: '',
           },
@@ -78,6 +81,7 @@ export const useUserReviewQuery = (restaurantSlug: string) => {
           },
         },
         limit: 1,
+        order_by: [{ authored_at: order_by.desc }],
       })
     : []
 }
@@ -117,12 +121,15 @@ export const useUserReviewQueryMutations = ({
         restaurant_id: restaurantId,
       }
       const result = await upsertUserReview(next, reviewQuery)
+      refetch(reviewQuery)
       return result
     },
     async deleteReview() {
       if (ogReview) {
         // @ts-ignore
-        return await deleteUserReview(ogReview, reviewQuery)
+        const res = await deleteUserReview(ogReview, reviewQuery)
+        refetch(reviewQuery)
+        return res
       }
     },
   }
@@ -176,7 +183,7 @@ export async function deleteUserReview(review: { id: string }, reviewQuery: any[
 
 export const useUserReviewsQuery = (where: review_bool_exp, rest: any = null) => {
   const userStore = useUserStore()
-  const userId = (userStore.user?.id as string) ?? ''
+  const userId = (userStore.user?.id as string) || ''
   const shouldFetch = userId && (where.restaurant_id || where.list_id)
   const refetch = useRefetch()
   const reviewsQuery = shouldFetch
@@ -193,26 +200,27 @@ export const useUserReviewsQuery = (where: review_bool_exp, rest: any = null) =>
       })
     : null
   const reviews = reviewsQuery
-    ? reviewsQuery.map<ReviewWithTag>((review) => {
+    ? reviewsQuery.map((review) => {
         const tag = {
-          name: review?.tag?.name ?? '',
-          type: review?.tag?.type ?? '',
+          name: review?.tag?.name || '',
+          type: review?.tag?.type || '',
         }
         const res: ReviewWithTag = {
-          id: review.id ?? '',
+          id: review.id || '',
           rating: review.rating ?? 0,
-          tag_id: review.tag_id ?? '',
-          text: review.text ?? '',
+          tag_id: review.tag_id || '',
+          text: review.text || '',
           tag,
+          type: review.type || '',
           vote: review.vote ?? 0,
-          restaurant_id: review.restaurant_id ?? '',
-          list_id: review.list_id ?? '',
-          user_id: review.user_id ?? '',
+          restaurant_id: review.restaurant_id || '',
+          list_id: review.list_id || '',
+          user_id: review.user_id || '',
           user: {
-            username: review.user.username ?? '',
+            username: review.user.username || '',
           },
           favorited: review.favorited ?? false,
-          updated_at: review.updated_at ?? '',
+          updated_at: review.updated_at || '',
         }
         return res
       })

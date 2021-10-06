@@ -1,5 +1,5 @@
 import { CornerLeftUp, X } from '@dish/react-feather'
-import React, { memo } from 'react'
+import React, { forwardRef, memo } from 'react'
 import { Button, ButtonProps } from 'snackui'
 
 type CircleButtonProps = ButtonProps & {
@@ -23,32 +23,28 @@ export const BackButton = memo((props: CircleButtonProps) => {
   )
 })
 
-export const SmallCircleButton = ({
-  shadowed,
-  children,
-  width,
-  height,
-  size = 44,
-  ...props
-}: CircleButtonProps) => {
-  return (
-    <Button
-      borderRadius={1000}
-      alignItems="center"
-      justifyContent="center"
-      paddingHorizontal={0}
-      paddingVertical={0}
-      {...(shadowed && {
-        elevation: 1,
-      })}
-      noTextWrap
-      minWidth={width ?? size}
-      minHeight={height ?? size}
-      maxWidth={width ?? size}
-      maxHeight={height ?? size}
-      {...props}
-    >
-      {children}
-    </Button>
-  )
-}
+export const SmallCircleButton = forwardRef(
+  ({ shadowed, children, width, height, size = 44, ...props }: CircleButtonProps, ref) => {
+    return (
+      <Button
+        ref={ref as any}
+        borderRadius={1000}
+        alignItems="center"
+        justifyContent="center"
+        paddingHorizontal={0}
+        paddingVertical={0}
+        {...(shadowed && {
+          elevation: 1,
+        })}
+        noTextWrap
+        minWidth={width ?? size}
+        minHeight={height ?? size}
+        maxWidth={width ?? size}
+        maxHeight={height ?? size}
+        {...props}
+      >
+        {children}
+      </Button>
+    )
+  }
+)

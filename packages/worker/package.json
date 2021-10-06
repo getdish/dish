@@ -3,12 +3,11 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "types": "types.d.ts",
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch",
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy",
     "test": "DISH_ENV=test ava test/* --verbose",
     "test:watch": "DISH_ENV=test ava test/* --watch"
   },
@@ -23,13 +22,12 @@
     "bull": "^3.22.8",
     "https-proxy-agent": "^5.0.0",
     "lodash": "*",
-    "make-fetch-happen": "^8.0.14",
+    "make-fetch-happen": "^9.1.0",
     "react": "^17.0.1",
     "redis": "^3.1.2"
   },
   "devDependencies": {
     "@dish/esdx": "*",
-    "@types/make-fetch-happen": "^8.0.0",
     "ava": "^3.14.0"
   }
 }

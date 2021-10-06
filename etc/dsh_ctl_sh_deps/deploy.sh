@@ -43,10 +43,30 @@ function deploy_to() {
     echo setup env
     source .env
     source .env.production
-    ./dsh pull_all
     ./dsh deploy_dish
     docker system prune --force || true &
     echo done
+  "
+}
+
+function pull_on() {
+  hostvar="$1_HOST"
+  host="${!hostvar}"
+  key="$PROJECT_ROOT/etc/keys/server_rsa"
+  chmod 600 "$key"
+  if [ "$host" = "" ] || [ ! -f "$key" ]; then
+    echo "no host or private key $host $key"
+    exit 1
+  fi
+  echo " 🖥  pulling (swarm)..."
+  ssh -i "$key" -o StrictHostKeyChecking=no "root@$host" "
+    echo start pull
+    set -e
+    cd /app
+    echo setup env
+    source .env
+    source .env.production
+    ./dsh pull_all
   "
 }
 
@@ -59,6 +79,33 @@ function deploy_all() {
   sleep 10 && docker_login || sleep 10 && docker_login || exit 1
   # deploy_swarmprom
   deploy_dish_stack_bootstrap
+}
+
+function sync_to() {
+  hostvar="$1_HOST"
+  host="${!hostvar}"
+  key="$PROJECT_ROOT/etc/keys/server_rsa"
+  if [ "$host" = "" ] || [ ! -f "$key" ]; then
+    echo "no host or private key $host $key"
+    exit 1
+  fi
+  chmod 600 "$key"
+  echo " ⬆️  syncing . to $host:/app"
+  rsync \
+    -avPq --force \
+    --exclude-from="$(
+      git -C . ls-files --exclude-standard -oi --directory >/tmp/excludes
+      echo /tmp/excludes
+    )" \
+    --exclude='- .git' \
+    -e "ssh -o StrictHostKeyChecking=no -i $key" . "root@$host:/app"
+  echo "synced"
+}
+export -f sync_to
+
+function sync_to_watch() {
+  sync_to "$1"
+  fswatch -0 -o path . | xargs -0 -n1 -I{} sh -c "sync_to $1"
 }
 
 function deploy_dish_stack_bootstrap() {

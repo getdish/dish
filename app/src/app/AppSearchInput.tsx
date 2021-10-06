@@ -1,7 +1,7 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import { Loader, Search, X } from '@dish/react-feather'
-import { getStore, reaction } from '@dish/use-store'
+import { getStore, reaction, selector } from '@dish/use-store'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { HStack, Spacer, VStack, getMedia, useDebounce, useMedia, useOnMount } from 'snackui'
@@ -28,25 +28,7 @@ import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 
 const isWebTouch = isWeb && supportsTouchWeb
 
-const placeholders = [
-  'pho',
-  'tacos',
-  'dim sum',
-  'gyro',
-  'bibimbap',
-  'poke',
-  'dosa',
-  'onigiri',
-  'banh mi',
-  'bbq',
-  'caesar salad',
-  'sushi',
-  'sisig',
-  'szechuan',
-  'italian',
-]
-
-const placeHolder = `Search ${placeholders[Math.floor(placeholders.length * Math.random())]}`
+const placeHolder = `Search`
 
 // avoid first one on iniital focus
 let avoidNextFocus = true
@@ -67,7 +49,7 @@ export function focusSearchInput() {
     avoidNextFocus = false
     return
   }
-  searchBar?.focus()
+  searchBar?.focus?.()
 }
 
 export function blurSearchInput() {
@@ -93,11 +75,21 @@ export const AppSearchInput = memo(() => {
   const outerHeight = height - 1
   const innerHeight = height - 1
 
+  const setSearchInputValue = (value: string) => {
+    const input = textInput$.current
+    if (!input) return
+    if (input.setNativeProps) {
+      input.setNativeProps({
+        value: homeStore.currentSearchQuery,
+      })
+    } else if (input) {
+      ;(input as any).value = value
+    }
+  }
+
   useOnMount(() => {
     searchBar = inputStore.node
-    textInput$.current?.setNativeProps({
-      value: homeStore.currentSearchQuery,
-    })
+    setSearchInputValue(homeStore.currentSearchQuery)
     return series([
       () => fullyIdle({ checks: 3, max: 100 }),
       () => {
@@ -110,19 +102,14 @@ export const AppSearchInput = memo(() => {
 
   // one way sync down for more perf
   useEffect(() => {
-    return reaction(
-      homeStore,
-      (x) => x.currentSearchQuery,
-      function searchQuerySync(value) {
-        setSearch(value)
-        textInput$.current?.setNativeProps({
-          value,
-        })
-      }
-    )
+    return selector(function searchQuerySync() {
+      const value = homeStore.currentSearchQuery
+      setSearch(value)
+      setSearchInputValue(value)
+    })
   }, [])
 
-  const input = inputStore.node
+  // const input = inputStore.node
   const searchInputContainer = useRef<View>()
 
   // focus for web
@@ -135,7 +122,7 @@ export const AppSearchInput = memo(() => {
     handleKeyPress(e, inputStore)
   }, [])
 
-  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore)(view), [])
+  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore, view), [])
 
   return (
     <InputFrame>
@@ -192,9 +179,7 @@ export const AppSearchInput = memo(() => {
                   // }
                 }}
                 onKeyPress={handleKeyPressInner}
-                {...(!isWeb && {
-                  placeholderTextColor: '#999',
-                })}
+                placeholderTextColor={color}
                 onFocus={(e) => {
                   inputStore.setIsFocused(true)
                   if (isDesktop) {
@@ -208,7 +193,6 @@ export const AppSearchInput = memo(() => {
                   if (homeStore.searchbarFocusedTag) {
                     homeStore.setSearchBarTagIndex(0)
                   } else {
-                    console.log('open autocomplete search', e.currentTarget)
                     autocompletesStore.setTarget('search')
                   }
                 }}
@@ -363,6 +347,10 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
           homeStore.clearSearch()
           homeStore.navigate({
             tags: [item],
+            state: {
+              ...homeStore.currentState,
+              searchQuery: '',
+            },
           })
         }
       }

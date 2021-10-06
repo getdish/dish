@@ -21,41 +21,44 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
   const theme = useTheme()
   return (
     <VStack
-      backgroundColor={theme.backgroundColorDarker}
+      backgroundColor={theme.backgroundColorSecondary}
       marginRight={size === 'sm' ? -3 : -8}
-      className="disable-hover-touch ease-in-out-faster"
+      className="disable-hover-touch ease-in-out-fast"
       borderRadius={cardFrameBorderRadius}
       shadowColor={theme.shadowColor}
       shadowRadius={2}
       shadowOffset={{ height: 3, width: 3 }}
       position="relative"
       opacity={1}
-      scale={0.85}
+      scale={0.95}
+      translateX={0}
+      hoverStyle={{
+        scale: 0.975,
+      }}
+      pressStyle={{
+        scale: 0.925,
+      }}
       {...(slanted && {
         scale: 0.85,
         perspective: 800,
         rotateY: '-18deg',
-      })}
-      translateX={0}
-      hoverStyle={{
-        scale: 0.87,
-        ...(slanted && {
-          // TODO bug in snackui
+        hoverStyle: {
           scale: 0.87,
           perspective: 800,
           rotateY: '-18deg',
-        }),
-      }}
-      pressStyle={{
-        scale: 0.83,
-        perspective: 800,
-        rotateY: '-10deg',
-      }}
+        },
+        pressStyle: {
+          scale: 0.83,
+          perspective: 800,
+          rotateY: '-10deg',
+        },
+      })}
       {...props}
     >
       {/* was broke on larger size too */}
       {/* on native this causes laggy scrolls */}
-      {isWeb && isBehind && (
+      {/* didnt scale properly */}
+      {/* {isWeb && isBehind && (
         <AbsoluteVStack
           className="ease-in-out"
           zIndex={1002}
@@ -66,13 +69,13 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
           width={40}
           x={-20}
           // this makes react native work...
-          backgroundColor="red"
+          backgroundColor="rgba(0,0,0,0.001)"
           shadowColor="#000"
-          shadowOpacity={0.5}
+          shadowOpacity={0.15}
           shadowRadius={20}
           shadowOffset={{ width: 10, height: 0 }}
         />
-      )}
+      )} */}
       {children}
     </VStack>
   )

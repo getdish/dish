@@ -1,22 +1,22 @@
 import React, { memo } from 'react'
-import { useThemeName } from 'snackui'
-import { HStack } from 'snackui'
+import { HStack, Theme } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
-import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
+import { useHomeStore, useHomeStoreSelector } from '../homeStore'
 import { Link } from '../views/Link'
 import { GradientButton } from './GradientButton'
 import { TagsText } from './TagsText'
 
 export const HomeTopSearches = memo(() => {
-  const themeName = useThemeName()
+  const activeTags = useHomeStoreSelector((x) => x.currentState['activeTags'] || {})
+
   return (
     <HStack
-      paddingHorizontal={18}
+      paddingHorizontal={10}
       // for easier touchability
-      paddingVertical={16}
-      marginVertical={-8}
+      paddingVertical={10}
+      marginVertical={-10}
       spacing="xs"
       marginHorizontal="auto"
       alignItems="center"
@@ -25,14 +25,22 @@ export const HomeTopSearches = memo(() => {
       overflow="hidden"
     >
       {recentSearches.map((search, index) => {
-        const rgb = search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
-        return (
+        // const rgb = search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
+        const contents = (
           <Link key={index} tags={search.tags} asyncClick>
-            <GradientButton bordered rgb={rgb}>
+            <GradientButton>
               <TagsText tags={search.tags} />
             </GradientButton>
           </Link>
         )
+        if (activeTags[search.tags[0]?.slug || '']) {
+          return (
+            <Theme key={index} name="active">
+              {contents}
+            </Theme>
+          )
+        }
+        return contents
       })}
     </HStack>
   )
@@ -54,49 +62,57 @@ const recentSearches: { tags: NavigableTag[] }[] = [
   {
     tags: [
       {
+        name: 'Delivery',
+        icon: '🚗',
+        type: 'filter',
+        slug: 'filters__delivery',
+      },
+    ],
+  },
+  {
+    tags: [
+      {
         displayName: '$',
         name: 'price-low',
         type: 'filter',
         slug: 'filters__price-low',
       },
-      { name: 'Pho', icon: '🍜', type: 'dish', slug: 'vietnamese__pho' },
-    ],
-  },
-  {
-    tags: [tagLenses[1], { name: 'Steak', icon: '🥩', type: 'dish', slug: 'american__steak' }],
-  },
-  {
-    tags: [
-      {
-        name: 'Delivery',
-        icon: '🚗',
-        type: 'filter',
-        slug: 'filters__delivery',
-      },
-      { name: 'Sushi', icon: '🍣', type: 'dish', slug: 'japanese__sushi' },
-    ],
-  },
-  {
-    tags: [
-      { ...tagLenses[0], displayName: 'Top', type: 'lense' },
-      { name: 'Thai', icon: '🇹🇭', type: 'country', slug: 'asia__thai' },
     ],
   },
   {
     tags: [
       {
-        name: 'Delivery',
-        icon: '🚗',
+        displayName: '$$$',
+        name: 'price-high',
         type: 'filter',
-        slug: 'filters__delivery',
+        slug: 'filters__price-high',
       },
+    ],
+  },
+  {
+    tags: [
       {
         ...tagLenses[3],
         displayName: 'Vegetarian',
         icon: '🥬',
         type: 'lense',
-        slug: 'global__vegetarian',
+        slug: 'lenses__veg',
       },
     ],
+  },
+  {
+    tags: [{ name: 'Pho', icon: '🍜', type: 'dish', slug: 'vietnamese__pho' }],
+  },
+  {
+    tags: [tagLenses[1]],
+  },
+  {
+    tags: [{ name: 'Sushi', icon: '🍣', type: 'dish', slug: 'japanese__sushi' }],
+  },
+  {
+    tags: [{ name: 'Steak', icon: '🥩', type: 'dish', slug: 'american__steak' }],
+  },
+  {
+    tags: [{ name: 'Thai', icon: '🇹🇭', type: 'country', slug: 'asia__thai' }],
   },
 ]

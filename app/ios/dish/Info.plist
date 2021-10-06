@@ -32,30 +32,29 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>44</string>
+	<string>51</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-			<key>NSAllowsArbitraryLoads</key>
-			<true/>
-	</dict>
-	<!-- <key>NSAppTransportSecurity</key>
-	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>d1sh.com</key>
+			<key>dishapp.com</key>
 			<dict>
-				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<key>NSIncludesSubdomains</key>
 				<true/>
-			</dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.0</string>
 			</dict>
 		</dict>
-	</dict> -->
+	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>
+		 Users can submit photos as part of their review for a restaurant. This data is always
+		 public and indicated as such.
+	</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>
 		 Users can enable their location see and search nearby food.
@@ -83,5 +82,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>WhyteHeavy.otf</string>
+		<string>WhyteHeavy.woff</string>
+		<string>WhyteHeavy.woff2</string>
+		<string>Magnat.otf</string>
+		<string>Magnat.woff</string>
+	</array>
 </dict>
 </plist>

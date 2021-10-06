@@ -14,18 +14,27 @@ export const AppActionButton = () => {
   const [visible, setVisible] = useState(false)
   return (
     <Popover
-      position="bottom"
+      placement="bottom"
       isOpen={visible}
-      noArrow
       onChangeOpen={setVisible}
-      contents={
-        <Theme name="dark">
-          <AppActionButtonContents hide={() => setVisible(false)} />
-        </Theme>
-      }
-      mountImmediately
+      trigger={(props) => (
+        <AppMenuLinkButton
+          {...props}
+          onPress={() => setVisible((x) => !x)}
+          Icon={Plus}
+          tooltip="Create"
+        />
+      )}
     >
-      <AppMenuLinkButton onPress={() => setVisible((x) => !x)} Icon={Plus} tooltip="Create" />
+      {({ open }) =>
+        open ? (
+          <Popover.Content>
+            <Theme name="dark">
+              <AppActionButtonContents hide={() => setVisible(false)} />
+            </Theme>
+          </Popover.Content>
+        ) : null
+      }
     </Popover>
   )
 }
@@ -39,6 +48,7 @@ const AppActionButtonContents = ({ hide }: { hide?: (e: GestureResponderEvent) =
       alignItems="stretch"
       pointerEvents="auto"
       minWidth={240}
+      width={240}
     >
       {/* safari y={} fix overflow */}
       <VStack overflow="hidden" borderRadius={12} y={0.01}>

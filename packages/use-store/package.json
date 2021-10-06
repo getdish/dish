@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "types": "types",
   "main": "dist",
   "module": "_",
   "scripts": {
@@ -18,7 +17,7 @@
     "lodash": "^4.17.21",
     "react": "*",
     "react-dom": "*",
-    "use-sync-external-store": "^0.0.0-experimental-45898dacb2-20210828"
+    "use-sync-external-store": "0.0.0-experimental-5b57bc6e3-20210921"
   },
   "devDependencies": {
     "@dish/esdx": "*",

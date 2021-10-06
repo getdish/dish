@@ -10,6 +10,7 @@ import { ESBuildMinifyPlugin } from 'esbuild-loader'
 import { ensureDirSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 // import PnpWebpackPlugin from 'pnp-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 // import nodeExternals from 'webpack-node-externals'
@@ -63,7 +64,7 @@ export function createWebpackConfig({
   const isProduction = env === 'production'
   const isDevelopment = env === 'development'
   const isSSR = target === 'node'
-  const isHot = !isProduction && !isSSR && !disableHot && target !== 'node'
+  const isHot = !isProduction && !isSSR && !disableHot
   const isStaticExtracted = !process.env.NO_EXTRACT
   const isVerbose = process.env.ANALYZE_BUNDLE || process.env.INSPECT
   const minimize = !isSSR && !noMinify
@@ -139,7 +140,7 @@ export function createWebpackConfig({
       // eval-cheap-module-source-map (original lines)
       // eval-cheap-source-map (transformed lines)
       // eval-nosources-cheap-source-map (transformed lines)
-      devtool: isProduction ? 'source-map' : 'eval',
+      devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
       entry: {
         main:
           polyFillPath || isSSR
@@ -341,6 +342,8 @@ export function createWebpackConfig({
         ],
       },
       plugins: [
+        new LodashModuleReplacementPlugin(),
+
         new MiniCssExtractPlugin({
           filename: isProduction ? '[name].[contenthash].css' : '[name].css',
         }),
@@ -363,7 +366,10 @@ export function createWebpackConfig({
             rel: 'preload',
             include: 'initial',
             as(entry) {
-              if (/\.jpg$/.test(entry)) return 'image'
+              if (/\.css$/.test(entry)) return 'style'
+              if (/\.(jpg|png)$/.test(entry)) return 'image'
+              if (/\.(woff|woff2|otf|ttf)$/.test(entry)) return 'font'
+              return 'script'
             },
           }),
 
@@ -431,6 +437,12 @@ const excludedRootPaths = [
 ]
 
 function defaultBabelInclude(inputPath) {
+  if (inputPath.includes('react-native-awesome-gallery')) {
+    return true
+  }
+  if (inputPath.includes('react-native-gallery-toolkit')) {
+    return true
+  }
   if (inputPath.includes('react-native-web/dist/exports/View')) {
     return true
   }

@@ -6,11 +6,14 @@ if (process.env.TARGET !== 'web') {
 
 export * from './react'
 export * from './graphql'
+export * from './graphql/fetchLog'
+export * from './graphql/queryFetcher'
 export * from './startLogging'
 export * from './types'
 export * from './typesExtra'
 export * from './constants'
 export * from './Auth'
+export * from './uploadFile'
 
 export * from './getAuth'
 export * from './helpers/userHelpers'
@@ -23,6 +26,7 @@ export * from './helpers/queryResolvers'
 export * from './helpers/slugify'
 
 export * from './queries/listQueries'
+export * from './queries/photoQueries'
 export * from './queries/menuItemQueries'
 export * from './queries/restaurantQueries'
 export * from './queries/restaurantTagQueries'

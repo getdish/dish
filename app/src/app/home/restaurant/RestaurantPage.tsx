@@ -1,8 +1,9 @@
 import { fullyIdle, series } from '@dish/async'
+import { sleep } from '@dish/async'
 import { graphql } from '@dish/graph'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
+import { Circle, LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
 
 import { searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
@@ -11,8 +12,9 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
 import { router } from '../../../router'
 import { HomeStateItemRestaurant } from '../../../types/homeTypes'
-import { appMapStore, useSetAppMap } from '../../AppMap'
+import { appMapStore, useSetAppMap } from '../../appMapStore'
 import { drawerStore } from '../../drawerStore'
+import { useAsyncEffect } from '../../hooks/useAsync'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { PageHead } from '../../views/PageHead'
@@ -68,6 +70,13 @@ const RestaurantPage = memo(
       const [scrollView, setScrollView] = useState<ScrollView | null>(null)
       const [reviewsSection, setReviewsSection] = useState<View | HTMLElement | null>(null)
       const [dishesSection, setDishesSection] = useState<View | null>(null)
+      const [hasLoadedAboveFold, setHasLoadedAboveFold] = useState(false)
+
+      useAsyncEffect(async (mounted) => {
+        await sleep(500)
+        if (!mounted()) return
+        setHasLoadedAboveFold(true)
+      }, [])
 
       // preload from search
       const restaurantFromSearch = getSearchPageStore().results.find(
@@ -177,6 +186,16 @@ const RestaurantPage = memo(
                     restaurantSlug={restaurantSlug}
                   />
 
+                  <VStack zIndex={0}>
+                    <RestaurantOverallAndTagReviews
+                      tagSlug={selectedDish}
+                      borderless
+                      showScoreTable
+                      key={restaurantSlug}
+                      restaurant={restaurant}
+                    />
+                  </VStack>
+
                   <View ref={setDishesSection}>
                     <RestaurantDishRow
                       max={35}
@@ -188,16 +207,6 @@ const RestaurantPage = memo(
                       // themeName={`${colors.name}-dark`}
                     />
                   </View>
-
-                  <VStack zIndex={0} marginHorizontal={-20} marginBottom={-20}>
-                    <RestaurantOverallAndTagReviews
-                      tagSlug={selectedDish}
-                      borderless
-                      showScoreTable
-                      id={restaurantSlug}
-                      restaurant={restaurant}
-                    />
-                  </VStack>
 
                   <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
 
@@ -217,7 +226,11 @@ const RestaurantPage = memo(
 
               <VStack ref={setReviewsSection}>
                 <Suspense fallback={null}>
-                  <RestaurantReviewsList restaurantSlug={restaurantSlug} />
+                  {hasLoadedAboveFold ? (
+                    <RestaurantReviewsList restaurantSlug={restaurantSlug} />
+                  ) : (
+                    <LoadingItems />
+                  )}
                 </Suspense>
               </VStack>
 

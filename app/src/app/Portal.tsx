@@ -1,11 +1,11 @@
-import { Store, useStore } from '@dish/use-store'
+import { Store, compareStrict, useStore } from '@dish/use-store'
 import React, { Suspense, useLayoutEffect } from 'react'
-import { AbsoluteVStack } from 'snackui'
 
 type PortalStoreProps = { id: 'root' | 'drawer' }
 type PortalItemProps = { children: any }
 
 class PortalStore extends Store<PortalStoreProps> {
+  @compareStrict
   items = {}
 
   setItem(key: string, item: any) {

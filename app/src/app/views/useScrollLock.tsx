@@ -26,6 +26,7 @@ export const useScrollLock = ({ id, direction }: { id: string; direction: Scroll
   if (supportsTouchWeb) {
     // touch only logic for scroll locking (faster)
     useEffect(() => {
+      if (!scrollRef.current?.getScrollableNode) return
       const node = scrollRef.current?.getScrollableNode() as HTMLDivElement
       assertPresent(node, 'no scroll node')
       let preventUntilNext = false

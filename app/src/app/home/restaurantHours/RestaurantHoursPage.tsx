@@ -68,6 +68,9 @@ export default memo(
                   </TableHeadRow>
 
                   {hours.map((hour, i) => {
+                    if (!hour.hoursInfo) {
+                      return null
+                    }
                     const isToday = (hour.hoursInfo.day ?? '').startsWith(dayOfWeek)
                     return (
                       <TableRow backgroundColor={isToday ? bgLight : 'transparent'} key={i}>

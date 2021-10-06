@@ -1,6 +1,6 @@
 import { CACHE_KEY_PREFIX, route } from '@dish/api'
 
-import { redisDeletePattern } from './_rc'
+import { redisClient, redisDeletePattern } from './_redis'
 
 export default route((_req, res) => {
   console.warn('Clearing REDIS cache')

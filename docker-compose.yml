@@ -21,6 +21,7 @@ x-dish-env: &dish-env
   HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET:-password}
   POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+  POSTGRES_DB: ${POSTGRES_DB:-dish}
   TIMESCALE_HOST: ${TIMESCALE_HOST:-timescale}
   TIMESCALE_PASSWORD: ${TIMESCALE_PASSWORD:-postgres}
   TIMESCALE_PORT: ${TIMESCALE_PORT:-5433}
@@ -94,6 +95,8 @@ services:
 
   postgres:
     image: registry.dishapp.com/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
+    build:
+      context: ./services/${POSTGRES_NAME:-postgres}
     command: postgres -c config_file=/postgres/postgresql.conf
     deploy:
       update_config:
@@ -107,8 +110,6 @@ services:
         max_attempts: 5
     networks:
       - default
-    build:
-      context: ./services/${POSTGRES_NAME:-postgres}
     volumes:
       - ${POSTGRES_DB_DIR?err}:/var/lib/postgresql/data
       - ./services/postgres:/postgres
@@ -125,10 +126,9 @@ services:
     #   retries: 5
 
   hasura:
-    image: ${DOCKER_HASURA_IMAGE:-registry.dishapp.com/dish-hasura:latest}
-    build:
-      context: .
-      dockerfile: ./services/hasura/Dockerfile
+    image: ${DOCKER_HASURA_IMAGE:-hasura/graphql-engine:v2.1.0-beta.1.cli-migrations-v2}
+    # build:
+    #   context: ${DOCKER_HASURA_FOLDER:-./services/hasura}
     restart: on-failure:3
     networks:
       - traefik-public
@@ -168,10 +168,11 @@ services:
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - DISH_HOOKS_ENDPOINT=${HOOKS_ENDPOINT}
       - GORSE_SYNC_HOOK=${GORSE_ENDPOINT}/gorse_sync
-    depends_on:
-      - 'postgres'
-      - 'redis'
-      - 'hooks'
+      # - HASURA_GRAPHQL_DEV_MODE=true
+    # depends_on:
+    #   # - 'postgres'
+    #   - 'redis'
+    #   # - 'hooks'
 
   search:
     image: registry.dishapp.com/dish-search${DISH_IMAGE_TAG}
@@ -207,12 +208,9 @@ services:
         - traefik.http.routers.search-https.tls.certresolver=le
         - traefik.http.services.search.loadbalancer.server.port=9999
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-dish}
-      - POSTGRES_USER=${POSTGRES_USER:-postgres}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
-      - POSTGRES_HOST=postgres
-    depends_on:
-      - 'postgres'
+      <<: *dish-env
+    # depends_on:
+    #   - 'postgres'
 
   tileserver:
     image: registry.dishapp.com/dish-tileserver${DISH_IMAGE_TAG}
@@ -252,8 +250,8 @@ services:
     environment:
       - WATCH_MODE=true
       - DATABASE_URL=${POSTGRES_URL_INTERNAL:-postgres://postgres:postgres@postgres/dish}
-    depends_on:
-      - 'postgres'
+    # depends_on:
+    #   - 'postgres'
 
   site:
     image: registry.dishapp.com/dish-site${DISH_IMAGE_TAG}

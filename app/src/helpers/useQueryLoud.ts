@@ -1,41 +1,37 @@
 import { useEffect } from 'react'
-import {
-  QueryFunction,
-  QueryKey,
-  QueryObserverResult,
-  UseQueryOptions,
-  useQuery,
-} from 'react-query'
 import { Toast } from 'snackui'
+import useSWR, { SWRConfiguration } from 'swr'
 
 // automatically logs errors to toast
 // but allows things to fail without failing entire app
 
+type QueryFunction<A> = (...args: any[]) => A | Promise<A>
+
 export function useQueryLoud<TData = unknown, TError = unknown, TQueryFnData = TData>(
-  queryKey: QueryKey,
+  queryKey: string,
   queryFn: QueryFunction<TQueryFnData | TData>,
-  options?: UseQueryOptions<TData, TError, TQueryFnData>
-): QueryObserverResult<TQueryFnData, TError> {
-  const res = useQuery(
+  options?: SWRConfiguration<TData, TError, QueryFunction<TData>>
+) {
+  const res = useSWR(
     queryKey,
     async (...args) => {
       try {
         const res = await queryFn(...args)
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV === 'development' || process.env.DEBUG || process.env.LOG_FETCH) {
           console.groupCollapsed(`🔦 ${queryKey.slice(0, 50)}`)
           console.log(res)
           console.groupEnd()
         }
         return res
       } catch (err) {
+        console.error(err)
         Toast.show(`Query error: ${err.message}`)
         throw err
       }
     },
     {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      refreshWhenHidden: false,
+      revalidateOnFocus: false,
       ...options,
     }
   )

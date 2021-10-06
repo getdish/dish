@@ -24,18 +24,21 @@ import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { configureUseStore } from '@dish/use-store'
-import AppLoading from 'expo-app-loading'
+import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { QueryClientProvider } from 'react-query'
-import { AbsoluteVStack, Paragraph, ThemeProvider, Toast, configureThemes } from 'snackui'
+import {
+  AbsoluteVStack,
+  Paragraph,
+  SnackUIProvider,
+  Toast,
+  configureThemes,
+  useSafeAreaInsets,
+} from 'snackui'
 
 import { App } from './app/App'
+// import { App } from './app/App'
 import { homeStore } from './app/homeStore'
-import { useSafeArea } from './app/hooks/useSafeArea'
-import { PlatformSpecificProvider } from './app/PlatformSpecificProvider'
-import { RootPortalProvider } from './app/Portal'
 import { useUserStore, userStore } from './app/userStore'
 import { showRadar } from './constants/constants'
 import { initialHomeState } from './constants/initialHomeState'
@@ -43,7 +46,6 @@ import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/local
 import { isHermes } from './constants/platforms'
 import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
-import { queryClient } from './helpers/queryClient'
 import { DRoutesTable, router, routes } from './router'
 
 declare module 'snackui' {
@@ -121,7 +123,7 @@ export function RootSuspenseLoad(props: any) {
 }
 
 const DebugHUD = () => {
-  const safeArea = useSafeArea()
+  const safeArea = useSafeAreaInsets()
   return (
     <Paragraph
       position="absolute"
@@ -149,31 +151,31 @@ export function Root() {
   }
 
   useEffect(() => {
+    if (isLoaded) {
+      SplashScreen.hideAsync()
+    }
+  }, [isLoaded])
+
+  useEffect(() => {
     start().then(() => {
       setIsLoaded(true)
     })
   }, [])
 
+  const defaultTheme =
+    (userStore.theme === 'auto' ? colorScheme : userStore.theme) ?? colorScheme ?? 'dark'
+
   return (
     <>
-      <SafeAreaProvider>
-        <PlatformSpecificProvider>
-          <ThemeProvider themes={themes} defaultTheme={userStore.theme ?? colorScheme ?? 'dark'}>
-            <ProvideRouter routes={routes}>
-              <QueryClientProvider client={queryClient}>
-                <Suspense fallback={null}>
-                  {!isLoaded && <AppLoading />}
-                  {isLoaded ? <App /> : null}
-
-                  {process.env.NODE_ENV === 'development' && <DebugHUD />}
-                </Suspense>
-                <RootPortalProvider />
-              </QueryClientProvider>
-            </ProvideRouter>
-          </ThemeProvider>
-        </PlatformSpecificProvider>
-        {showRadar && <Radar />}
-      </SafeAreaProvider>
+      <SnackUIProvider themes={themes} defaultTheme={defaultTheme}>
+        <ProvideRouter routes={routes}>
+          <Suspense fallback={null}>
+            {isLoaded ? <App /> : null}
+            {process.env.NODE_ENV === 'development' && <DebugHUD />}
+          </Suspense>
+        </ProvideRouter>
+      </SnackUIProvider>
+      {showRadar && <Radar />}
     </>
   )
 }

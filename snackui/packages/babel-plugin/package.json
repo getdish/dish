@@ -1,16 +1,15 @@
 {
   "name": "@snackui/babel-plugin",
-  "version": "0.16.1",
+  "version": "0.18.3",
   "license": "MIT",
-  "types": "types.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch"
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy"
   },
   "devDependencies": {
     "@babel/generator": "*",
@@ -18,8 +17,8 @@
     "@babel/template": "*",
     "@babel/traverse": "*",
     "@babel/types": "*",
-    "@dish/esdx": "^0.0.9",
-    "@snackui/static": "^0.16.1"
+    "@dish/esdx": "^0.3.0",
+    "@snackui/static": "^0.18.3"
   },
   "gitHead": "a41c5a5b08be5518d138515137122c248e3f7c71"
 }

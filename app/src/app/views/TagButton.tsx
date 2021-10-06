@@ -82,36 +82,37 @@ export const getTagButtonProps = (review_or_tag?: TagLike | review | null): TagB
 
 export type TagButtonProps = StackProps &
   Omit<TagButtonTagProps, 'rgb'> & {
-    noLink?: boolean
-    theme?: ThemeName
-    rgb?: RGB | null
-    refetchKey?: string
-    slug?: string
-    restaurant?: restaurant | null
-    size?: 'lg' | 'md' | 'sm'
-    votable?: boolean
+    after?: any
+    bordered?: boolean
+    circular?: boolean
     closable?: boolean
-    onClose?: Function
-    onlyIcon?: boolean
     color?: any
-    hideIcon?: boolean
-    subtleIcon?: boolean
+    fadeLowlyVoted?: boolean
+    floating?: boolean
     fontSize?: TextProps['fontSize']
     fontWeight?: TextProps['fontWeight']
+    hideIcon?: boolean
+    hideRank?: boolean
+    hideRating?: boolean
+    hideVote?: boolean
+    isActive?: boolean
+    noLink?: boolean
+    onClose?: () => void
+    onlyIcon?: boolean
+    ratingStyle?: 'points' | 'pie'
+    refetchKey?: string
     replace?: boolean
     replaceSearch?: boolean
-    after?: any
-    floating?: boolean
-    hideRating?: boolean
-    hideRank?: boolean
-    ratingStyle?: 'points' | 'pie'
-    transparent?: boolean
-    bordered?: boolean
-    isActive?: boolean
+    restaurant?: restaurant | null
+    rgb?: RGB | null
     showSearchButton?: boolean
+    size?: 'lg' | 'md' | 'sm'
+    slug?: string
+    subtleIcon?: boolean
+    theme?: ThemeName
     tooltip?: string
-    fadeLowlyVoted?: boolean
-    circular?: boolean
+    transparent?: boolean
+    votable?: boolean
   }
 
 const typeColors = {
@@ -135,41 +136,42 @@ export const TagButton = memo((props: TagButtonProps) => {
 
 const TagButtonInner = (props: TagButtonProps) => {
   const {
-    rank,
-    name,
-    type,
-    size,
-    slug,
-    rating,
-    floating,
-    closable,
-    bordered,
-    onClose,
-    replaceSearch,
-    votable,
-    onlyIcon,
-    fontSize: fontSizeProp,
-    fontWeight,
-    color,
-    icon,
-    fadeLowlyVoted,
-    rgb,
-    score,
-    subtleIcon,
-    hideIcon,
-    isActive,
     after,
-    showSearchButton,
-    replace,
-    restaurant,
-    hideRating,
-    hideRank,
-    ratingStyle = 'pie',
-    transparent,
-    noLink,
-    tooltip,
+    bordered,
     children,
     circular,
+    closable,
+    color,
+    fadeLowlyVoted,
+    floating,
+    fontSize: fontSizeProp,
+    fontWeight,
+    hideIcon,
+    hideRank,
+    hideRating,
+    hideVote,
+    icon,
+    isActive,
+    name,
+    noLink,
+    onClose,
+    onlyIcon,
+    rank,
+    rating,
+    ratingStyle = 'pie',
+    replace,
+    replaceSearch,
+    restaurant,
+    rgb,
+    score,
+    showSearchButton,
+    size,
+    slug,
+    subtleIcon,
+    tooltip,
+    transparent,
+    type,
+    votable,
     ...rest
   } = props
 
@@ -197,7 +199,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         color={theme.color}
         letterSpacing={-1}
         marginRight={-3}
-        opacity={0.8}
+        opacity={0.2}
       >
         {rank}
       </Text>
@@ -241,8 +243,8 @@ const TagButtonInner = (props: TagButtonProps) => {
       spacing={fontSize * 0.5}
       borderRadius={8}
       backgroundColor={theme.backgroundColor}
-      borderWidth={0.5}
-      borderColor={bordered ? theme.borderColor : 'transparent'}
+      borderWidth={bordered ? 0.5 : 0}
+      borderColor={theme.borderColor}
       hoverStyle={{
         backgroundColor: theme.backgroundColorSecondary,
       }}
@@ -250,6 +252,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         backgroundColor: theme.backgroundColorTertiary,
       }}
       {...(transparent && {
+        borderColor: 'transparent',
         backgroundColor: 'transparent',
         hoverStyle: {
           backgroundColor: 'transparent',
@@ -265,18 +268,55 @@ const TagButtonInner = (props: TagButtonProps) => {
         },
       })}
       alignItems="center"
-      justifyContent="center"
+      // justifyContent="center"
       paddingHorizontal={isSmall ? 5 : 10}
       paddingVertical={isSmall ? 3 : 5}
       height={isSmall ? 36 : 38}
       {...(fadeLowlyVoted &&
+        typeof vote === 'number' &&
         vote <= 2 && {
-          opacity: 0.5,
+          opacity: 0.4,
         })}
       {...rest}
     >
       {rankElement}
       {iconElement}
+
+      {!hideRating && typeof rating !== 'undefined' && (
+        <>
+          {ratingStyle === 'pie' && (
+            <VStack marginVertical={-2} position="relative">
+              {/* {rating === 0 ? null : rating * 10 < 18 ? (
+                <Text fontSize={16}>😕</Text>
+              ) : rating * 10 > 90 ? (
+                <Text fontSize={16}>💎</Text>
+              ) : ( */}
+              <VStack
+                position="relative"
+                backgroundColor={theme.backgroundColorQuartenary}
+                borderRadius={100}
+                width={pieSize}
+                height={pieSize}
+                transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
+                // borderWidth={1}
+                borderColor={theme.backgroundColorAlt}
+                opacity={floating ? 1 : 0.7}
+              >
+                <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
+              </VStack>
+              {/* )} */}
+            </VStack>
+          )}
+
+          {ratingStyle !== 'pie' && (
+            <VStack position="relative" backgroundColor={floating ? `#fff` : theme.color}>
+              <Text color={theme.color} fontSize={13} fontWeight="900" letterSpacing={-0.5}>
+                {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
+              </Text>
+            </VStack>
+          )}
+        </>
+      )}
 
       {!onlyIcon && !circular && (
         <Text
@@ -284,6 +324,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           fontSize={fontSize}
           fontWeight={fontWeight || '400'}
           lineHeight={isSmall ? 15 : 22}
+          paddingLeft={3}
           color={color || theme.color}
           pointerEvents="none"
           // borderBottomColor={theme.backgroundColor}
@@ -305,47 +346,7 @@ const TagButtonInner = (props: TagButtonProps) => {
 
       {children}
 
-      {!hideRating && typeof rating !== 'undefined' && (
-        <>
-          {ratingStyle === 'pie' && (
-            <VStack marginVertical={-2} position="relative">
-              {rating === 0 ? null : rating * 10 < 18 ? (
-                <Text fontSize={16}>😕</Text>
-              ) : rating * 10 > 90 ? (
-                <Text fontSize={16}>💎</Text>
-              ) : (
-                <VStack
-                  position="relative"
-                  backgroundColor={theme.backgroundColorQuartenary}
-                  borderRadius={100}
-                  width={pieSize}
-                  height={pieSize}
-                  transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
-                  // borderWidth={1}
-                  borderColor={theme.backgroundColorAlt}
-                  opacity={floating ? 1 : 0.7}
-                >
-                  <Pie
-                    size={pieSize}
-                    percent={rating * 10}
-                    color={floating ? `#fff` : theme.color}
-                  />
-                </VStack>
-              )}
-            </VStack>
-          )}
-
-          {ratingStyle !== 'pie' && (
-            <VStack position="relative" backgroundColor={floating ? `#fff` : theme.color}>
-              <Text color={theme.color} fontSize={13} fontWeight="900" letterSpacing={-0.5}>
-                {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
-              </Text>
-            </VStack>
-          )}
-        </>
-      )}
-
-      {!!slug && !!votable && !!props.restaurant && (
+      {(hideVote && !vote ? false : true) && !!slug && !!votable && !!props.restaurant && (
         <TagButtonVote
           {...props}
           vote={vote}
@@ -397,6 +398,13 @@ const TagButtonInner = (props: TagButtonProps) => {
     </HStack>
   )
 
+  // make entire button votable in this case
+  // dont combine with link/tooltip
+  const voteOnButton = noLink && votable
+  if (voteOnButton) {
+    return <TagVotePopover {...props}>{contents}</TagVotePopover>
+  }
+
   if (!noLink) {
     contents = (
       <Link
@@ -421,12 +429,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   if (tooltip) {
-    contents = <Tooltip contents={tooltip}>{contents}</Tooltip>
-  }
-
-  // make entire button votable in this case
-  if (noLink && votable) {
-    return <TagVotePopover {...props}>{contents}</TagVotePopover>
+    return <Tooltip trigger={(props) => <VStack {...props}>{contents}</VStack>}>{tooltip}</Tooltip>
   }
 
   return contents
@@ -436,8 +439,9 @@ export const TagVotePopover = graphql(
   ({
     slug,
     restaurant,
+    children,
     ...popoverProps
-  }: Omit<Partial<HoverablePopoverProps>, 'position' | 'style'> & TagButtonProps) => {
+  }: Omit<Partial<HoverablePopoverProps>, 'placement' | 'style'> & TagButtonProps) => {
     const hovPopRef = useRef<HoverablePopoverRef>()
     const tagSlug = getTagSlug(slug)
     const { vote, setVote } = useUserTagVotes({
@@ -447,53 +451,52 @@ export const TagVotePopover = graphql(
 
     return (
       <HoverablePopover
-        // @ts-ignore
-        ref={hovPopRef}
+        ref={hovPopRef as any}
         allowHoverOnContent
-        anchor="CENTER"
-        animated={false}
+        fallbackToPress
+        placement="top"
         {...popoverProps}
-        contents={
-          <Theme name="dark">
-            <Box paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
-              <HStack>
-                {tagRatings.map((rating) => (
-                  <LinkButton
-                    promptLogin
-                    borderRadius={1000}
-                    width={38}
-                    height={38}
-                    paddingHorizontal={0}
-                    textProps={{
-                      letterSpacing: -1,
-                      fontWeight: '600',
-                      paddingHorizontal: 4,
-                    }}
-                    onPress={(e) => {
-                      e.stopPropagation()
-                      setVote(rating)
-                      // give time to see it update
-                      setTimeout(() => {
-                        hovPopRef.current?.close()
-                      }, 200)
-                    }}
-                    key={rating}
-                    {...(vote === rating
-                      ? {
-                          backgroundColor: blue,
-                        }
-                      : {
-                          backgroundColor: 'transparent',
-                        })}
-                  >
-                    {rating}
-                  </LinkButton>
-                ))}
-              </HStack>
-            </Box>
-          </Theme>
-        }
-      />
+        trigger={(props) => React.cloneElement(children, props)}
+      >
+        <Theme name="dark">
+          <Box paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
+            <HStack>
+              {tagRatings.map((rating) => (
+                <LinkButton
+                  promptLogin
+                  borderRadius={1000}
+                  width={38}
+                  height={38}
+                  paddingHorizontal={0}
+                  textProps={{
+                    letterSpacing: -1,
+                    fontWeight: '600',
+                    paddingHorizontal: 4,
+                  }}
+                  onPress={(e) => {
+                    e.stopPropagation()
+                    setVote(rating)
+                    // give time to see it update
+                    setTimeout(() => {
+                      hovPopRef.current?.close()
+                    }, 200)
+                  }}
+                  key={rating}
+                  {...(vote === rating
+                    ? {
+                        backgroundColor: blue,
+                      }
+                    : {
+                        backgroundColor: 'transparent',
+                      })}
+                >
+                  {rating}
+                </LinkButton>
+              ))}
+            </HStack>
+          </Box>
+        </Theme>
+      </HoverablePopover>
     )
   },
   {

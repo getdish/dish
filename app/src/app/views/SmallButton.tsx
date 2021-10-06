@@ -1,48 +1,50 @@
-import React from 'react'
-import { Button, ButtonProps, Tooltip, themeable, useTheme } from 'snackui'
+import React, { forwardRef } from 'react'
+import { Button, ButtonProps, Tooltip, combineRefs, themeable, useTheme } from 'snackui'
 
 export type SmallButtonProps = ButtonProps & {
   tooltip?: string | null
 }
 
 export const SmallButton = themeable(
-  ({ children, tooltip, theme: themeProp, textProps, ...rest }: SmallButtonProps) => {
-    const theme = useTheme()
+  forwardRef(
+    ({ children, tooltip, theme: themeProp, textProps, ...rest }: SmallButtonProps, ref) => {
+      const theme = useTheme()
 
-    let contents = (
-      <Button
-        borderRadius={200}
-        borderWidth={0.5}
-        borderColor={theme.backgroundColorTertiary}
-        backgroundColor={theme.backgroundColor}
-        // borderColor={theme.borderColor}
-        // backgroundColor={theme.backgroundColorTransluscent}
-        hoverStyle={{
-          backgroundColor: theme.backgroundColorSecondary,
-        }}
-        pressStyle={{
-          backgroundColor: theme.backgroundColorTertiary,
-        }}
-        {...(themeProp == 'active' && {
-          backgroundColor: theme.backgroundColor,
-        })}
-        height={44}
-        maxHeight={44}
-        minWidth={44}
-        textProps={{
-          fontSize: 13,
-          ...textProps,
-        }}
-        {...rest}
-      >
-        {children}
-      </Button>
-    )
+      const getContents = (props) => (
+        <Button
+          {...props}
+          ref={combineRefs(props.ref, ref)}
+          borderRadius={200}
+          borderWidth={0.5}
+          borderColor={theme.borderColor}
+          backgroundColor={theme.backgroundColor}
+          hoverStyle={{
+            backgroundColor: theme.backgroundColorSecondary,
+          }}
+          pressStyle={{
+            backgroundColor: theme.backgroundColorTertiary,
+          }}
+          {...(themeProp == 'active' && {
+            backgroundColor: theme.backgroundColor,
+          })}
+          height={44}
+          maxHeight={44}
+          minWidth={44}
+          textProps={{
+            fontSize: 13,
+            ...textProps,
+          }}
+          {...rest}
+        >
+          {children}
+        </Button>
+      )
 
-    if (tooltip) {
-      return <Tooltip contents={tooltip}>{contents}</Tooltip>
+      if (tooltip) {
+        return <Tooltip trigger={getContents}>{tooltip}</Tooltip>
+      }
+
+      return getContents({})
     }
-
-    return contents
-  }
+  )
 )

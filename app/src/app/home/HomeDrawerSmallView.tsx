@@ -12,6 +12,7 @@ import { blurSearchInput } from '../AppSearchInput'
 import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore as drawerStoreInstance } from '../drawerStore'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
+import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
   const drawerStore = useStoreInstance(drawerStoreInstance)
@@ -89,34 +90,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           zIndex: 100,
         }}
       >
-        {/* handle */}
-        <View
-          pointerEvents="auto"
-          style={{
-            position: 'absolute',
-            top: -40,
-            padding: 15,
-          }}
-          {...panResponder.panHandlers}
-        >
-          <VStack
-            className="home-drawer-snap"
-            pointerEvents="auto"
-            paddingHorizontal={20}
-            paddingVertical={20}
-            marginTop={-10}
-          >
-            <VStack
-              backgroundColor="rgba(100,100,100,0.5)"
-              width={60}
-              height={8}
-              borderRadius={100}
-              hoverStyle={{
-                backgroundColor: 'rgba(200,200,200,0.65)',
-              }}
-            />
-          </VStack>
-        </View>
+        <AppFloatingTagMenuBar />
 
         <BottomSheetContainer>
           <View style={sheet.searchBarContainer} {...panResponder.panHandlers}>

@@ -3,12 +3,11 @@
   "version": "0.0.1",
   "sideEffects": false,
   "bin": "jest",
-  "types": "types.d.ts",
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch"
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy"
   },
   "dependencies": {
     "lodash": "^4.17.21",

@@ -13,7 +13,6 @@ export const useTopCuisines = (center: LngLat) => {
 
 const getHomeCuisines = async (center: LngLat) => {
   const zoom = (await getMapZoom()) ?? 11
-  console.log('get at zoom', zoom)
   const cuisineItems = await getHomeDishes(center.lng, center.lat, zoom)
   let all: TopCuisine[] = []
   for (const item of cuisineItems) {

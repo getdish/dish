@@ -1,7 +1,10 @@
 import { list, restaurant, review } from '@dish/graph'
 import React from 'react'
 
+import { ListColors } from './listColors'
+
 export type ListItemProps = {
+  listColors: ListColors
   list?: list | null
   listTheme?: 'modern' | 'minimal'
   reviewQuery?: review[] | null
@@ -9,9 +12,9 @@ export type ListItemProps = {
   restaurant: restaurant
   listSlug?: string
   hideRate?: boolean
+  minimal?: boolean
   rank: number
   activeTagSlugs?: string[]
-  onFinishRender?: Function
   editable?: boolean
   hideTagRow?: boolean
   above?: any

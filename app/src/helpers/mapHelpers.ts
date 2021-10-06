@@ -4,8 +4,6 @@ import bbox from '@turf/bbox'
 import getCenter from '@turf/center'
 import { BBox, MultiPolygon, Polygon } from '@turf/helpers'
 
-import { Point } from '../types/homeTypes'
-
 const { abs } = Math
 
 export function snapCoordsToTileCentre(lon: number, lat: number, zoom: number) {
@@ -136,8 +134,10 @@ export const getMaxLngLat = (ll: LngLat, max: LngLat) => {
 
 // used to help prevent duplicate searches on slight diff in map move
 export const roundLngLat = (ll: LngLat): LngLat => {
-  return reduce(ll, (_, v) => Math.round(v * 100000) / 100000)
+  return reduce(ll, (_, v) => roundCoord(v))
 }
+
+export const roundCoord = (coordinate: number, to = 100000) => Math.round(coordinate * to) / to
 
 export const hasMovedAtLeast = (
   current: { center: LngLat; span: LngLat },

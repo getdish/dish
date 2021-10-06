@@ -10,6 +10,7 @@ import GalleryPage from './home/gallery/GalleryPage'
 import { Home } from './home/Home'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
+import { RootPortalProvider } from './Portal'
 import { Route } from './Route'
 
 LogBox.ignoreAllLogs(true)
@@ -19,12 +20,13 @@ export function App() {
 
   return (
     <>
+      <RootPortalProvider />
       {/* <StatusBar style="dark" /> */}
       <AutocompleteEffects />
       <AbsoluteVStack fullscreen backgroundColor={theme.mapBackground}>
         <Suspense fallback={null}>
           {/* keep indent  */}
-          <AppMap />
+          {/* <AppMap /> */}
         </Suspense>
 
         <Home />

@@ -1,4 +1,4 @@
-import { LngLat } from '@dish/graph/types'
+import { LngLat } from '@dish/graph'
 import { HistoryItem } from '@dish/router'
 
 import { isLngLatParam, urlSerializers } from '../app/home/search/urlSerializers'

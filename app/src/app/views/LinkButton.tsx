@@ -1,19 +1,20 @@
 import { RoutesTable } from '@dish/router'
-import React from 'react'
-import { Button } from 'snackui'
+import React, { forwardRef } from 'react'
+import { Button, Tooltip, combineRefs } from 'snackui'
 
 import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkButtonProps } from './LinkProps'
 
-export function LinkButton<Name extends DRouteName = DRouteName>(
-  props: LinkButtonProps<Name, RoutesTable[Name]['params']>
-) {
+export const LinkButton = forwardRef(function LinkButtonContent<
+  Name extends DRouteName = DRouteName
+>(props: LinkButtonProps<Name, RoutesTable[Name]['params']>, ref) {
   // @ts-ignore
   const { wrapWithLinkElement } = useLink(props)
   const {
     children,
     replace,
+    tooltip,
     disallowDisableWhenActive,
     tags,
     tag,
@@ -28,22 +29,22 @@ export function LinkButton<Name extends DRouteName = DRouteName>(
     theme,
     ...restProps
   } = props
-  // const themeName = useThemeName()
-  return wrapWithLinkElement(
-    <Button
-      {...restProps}
-      {...(isActive && activeStyle)}
-      textProps={isActive ? props.activeTextStyle : textProps}
-      // {...(theme &&
-      //   colorNames.includes(theme as any) &&
-      //   themeName === 'dark' && {
-      //     theme: `${theme}-dark`,
-      //   })}
-    >
-      {getChildren(props, isActive)}
-    </Button>
-  )
-}
+  const getElement = (innerProps) =>
+    wrapWithLinkElement(
+      <Button
+        {...restProps}
+        ref={combineRefs(innerProps.ref, ref)}
+        {...(isActive && activeStyle)}
+        textProps={isActive ? props.activeTextStyle : textProps}
+      >
+        {getChildren(props, isActive)}
+      </Button>
+    )
+  if (!!tooltip) {
+    return <Tooltip trigger={getElement}>{tooltip}</Tooltip>
+  }
+  return getElement({})
+})
 
 const getChildren = (props: LinkButtonProps, isActive?: boolean) => {
   if (typeof props.children === 'function') {

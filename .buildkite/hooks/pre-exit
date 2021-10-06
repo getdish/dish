@@ -44,9 +44,9 @@ fi
 
 if [ "$LOG_DOCKER" == "true" ]; then
   echo "--- docker-compose logs"
-  docker-compose logs | tail -n 200 || true
+  docker-compose logs --tail 1000 | tail -n 1000 || true
   sleep 2
-  echo "docker-compose logs | tail -n 200"
+  echo "docker-compose logs --tail 1000 | tail -n 100"
   echo "**to see all**"
   echo "dsh shell h1"
   echo "cd $(pwd)"

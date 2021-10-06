@@ -252,11 +252,20 @@ export const useTheme = () => {
   )
 }
 
-export const ThemeProvider = (props: {
+const GET_DEFAULT = Symbol('_DEFAULT_THEME_KEY')
+
+export const useDefaultThemeName = () => {
+  // @ts-ignore
+  return useContext(ThemeContext)[GET_DEFAULT] as ThemeName
+}
+
+export type ThemeProviderProps = {
   themes: Themes
   defaultTheme: ThemeName
   children?: any
-}) => {
+}
+
+export const ThemeProvider = (props: ThemeProviderProps) => {
   if (!hasConfigured) {
     throw new Error(`Missing configureThemes() call, add to your root file`)
   }
@@ -272,8 +281,19 @@ export const ThemeProvider = (props: {
     }
   }, [])
 
+  const themes = useMemo(
+    () =>
+      new Proxy(props.themes, {
+        get(target, key) {
+          if (key === GET_DEFAULT) return props.defaultTheme
+          return Reflect.get(target, key)
+        },
+      }),
+    [props.themes]
+  )
+
   return (
-    <ThemeContext.Provider value={props.themes}>
+    <ThemeContext.Provider value={themes}>
       <Theme name={props.defaultTheme}>{props.children}</Theme>
     </ThemeContext.Provider>
   )

@@ -12,7 +12,7 @@ import { getFuzzyMatchQuery } from '../helpers/getFuzzyMatchQuery'
 import { searchRestaurants } from '../helpers/searchRestaurants'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { LngLat } from '../types/homeTypes'
-import { appMapStore } from './AppMap'
+import { appMapStore } from './appMapStore'
 import { AutocompleteFrame } from './AutocompleteFrame'
 import { AutocompleteResults } from './AutocompleteResults'
 import { AutocompleteStore, autocompleteSearchStore } from './AutocompletesStore'
@@ -110,7 +110,7 @@ function useSearchQueryEffect(
         if (cuisineName) {
           results = await resolved(() => {
             return [
-              ...searchDishTags(query, cuisineName),
+              ...searchTags(query, cuisineName),
               ...searchRestaurants(query, postion.center, postion.span, cuisineName),
             ]
           })
@@ -184,11 +184,42 @@ function searchAutocomplete(
 ): Promise<AutocompleteItemFull[]> {
   return resolved(() => {
     return [
-      ...searchDishTags(searchQuery),
+      ...searchTags(searchQuery),
       ...searchRestaurants(searchQuery, center, span),
       ...searchCuisines(searchQuery),
+      ...searchUsers(searchQuery),
     ]
   })
+}
+
+function searchUsers(searchQuery: string) {
+  return query
+    .user({
+      where: {
+        _or: [
+          {
+            name: {
+              _ilike: searchQuery,
+            },
+          },
+          {
+            username: {
+              _ilike: searchQuery,
+            },
+          },
+        ],
+      },
+      limit: 3,
+    })
+    .map((r) => {
+      return createAutocomplete({
+        name: r.name || r.username || '',
+        type: 'user',
+        icon: r.avatar || '',
+        description: r.username,
+        slug: r.username || '',
+      })
+    })
 }
 
 function searchCuisines(searchQuery: string) {
@@ -226,9 +257,9 @@ function searchCuisines(searchQuery: string) {
     })
 }
 
-function searchDishTags(searchQuery: string, cuisine?: string) {
+function searchTags(searchQuery: string, cuisine?: string) {
   return [
-    ...searchDishes(
+    ...searchTagsQuery(
       {
         ...(searchQuery && {
           name: {
@@ -254,7 +285,7 @@ function searchDishTags(searchQuery: string, cuisine?: string) {
           }
     ),
     ...(searchQuery
-      ? searchDishes({
+      ? searchTagsQuery({
           name: {
             _ilike: getFuzzyMatchQuery(searchQuery),
           },
@@ -278,13 +309,13 @@ function searchDishTags(searchQuery: string, cuisine?: string) {
   )
 }
 
-const searchDishes = (whereCondition: any, extraQuery: any = {}, limit = 5) => {
+const searchTagsQuery = (whereCondition: any, extraQuery: any = {}, limit = 5) => {
   return query.tag({
     ...extraQuery,
     where: {
       ...whereCondition,
       type: {
-        _eq: 'dish',
+        _neq: 'country',
       },
     },
     order_by: [{ popularity: order_by.desc }],

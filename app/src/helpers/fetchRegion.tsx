@@ -1,10 +1,9 @@
-import { DISH_API_ENDPOINT, SEARCH_DOMAIN } from '@dish/graph'
+import { DISH_API_ENDPOINT } from '@dish/graph'
 import { capitalize } from 'lodash'
-import { UseQueryOptions } from 'react-query'
+import { SWRConfiguration } from 'swr'
 
 import { RegionApiResponse, RegionNormalized } from '../types/homeTypes'
 import { coordsToLngLat, getMinLngLat, polygonToLngLat, roundLngLat } from './mapHelpers'
-import { queryClient } from './queryClient'
 import { useQueryLoud } from './useQueryLoud'
 
 const getKey = (slug?: string | null) => `REGIONQUERY-${slug}`
@@ -15,8 +14,8 @@ export const fetchRegion = async (slug?: string | null) => {
   if (!slug) {
     return null
   }
+  const url = `${DISH_API_ENDPOINT}/region?slug=${encodeURIComponent(slug)}`
   try {
-    const url = `${DISH_API_ENDPOINT}/region?slug=${encodeURIComponent(slug)}`
     const res: RegionApiResponse = await fetch(url).then((x) => x.json())
     const centerAt = res?.centroid?.coordinates
     // console.log('got region response', res, centerAt)
@@ -36,19 +35,20 @@ export const fetchRegion = async (slug?: string | null) => {
             .join(' '),
         }
       }
-      queryClient.setQueryData(getKey(slug), response)
       return response
     }
     return null
   } catch (err) {
-    console.error(err)
+    console.error('error fetching region', err, url)
     return null
   }
 }
 
-export const useRegionQuery = (slug?: string | null, config?: UseQueryOptions<any>) => {
+export const useRegionQuery = (slug?: string | null, config?: SWRConfiguration<any>) => {
   return useQueryLoud<RegionNormalized | null>(getKey(slug), () => fetchRegion(slug), {
     ...config,
-    enabled: !!slug,
+    isPaused() {
+      return !slug
+    },
   })
 }

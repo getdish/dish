@@ -1,6 +1,6 @@
 import { HistoryItem } from '@dish/router'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import _, { clamp, findLast, reverse } from 'lodash'
+import _, { clamp, findLast } from 'lodash'
 import { Keyboard } from 'react-native'
 import { Toast } from 'snackui'
 
@@ -26,7 +26,7 @@ import {
   HomeStatesByType,
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
-import { appMapStore } from './AppMap'
+import { appMapStore } from './appMapStore'
 
 class HomeStore extends Store {
   searchBarTagIndex = 0
@@ -215,7 +215,6 @@ class HomeStore extends Store {
 
   popTo(type: HomeStateItem['type']) {
     const isUpBack = this.getIsUpBack(type)
-    // console.trace('popTo', type, isUpBack)
     if (isUpBack) {
       router.back()
       return
@@ -414,7 +413,7 @@ class HomeStore extends Store {
       // find state to jump to
       let nextState: HomeStateItem | null = null
       if (item.direction === 'backward') {
-        const backStates = this.states.slice(0, this.stateIndex)
+        const backStates = this.states.slice(0, this.stateIndex + 1)
         backStates.reverse() // reverse to find most recent match
         nextState = backStates.find((x) => x.id === item.id) ?? null
       } else {
@@ -427,6 +426,7 @@ class HomeStore extends Store {
       if (!nextState) {
         console.warn('warning! no state found in history, perhaps from old refresh')
         Toast.show('page not found')
+        debugger
         // allow it then to continue to push
         // probably should just move the index +1/-1 to if possible to fallback to something
       } else {
@@ -550,9 +550,9 @@ class HomeStore extends Store {
   }
 
   updateCurrentState<A extends HomeStateItem>(via: string, val: Partial<Omit<A, 'type'>>) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`🏡 updateCurrentState ${via}`, val)
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.log(`🏡 updateCurrentState ${via}`, val)
+    // }
     this.updateHomeState(`updateCurrentState(${via})`, {
       id: this.currentState.id,
       ...val,
@@ -565,8 +565,12 @@ const normalizeItemName = {
 }
 
 export const homeStore = createStore(HomeStore)
+window['homeStore'] = homeStore
 
 export const useHomeStore = (debug?: boolean): HomeStore => {
+  if (debug) {
+    debugger
+  }
   return useStoreInstance(homeStore, debug)
 }
 
@@ -574,13 +578,13 @@ export const useHomeStoreSelector = <A extends (store: HomeStore) => any>(
   selector: A,
   debug?: boolean
 ): A extends (store: HomeStore) => infer B ? B : unknown => {
-  return useStoreInstanceSelector(homeStore, selector, [], debug)
+  return useStoreInstanceSelector(homeStore, selector, debug)
 }
 
-export const useLastHomeState = <Type extends HomeStateItem['type']>(type: Type) => {
-  return useStoreInstanceSelector(homeStore, (x) => _.findLast(x.states, (s) => s.type === type), [
-    type,
-  ])
+export const useLastHomeState = <Type extends HomeStateItem['type']>(...types: Type[]) => {
+  return useStoreInstanceSelector(homeStore, (x) =>
+    _.findLast(x.states, (s) => types.includes(s.type as any))
+  )
 }
 
 export const useHomeCurrentHomeType = () => {
@@ -588,11 +592,11 @@ export const useHomeCurrentHomeType = () => {
 }
 
 export const useIsHomeTypeActive = (type?: HomeStateItem['type']) => {
-  return useStoreInstanceSelector(homeStore, (x) => x.currentState.type === type, [type])
+  return useStoreInstanceSelector(homeStore, (x) => x.currentState.type === type)
 }
 
 export const useHomeStateById = <Type extends HomeStateItem>(id: string) => {
-  return useStoreInstanceSelector(homeStore, (x) => x.allStates[id], [id]) as Type
+  return useStoreInstanceSelector(homeStore, (x) => x.allStates[id]) as Type
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')

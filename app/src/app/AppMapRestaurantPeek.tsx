@@ -4,102 +4,105 @@ import React, { memo, useEffect, useState } from 'react'
 import { Box, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { queryRestaurant } from '../queries/queryRestaurant'
-import { appMapStore } from './AppMap'
+import { appMapStore } from './appMapStore'
 import { useHomeStore } from './homeStore'
 import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'
 
 export const AppMapRestaurantPeek = memo(
   graphql((props: any) => {
-    const home = useHomeStore()
-    const [slug, setSlug] = useState('')
-    const { selectedSlug, hoveredSlug } = useStoreInstanceSelector(appMapStore, (x) => ({
-      selectedSlug: x.selected?.slug || '',
-      hoveredSlug: x.hovered?.slug || '',
-    }))
+    // disable as we're adding floating bar until we decide if/how to restore
+    return null
 
-    // TODO could make hook useMostRecentValue(...args)
+    // const home = useHomeStore()
+    // const [slug, setSlug] = useState('')
+    // const { selectedSlug, hoveredSlug } = useStoreInstanceSelector(appMapStore, (x) => ({
+    //   selectedSlug: x.selected?.slug || '',
+    //   hoveredSlug: x.hovered?.slug || '',
+    // }))
 
-    useEffect(() => {
-      setSlug(selectedSlug)
-    }, [selectedSlug])
+    // // TODO could make hook useMostRecentValue(...args)
 
-    useEffect(() => {
-      setSlug(hoveredSlug)
-    }, [hoveredSlug])
+    // useEffect(() => {
+    //   setSlug(selectedSlug)
+    // }, [selectedSlug])
 
-    const state = home.currentState
+    // useEffect(() => {
+    //   setSlug(hoveredSlug)
+    // }, [hoveredSlug])
 
-    if (state.type === 'restaurant' && slug === state.restaurantSlug) {
-      return null
-    }
+    // const state = home.currentState
 
-    const containerWrap = (children: any) => {
-      return (
-        <Box
-          overflow="visible"
-          minWidth={200}
-          pointerEvents="auto"
-          // flex-wrap spacing
-          marginTop={15}
-          maxWidth="98%"
-          paddingHorizontal={0}
-          paddingVertical={0}
-          className={`animate-up ${slug ? 'active' : 'untouchable'}`}
-          shadowColor="rgba(0,0,0,0.25)"
-          shadowRadius={10}
-        >
-          {children}
-        </Box>
-      )
-    }
+    // if (state.type === 'restaurant' && slug === state.restaurantSlug) {
+    //   return null
+    // }
 
-    if (!slug) {
-      return containerWrap(null)
-    }
+    // const containerWrap = (children: any) => {
+    //   return (
+    //     <Box
+    //       overflow="visible"
+    //       minWidth={200}
+    //       pointerEvents="auto"
+    //       // flex-wrap spacing
+    //       marginTop={15}
+    //       maxWidth="98%"
+    //       paddingHorizontal={0}
+    //       paddingVertical={0}
+    //       className={`animate-up ${slug ? 'active' : 'untouchable'}`}
+    //       shadowColor="rgba(0,0,0,0.25)"
+    //       shadowRadius={10}
+    //     >
+    //       {children}
+    //     </Box>
+    //   )
+    // }
 
-    const [restaurant] = queryRestaurant(slug)
+    // if (!slug) {
+    //   return containerWrap(null)
+    // }
 
-    if (!restaurant) {
-      return null
-    }
+    // const [restaurant] = queryRestaurant(slug)
 
-    return containerWrap(
-      <>
-        <HStack
-          flex={1}
-          paddingHorizontal={8}
-          paddingVertical={8}
-          overflow="hidden"
-          alignItems="center"
-          borderRadius={20}
-        >
-          <VStack flex={5} overflow="hidden">
-            <LinkButton pointerEvents="auto" key={slug} name="restaurant" params={{ slug }}>
-              <Text ellipse selectable fontSize={16} fontWeight="600" paddingRight={30}>
-                {restaurant.name}
-              </Text>
-            </LinkButton>
-          </VStack>
+    // if (!restaurant) {
+    //   return null
+    // }
 
-          {!!restaurant.image && (
-            <>
-              <Spacer size="sm" />
-              <Image
-                resizeMode="cover"
-                source={{ uri: restaurant.image }}
-                style={{
-                  marginVertical: -50,
-                  marginRight: -40,
-                  height: 80,
-                  width: 80,
-                  borderRadius: 100,
-                }}
-              />
-            </>
-          )}
-        </HStack>
-      </>
-    )
+    // return containerWrap(
+    //   <>
+    //     <HStack
+    //       flex={1}
+    //       paddingHorizontal={8}
+    //       paddingVertical={8}
+    //       overflow="hidden"
+    //       alignItems="center"
+    //       borderRadius={20}
+    //     >
+    //       <VStack flex={5} overflow="hidden">
+    //         <LinkButton pointerEvents="auto" key={slug} name="restaurant" params={{ slug }}>
+    //           <Text ellipse selectable fontSize={16} fontWeight="600" paddingRight={30}>
+    //             {restaurant.name}
+    //           </Text>
+    //         </LinkButton>
+    //       </VStack>
+
+    //       {!!restaurant.image && (
+    //         <>
+    //           <Spacer size="sm" />
+    //           <Image
+    //             resizeMode="cover"
+    //             source={{ uri: restaurant.image }}
+    //             style={{
+    //               marginVertical: -50,
+    //               marginRight: -40,
+    //               height: 80,
+    //               width: 80,
+    //               borderRadius: 100,
+    //             }}
+    //           />
+    //         </>
+    //       )}
+    //     </HStack>
+    //   </>
+    // )
   })
 )

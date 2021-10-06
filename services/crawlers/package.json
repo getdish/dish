@@ -1,7 +1,6 @@
 {
   "name": "@dish/crawlers",
   "version": "0.0.1",
-  "types": "src",
   "main": "dist",
   "sideEffects": false,
   "testConfig": {
@@ -12,8 +11,8 @@
   },
   "scripts": {
     "start": "node dist/index.js",
-    "build": "esdx skip-types",
-    "watch": "esdx-watch skip-types",
+    "build": "esdx skip-types legacy",
+    "watch": "esdx-watch skip-types legacy",
     "crawl:one": "ENV=dev ./scripts/run_crawl.sh --one",
     "crawl:one:internal": "ENV=dev ./scripts/run_crawl.sh --one-internal",
     "test": "DISH_DEBUG=1 ./scripts/run_tests.sh",
@@ -38,7 +37,7 @@
     "csv-parse": "^4.9.0",
     "fast-levenshtein": "^3.0.0",
     "form-data": "^4.0.0",
-    "gqty": "1.1.3",
+    "gqty": "2.0.2",
     "graphql": "^15.5.0",
     "imghash": "^0.0.9",
     "js-base64": "^2.5.2",

@@ -15,7 +15,7 @@ import { initialPosition } from '../../../constants/initialHomeState'
 import { allTags } from '../../../helpers/allTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { HomeStateNav } from '../../../types/homeTypes'
-import { appMapStore } from '../../AppMap'
+import { appMapStore } from '../../appMapStore'
 import { homeStore } from '../../homeStore'
 
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
@@ -114,8 +114,8 @@ class SearchPageStore extends Store<{ id: string }> {
         console.warn('not right type?')
         return
       }
-      if (process.env.NODE_ENV === 'development') {
-        if (fail) console.warn('cancelling search')
+      if (fail && process.env.NODE_ENV === 'development') {
+        console.warn('cancelling search')
       }
       if (fail) {
         this.isSearching = false

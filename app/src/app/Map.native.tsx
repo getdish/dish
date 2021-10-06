@@ -1,14 +1,10 @@
 import { series, sleep } from '@dish/async'
-import { DISH_API_ENDPOINT, TILES_HOST } from '@dish/graph'
-import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import { DISH_API_ENDPOINT } from '@dish/graph'
 import MapboxGL from '@react-native-mapbox-gl/maps'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Animated, Dimensions, StyleSheet, useWindowDimensions } from 'react-native'
-import { VStack, useThemeName } from 'snackui'
-import { useTheme } from 'snackui'
-import { useDebounce } from 'snackui'
+import React, { useEffect, useRef, useState } from 'react'
+import { StyleSheet, useWindowDimensions } from 'react-native'
+import { useDebounce, useTheme } from 'snackui'
 
-import { green } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { drawerStore } from './drawerStore'
@@ -134,21 +130,6 @@ export default function Map({
           bounds,
         }}
       />
-
-      {/* <MapboxGL.VectorSource
-        id="regions"
-        url="http://192.168.7.53/api/tile/public.zcta5,public.hrr.json"
-      >
-        <MapboxGL.LineLayer
-          id="terrain-data"
-          sourceID="regions"
-          sourceLayerID="public.zcta5"
-          style={{
-            lineColor: '#000000',
-            lineWidth: 1,
-          }}
-        />
-      </MapboxGL.VectorSource> */}
 
       <MapboxGL.VectorSource
         id="regions"

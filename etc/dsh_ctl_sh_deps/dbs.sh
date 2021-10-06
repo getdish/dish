@@ -58,27 +58,38 @@ function hasura_admin() {
   popd
 }
 
+# helper to run hasura commands
+function hasura_cmd() {
+  pushd services/hasura
+  hasura --skip-update-check "$@" --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
+  popd
+}
+
+HAS_UP_TO_DATE_HASURA_VERSION=$(hasura --skip-update-check version | grep 2.1.0 | wc -l)
+
+function hasura_install_cli() {
+  if ! [ -x "$(command -v hasura)" ]; then
+    curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v2.1.0-beta.1 bash
+  fi
+  if [ "$HAS_UP_TO_DATE_HASURA_VERSION" == 0 ]; then
+    curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v2.1.0-beta.1 bash
+  fi
+}
+
 function migrate_hasura() {
   echo "migrating hasura"
-  if ! [ -x "$(command -v hasura)" ]; then
-    curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v1.3.3 bash
-  fi
-
-  # ensure hasura v2 "default" database in postgres
-  # dsh psql_main -c "SELECT 1 FROM pg_database WHERE datname = 'default'" | grep -q 1 || dsh psql_main -c "CREATE DATABASE default"
-
-  echo "hasura version"
+  hasura_install_cli
   hasura version
-  echo "POSTGRES_DB $POSTGRES_DB"
-  echo "hasura migrate $HASURA_ENDPOINT"
+  if [ "$HAS_UP_TO_DATE_HASURA_VERSION" == 0 ]; then
+    echo "do we need to do anything to update to v2?"
+  fi
+  echo "hasura migrate $HASURA_ENDPOINT / $POSTGRES_DB"
   pushd "$PROJECT_ROOT/services/hasura"
   hasura --skip-update-check migrate apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   echo "hasura metadata"
   hasura --skip-update-check metadata apply --endpoint "$HASURA_ENDPOINT" --admin-secret "$HASURA_GRAPHQL_ADMIN_SECRET"
   popd
-
   echo "hasura init functions"
-
   pushd "$PROJECT_ROOT/services/hasura"
   cat functions/*.sql |
     PGPASSWORD=$POSTGRES_PASSWORD psql \

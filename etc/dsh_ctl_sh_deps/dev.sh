@@ -1,3 +1,22 @@
+function run() {
+  set -a
+  source_env
+  if [ "$DISH_DEBUG" -gt "2" ]; then
+    echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
+  fi
+  pushd "$CWD_DIR"
+  bash -c "$ORIGINAL_ARGS"
+  popd
+}
+
+function docker_exec() {
+  app=${1:-app}
+  shift
+  cmd=$*
+  echo "exec $app: running $cmd"
+  docker exec -it $(docker ps | grep $app | head -n1 | awk '{print $1}') $cmd
+}
+
 function dish_app_generate_tags() {
   export HASURA_ENDPOINT=https://hasura.dishapp.com
   export IS_LIVE=1
@@ -23,41 +42,11 @@ function clean() {
   find $PROJECT_ROOT -name "yarn-error.log" -prune -exec rm -rf '{}' \;
 }
 
-function run() {
-  if [ ! -z "$DEV_USER" ]; then
-    source .env.local
-  fi
-  if [ "$DISH_DEBUG" -gt "2" ]; then
-    echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
-  fi
-  pushd "$CWD_DIR"
-  bash -c "$ORIGINAL_ARGS"
-  popd
-}
-
-function sync_to() {
-  hostvar="$1_HOST"
-  host="${!hostvar}"
-  key="$PROJECT_ROOT/etc/keys/server_rsa"
-  if [ "$host" = "" ] || [ ! -f "$key" ]; then
-    echo "no host or private key $host $key"
-    exit 1
-  fi
-  chmod 600 "$key"
-  echo " ⬆️  syncing . to $host:/app"
-  rsync \
-    -avPq --force \
-    --exclude-from="$(
-      git -C . ls-files --exclude-standard -oi --directory >/tmp/excludes
-      echo /tmp/excludes
-    )" \
-    --exclude='- .git' \
-    -e "ssh -o StrictHostKeyChecking=no -i $key" . "root@$host:/app"
-  echo "synced"
-}
-export -f sync_to
-
-function sync_to_watch() {
-  sync_to "$1"
-  fswatch -0 -o path . | xargs -0 -n1 -I{} sh -c "sync_to $1"
+function run_hasura() {
+  docker run -p 8091:8080 \
+    -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@host.docker.internal:5432/dish \
+    -e HASURA_GRAPHQL_ENABLE_CONSOLE=true \
+    -e HASURA_GRAPHQL_JWT_SECRET='{"type":"HS256", "key":"12345678901234567890123456789012"}' \
+    -e HASURA_GRAPHQL_ADMIN_SECRET=password \
+    fedormelexin/graphql-engine-arm64:v2.1.0-beta.1.cli-migrations-v2
 }

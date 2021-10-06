@@ -2,8 +2,9 @@ import { series, sleep } from '@dish/async'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
 import { Pressable } from 'react-native'
-import { TouchableOpacity, useForceUpdate } from 'snackui'
+import { useForceUpdate } from 'snackui'
 
+import { getLastDrag } from '../../AdvancedGallery'
 import { isWeb } from '../../constants/constants'
 import { addTagsToCache, allTags, getFullTagFromNameAndType } from '../../helpers/allTags'
 import { getNavigateItemForState } from '../../helpers/getNavigateItemForState'
@@ -12,7 +13,7 @@ import { filterToNavigable } from '../../helpers/tagHelpers'
 import { NavigateItem, router } from '../../router'
 import { homeStore } from '../homeStore'
 import { userStore } from '../userStore'
-import { LinkButtonProps, LinkProps, LinkSharedProps } from '../views/LinkProps'
+import { LinkButtonProps, LinkProps } from '../views/LinkProps'
 
 export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
   const forceUpdate = useForceUpdate()
@@ -31,19 +32,22 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
   }, [])
 
   const onPress = (e: any) => {
+    const justDragged = Date.now() - getLastDrag() < 100
+    if (justDragged) {
+      e.preventDefault()
+      e.stopPropagation()
+      console.warn('just dragged')
+      return
+    }
     if (props.stopPropagation) {
       e.stopPropagation()
     }
-
     const shouldPrevent = props.promptLogin ? userStore.promptLogin() : false
-    console.warn('click once', props.promptLogin, props, shouldPrevent)
-
     if (shouldPrevent) {
       e.preventDefault()
       e.stopPropagation()
       return
     }
-
     if (isWeb) {
       if (props.preventNavigate) {
         return
@@ -54,11 +58,8 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
         return
       }
     }
-
     e.preventDefault()
-
     const newLinkProps = getNormalizeLinkProps(props as any, forceUpdate)
-
     if (props.asyncClick) {
       cancel.current = series([
         // just enough time to do a lil animation, but not enough to slow the action, hard to get right
@@ -76,13 +77,14 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
   return {
     onPress,
     navItem,
-    wrapWithLinkElement(children: any) {
+    wrapWithLinkElement(children: any, ref?: any) {
       if (isWeb) {
         const element = props.tagName ?? 'a'
         const href = props.href ?? router.getPathFromParams(navItem)
         return React.createElement(
           element,
           {
+            ref,
             onClick: onPress,
             className: `a-link display-contents cursor-pointer ${props.className ?? ''}`,
             target: props.target,
@@ -98,6 +100,7 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
       // return children
       return (
         <Pressable
+          ref={ref}
           style={styleProps}
           onStartShouldSetResponderCapture={() => true}
           onPress={onPress}

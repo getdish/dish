@@ -1,39 +1,97 @@
+@font-face {
+  font-family: 'Magnat';
+  font-weight: 800;
+  src: url('../assets/fonts/Magnat.woff') format('woff');
+}
+
+
+@font-face {
+  font-family: 'WhyteHeavy';
+  font-weight: 800;
+  src: url('../assets/fonts/WhyteHeavy.woff2') format('woff2'),
+    url('../assets/fonts/WhyteHeavy.woff') format('woff');
+}
+
+.font-title {
+  font-family: 'WhyteHeavy', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Helvetica Neue', sans-serif;
+}
+
 /* default to not selectable like react native */
 .snack-text, span {
   user-select: none;
   -webkit-user-select: none;
 }
 
-/* tmp bugfix until i can figure out why tis excluded in prod... */
-._paRi-14px{padding-right:14px;}
-
 html,
 body {
-  max-height: 100vh;
-  max-width: 100vw;
-  height: 100%;
-  width: 100%;
   overflow: hidden;
   margin: 0px;
   padding: 0px;
-  background-color: #000;
+  background-color: #fff;
+  pointer-events: none;
+  inset: 0;
 }
 
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background-color: #000;
+  }
+}
+
+html, body, #root {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  height: -webkit-fill-available;
+  max-height: -webkit-fill-available;
+}
+
+#root > div {
+  overflow: hidden;
+}
+
+html, body {
+  -webkit-overflow-scrolling: none;
+}
+
+/* 
+body {
+  max-height: calc(100vh + 0.5px);
+  height: calc(100vh + 0.5px);
+} */
+
+/* 
+body.modal-open {
+  max-height: 100%;
+  height: 100%;
+} */
+
 #root {
-  flex-shrink: 0;
-  flex-basis: auto;
-  flex-grow: 1;
   display: flex;
-  flex: 1;
   z-index: 0;
   overflow: hidden;
   position: relative;
-  max-height: 100vh;
-  position: absolute;
-  inset: 0;
-  /* ios safari fix */
-  height: 100%;
-  width: 100%;
+}
+
+html.mobile-layout, html.mobile-layout body, html.mobile-layout #root {
+  min-height: 100vh;
+  height: auto !important;
+  max-height: max-content;
+  pointer-events: auto;
+  overflow: visible;
+}
+
+html.mobile-layout, html.mobile-layout body {
+  -webkit-overflow-scrolling: touch;
+}
+
+html.mobile-layout #root {
+  overflow: visible;
+  flex: 0;
+  max-width: 100vh;
+  overflow: hidden;
 }
 
 * {
@@ -57,7 +115,7 @@ html {
 }
 
 body {
-  background: #000;
+  /* background: #000; */
   display: flex;
   overscroll-behavior-y: none;
   -ms-overflow-style: scrollbar;
@@ -68,7 +126,7 @@ pre,
 input,
 textarea {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    'Ubuntu', 'Helvetica Neue', sans-serif;
 }
 
 a {
@@ -212,22 +270,6 @@ textarea {
   text-overflow: ellipsis;
 }
 
-
-.theme--light .searchbar-container  ::placeholder {
-  color: rgba(250, 250, 250, 0.5);
-  text-overflow: ellipsis;
-}
-
-.theme--light ::placeholder {
-  color: rgba(50, 50, 50, 0.5);
-  text-overflow: ellipsis;
-}
-
-.theme--dark ::placeholder {
-  color: rgba(230, 230, 230, 0.5);
-  text-overflow: ellipsis;
-}
-
 .display-contents {
   display: contents;
 }
@@ -338,6 +380,10 @@ li {
 
 .unselectable-all * {
   user-select: none !important;
+}
+
+.unselectable-all .hide-while-unselectable {
+  display: none;
 }
 
 .searchbar-inner-shadow {
@@ -612,39 +658,41 @@ mark {
   display: none;
 }
 
-.hover-parent:hover .hover-100-opacity-child,
-.hover-parent .hover-100-opacity-child:hover {
-  opacity: 1;
-}
-
-.hover-parent:hover .hover-slide-up-child,
-.hover-parent .hover-slide-up-child:hover {
-  transform: translateY(0);
-}
-
-.hover-parent:hover .hover-75-opacity-child,
-.hover-parent .hover-75-opacity-child:hover {
-  opacity: 0.75;
-}
-
-.hover-parent:hover .hover-90-opacity-child,
-.hover-parent .hover-90-opacity-child:hover {
-  opacity: 0.9;
-}
-
-.hover-parent:hover .hover-50-opacity-child,
-.hover-parent .hover-50-opacity-child:hover {
-  opacity: 0.5;
-}
-
-.hover-parent:hover .hover-25-opacity-child,
-.hover-parent .hover-25-opacity-child:hover {
-  opacity: 0.25;
-}
-
-.hover-parent:hover .hover-0-opacity-child,
-.hover-parent .hover-0-opacity-child:hover {
-  opacity: 0;
+@media not all and (hover: none) {
+  .hover-parent:hover .hover-100-opacity-child,
+  .hover-parent .hover-100-opacity-child:hover {
+    opacity: 1;
+  }
+  
+  .hover-parent:hover .hover-slide-up-child,
+  .hover-parent .hover-slide-up-child:hover {
+    transform: translateY(0);
+  }
+  
+  .hover-parent:hover .hover-75-opacity-child,
+  .hover-parent .hover-75-opacity-child:hover {
+    opacity: 0.75;
+  }
+  
+  .hover-parent:hover .hover-90-opacity-child,
+  .hover-parent .hover-90-opacity-child:hover {
+    opacity: 0.9;
+  }
+  
+  .hover-parent:hover .hover-50-opacity-child,
+  .hover-parent .hover-50-opacity-child:hover {
+    opacity: 0.5;
+  }
+  
+  .hover-parent:hover .hover-25-opacity-child,
+  .hover-parent .hover-25-opacity-child:hover {
+    opacity: 0.25;
+  }
+  
+  .hover-parent:hover .hover-0-opacity-child,
+  .hover-parent .hover-0-opacity-child:hover {
+    opacity: 0;
+  }
 }
 
 .mask-image div {

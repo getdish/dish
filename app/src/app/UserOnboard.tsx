@@ -1,11 +1,13 @@
-import { Auth, graphql, useRefetch } from '@dish/graph'
-import React, { useEffect, useRef, useState } from 'react'
+import { graphql, useRefetch } from '@dish/graph'
+import React, { useEffect, useRef } from 'react'
 import { HStack, Input, Paragraph, Spacer, Text, TextArea, Toast, VStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { queryUser } from '../queries/queryUser'
 import { characters } from './home/user/characters'
 import { UserAvatar } from './home/user/UserAvatar'
+import { useStateSynced } from './hooks/useStateSynced'
+import { useImageUploadForm } from './useImageUploadForm'
 import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
 import { SmallButton } from './views/SmallButton'
@@ -14,27 +16,25 @@ export const UserOnboard = graphql(
   ({ hideLogo, onFinish }: { hideLogo?: boolean; onFinish?: Function }) => {
     const refetch = useRefetch()
     const userStore = useUserStore()
-    const imageFormRef = useRef(null)
+    const uploadForm = useImageUploadForm('avatar')
     const formState = useRef({
       name: userStore.user?.name ?? '',
       about: userStore.user?.about ?? '',
       location: userStore.user?.location ?? '',
     })
-    const [charIndex, setCharIndex] = useState(userStore.user?.charIndex ?? 0)
+    const userCharIndex = userStore.user?.charIndex ?? 0
+    const [charIndex, setCharIndex] = useStateSynced(userCharIndex)
     const username = userStore.user?.username ?? ''
     const user = queryUser(username)
     const inputAvatar = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
       const avatar = inputAvatar.current
-      const form = imageFormRef.current
-      if (!avatar || !form) return
+      if (!avatar) return
 
       const handleUpload = async (e) => {
-        const formData = new FormData(form!)
         try {
-          Toast.show('Uploading...')
-          const avatar = await Auth.uploadAvatar(formData)
+          const avatar = await uploadForm.upload()
           if (avatar) {
             userStore.refresh()
             refetch()
@@ -43,6 +43,7 @@ export const UserOnboard = graphql(
             Toast.error('Error saving  image!')
           }
         } catch (err) {
+          console.error('error', err.message, err.stack)
           Toast.show(`Error saving image: ${err.message.slice(0, 100)}...`)
         }
       }
@@ -52,7 +53,7 @@ export const UserOnboard = graphql(
       return () => {
         avatar.removeEventListener('change', handleUpload)
       }
-    }, [imageFormRef.current, inputAvatar.current])
+    }, [inputAvatar.current])
 
     return (
       <>
@@ -83,7 +84,7 @@ export const UserOnboard = graphql(
             {isWeb && (
               <form
                 id="userform"
-                ref={imageFormRef}
+                ref={uploadForm.ref}
                 style={{
                   maxWidth: 150,
                 }}
@@ -119,7 +120,6 @@ export const UserOnboard = graphql(
             defaultValue={formState.current.name}
             width="100%"
             onChangeText={(text) => {
-              console.log('changing name to be', text)
               formState.current.name = text
             }}
           />
@@ -143,7 +143,6 @@ export const UserOnboard = graphql(
                     backgroundColor: i === charIndex ? '#fff' : '#444',
                   }}
                   onPress={() => {
-                    console.log('setting', i)
                     setCharIndex(i) // TODO can remove if gqty works
                   }}
                 >

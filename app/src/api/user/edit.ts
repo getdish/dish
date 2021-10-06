@@ -1,10 +1,11 @@
 import { useRouteBodyParser } from '@dish/api'
 import { EditUserResponse, userUpdate } from '@dish/graph'
 
-import { ensureUserOnRoute, secureRoute } from './_user'
+import { ensureSecureRoute, ensureUserOnRoute } from './_user'
 
-export default secureRoute('user', async (req, res) => {
-  await useRouteBodyParser(req, res, { json: { limit: 2048 } })
+export default async (req, res) => {
+  await useRouteBodyParser(req, res, { json: { limit: 4048 } })
+  await ensureSecureRoute(req, res, 'user')
   const user = await ensureUserOnRoute(req)
   const { about, location, charIndex, name } = req.body
   const nextUser = {
@@ -32,4 +33,4 @@ export default secureRoute('user', async (req, res) => {
     res.status(409).json({ error: e.message })
     return
   }
-})
+}

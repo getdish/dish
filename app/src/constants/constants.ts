@@ -26,7 +26,7 @@ export const logoSmHeight = Math.round(894 * 0.069)
 export const logoXsWidth = Math.round(1024 * 0.044)
 export const logoXsHeight = Math.round(1024 * 0.044)
 
-export const pageWidthMax = 2000
+export const pageWidthMax = 1800
 
 export const searchBarBorderRadius = 7
 export const searchBarTopOffset = 3
@@ -52,7 +52,7 @@ export const cardFrameBorderRadius = 16
 export const cardFrameWidth = 170
 export const cardFrameHeight = 220
 export const cardFrameWidthLg = 180
-export const cardFrameHeightLg = 240
+export const cardFrameHeightLg = 250
 export const cardFrameWidthSm = Math.round(cardFrameWidth * 0.9)
 export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.9)
 

@@ -9,30 +9,20 @@ export const InputTagButton = (props: TagButtonProps & { isActive?: boolean }) =
   const theme = useTheme()
   return (
     // makes x visible in dark mode
-    <Theme name="light">
-      <TagButton
-        size="sm"
-        closable
-        subtleIcon
-        color="#222"
-        backgroundColor="#fff"
-        hoverStyle={{
-          backgroundColor: '#ffffffee',
-        }}
-        pressStyle={{
-          backgroundColor: '#ffffff99',
-        }}
-        elevation={1}
-        hideRating
-        hideRank
-        {...(props.isActive && {
+    <TagButton
+      size="sm"
+      closable
+      subtleIcon
+      elevation={1}
+      hideRating
+      hideRank
+      {...(props.isActive && {
+        backgroundColor: theme.backgroundColor,
+        hoverStyle: {
           backgroundColor: theme.backgroundColor,
-          hoverStyle: {
-            backgroundColor: theme.backgroundColor,
-          },
-        })}
-        {...props}
-      />
-    </Theme>
+        },
+      })}
+      {...props}
+    />
   )
 }

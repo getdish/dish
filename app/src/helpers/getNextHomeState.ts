@@ -7,7 +7,6 @@ import { initialHomeState } from '../constants/initialHomeState'
 import { HomeStateItem, HomeStateNav, HomeStateTagNavigable } from '../types/homeTypes'
 import { allTags, allTagsNameToSlug, tagNameKey } from './allTags'
 import { getActiveTagSlugs } from './getActiveTagSlugs'
-import { isHomeState, isSearchState } from './homeStateHelpers'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
 const ensureUnique = new Set(['lense', 'country', 'dish'])

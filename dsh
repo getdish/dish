@@ -15,18 +15,21 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 export PROJECT_ROOT=$SCRIPT_DIR
 
+# think we can just do this in git
+
 if [ "$DEV_USER" = "tom@tombh.co.uk" ]; then
+  chmod 600 $PROJECT_ROOT/etc/keys/server_rsa
   DISH_ENV="${DISH_ENV:-development}"
   IS_LOCAL="${IS_LOCAL:-1}"
   DISH_DEBUG=${DISH_DEBUG:-"0"}
   RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
-  chmod 600 $PROJECT_ROOT/etc/keys/server_rsa
 fi
 
 if [ "$DEV_USER" = "natewienert@gmail.com" ]; then
+  chmod 600 $PROJECT_ROOT/etc/keys/server_rsa
   export CLEAR_JOBS
   RUN_WITHOUT_WORKER=${RUN_WITHOUT_WORKER:-true}
-  DISH_DEBUG=${DISH_DEBUG:-"2"}
+  DISH_DEBUG=${DISH_DEBUG:-"1"}
 fi
 
 CWD_DIR=$(pwd)
@@ -59,7 +62,7 @@ popd >/dev/null
 
 function_to_run=$1
 
-if [ "$DISH_DEBUG" -gt "0" ]; then
+if [ "$DISH_DEBUG" == "1" ] || [ "$LOG_ENV" == "0" ]; then
   echo "dsh -- env $DISH_ENV in $PROJECT_ROOT running $function_to_run $GIT_COMMIT"
 fi
 

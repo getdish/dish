@@ -1,16 +1,15 @@
 {
   "name": "snackui-loader",
-  "version": "0.16.1",
+  "version": "0.18.3",
   "main": "dist",
-  "types": "types.d.ts",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch"
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy"
   },
   "dependencies": {
-    "@dish/esdx": "^0.0.9",
-    "@snackui/static": "^0.16.1",
+    "@dish/esdx": "^0.3.0",
+    "@snackui/static": "^0.18.3",
     "fs-extra": "^9.1.0",
     "loader-utils": "^2.0.0",
     "lodash": "^4.17.21"

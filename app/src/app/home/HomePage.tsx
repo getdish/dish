@@ -1,13 +1,11 @@
 import { slugify } from '@dish/graph'
 import { useStore, useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo, useEffect, useMemo } from 'react'
+import React, { Suspense, memo, useEffect } from 'react'
 import {
   AbsoluteVStack,
   AnimatedVStack,
-  HStack,
   LoadingItems,
   Paragraph,
-  Spacer,
   Text,
   Theme,
   VStack,
@@ -18,12 +16,9 @@ import {
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { getDefaultLocation, setDefaultLocation } from '../../constants/initialHomeState'
 import { useRegionQuery } from '../../helpers/fetchRegion'
-import { getColorsForName } from '../../helpers/getColorsForName'
-import { queryClient } from '../../helpers/queryClient'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { cancelUpdateRegion } from '../AppMap'
-import { autocompletesStore } from '../AutocompletesStore'
+import { cancelUpdateRegion } from '../appMapStore'
 import { homeStore, useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
@@ -32,18 +27,15 @@ import { IntroModalStore } from '../IntroModalStore'
 import { PortalItem } from '../Portal'
 import { CloseButton } from '../views/CloseButton'
 import { ContentScrollView } from '../views/ContentScrollView'
-import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { PageHead } from '../views/PageHead'
 import { PaneControlButtons } from '../views/PaneControlButtons'
-import { SlantedTitle } from '../views/SlantedTitle'
 import { HomePageFeed } from './HomePageFeed'
 import { homePageStore } from './homePageStore'
 import { HomeStackViewProps } from './HomeStackViewProps'
-import { HomeTopSearches } from './HomeTopSearches'
 import { PageContentWithFooter } from './PageContentWithFooter'
 
-type Props = HomeStackViewProps<HomeStateItemHome>
+export type Props = HomeStackViewProps<HomeStateItemHome>
 
 export default memo(function HomePage(props: Props) {
   const media = useMedia()
@@ -69,12 +61,13 @@ const HomePageContent = (props: Props) => {
   const theme = useTheme()
   const enabled = isActive && !!state.region
   const regionResponse = useRegionQuery(state.region, {
-    enabled,
-    suspense: true,
+    isPaused() {
+      return !enabled
+    },
+    suspense: false,
   })
-  // const [position, setPosition] = useState<MapPosition>(initialPosition)
-  const regionColors = getColorsForName(state.region)
   const region = regionResponse.data
+  // const [position, setPosition] = useState<MapPosition>(initialPosition)
   const { results } = useStoreInstance(homePageStore)
 
   // region based effects
@@ -97,16 +90,16 @@ const HomePageContent = (props: Props) => {
     // }
   }, [isActive, JSON.stringify([region])])
 
-  useEffect(() => {
-    return () => {
-      queryClient.cancelQueries(state.region)
-    }
-  }, [state.region])
+  // useEffect(() => {
+  //   return () => {
+  //     queryClient.cancelQueries(state.region)
+  //   }
+  // }, [state.region])
 
   // set location for next reload + move map on initial load
   useEffect(() => {
     if (!isActive) return
-    if (regionResponse.status !== 'success') return
+    if (regionResponse.error) return
     if (!region) return
     const next = region.slug ?? slugify(region.name)
     const prev = getDefaultLocation().region
@@ -133,50 +126,10 @@ const HomePageContent = (props: Props) => {
     }
   }, [isActive, state.region])
 
-  const regionName = region?.name || state.curLocName || '...'
-  const media = useMedia()
-
   // if (process.env.NODE_ENV === 'development') {
   //   // prettier-ignore
   //   console.log('👀 HomePage', { enabled, regionResponse, position, item, region, state, isActive })
   // }
-
-  const homeHeaderContent = useMemo(() => {
-    return (
-      <>
-        <HomeTopSpacer />
-
-        <HStack marginVertical={-16}>
-          <ContentScrollViewHorizontal>
-            <HStack alignItems="center" paddingVertical={media.sm ? 10 : 15} paddingHorizontal={10}>
-              <Link onPress={() => autocompletesStore.setTarget('location')}>
-                <SlantedTitle
-                  color={regionColors.color}
-                  alignSelf="center"
-                  size={
-                    regionName.length > 24
-                      ? 'xxxs'
-                      : regionName.length > 17
-                      ? 'xxs'
-                      : regionName.length > 14
-                      ? 'xs'
-                      : regionName.length > 8
-                      ? 'sm'
-                      : 'md'
-                  }
-                >
-                  {regionName}
-                </SlantedTitle>
-              </Link>
-
-              <HomeTopSearches />
-            </HStack>
-          </ContentScrollViewHorizontal>
-        </HStack>
-        <Spacer size="md" />
-      </>
-    )
-  }, [regionColors.color, regionName])
 
   const wasEverActive = useLastValueWhen(() => props.isActive, !props.isActive)
 
@@ -229,8 +182,7 @@ const HomePageContent = (props: Props) => {
         alignSelf="flex-end"
       >
         <ContentScrollView id="home">
-          {homeHeaderContent}
-
+          <HomeTopSpacer />
           <PageContentWithFooter>
             {wasEverActive && <HomePageFeed {...homePageFeedProps} />}
           </PageContentWithFooter>
@@ -300,5 +252,5 @@ const Inner = () => {
 
 const HomeTopSpacer = () => {
   const media = useMedia()
-  return <VStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight + 10} />
+  return <VStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight + 20} />
 }

@@ -4,7 +4,6 @@ import { capitalize } from 'lodash'
 
 export default route(async (req, res) => {
   const slug = req.query['slug'] ?? ''
-  console.log('querying db...')
   const { rows } = await main_db.query(regionsQuery, [slug])
   const data = rows[0]?.json_build_object
   if (data) {
@@ -19,6 +18,7 @@ export default route(async (req, res) => {
         .map((x) => capitalize(x))
         .join(' ')
     }
+    console.log('data', data)
     res.send(data)
   } else {
     res.sendStatus(500)

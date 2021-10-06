@@ -12,15 +12,15 @@ export const RestaurantAddTagButton = ({ restaurant }: { restaurant: Restaurant 
     <Popover
       isOpen={isOpen}
       onChangeOpen={setIsOpen}
-      contents={
-        <Box>
-          <LenseButtonBar />
-        </Box>
-      }
+      trigger={(props) => (
+        <LinkButton marginTop={4} {...props} onPress={() => setIsOpen((x) => !x)}>
+          <Plus size={12} color="#555" />
+        </LinkButton>
+      )}
     >
-      <LinkButton marginTop={4} onPress={() => setIsOpen((x) => !x)}>
-        <Plus size={12} color="#555" />
-      </LinkButton>
+      <Box>
+        <LenseButtonBar />
+      </Box>
     </Popover>
   )
 }

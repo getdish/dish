@@ -54,12 +54,14 @@ export const useInputStoreLocation = () => useStoreInstance(inputStoreLocation)
 export const inputStoreSearch = createStore(InputStore, { name: 'search' })
 export const useInputStoreSearch = () => useStoreInstance(inputStoreSearch)
 
-export const setNodeOnInputStore = (inputStore: InputStore) =>
-  debounce((view: any) => {
-    if (!view) return
-    const next = inputGetNode(view)
-    if (!next || next === inputStore.node) {
-      return
-    }
-    inputStore.setNode(next)
-  })
+const setNodeDebounced = debounce((inputStore, view: any) => {
+  if (!view) return
+  const next = inputGetNode(view)
+  if (!next || next === inputStore.node) {
+    return
+  }
+  inputStore.setNode(next)
+})
+
+export const setNodeOnInputStore = (inputStore: InputStore, view: any) =>
+  setNodeDebounced(inputStore, view)

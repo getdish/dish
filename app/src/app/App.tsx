@@ -4,6 +4,7 @@ import { AbsoluteVStack, LoadingItems, ToastRoot, useTheme } from 'snackui'
 
 import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
+import { AppHomeMobileWeb } from './AppHomeMobileWeb'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
@@ -11,12 +12,23 @@ import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AppSearchBarFloating } from './AppSearchBarFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
 import { Home } from './home/Home'
+import { RootPortalProvider } from './Portal'
 import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
+import { useIsMobilePhone } from './useIsMobilePhone'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
 export function App() {
+  // useEffect(() => {
+  //   geoSearch({
+  //     query: 'boba',
+  //     ...homeStore.lastHomeOrSearchState.center!,
+  //   }).then((res) => {
+  //     console.log('got', res)
+  //   })
+  // }, [])
+
   // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {
     useEffect(() => {
@@ -54,11 +66,22 @@ export function App() {
 
 function AppHomeContent(props: { children?: any }) {
   const theme = useTheme()
+  const isMobileWeb = useIsMobilePhone()
+
+  if (isMobileWeb) {
+    return (
+      <>
+        <AppHomeMobileWeb />
+      </>
+    )
+  }
 
   return (
     <>
       {/* background */}
       <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
+
+      <RootPortalProvider />
 
       <Suspense fallback={null}>
         <Home />

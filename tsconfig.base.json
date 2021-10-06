@@ -1,14 +1,34 @@
-// dont do any references, incremental here
-// they dont place nice with paths
-// https://github.com/IBM/slack-wrench/pull/44
-
 {
-  "extends": "./tsconfig.base.parent.json",
   "compilerOptions": {
-    // baseUrl + paths must both be set
-    "baseUrl": ".",
-    "paths": {
-      "@dish/*": ["packages/*"]
-    }
+    "importHelpers": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "preserveSymlinks": true,
+    "incremental": true,
+    "jsx": "react",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "noEmitOnError": false,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "experimentalDecorators": true,
+    "useUnknownInCatchVariables": false,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
+    // "strict": true,
+    "strictNullChecks": true,
+    "target": "es2019",
+    "types": ["node", "jest"],
+    "lib": ["es2019", "dom", "esnext"]
+  },
+  "exclude": ["_"],
+  "typeAcquisition": {
+    "enable": true
   }
 }

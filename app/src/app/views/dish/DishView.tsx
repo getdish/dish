@@ -1,4 +1,4 @@
-import { restaurant } from '@dish/graph/types'
+import { restaurant } from '@dish/graph'
 import { supportsTouchWeb } from '@dish/helpers'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
@@ -198,7 +198,7 @@ const DishViewContent = (props: DishViewProps) => {
           style={{
             width: size,
             height: size,
-            borderRadius: cardFrameBorderRadius,
+            borderRadius: 1000,
           }}
           resizeMode="cover"
         />
@@ -239,7 +239,8 @@ const DishViewContent = (props: DishViewProps) => {
     <SimpleCard
       backgroundColor={backgroundColor}
       borderColor={selected ? '#000' : 'transparent'}
-      borderWidth={1}
+      borderRadius={1000}
+      // borderWidth={1}
       pointerEvents="auto"
       size={size < 40 ? 'sm' : 'md'}
       {...rest}

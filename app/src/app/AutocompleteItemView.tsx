@@ -1,14 +1,13 @@
 import { Plus } from '@dish/react-feather'
 import React, { memo } from 'react'
-import { Image, Keyboard } from 'react-native'
+import { Keyboard } from 'react-native'
 import { HStack, Spacer, Text, Theme, VStack, useDebounce, useTheme } from 'snackui'
 
 import { AutocompleteItem } from '../helpers/createAutocomplete'
-import { rgbString } from '../helpers/rgb'
 import { AutocompleteSelectCb } from './AutocompleteResults'
 import { ShowAutocomplete, autocompletesStore } from './AutocompletesStore'
 import { CircleButton } from './home/restaurant/CircleButton'
-import { useCurrentLenseColor } from './hooks/useCurrentLenseColor'
+import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'
 
 export const AutocompleteItemView = memo(
@@ -39,7 +38,6 @@ export const AutocompleteItemView = memo(
   }) => {
     const showLocation = target === 'location'
     const theme = useTheme()
-    const themeColor = rgbString(useCurrentLenseColor().rgb)
     const hideAutocompleteSlow = useDebounce(() => autocompletesStore.setVisible(false), 50)
     const plusButtonEl = showAddButton ? (
       <>
@@ -73,10 +71,10 @@ export const AutocompleteItemView = memo(
         alignSelf="stretch"
         justifyContent="flex-start"
         minHeight={46}
-        backgroundColor={isActive ? themeColor : 'transparent'}
+        backgroundColor={isActive ? '#000' : 'transparent'}
         borderRadius={0}
         hoverStyle={{
-          backgroundColor: isActive ? themeColor : theme.backgroundColorDarker,
+          backgroundColor: isActive ? '#000' : theme.backgroundColorDarker,
         }}
         {...(hideBackground && {
           backgroundColor: 'transparent',
@@ -91,17 +89,7 @@ export const AutocompleteItemView = memo(
         }}
         stopPropagation
         preventNavigate={preventNavigate}
-        {...(!showLocation &&
-          result?.type !== 'orphan' && {
-            tag: result,
-          })}
-        {...(result.type == 'restaurant' && {
-          tag: null,
-          name: 'restaurant',
-          params: {
-            slug: result.slug,
-          },
-        })}
+        {...getLinkForAutocomplete(result)}
         noTextWrap
       >
         <HStack alignItems="center" width="100%">
@@ -137,3 +125,28 @@ export const AutocompleteItemView = memo(
     )
   }
 )
+
+function getLinkForAutocomplete(item: AutocompleteItem) {
+  if (item.type == 'user') {
+    return {
+      name: 'user',
+      params: {
+        username: item.slug,
+      },
+    } as const
+  }
+  if (item.type == 'restaurant') {
+    return {
+      name: 'restaurant',
+      params: {
+        slug: item.slug,
+      },
+    } as const
+  }
+  if (item?.type !== 'orphan') {
+    return {
+      tag: item,
+    } as const
+  }
+  return null
+}

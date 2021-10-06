@@ -1,7 +1,7 @@
 import React, { Suspense, memo, useContext } from 'react'
 import { AbsoluteVStack, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
 
-import { isWeb } from '../../../constants/constants'
+import { isNative, isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
@@ -10,10 +10,8 @@ import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewH
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { Arrow } from './Arrow'
-import { SearchForkListButton } from './SearchForkListButton'
 import { SearchPageListsRow } from './SearchPageListsRow'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
-import { SearchPageResultsInfoBox } from './SearchPageResultsInfoBox'
 import { SearchPageScoring } from './SearchPageScoring'
 
 export const SearchHeader = memo(() => {
@@ -39,38 +37,41 @@ export const SearchHeader = memo(() => {
       <ContentScrollViewHorizontalFitted width={width} setWidth={setWidthDebounce}>
         <VStack width="100%">
           <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
-          <HStack position="relative">
-            <VStack zIndex={10} x={-10}>
+          <HStack position="relative" zIndex={100}>
+            <VStack position="relative" zIndex={100} x={-10}>
               <VStack paddingHorizontal={16} paddingVertical={8} marginBottom={-3}>
                 <VStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 15 : 20}>
                   <Text
+                    className="font-title"
+                    fontFamily="WhyteHeavy"
                     color={theme.color}
                     marginTop={-4}
                     marginBottom={0}
-                    height={28}
                     fontWeight="700"
-                    fontSize={title.length < 20 ? 27 : 24}
+                    fontSize={title.length < 20 ? 40 : 34}
                     {...(media.sm && {
-                      fontSize: title.length < 20 ? 24 : 18,
+                      fontSize: title.length < 20 ? 36 : 30,
                     })}
+                    height={28}
                     lineHeight={28}
+                    {...(isNative && {
+                      height: 38,
+                      lineHeight: 38,
+                    })}
                   >
                     {title.trim()}
-                  </Text>
-                  {!!subTitle && (
-                    <>
-                      <Spacer size="xs" />
+                    {!!subTitle && (
                       <Text
                         color={rgbString(lenseColor)}
                         opacity={0.8}
                         className="nobreak"
-                        fontSize={title.length < 25 ? 20 : 16}
+                        fontSize={title.length < 25 ? 24 : 20}
                         fontWeight="300"
                       >
-                        {subTitle.trim()}
+                        &nbsp; in {subTitle.trim()}
                       </Text>
-                    </>
-                  )}
+                    )}
+                  </Text>
                 </VStack>
               </VStack>
               <Spacer size="xs" />

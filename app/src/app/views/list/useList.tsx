@@ -1,15 +1,22 @@
-import { client, reviewUpsert, review_constraint, useRefetch } from '@dish/graph'
+import {
+  client,
+  list,
+  list_restaurant,
+  order_by,
+  reviewUpsert,
+  review_constraint,
+  useRefetch,
+} from '@dish/graph'
 import { useEffect, useState } from 'react'
 import { Toast } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
-import { queryList } from '../../../queries/queryList'
-import { getListColors } from '../../home/list/listColors'
+import { useListColors } from '../../home/list/listColors'
 import { useUserStore, userStore } from '../../userStore'
-import { ListIDProps } from './ListCard'
 
-export const useList = ({ slug }: ListIDProps) => {
-  const [list] = slug ? queryList(slug) : []
+export type ListQueryProps = { list: list; query: list[] | list_restaurant[] }
+
+export const useList = ({ list }: ListQueryProps) => {
   const colors = getColorsForName(list?.name ?? '')
   const photos = list
     ?.restaurants({
@@ -17,20 +24,18 @@ export const useList = ({ slug }: ListIDProps) => {
       where: {
         restaurant: {
           image: {
-            _neq: null,
+            _is_null: false,
           },
         },
       },
     })
     .map((x) => x.restaurant.image)
-  const backgroundColor = getListColors(list?.color) ?? colors.color
+  const backgroundColor = useListColors(list?.color) ?? colors.color
   return { list, colors, photos, backgroundColor }
 }
 
-export const useListFavorite = ({ slug }: { slug: string }) => {
+export const useListFavorite = ({ query, list }: ListQueryProps) => {
   const doRefetch = useRefetch()
-  const listQuery = slug ? queryList(slug) : []
-  const list = listQuery[0]
   const listId = list?.id
   const { user } = useUserStore()
   const userId = user?.id
@@ -55,10 +60,8 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
           user_id: {
             _eq: userId,
           },
-          favorited: {
-            _eq: true,
-          },
         },
+        order_by: [{ authored_at: order_by.desc }],
       })
     : null
   const review = reviewQuery?.[0]
@@ -96,7 +99,7 @@ export const useListFavorite = ({ slug }: { slug: string }) => {
   }
 
   const refetch = () => {
-    doRefetch(listQuery)
+    doRefetch(query)
     doRefetch(reviewQuery)
   }
 

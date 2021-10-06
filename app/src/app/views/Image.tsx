@@ -1,4 +1,4 @@
-import { ImageProps, Image as RNImage } from 'react-native'
+import { ImageProps, Image as RNImage, View } from 'react-native'
 
 export function Image(props: ImageProps) {
   const uri = props.source?.['uri']
@@ -6,6 +6,5 @@ export function Image(props: ImageProps) {
     console.warn('invalid image uri', props)
     return null
   }
-
   return <RNImage {...props} />
 }

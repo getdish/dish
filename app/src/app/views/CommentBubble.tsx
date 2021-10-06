@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import {
   AbsoluteVStack,
+  Circle,
   HStack,
   Modal,
   Paragraph,
@@ -44,6 +45,7 @@ export type CommentBubbleProps = Omit<StackProps, 'children'> & {
   chromeless?: boolean
   hideMeta?: boolean
   source?: string
+  showChildren?: boolean
   size?: 'lg' | 'md'
   color?: string
 }
@@ -82,7 +84,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
           overlayDismisses
           visible
           width="98%"
-          maxWidth={800}
+          maxWidth={760}
           maxHeight="90%"
           onDismiss={() => setIsExpanded(false)}
         >
@@ -100,42 +102,43 @@ export const CommentBubble = (props: CommentBubbleProps) => {
   )
 }
 
-function CommentBubbleContents({
-  title,
-  name,
-  username,
-  avatar: avatarProp,
-  ellipseContentAbove,
-  bubbleHeight,
-  expandable,
-  text,
-  before,
-  hideMeta,
-  after,
-  afterName,
-  chromeless,
-  date,
-  onExpand,
-  expanded,
-  size,
-  // belowContent,
-  source,
-  avatarBackgroundColor,
-  scrollable,
-  children,
-  color,
-}: CommentBubbleProps & {
-  onExpand?: () => any
-  expanded?: boolean
-  scrollable?: boolean
-}) {
+function CommentBubbleContents(
+  props: CommentBubbleProps & {
+    onExpand?: () => any
+    expanded?: boolean
+    scrollable?: boolean
+  }
+) {
+  const {
+    title,
+    name,
+    username,
+    avatar: avatarProp,
+    ellipseContentAbove,
+    bubbleHeight,
+    expandable,
+    text,
+    before,
+    hideMeta,
+    after,
+    afterName,
+    chromeless,
+    date,
+    onExpand,
+    expanded,
+    size,
+    // belowContent,
+    source,
+    avatarBackgroundColor,
+    scrollable,
+    showChildren,
+    children,
+    color,
+  } = props
   const theme = useTheme()
   const canExpand = !expanded && !!expandable
 
-  if (name && !username) {
-    return <AbsoluteVStack fullscreen backgroundColor="pink" />
-  }
-
+  const hasContents = !!text || showChildren
   const contents = (
     <>
       {title ? (
@@ -149,11 +152,12 @@ function CommentBubbleContents({
           className="preserve-whitespace break-word"
           maxWidth="100%"
           overflow="hidden"
-          sizeLineHeight={0.9}
+          color={color ? color : theme.colorSecondary}
           fontSize={size === 'lg' ? 18 : 14}
+          lineHeight={size === 'lg' ? 32 : 18}
         >
           {ellipseContentAbove && text && text.length > ellipseContentAbove ? (
-            <Text selectable color={color ? color : theme.color}>
+            <Text selectable>
               {expanded
                 ? text
                 : typeof text === 'string'
@@ -174,14 +178,23 @@ function CommentBubbleContents({
     </>
   )
 
-  const circleSize = 44
-  const extImgSize = 38
+  const circleSize = size === 'lg' ? 52 : 44
+  const extImgSize = size === 'lg' ? 44 : 38
   const charSize = 22
   // const colors = getColorsForName(`${name}`)
 
-  const externalSource = source ? thirdPartyCrawlSources[source] : null
+  const externalSource = source && source !== 'dish' ? thirdPartyCrawlSources[source] : null
   const backgroundColor = avatarBackgroundColor || grey
   const avatar = avatarProp?.image || ''
+  const isExternalUser = name === '_dish_external_user'
+
+  const wrapLink = (children: any) => {
+    return (
+      <Link name="user" params={{ username: username || '' }} pointerEvents="auto" ellipse>
+        {children}
+      </Link>
+    )
+  }
 
   const metaContents = (
     <HStack alignItems="center" pointerEvents="auto">
@@ -193,21 +206,26 @@ function CommentBubbleContents({
             <VStack
               width={circleSize}
               height={circleSize}
+              marginVertical={size === 'lg' ? -4 : 0}
               borderRadius={100}
               backgroundColor={backgroundColor}
               alignItems="center"
               justifyContent="center"
             >
-              {!avatar && <User color={theme.color} size={charSize} />}
-              {!!avatar && (
-                <UserAvatar
-                  charIndex={avatarProp?.charIndex || 0}
-                  size={circleSize}
-                  avatar={avatar}
-                />
+              {wrapLink(
+                <>
+                  {!avatar && <User color={theme.color} size={charSize} />}
+                  {!!avatar && (
+                    <UserAvatar
+                      charIndex={avatarProp?.charIndex || 0}
+                      size={circleSize}
+                      avatar={avatar}
+                    />
+                  )}
+                </>
               )}
             </VStack>
-            {!!externalSource && (
+            {!!externalSource?.image && (
               <VStack
                 shadowColor={theme.shadowColor}
                 shadowRadius={4}
@@ -232,20 +250,10 @@ function CommentBubbleContents({
           <HStack flex={1} pointerEvents="auto" alignItems="center" spacing>
             {!!name && (
               <VStack>
-                {name === '_dish_external_user' ? (
-                  <Paragraph opacity={0.7} size="sm">
-                    via {externalSource?.name || '-'}
-                  </Paragraph>
-                ) : (
-                  <Link
-                    name="user"
-                    params={{ username: username || '' }}
-                    pointerEvents="auto"
-                    fontSize={13}
-                    ellipse
-                  >
-                    {name}
-                  </Link>
+                {wrapLink(
+                  <Text color={theme.color} fontSize={size === 'lg' ? 18 : 14} fontWeight="800">
+                    {isExternalUser ? `via ${externalSource?.name || '-'}` : name}
+                  </Text>
                 )}
               </VStack>
             )}
@@ -282,7 +290,7 @@ function CommentBubbleContents({
       {/* {chromeless && metaContents} */}
 
       {/* main card */}
-      {!!contents && (
+      {hasContents && (
         <VStack
           paddingHorizontal={15}
           paddingVertical={15}

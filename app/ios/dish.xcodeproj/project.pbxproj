@@ -9,11 +9,17 @@
 /* Begin PBXBuildFile section */
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		2CF094F48C0C4EE0B380BB92 /* WhyteHeavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = D83D84C5729645819568E3C5 /* WhyteHeavy.otf */; };
 		96905EF65AED1B983A6B3ABC /* libPods-dish.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-dish.a */; };
+		AE2563F326FB7A5600C31CA6 /* libswiftWebKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AE2563F226FB7A5600C31CA6 /* libswiftWebKit.tbd */; };
 		AED829FF25E47F5A00FF17C0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		AED82A0125E47F9200FF17C0 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		AED82A0225E47F9400FF17C0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		AED82A0325E47F9700FF17C0 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		B98CBB070CE648E7B1207281 /* WhyteHeavy.woff in Resources */ = {isa = PBXBuildFile; fileRef = 514BBB37B46A42979473DE4C /* WhyteHeavy.woff */; };
+		CF556591E3C64E7CA922EB68 /* WhyteHeavy.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = 927DEC4D3B8444EDB25F948D /* WhyteHeavy.woff2 */; };
+		EFB24C2F88E74CCE9491564D /* Magnat.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3C2ED4E6C4C242F8B697187C /* Magnat.otf */; };
+		9D4CE5A04D2049FE9112B31D /* Magnat.woff in Resources */ = {isa = PBXBuildFile; fileRef = 7E3D5C8E600E42F0A70B6F60 /* Magnat.woff */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,13 +30,19 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = dish/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = dish/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = dish/main.m; sourceTree = "<group>"; };
+		514BBB37B46A42979473DE4C /* WhyteHeavy.woff */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = WhyteHeavy.woff; path = ../src/assets/fonts/WhyteHeavy.woff; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-dish.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dish.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C2E3173556A471DD304B334 /* Pods-dish.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dish.debug.xcconfig"; path = "Target Support Files/Pods-dish/Pods-dish.debug.xcconfig"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dish.release.xcconfig"; path = "Target Support Files/Pods-dish/Pods-dish.release.xcconfig"; sourceTree = "<group>"; };
+		927DEC4D3B8444EDB25F948D /* WhyteHeavy.woff2 */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = WhyteHeavy.woff2; path = ../src/assets/fonts/WhyteHeavy.woff2; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = dish/SplashScreen.storyboard; sourceTree = "<group>"; };
+		AE2563F226FB7A5600C31CA6 /* libswiftWebKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftWebKit.tbd; path = usr/lib/swift/libswiftWebKit.tbd; sourceTree = SDKROOT; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		D83D84C5729645819568E3C5 /* WhyteHeavy.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = WhyteHeavy.otf; path = ../src/assets/fonts/WhyteHeavy.otf; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		3C2ED4E6C4C242F8B697187C /* Magnat.otf */ = {isa = PBXFileReference; name = "Magnat.otf"; path = "../src/assets/fonts/Magnat.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7E3D5C8E600E42F0A70B6F60 /* Magnat.woff */ = {isa = PBXFileReference; name = "Magnat.woff"; path = "../src/assets/fonts/Magnat.woff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE2563F326FB7A5600C31CA6 /* libswiftWebKit.tbd in Frameworks */,
 				96905EF65AED1B983A6B3ABC /* libPods-dish.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,6 +76,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AE2563F226FB7A5600C31CA6 /* libswiftWebKit.tbd */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
 				58EEBF8E8E6FB1BC6CAF49B5 /* libPods-dish.a */,
@@ -85,6 +99,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
+				B45496D26B304401AD6D7667 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -97,6 +112,18 @@
 				13B07F961A680F5B00A75B9A /* dish.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B45496D26B304401AD6D7667 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D83D84C5729645819568E3C5 /* WhyteHeavy.otf */,
+				514BBB37B46A42979473DE4C /* WhyteHeavy.woff */,
+				927DEC4D3B8444EDB25F948D /* WhyteHeavy.woff2 */,
+				3C2ED4E6C4C242F8B697187C /* Magnat.otf */,
+				7E3D5C8E600E42F0A70B6F60 /* Magnat.woff */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -182,6 +209,11 @@
 				AED82A0225E47F9400FF17C0 /* Images.xcassets in Resources */,
 				AED82A0125E47F9200FF17C0 /* SplashScreen.storyboard in Resources */,
 				AED829FF25E47F5A00FF17C0 /* LaunchScreen.xib in Resources */,
+				2CF094F48C0C4EE0B380BB92 /* WhyteHeavy.otf in Resources */,
+				B98CBB070CE648E7B1207281 /* WhyteHeavy.woff in Resources */,
+				CF556591E3C64E7CA922EB68 /* WhyteHeavy.woff2 in Resources */,
+				EFB24C2F88E74CCE9491564D /* Magnat.otf in Resources */,
+				9D4CE5A04D2049FE9112B31D /* Magnat.woff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,8 +231,8 @@
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export TARGET=native\nexport NODE_ENV=production\nexport IS_LIVE=1\nif [ \"${CONFIGURATION}\" == \"Debug\" ] || [ \"${SKIP_BUNDLING}\" = \"true\" ]; then\n  export SKIP_BUNDLING=true\n  export NODE_ENV=development\n  export IS_LIVE=0 \nfi\n\nDEFAULT_NODE_BINARY=$(which node)\nexport NODE_BINARY=${NODE_BINARY:-$DEFAULT_NODE_BINARY}\nif [ -z \"$NODE_BINARY\" ]; then\n    export NODE_BINARY=\"/opt/homebrew/bin/node\"\nfi\n\n../node_modules/react-native/scripts/react-native-xcode.sh\n../node_modules/expo-constants/scripts/get-app-config-ios.sh\n";
+			shellPath = /bin/bash;
+			shellScript = "set -a\n\necho \"wut is ${ACTION}.${TARGET_NAME}.${CONFIGURATION}!\"\n\nif [ \"${CONFIGURATION}\" == \"Debug\" ]; then\n export SKIP_BUNDLING=\"true\"\nelse\n export SKIP_BUNDLING=\"\"\nfi\n\nsource ../../.env\nif [ \"${NODE_ENV}\" == \"development\" ]; then\n  source ../../.env.development \nelse\n  source ../../.env.production\nfi\nexport TARGET=native\n\nDEFAULT_NODE_BINARY=$(which node)\nexport NODE_BINARY=${NODE_BINARY:-$DEFAULT_NODE_BINARY}\nif [ -z \"$NODE_BINARY\" ]; then\n    export NODE_BINARY=\"/opt/homebrew/bin/node\"\nfi\n\n../node_modules/expo-constants/scripts/get-app-config-ios.sh\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		30A8BD28069EEC5FA4335F54 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -314,11 +346,9 @@
 				CODE_SIGN_ENTITLEMENTS = dish/dishapp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = 399WY8X9HY;
 				ENABLE_BITCODE = NO;
-				EXCLUDED_ARCHS = "";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "$(EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_$(EFFECTIVE_PLATFORM_SUFFIX)__NATIVE_ARCH_64_BIT_$(NATIVE_ARCH_64_BIT)__XCODE_$(XCODE_VERSION_MAJOR))";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					"FB_SONARKIT_ENABLED=1",
@@ -328,6 +358,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
 				);
 				MARKETING_VERSION = 1.0.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -339,6 +373,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dish.motion;
 				PRODUCT_NAME = dish;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RCT_NO_LAUNCH_PACKAGER = 1;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -358,14 +393,17 @@
 				CODE_SIGN_ENTITLEMENTS = dish/dishapp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 51;
 				DEVELOPMENT_TEAM = 399WY8X9HY;
-				EXCLUDED_ARCHS = "";
 				INFOPLIST_FILE = dish/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
 				);
 				MARKETING_VERSION = 1.0.0;
 				ONLY_ACTIVE_ARCH = YES;
@@ -377,6 +415,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dish.motion;
 				PRODUCT_NAME = dish;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				RCT_NO_LAUNCH_PACKAGER = 1;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_WORKSPACE = YES;
@@ -419,7 +458,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				EXCLUDED_ARCHS = "";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -442,6 +481,7 @@
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
+					"\"$(SDKROOT)/usr/lib/swift\"",
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
 					"\"$(inherited)\"",
@@ -488,7 +528,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXCLUDED_ARCHS = "";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -504,6 +544,7 @@
 					"$(inherited)",
 				);
 				LIBRARY_SEARCH_PATHS = (
+					"\"$(SDKROOT)/usr/lib/swift\"",
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)\"",
 					"\"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)\"",
 					"\"$(inherited)\"",

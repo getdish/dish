@@ -1,6 +1,7 @@
+import { isEqualSubsetShallow } from './comparators'
 import { UNWRAP_PROXY } from './constants'
-import { isEqualSubsetShallow } from './isEqualShallow'
 import { Store } from './Store'
+import { setIsInReaction } from './useStore'
 
 const dispose = (d: any) => {
   if (typeof d === 'function') {
@@ -21,24 +22,30 @@ export function reaction<
   let innerDispose: any
 
   function updateReaction() {
-    const next = selector(store)
-    if (!equalityFn(last, next)) {
-      if (process.env.NODE_ENV === 'development') {
-        console.groupCollapsed(
-          `💰  ⏭ %c${receiver.name.padStart(24)} (${store[UNWRAP_PROXY].constructor.name}${
-            store.props?.id ? `:${store.props.id}` : ''
-          }) ${last} => ${next}`,
-          'color: chocolate;'
-        )
-        console.groupCollapsed('trace >')
-        console.trace()
-        console.groupEnd()
-        console.log('  ARG', next)
-        console.groupEnd()
+    try {
+      setIsInReaction(true)
+      const storeInstance = store[UNWRAP_PROXY] || store
+      const next = selector(storeInstance)
+      if (!equalityFn(last, next)) {
+        if (process.env.NODE_ENV === 'development') {
+          console.groupCollapsed(
+            `💰  ⏭ %c${receiver.name.padStart(24)} (${storeInstance.constructor.name}${
+              store.props?.id ? `:${store.props.id}` : ''
+            }) ${last} => ${next}`,
+            'color: chocolate;'
+          )
+          console.groupCollapsed('trace >')
+          console.trace()
+          console.groupEnd()
+          console.log('  ARG', next)
+          console.groupEnd()
+        }
+        dispose(innerDispose)
+        last = next
+        innerDispose = receiver(next)
       }
-      dispose(innerDispose)
-      last = next
-      innerDispose = receiver(next)
+    } finally {
+      setIsInReaction(false)
     }
   }
 

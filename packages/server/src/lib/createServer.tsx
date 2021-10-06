@@ -86,7 +86,12 @@ async function createApiServer(app: any, conf: ServerConfigNormal) {
   const { createConfig, ...config } = conf
   const port = await getPort()
   const pa = `localhost:${port}`
-  app.use('/api', proxy(pa))
+  app.use(
+    '/api',
+    proxy(pa, {
+      limit: '100mb',
+    })
+  )
   const file = require.resolve('./createApiServer.worker')
   const worker = new Worker(file, {
     workerData: {
@@ -120,7 +125,7 @@ async function createApiServer(app: any, conf: ServerConfigNormal) {
 function cors() {
   const HEADER_ALLOWED = '*'
   return (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin)
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*')
     res.header('Access-Control-Allow-Credentials', 'true')
     res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
     res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')

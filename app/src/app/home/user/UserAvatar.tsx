@@ -1,5 +1,4 @@
 import React, { memo } from 'react'
-import { Circle } from 'snackui'
 import { Text, VStack, useTheme } from 'snackui'
 
 import { defaultUserImage } from '../../../constants/defaultUserImage'
@@ -46,7 +45,7 @@ export const UserAvatar = memo(
             height={size}
           />
         )}
-        <Text position="absolute" bottom={-size * 0.1} left={-size * 0.1} fontSize={size * 0.4}>
+        <Text position="absolute" bottom={0} right={0} fontSize={size * 0.33}>
           {char ?? '👻'}
         </Text>
       </VStack>

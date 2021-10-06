@@ -27,27 +27,32 @@ export async function userEdit(user: EditUserProps): Promise<EditUserResponse | 
   return await (await userFetchSimple('POST', '/user/edit', user)).json()
 }
 
-type UserFetchOpts = {
+export type UserFetchOpts = {
   isAdmin?: boolean
   handleLogOut?: () => void
   rawData?: boolean
+  headers?: {
+    [key: string]: any
+  }
 }
 
 export async function userFetchSimple(
   method: 'POST' | 'GET',
   path: string,
   data: any = {},
-  { handleLogOut, rawData, isAdmin }: UserFetchOpts = {}
+  { handleLogOut, rawData, isAdmin, headers: userHeaders }: UserFetchOpts = {}
 ) {
+  const headers = {
+    ...userHeaders,
+    ...getAuthHeaders(isAdmin),
+    ...(!rawData && {
+      'Content-Type': 'application/json',
+    }),
+    Accept: 'application/json',
+  }
   const init: RequestInit = {
     method,
-    headers: {
-      ...getAuthHeaders(isAdmin),
-      ...(!rawData && {
-        'Content-Type': 'application/json',
-      }),
-      Accept: 'application/json',
-    },
+    headers,
     body: rawData ? data : JSON.stringify(data),
   }
   const url = DISH_API_ENDPOINT + path
@@ -115,17 +120,6 @@ class AuthModel {
     } else {
       this.isAdmin = false
     }
-  }
-
-  async uploadAvatar(body: FormData) {
-    const response = await this.api('POST', '/user/uploadAvatar', body, {
-      rawData: true,
-    })
-    if (response.status !== 200) {
-      console.error(`Error updating: ${response.status} ${response.statusText}`)
-      return null
-    }
-    return await response.json()
   }
 
   async register(username: string, email: string, password: string) {

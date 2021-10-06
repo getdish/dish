@@ -1,7 +1,6 @@
 {
   "name": "@dish/api",
   "version": "0.0.1",
-  "types": "types.d.ts",
   "main": "dist",
   "module": "_",
   "sideEffects": false,
@@ -9,8 +8,8 @@
     "/_"
   ],
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch"
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

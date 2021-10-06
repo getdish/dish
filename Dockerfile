@@ -15,7 +15,7 @@ RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr
   && yarn set version berry \
   && apt-get clean
 
-# copy everything
+# copy everything needed for install
 COPY snackui snackui
 COPY app app
 COPY services services
@@ -36,7 +36,7 @@ RUN yarn install --immutable-cache \
   && yarn cache clean
 
 COPY tsconfig.json tsconfig.build.json \
-      tsconfig.base.parent.json tsconfig.base.json ava.config.js ./
+       tsconfig.base.json ava.config.js ./
 COPY packages packages
 # only services that depend on yarn build for testing
 COPY services/crawlers services/crawlers
@@ -47,21 +47,13 @@ COPY snackui snackui
 COPY dsh dsh
 COPY etc/dsh_ctl_sh_deps etc/dsh_ctl_sh_deps
 
-# remove all tests even node modules
-RUN find . -type d \(  -name "test" -o -name "tests"  \) -print | xargs rm -rf && \
-  find . -type f \( \
-    -name "jest.config.js" \
-    -o -name "ava.config.js" \
-    -o -name "*.md" \
-    -o -name "*.jpg" \
-  \) -print | xargs rm -rf \
-  # link in esdx bugfix
-  && ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
+# link esdx bugfix
+RUN ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
 
 RUN yarn build:js
-# \
-  # remove package.json scripts
-  # && sed -i '/\"scripts\"/,/}/ d; /^$/d' package.json
+
+# remove anything here to preserve cache: package.json scripts, ...
+# RUN sed -i '/\"scripts\"/,/}/ d; /^$/d' package.json
 
 # so we can deploy/tag on fly
 RUN touch ./__noop__

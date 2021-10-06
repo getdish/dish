@@ -17,11 +17,24 @@ async function go({ legacy, skipTypes }) {
 
   async function buildTsc() {
     if (process.env.JS_ONLY || skipTypes) return
+
     if (legacy) {
-      await exec('tsc', ['--emitDeclarationOnly', '--declarationMap', '--declarationDir', 'types'])
+      // so we can publish types
+      await exec('npx', [
+        'tsc',
+        '--emitDeclarationOnly',
+        '--declarationMap',
+        '--declarationDir',
+        'types',
+      ])
+      // intellisense will find this
+      // keep types around so we can publish them
+      await fs.copy('types', 'dist')
       return
     }
-    await exec('tsc', ['--emitDeclarationOnly', '--declarationMap'])
+
+    await exec('npx', ['tsc', '--emitDeclarationOnly', '--declarationMap'])
+
     // if its already a single-file we need to handle it diff
     if (await fs.pathExists('index.d.ts')) {
       await fs.remove('types.d.ts')
@@ -73,7 +86,7 @@ async function go({ legacy, skipTypes }) {
         entryPoints: files,
         outdir: '_',
         sourcemap: true,
-        target: 'es2020',
+        target: 'es2019',
         keepNames: true,
         format: 'esm',
         logLevel: 'error',

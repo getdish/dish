@@ -31,14 +31,7 @@ export const RestaurantLists = memo(
         </SlantedTitle>
         <CardCarousel>
           {lists.map(({ list }, i) => {
-            return (
-              <ListCard
-                // zIndex={1000 - i}
-                key={list.id || i}
-                slug={list.slug || ''}
-                userSlug={list.user?.username ?? 'no-user'}
-              />
-            )
+            return <ListCard key={list.id || i} query={lists} list={list} />
           })}
         </CardCarousel>
       </VStack>

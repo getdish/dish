@@ -1,20 +1,22 @@
 import { Menu } from '@dish/react-feather'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo } from 'react'
-import { TouchableWithoutFeedback } from 'react-native'
-import { AbsoluteVStack, BlurView, HStack, Modal, VStack, useMedia } from 'snackui'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { AbsoluteVStack, HStack, Modal, VStack, useMedia } from 'snackui'
 
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
-import { useSafeArea } from './hooks/useSafeArea'
+import { UserAvatar } from './home/user/UserAvatar'
+import { useUserStore } from './userStore'
 import { CloseButton } from './views/CloseButton'
 import { PaneControlButtons } from './views/PaneControlButtons'
 
 export const AppMenuButtonFloating = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
-  const safeArea = useSafeArea()
+  const safeArea = useSafeAreaInsets()
+  const user = useUserStore()
 
   if (!(media.sm || media.xs)) {
     return null
@@ -65,17 +67,19 @@ export const AppMenuButtonFloating = memo(() => {
           }}
           onPress={appMenu.show}
         >
-          <BlurView borderRadius={24} fallbackBackgroundColor="rgba(0,0,0,0.5)">
-            <HStack
-              width={50}
-              height={50}
-              alignItems="center"
-              justifyContent="center"
-              borderRadius={100}
-            >
+          <HStack
+            width={50}
+            height={50}
+            alignItems="center"
+            justifyContent="center"
+            borderRadius={100}
+          >
+            {user.user ? (
+              <UserAvatar size={40} avatar={user.user?.avatar} charIndex={user.user?.charIndex} />
+            ) : (
               <Menu color="#fff" size={24} />
-            </HStack>
-          </BlurView>
+            )}
+          </HStack>
         </VStack>
       </AbsoluteVStack>
     </>

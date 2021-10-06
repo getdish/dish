@@ -5,7 +5,7 @@ import { AbsoluteHStack, AbsoluteVStack, Button, HStack, VStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
-import { appMapStore } from './AppMap'
+import { appMapStore } from './appMapStore'
 import { inputTextStyles } from './AppSearchInput'
 import { autocompleteLocationStore, autocompletesStore } from './AutocompletesStore'
 import { useHomeStoreSelector } from './homeStore'
@@ -15,7 +15,7 @@ import { InputFrame } from './InputFrame'
 import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { InputTagButton } from './InputTagButton'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { setLocation } from './setLocation'
+import { setLocationFromAutocomplete } from './setLocation'
 import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 
 const isWebTouch = supportsTouchWeb
@@ -36,14 +36,13 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
   const handleKeyPress = useCallback((e) => {
     // @ts-ignore
     const code = e.keyCode
-    console.log('code', code)
 
     switch (code) {
       case 13: {
         // enter
         const result = autocompleteLocationStore.activeResult
         if (result?.type === 'place') {
-          setLocation(result.name, result.slug)
+          setLocationFromAutocomplete(result.name, result.slug)
           autocompletesStore.setVisible(false)
         } else {
           console.warn('not a place?')
@@ -70,7 +69,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
     }
   }, [])
 
-  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore)(view), [])
+  const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore, view), [])
   const showLocationTag = !inputStore.isFocused && !!curLocName
 
   return (

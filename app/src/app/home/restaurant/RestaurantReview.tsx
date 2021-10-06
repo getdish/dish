@@ -1,10 +1,11 @@
 import { getUserName, graphql, list, review } from '@dish/graph'
 import React, { memo } from 'react'
-import { HStack, Text, VStack } from 'snackui'
+import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { CommentBubble, CommentBubbleProps } from '../../views/CommentBubble'
 import { Link } from '../../views/Link'
 import { RestaurantReviewEdit } from './RestaurantReviewEdit'
+import { ReviewImagesRow } from './ReviewImagesRow'
 import { ReviewTagsRow } from './ReviewTagsRow'
 
 export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
@@ -22,6 +23,7 @@ export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
   onEdit?: (text: string) => void
   onDelete?: () => void
   showEmptyReview?: boolean
+  hideImagesRow?: boolean
   hideTagsRow?: boolean
   wrapTagsRow?: boolean
   votable?: boolean
@@ -43,11 +45,11 @@ export const RestaurantReview = memo(
         votable,
         after,
         hideGeneralTags,
-        restaurantSlug,
         listSlug,
         listTheme,
         wrapTagsRow,
         hideTagsRow,
+        hideImagesRow,
         review,
         showEmptyReview,
         ...commentBubbleProps
@@ -57,13 +59,16 @@ export const RestaurantReview = memo(
         return <RestaurantReviewEdit {...props} />
       }
 
+      // todo can we weave this with query?
+      const restaurantSlug = props.restaurantSlug ?? (review?.restaurant?.slug || '')
+
       const tagsRowEl = (
         <>
           {!hideTagsRow && (
             <ReviewTagsRow
               {...props}
               wrapTagsRow={wrapTagsRow}
-              restaurantSlug={props.restaurantSlug ?? (review?.restaurant?.slug || '')}
+              restaurantSlug={restaurantSlug}
               votable={votable}
               hideGeneralTags={hideGeneralTags}
             />
@@ -71,59 +76,69 @@ export const RestaurantReview = memo(
         </>
       )
 
-      if (!review && !showEmptyReview) {
-        return tagsRowEl
-      }
-
       const name = getUserName(review?.user)
       const userName = hideUsername ? '' : propName ?? name ?? ''
 
       return (
         <>
           {/* {showAddTag && <RateRestaurantTagsModal onDismiss={() => setShowAddTag(false)} />} */}
-          <VStack width="100%">
-            <CommentBubble
-              chromeless={listTheme === 'minimal'}
-              expandable
-              {...(!hideRestaurantName && {
-                title: (
-                  <Text fontWeight="800">
-                    <Link name="restaurant" params={{ slug: review?.restaurant?.slug || '' }}>
-                      {review?.restaurant?.name ?? ''}
-                    </Link>
-                  </Text>
-                ),
-              })}
-              date={review?.updated_at}
-              // belowContent={<>{review?.vote ? <SentimentText sentiment={review?.vote} /> : null}</>}
-              bubbleHeight={height}
-              avatar={{
-                image: review?.user.avatar ?? '',
-                charIndex: review?.user.charIndex || 0,
-              }}
-              // @ts-ignore
-              source={review?.source}
-              height={height}
-              ellipseContentAbove={200}
-              text={review?.text ?? ''}
-              name={userName}
-              username={userName}
-              after={
-                <HStack flex={1} overflow="hidden" alignItems="center" maxWidth="100%">
-                  <VStack flex={1} />
-                  {after}
-                </HStack>
-              }
-              {...commentBubbleProps}
-            />
+          <VStack maxWidth={720} alignSelf="center" width="100%">
+            {!!(review || showEmptyReview) && (
+              <CommentBubble
+                // chromeless={listTheme === 'minimal'}
+                expandable={!showEmptyReview}
+                {...(!hideRestaurantName && {
+                  title: (
+                    <Text fontWeight="800">
+                      <Link name="restaurant" params={{ slug: review?.restaurant?.slug || '' }}>
+                        {review?.restaurant?.name ?? ''}
+                      </Link>
+                    </Text>
+                  ),
+                })}
+                date={review?.updated_at}
+                // belowContent={<>{review?.vote ? <SentimentText sentiment={review?.vote} /> : null}</>}
+                bubbleHeight={height}
+                avatar={{
+                  image: review?.user.avatar ?? '',
+                  charIndex: review?.user.charIndex || 0,
+                }}
+                // @ts-ignore
+                source={review?.source}
+                height={height}
+                ellipseContentAbove={200}
+                text={review?.text ?? ''}
+                name={userName}
+                username={review?.user.username || ''}
+                after={
+                  <HStack flex={1} overflow="hidden" alignItems="center" maxWidth="100%">
+                    <VStack flex={1} />
+                    {after}
+                  </HStack>
+                }
+                {...commentBubbleProps}
+              />
+            )}
 
             {tagsRowEl}
+
+            {/* TEMP TODO REMOVE hideRestaurantName SLOW RPAGE */}
+            {!hideImagesRow && !hideRestaurantName && (
+              <>
+                <Spacer />
+                <ReviewImagesRow
+                  restaurantSlug={restaurantSlug}
+                  review={review}
+                  isEditing={isEditing || showEmptyReview}
+                />
+              </>
+            )}
           </VStack>
         </>
       )
     },
     {
-      suspense: false,
+      suspense: true,
     }
   )
 )

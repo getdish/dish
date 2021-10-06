@@ -7,22 +7,25 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
   return (
     <HStack
       alignItems="center"
-      borderRadius={6}
+      borderRadius={10}
       width="100%"
       flex={1}
       maxWidth="100%"
       paddingLeft={10}
       position="relative"
       maxHeight={44}
-      backgroundColor={theme.backgroundColorTransluscent}
+      // borderWidth={0.5}
+      // borderColor="rgba(0,0,0,0.2)"
+      backgroundColor="rgba(150,150,150,0.1)"
       hoverStyle={{
-        backgroundColor: theme.backgroundColorTransluscentHover,
+        backgroundColor: 'rgba(150,150,150,0.15)',
       }}
       focusStyle={{
-        backgroundColor: theme.backgroundColorTransluscent,
+        backgroundColor: 'rgba(150,150,150,0.15)',
       }}
       {...(media.sm && {
         maxHeight: 44,
+        // borderWidth: 0,
         backgroundColor: theme.backgroundColorSecondary,
         borderRadius: 10,
         hoverStyle: {

@@ -2,7 +2,7 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
-import { Store, reaction, useStore } from '@dish/use-store'
+import { Store, compareStrict, reaction, useStore, useStoreInstanceSelector } from '@dish/use-store'
 import React, {
   Suspense,
   forwardRef,
@@ -34,17 +34,21 @@ import {
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
+import { getWindow } from '../../../helpers/getWindow'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
 import { useQueryLoud } from '../../../helpers/useQueryLoud'
+import { weakKey } from '../../../helpers/weakKey'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
-import { appMapStore, useSetAppMap } from '../../AppMap'
+import { appMapStore, useSetAppMap } from '../../appMapStore'
+import { drawerStore } from '../../drawerStore'
 import { homeStore, useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { RootPortalItem } from '../../Portal'
+import { useIsMobilePhone } from '../../useIsMobilePhone'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { PageHead } from '../../views/PageHead'
@@ -67,9 +71,8 @@ export default memo(function SearchPage(props: SearchProps) {
   const { title } = getTitleForState(state, {
     lowerCase: true,
   })
-  const route = useLastValueWhen<HistoryItem<'search'>>(
-    // @ts-expect-error
-    () => router.curPage,
+  const route = useLastValueWhen(
+    () => router.curPage as HistoryItem<'search'>,
     router.curPage.name !== 'search'
   )
 
@@ -247,6 +250,10 @@ const SearchPageContent = memo(function SearchPageContent(
 
 const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
   const media = useMedia()
+  const isDrawerAtBottom = useStoreInstanceSelector(
+    drawerStore,
+    (x) => x.snapIndexName === 'bottom'
+  )
   let contents = isActive ? <SearchPageNavBar /> : null
 
   if (!media.sm) {
@@ -261,7 +268,13 @@ const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
     )
   }
 
-  return <RootPortalItem key={`${isActive}`}>{contents}</RootPortalItem>
+  return (
+    <RootPortalItem key={`${isActive}${isDrawerAtBottom}`}>
+      <AbsoluteVStack className="ease-in-out-slower" fullscreen y={isDrawerAtBottom ? 50 : 0}>
+        {contents}
+      </AbsoluteVStack>
+    </RootPortalItem>
+  )
 })
 
 // prevent warning
@@ -297,6 +310,7 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
   const searchPageStore = useSearchPageStore({
     id: props.item.id,
   })
+
   const activeTagSlugs = useActiveTagSlugs(props)
   const { status } = searchPageStore
 
@@ -348,14 +362,17 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
     [activeTagSlugs]
   )
 
+  const isMobilePhone = useIsMobilePhone()
+
   if (status !== 'loading' && results.length === 0) {
     return <SearchEmptyResults />
   }
 
   return (
     <RecyclerListView
-      style={sheet.listStyle}
-      canChangeSize
+      // style={sheet.listStyle}
+      key={weakKey(results)}
+      // canChangeSize
       externalScrollView={SearchPageScrollView as any}
       scrollViewProps={{
         id: props.item.id,
@@ -365,6 +382,7 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
       dataProvider={dataProvider}
       layoutProvider={layoutProvider}
       deterministic
+      useWindowScroll={isMobilePhone}
     />
   )
 })
@@ -397,7 +415,9 @@ type SearchPageScrollViewProps = ScrollViewProps & {
 }
 
 class SearchPageChildrenStore extends Store<{ id: string }> {
+  @compareStrict
   children = null
+
   setChildren(next: any) {
     this.children = next
   }
@@ -407,15 +427,17 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, id, ...props }, ref) => {
     const scrollRef = useRef<ScrollView>()
     const searchPageStore = getSearchPageStore()
+    const isMobilePhone = useIsMobilePhone()
     const searchPageChildrenStore = useStore(SearchPageChildrenStore, { id })
 
+    // for now, scrollRef doesnt have scrollTo?
     useEffect(() => {
       return reaction(
         searchPageStore,
         (x) => [x.index, x.event] as const,
-        function searchPageIndexToSCroll([index, event]) {
+        function searchPageIndexToScroll([index, event]) {
           if (event === 'pin' || event === 'key') {
-            scrollRef.current?.scrollTo({
+            scrollRef.current?.scrollTo?.({
               x: 0,
               y: ITEM_HEIGHT * index,
               animated: true,
@@ -428,12 +450,60 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     const layoutProps = useLayout({
       stateless: true,
       onLayout: (x) => {
+        if (isMobilePhone) {
+          // @ts-ignore
+          return onSizeChanged(getWindow())
+        }
         onSizeChanged?.(x.nativeEvent.layout)
       },
     })
 
+    // replicating RecyclerListView useWindow support
+    if (isMobilePhone) {
+      useEffect(() => {
+        const target = layoutProps!.ref!.current! as any
+        if (!target) return
+        const onScroll = () => {
+          if (!props.onScroll) return
+          props.onScroll({
+            // @ts-ignore
+            nativeEvent: {
+              contentOffset: {
+                get x(): number {
+                  return window.scrollX === undefined ? window.pageXOffset : window.scrollX
+                },
+                get y(): number {
+                  return window.scrollY === undefined ? window.pageYOffset : window.scrollY
+                },
+              },
+              contentSize: {
+                get height(): number {
+                  return target.offsetHeight
+                },
+                get width(): number {
+                  return target.offsetWidth
+                },
+              },
+              layoutMeasurement: {
+                get height(): number {
+                  return window.innerHeight
+                },
+                get width(): number {
+                  return window.innerWidth
+                },
+              },
+            },
+          })
+        }
+        window.addEventListener('scroll', onScroll)
+        return () => {
+          window.removeEventListener('scroll', onScroll)
+        }
+      }, [])
+    }
+
     const scrollToTopHandler = useCallback(() => {
-      scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
+      scrollRef.current?.scrollTo?.({ x: 0, y: 0, animated: true })
     }, [])
 
     useLayoutEffect(() => {
@@ -445,35 +515,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         searchPageChildrenStore.setChildren(null)
       }
     }, [])
-
-    // memo is important here, keeps scroll from stopping on ios safari
-    // return useMemo(() => {
-    //   return (
-    //     <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
-    //       <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
-    //         <PageContentWithFooter>
-    //           <SearchHeader />
-    //           <SearchContent id={id} />
-    //           <Suspense fallback={null}>
-    //             <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
-    //           </Suspense>
-    //         </PageContentWithFooter>
-    //       </ContentScrollView>
-    //     </View>
-    //   )
-    // }, [])
-
-    // return (
-    //   <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
-    //     <ScrollView ref={combineRefs(ref, scrollRef) as any} {...props}>
-    //       <SearchHeader />
-    //       <SearchContent id={id} />
-    //       <Suspense fallback={null}>
-    //         <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
-    //       </Suspense>
-    //     </ScrollView>
-    //   </View>
-    // )
 
     return (
       <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
@@ -542,134 +583,3 @@ function useTagsFromRoute(route: HistoryItem<'search'>) {
     suspense: false,
   })
 }
-
-// ... in Map.tsx the fitBounds that runs
-// in some cases comes from `center/span` above which are
-// estimates of the final bounds basically, we can't get that
-// from mapbox (no `map.getFinalBoundsFor(bounds)`)
-// instead of doing complicated things in Map, once center changes,
-// the *next* movement
-// from map we can safely ignore! because it will almost always change
-// worst case is not bad: we miss a movement, but they can just touch
-// map again and it will show "re-search in area button"
-// useEffect(() => {
-//   let runs = 0
-//   const dispose = reaction(
-//     appMapStore,
-//     (x) => x.nextPosition,
-//     function setSearchPosition(x) {
-//       searchPageStore.setSearchPosition(x)
-//       runs++
-//       if (runs > 1) {
-//         dispose()
-//       }
-//     }
-//   )
-//   return dispose
-// }, [props.item.id, center])
-
-// disabled for now, too easy to regress
-// // sync mapStore.selected to activeIndex in results
-// if (isWeb) {
-//   useEffect(() => {
-// should i try without reaction2? that couldve been causing weridness?
-//     return reaction2(() => {
-//       const { searchPosition, status } = searchPageStore
-//       const { nextPosition, isOnRegion } = appMapStore
-//       if (status === 'loading') return
-//       if (isOnRegion) {
-//         return
-//       }
-//       return series([
-//         () => sleep(600),
-//         () => {
-//           const props = getProps()
-//           if (!props.isActive) return
-//           // not on region, set to coordinates
-//           const { center, span } = searchPosition
-//           const pos = [center.lat, center.lng, span.lat, span.lng].map(
-//             (x) => Math.round(x * 1000) / 1000
-//           )
-//           console.warn('should set', pos.join('_'))
-//           // router.setParams({
-//           //   region: pos.join('_'),
-//           // })
-//         },
-//       ])
-//     })
-//   }, [])
-// }
-
-// import is broken maybe i have too recent react-native version?
-// i think the proxies break it, Element type invalid expected
-// return (
-//   <FlatList
-//     ListHeaderComponent={SearchHeader}
-//     ListFooterComponent={SearchFooter}
-//     removeClippedSubviews
-//     initialNumToRender={Math.ceil(getWindowHeight() / ITEM_HEIGHT)}
-//     data={results}
-//     renderItem={({ item, index }) => (
-//       <RestaurantListItem
-//         curLocInfo={props.item.curLocInfo ?? null}
-//         restaurantId={item.id}
-//         restaurantSlug={item.slug}
-//         rank={index + 1}
-//         activeTagSlugs={activeTagSlugs}
-//         meta={item.meta}
-//       />
-//     )}
-//     keyExtractor={(item) => item.id}
-//   />
-// )
-
-// // web was feeling slow with recyclerlistview:
-// // https://github.com/Flipkart/recyclerlistview/issues/601
-// const SearchResultsSimpleScroll = memo((props: Props) => {
-//   const { results, status } = useSearchPageStore()
-//   const activeTagSlugs = useActiveTagSlugs(props)
-//   const scrollRef = useRef<ScrollView>(null)
-//   const scrollToTopHandler = useCallback(() => {
-//     scrollRef.current?.scrollTo({ x: 0, y: 0, animated: true })
-//   }, [])
-
-//   if (status === 'loading') {
-//     return <LoadingItems />
-//   }
-
-//   if (!results.length) {
-//     return <SearchEmptyResults />
-//   }
-
-//   return (
-//     <ScrollView ref={scrollRef}>
-//       <PageContentWithFooter>
-//         <SearchHeader />
-//         <VStack position="relative" flex={10} minHeight={600}>
-//           <SuspenseList revealOrder="forwards">
-//             {results.map((data, index) => {
-//               return (
-//                 <VStack key={index} height={ITEM_HEIGHT}>
-//                   <RestaurantListItem
-//                     curLocInfo={props.item.curLocInfo ?? null}
-//                     restaurantId={data.id}
-//                     restaurantSlug={data.slug}
-//                     rank={index + 1}
-//                     activeTagSlugs={activeTagSlugs}
-//                     meta={data.meta}
-//                   />
-//                 </VStack>
-//               )
-//             })}
-//           </SuspenseList>
-//         </VStack>
-//         <Suspense fallback={null}>
-//           <SearchFooter
-//             numResults={searchPageStore.results.length}
-//             scrollToTop={scrollToTopHandler}
-//           />
-//         </Suspense>
-//       </PageContentWithFooter>
-//     </ScrollView>
-//   )
-// })

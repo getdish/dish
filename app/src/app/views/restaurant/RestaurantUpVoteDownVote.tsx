@@ -62,8 +62,8 @@ const RestaurantUpVoteDownVoteContents = graphql(
     return (
       <VStack pointerEvents="auto" position="relative">
         <AbsoluteVStack
-          bottom={-16}
-          right={-35}
+          bottom={-15}
+          right={-30}
           zIndex={2}
           borderRadius={1000}
           backgroundColor={theme.cardBackgroundColor}
@@ -71,7 +71,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           shadowOpacity={0.1}
           shadowRadius={3}
         >
-          <RestaurantRatingView restaurant={restaurant} floating size={42} />
+          <RestaurantRatingView restaurant={restaurant} floating size={36} />
         </AbsoluteVStack>
         <RatingWithVotes
           score={score || 0}
@@ -119,8 +119,9 @@ const RatingWithVotes = memo(
             isOpen: false,
           }
 
-    const upvote = (
+    const getUpvote = (props) => (
       <VoteButton
+        {...props}
         size={20 * scale}
         Icon={isMultiple ? ChevronsUp : ChevronUp}
         shadowDirection="up"
@@ -133,8 +134,9 @@ const RatingWithVotes = memo(
       />
     )
 
-    const downvote = (
+    const getDownvote = (props) => (
       <VoteButton
+        {...props}
         size={20 * scale}
         Icon={isMultiple ? ChevronsDown : ChevronDown}
         voted={vote == -1}
@@ -161,10 +163,10 @@ const RatingWithVotes = memo(
       >
         <AbsoluteVStack top={-34}>
           {subtle ? (
-            upvote
+            getUpvote({})
           ) : (
-            <Tooltip position="right" contents="Upvote" {...isOpenProp}>
-              {upvote}
+            <Tooltip placement="right" trigger={getUpvote} {...isOpenProp}>
+              Upvote
             </Tooltip>
           )}
         </AbsoluteVStack>
@@ -187,10 +189,10 @@ const RatingWithVotes = memo(
         </HStack>
         <AbsoluteVStack bottom={-34}>
           {subtle ? (
-            downvote
+            getDownvote({})
           ) : (
-            <Tooltip position="right" contents="Downvote" {...isOpenProp}>
-              {downvote}
+            <Tooltip placement="right" trigger={getDownvote} {...isOpenProp}>
+              Downvote
             </Tooltip>
           )}
         </AbsoluteVStack>

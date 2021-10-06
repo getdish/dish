@@ -1,6 +1,6 @@
 // TODO variant for width/height
 import React from 'react'
-import { AbsoluteVStack, VStack, useTheme } from 'snackui'
+import { VStack, useTheme } from 'snackui'
 
 import {
   cardFrameBorderRadius,
@@ -24,7 +24,8 @@ export type CardFrameProps = {
   flat?: boolean
   flexible?: boolean
   floating?: boolean
-  hoverEffect?: 'scale' | 'background' | false
+  overflowHidden?: boolean
+  hoverEffect?: 'scale' | 'background' | null
   pressable?: boolean
   size?: 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
   skew?: boolean
@@ -34,10 +35,10 @@ export type CardFrameProps = {
 
 export const CardFrame = ({
   aspectFixed,
-  backgroundColor,
   borderColor,
   borderless,
   children,
+  overflowHidden,
   chromeless,
   className,
   expandable,
@@ -66,6 +67,7 @@ export const CardFrame = ({
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"
       alignItems="center"
+      maxWidth="98%"
       justifyContent="center"
       minWidth={cardFrameWidth}
       {...(flat && {
@@ -155,21 +157,10 @@ export const CardFrame = ({
         width: 'auto',
         flexGrow: 1,
       })}
+      {...(overflowHidden && {
+        overflow: 'hidden',
+      })}
     >
-      {/* background */}
-      {!!backgroundColor && (
-        <AbsoluteVStack
-          fullscreen
-          className="hover-25-opacity-child chrome-fix-overflow safari-fix-overflow"
-          scale={1}
-          overflow="hidden"
-          borderRadius={flat ? 0 : cardFrameBorderRadius}
-          backgroundColor={backgroundColor}
-          {...(hoverEffect === 'background' && {
-            opacity: 0.2,
-          })}
-        />
-      )}
       {children}
     </VStack>
   )

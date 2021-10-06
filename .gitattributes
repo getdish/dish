@@ -7,3 +7,4 @@ etc/keys/server_rsa filter=git-crypt diff=git-crypt
 etc/keys/github_rsa filter=git-crypt diff=git-crypt
 etc/keys/teamdish_gpg filter=git-crypt diff=git-crypt
 AppleAuthKey.p8 filter=git-crypt diff=git-crypt
+etc/keys/mapkit.p8 filter=git-crypt diff=git-crypt

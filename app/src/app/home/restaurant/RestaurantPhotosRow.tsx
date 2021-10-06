@@ -19,27 +19,36 @@ type Props = {
   spacing?: Spacing
   floating?: boolean
   max?: number
+  slanted?: boolean
 }
 
 export const RestaurantPhotosRow = (props: Props) => {
   return (
-    <VStack
-      position="relative"
-      zIndex={0}
-      overflow="hidden"
-      height={props.height}
-      minWidth={props.width}
+    <Suspense
+      fallback={
+        <VStack height={props.height}>
+          <PhotoCard {...props} />
+        </VStack>
+      }
     >
-      <Suspense fallback={null}>
-        <RestaurantPhotosRowContent {...props} />
-      </Suspense>
-    </VStack>
+      <RestaurantPhotosRowContent {...props} />
+    </Suspense>
   )
 }
 
 export const RestaurantPhotosRowContent = memo(
   graphql(
-    ({ escalating, showEscalated, restaurant, width, height, spacing, floating, max }: Props) => {
+    ({
+      escalating,
+      slanted,
+      showEscalated,
+      restaurant,
+      width,
+      height,
+      spacing,
+      floating,
+      max,
+    }: Props) => {
       const initialWidth = useConstant(() => width)
       const { photos } = useRestaurantPhotos(restaurant)
       const photosData = photos.slice(0, max ?? Infinity).map((url, index) => {
@@ -63,84 +72,75 @@ export const RestaurantPhotosRowContent = memo(
         floating,
         width,
         height,
+        slanted,
       }
+
+      const contents = [
+        ...photosData,
+        // @ts-ignore
+        max > 3
+          ? {
+              content: (
+                <LinkButton
+                  width={width}
+                  height={height}
+                  name="gallery"
+                  alignSelf="center"
+                  params={{ restaurantSlug }}
+                  textProps={{
+                    textAlign: 'center',
+                    fontSize: 28,
+                    fontWeight: '800',
+                  }}
+                >
+                  Gallery 🖼
+                </LinkButton>
+              ),
+            }
+          : null,
+      ]
+        .filter(isPresent)
+        .map((item, index) => {
+          return (
+            <PhotoCard
+              {...photoCardProps}
+              // marginRight={slanted ? -width * 0.3 : 0}
+              zIndex={1000 - index}
+              isBehind={index > 0}
+              key={index}
+            >
+              {(() => {
+                if ('content' in item) {
+                  return item.content
+                }
+                const { uri, width, height, isEscalated } = item
+                return (
+                  <>
+                    {(!isEscalated || showEscalated) && (
+                      <Link name="gallery" params={{ restaurantSlug, offset: index }}>
+                        <Image
+                          source={{
+                            uri,
+                          }}
+                          style={{
+                            height,
+                            width,
+                          }}
+                          resizeMode="cover"
+                        />
+                      </Link>
+                    )}
+                  </>
+                )
+              })()}
+            </PhotoCard>
+          )
+        })
 
       return (
         // an attempt to get native to scroll but not working
         <HStack spacing={spacing} minWidth={fullWidth}>
-          {!photos.length && (
-            <SkewedCardCarousel>
-              <PhotoCard {...photoCardProps} />
-              <PhotoCard {...photoCardProps} />
-              <PhotoCard {...photoCardProps} />
-              <PhotoCard {...photoCardProps} />
-            </SkewedCardCarousel>
-          )}
-          {!!photos.length && (
-            <SkewedCardCarousel>
-              {[
-                ...photosData,
-                // @ts-ignore
-                max > 2
-                  ? {
-                      content: (
-                        <LinkButton
-                          width={width}
-                          height={height}
-                          name="gallery"
-                          alignSelf="center"
-                          params={{ restaurantSlug }}
-                          textProps={{
-                            textAlign: 'center',
-                            fontSize: 28,
-                            fontWeight: '800',
-                          }}
-                        >
-                          Gallery 🖼
-                        </LinkButton>
-                      ),
-                    }
-                  : null,
-              ]
-                .filter(isPresent)
-                .map((item, index) => {
-                  return (
-                    <PhotoCard
-                      {...photoCardProps}
-                      marginRight={-width * 0.3}
-                      zIndex={1000 - index}
-                      isBehind={index > 0}
-                      key={index}
-                    >
-                      {(() => {
-                        if ('content' in item) {
-                          return item.content
-                        }
-                        const { uri, width, height, isEscalated } = item
-                        return (
-                          <>
-                            {(!isEscalated || showEscalated) && (
-                              <Link name="gallery" params={{ restaurantSlug, offset: index }}>
-                                <Image
-                                  source={{
-                                    uri,
-                                  }}
-                                  style={{
-                                    height,
-                                    width,
-                                  }}
-                                  resizeMode="cover"
-                                />
-                              </Link>
-                            )}
-                          </>
-                        )
-                      })()}
-                    </PhotoCard>
-                  )
-                })}
-            </SkewedCardCarousel>
-          )}
+          {slanted ? <SkewedCardCarousel>{contents}</SkewedCardCarousel> : contents}
         </HStack>
       )
     }
@@ -148,10 +148,9 @@ export const RestaurantPhotosRowContent = memo(
 )
 
 const PhotoCard = (props: SimpleCardProps & { floating?: boolean }) => {
-  const theme = useTheme()
+  // const theme = useTheme()
   return (
     <SimpleCard
-      slanted
       {...(props.floating && {
         borderRadius: 12,
         overflow: 'hidden',

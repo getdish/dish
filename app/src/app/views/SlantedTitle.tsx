@@ -3,6 +3,7 @@ import { BoxProps, SizableTextProps, Title, useTextProps } from 'snackui'
 
 import { isStringChild } from '../../helpers/isStringChild'
 import { SlantedBox } from './SlantedBox'
+import { TitleStyled } from './TitleStyled'
 
 export type SlantedTitleProps = Omit<BoxProps, 'color'> &
   Partial<
@@ -18,7 +19,7 @@ export const SlantedTitle = ({ size, sizeLineHeight, ...props }: SlantedTitlePro
   return (
     <SlantedBox alignSelf="flex-start" {...(rest as any)}>
       {isStringChild(children) ? (
-        <Title
+        <TitleStyled
           fontWeight="800"
           size={size}
           sizeLineHeight={sizeLineHeight}
@@ -26,7 +27,7 @@ export const SlantedTitle = ({ size, sizeLineHeight, ...props }: SlantedTitlePro
           {...textStyle}
         >
           {children}
-        </Title>
+        </TitleStyled>
       ) : (
         children
       )}

@@ -15,7 +15,6 @@ export const SearchPageListsRow = memo(
     const region = curProps.item.region
     const tags = getActiveTags(curProps.item)
     const activeTags = tags.map((x) => x.slug).filter(isPresent)
-
     const lists = query.list_populated({
       args: {
         min_items: 2,
@@ -48,19 +47,8 @@ export const SearchPageListsRow = memo(
           paddingHorizontal={20}
         >
           {lists.map((list, i) => {
-            return (
-              <ListCard
-                size="xs"
-                key={i}
-                slug={list.slug ?? ''}
-                userSlug={list.user?.username ?? ''}
-                flat
-                colored
-                // region={list.region ?? ''}
-              />
-            )
+            return <ListCard size="xs" key={i} list={list} query={lists} flat colored />
           })}
-
           <SearchForkListButton>{!lists.length ? 'Create' : 'Create list'}</SearchForkListButton>
         </HStack>
       </Suspense>

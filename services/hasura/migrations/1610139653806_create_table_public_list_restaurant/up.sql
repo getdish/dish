@@ -1,0 +1,3 @@
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE TABLE "public"."list_restaurant"("id" uuid NOT NULL DEFAULT gen_random_uuid(), "restaurant_id" uuid NOT NULL, "list_id" uuid NOT NULL, "comment" text, PRIMARY KEY ("restaurant_id","list_id") , FOREIGN KEY ("restaurant_id") REFERENCES "public"."restaurant"("id") ON UPDATE cascade ON DELETE cascade, FOREIGN KEY ("list_id") REFERENCES "public"."list"("id") ON UPDATE cascade ON DELETE cascade, UNIQUE ("id"));

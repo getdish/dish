@@ -2,15 +2,15 @@
   "name": "@dish/worker-app",
   "version": "0.0.1",
   "main": "dist",
-  "types": "types.d.ts",
   "sideEffects": false,
   "license": "none",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch",
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy",
     "start": "node dist/index.js",
     "start:clear": "CLEAR_JOBS=1 node dist/index.js",
-    "repl": "npx bull-repl connect"
+    "repl": "npx bull-repl connect",
+    "worker": "node dist/worker.js"
   },
   "dependencies": {
     "@bull-board/api": "^3.2.8",

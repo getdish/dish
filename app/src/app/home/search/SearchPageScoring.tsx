@@ -33,9 +33,9 @@ export const SearchPageScoring = memo(() => {
   )
 
   return (
-    <HStack alignItems="center" paddingBottom={5}>
+    <HStack alignItems="center" paddingBottom={0} position="relative" zIndex={100}>
       <HStack flex={1} position="relative">
-        <HStack position="absolute" fullscreen>
+        <HStack y={-7} position="absolute" fullscreen>
           <VStack
             borderLeftWidth={2}
             borderColor={theme.borderColor}
@@ -55,22 +55,22 @@ export const SearchPageScoring = memo(() => {
       </HStack>
       <HStack
         alignItems="center"
-        borderWidth={1}
-        borderColor={theme.borderColor}
+        // borderWidth={1}
+        // borderColor={theme.borderColor}
         paddingHorizontal={18}
         borderRadius={100}
-        marginLeft={50}
+        marginLeft={0}
         marginRight={30}
         height={48}
         position="relative"
       >
-        <AbsoluteVStack left={-42}>
-          <SlantedTitle size="xxs" fontWeight="300">
+        <AbsoluteVStack left={-62}>
+          <SlantedTitle size="xxs" fontWeight="500">
             Scoring
           </SlantedTitle>
         </AbsoluteVStack>
 
-        <HStack opacity={0.7} spacing="sm">
+        <HStack marginLeft={-5} spacing="sm">
           {tagsWithPct.map(({ tag, pct }, index) => {
             return (
               <TagButton

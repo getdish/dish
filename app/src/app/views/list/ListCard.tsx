@@ -1,20 +1,20 @@
-import { getUserName, graphql, mutate, query, resolved } from '@dish/graph'
+import { getUserName, graphql, mutate, query, resolved, slugify } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import React, { Suspense, memo, useState } from 'react'
-import { AbsoluteVStack, Hoverable, Toast, VStack } from 'snackui'
+import { AbsoluteVStack, Hoverable, Toast, VStack, isTouchDevice, useThemeName } from 'snackui'
 
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
 import { getListPhoto } from '../../home/getListPhoto'
-import { getListColors } from '../../home/list/listColors'
+import { useListColors } from '../../home/list/listColors'
 import { ListFavoriteButton } from '../../home/restaurant/ListFavoriteButton'
 import { useUserStore } from '../../userStore'
 import { CloseButton } from '../CloseButton'
 import { Link } from '../Link'
 import { SuspenseFallback } from '../SuspenseFallback'
-import { useList } from './useList'
+import { ListQueryProps, useList } from './useList'
 
-export type ListCardProps = ListIDProps &
+export type ListCardProps = ListQueryProps &
   FeedCardProps & {
     onHover?: (is: boolean) => any
     floating?: boolean
@@ -22,11 +22,6 @@ export type ListCardProps = ListIDProps &
     deletable?: boolean
     onDelete?: () => void
   }
-
-export type ListIDProps = {
-  slug: string
-  userSlug: string
-}
 
 export const ListCard = memo((props: ListCardProps) => {
   return (
@@ -38,16 +33,13 @@ export const ListCard = memo((props: ListCardProps) => {
 
 const ListCardContent = graphql((props: ListCardProps) => {
   const { list } = useList(props)
-  const numItems = list?.restaurants_aggregate().aggregate?.count() ?? 0
-  const listColors = getListColors(list?.color)
-  const listThemeName = (list?.theme || 0) === 0 ? 'modern' : 'minimal'
+  const numItems = props.numItems ?? list?.restaurants_aggregate().aggregate?.count() ?? 0
   return (
     <ListCardFrame
       title={list?.name ?? ''}
-      numItems={numItems}
       author={` by ${getUserName(list?.user)}`}
+      numItems={numItems}
       {...props}
-      // theme={listThemeName}
       tags={
         props.size === 'xs'
           ? []
@@ -57,11 +49,18 @@ const ListCardContent = graphql((props: ListCardProps) => {
               .filter(isPresent)
       }
       photo={getListPhoto(list)}
-      {...(props.colored && {
-        color: listColors.color,
-        backgroundColor: listColors.backgroundColor,
-        chromeless: true,
-        flat: true,
+      items={list.restaurants({ limit: 5 }).map((r) => {
+        return {
+          title: r.restaurant.name,
+          subtitle: r.restaurant.address,
+          image: r.restaurant.image,
+          link: {
+            type: 'restaurant',
+            params: {
+              slug: r.restaurant.slug,
+            },
+          },
+        }
       })}
     />
   )
@@ -69,29 +68,34 @@ const ListCardContent = graphql((props: ListCardProps) => {
 
 export const ListCardFrame = graphql((props: ListCardProps) => {
   const [hidden, setHidden] = useState(false)
-  const { slug, userSlug, onHover, outside, deletable, onDelete, theme, ...feedCardProps } = props
+  const { list, onHover, outside, deletable, onDelete, theme, ...feedCardProps } = props
+  const listColors = useListColors(list?.color)
   const userStore = useUserStore()
 
   if (hidden) {
     return null
   }
 
+  const userSlug = slugify(list.user?.username)
   const contents = (
-    <Link
-      width="100%"
-      asyncClick
-      {...(!!(slug && userSlug) && {
-        name: 'list',
-        params: { slug, userSlug },
-      })}
-    >
+    <Link width="100%" asyncClick name="list" params={{ slug: list.slug || '', userSlug }}>
       <FeedCard
+        listColors={listColors}
         theme={theme}
+        fontTheme={!list.font ? 'slab' : 'sans'}
+        {...(props.colored && {
+          color: listColors.colorForTheme,
+          backgroundColor: `${listColors.backgroundColor}22`,
+          chromeless: true,
+          flat: true,
+        })}
         outside={
           <>
             {outside}
-            {(userStore.isAdmin ||
-              (userSlug && userStore.user?.username === userSlug && deletable)) && (
+            {!!(
+              userStore.isAdmin ||
+              (userSlug && userStore.user?.username === userSlug && deletable)
+            ) && (
               <AbsoluteVStack zIndex={1000} pointerEvents="auto" top={-5} right={-5}>
                 <CloseButton
                   size={40}
@@ -125,7 +129,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
                               _and: [
                                 {
                                   slug: {
-                                    _eq: slug,
+                                    _eq: list.slug,
                                   },
                                 },
                                 {
@@ -154,13 +158,13 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         pressable
         flat
         chromeless
-        floating
+        // floating
         {...feedCardProps}
       >
         {!props.size?.endsWith('xs') && (
           <VStack x={-5}>
             <Suspense fallback={null}>
-              <ListFavoriteButton slug={props.slug} />
+              <ListFavoriteButton list={props.list} query={props.query} />
             </Suspense>
           </VStack>
         )}
@@ -168,7 +172,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
     </Link>
   )
 
-  if (onHover) {
+  if (!isTouchDevice && onHover) {
     return (
       <Hoverable onHoverIn={() => onHover(true)} onHoverOut={() => onHover(true)}>
         {contents}

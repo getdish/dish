@@ -1,5 +1,0 @@
-- type: run_sql
-  args:
-    cascade: false
-    read_only: false
-    sql: ALTER TABLE "public"."list" ADD COLUMN "image" text NULL;

@@ -1,10 +1,16 @@
 import { fullyIdle, series } from '@dish/async'
 import { X } from '@dish/react-feather'
+import { useStoreSelector } from '@dish/use-store'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { TextInput } from 'react-native'
 import { HStack, Text, VStack } from 'snackui'
 
-import { useColumnStore, useRowStore } from './SelectionStore'
+import {
+  ColumnSelectionStore,
+  RowSelectionStore,
+  useColumnStore,
+  useRowStore,
+} from './SelectionStore'
 import { styles } from './styles'
 
 export type AdminListItemProps = {
@@ -33,8 +39,10 @@ export const AdminListItem = memo(
   }: AdminListItemProps) => {
     const rowStore = useRowStore({ id, column })
     const columnStore = useColumnStore({ id })
-    const isRowActive = useRowStore({ id, column }, (s) => s.row === row)
-    const isColumnActive = useColumnStore({ id }, (s) => s.column === column)
+    const isRowActive = useStoreSelector(RowSelectionStore, (s) => s.row === row, { id, column })
+    const isColumnActive = useStoreSelector(ColumnSelectionStore, (s) => s.column === column, {
+      id,
+    })
     const isActive = isRowActive && isColumnActive
     const isFormerlyActive = isRowActive && !isColumnActive
     const [isEditing, setIsEditing] = useState(false)

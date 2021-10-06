@@ -24,7 +24,7 @@ function RestaurantReviewPageContent() {
   const store = useStoreInstance(homeStore)
   const state = store.getLastStateByType('restaurantReview')
   return (
-    <Modal width="98%" maxWidth={720} visible>
+    <Modal width="98%" maxHeight="100%" maxWidth={720} visible>
       <PaneControlButtons>
         <StackViewCloseButton />
       </PaneControlButtons>
@@ -59,7 +59,7 @@ const HomePageReviewContent = memo(
       )
     }
     const [restaurant] = queryRestaurant(state.restaurantSlug)
-    const reviewQuery = user?.name ? useUserReviewQuery(state.restaurantSlug) : []
+    const reviewQuery = user ? useUserReviewQuery(state.restaurantSlug) : []
     let [review] = reviewQuery
     const reviewMutations = useUserReviewQueryMutations({
       restaurantId: restaurant?.id,

@@ -1,10 +1,12 @@
+# these just need to be published on npm
+**/types/**/*.d.ts
+**/types/**/*.d.ts.map
+
 .yarn
 .ultra.cache.json
 tmp
 *.tsbuildinfo
-
 *.tmp.js
-
 yarn-error.log
 dist
 tsconfig.tsbuildinfo

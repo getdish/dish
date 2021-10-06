@@ -56,46 +56,6 @@ export const tagDefaultAutocomplete = [
     rgb: null,
   },
   {
-    id: '36224884-6441-4585-b68a-a605d682bfa2',
-    name: 'Boba',
-    type: 'dish',
-    icon: '',
-    slug: 'chinese-american__boba',
-    rgb: null,
-  },
-  {
-    id: '2ce796f2-fb67-44af-979b-9badc8e41621',
-    name: 'Oysters',
-    type: 'dish',
-    icon: '',
-    slug: 'namibian__oysters',
-    rgb: null,
-  },
-  {
-    id: '319fc413-fd33-4e16-9471-325b988d1359',
-    name: 'Coffee',
-    type: 'dish',
-    icon: '',
-    slug: 'mediterranean__coffee',
-    rgb: null,
-  },
-  {
-    id: '7bef7997-267c-4656-ab72-d28155a6f0e7',
-    name: 'Breakfast',
-    type: 'category',
-    icon: '',
-    slug: 'categories__breakfast',
-    rgb: null,
-  },
-  {
-    id: 'a751dfb0-ff55-4702-b162-be0136fb3764',
-    name: 'Curry',
-    type: 'dish',
-    icon: '',
-    slug: 'malaysian__curry',
-    rgb: null,
-  },
-  {
     id: 'bdf7edcc-397d-42f5-9e95-fc3450cad170',
     name: 'Salad',
     type: '',
@@ -128,14 +88,6 @@ export const tagDefaultAutocomplete = [
     rgb: null,
   },
   {
-    id: '51f96459-65eb-4972-92fa-a19be0af85b9',
-    name: 'Wine',
-    type: 'dish',
-    icon: '',
-    slug: 'italian__wine',
-    rgb: null,
-  },
-  {
     id: 'd2d6750c-59fc-4279-9b6a-72ce2efc5955',
     name: 'Bubble Tea',
     type: '',
@@ -159,22 +111,6 @@ export const tagDefaultAutocomplete = [
     slug: 'global__sushi',
     rgb: null,
   },
-  {
-    id: '319fc413-fd33-4e16-9471-325b988d1359',
-    name: 'Coffee',
-    type: 'dish',
-    icon: '',
-    slug: 'mediterranean__coffee',
-    rgb: null,
-  },
-  {
-    id: 'dfe4208e-fc3b-40df-b219-fe09926b19ed',
-    name: 'Tea',
-    type: 'dish',
-    icon: '',
-    slug: 'chinese__tea',
-    rgb: null,
-  },
 ]
 export const tagLenses = [
   {
@@ -191,7 +127,7 @@ export const tagLenses = [
     type: 'lense',
     icon: '🍷',
     slug: 'lenses__drinks',
-    rgb: ['153', ' 76', ' 76'],
+    rgb: ['153', ' 75', ' 75'],
   },
   {
     id: '5da93fbe-5715-43b4-8b15-6521e3897bd9',
@@ -199,17 +135,18 @@ export const tagLenses = [
     type: 'lense',
     icon: '🌃',
     slug: 'lenses__vibe',
-    rgb: ['30', ' 83', ' 141'],
+    rgb: ['50', ' 93', ' 161'],
   },
   {
     id: '4768116c-bca3-4936-970b-5f2570a9e8f8',
     name: 'Veg',
     type: 'lense',
-    icon: '🥬',
+    icon: '🌱',
     slug: 'lenses__veg',
     rgb: ['51', ' 153', ' 51'],
   },
-]
+] as const
+
 export const tagFilters = [
   {
     id: '507e6614-3265-4857-8911-a9ffbd45e212',
@@ -251,7 +188,8 @@ export const tagFilters = [
     slug: 'filters__open',
     rgb: null,
   },
-]
+] as const
+
 export const tagCategoriesPopular = [
   {
     id: 'c0bf32d2-427d-44ca-913c-2c8f15ce79d2',
@@ -333,4 +271,4 @@ export const tagCategoriesPopular = [
     slug: 'categories__noodle',
     rgb: null,
   },
-]
+] as const

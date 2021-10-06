@@ -1,7 +1,6 @@
 {
   "name": "@dish/site",
   "version": "0.0.1",
-  "types": "types.d.ts",
   "scripts": {
     "start": "TARGET=web NODE_ENV=development dish start --port 3999",
     "build:prod": "TARGET=web NODE_ENV=production dish build",

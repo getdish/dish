@@ -34,8 +34,9 @@ async function getFiles(
 }
 
 async function getPackageJsonPaths() {
+  console.log('excluding snackui - test env broke + crawlers (http api seems down atm)')
   return await getFiles('.', {
-    excludeDir: /node_modules|data/,
+    excludeDir: /node_modules|data|snackui|crawlers/,
     filter: /package.json$/,
   })
 }

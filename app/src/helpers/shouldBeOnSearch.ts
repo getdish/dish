@@ -5,6 +5,6 @@ import { getActiveTags } from './getActiveTags'
 export const shouldBeOnSearch = (state: HomeStateTagNavigable) => {
   const realState = state || homeStore.currentState
   const tags = getActiveTags(realState)
-  const next = realState.searchQuery !== '' || tags.some((x) => x.type !== 'filter')
+  const next = realState.searchQuery !== '' || !!tags.length
   return next
 }

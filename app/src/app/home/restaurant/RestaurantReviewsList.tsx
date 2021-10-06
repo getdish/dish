@@ -44,9 +44,10 @@ export const RestaurantReviewsList = memo(
         },
         order_by: [
           {
-            reviews_aggregate: {
-              count: order_by.desc,
-            },
+            authored_at: order_by.desc,
+            // reviews_aggregate: {
+            //   count: order_by.desc,
+            // },
           },
         ],
       })
@@ -90,7 +91,9 @@ export const RestaurantReviewsList = memo(
               </VStack>
             )}
             <Grid itemMinWidth={320}>
-              {!!review && <RestaurantReview wrapTagsRow hideRestaurantName review={review} />}
+              {!!review && (
+                <RestaurantReview hideGeneralTags wrapTagsRow hideRestaurantName review={review} />
+              )}
 
               {topReviews.map((review, i) => {
                 return (

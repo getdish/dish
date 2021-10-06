@@ -1,15 +1,14 @@
 {
   "name": "@snackui/helpers",
-  "version": "0.16.1",
+  "version": "0.18.3",
   "main": "dist",
-  "types": "types.d.ts",
   "module": "_",
   "scripts": {
-    "build": "esdx",
-    "watch": "esdx-watch"
+    "build": "esdx legacy",
+    "watch": "esdx-watch legacy"
   },
   "devDependencies": {
-    "@dish/esdx": "^0.0.9"
+    "@dish/esdx": "^0.3.0"
   },
   "publishConfig": {
     "access": "public"

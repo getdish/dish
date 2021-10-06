@@ -1,31 +1,26 @@
 import React from 'react'
-
 import { isTouchDevice } from '../platform'
 import { Box } from './Box'
-import { HoverablePopover } from './HoverablePopover'
-import { PopoverProps } from './PopoverProps'
+import { HoverablePopoverProps, HoverablePopover } from './HoverablePopover'
 import { Text } from './Text'
 
-export type TooltipProps = Omit<PopoverProps, 'contents'> & { contents: any }
+export type TooltipProps = HoverablePopoverProps
 
-export const Tooltip = ({ contents, ...props }: TooltipProps) => {
+export const Tooltip = (props: TooltipProps) => {
   if (isTouchDevice) {
-    return props.children
+    return props.trigger({} as any, { open: false })
   }
   return (
-    <HoverablePopover
-      noArrow
-      delay={200}
-      contents={(open) =>
-        open ? (
-          <Box backgroundColor="#000" paddingHorizontal={9} borderRadius={1000}>
-            <Text fontSize={13} color="#fff">
-              {contents}
+    <HoverablePopover placement="bottom" delay={200} {...props}>
+      {({ open }) => {
+        return open ? (
+          <Box margin={10} backgroundColor="#000" paddingHorizontal={9} borderRadius={1000}>
+            <Text ellipse fontSize={13} color="#fff">
+              {props.children}
             </Text>
           </Box>
         ) : null
-      }
-      {...props}
-    />
+      }}
+    </HoverablePopover>
   )
 }

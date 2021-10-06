@@ -42,12 +42,6 @@ export const ListItemContentModern = memo(
       },
     })
 
-    useEffect(() => {
-      if (!!restaurant.name && props.onFinishRender) {
-        return series([() => fullyIdle({ min: 16 }), props.onFinishRender!])
-      }
-    }, [restaurant.name])
-
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
     const open = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)

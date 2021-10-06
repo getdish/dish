@@ -15,6 +15,7 @@ import { isWeb } from '../../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { drawerStore } from '../drawerStore'
+import { useIsMobilePhone } from '../useIsMobilePhone'
 
 export type ScrollLock = 'horizontal' | 'vertical' | 'drawer' | 'none'
 
@@ -42,7 +43,7 @@ export class ScrollStore extends Store<{ id: string }> {
   }
 
   scrollTo(val: { x?: number; y?: number; animated?: boolean }) {
-    this.scrollView?.scrollTo(val)
+    this.scrollView?.scrollTo?.(val)
   }
 }
 
@@ -115,6 +116,12 @@ type ContentScrollViewProps = ScrollViewProps & {
 
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, bidirectional, ...props }, ref) => {
+    const isMobilePhone = useIsMobilePhone()
+
+    if (isMobilePhone) {
+      return children
+    }
+
     // this updates when drawer moves to top
     // this is already handled in useScrollActive i think
     // const isActive = useStoreSelector(ContentParentStore, x => x.activeId === id, { id })
@@ -139,7 +146,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       if (isAtTop) {
         if (!scrollStore.isAtTop) {
           scrollStore.setIsAtTop(true)
-          scrollStore.setLock('none')
+          // this breaks scroll to pull
+          // scrollStore.setLock('none')
         }
         // safari desktop wants this
         // if (scrollStore.lock === 'vertical') {
@@ -294,7 +302,9 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
                 if (!drawerStore.isDragging) {
                   drawerStore.setIsDragging(true)
                 }
-                drawerStore._setY(y)
+                if (scrollStore.lock === 'vertical') {
+                  drawerStore._setY(y)
+                }
               }}
               onTouchEnd={(e) => {
                 scrollStore.setLock('none')

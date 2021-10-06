@@ -14,7 +14,7 @@ import { Toast, useLazyEffect } from 'snackui'
 import { getFullTags } from '../../helpers/getFullTags'
 import { useUserStore, userStore } from '../userStore'
 
-export type VoteNumber = 1 | 2 | 3 | 4 | 5
+export type VoteNumber = -1 | 0 | 1 | 2 | 3 | 4 | 5
 
 const tagVotesStore = createStore(
   class TagVotesStore extends Store {
@@ -98,7 +98,7 @@ export const useUserTagVotes = (props: UserTagVotesProps) => {
     })
   )
   // use the first one when querying multiple
-  const vote = votesNow ?? votes[0]?.vote ?? 0
+  const vote = votesNow ?? (votes[0]?.vote || null)
 
   // sync down
   useEffect(() => {
@@ -166,7 +166,7 @@ const queryUserTagVote = ({
               },
             },
           },
-          order_by: [{ authored_at: order_by.asc }],
+          order_by: [{ authored_at: order_by.desc }],
         })
       : null
 
