@@ -53,9 +53,7 @@ function migrate_timescale() {
 }
 
 function hasura_admin() {
-  pushd services/hasura
-  hasura console --endpoint "http://localhost:$HASURA_PORT" --admin-secret="$HASURA_GRAPHQL_ADMIN_SECRET"
-  popd
+  hasura_cmd console
 }
 
 # helper to run hasura commands
@@ -65,14 +63,14 @@ function hasura_cmd() {
   popd
 }
 
-HAS_UP_TO_DATE_HASURA_VERSION=$(hasura --skip-update-check version | grep 2.1.0 | wc -l)
-
 function hasura_install_cli() {
   if ! [ -x "$(command -v hasura)" ]; then
     curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v2.1.0-beta.1 bash
-  fi
-  if [ "$HAS_UP_TO_DATE_HASURA_VERSION" == 0 ]; then
-    curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v2.1.0-beta.1 bash
+  else
+    HAS_UP_TO_DATE_HASURA_VERSION=$(hasura --skip-update-check version | grep 2.1.0 | wc -l)
+    if [ "$HAS_UP_TO_DATE_HASURA_VERSION" == 0 ]; then
+      curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | VERSION=v2.1.0-beta.1 bash
+    fi
   fi
 }
 

@@ -1,9 +1,9 @@
 import { sleep } from '@dish/async'
-import { ReviewQuery, graphql, order_by, query, useQuery, useRefetch } from '@dish/graph'
+import { ReviewQuery, graphql, order_by, query, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Plus } from '@dish/react-feather'
 import { useRouterSelector } from '@dish/router'
-import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
+import React, { Suspense, memo, useState } from 'react'
 import {
   AbsoluteVStack,
   Divider,
@@ -14,14 +14,12 @@ import {
   ParagraphProps,
   Spacer,
   VStack,
-  useForceUpdate,
   useLazyEffect,
   useMedia,
   useTheme,
 } from 'snackui'
 
 import { getTimeFormat } from '../../../helpers/getTimeFormat'
-import { pluralize } from '../../../helpers/pluralize'
 import { queryUser } from '../../../queries/queryUser'
 import { router } from '../../../router'
 import { HomeStateItemUser } from '../../../types/homeTypes'
@@ -45,10 +43,8 @@ import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TitleStyled } from '../../views/TitleStyled'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
-import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { CardCarousel } from './CardCarousel'
-import { characters } from './characters'
 import { UserAvatar } from './UserAvatar'
 
 type UserPane = 'vote' | 'review' | '' | 'favorite'

@@ -89,9 +89,7 @@ services:
     ports:
       - 4444:4444
     depends_on:
-      - 'hasura'
-      - 'redis'
-      - 'tileserver'
+      - redis
 
   postgres:
     image: registry.dishapp.com/dish-${POSTGRES_NAME:-postgres}${DISH_IMAGE_TAG}
@@ -253,31 +251,31 @@ services:
     # depends_on:
     #   - 'postgres'
 
-  site:
-    image: registry.dishapp.com/dish-site${DISH_IMAGE_TAG}
-    build:
-      context: .
-      dockerfile: ./services/site/Dockerfile
-    ports:
-      - 3999:3999
-    networks:
-      - default
-      - traefik-public
-    deploy:
-      update_config:
-        order: start-first
-      labels:
-        - traefik.enable=true
-        - traefik.docker.network=traefik-public
-        - traefik.constraint-label=traefik-public
-        - traefik.http.routers.site-http.rule=Host(`site.${DOMAIN}`)
-        - traefik.http.routers.site-http.entrypoints=http
-        - traefik.http.routers.site-http.middlewares=dish-https-redirect
-        - traefik.http.routers.site-https.rule=Host(`site.${DOMAIN}`)
-        - traefik.http.routers.site-https.entrypoints=https
-        - traefik.http.routers.site-https.tls=true
-        - traefik.http.routers.site-https.tls.certresolver=le
-        - traefik.http.services.site.loadbalancer.server.port=3999
+  # site:
+  #   image: registry.dishapp.com/dish-site${DISH_IMAGE_TAG}
+  #   build:
+  #     context: .
+  #     dockerfile: ./services/site/Dockerfile
+  #   ports:
+  #     - 3999:3999
+  #   networks:
+  #     - default
+  #     - traefik-public
+  #   deploy:
+  #     update_config:
+  #       order: start-first
+  #     labels:
+  #       - traefik.enable=true
+  #       - traefik.docker.network=traefik-public
+  #       - traefik.constraint-label=traefik-public
+  #       - traefik.http.routers.site-http.rule=Host(`site.${DOMAIN}`)
+  #       - traefik.http.routers.site-http.entrypoints=http
+  #       - traefik.http.routers.site-http.middlewares=dish-https-redirect
+  #       - traefik.http.routers.site-https.rule=Host(`site.${DOMAIN}`)
+  #       - traefik.http.routers.site-https.entrypoints=https
+  #       - traefik.http.routers.site-https.tls=true
+  #       - traefik.http.routers.site-https.tls.certresolver=le
+  #       - traefik.http.services.site.loadbalancer.server.port=3999
 
   image-proxy:
     image: darthsim/imgproxy:v2
