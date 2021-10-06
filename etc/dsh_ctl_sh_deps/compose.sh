@@ -54,12 +54,12 @@ function compose_up_subset() {
 
 function compose_up() {
   services_list="$COMPOSE_EXCLUDE${COMPOSE_EXCLUDE_EXTRA:-}"
-  echo "compose_up services_list: $services_list"
   services=$(
     docker-compose config --services 2>/dev/null |
       grep -E -v "$services_list" |
       tr '\r\n' ' '
   )
+  echo "compose_up exclude $services_list services $services"
   docker_login
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then

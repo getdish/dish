@@ -110,6 +110,8 @@ const main_db_config: PoolConfig = {
   max: 10,
 }
 
+// console.log('main_db_config', main_db_config, scrape_db_config)
+
 export const main_db = new Database(main_db_config)
 export const scrape_db = new Database(scrape_db_config)
 
