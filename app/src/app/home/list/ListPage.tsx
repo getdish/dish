@@ -23,6 +23,7 @@ import {
   useTheme,
   useThemeName,
 } from 'snackui'
+import { AbsoluteVStack } from 'snackui/dist'
 
 import { red400 } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
