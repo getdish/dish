@@ -12,7 +12,7 @@ import {
 } from '@dish/graph'
 import anyTest, { ExecutionContext, TestInterface } from 'ava'
 
-import { redisDeletePattern, redisGet, redisSet } from '../../src/api/_rc'
+import { redisDeletePattern, redisGet, redisSet } from '../../src/api/_redis'
 
 interface Context {
   restaurant: Restaurant
