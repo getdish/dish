@@ -1,4 +1,4 @@
-import { Page, WebKitBrowser, devices, webkit } from 'playwright-webkit'
+import { ChromiumBrowser, Page, chromium, devices } from 'playwright-chromium'
 
 if (!process.env.LUMINATI_PROXY_HOST) {
   throw new Error(`No proxy config`)
@@ -24,7 +24,7 @@ const baseProxy = {
 
 const instances: {
   [key: string]: {
-    browser: WebKitBrowser | null
+    browser: ChromiumBrowser | null
     page: Page | null
     tries: number
     proxy: null | string | typeof baseProxy
@@ -72,7 +72,7 @@ async function ensureInstance(
         await instance.browser?.close()
       }
       console.log('start browser with', { recreate, useAWS }, url)
-      const browser = await webkit.launch({
+      const browser = await chromium.launch({
         headless: true,
         ...(url.proxy && {
           proxy: url.proxy,
@@ -111,7 +111,6 @@ async function getBrowserAndURL(uri: string, retry = 0, userOpts?: CreateBrowser
     recreate: retry < 1,
     ...userOpts,
   }
-  console.log('using opts', opts)
   const instance = await ensureInstance(uri, opts)
   const url = getProxyURL(uri, opts.useAWS)
   return {
@@ -240,6 +239,7 @@ export async function fetchBrowserScriptData(uri: string, selectors: string[], r
   if (!page) throw new Error(`No browser instance`)
   console.log('fetch browser hyperscript', uri, retry)
   await page.goto(url.uri, {
+    waitUntil: 'domcontentloaded',
     timeout: 60_000,
   })
 
