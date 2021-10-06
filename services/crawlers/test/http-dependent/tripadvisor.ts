@@ -9,8 +9,7 @@ test.beforeEach(async () => {
   await deleteAllScrapesBySourceID(ID)
 })
 
-// Skipped because Luminati's residneital proxies are just too expensive
-test.skip('Gets and persists a restaurant', async (t) => {
+test('Gets and persists a restaurant', async (t) => {
   const ta = new Tripadvisor()
   ta.MAPVIEW_SIZE = 350
   ta.SEARCH_RADIUS_MULTIPLIER = 1
@@ -23,6 +22,8 @@ test.skip('Gets and persists a restaurant', async (t) => {
     lat: 37.759125,
   })
   t.is(scrape.data.overview.contact.phone, '+1 415-826-7000')
+  const priceRange = scrape.data.overview.detailCard.tagTexts.priceRange
+  t.is(priceRange.tags[0].tagValue, 'Mid-range')
   t.assert(scrape.data.photos?.length > 50)
   t.assert(scrape.data.reviewsp0.length > 5)
   t.assert(scrape.data.reviewsp1.length > 5)

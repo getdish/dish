@@ -156,8 +156,6 @@ test('Merging', async (t) => {
   })
   t.is(updated.website, 'http://www.intercontinentalsanfrancisco.com/')
 
-  // decodeURIComponent(`/adredir?ad_business_id=wqjB8Vp7EmUQ7bKj9ocY1w&amp;campaign_id=HfEfI6USLfU6x-u8kOlNjA&amp;click_origin=search_results&amp;placement=above_search&amp;placement_slot=0&amp;redirect_url=https%3A%2F%2Fwww.yelp.com%2Fbiz%2Fbhoga-san-francisco-2&amp;request_id=fd4f982613d67a29&amp;signature=1da1b6a15017165a2b745e44fef3b1f1f382dade59668126db10be7a2d8734ed&amp;slot=0`.replace(/\/.*redirect_url=/, '').replace(/&amp.*/, '').replace(/;signature.*/, ''))
-
   t.deepEqual(updated.sources, {
     yelp: {
       url: 'https://www.yelp.com',
@@ -172,6 +170,13 @@ test('Merging', async (t) => {
       rating: 2.5,
     },
   })
+
+  t.is(updated.hours.length, 5)
+  t.deepEqual(updated.hours[0], {
+    formattedDate: 'Mon-Tue',
+    formattedTime: '4:00 pm - 10:00 pm',
+  })
+  t.is(updated.price_range, '$')
 
   // Check that photo work isn't repeated
   t.is(__uploadToDOSpaces__count, 1)

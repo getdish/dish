@@ -1784,6 +1784,7 @@ __metadata:
     "@unimodules/react-native-adapter": ^6.3.9
     "@welldone-software/why-did-you-render": ^6.1.1
     apple-sign-in-rest: ^1.0.2
+    ava: ^3.15.0
     aws-sdk: ^2.762.0
     babel-plugin-transform-inline-environment-variables: ^0.4.3
     bcryptjs: ^2.4.3
@@ -7003,7 +7004,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ava@npm:*, ava@npm:^3.14.0":
+"ava@npm:*, ava@npm:^3.14.0, ava@npm:^3.15.0":
   version: 3.15.0
   resolution: "ava@npm:3.15.0"
   dependencies:
@@ -20586,7 +20587,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^3.4.0, react-native-screens@npm:^3.7.2":
+"react-native-screens@npm:^3.4.0":
+  version: 3.7.2
+  resolution: "react-native-screens@npm:3.7.2"
+  dependencies:
+    warn-once: ^0.1.0
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 869eea68fdb4686f4e73e1eb25c5441376e97a3785d371645f2ac5ccacc0b2e6662befa556b7df3e20c7c0ebbab8d1f87e949c4bc2defc92322ef1ff4bd15288
+  languageName: node
+  linkType: hard
+
+"react-native-screens@npm:^3.7.2":
   version: 3.8.0
   resolution: "react-native-screens@npm:3.8.0"
   dependencies:

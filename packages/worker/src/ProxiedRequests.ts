@@ -53,11 +53,7 @@ export class ProxiedRequests {
   }
 
   async get(uri: string, props: Opts = { timeout: null }) {
-    const config = _.merge(this.config, props, {
-      headers: {
-        'Accept-Encoding': 'br;q=1.0, gzip;q=0.8, *;q=0.1',
-      },
-    })
+    const config = _.merge(this.config, props)
 
     let agentConfig: any = null
     let tries = 0
@@ -147,10 +143,6 @@ export class ProxiedRequests {
         console.warn(`  options: ${JSON.stringify(options || null, null, 2)}`)
       }
     }
-
-    throw new Error(
-      `Couldn't make fetch after a few tries, giving up: ${JSON.stringify(tried, null, 2)}`
-    )
   }
 
   getStormProxyConfig() {

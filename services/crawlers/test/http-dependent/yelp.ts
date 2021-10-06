@@ -29,6 +29,8 @@ test('Gets and persists a restaurant', async (t) => {
   })
   const scrape = (await scrapeFindOneBySourceID('yelp', BIZ_ID)) as YelpScrape
   t.assert(scrape.data.data_from_search_list_item.name.includes('Flour + Water'))
+  const hours = scrape.data.dynamic?.legacyProps?.props?.moreInfoProps?.bizInfo?.bizHours
+  t.deepEqual(hours, [{ formattedDate: 'Mon-Sun', formattedTime: '5:00 pm - 9:00 pm' }])
   t.deepEqual(scrape.location, { lon: -122.4122826, lat: 37.7589326 })
   t.is(scrape.data.data_from_search_list_item.phone, '(415) 826-7000')
   t.assert(scrape.data?.photosp0?.length > 25)
