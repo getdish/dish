@@ -482,10 +482,13 @@ services:
 
   puppet-proxy:
     image: registry.dishapp.com/dish-puppet-proxy${DISH_IMAGE_TAG}
+    ipc: host
+    cap_add:
+      - SYS_ADMIN
     networks:
       - default
     volumes:
-      - ./services/puppet-proxy/dist:/dist
+      - ./services/puppet-proxy/dist:/app/dist
     build:
       context: ./services/puppet-proxy
       dockerfile: ./Dockerfile

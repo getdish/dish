@@ -1,4 +1,4 @@
-import { ChromiumBrowser, Page, chromium, devices } from 'playwright-chromium'
+import { ChromiumBrowser, Page, chromium, devices } from 'playwright'
 
 if (!process.env.LUMINATI_PROXY_HOST) {
   throw new Error(`No proxy config`)
@@ -74,6 +74,7 @@ async function ensureInstance(
       console.log('start browser with', { recreate, useAWS }, url)
       const browser = await chromium.launch({
         headless: true,
+        args: ['--no-sandbox', '--disable-dev-shm-usage'],
         ...(url.proxy && {
           proxy: url.proxy,
         }),

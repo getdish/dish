@@ -36,12 +36,12 @@ function startServer() {
   app.use(async (req, res) => {
     try {
       const headers = req.headers ?? {}
-      // console.log('got headers', headers)
-      if (!headers['url']) {
-        res.status(500).send('no url')
+      const url = `${headers['url'] || ''}`
+      console.log('url', url)
+      if (!url) {
+        res.json({ empty: true })
         return
       }
-      const url = `${headers['url']}`
       const type = types[`${headers['parse'] ?? 'html'}`]
       const options = {
         selectors: JSON.parse(`${headers['selectors'] || ''}` || 'null'),
@@ -59,3 +59,4 @@ function startServer() {
 }
 
 main()
+console.log('start')

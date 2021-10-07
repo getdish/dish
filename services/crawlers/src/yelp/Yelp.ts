@@ -50,6 +50,8 @@ export const yelpAPIMobile = new ProxiedRequests(
   {
     headers: {
       'X-My-X-Forwarded-For': 'm.yelp.com',
+      'User-Agent':
+        'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_3_2 like Mac OS X; nl-nl) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8H7 Safari/6533.18.5',
     },
     timeout: null,
   }
@@ -160,6 +162,7 @@ export class Yelp extends WorkerJob {
       return
     }
     const mv = 0.0025
+    this.log(`found ${JSON.stringify(found || null)}`)
     const [lat, lng] = await geocode(found.subtitle)
     this.log('found new coords, try again at', JSON.stringify({ lat, lng }))
     await this.getRestaurants({

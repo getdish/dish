@@ -1,8 +1,9 @@
-const { chromium, devices } = require('playwright-chromium')
+const { chromium, devices } = require('playwright')
 
 ;(async () => {
   const browser = await chromium.launch({
     headless: false,
+    args: ['--no-sandbox'],
   })
   const context = await browser.newContext({
     ...devices['iPhone 11 Pro'],

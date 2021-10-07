@@ -12,11 +12,11 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
+    "@dish/esdx": "*",
     "express": "^4.17.1",
-    "playwright-chromium": "^1.15.2"
+    "playwright": "^1.15.2"
   },
   "devDependencies": {
-    "@dish/esdx": "*",
     "typescript": "^4.2.4"
   }
 }
