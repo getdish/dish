@@ -5,7 +5,7 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src"],
+  "include": ["src", "scripts/one.ts"],
   "references": [
     { "path": "../../packages/async" },
     { "path": "../../packages/common" },
