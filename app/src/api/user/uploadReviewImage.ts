@@ -1,7 +1,6 @@
 import { route, runMiddleware, useRouteBodyParser } from '@dish/api'
 import {
   PhotoQueryHelpers,
-  PhotoXrefQuery,
   PhotoXrefQueryHelpers,
   globalTagId,
   photo,

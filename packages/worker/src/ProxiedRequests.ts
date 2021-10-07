@@ -53,14 +53,16 @@ export class ProxiedRequests {
 
   proxies = [
     { name: 'Unproxied', base: this.domain },
+    // fly.io - basically free but may not like us crawling
+    { name: 'Fly', base: this.domain, host: 'fly-proxy.fly.dev', port: 10080, protocol: 'https' },
     // $0.000005/request regardless of bandwidth
     { name: 'AWS', base: this.aws_proxy.replace(/\/$/, '') },
-    // $50/mo "unlimited"
-    { name: 'Storm', base: this.domain, ...getStormProxyConfig() },
     // $0.5/GB or ~$0.00005/request for ~100kb requests
     { name: 'Luminati', base: this.domain, ...getLuminatiProxyConfig() },
     // $12.5/GB or ~$0.00125/request for ~100kb requests
     { name: 'Luminati Residential', base: this.domain, ...getLuminatiResidentialConfig() },
+    // $50/mo "unlimited"
+    { name: 'Storm', base: this.domain, ...getStormProxyConfig() },
   ] as const
 
   async get(uri: string, props: Opts = { timeout: null }) {
@@ -84,7 +86,7 @@ export class ProxiedRequests {
       tried.push({ url, options })
       try {
         const tm = sleep(8000).then(() => 'failed')
-        console.log('ProxiedRequests.get', name, url)
+        console.log('ProxiedRequests.get', name, url, options)
         // @ts-ignore
         const res = await Promise.race([fetch(url, options), tm])
         if (res === 'failed') {
