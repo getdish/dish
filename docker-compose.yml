@@ -484,6 +484,8 @@ services:
     image: registry.dishapp.com/dish-puppet-proxy${DISH_IMAGE_TAG}
     networks:
       - default
+    volumes:
+      - ./services/puppet-proxy/dist:/dist
     build:
       context: ./services/puppet-proxy
       dockerfile: ./Dockerfile
