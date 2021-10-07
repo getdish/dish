@@ -1,6 +1,7 @@
+import '@dish/helpers/polyfill-node'
 import '@dish/common'
 
-import crypto from 'crypto'
+import * as crypto from 'crypto'
 import { basename } from 'path'
 
 import { sleep } from '@dish/async'
@@ -27,11 +28,10 @@ import { Database } from '@dish/helpers-node'
 import FormData from 'form-data'
 import { selectFields } from 'gqty'
 import { chunk, clone, difference, uniqBy } from 'lodash'
-import fetch, { Response } from 'node-fetch'
 
 import { DISH_DEBUG } from './constants'
 
-type ImageQualityResponse = Promise<{ mean_score_prediction: number; image_id: string }[]>
+type ImageQualityResponse = { mean_score_prediction: number; image_id: string }[]
 
 export let __uploadToDOSpaces__count = 0
 export let __assessNewPhotos__count = 0
@@ -502,7 +502,7 @@ async function getImageCategory(
   const IMAGE_CATEGORY_API = `${process.env.IMAGE_RECOGNIZE_ENDPOINT}/recognize`
   return await Promise.all(
     urls.map(async (url) => {
-      const data = await fetch(url).then((res) => res.buffer())
+      const data = await fetch(url).then((res) => res.arrayBuffer())
       const formdata = new FormData()
       const parsedUrl = new URL(url)
       const filename = basename(parsedUrl.pathname)

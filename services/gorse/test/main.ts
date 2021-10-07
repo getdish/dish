@@ -1,9 +1,9 @@
 import '@dish/helpers/polyfill'
+import '@dish/helpers/polyfill-node'
 
 import { sleep } from '@dish/async'
 import { Auth, Restaurant, User, flushTestData, restaurantUpsert, reviewUpsert } from '@dish/graph'
 import anyTest, { TestInterface } from 'ava'
-import fetch from 'node-fetch'
 
 interface Context {
   restaurant: Restaurant

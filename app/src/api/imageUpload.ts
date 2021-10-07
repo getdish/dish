@@ -1,6 +1,5 @@
 import { route } from '@dish/api'
 import AWS from 'aws-sdk'
-import fetch from 'node-fetch'
 
 const s3 = new AWS.S3({
   endpoint: 'sfo2.digitaloceanspaces.com',
@@ -17,7 +16,7 @@ export default route(async (req, res) => {
       res.send(`No body sent on request`)
       return
     }
-    const contents = await fetch(payload.photo_url).then((res) => res.buffer())
+    const contents = await fetch(payload.photo_url).then((res) => res.blob())
     await new Promise((res, rej) => {
       s3.upload(
         {

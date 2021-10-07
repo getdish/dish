@@ -1,4 +1,4 @@
-import fetch from 'node-fetch'
+import '@dish/helpers/polyfill-node'
 
 export async function fetchBrowserJSON(url: string, headers?: Object) {
   const res = await fetchBrowser(url, {

@@ -1,5 +1,4 @@
 import { SUMMARIZER_API } from '@dish/graph'
-import fetch, { RequestInit } from 'node-fetch'
 
 export async function getSummary(of: string) {
   const request: RequestInit = {

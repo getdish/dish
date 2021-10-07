@@ -89,7 +89,7 @@ export class DoorDash extends WorkerJob {
     return response.data.data
   }
 
-  async search(lat: number, lng: number) {
+  async search(lat: number, lng: number, name?: string) {
     let is_more = true
     let stores: { [id: string]: BasicStore } = {}
     let page = 0
@@ -100,10 +100,12 @@ export class DoorDash extends WorkerJob {
       console.log('DOORDASH: search found ' + results.length + ' stores')
       if (results.length > 0) {
         for (const store of results) {
-          stores[store.id] = {
-            id: store.id,
-            lat: store.location.lat,
-            lng: store.location.lng,
+          if (!name || store.name?.includes(name)) {
+            stores[store.id] = {
+              id: store.id,
+              lat: store.location.lat,
+              lng: store.location.lng,
+            }
           }
         }
         page += 1
