@@ -119,6 +119,10 @@ export class GooglePuppeteer extends GooglePuppeteerJob {
           tags: { source: 'Google crawler' },
           logger: this.log,
         })
+      } else {
+        if (process.env.DEBUG) {
+          console.log('error info', await this.puppeteer.page.content())
+        }
       }
     }
   }

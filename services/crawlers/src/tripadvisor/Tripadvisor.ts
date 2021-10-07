@@ -28,8 +28,7 @@ const AXIOS_HEADERS = {
 const tripadvisorAPI = new ProxiedRequests(
   TRIPADVISOR_OG_DOMAIN,
   process.env.TRIPADVISOR_PROXY || '',
-  { timeout: null },
-  true
+  { timeout: null }
 )
 
 export class Tripadvisor extends WorkerJob {

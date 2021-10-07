@@ -8,7 +8,13 @@ export async function fetchBrowserJSON(url: string, headers?: Object) {
       headers: JSON.stringify(headers),
     }),
   })
-  return await res.json()
+  try {
+    return await res.json()
+  } catch (err) {
+    console.log('error, got', res.status, res.statusText)
+    console.log('reply is', await res.text())
+    throw err
+  }
 }
 
 export async function fetchBrowserScriptData(url: string, selectors: string[]) {
@@ -25,13 +31,14 @@ export async function fetchBrowserHTML(url: string) {
   return await res.text()
 }
 
-const URL = process.env.PUPPET_PROXY_ENDPOINT ?? 'http://localhost:3535'
+const URL = process.env.PUPPET_PROXY_ENDPOINT ?? 'http://0.0.0.0:3535'
 
 async function fetchBrowser(url: string, headers = {}, retry = 3) {
   let i = 0
   while (i < retry) {
     i++
     try {
+      console.log('curl', URL, '--header', 'url: ' + url)
       return await fetch(URL, {
         headers: {
           url,
@@ -39,7 +46,7 @@ async function fetchBrowser(url: string, headers = {}, retry = 3) {
         },
       })
     } catch (err) {
-      console.error(`fetchBrowser Error ${err.message}, retries left ${retry - i}`)
+      console.error(`fetchBrowserError: ${err.message}, retries left ${retry - i}`)
     }
   }
   throw new Error(`Failed to fetch`)

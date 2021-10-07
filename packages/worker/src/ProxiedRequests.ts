@@ -19,22 +19,21 @@ export class ProxiedRequests {
   constructor(
     public domain: string,
     public aws_proxy: string,
-    public config: Opts = { timeout: null },
-    public start_with_aws = false
+    public config: Opts = { timeout: null }
   ) {}
 
   async getJSON(uri: string, props?: Opts) {
-    if (!props?.skipBrowser) {
-      try {
+    try {
+      return await this.get(uri, props).then((x) => x.json() as Promise<{ [key: string]: any }>)
+    } catch (err) {
+      if (!props?.skipBrowser) {
         const url = this.domain + uri
         console.log(`ProxiedRequests.getJSON`, url)
         return await fetchBrowserJSON(url)
-      } catch (err) {
-        console.warn('Error with browser fetch, fall back to proxies', err)
-        return
+      } else {
+        throw err
       }
     }
-    return await this.get(uri, props).then((x) => x.json() as Promise<{ [key: string]: any }>)
   }
 
   async getScriptData(uri: string, selectors: string[]): Promise<any> {
@@ -52,56 +51,31 @@ export class ProxiedRequests {
     return await this.get(uri, props).then((x) => x.text())
   }
 
+  proxies = [
+    { name: 'Unproxied', base: this.domain },
+    // $0.000005/request regardless of bandwidth
+    { name: 'AWS', base: this.aws_proxy.replace(/\/$/, '') },
+    // $50/mo "unlimited"
+    { name: 'Storm', base: this.domain, ...getStormProxyConfig() },
+    // $0.5/GB or ~$0.00005/request for ~100kb requests
+    { name: 'Luminati', base: this.domain, ...getLuminatiProxyConfig() },
+    // $12.5/GB or ~$0.00125/request for ~100kb requests
+    { name: 'Luminati Residential', base: this.domain, ...getLuminatiResidentialConfig() },
+  ] as const
+
   async get(uri: string, props: Opts = { timeout: null }) {
     const config = _.merge(this.config, props)
-
-    let agentConfig: any = null
     let tries = 0
-    let base: string = this.domain
-    let method: string = 'none'
-
-    const setStormProxy = () => {
-      // $50/mo "unlimited"
-      method = 'STORMPROXY RESIDENTIAL PROXY'
-      base = this.domain
-      agentConfig = this.getStormProxyConfig()
-    }
-
-    const setLuminatiProxy = () => {
-      // $0.5/GB or ~$0.00005/request for ~100kb requests
-      method = 'LUMINATI DATACENTRE PROXY'
-      base = this.domain
-      agentConfig = this.luminatiProxyConfig()
-    }
-
-    const setLuminatiResidentialProxy = () => {
-      // $12.5/GB or ~$0.00125/request for ~100kb requests
-      method = 'LUMINATI RESIDENTIAL PROXY'
-      base = this.domain
-      agentConfig = this.luminatiResidentialConfig()
-    }
-
-    const setAwsProxy = () => {
-      // $0.000005/request regardless of bandwidth
-      base = this.aws_proxy.replace(/\/$/, '')
-      method = 'AWS GATEWAY PROXY'
-    }
-
-    if (this.start_with_aws) {
-      setAwsProxy()
-    } else {
-      setStormProxy()
-      // setLuminatiResidentialProxy()
-    }
-
+    const { name, base, ...agentConfig } = this.proxies[tries]
     const tried: any[] = []
-
     while (true) {
       const url = base + uri
       const options = {
         ...config,
       }
-      if (agentConfig) {
+      // if proxied by us
+      if ('host' in agentConfig) {
+        // @ts-ignore
         const { host, port, auth } = agentConfig
         const proto = agentConfig.protocol ?? 'http'
         const user = auth ? `${auth.username}:${auth.password}@` : ''
@@ -110,7 +84,7 @@ export class ProxiedRequests {
       tried.push({ url, options })
       try {
         const tm = sleep(8000).then(() => 'failed')
-        console.log('ProxiedRequests.get', url)
+        console.log('ProxiedRequests.get', name, url)
         // @ts-ignore
         const res = await Promise.race([fetch(url, options), tm])
         if (res === 'failed') {
@@ -125,61 +99,52 @@ export class ProxiedRequests {
         return res
       } catch (e) {
         tries++
-        if (tries === 2) {
-          setStormProxy()
-        } else if (!process.env.DISABLE_LUMINATI) {
-          if (tries == 3) {
-            setLuminatiProxy()
-          } else {
-            setLuminatiResidentialProxy()
-          }
-        }
-        if (tries > 4) {
+        if (tries > this.proxies.length - 1) {
           console.log('Error:', e.message, { options, tried })
           throw new Error('Too many 503 errors for: ' + uri)
         }
         const errMsg = e.message?.replace(url, '(url)')
-        console.warn(`ProxiedRequests: error, retrying (${tries}) with ${method}: ${errMsg}`)
+        console.warn(`ProxiedRequests: error, retrying (${tries}) with ${name}: ${errMsg}`)
         console.warn(`  options: ${JSON.stringify(options || null, null, 2)}`)
       }
     }
   }
+}
 
-  getStormProxyConfig() {
-    if (!process.env.STORMPROXY_HOSTS) {
-      throw new Error(`No STORMPROXY_HOSTS env`)
-    }
-    const hosts = process.env.STORMPROXY_HOSTS.split(',')
-    const index = Math.floor(Math.random() * (hosts.length - 1))
-    const [host, port] = hosts[index].split(':')
-    return { host, port: +port, protocol: 'https' }
+function getStormProxyConfig() {
+  if (!process.env.STORMPROXY_HOSTS) {
+    throw new Error(`No STORMPROXY_HOSTS env`)
   }
+  const hosts = process.env.STORMPROXY_HOSTS.split(',')
+  const index = Math.floor(Math.random() * (hosts.length - 1))
+  const [host, port] = hosts[index].split(':')
+  return { host, port: +port, protocol: 'https' }
+}
 
-  luminatiBaseConfig() {
-    return {
-      protocol: 'https',
-      host: process.env.LUMINATI_PROXY_HOST!,
-      port: +`${process.env.LUMINATI_PROXY_PORT ?? 0}`,
-    }
+function getLuminatiBaseConfig() {
+  return {
+    protocol: 'https',
+    host: process.env.LUMINATI_PROXY_HOST!,
+    port: +`${process.env.LUMINATI_PROXY_PORT ?? 0}`,
   }
+}
 
-  luminatiProxyConfig() {
-    return {
-      ...this.luminatiBaseConfig(),
-      auth: {
-        username: process.env.LUMINATI_PROXY_DATACENTRE_USER!,
-        password: process.env.LUMINATI_PROXY_DATACENTRE_PASSWORD!,
-      },
-    }
+function getLuminatiProxyConfig() {
+  return {
+    ...getLuminatiBaseConfig(),
+    auth: {
+      username: process.env.LUMINATI_PROXY_DATACENTRE_USER!,
+      password: process.env.LUMINATI_PROXY_DATACENTRE_PASSWORD!,
+    },
   }
+}
 
-  luminatiResidentialConfig() {
-    return {
-      ...this.luminatiBaseConfig(),
-      auth: {
-        username: process.env.LUMINATI_PROXY_RESIDENTIAL_USER!,
-        password: process.env.LUMINATI_PROXY_RESIDENTIAL_PASSWORD!,
-      },
-    }
+function getLuminatiResidentialConfig() {
+  return {
+    ...getLuminatiBaseConfig(),
+    auth: {
+      username: process.env.LUMINATI_PROXY_RESIDENTIAL_USER!,
+      password: process.env.LUMINATI_PROXY_RESIDENTIAL_PASSWORD!,
+    },
   }
 }

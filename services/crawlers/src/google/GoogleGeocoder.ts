@@ -22,8 +22,7 @@ const googleAPI = new ProxiedRequests(
     headers: {
       'X-My-X-Forwarded-For': 'www.google.com',
     },
-  },
-  true
+  }
 )
 
 String.prototype.replaceAll = function (search, replacement) {
