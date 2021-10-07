@@ -2,18 +2,24 @@ import { restaurantFindOne } from '@dish/graph'
 
 import { DoorDash } from './DoorDash'
 
-async function main() {
-  const dd = new DoorDash()
-  await dd.runOnWorker('allForCity', ['San Francisco, CA'])
+// async function main() {
+//   const dd = new DoorDash()
+//   await dd.runOnWorker('allForCity', ['San Francisco, CA'])
+// }
+
+export async function one(slug: string) {
+  const restaurant = await restaurantFindOne({ slug })
+  const doordash = new DoorDash()
+  const coords = restaurant.location.coordinates as number[]
+  const stores = await doordash.search(coords[1], coords[0], restaurant.name)
+  const firstStore = stores[Object.keys(stores)[0]]
+  if (!firstStore) {
+    console.warn('⚠️ no doordash result found')
+  }
+  const id = await doordash.getStore(firstStore)
+  console.log('inserted scrape', id)
 }
 
-export async function one() {
-  const range = 0.001
-  const name = 'Solstice'
-  const coords = [37.797519, -122.4314282]
-  const t = new DoorDash()
-  //const restaurant = await restaurantFindOne({ name })
-  //console.log('restaurant', restaurant)
+if (process.env.RUN && process.env.SLUG) {
+  one(process.env.SLUG)
 }
-
-main()

@@ -1,22 +1,9 @@
-import { query, resolved, restaurantFindOne } from '@dish/graph'
+import { restaurantFindOne } from '@dish/graph'
 
 import { Tripadvisor } from './Tripadvisor'
 
 export async function one(slug: string) {
-  const r = await resolved(() => {
-    return query
-      .restaurant({
-        where: {
-          slug: {
-            _eq: slug,
-          },
-        },
-      })
-      .map((r) => ({
-        slug: r.slug,
-        sources: r.sources,
-      }))[0]
-  })
+  const r = await restaurantFindOne({ slug })
   if (!r) {
     throw new Error(`No restaurant with slug ${slug}`)
   }

@@ -3,7 +3,11 @@ import '@dish/helpers/polyfill'
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
 import { scrape_db } from '@dish/helpers-node'
 
+import * as Doordash from '../src/doordash/one'
 import * as Google from '../src/google/one'
+import * as Grubhub from '../src/grubhub/one'
+import * as Infatuated from '../src/infatuated/one'
+import { removeScrapeForRestaurant } from '../src/scrape-helpers'
 import * as Self from '../src/self/one'
 import * as Tripadvisor from '../src/tripadvisor/one'
 import * as Yelp from '../src/yelp/one'
@@ -46,18 +50,21 @@ export async function main(slug: string) {
     }
 
     if (!shouldSkip('external')) {
-      if (!shouldSkip('tripadvisor')) {
-        try {
-          await Tripadvisor.one(slug)
-        } catch (err) {
-          console.error(err)
+      const externals = [
+        { name: 'yelp', action: Yelp.one },
+        { name: 'google', action: Google.one },
+        { name: 'doordash', action: Doordash.one },
+        { name: 'grubhub', action: Grubhub.one },
+        { name: 'tripadvisor', action: Tripadvisor.one },
+        { name: 'infatuated', action: Infatuated.one },
+      ]
+      for (const external of externals) {
+        if (shouldSkip(external.name)) {
+          console.log('skipping', external.name)
+          continue
         }
-      }
-      if (!shouldSkip('yelp')) {
-        await Yelp.one(slug)
-      }
-      if (!shouldSkip('google')) {
-        await Google.one(slug)
+        await removeScrapeForRestaurant(rest, external.name)
+        await external.action(slug)
       }
     }
 

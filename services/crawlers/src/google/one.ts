@@ -25,7 +25,7 @@ async function one_geocoder(slug: string) {
     restaurant.location.coordinates[1],
     restaurant.location.coordinates[0]
   )
-  console.log(id)
+  console.log('geocoded', id)
 }
 
 async function one_review_api(slug: string) {

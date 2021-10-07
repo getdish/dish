@@ -1,5 +1,4 @@
 import { sentryMessage } from '@dish/common'
-import fetch, { RequestInit } from 'node-fetch'
 
 import { DISH_DEBUG } from '../constants'
 import { getSummary } from './getSummary'

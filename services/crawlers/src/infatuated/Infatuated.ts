@@ -46,11 +46,19 @@ export class Infatuated extends WorkerJob {
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5))
     for (const box_center of region_coords) {
-      await this.runOnWorker('getRestaurants', [box_center])
+      await this.runOnWorker('getRestaurants', [{ center: box_center }])
     }
   }
 
-  async getRestaurants(center: [number, number], start: number = 0) {
+  async getRestaurants({
+    start = 0,
+    center,
+    returnResults,
+  }: {
+    center: [number, number]
+    start?: number
+    returnResults?: boolean
+  }) {
     const per_page = 40
     const limit = 40
     const path = '/api/v1/venues/search?'
@@ -62,12 +70,14 @@ export class Infatuated extends WorkerJob {
     const query = [latlon, distance, pagination, base, city].join('&')
     const response = await axios.get(path + query)
     const restaurants = response.data.data
-
+    if (returnResults) {
+      return restaurants
+    }
     for (const restaurant of restaurants) {
       await this.saveDataFromMapSearch(restaurant)
     }
     if (restaurants.length > 0) {
-      await this.runOnWorker('getRestaurants', [center, start + per_page])
+      await this.runOnWorker('getRestaurants', [{ center, start: start + per_page }])
     }
   }
 
