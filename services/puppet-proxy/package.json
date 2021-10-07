@@ -9,7 +9,8 @@
     "build": "esdx legacy",
     "build:skip-types": "esdx skip-types legacy",
     "watch": "esdx-watch legacy",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "dev": "nodemon dist/index.js"
   },
   "dependencies": {
     "@dish/esdx": "*",

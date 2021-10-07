@@ -40,7 +40,6 @@ COPY tsconfig.json tsconfig.build.json \
 COPY packages packages
 # only services that depend on yarn build for testing
 COPY services/crawlers services/crawlers
-COPY services/hooks services/hooks
 COPY services/worker services/worker
 COPY app app
 COPY snackui snackui

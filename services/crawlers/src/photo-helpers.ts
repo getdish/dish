@@ -6,6 +6,7 @@ import { basename } from 'path'
 import { sleep } from '@dish/async'
 import { sentryException, sentryMessage } from '@dish/common'
 import {
+  DISH_API_ENDPOINT,
   PhotoBase,
   PhotoXref,
   ZeroUUID,
@@ -524,7 +525,7 @@ async function getImageCategory(
   // return res
 }
 
-async function getImageQuality(urls: string[]): ImageQualityResponse {
+async function getImageQuality(urls: string[]): Promise<ImageQualityResponse> {
   const IMAGE_QUALITY_API = `${process.env.IMAGE_QUALITY_ENDPOINT}/prediction`
   const qualityResponse: any = await fetch(IMAGE_QUALITY_API, {
     method: 'POST',
@@ -659,7 +660,6 @@ export async function sendToDO(url: string, id: string) {
     return id
   }
   const mime_type = response.headers.get('content-type')
-
   while (true) {
     let retries = 1
     const result = await doImageUpload(url, id, mime_type || 'application/json')
@@ -685,7 +685,7 @@ export async function sendToDO(url: string, id: string) {
 }
 
 async function doImageUpload(url: string, id: uuid, content_type: string) {
-  const uploadUrl = process.env.HOOKS_ENDPOINT + '/do_image_upload'
+  const uploadUrl = `${DISH_API_ENDPOINT}/imageUpload`
   try {
     const result = await fetch(uploadUrl, {
       method: 'POST',
@@ -698,7 +698,7 @@ async function doImageUpload(url: string, id: uuid, content_type: string) {
         content_type,
       }),
     })
-    console.log('Dish hook do_image_upload response: ', result.status, await result.text(), url)
+    console.log('imageUpload response: ', result.status, await result.text(), url)
     return result
   } catch (err) {
     console.log('Failed uploading to ', uploadUrl)

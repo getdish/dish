@@ -9,7 +9,6 @@ x-dish-env: &dish-env
   TIMESCALE_ENDPOINT: ${TIMESCALE_ENDPOINT?bad_env}
   IMAGE_RECOGNIZE_ENDPOINT: ${IMAGE_RECOGNIZE_ENDPOINT?bad_env}
   IMAGE_QUALITY_ENDPOINT: ${IMAGE_QUALITY_ENDPOINT?bad_env}
-  HOOKS_ENDPOINT: ${HOOKS_ENDPOINT?bad_env}
   SUMMARIZER_ENDPOINT: ${SUMMARIZER_ENDPOINT?bad_env}
   PUPPET_PROXY_ENDPOINT: ${PUPPET_PROXY_ENDPOINT?bad_env}
   REDIS_HOST: ${REDIS_HOST}
@@ -164,13 +163,11 @@ services:
       - HASURA_GRAPHQL_UNAUTHORIZED_ROLE=anon
       - HASURA_GRAPHQL_JWT_SECRET={"type":"HS256", "key":"12345678901234567890123456789012"}
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
-      - DISH_HOOKS_ENDPOINT=${HOOKS_ENDPOINT}
       - GORSE_SYNC_HOOK=${GORSE_ENDPOINT}/gorse_sync
       # - HASURA_GRAPHQL_DEV_MODE=true
     # depends_on:
     #   # - 'postgres'
     #   - 'redis'
-    #   # - 'hooks'
 
   search:
     image: registry.dishapp.com/dish-search${DISH_IMAGE_TAG}
@@ -494,19 +491,6 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 3535:3535
-    environment:
-      <<: *dish-env
-
-  hooks:
-    image: registry.dishapp.com/dish-hooks${DISH_IMAGE_TAG}
-    networks:
-      - traefik-public
-      - default
-    build:
-      context: ./
-      dockerfile: ./services/hooks/Dockerfile
-    ports:
-      - ${HOOKS_PORT:-6154}:6154
     environment:
       <<: *dish-env
 

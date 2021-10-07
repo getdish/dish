@@ -30,11 +30,6 @@ steps:
     depends_on: base
     command: DISH_ENV=production ./dsh compose_build run-tests
 
-  - label: ":docker: build hooks"
-    key: hooks
-    depends_on: base
-    command: DISH_ENV=production ./dsh compose_build hooks
-
   - label: ":docker: build puppet-proxy"
     key: puppet-proxy
     command: DISH_ENV=production ./dsh compose_build puppet-proxy
@@ -73,7 +68,6 @@ steps:
     key: test-images
     depends_on:
       - app
-      - hooks
       - search
       - hasura
       - timescale
