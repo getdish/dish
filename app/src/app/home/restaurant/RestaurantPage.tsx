@@ -1,11 +1,21 @@
-import { fullyIdle, series } from '@dish/async'
-import { sleep } from '@dish/async'
+import { fullyIdle, series, sleep } from '@dish/async'
 import { graphql } from '@dish/graph'
+import { Clock } from '@dish/react-feather'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-import { Circle, LoadingItems, Spacer, Theme, VStack, useTheme, useThemeName } from 'snackui'
+import {
+  HStack,
+  LoadingItems,
+  Spacer,
+  Text,
+  Theme,
+  ThemeInverse,
+  VStack,
+  useTheme,
+  useThemeName,
+} from 'snackui'
 
-import { searchBarHeight } from '../../../constants/constants'
+import { drawerBorderRadius, isWeb, searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
 import { UseColors, useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -16,17 +26,31 @@ import { appMapStore, useSetAppMap } from '../../appMapStore'
 import { drawerStore } from '../../drawerStore'
 import { useAsyncEffect } from '../../hooks/useAsync'
 import { ContentScrollView } from '../../views/ContentScrollView'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
+import { Link } from '../../views/Link'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { PageHead } from '../../views/PageHead'
+import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
+import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
+import { RestaurantTagsList } from '../../views/restaurant/RestaurantTagsList'
+import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { PageContentWithFooter } from '../PageContentWithFooter'
+import { RestaurantRatingView } from '../RestaurantRatingView'
 import { getSearchPageStore } from '../search/SearchPageStore'
+import { RestaurantAddCommentButton } from './RestaurantAddCommentReviewButton'
+import { RestaurantAddress } from './RestaurantAddress'
+import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
+import { RestaurantAddToListButton } from './RestaurantAddToListButton'
+import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
+import { openingHours } from './RestaurantDetailRow'
 import { RestaurantDishRow } from './RestaurantDishRow'
-import { RestaurantHeader } from './RestaurantHeader'
+import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
 import { RestaurantLists } from './RestaurantLists'
 import { RestaurantMenu } from './RestaurantMenu'
 import { RestaurantOverallAndTagReviews } from './RestaurantOverallAndTagReviews'
+import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { RestaurantTagPhotos } from './RestaurantTagPhotos'
 import { useSelectedDish } from './useSelectedDish'
@@ -60,7 +84,7 @@ export default function RestaurantPageContainer(props: Props) {
 const RestaurantPage = memo(
   graphql(
     (props: Props & { colors: UseColors }) => {
-      const { item, colors } = props
+      const { item } = props
       const { restaurantSlug, section, sectionSlug } = item
       const [restaurant] = queryRestaurant(restaurantSlug)
       const coords = restaurant?.location?.coordinates ?? []
@@ -71,6 +95,17 @@ const RestaurantPage = memo(
       const [reviewsSection, setReviewsSection] = useState<View | HTMLElement | null>(null)
       const [dishesSection, setDishesSection] = useState<View | null>(null)
       const [hasLoadedAboveFold, setHasLoadedAboveFold] = useState(false)
+      const open = openingHours(restaurant!)
+      const spacer = <Spacer size={30} />
+      const nameLen = restaurant?.name?.length ?? 10
+      const scale = 1
+      const fontScale = 1.5
+      const fontSizeBase =
+        nameLen > 40 ? 18 : nameLen > 30 ? 22 : nameLen > 24 ? 24 : nameLen > 16 ? 26 : 32
+      const fontSize = Math.round(scale * fontSizeBase * fontScale)
+      // const restaurantId = restaurant.id
+      const [hasScrolled, setHasScrolled] = useState(false)
+      const colors = useColorsFor(restaurantSlug)
 
       useAsyncEffect(async (mounted) => {
         await sleep(500)
@@ -159,6 +194,207 @@ const RestaurantPage = memo(
         return <NotFoundPage />
       }
 
+      const headerEl = (
+        <>
+          <PaneControlButtonsLeft>
+            <Suspense fallback={null}>
+              <RestaurantAddCommentButton restaurantSlug={restaurantSlug} />
+            </Suspense>
+            <Suspense fallback={null}>
+              <RestaurantAddToListButton floating restaurantSlug={restaurantSlug} />
+            </Suspense>
+            <Suspense fallback={null}>
+              <RestaurantFavoriteButton floating size="lg" restaurantSlug={restaurantSlug} />
+            </Suspense>
+          </PaneControlButtonsLeft>
+          <VStack
+            paddingTop={0}
+            // minWidth={minWidth}
+            // maxWidth={width}
+            borderTopRightRadius={drawerBorderRadius - 1}
+            borderTopLeftRadius={drawerBorderRadius - 1}
+            width="100%"
+            position="relative"
+            pointerEvents="none"
+            zIndex={10}
+          >
+            <VStack flex={1}>
+              {/* below title row */}
+              <ContentScrollViewHorizontal>
+                <VStack>
+                  {/* title row */}
+                  <HStack paddingLeft={20} alignItems="flex-end" position="relative">
+                    <VStack width={66} height={66} marginRight={-15} marginBottom={0} zIndex={200}>
+                      <Theme name={themeName}>
+                        <RestaurantRatingView floating size={66} restaurant={restaurant} />
+                      </Theme>
+                    </VStack>
+
+                    <HStack
+                      y={10}
+                      marginRight={-25}
+                      pointerEvents="auto"
+                      paddingHorizontal={25}
+                      paddingVertical={9}
+                      alignItems="center"
+                      position="relative"
+                      zIndex={199}
+                      justifyContent="center"
+                      minWidth={100}
+                      // skewX="-12deg"
+                    >
+                      {/* <AbsoluteVStack
+                    fullscreen
+                    backgroundColor={colors.themeColorAlt}
+                    zIndex={-1}
+                    opacity={0.96}
+                    borderRadius={6}
+                    shadowColor="#000"
+                    shadowOpacity={0.1}
+                    shadowRadius={5}
+                    skewX="-12deg"
+                    shadowOffset={{ height: 3, width: 0 }}
+                  /> */}
+                      <ThemeInverse>
+                        <HStack
+                          display={isWeb ? 'block' : 'flex'}
+                          maxWidth={280}
+                          marginRight={30}
+                          paddingTop={50}
+                        >
+                          <Text
+                            className="font-title"
+                            fontFamily="WhyteHeavy"
+                            // backgroundColor={theme.backgroundColor}
+                            // color={theme.color}
+                            color={colors.color}
+                            maxWidth={500}
+                            alignSelf="flex-start"
+                            selectable
+                            letterSpacing={-1}
+                            fontSize={fontSize}
+                            lineHeight={fontSize}
+                            fontWeight="900"
+                          >
+                            {(restaurant.name || '').trim()}
+                          </Text>
+                        </HStack>
+                      </ThemeInverse>
+                    </HStack>
+
+                    <VStack paddingTop={10}>
+                      <RestaurantPhotosRow
+                        // slanted
+                        restaurant={restaurant}
+                        spacing="sm"
+                        floating
+                        width={130}
+                        height={150}
+                        showEscalated={hasScrolled}
+                      />
+                    </VStack>
+                  </HStack>
+
+                  <Spacer size="md" />
+
+                  <HStack pointerEvents="auto" flex={1} alignItems="center" minWidth={280}>
+                    {spacer}
+                    <VStack flex={10}>
+                      <VStack pointerEvents="auto" overflow="hidden" paddingRight={20}>
+                        <HStack alignItems="center" maxWidth="100%" minHeight={55}>
+                          <>
+                            <Suspense fallback={null}>
+                              <HStack>
+                                <RestaurantAddressLinksRow
+                                  size="lg"
+                                  restaurantSlug={restaurantSlug}
+                                />
+                              </HStack>
+
+                              <Spacer size="sm" />
+
+                              <VStack>
+                                <RestaurantAddress size="xs" address={restaurant?.address ?? ''} />
+                              </VStack>
+
+                              <Spacer size="sm" />
+
+                              <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                                <SmallButton
+                                  backgroundColor="transparent"
+                                  borderWidth={0}
+                                  icon={
+                                    <Clock
+                                      size={14}
+                                      color={isWeb ? 'var(--color)' : '#999'}
+                                      style={{ marginRight: 5 }}
+                                    />
+                                  }
+                                >
+                                  {`${open.text}${open.nextTime ? ` (${open.nextTime})` : ''}`}
+                                </SmallButton>
+                              </Link>
+
+                              <Spacer size="md" />
+
+                              <RestaurantDeliveryButtons
+                                showLabels
+                                restaurantSlug={restaurantSlug}
+                              />
+                            </Suspense>
+                          </>
+                        </HStack>
+
+                        <Spacer size="sm" />
+                      </VStack>
+                    </VStack>
+                  </HStack>
+                </VStack>
+              </ContentScrollViewHorizontal>
+
+              <HStack>
+                <VStack flex={1} maxWidth={300} marginBottom={10} pointerEvents="auto">
+                  <RestaurantOverview
+                    isDishBot
+                    maxLines={3}
+                    size="lg"
+                    restaurantSlug={restaurantSlug}
+                  />
+                </VStack>
+
+                <VStack flex={1} maxWidth={300}>
+                  <RestaurantTagsList
+                    exclude={['dish']}
+                    restaurant={restaurant}
+                    spacing={0}
+                    maxItems={5}
+                    tagButtonProps={{
+                      // borderWidth: 0,
+                      hideRank: false,
+                      hideRating: false,
+                      borderWidth: 0,
+                      votable: true,
+                    }}
+                  />
+                </VStack>
+
+                <VStack flex={1} maxWidth={300} ref={setDishesSection}>
+                  <RestaurantDishRow
+                    max={35}
+                    restaurantSlug={restaurantSlug}
+                    restaurantId={restaurant.id ?? undefined}
+                    selectable
+                    selected={selectedDish}
+                    onSelect={setSelectedDishToggle}
+                    // themeName={`${colors.name}-dark`}
+                  />
+                </VStack>
+              </HStack>
+            </VStack>
+          </VStack>
+        </>
+      )
+
       return (
         <>
           <PageHead isActive={props.isActive}>{`${restaurant.name} has the best ${topTags.join(
@@ -180,11 +416,12 @@ const RestaurantPage = memo(
                   // borderBottomColor={theme.borderColor}
                   // borderBottomWidth={1}
                 >
-                  <RestaurantHeader
+                  {headerEl}
+                  {/* <RestaurantHeader
                     themeName={themeName}
                     minHeight={450}
                     restaurantSlug={restaurantSlug}
-                  />
+                  /> */}
 
                   <VStack zIndex={0}>
                     <RestaurantOverallAndTagReviews
@@ -195,18 +432,6 @@ const RestaurantPage = memo(
                       restaurant={restaurant}
                     />
                   </VStack>
-
-                  <View ref={setDishesSection}>
-                    <RestaurantDishRow
-                      max={35}
-                      restaurantSlug={restaurantSlug}
-                      restaurantId={restaurant.id ?? undefined}
-                      selectable
-                      selected={selectedDish}
-                      onSelect={setSelectedDishToggle}
-                      // themeName={`${colors.name}-dark`}
-                    />
-                  </View>
 
                   <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
 
