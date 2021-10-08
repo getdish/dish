@@ -25,22 +25,16 @@ type TagRowProps = {
 export const RestaurantTagsList = (props: TagRowProps) => {
   const rowHeight = 50 * (props.size === 'lg' ? 1.1 : props.size === 'sm' ? 0.65 : 0.92)
   return (
-    <HStack
-      marginBottom={typeof props.spacing === 'number' ? -props.spacing : 0}
-      maxHeight={rowHeight * (props.maxLines ?? 1)}
-      maxWidth="100%"
-      overflow="hidden"
-      flexWrap="wrap"
-    >
+    <>
       {/* may jump up a bit on load */}
       <Suspense fallback={<VStack height={rowHeight} />}>
-        <RestaurantTagsRowContent {...props} />
+        <Content {...props} />
       </Suspense>
-    </HStack>
+    </>
   )
 }
 
-const RestaurantTagsRowContent = memo(
+const Content = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
     const { size = 'sm', restaurant, showMore, excludeOverall } = props
     if (!restaurant) {

@@ -103,6 +103,8 @@ export const RestaurantDishRowContent = memo(
         })
       }
 
+      return getDishRow(dishGroups[0])
+
       return (
         <ContentScrollViewHorizontal
           onScroll={handleScroll}
