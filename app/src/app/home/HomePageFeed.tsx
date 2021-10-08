@@ -222,7 +222,7 @@ export const HomePageFeed = memo(
 
             <Spacer size="xxxl" />
 
-            <HomeTrendingSpots region={region} />
+            {/* <HomeTrendingSpots region={region} /> */}
           </VStack>
         </>
       )

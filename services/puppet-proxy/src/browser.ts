@@ -8,7 +8,7 @@ const awsProxies = {
   'https://ubereats.com/': process.env.UBEREATS_PROXY,
   'https://yelp.com/': process.env.YELP_AWS_PROXY,
   'https://m.yelp.com/': process.env.YELP_MOBILE_AWS_PROXY,
-  'https://infatuated.com/': process.env.INFATUATED_PROXY,
+  'https://infatuation.com/': process.env.INFATUATION_PROXY,
   'https://michelin.com/': process.env.MICHELIN_PROXY,
   'https://tripadvisor.com/': process.env.TRIPADVISOR_PROXY,
   'https://google.com/': process.env.GOOGLE_AWS_PROXY,

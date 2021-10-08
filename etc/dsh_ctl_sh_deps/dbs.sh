@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function migrate_all() {
   wait_until_services_ready
   echo "services ready"

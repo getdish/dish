@@ -4,21 +4,22 @@ import { bertResultToNumber, fetchBertSentiment } from '@dish/helpers'
 import { Loggable } from '@dish/worker'
 import { chunk } from 'lodash'
 
+import { ALL_SOURCES } from './ALL_SOURCES'
 import { Self } from './Self'
 
 const BERT_NEGATIVE_SENTIMENT_CRITERIA = -0.999
+
+const TAG_SCORE_ALL_SOURCES = [...ALL_SOURCES, 'dish']
 
 export class RestaurantTagScores extends Loggable {
   crawler: Self
   breakdown: any = {}
   total_sentences = 0
   current_sentence = 0
-  ALL_SOURCES: string[] = []
 
   constructor(crawler: Self) {
     super()
     this.crawler = crawler
-    this.ALL_SOURCES = [...this.crawler.ALL_SOURCES, 'dish']
   }
 
   async calculateScores() {
@@ -195,7 +196,7 @@ export class RestaurantTagScores extends Loggable {
 
   generateBreakdownSQL(tag_id: string) {
     let sources_sql: string[] = []
-    for (const source of this.ALL_SOURCES) {
+    for (const source of TAG_SCORE_ALL_SOURCES) {
       const source_sql = `
         '${source}', json_build_object(
           'score',
@@ -280,7 +281,7 @@ export class RestaurantTagScores extends Loggable {
   generateUpDownSQL() {
     let ups: string[] = []
     let downs: string[] = []
-    for (const source of this.ALL_SOURCES) {
+    for (const source of TAG_SCORE_ALL_SOURCES) {
       ups.push(`(breakdown->'${source}'->'upvotes')::numeric`)
       downs.push(`(breakdown->'${source}'->'downvotes')::numeric`)
     }

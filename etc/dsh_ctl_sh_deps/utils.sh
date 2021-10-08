@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function generate_random_port() {
   echo "2$((1000 + RANDOM % 8999))"
 }

@@ -33,7 +33,7 @@ export const thirdPartyCrawlSources = {
     delivery: false,
     color: '#C63A38',
   },
-  infatuated: {
+  infatuation: {
     name: 'The Infatuation',
     image: require('../assets/the-infatuation.svg'),
     delivery: false,

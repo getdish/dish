@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function setup_server() {
   host=$1
   echo "setting up $host"

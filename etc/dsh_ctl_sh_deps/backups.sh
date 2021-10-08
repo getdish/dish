@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function list_backups() {
   s3 ls "s3://$DISH_BACKUP_BUCKET" | sort -k1,2
 }

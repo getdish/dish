@@ -9,10 +9,10 @@ import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 
-const INFATUATED_DOMAIN = process.env.INFATUATED_PROXY || 'https://www.theinfatuation.com'
+const INFATUATION_DOMAIN = process.env.INFATUATION_PROXY || 'https://www.theinfatuation.com'
 
 const axios = axios_base.create({
-  baseURL: INFATUATED_DOMAIN,
+  baseURL: INFATUATION_DOMAIN,
   headers: {
     common: {
       'X-My-X-Forwarded-For': 'www.theinfatuation.com',
@@ -22,7 +22,7 @@ const axios = axios_base.create({
 
 const MAPVIEW_SIZE = 5000
 
-export class Infatuated extends WorkerJob {
+export class Infatuation extends WorkerJob {
   public longest_radius: number
 
   static queue_config: QueueOptions = {
@@ -42,7 +42,7 @@ export class Infatuated extends WorkerJob {
   }
 
   async allForCity(city_name: string) {
-    console.log('Starting The Infatuation crawler. Using domain: ' + INFATUATED_DOMAIN)
+    console.log('Starting The Infatuation crawler. Using domain: ' + INFATUATION_DOMAIN)
     const coords = await geocode(city_name)
     const region_coords = _.shuffle(aroundCoords(coords[0], coords[1], MAPVIEW_SIZE, 5))
     for (const box_center of region_coords) {
@@ -68,6 +68,7 @@ export class Infatuated extends WorkerJob {
     const pagination = `offset=${start}&limit=${limit}`
     const base = 'sort_order=Highest%20Rated&category%5B%5D=RESTAURANT'
     const query = [latlon, distance, pagination, base, city].join('&')
+    console.log('infatuation search GET', INFATUATION_DOMAIN + path + query)
     const response = await axios.get(path + query)
     const restaurants = response.data.data
     if (returnResults) {
@@ -82,18 +83,21 @@ export class Infatuated extends WorkerJob {
   }
 
   async saveDataFromMapSearch(data: ScrapeData) {
-    console.info('Infatuated: saving ' + data.name)
+    console.info('Infatuation: saving ' + data.name)
     const id_from_source = data.id.toString()
     const lon = data.geo_point.coordinates[0]
     const lat = data.geo_point.coordinates[1]
     const restaurant_id = await restaurantSaveCanonical(
-      'infatuated',
+      'infatuation',
       id_from_source,
       lon,
       lat,
       data.name,
       data.street
     )
+    if (process.env.DEBUG) {
+      console.log('Infatuation data', data)
+    }
     const id = await scrapeInsert({
       source: 'infatuation',
       restaurant_id,

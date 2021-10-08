@@ -6,23 +6,30 @@ import { scrape_db } from '@dish/helpers-node'
 import * as Doordash from '../src/doordash/one'
 import * as Google from '../src/google/one'
 import * as Grubhub from '../src/grubhub/one'
-import * as Infatuated from '../src/infatuated/one'
+import * as Infatuation from '../src/infatuation/one'
 import { removeScrapeForRestaurant } from '../src/scrape-helpers'
 import * as Self from '../src/self/one'
 import * as Tripadvisor from '../src/tripadvisor/one'
 import * as Yelp from '../src/yelp/one'
+
+const skips = (process.env.SKIP ?? '').split(',').filter(Boolean)
+let onlys = (process.env.ONLY ?? '').split(',').filter(Boolean)
+if (onlys.some((x) => /yelp|google|doordash|grubhub|tripadvisor|infatuation/.test(x))) {
+  onlys = [...new Set([...onlys, 'external'])]
+}
+
+const shouldSkip = (str: string) =>
+  skips.includes(str) || (onlys.length ? !onlys.includes(str) : false)
 
 export async function main(slug: string) {
   try {
     const rest = await restaurantFindOne({
       slug,
     })
-
     if (!rest) {
       console.log('No restaurant')
       return
     }
-
     console.log(
       'crawling restaurant',
       `${slug} ${rest.id} ${rest.name} ${rest.address} ${rest.telephone}`
@@ -35,9 +42,6 @@ export async function main(slug: string) {
       gpt_summary_updated_at: null,
     }
     await restaurantUpdate(rest)
-
-    const skips = (process.env.SKIP ?? '').split(',')
-    const shouldSkip = (str: string) => skips.includes(str)
 
     // clear existing scrapes
     if (rest.id && !shouldSkip('external') && !shouldSkip('scrapes')) {
@@ -56,15 +60,20 @@ export async function main(slug: string) {
         { name: 'doordash', action: Doordash.one },
         { name: 'grubhub', action: Grubhub.one },
         { name: 'tripadvisor', action: Tripadvisor.one },
-        { name: 'infatuated', action: Infatuated.one },
+        { name: 'infatuation', action: Infatuation.one },
       ]
       for (const external of externals) {
         if (shouldSkip(external.name)) {
           console.log('skipping', external.name)
           continue
         }
-        await removeScrapeForRestaurant(rest, external.name)
-        await external.action(slug)
+        try {
+          await removeScrapeForRestaurant(rest, external.name)
+          await external.action(slug)
+        } catch (err) {
+          console.log('error running crawler', external.name, err.message)
+          console.log(err.stack)
+        }
       }
     }
 

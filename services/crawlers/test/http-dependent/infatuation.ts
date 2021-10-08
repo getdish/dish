@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { Infatuated } from '../../src/infatuated/Infatuated'
+import { Infatuation } from '../../src/infatuation/Infatuation'
 import { deleteAllScrapesBySourceID, scrapeFindOneBySourceID } from '../../src/scrape-helpers'
 
 const ID = '438'
@@ -10,9 +10,9 @@ test.beforeEach(async () => {
 })
 
 test('Gets and persists a restaurant', async (t) => {
-  let infatuated = new Infatuated()
-  infatuated.longest_radius = 10
-  await infatuated.getRestaurants([37.758866, -122.412447])
+  let infatuation = new Infatuation()
+  infatuation.longest_radius = 10
+  await infatuation.getRestaurants([37.758866, -122.412447])
   const scrape = await scrapeFindOneBySourceID('infatuation', ID)
   t.is(scrape.data.data_from_search_list_item.name, 'Flour + Water')
   t.deepEqual(scrape.location, { lon: -122.412447, lat: 37.758866 })

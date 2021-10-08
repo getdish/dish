@@ -24,6 +24,7 @@ import {
   DoorDashScrapeData,
   GoogleReviewScrapeData,
   GoogleScrapeData,
+  InfatuationScrapeData,
   TripAdvisorScrapeData,
   UberEatsScrapeData,
 } from '../fixtures/fixtures'
@@ -49,6 +50,7 @@ import {
   roughSizeOfObject,
 } from '../utils'
 import { YELP_DOMAIN, YelpScrape, yelpAPIMobile } from '../yelp/Yelp'
+import { ALL_SOURCES } from './ALL_SOURCES'
 import { GPT3 } from './GPT3'
 import { checkMaybeDeletePhoto, remove404Images } from './remove_404_images'
 import { RestaurantBaseScore } from './RestaurantBaseScore'
@@ -76,20 +78,9 @@ const toPostgresTime = (day: Day, time: string) => {
 const IS_FULL_RUN = !process.env.ONLY_FUNC
 
 export class Self extends WorkerJob {
-  ALL_SOURCES = [
-    'yelp',
-    'ubereats',
-    'infatuated',
-    'michelin',
-    'tripadvisor',
-    'doordash',
-    'grubhub',
-    'google',
-    'google_review_api',
-  ]
   yelp: YelpScrape | null = null
   ubereats: Scrape<UberEatsScrapeData> | null = null
-  infatuated: Scrape | null = null
+  infatuation: Scrape<InfatuationScrapeData> | null = null
   michelin: Scrape | null = null
   tripadvisor: Scrape<TripAdvisorScrapeData> | null = null
   doordash: Scrape<DoorDashScrapeData> | null = null
@@ -149,7 +140,7 @@ export class Self extends WorkerJob {
         results.map(async (result) => {
           // avoid a ton of jobs by checking for scrapes first
           const anyScrape = await Promise.all(
-            this.ALL_SOURCES.map(async (source) => {
+            ALL_SOURCES.map(async (source) => {
               return await latestScrapeForRestaurant(result, source)
             })
           )
@@ -211,7 +202,7 @@ export class Self extends WorkerJob {
 
   async getScrapeData() {
     let at_least_one = false
-    for (const source of this.ALL_SOURCES) {
+    for (const source of ALL_SOURCES) {
       const scrape = await latestScrapeForRestaurant(this.restaurant, source)
       if (scrape) {
         at_least_one = true
@@ -400,7 +391,7 @@ export class Self extends WorkerJob {
     const names = [
       scrapeGetData(this.yelp, (x) => x.json.name),
       scrapeGetData(this.ubereats, (x) => x.main.title),
-      scrapeGetData(this.infatuated, (x) => x.data_from_search_list_item.name),
+      scrapeGetData(this.infatuation, (x) => x.data_from_search_list_item.name),
       scrapeGetData(this.michelin, (x) => x.main.name),
       scrapeGetData(this.grubhub, (x) => x.main.name),
       scrapeGetData(this.doordash, (x) => x.main.title),
@@ -422,7 +413,7 @@ export class Self extends WorkerJob {
     this.restaurant.telephone = this.merge([
       scrapeGetData(this.yelp, (x) => x.json.telephone),
       scrapeGetData(this.ubereats, (x) => x.main.phoneNumber),
-      scrapeGetData(this.infatuated, (x) => x.data_from_html_embed.phone_number),
+      scrapeGetData(this.infatuation, (x) => x.data_from_search_list_item.phone_number),
       scrapeGetData(this.tripadvisor, (x) => x.overview.contact.phone),
       scrapeGetData(this.google, (x) => x.telephone),
     ])
@@ -445,7 +436,7 @@ export class Self extends WorkerJob {
         ['']
       ),
       scrapeGetData(this.ubereats, (x) => x.main.location.address),
-      scrapeGetData(this.infatuated, (x) => x.data_from_search_list_item.street),
+      scrapeGetData(this.infatuation, (x) => x.data_from_search_list_item.street),
       scrapeGetData(this.michelin, (x) => x.main.title),
       scrapeGetData(this.tripadvisor, (x) => x.overview.contact.address),
       scrapeGetData(this.doordash, (x) => x.main.location.address),
@@ -614,7 +605,7 @@ export class Self extends WorkerJob {
     const sources = [
       this.tripadvisor,
       this.michelin,
-      this.infatuated,
+      this.infatuation,
       this.yelp,
       this.doordash,
       this.grubhub,
@@ -685,11 +676,11 @@ export class Self extends WorkerJob {
       }
     }
 
-    path = scrapeGetData(this.infatuated, (x) => x.data_from_search_list_item.post.review_link)
+    path = scrapeGetData(this.infatuation, (x) => x.data_from_search_list_item.post.review_link)
     if (path != '') {
-      this.restaurant.sources.infatuated = {
+      this.restaurant.sources.infatuation = {
         url: 'https://www.theinfatuation.com' + path,
-        rating: ratings?.infatuated,
+        rating: ratings?.infatuation,
       }
     }
 
@@ -779,12 +770,12 @@ export class Self extends WorkerJob {
     if (googles) {
       hero = googles
     }
-    const infatuateds = scrapeGetData(
-      this.infatuated,
+    const infatuations = scrapeGetData(
+      this.infatuation,
       (x) => x.data_from_search_list_item.post.venue_image
     )
-    if (infatuateds) {
-      hero = infatuateds
+    if (infatuations) {
+      hero = infatuations
     }
     const michelins = scrapeGetData(this.michelin, (x) => x.main.image)
     if (michelins) {
