@@ -11,7 +11,7 @@ export const RESTAURANT_WEIGHTS = {
   yelp: 0.6,
   tripadvisor: 0.6,
   michelin: 1.0,
-  infatuated: 0.9,
+  infatuation: 0.9,
   ubereats: 0.2,
   doordash: 0.2,
   grubhub: 0.2,
@@ -30,7 +30,7 @@ export class RestaurantRatings {
     const ratings = {
       yelp: rating(scrapeGetData(this.crawler.yelp, (x) => x.json.aggregateRating.ratingValue)),
       ubereats: rating(scrapeGetData(this.crawler.ubereats, (x) => x.main.rating.ratingValue)),
-      infatuated: rating(this._infatuatedRating()),
+      infatuation: rating(this._infatuationRating()),
       tripadvisor: rating(
         scrapeGetData(this.crawler.tripadvisor, (x) => x.overview.rating.primaryRating)
       ),
@@ -53,13 +53,12 @@ export class RestaurantRatings {
     }
   }
 
-  _infatuatedRating() {
-    const rating = scrapeGetData(
-      this.crawler.infatuated,
-      (x) => x.data_from_search_list_item.post.rating
+  _infatuationRating() {
+    const rating = scrapeGetData(this.crawler.infatuation, (x) =>
+      parseFloat(x.data_from_search_list_item.post.rating || '0')
     )
-    if (rating < 0) return NaN
-    return parseFloat(rating) / 2
+    if (rating < 0) return null
+    return rating / 2
   }
 
   _doorDashRating() {

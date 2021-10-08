@@ -17,7 +17,7 @@
 0  *  *  *  *     DISH_ENV=production /app/dsh hasura_clean_event_logs >> /var/log/cron.log 2>&1
 
 #0  0  *  *  0  DISH_ENV=production /app/dsh start_crawler google >> /var/log/cron.log 2>&1
-#0 12  *  *  1  DISH_ENV=production /app/dsh start_crawler infatuated >> /var/log/cron.log 2>&1
+#0 12  *  *  1  DISH_ENV=production /app/dsh start_crawler infatuation >> /var/log/cron.log 2>&1
 #0  0  *  *  2  DISH_ENV=production /app/dsh start_crawler grubhub >> /var/log/cron.log 2>&1
 #0  0  *  *  1  DISH_ENV=production /app/dsh start_crawler michelin >> /var/log/cron.log 2>&1
 #0  0  *  *  3  DISH_ENV=production /app/dsh start_crawler tripadvisor >> /var/log/cron.log 2>&1

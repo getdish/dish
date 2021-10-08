@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function compose() {
   docker-compose -f docker-$1.yml $2 $3
 }

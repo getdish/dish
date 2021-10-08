@@ -5,7 +5,7 @@ import { clone } from 'lodash'
 import { DoorDash } from './doordash/DoorDash'
 import { GoogleGeocoder } from './google/GoogleGeocoder'
 import { GrubHub } from './grubhub/GrubHub'
-import { Infatuated } from './infatuated/Infatuated'
+import { Infatuation } from './infatuation/Infatuation'
 import { Michelin } from './michelin/Michelin'
 import { Tripadvisor } from './tripadvisor/Tripadvisor'
 import { UberEats } from './ubereats/UberEats'
@@ -230,7 +230,7 @@ export async function scrapeUpdateGeocoderID(scrape_id: string) {
       deets = GrubHub.getNameAndAddress(scrape)
       break
     case 'infatuation':
-      deets = Infatuated.getNameAndAddress(scrape)
+      deets = Infatuation.getNameAndAddress(scrape)
       break
     case 'michelin':
       deets = Michelin.getNameAndAddress(scrape)

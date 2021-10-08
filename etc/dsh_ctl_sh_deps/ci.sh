@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function send_slack_monitoring_message() {
   message=$1
   curl -X POST "$SLACK_MONITORING_HOOK" \

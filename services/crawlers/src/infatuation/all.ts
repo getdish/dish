@@ -1,7 +1,7 @@
 import { getCities } from '../utils'
-import { Infatuated } from './Infatuated'
+import { Infatuation } from './Infatuation'
 
-const i = new Infatuated()
+const i = new Infatuation()
 for (const city of getCities()) {
   i.runOnWorker('allForCity', [city])
 }

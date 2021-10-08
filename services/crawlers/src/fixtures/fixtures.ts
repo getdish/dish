@@ -295,3 +295,37 @@ export const google_review_api = {
 }
 
 export type GoogleReviewScrapeData = typeof google_review_api['data']
+
+export const infatuation = {
+  data_from_search_list_item: {
+    name: 'Lily',
+    street: '225 Clement Street',
+    price_tier: 3,
+    category: ['RESTAURANT'],
+    geo_point: { type: 'Point', coordinates: [-122.461686, 37.782826] },
+    id: 27148,
+    post: {
+      rating: 'None',
+      review_link: '/san-francisco/reviews/lily',
+      thumb_image:
+        'https://infatuation.imgix.net/media/images/reviews/lily/banners/1625092441.8032744.png?auto=format&h=128&w=192',
+      excerpt:
+        'Lily is an upscale Vietnamese restaurant in the Richmond that nails every aspect essential to a fantastic meal.',
+      cuisine: [[Object]],
+      perfectFor: [],
+      neighborhoods: [[Object]],
+      venue_image:
+        'https://infatuation.imgix.net/media/images/reviews/lily/banners/1625092441.8032744.png?auto=format&fit=crop&h=756&w=1134',
+    },
+    distance: 0.0019438024810108964,
+    currency_symbol: '$',
+    city: 'San Francisco',
+    state: 'California',
+    postal_code: '94118',
+    website_url: 'https://www.lilyonclement.com/',
+    phone_number: '(415) 742-5285',
+    hours: [],
+  },
+}
+
+export type InfatuationScrapeData = typeof infatuation

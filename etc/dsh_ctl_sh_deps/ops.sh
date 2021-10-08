@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function shell() {
   hostvar="$1_HOST"
   host="${!hostvar}"

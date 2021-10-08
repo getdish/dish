@@ -62,6 +62,9 @@ export const DO_BASE = 'https://dish-images.sfo2.digitaloceanspaces.com/'
 export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
   if (photosOg.length == 0) return []
   let photos = await ensureValidPhotos(normalizePhotos(photosOg))
+  if (!photos) {
+    return []
+  }
   photos = ensurePhotosAreUniqueKeyAble(photos)
   photos = uniqBy(photos, (el) => [el.tag_id, el.restaurant_id, el.photo?.url].join())
   photos = archiveURLInOrigin(photos)
@@ -71,6 +74,9 @@ export async function photoUpsert(photosOg: Partial<PhotoXref>[]) {
     selectBasePhotoXrefFields
   )
   const updated = await postUpsert(photos)
+  if (!updated) {
+    return []
+  }
   if (updated.length > 0) {
     return updated
   } else {
@@ -99,6 +105,10 @@ function ensurePhotosAreUniqueKeyAble(photos: Partial<PhotoXref>[]) {
 
 // ensure they are valid image urls otherwise other steps fail
 async function ensureValidPhotos(photosOg: Partial<PhotoXref>[]) {
+  if (process.env.SKIP_PHOTO_ANALYZE) {
+    console.log('skipping photo validity check')
+    return
+  }
   console.log(`Downloading ${photosOg.length} to check validity`)
   const valid = (
     await Promise.all(
@@ -175,6 +185,10 @@ export async function uploadToDO(photos: Partial<PhotoXref>[]) {
 }
 
 export async function updatePhotoQualityAndCategories(photos: Partial<PhotoXref>[]) {
+  if (process.env.SKIP_PHOTO_ANALYZE) {
+    console.log('skipping photo analyze')
+    return
+  }
   const unassessed_photos = await findUnassessedPhotos(photos)
   const result = await assessNewPhotos(unassessed_photos)
   if (!result) {

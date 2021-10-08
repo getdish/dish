@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function run() {
   set -a
   source_env

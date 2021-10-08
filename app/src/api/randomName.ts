@@ -605,7 +605,7 @@ const name1 = [
   'indolent',
   'infamous',
   'infantile',
-  'infatuated',
+  'infatuation',
   'inferior',
   'infinite',
   'informal',

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function deploy() {
   if [ "$1" = "all" ]; then
     deploy_all_to io1
@@ -126,8 +128,8 @@ function deploy_dish() {
     docker_service_restart_with_latest_image "$service"
   done
   wait
-
-  sleep 5
+  # echo "running migrations"
+  # docker_exec migrate yarn migrate
 }
 
 function docker_service_restart_with_latest_image() {

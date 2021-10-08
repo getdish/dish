@@ -21,7 +21,7 @@ with updown as (
         +
         (source_breakdown->'ubereats'->'upvotes')::numeric
         +
-        (source_breakdown->'infatuated'->'upvotes')::numeric
+        (source_breakdown->'infatuation'->'upvotes')::numeric
         +
         (source_breakdown->'tripadvisor'->'upvotes')::numeric
       ) as upvotes,
@@ -41,7 +41,7 @@ with updown as (
         +
         (source_breakdown->'ubereats'->'downvotes')::numeric
         +
-        (source_breakdown->'infatuated'->'downvotes')::numeric
+        (source_breakdown->'infatuation'->'downvotes')::numeric
         +
         (source_breakdown->'tripadvisor'->'downvotes')::numeric
       ) as downvotes
