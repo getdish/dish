@@ -26,7 +26,7 @@ export function App() {
       <AbsoluteVStack fullscreen backgroundColor={theme.mapBackground}>
         <Suspense fallback={null}>
           {/* keep indent  */}
-          {/* <AppMap /> */}
+          <AppMap />
         </Suspense>
 
         <Home />

@@ -26,7 +26,7 @@ import Animated, {
 import { useVector } from 'react-native-redash'
 
 import { useRefs } from '../useRefs'
-import { Props, RenderItemInfo } from './Props'
+import { Props, RenderItemInfo } from './types'
 
 let lastDrag = Date.now()
 export const getLastDrag = () => lastDrag
