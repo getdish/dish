@@ -48,6 +48,9 @@ function setup_test_services() {
   echo "setup test services for env $DISH_ENV in home $HOME with postgres db $POSTGRES_DB_DIR"
   docker network create traefik-public || true
 
+  echo "fixe duplicate network interfaces"
+  docker network rm $(docker network ls -f name="integration_default" -q) || true
+
   # if not already mounted/setup, we need to start postgres once and restart it
   # this is because there are problems where postgres gets corrupted/weird while other services
   # try and access it during init, giving it time to init here and then run later
