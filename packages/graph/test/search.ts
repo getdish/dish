@@ -31,7 +31,7 @@ test.beforeEach(async (t) => {
   t.context.user = user
 })
 
-test('Searching for a restaurant by name', async (t) => {
+test.skip('Searching for a restaurant by name', async (t) => {
   const [restaurant] = await restaurantUpsert([restaurant_fixture])
   const results = await search({
     center: {
@@ -47,7 +47,7 @@ test('Searching for a restaurant by name', async (t) => {
   t.is(results.name_matches[0].id, restaurant.id)
 })
 
-test('Searching for a restaurant by tag', async (t) => {
+test.skip('Searching for a restaurant by tag', async (t) => {
   let [restaurant] = await restaurantUpsert([restaurant_fixture])
   restaurant = (await restaurantUpsertOrphanTags(restaurant, ['Test tag']))!
   const results = await search({
@@ -65,7 +65,7 @@ test('Searching for a restaurant by tag', async (t) => {
   t.is(results?.restaurants?.[0].id, restaurant.id)
 })
 
-test('Orders by restaurant score if no dish tags queried', async (t) => {
+test.skip('Orders by restaurant score if no dish tags queried', async (t) => {
   let r1 = clone(restaurant_fixture)
   let r2 = clone(restaurant_fixture)
   let r3 = clone(restaurant_fixture)
@@ -98,13 +98,13 @@ test('Orders by restaurant score if no dish tags queried', async (t) => {
   t.is(results?.[2].id, rr3.id)
 })
 
-test('Tag insert triggers work, useful for next test', async (t) => {
+test.skip('Tag insert triggers work, useful for next test', async (t) => {
   await tagInsert([{ name: 'Test rated tag', type: 'dish' }])
   const tag = await tagFindOne({ name: 'Test rated tag' })
   t.is(tag.slug, 'global__test-rated-tag')
 })
 
-test('Orders by restaurant+tag score if dish tags queried', async (t) => {
+test.skip('Orders by restaurant+tag score if dish tags queried', async (t) => {
   let r1 = clone(restaurant_fixture)
   let r2 = clone(restaurant_fixture)
   let r3 = clone(restaurant_fixture)
@@ -143,7 +143,7 @@ test('Orders by restaurant+tag score if dish tags queried', async (t) => {
   t.is(results?.restaurants?.[2].meta.rish_rank, 3)
 })
 
-test('Supports main_tag priority ordering', async (t) => {
+test.skip('Supports main_tag priority ordering', async (t) => {
   let r1 = clone(restaurant_fixture)
   let r2 = clone(restaurant_fixture)
   let r3 = clone(restaurant_fixture)
@@ -187,7 +187,7 @@ test('Supports main_tag priority ordering', async (t) => {
   t.is(results?.restaurants?.[2].meta.restaurant_rank, 3)
 })
 
-test('Home page feed', async (t) => {
+test.skip('Home page feed', async (t) => {
   restaurant_fixture.location = {
     type: 'Point',
     coordinates: [-122, 36],
@@ -205,7 +205,7 @@ test('Home page feed', async (t) => {
   t.deepEqual(Object.keys(json), ['trending', 'newest', 'total_restaurants_in_region'])
 })
 
-// test('Regions', async (t) => {
+// test.skip('Regions', async (t) => {
 //   const response = await fetch(SEARCH_DOMAIN + '/regions?slug=xxx')
 //   const json = await response.json()
 //   t.deepEqual(Object.keys(json), ['bbox', 'centroid', 'name', 'slug'])

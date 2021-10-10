@@ -4,6 +4,7 @@ set -eo pipefail
 echo "HOME = $HOME"
 
 if [ "$FIRST_STEP" == "true" ]; then
+  ./dsh docker_network_dedupe
   rm -f exit_this_build || true
 
   # remove old data cache which can mess up tests db, recreate

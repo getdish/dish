@@ -54,7 +54,7 @@ export class ProxiedRequests {
   proxies = [
     ...(process.env.NODE_ENV === 'development' ? [{ name: 'Unproxied', base: this.domain }] : []),
     // fly.io - basically free but may not like us crawling
-    { name: 'Fly', base: this.domain, host: 'fly-proxy.fly.dev', port: 10080, protocol: 'https' },
+    // { name: 'Fly', base: this.domain, host: 'fly-proxy.fly.dev', port: 10080, protocol: 'https' },
     // $0.000005/request regardless of bandwidth
     { name: 'AWS', base: this.aws_proxy.replace(/\/$/, '') },
     // $0.5/GB or ~$0.00005/request for ~100kb requests

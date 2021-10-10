@@ -1,3 +1,5 @@
+import { createHash } from 'crypto'
+
 import { route } from '@dish/api'
 import { SEARCH_DOMAIN_INTERNAL } from '@dish/graph'
 import proxy from 'express-http-proxy'
@@ -12,18 +14,19 @@ const proxyHandler = proxy(SEARCH_DOMAIN_INTERNAL, {
     if (process.env.NODE_ENV === 'test') {
       return val
     }
-    console.log('val', val)
     redisSet(req['_key'], val)
     return val
   },
 })
+
+const md5 = createHash('md5')
 
 export default route(async (req, res, next) => {
   if (process.env.NODE_ENV === 'test') {
     proxyHandler(req, res, next)
     return
   }
-  const key = simpleHash(JSON.stringify(req.query ?? []))
+  const key = md5.update(JSON.stringify(req.query ?? [])).digest('hex')
   req['_key'] = key
   const cached = await redisGet(key)
   if (cached) {
@@ -33,13 +36,3 @@ export default route(async (req, res, next) => {
   }
   proxyHandler(req, res, next)
 })
-
-export const simpleHash = (str: string) => {
-  let hash = 0
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i)
-    hash = (hash << 5) - hash + char
-    hash &= hash // Convert to 32bit integer
-  }
-  return new Uint32Array([hash])[0].toString(36)
-}
