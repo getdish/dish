@@ -9,8 +9,9 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import { Image } from '../app/views/Image'
-import { EventsCallbacks, ItemRef, RenderItem, RenderItemInfo } from './Props'
+import { isNative } from '../constants/constants'
 import { ResizableImage } from './ResizableImage'
+import { EventsCallbacks, ItemRef, RenderItem, RenderItemInfo } from './types'
 
 const DOUBLE_TAP_SCALE = 3
 const MAX_SCALE = 6
@@ -31,7 +32,7 @@ export type GalleryRef = {
   reset: (animated?: boolean) => void
 }
 
-export type GalleryReactRef = React.Ref<GalleryRef>
+type GalleryReactRef = React.Ref<GalleryRef>
 
 type GalleryProps<T> = EventsCallbacks & {
   ref?: GalleryReactRef
@@ -85,6 +86,10 @@ const GalleryComponent = <T extends any>(
   }: GalleryProps<T>,
   ref: GalleryReactRef
 ) => {
+  if (isNative) {
+    return null
+  }
+
   const windowDimensions = useWindowDimensions()
   const dimensions = containerDimensions || windowDimensions
   const isLoop = loop && data?.length > 1
