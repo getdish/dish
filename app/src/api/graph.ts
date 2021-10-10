@@ -75,7 +75,7 @@ async function start() {
           },
           cache,
           enabled: (context: Request) => {
-            if (context.params?.skipCache) {
+            if (context.query?.skipCache) {
               return false
             }
             return !avoidCache
