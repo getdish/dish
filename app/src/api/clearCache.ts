@@ -6,6 +6,8 @@ export default route(async (req, res) => {
   console.warn('Clearing REDIS cache')
   if (req.params?.force) {
     await redisClient.flushall()
+    res.send('force cleared ok')
+    return
   } else {
     await redisDeletePattern(`${CACHE_KEY_PREFIX}*`)
   }
