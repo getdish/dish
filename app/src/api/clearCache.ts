@@ -2,8 +2,12 @@ import { CACHE_KEY_PREFIX, route } from '@dish/api'
 
 import { redisClient, redisDeletePattern } from './_redis'
 
-export default route((_req, res) => {
+export default route((req, res) => {
   console.warn('Clearing REDIS cache')
-  redisDeletePattern(`${CACHE_KEY_PREFIX}*`)
+  if (req.params.force) {
+    redisDeletePattern(``)
+  } else {
+    redisDeletePattern(`${CACHE_KEY_PREFIX}*`)
+  }
   res.send('ok')
 })
