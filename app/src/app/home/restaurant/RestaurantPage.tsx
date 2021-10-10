@@ -378,7 +378,7 @@ const RestaurantPage = memo(
                   />
                 </VStack>
 
-                <VStack flex={1} maxWidth={300} ref={setDishesSection}>
+                <VStack flex={1} maxWidth={300} ref={setDishesSection as any}>
                   <RestaurantDishRow
                     max={35}
                     restaurantSlug={restaurantSlug}

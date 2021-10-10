@@ -90,6 +90,7 @@
     "apple-sign-in-rest": "^1.0.2",
     "aws-sdk": "^2.762.0",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "date-fns": "^2.21.1",
     "expo-image-picker": "^10.2.3",
     "expo-linear-gradient": "^9.2.0",
