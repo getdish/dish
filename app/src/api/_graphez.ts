@@ -15,6 +15,8 @@ import {
   handleRequest,
 } from 'graphql-ez'
 
+import { EZCors, handleCors } from './_cors'
+
 export interface NextHandlerContext {
   handlers: Array<
     (
@@ -31,6 +33,7 @@ export interface NextHandlerContext {
 
 export interface DishAppOptions extends AppOptions {
   processRequestOptions?: (req: Request, res: Response) => ProcessRequestOptions
+  cors?: EZCors
   path?: string
 }
 
@@ -69,7 +72,7 @@ export function CreateApp(config: DishAppOptions = {}): EZAppBuilder {
   const { appBuilder, onIntegrationRegister, ...commonApp } = ezApp
 
   const buildApp: EZAppBuilder['buildApp'] = function buildApp(buildOptions = {}) {
-    const { buildContext, onAppRegister, processRequestOptions } = appConfig
+    const { buildContext, onAppRegister, processRequestOptions, cors } = appConfig
 
     let appHandler: Handler
     const appPromise = Promise.allSettled([
@@ -85,6 +88,8 @@ export function CreateApp(config: DishAppOptions = {}): EZAppBuilder {
 
         await onIntegrationRegister(integration)
 
+        const corsMiddleware = await handleCors(cors)
+
         const {
           preProcessRequest,
           options: { customHandleRequest },
@@ -99,10 +104,12 @@ export function CreateApp(config: DishAppOptions = {}): EZAppBuilder {
             if (result.some((v) => v?.stop)) return
           }
 
-          res.header('Access-Control-Allow-Origin', '*')
-          res.header('Access-Control-Allow-Credentials', 'true')
-          res.header('Access-Control-Allow-Headers', '*')
-          res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
+          // res.header('Access-Control-Allow-Origin', '*')
+          // res.header('Access-Control-Allow-Credentials', 'true')
+          // res.header('Access-Control-Allow-Headers', '*')
+          // res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
+
+          corsMiddleware && (await corsMiddleware(req, res))
 
           const request = {
             body: req.body,
