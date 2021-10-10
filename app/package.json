@@ -30,7 +30,7 @@
     "web:no-extract": "NO_EXTRACT=1 yarn web",
     "ios:bump-version": "cd ios && xcrun agvtool next-version -all",
     "ios:install": "cd ios && USE_HERMES=1 pod install --repo-update",
-    "ios:run": "TARGET=native arch -x86_64 react-native run-ios",
+    "ios:run": "TARGET=native react-native run-ios",
     "ios": "DISH_ENV=development yarn ios:run  --no-packager --simulator=\"iPhone 11 Pro\"",
     "ios:prod": "DISH_ENV=production yarn ios:run --configuration Release",
     "ios:device": "yarn ios:run --device",
