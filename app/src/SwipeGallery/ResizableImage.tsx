@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { Platform, StyleSheet, View, ViewStyle, useWindowDimensions } from 'react-native'
+import React, { useEffect } from 'react'
+import { Platform } from 'react-native'
 import {
   GestureEvent,
   PanGestureHandler,
@@ -25,78 +25,13 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useVector } from 'react-native-redash'
 
-import { Image } from './app/views/Image'
-
-type Props<T> = EventsCallbacks & {
-  item: T
-  index: number
-  isFirst: boolean
-  isLast: boolean
-  translateX: Animated.SharedValue<number>
-  currentIndex: Animated.SharedValue<number>
-  renderItem: RenderItem<T>
-  width: number
-  height: number
-  length: number
-  emptySpaceWidth: number
-  doubleTapInterval: number
-  doubleTapScale: number
-  maxScale: number
-  pinchEnabled: boolean
-  disableTransitionOnScaledImage: boolean
-  hideAdjacentImagesOnScaledImage: boolean
-  disableTapToZoom: boolean
-  disablePinchToZoom: boolean
-  disableVerticalSwipe: boolean
-  disableSwipeUp?: boolean
-  loop: boolean
-  onScaleChange?: (scale: number) => void
-  onScaleChangeRange?: { start: number; end: number }
-  setRef: (index: number, value: ItemRef) => void
-}
-
-type EventsCallbacks = {
-  onSwipeToClose?: () => void
-  onTap?: () => void
-  onDoubleTap?: () => void
-  onScaleStart?: () => void
-  onPanStart?: () => void
-}
-
-type RenderItem<T> = (imageInfo: RenderItemInfo<T>) => React.ReactElement | null
-type ItemRef = { reset: (animated: boolean) => void }
-
-export type RenderItemInfo<T> = {
-  index: number
-  item: T
-  onLayout: (e: { nativeEvent: { layout: { width: number; height: number } } }) => void
-}
+import { useRefs } from '../useRefs'
+import { Props, RenderItemInfo } from './Props'
 
 let lastDrag = Date.now()
 export const getLastDrag = () => lastDrag
 
-const DOUBLE_TAP_SCALE = 3
-const MAX_SCALE = 6
-const SPACE_BETWEEN_IMAGES = 40
-const isAndroid = Platform.OS === 'android'
-const useRefs = () => {
-  const pan = useRef()
-  const tap = useRef()
-  const doubleTap = useRef()
-  const pinch = useRef<PinchGestureHandler>()
-  return {
-    pan,
-    tap,
-    doubleTap,
-    pinch,
-  }
-}
-
-export const snapPoint = (
-  value: number,
-  velocity: number,
-  points: ReadonlyArray<number>
-): number => {
+const snapPoint = (value: number, velocity: number, points: ReadonlyArray<number>): number => {
   'worklet'
   const point = value + 0.25 * velocity
   const deltas = points.map((p) => Math.abs(point - p))
@@ -104,18 +39,9 @@ export const snapPoint = (
   return points.filter((p) => Math.abs(point - p) === minDelta)[0]
 }
 
-const defaultRenderImage = ({ item, onLayout }: RenderItemInfo<any>) => {
-  return (
-    <Image
-      onLayout={onLayout}
-      source={{ uri: item }}
-      resizeMode="contain"
-      style={StyleSheet.absoluteFillObject}
-    />
-  )
-}
+const isAndroid = Platform.OS === 'android'
 
-const ResizableImage = React.memo(
+export const ResizableImage = React.memo(
   <T extends any>({
     item,
     translateX,
@@ -727,189 +653,6 @@ const ResizableImage = React.memo(
   }
 )
 
-export type GalleryRef = {
-  setIndex: (newIndex: number) => void
-  reset: (animated?: boolean) => void
-}
-
-export type GalleryReactRef = React.Ref<GalleryRef>
-
-type GalleryProps<T> = EventsCallbacks & {
-  ref?: GalleryReactRef
-  data: T[]
-  renderItem?: RenderItem<T>
-  keyExtractor?: (item: T, index: number) => string | number
-  initialIndex?: number
-  onIndexChange?: (index: number) => void
-  numToRender?: number
-  emptySpaceWidth?: number
-  doubleTapScale?: number
-  doubleTapInterval?: number
-  maxScale?: number
-  style?: ViewStyle
-  containerDimensions?: { width: number; height: number }
-  pinchEnabled?: boolean
-  disableTapToZoom?: boolean
-  disablePinchToZoom?: boolean
-  disableTransitionOnScaledImage?: boolean
-  hideAdjacentImagesOnScaledImage?: boolean
-  disableVerticalSwipe?: boolean
-  disableSwipeUp?: boolean
-  loop?: boolean
-  onScaleChange?: (scale: number) => void
-  onScaleChangeRange?: { start: number; end: number }
-}
-
-const GalleryComponent = <T extends any>(
-  {
-    data,
-    renderItem = defaultRenderImage,
-    initialIndex = 0,
-    numToRender = 5,
-    emptySpaceWidth = SPACE_BETWEEN_IMAGES,
-    doubleTapScale = DOUBLE_TAP_SCALE,
-    doubleTapInterval = 500,
-    maxScale = MAX_SCALE,
-    pinchEnabled = true,
-    disableTransitionOnScaledImage = false,
-    hideAdjacentImagesOnScaledImage = false,
-    onIndexChange,
-    style,
-    keyExtractor,
-    containerDimensions,
-    disableVerticalSwipe,
-    disableSwipeUp = false,
-    loop = false,
-    onScaleChange,
-    onScaleChangeRange,
-    ...eventsCallbacks
-  }: GalleryProps<T>,
-  ref: GalleryReactRef
-) => {
-  const windowDimensions = useWindowDimensions()
-  const dimensions = containerDimensions || windowDimensions
-  const isLoop = loop && data?.length > 1
-  const [index, setIndex] = useState(initialIndex)
-  const refs = useRef<ItemRef[]>([])
-  const setRef = useCallback((index: number, value: ItemRef) => {
-    refs.current[index] = value
-  }, [])
-  const translateX = useSharedValue(initialIndex * -(dimensions.width + emptySpaceWidth))
-  const currentIndex = useSharedValue(initialIndex)
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: translateX.value }],
-  }))
-  const changeIndex = useCallback(
-    (newIndex) => {
-      onIndexChange?.(newIndex)
-      setIndex(newIndex)
-    },
-    [onIndexChange, setIndex]
-  )
-
-  useAnimatedReaction(
-    () => currentIndex.value,
-    (newIndex) => runOnJS(changeIndex)(newIndex),
-    [currentIndex, changeIndex]
-  )
-
-  useEffect(() => {
-    translateX.value = index * -(dimensions.width + emptySpaceWidth)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [windowDimensions])
-
-  useImperativeHandle(ref, () => ({
-    setIndex(newIndex: number) {
-      setIndex(newIndex)
-      currentIndex.value = newIndex
-      const index = newIndex * -(dimensions.width + emptySpaceWidth)
-      translateX.value = withSpring(index, {
-        damping: 800,
-        mass: 1,
-        stiffness: 250,
-        restDisplacementThreshold: 0.02,
-        restSpeedThreshold: 4,
-      })
-    },
-    reset(animated = false) {
-      refs.current?.forEach((itemRef) => itemRef.reset(animated))
-    },
-  }))
-
-  useEffect(() => {
-    if (index >= data.length) {
-      const newIndex = data.length - 1
-      setIndex(newIndex)
-      currentIndex.value = newIndex
-      translateX.value = newIndex * -(dimensions.width + emptySpaceWidth)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.length])
-
-  return (
-    <View pointerEvents="auto" style={[{ flex: 1 }, style]}>
-      <Animated.View style={[{ flex: 1, flexDirection: 'row' }, animatedStyle]}>
-        {data.map((item: any, i) => {
-          const isFirst = i === 0
-
-          const outOfLoopRenderRange =
-            !isLoop ||
-            (Math.abs(i - index) < data.length - (numToRender - 1) / 2 &&
-              Math.abs(i - index) > (numToRender - 1) / 2)
-
-          const hidden = Math.abs(i - index) > (numToRender - 1) / 2 && outOfLoopRenderRange
-
-          return (
-            <View
-              key={keyExtractor ? keyExtractor(item, i) : item.id || item.key || item._id || item}
-              style={[
-                { width: dimensions.width, height: dimensions.height },
-                isFirst ? {} : { marginLeft: emptySpaceWidth },
-                { zIndex: index === i ? 1 : 0 },
-              ]}
-            >
-              {hidden ? null : (
-                // @ts-ignore
-                <ResizableImage
-                  {...{
-                    translateX,
-                    item,
-                    currentIndex,
-                    index: i,
-                    isFirst,
-                    isLast: i === data.length - 1,
-                    length: data.length,
-                    renderItem,
-                    emptySpaceWidth,
-                    doubleTapScale,
-                    doubleTapInterval,
-                    maxScale,
-                    pinchEnabled,
-                    disableTransitionOnScaledImage,
-                    hideAdjacentImagesOnScaledImage,
-                    disableVerticalSwipe,
-                    disableSwipeUp,
-                    loop: isLoop,
-                    onScaleChange,
-                    onScaleChangeRange,
-                    setRef,
-                    ...eventsCallbacks,
-                    ...dimensions,
-                  }}
-                />
-              )}
-            </View>
-          )
-        })}
-      </Animated.View>
-    </View>
-  )
-}
-
-export const AdvancedGallery = React.forwardRef(GalleryComponent) as <T extends any>(
-  p: GalleryProps<T> & { ref?: GalleryReactRef }
-) => React.ReactElement
-
 export const clamp = (value: number, min: number, max: number) => {
   'worklet'
 
@@ -932,7 +675,6 @@ export const withRubberBandClamp = (
   let clampedX = clamp(x, limits[0], limits[1])
   let diff = Math.abs(x - clampedX)
   let sign = clampedX > x ? -1 : 1
-
   return clampedX + sign * rubberBandClamp(diff, coeff, dim)
 }
 

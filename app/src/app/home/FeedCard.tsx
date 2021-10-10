@@ -1,5 +1,5 @@
 import { ChevronRight } from '@dish/react-feather'
-import React, { Ref, RefObject, useRef, useState } from 'react'
+import React, { RefObject, useRef, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import {
   AbsoluteHStack,
@@ -12,12 +12,12 @@ import {
   useTheme,
 } from 'snackui'
 
-import { AdvancedGallery, GalleryReactRef, GalleryRef } from '../../AdvancedGallery'
 import { isWeb } from '../../constants/constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { getWindowWidth } from '../../helpers/getWindow'
 import { pluralize } from '../../helpers/pluralize'
+import { GalleryRef, SwipeGallery } from '../../SwipeGallery'
 import { Image } from '../views/Image'
 import { TagButton } from '../views/TagButton'
 import { FontTheme, TitleStyled } from '../views/TitleStyled'
@@ -72,7 +72,7 @@ export const FeedCard = (props: FeedCardProps) => {
         }}
       />
       {!!dimensions.width && (
-        <AdvancedGallery
+        <SwipeGallery
           ref={galleryRef}
           disableVerticalSwipe
           disableSwipeUp
