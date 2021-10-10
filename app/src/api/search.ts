@@ -19,14 +19,14 @@ const proxyHandler = proxy(SEARCH_DOMAIN_INTERNAL, {
   },
 })
 
-const md5 = createHash('md5')
-
 export default route(async (req, res, next) => {
   if (process.env.NODE_ENV === 'test') {
     proxyHandler(req, res, next)
     return
   }
-  const key = md5.update(JSON.stringify(req.query ?? [])).digest('hex')
+  const key = createHash('md5')
+    .update(JSON.stringify(req.query ?? []))
+    .digest('hex')
   req['_key'] = key
   const cached = await redisGet(key)
   if (cached) {
