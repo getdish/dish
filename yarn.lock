@@ -1822,7 +1822,7 @@ __metadata:
     react-helmet: ^6.1.0
     react-hook-form: ^6.13.0
     react-lag-radar: ^1.0.0
-    react-native: ^0.63.4
+    react-native: ^0.66.0
     react-native-clean-project: ^3.6.4
     react-native-codegen: ^0.0.7
     react-native-dotenv: ^2.5.3
@@ -2095,7 +2095,7 @@ __metadata:
     "@testing-library/react": 13.0.0-alpha.1
     "@types/react": ^16.9.44
     "@types/react-dom": ^16.9.8
-    "@types/react-native": ^0.62.12
+    "@types/react-native": ^0.65.5
     "@types/react-test-renderer": "*"
     debug-http: ^1.1.0
     happy-dom: ^2.23.0
@@ -5641,30 +5641,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-native@npm:*":
-  version: 0.65.2
-  resolution: "@types/react-native@npm:0.65.2"
+"@types/react-native@npm:0.65.5":
+  version: 0.65.5
+  resolution: "@types/react-native@npm:0.65.5"
   dependencies:
     "@types/react": "*"
-  checksum: a028226da24b7d170e92167e59fef375e9f5dd6530efeb46e927742f6841d31b9c0f33b9945464996f3e63534f57b3a1ba9b95a84fc8f523271c45f603c7109a
-  languageName: node
-  linkType: hard
-
-"@types/react-native@npm:^0.62.12":
-  version: 0.62.18
-  resolution: "@types/react-native@npm:0.62.18"
-  dependencies:
-    "@types/react": "*"
-  checksum: 0771a77366c9a59a47ab7f0fc4997b971b074c958ba467a3e609911c81c7435e97d2f4403f199bafd499a1d5e7fb34ee271b0dc09f61141650cb6f0f70b99670
-  languageName: node
-  linkType: hard
-
-"@types/react-native@npm:^0.64.2":
-  version: 0.64.15
-  resolution: "@types/react-native@npm:0.64.15"
-  dependencies:
-    "@types/react": "*"
-  checksum: 3b63405f918e62ab9df2cc8f253f33cd2793eff3bd905a81168cea59979fba6958fff45b0d4d966268177705884d76e787d337c6e7d687f9dc492e36484dae67
+  checksum: 18459ea74c2083833c01697e48425d699ef3ce8938cf347e29a0e092b6f1807c6e060643b87e4f12eb2e4b2cb0c069e0273645deee56c9640b5faa43182015aa
   languageName: node
   linkType: hard
 
@@ -10243,7 +10225,6 @@ __metadata:
     "@types/fs-extra": ^9.0.11
     "@types/node": ^14.14.12
     "@types/react": ^17.0.19
-    "@types/react-native": ^0.64.2
     "@typescript-eslint/eslint-plugin": ^4.29.2
     "@typescript-eslint/parser": ^4.29.2
     "@yarnpkg/plugin-patch": ^2.1.2
@@ -20665,9 +20646,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.66.0-rc.4":
-  version: 0.66.0-rc.4
-  resolution: "react-native@npm:0.66.0-rc.4"
+"react-native@npm:0.66.0":
+  version: 0.66.0
+  resolution: "react-native@npm:0.66.0"
   dependencies:
     "@jest/create-cache-key-function": ^27.0.1
     "@react-native-community/cli": ^6.0.0
@@ -20704,7 +20685,7 @@ __metadata:
     react: 17.0.2
   bin:
     react-native: cli.js
-  checksum: 836a81737f514f3ec5071c843242e655f32e3f1ec77ee647e9c6cca010e2b09c69cd07d6f0bd9019bfd06c3dcf2c5b6070d7cdedbaa44db8c13466009e801bed
+  checksum: f563535a66e42c8c86967f3a5885666b8cf2e530ce8eef5237f03fa1c3718ffb96cd0aa7cde3c69e9ae93c49689cf20610bde05e11e1cfd35d199edc6200bbb8
   languageName: node
   linkType: hard
 
