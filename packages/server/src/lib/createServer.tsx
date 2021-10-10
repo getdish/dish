@@ -2,6 +2,7 @@ import { join } from 'path'
 import { Worker } from 'worker_threads'
 
 import compression from 'compression'
+import cors from 'cors'
 import express from 'express'
 import proxy from 'express-http-proxy'
 import getPort from 'get-port'
@@ -50,7 +51,29 @@ export async function createServer(serverConf: ServerConfig) {
 
   const app = express()
   app.set('port', conf.port)
-  app.use(cors())
+
+  const allowedOrigins = new Set([
+    'http://localhost:4444',
+    'http://d1live.com',
+    'http://d1sh.com',
+    'https://dishapp.com',
+  ])
+
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        // allow requests with no origin
+        // (like mobile apps or curl requests)
+        if (!origin) return callback(null, true)
+        if (!allowedOrigins.has(origin)) {
+          var msg =
+            'The CORS policy for this site does not ' + 'allow access from the specified Origin.'
+          return callback(new Error(msg), false)
+        }
+        return callback(null, true)
+      },
+    })
+  )
   app.use(compression())
   // fixes bug with 304 errors sometimes
   // see: https://stackoverflow.com/questions/18811286/nodejs-express-cache-and-304-status-code
@@ -122,13 +145,13 @@ async function createApiServer(app: any, conf: ServerConfigNormal) {
   })
 }
 
-function cors() {
-  const HEADER_ALLOWED = '*'
-  return (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin || '*')
-    res.header('Access-Control-Allow-Credentials', 'true')
-    res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
-    res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
-    next()
-  }
-}
+// function cors() {
+//   const HEADER_ALLOWED = '*'
+//   return (req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', req.headers.origin || '*')
+//     res.header('Access-Control-Allow-Credentials', 'true')
+//     res.header('Access-Control-Allow-Headers', HEADER_ALLOWED)
+//     res.header('Access-Control-Allow-Methods', 'GET,HEAD,POST,PUT,DELETE,OPTIONS')
+//     next()
+//   }
+// }
