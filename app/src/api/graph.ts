@@ -1,4 +1,4 @@
-import { route, useRouteBodyParser } from '@dish/api'
+import { CACHE_KEY_PREFIX, route, useRouteBodyParser } from '@dish/api'
 import { sleep } from '@dish/async'
 import { DISH_DEBUG, GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
 import { useParserCache } from '@envelop/parser-cache'
@@ -50,6 +50,7 @@ async function start() {
   const cache = redisConnected
     ? createRedisCache({
         redis: redisClient,
+        buildRedisOperationResultCacheKey: (x) => `${CACHE_KEY_PREFIX}${x}`,
       })
     : createInMemoryCache()
 
