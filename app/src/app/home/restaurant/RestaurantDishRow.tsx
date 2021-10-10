@@ -56,10 +56,10 @@ export const RestaurantDishRowContent = memo(
       const dishes = getRestaurantDishes({ restaurant, max })
       const [hasScrolled, setHasScrolled] = useState(false)
       const hasDishes = !!dishes?.length
-      const dishGroups = partition(
-        dishes,
-        withIndex((_, idx) => idx % 2)
-      )
+      // const dishGroups = partition(
+      //   dishes,
+      //   withIndex((_, idx) => idx % 2)
+      // )
 
       const handleScroll = useMemo(() => {
         return !hasScrolled
@@ -103,7 +103,7 @@ export const RestaurantDishRowContent = memo(
         })
       }
 
-      return <>{getDishRow(dishGroups[0])}</>
+      return <>{getDishRow(dishes)}</>
 
       return (
         <ContentScrollViewHorizontal

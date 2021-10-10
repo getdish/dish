@@ -1,5 +1,6 @@
 import { restaurant, restaurant_tag } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
+import { sortBy } from 'lodash'
 
 import { DishTagItemSimple, selectRishDishViewSimple } from './selectDishViewSimple'
 
@@ -45,13 +46,17 @@ export const getRestaurantDishes = ({
 
   topTags = prependSearchedForTags(topTags ?? [], tagSlugs)
 
-  return (topTags ?? [])
+  const unsorted = (topTags ?? [])
     .map((tag) => {
       if (!tag) return null
       return selectRishDishViewSimple(tag)
     })
     .filter(isPresent)
     .filter((x) => x && !!x.slug)
+
+  const sorted = sortBy(unsorted, (x) => -x.rating)
+
+  return sorted
 }
 
 // TODO: Whether it is Postgres or Hasura, having to set the ordering here should not

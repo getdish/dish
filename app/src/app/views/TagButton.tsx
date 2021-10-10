@@ -182,11 +182,16 @@ const TagButtonInner = (props: TagButtonProps) => {
   const smallerFontSize: any = typeof fontSize === 'number' ? Math.round(fontSize * 0.85) : fontSize
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
   const pieSize = size === 'sm' ? 16 : 20
-  const showRank = !hideRank && !!rank
+  const showRank = !hideRank
 
-  const rankElement = !onlyIcon && showRank && rank && rank < 100 && (
-    <>
-      <Text pointerEvents="none" color={theme.color} fontSize={11} fontWeight="300" opacity={0.5}>
+  const rankElement = !onlyIcon && showRank && (
+    <HStack
+      alignItems="flex-start"
+      flexWrap="nowrap"
+      flexShrink={0}
+      opacity={rank && rank < 100 ? 1 : 0}
+    >
+      <Text pointerEvents="none" color={theme.color} fontSize={7} fontWeight="300" opacity={0.15}>
         #
       </Text>
       <Text
@@ -197,13 +202,12 @@ const TagButtonInner = (props: TagButtonProps) => {
         alignItems="center"
         display="flex"
         color={theme.color}
-        letterSpacing={-1}
-        marginRight={-3}
+        letterSpacing={-1.5}
         opacity={0.2}
       >
         {rank}
       </Text>
-    </>
+    </HStack>
   )
 
   const iconElement =

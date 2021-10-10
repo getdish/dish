@@ -25,13 +25,15 @@ export const RestaurantLists = memo(
     }
 
     return (
-      <VStack marginTop={-15} marginBottom={15}>
+      <VStack marginBottom={15}>
         <SlantedTitle size="xs" marginBottom={-26} alignSelf="center" fontWeight="700">
           Lists
         </SlantedTitle>
         <CardCarousel>
           {lists.map(({ list }, i) => {
-            return <ListCard key={list.id || i} query={lists} list={list} />
+            return (
+              <ListCard size="lg" flat borderless key={list.id || i} query={lists} list={list} />
+            )
           })}
         </CardCarousel>
       </VStack>
