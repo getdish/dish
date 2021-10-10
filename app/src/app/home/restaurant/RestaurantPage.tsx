@@ -352,44 +352,53 @@ const RestaurantPage = memo(
                 </VStack>
               </ContentScrollViewHorizontal>
 
-              <HStack>
-                <VStack flex={1} maxWidth={300} marginBottom={10} pointerEvents="auto">
-                  <RestaurantOverview
-                    isDishBot
-                    maxLines={3}
-                    size="lg"
-                    restaurantSlug={restaurantSlug}
-                  />
-                </VStack>
+              <ContentScrollViewHorizontal>
+                <HStack flexShrink={0} marginBottom={20}>
+                  <VStack flex={1} maxWidth={340} marginBottom={10} pointerEvents="auto">
+                    <RestaurantOverview
+                      isDishBot
+                      maxLines={3}
+                      size="lg"
+                      restaurantSlug={restaurantSlug}
+                    />
+                  </VStack>
 
-                <VStack flex={1} maxWidth={300}>
-                  <RestaurantTagsList
-                    exclude={['dish']}
-                    restaurant={restaurant}
-                    spacing={0}
-                    maxItems={5}
-                    tagButtonProps={{
-                      // borderWidth: 0,
-                      hideRank: false,
-                      hideRating: false,
-                      borderWidth: 0,
-                      votable: true,
-                    }}
-                  />
-                </VStack>
+                  <VStack maxHeight={195} flexWrap="wrap" overflow="hidden" flex={1} maxWidth={200}>
+                    <RestaurantTagsList
+                      exclude={['dish']}
+                      restaurant={restaurant}
+                      spacing={0}
+                      maxItems={5}
+                      tagButtonProps={{
+                        // borderWidth: 0,
+                        hideRank: false,
+                        hideRating: false,
+                        borderWidth: 0,
+                        votable: true,
+                      }}
+                    />
+                  </VStack>
 
-                <VStack flex={1} maxWidth={300} ref={setDishesSection as any}>
-                  <RestaurantDishRow
-                    max={35}
-                    restaurantSlug={restaurantSlug}
-                    restaurantId={restaurant.id ?? undefined}
-                    selectable
-                    selected={selectedDish}
-                    onSelect={setSelectedDishToggle}
-                    // themeName={`${colors.name}-dark`}
-                  />
-                </VStack>
-              </HStack>
+                  <VStack
+                    maxHeight={195}
+                    flexWrap="wrap"
+                    overflow="hidden"
+                    flex={1}
+                    maxWidth={200}
+                    ref={setDishesSection as any}
+                  >
+                    <RestaurantDishRow
+                      max={15}
+                      restaurantSlug={restaurantSlug}
+                      restaurantId={restaurant.id ?? undefined}
+                      selectable
+                      selected={selectedDish}
+                      onSelect={setSelectedDishToggle}
+                      // themeName={`${colors.name}-dark`}
+                    />
+                  </VStack>
+                </HStack>
+              </ContentScrollViewHorizontal>
             </VStack>
           </VStack>
         </>
@@ -423,7 +432,7 @@ const RestaurantPage = memo(
                     restaurantSlug={restaurantSlug}
                   /> */}
 
-                  <VStack zIndex={0}>
+                  <VStack marginHorizontal={-15} zIndex={0}>
                     <RestaurantOverallAndTagReviews
                       tagSlug={selectedDish}
                       borderless

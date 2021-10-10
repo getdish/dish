@@ -1,4 +1,5 @@
 import { order_by, restaurant } from '@dish/graph'
+import { sortBy } from 'lodash'
 
 export type QueryRestaurantTagsProps = {
   restaurant?: restaurant | null
@@ -66,5 +67,7 @@ export const queryRestaurantTags = ({
         },
         order_by: [{ rating: order_by.desc_nulls_last }, { votes_ratio: order_by.desc_nulls_last }],
       })
-  return [...dishTags, ...lenseTags, ...countryTags, ...catTags]
+  const sorted = sortBy([...dishTags, ...lenseTags, ...countryTags, ...catTags], (x) => x.rank)
+  console.log(JSON.stringify(sorted, null, 2))
+  return sorted
 }
