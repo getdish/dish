@@ -6,7 +6,7 @@ const { build } = require('esbuild')
 const fg = require('fast-glob')
 const { emitFlatDts } = require('rollup-plugin-flat-dts/api')
 
-async function go({ legacy, skipTypes }) {
+async function go({ legacy, skipTypes, jsx }) {
   const x = Date.now()
 
   if (process.env.NO_CLEAN) {
@@ -95,6 +95,23 @@ async function go({ legacy, skipTypes }) {
       }).then(() => {
         console.log('built _')
       }),
+      jsx
+        ? build({
+            // only diff is jsx preserve and outdir
+            jsx: 'preserve',
+            outdir: '_jsx',
+            entryPoints: files,
+            sourcemap: true,
+            target: 'es2019',
+            keepNames: true,
+            format: 'esm',
+            logLevel: 'error',
+            minify: false,
+            platform: 'neutral',
+          }).then(() => {
+            console.log('built _jsx')
+          })
+        : null,
     ])
   } catch (error) {
     console.log(error)
@@ -110,5 +127,6 @@ if (!process.env.DISABLE_AUTORUN) {
   process.on('unhandledRejection', console.log.bind(console))
   const legacy = process.argv.includes('legacy')
   const skipTypes = process.argv.includes('skip-types')
-  go({ legacy, skipTypes })
+  const jsx = process.argv.includes('--jsx')
+  go({ legacy, skipTypes, jsx })
 }

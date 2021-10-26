@@ -1,6 +1,6 @@
 {
   "name": "@dish/esdx",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "bin": {
     "esdx": "esdx.js",
     "esdx-watch": "esdx-watch.js"
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "chokidar-cli": "^2.1.0",
-    "esbuild": "^0.11.20",
+    "esbuild": "0.13.8",
     "execa": "^5.0.0",
     "fast-glob": "^3.2.5",
     "fs-extra": "^9.1.0",

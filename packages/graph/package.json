@@ -4,6 +4,7 @@
   "sideEffects": false,
   "private": true,
   "main": "dist",
+  "types": "./types",
   "testConfig": {
     "isolate": true
   },
