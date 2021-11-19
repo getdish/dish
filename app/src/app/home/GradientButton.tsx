@@ -1,12 +1,12 @@
+import { XStack, useTheme } from '@dish/ui'
 import React from 'react'
-import { HStack, useTheme } from 'snackui'
 
 import { RGB } from '../../helpers/rgb'
 
 export function GradientButton({ children }: { children?: any }) {
   const theme = useTheme()
   return (
-    <HStack
+    <XStack
       paddingVertical={12}
       paddingHorizontal={18}
       alignItems="center"
@@ -27,6 +27,6 @@ export function GradientButton({ children }: { children?: any }) {
       }}
     >
       {children}
-    </HStack>
+    </XStack>
   )
 }

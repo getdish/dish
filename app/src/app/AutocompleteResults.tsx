@@ -1,6 +1,6 @@
+import { Spacer, Theme, YStack, useMedia } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
-import { Spacer, Theme, VStack, useMedia } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { AutocompleteItem } from '../helpers/createAutocomplete'
@@ -51,7 +51,7 @@ export const AutocompleteResults = memo(
         })}
 
         {/* on small screens add */}
-        <VStack height={media.pointerCoarse ? 300 : 0} />
+        <YStack height={media.pointerCoarse ? 300 : 0} />
       </>
     )
   }

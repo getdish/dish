@@ -1,5 +1,5 @@
 import { sleep } from '@dish/async'
-import { useOnMount } from 'snackui'
+import { useOnMount } from '@dish/ui'
 
 import { isWeb } from '../../../constants/constants'
 import { supportsTouchWeb } from '../../../constants/platforms'

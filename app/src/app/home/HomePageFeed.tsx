@@ -1,20 +1,20 @@
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Plus } from '@dish/react-feather'
+import {
+  AbsoluteYStack,
+  Button,
+  Grid,
+  Spacer,
+  Title,
+  XStack,
+  YStack,
+  useDebounce,
+  useDebounceEffect,
+} from '@dish/ui'
+import { Plus } from '@tamagui/feather-icons'
 import getCenter from '@turf/center'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
-import {
-  AbsoluteVStack,
-  Button,
-  Grid,
-  HStack,
-  Spacer,
-  Title,
-  VStack,
-  useDebounce,
-  useDebounceEffect,
-} from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
@@ -150,16 +150,16 @@ export const HomePageFeed = memo(
 
           <Spacer size="xxl" />
 
-          <VStack paddingHorizontal={10} position="relative">
-            <AbsoluteVStack zIndex={100} top={-15} left={10}>
+          <YStack paddingHorizontal={10} position="relative">
+            <AbsoluteYStack zIndex={100} top={-15} left={10}>
               <SlantedTitle size="xs">Top Playlists</SlantedTitle>
-            </AbsoluteVStack>
+            </AbsoluteYStack>
 
             <Grid itemMinWidth={220}>
               {trendingLists.map((list, i) => {
                 const listSlug = list.slug
                 return (
-                  <HStack
+                  <XStack
                     alignItems="center"
                     flexShrink={0}
                     key={`${list.id ?? i}`}
@@ -181,13 +181,13 @@ export const HomePageFeed = memo(
                       })}
                     />
                     <Spacer size="xxs" />
-                  </HStack>
+                  </XStack>
                 )
               })}
 
               {[...new Array(numAddButtons)].map((_, index) =>
                 index > 6 ? null : (
-                  <HStack
+                  <XStack
                     paddingHorizontal={2}
                     alignItems="center"
                     flex={1}
@@ -204,7 +204,7 @@ export const HomePageFeed = memo(
                       }}
                     >
                       <FeedCard flexible chromeless size="lg" flat>
-                        <AbsoluteVStack
+                        <AbsoluteYStack
                           opacity={0.26}
                           hoverStyle={{ opacity: 1 }}
                           fullscreen
@@ -212,10 +212,10 @@ export const HomePageFeed = memo(
                           justifyContent="center"
                         >
                           <Plus color="#eeeeee" />
-                        </AbsoluteVStack>
+                        </AbsoluteYStack>
                       </FeedCard>
                     </Link>
-                  </HStack>
+                  </XStack>
                 )
               )}
             </Grid>
@@ -223,7 +223,7 @@ export const HomePageFeed = memo(
             <Spacer size="xxxl" />
 
             {/* <HomeTrendingSpots region={region} /> */}
-          </VStack>
+          </YStack>
         </>
       )
     },
@@ -243,18 +243,18 @@ const HomeTrendingSpots = memo(({ region }: { region: string }) => {
 
   return (
     <>
-      <VStack position="relative">
-        <AbsoluteVStack zIndex={100} top={-15} left={0}>
+      <YStack position="relative">
+        <AbsoluteYStack zIndex={100} top={-15} left={0}>
           <SlantedTitle size="xs">Trending Spots</SlantedTitle>
-        </AbsoluteVStack>
+        </AbsoluteYStack>
         <ContentScrollViewHorizontal>
-          <HStack alignItems="center" spacing="md" paddingVertical={10}>
+          <XStack alignItems="center" spacing="md" paddingVertical={10}>
             {trendingSpots.map((spot, index) => {
               return <RestaurantCard key={spot.id || index} size="sm" restaurant={spot} />
             })}
-          </HStack>
+          </XStack>
         </ContentScrollViewHorizontal>
-      </VStack>
+      </YStack>
     </>
   )
 })
@@ -262,7 +262,7 @@ const HomeTrendingSpots = memo(({ region }: { region: string }) => {
 const HomeTagLenses = memo(() => {
   return (
     <ContentScrollViewHorizontal>
-      <HStack alignItems="center" spacing="xxl" paddingHorizontal={16}>
+      <XStack alignItems="center" spacing="xxl" paddingHorizontal={16}>
         {tagLenses.map((lense, i) => {
           return (
             <Link key={i} tag={lense}>
@@ -282,7 +282,7 @@ const HomeTagLenses = memo(() => {
             </Link>
           )
         })}
-      </HStack>
+      </XStack>
     </ContentScrollViewHorizontal>
   )
 })
@@ -314,7 +314,7 @@ const HomeNearbyRegions = memo(
         {!!nearbyRegions.length && <Spacer size="sm" />}
 
         <ContentScrollViewHorizontal>
-          <HStack alignItems="center" spacing="sm" paddingHorizontal={16}>
+          <XStack alignItems="center" spacing="sm" paddingHorizontal={16}>
             {nearbyRegions.map((r, i) => {
               const regionName = capitalize(r.hrrcity?.replace(/[a-z]+\-\s*/i, '') || '')
               const center = r.wkb_geometry ? getCenter(r.wkb_geometry) : null
@@ -341,7 +341,7 @@ const HomeNearbyRegions = memo(
                 </Button>
               )
             })}
-          </HStack>
+          </XStack>
         </ContentScrollViewHorizontal>
       </>
     )

@@ -1,5 +1,5 @@
+import { useMedia } from '@dish/ui'
 import React, { Suspense } from 'react'
-import { useMedia } from 'snackui'
 
 import { AppSearchBarContents } from './AppSearchBarContents'
 

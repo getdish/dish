@@ -1,8 +1,8 @@
-import { MapPin, Search } from '@dish/react-feather'
+import { Button, Spacer, XStack, YStack, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
+import { MapPin, Search } from '@tamagui/feather-icons'
 import React, { Suspense, memo } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { Button, HStack, Spacer, VStack, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { AppActionButton } from './AppActionButton'
@@ -26,7 +26,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
   const searchLocationEl = <AppSearchInputLocation key={1} />
 
   return (
-    <HStack
+    <XStack
       width="100%"
       flex={1}
       pointerEvents="auto"
@@ -38,11 +38,11 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
     >
       {!media.sm && <SearchBarActionButton />}
 
-      <VStack paddingHorizontal={media.sm ? 2 : 12} maxHeight={searchBarHeight} overflow="hidden">
+      <YStack paddingHorizontal={media.sm ? 2 : 12} maxHeight={searchBarHeight} overflow="hidden">
         <DishLogoButton color={isColored ? '#fff' : undefined} />
-      </VStack>
+      </YStack>
 
-      <VStack
+      <YStack
         className="ease-in-out"
         position="relative"
         width={media.sm ? 'auto' : '43%'}
@@ -62,9 +62,9 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
           <>
             {showLocation && searchLocationEl}
             {!showLocation && (
-              <VStack justifyContent="center" width="100%" maxWidth="100%" flex={1}>
+              <YStack justifyContent="center" width="100%" maxWidth="100%" flex={1}>
                 {searchInputEl}
-              </VStack>
+              </YStack>
             )}
           </>
         )}
@@ -72,7 +72,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
         {media.xs && isWeb && (
           <>
             {/* keep both in dom so we have access to ref */}
-            <VStack
+            <YStack
               flex={1}
               maxWidth="100%"
               width="100%"
@@ -80,8 +80,8 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
               display={showLocation ? 'flex' : 'none'}
             >
               {searchLocationEl}
-            </VStack>
-            <VStack
+            </YStack>
+            <YStack
               flex={1}
               maxWidth="100%"
               width="100%"
@@ -89,15 +89,15 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
               display={!showLocation ? 'flex' : 'none'}
             >
               {searchInputEl}
-            </VStack>
+            </YStack>
           </>
         )}
-      </VStack>
+      </YStack>
 
       {!media.xs && (
         <>
           <Spacer size={4} />
-          <VStack
+          <YStack
             className="ease-in-out"
             overflow="hidden"
             minWidth={media.sm ? 220 : 260}
@@ -109,7 +109,7 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
             flex={media.sm ? 1 : 10}
           >
             {searchLocationEl}
-          </VStack>
+          </YStack>
         </>
       )}
 
@@ -144,15 +144,15 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
             </>
           )}
 
-          <VStack>
+          <YStack>
             <AppActionButton />
-          </VStack>
+          </YStack>
 
           <Suspense fallback={null}>
             <AppMenuButton />
           </Suspense>
         </>
       )}
-    </HStack>
+    </XStack>
   )
 })

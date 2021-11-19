@@ -1,19 +1,19 @@
 import { fullyIdle, series, sleep } from '@dish/async'
 import { graphql } from '@dish/graph'
-import { Clock } from '@dish/react-feather'
-import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
-import { ScrollView, View } from 'react-native'
 import {
-  HStack,
   LoadingItems,
   Spacer,
   Text,
   Theme,
   ThemeInverse,
-  VStack,
+  XStack,
+  YStack,
   useTheme,
   useThemeName,
-} from 'snackui'
+} from '@dish/ui'
+import { Clock } from '@tamagui/feather-icons'
+import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
+import { ScrollView, View } from 'react-native'
 
 import { drawerBorderRadius, isWeb, searchBarHeight } from '../../../constants/constants'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
@@ -64,7 +64,7 @@ export default function RestaurantPageContainer(props: Props) {
     <StackDrawer
       closable
       fallback={
-        <VStack
+        <YStack
           backgroundColor={colors.themeColor}
           borderBottomColor={theme.borderColor}
           borderBottomWidth={1}
@@ -73,7 +73,7 @@ export default function RestaurantPageContainer(props: Props) {
           <PageContentWithFooter>
             <LoadingItems />
           </PageContentWithFooter>
-        </VStack>
+        </YStack>
       }
     >
       <RestaurantPage {...props} colors={colors} />
@@ -207,7 +207,7 @@ const RestaurantPage = memo(
               <RestaurantFavoriteButton floating size="lg" restaurantSlug={restaurantSlug} />
             </Suspense>
           </PaneControlButtonsLeft>
-          <VStack
+          <YStack
             paddingTop={0}
             // minWidth={minWidth}
             // maxWidth={width}
@@ -218,19 +218,19 @@ const RestaurantPage = memo(
             pointerEvents="none"
             zIndex={10}
           >
-            <VStack flex={1}>
+            <YStack flex={1}>
               {/* below title row */}
               <ContentScrollViewHorizontal>
-                <VStack>
+                <YStack>
                   {/* title row */}
-                  <HStack paddingLeft={20} alignItems="flex-end" position="relative">
-                    <VStack width={66} height={66} marginRight={-15} marginBottom={0} zIndex={200}>
+                  <XStack paddingLeft={20} alignItems="flex-end" position="relative">
+                    <YStack width={66} height={66} marginRight={-15} marginBottom={0} zIndex={200}>
                       <Theme name={themeName}>
                         <RestaurantRatingView floating size={66} restaurant={restaurant} />
                       </Theme>
-                    </VStack>
+                    </YStack>
 
-                    <HStack
+                    <XStack
                       y={10}
                       marginRight={-25}
                       pointerEvents="auto"
@@ -243,7 +243,7 @@ const RestaurantPage = memo(
                       minWidth={100}
                       // skewX="-12deg"
                     >
-                      {/* <AbsoluteVStack
+                      {/* <AbsoluteYStack
                     fullscreen
                     backgroundColor={colors.themeColorAlt}
                     zIndex={-1}
@@ -256,7 +256,7 @@ const RestaurantPage = memo(
                     shadowOffset={{ height: 3, width: 0 }}
                   /> */}
                       <ThemeInverse>
-                        <HStack
+                        <XStack
                           display={isWeb ? 'block' : 'flex'}
                           maxWidth={280}
                           marginRight={30}
@@ -278,11 +278,11 @@ const RestaurantPage = memo(
                           >
                             {(restaurant.name || '').trim()}
                           </Text>
-                        </HStack>
+                        </XStack>
                       </ThemeInverse>
-                    </HStack>
+                    </XStack>
 
-                    <VStack paddingTop={10}>
+                    <YStack paddingTop={10}>
                       <RestaurantPhotosRow
                         // slanted
                         restaurant={restaurant}
@@ -292,30 +292,30 @@ const RestaurantPage = memo(
                         height={150}
                         showEscalated={hasScrolled}
                       />
-                    </VStack>
-                  </HStack>
+                    </YStack>
+                  </XStack>
 
                   <Spacer size="md" />
 
-                  <HStack pointerEvents="auto" flex={1} alignItems="center" minWidth={280}>
+                  <XStack pointerEvents="auto" flex={1} alignItems="center" minWidth={280}>
                     {spacer}
-                    <VStack flex={10}>
-                      <VStack pointerEvents="auto" overflow="hidden" paddingRight={20}>
-                        <HStack alignItems="center" maxWidth="100%" minHeight={55}>
+                    <YStack flex={10}>
+                      <YStack pointerEvents="auto" overflow="hidden" paddingRight={20}>
+                        <XStack alignItems="center" maxWidth="100%" minHeight={55}>
                           <>
                             <Suspense fallback={null}>
-                              <HStack>
+                              <XStack>
                                 <RestaurantAddressLinksRow
                                   size="lg"
                                   restaurantSlug={restaurantSlug}
                                 />
-                              </HStack>
+                              </XStack>
 
                               <Spacer size="sm" />
 
-                              <VStack>
+                              <YStack>
                                 <RestaurantAddress size="xs" address={restaurant?.address ?? ''} />
-                              </VStack>
+                              </YStack>
 
                               <Spacer size="sm" />
 
@@ -343,27 +343,27 @@ const RestaurantPage = memo(
                               />
                             </Suspense>
                           </>
-                        </HStack>
+                        </XStack>
 
                         <Spacer size="sm" />
-                      </VStack>
-                    </VStack>
-                  </HStack>
-                </VStack>
+                      </YStack>
+                    </YStack>
+                  </XStack>
+                </YStack>
               </ContentScrollViewHorizontal>
 
               <ContentScrollViewHorizontal>
-                <HStack flexShrink={0} marginBottom={20}>
-                  <VStack flex={1} maxWidth={340} marginBottom={10} pointerEvents="auto">
+                <XStack flexShrink={0} marginBottom={20}>
+                  <YStack flex={1} maxWidth={340} marginBottom={10} pointerEvents="auto">
                     <RestaurantOverview
                       isDishBot
                       maxLines={3}
                       size="lg"
                       restaurantSlug={restaurantSlug}
                     />
-                  </VStack>
+                  </YStack>
 
-                  <VStack maxHeight={195} flexWrap="wrap" overflow="hidden" flex={1} maxWidth={200}>
+                  <YStack maxHeight={195} flexWrap="wrap" overflow="hidden" flex={1} maxWidth={200}>
                     <RestaurantTagsList
                       exclude={['dish']}
                       restaurant={restaurant}
@@ -377,9 +377,9 @@ const RestaurantPage = memo(
                         votable: true,
                       }}
                     />
-                  </VStack>
+                  </YStack>
 
-                  <VStack
+                  <YStack
                     maxHeight={195}
                     flexWrap="wrap"
                     overflow="hidden"
@@ -396,11 +396,11 @@ const RestaurantPage = memo(
                       onSelect={setSelectedDishToggle}
                       // themeName={`${colors.name}-dark`}
                     />
-                  </VStack>
-                </HStack>
+                  </YStack>
+                </XStack>
               </ContentScrollViewHorizontal>
-            </VStack>
-          </VStack>
+            </YStack>
+          </YStack>
         </>
       )
 
@@ -420,7 +420,7 @@ const RestaurantPage = memo(
               {/* HEADER */}
               {/* -1 margin bottom to overlap bottom border */}
               <Theme name={headerThemeName}>
-                <VStack
+                <YStack
                   backgroundColor={colors.themeColor}
                   // borderBottomColor={theme.borderColor}
                   // borderBottomWidth={1}
@@ -432,7 +432,7 @@ const RestaurantPage = memo(
                     restaurantSlug={restaurantSlug}
                   /> */}
 
-                  <VStack marginHorizontal={-15} zIndex={0}>
+                  <YStack marginHorizontal={-15} zIndex={0}>
                     <RestaurantOverallAndTagReviews
                       tagSlug={selectedDish}
                       borderless
@@ -440,7 +440,7 @@ const RestaurantPage = memo(
                       key={restaurantSlug}
                       restaurant={restaurant}
                     />
-                  </VStack>
+                  </YStack>
 
                   <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
 
@@ -453,12 +453,12 @@ const RestaurantPage = memo(
                   <Spacer size="xl" />
 
                   {/* END head color AREA */}
-                </VStack>
+                </YStack>
               </Theme>
 
               <Spacer />
 
-              <VStack ref={setReviewsSection}>
+              <YStack ref={setReviewsSection}>
                 <Suspense fallback={null}>
                   {hasLoadedAboveFold ? (
                     <RestaurantReviewsList restaurantSlug={restaurantSlug} />
@@ -466,15 +466,15 @@ const RestaurantPage = memo(
                     <LoadingItems />
                   )}
                 </Suspense>
-              </VStack>
+              </YStack>
 
               <Spacer size="xl" />
 
-              <VStack flex={1} marginBottom={20} width="100%" alignSelf="center">
+              <YStack flex={1} marginBottom={20} width="100%" alignSelf="center">
                 <Suspense fallback={null}>
                   <RestaurantMenu restaurantSlug={restaurantSlug} />
                 </Suspense>
-              </VStack>
+              </YStack>
             </PageContentWithFooter>
           </ContentScrollView>
         </>

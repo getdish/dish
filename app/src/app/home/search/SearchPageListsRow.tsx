@@ -1,7 +1,7 @@
 import { graphql, query } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
+import { XStack } from '@dish/ui'
 import React, { Suspense, memo, useContext } from 'react'
-import { HStack } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getInitialRegionSlug } from '../../initialRegionSlug'
@@ -39,7 +39,7 @@ export const SearchPageListsRow = memo(
 
     return (
       <Suspense fallback={null}>
-        <HStack
+        <XStack
           height="100%"
           alignItems="center"
           justifyContent="center"
@@ -50,7 +50,7 @@ export const SearchPageListsRow = memo(
             return <ListCard size="xs" key={i} list={list} query={lists} flat colored />
           })}
           <SearchForkListButton>{!lists.length ? 'Create' : 'Create list'}</SearchForkListButton>
-        </HStack>
+        </XStack>
       </Suspense>
     )
   })

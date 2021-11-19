@@ -1,5 +1,5 @@
+import { Text, TextProps, XStack, YStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack, Text, TextProps, VStack } from 'snackui'
 
 export const Quote = memo(
   ({
@@ -9,11 +9,11 @@ export const Quote = memo(
     by?: string
   }) => {
     return (
-      <HStack spacing={10}>
+      <XStack spacing={10}>
         <Text fontSize={40} color="#ccc" marginTop={-10} marginBottom={0}>
           “
         </Text>
-        <VStack spacing={6} flex={1}>
+        <YStack spacing={6} flex={1}>
           <Text fontSize={props.fontSize ?? 16} color={props.color ?? '#999'}>
             “
           </Text>
@@ -22,8 +22,8 @@ export const Quote = memo(
               {by}
             </Text>
           )}
-        </VStack>
-      </HStack>
+        </YStack>
+      </XStack>
     )
   }
 )

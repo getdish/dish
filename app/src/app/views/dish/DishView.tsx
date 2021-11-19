@@ -1,18 +1,18 @@
 import { restaurant } from '@dish/graph'
 import { supportsTouchWeb } from '@dish/helpers'
-import { capitalize } from 'lodash'
-import React, { Suspense, memo, useState } from 'react'
 import {
-  AbsoluteVStack,
+  AbsoluteYStack,
   Box,
   Paragraph,
   StackProps,
   Text,
-  VStack,
+  YStack,
   prevent,
   useTheme,
   useThemeName,
-} from 'snackui'
+} from '@dish/ui'
+import { capitalize } from 'lodash'
+import React, { Suspense, memo, useState } from 'react'
 
 import { cardFrameBorderRadius, isWeb } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
@@ -111,7 +111,7 @@ const DishViewContent = (props: DishViewProps) => {
 
   let contents = (
     <>
-      <AbsoluteVStack
+      <AbsoluteYStack
         className="ease-in-out-fast"
         fullscreen
         alignItems="flex-end"
@@ -121,7 +121,7 @@ const DishViewContent = (props: DishViewProps) => {
         onHoverOut={() => setIsHovered(false)}
       >
         {showVote && !!slug && (
-          <AbsoluteVStack zIndex={1000000} top={0} left={0} y={-6} x={-6}>
+          <AbsoluteYStack zIndex={1000000} top={0} left={0} y={-6} x={-6}>
             <Suspense fallback={null}>
               <DishScore
                 shadowed
@@ -133,10 +133,10 @@ const DishViewContent = (props: DishViewProps) => {
                 restaurant={restaurant}
               />
             </Suspense>
-          </AbsoluteVStack>
+          </AbsoluteYStack>
         )}
 
-        <AbsoluteVStack
+        <AbsoluteYStack
           opacity={showSearchButton_ ? 1 : 0}
           pointerEvents={showSearchButton_ ? 'auto' : 'none'}
           onPress={prevent}
@@ -150,9 +150,9 @@ const DishViewContent = (props: DishViewProps) => {
             // @ts-ignore
             tag={{ slug, type: 'dish' }}
           />
-        </AbsoluteVStack>
+        </AbsoluteYStack>
 
-        <VStack
+        <YStack
           position="absolute"
           bottom="8%"
           left="10%"
@@ -184,11 +184,11 @@ const DishViewContent = (props: DishViewProps) => {
           >
             {dishName}
           </Paragraph>
-        </VStack>
-      </AbsoluteVStack>
+        </YStack>
+      </AbsoluteYStack>
 
       {!!image && (
-        // <VStack
+        // <YStack
         // // BUG cant put transform on same as borderRadius + overflowHidden
         // // https://stackoverflow.com/questions/21087979/probleme-css3-scale-transform-and-overflowhidden-on-safari
         // // transform={[{ scale: isFallback ? 0.8 : 0.9 }]}
@@ -202,14 +202,14 @@ const DishViewContent = (props: DishViewProps) => {
           }}
           resizeMode="cover"
         />
-        // </VStack>
+        // </YStack>
       )}
 
       {!image && (
-        // native needs this vstack
-        <VStack width={size} height={size} alignItems="center" justifyContent="center">
+        // native needs this YStack
+        <YStack width={size} height={size} alignItems="center" justifyContent="center">
           <Text fontSize={80}>{icon || '🥗'}</Text>
-        </VStack>
+        </YStack>
       )}
     </>
   )
@@ -252,14 +252,14 @@ const DishViewContent = (props: DishViewProps) => {
 
 // {/* performance */}
 // {!isTouchDevice && (
-//   <AbsoluteVStack fullscreen borderRadius={10000} overflow="hidden">
+//   <AbsoluteYStack fullscreen borderRadius={10000} overflow="hidden">
 //     {/* {isFallback && (
-//     <AbsoluteVStack
+//     <AbsoluteYStack
 //       fullscreen
 //       transform={[{ translateX: -size * 0.75 }, { translateY: size * 0.42 }]}
 //     >
 //       <SineWave color={backgroundColor} size={size + 10} />
-//     </AbsoluteVStack>
+//     </AbsoluteYStack>
 //   )} */}
 //     <LinearGradient
 //       style={[StyleSheet.absoluteFill]}
@@ -271,17 +271,17 @@ const DishViewContent = (props: DishViewProps) => {
 //       start={[0, 0.5]}
 //       end={[0.5, 0.5]}
 //     />
-//   </AbsoluteVStack>
+//   </AbsoluteYStack>
 // )}
 
 // const SineWave = ({ color, size }: { color: string; size: number }) => {
 //   return (
-//     <VStack transform={[{ scale: size / 385 }, { translateX: (385 - size / 385) / 2 }]}>
+//     <YStack transform={[{ scale: size / 385 }, { translateX: (385 - size / 385) / 2 }]}>
 //       <Svg width="385px" height="169px" viewBox="0 0 385 169">
 //         <G transform="translate(-83.000000, -142.000000)" fill={color}>
 //           <Path d="M83,169.121094 C153.643229,133.990885 221.466146,133.990885 286.46875,169.121094 C351.471354,204.251302 411.981771,204.251302 468,169.121094 L468,310.121094 L83,310.121094 L83,169.121094 Z" />
 //         </G>
 //       </Svg>
-//     </VStack>
+//     </YStack>
 //   )
 // }

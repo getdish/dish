@@ -6,11 +6,7 @@ const config = createMetroConfiguration(__dirname)
 
 module.exports = {
   ...config,
-  watchFolders: [
-    ...config.watchFolders,
-    path.join(__dirname, '../packages'),
-    path.join(__dirname, '../snackui/packages'),
-  ],
+  watchFolders: [...config.watchFolders, path.join(__dirname, '../packages')],
   resolver: {
     ...config.resolver,
     blockList: block([/.*\/android\/React(Android|Common)\/.*/, /.*\/versioned-react-native\/.*/]),

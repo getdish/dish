@@ -1,5 +1,5 @@
+import { Button, ButtonProps, Tooltip, combineRefs, themeable, useTheme } from '@dish/ui'
 import React, { forwardRef } from 'react'
-import { Button, ButtonProps, Tooltip, combineRefs, themeable, useTheme } from 'snackui'
 
 export type SmallButtonProps = ButtonProps & {
   tooltip?: string | null

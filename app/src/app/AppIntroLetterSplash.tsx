@@ -1,22 +1,22 @@
-import { Home } from '@dish/react-feather'
-import { useStore } from '@dish/use-store'
-import loadable from '@loadable/component'
-import React, { memo, useLayoutEffect, useMemo, useState } from 'react'
-import { StyleSheet } from 'react-native'
 import {
-  AbsoluteVStack,
+  AbsoluteYStack,
   Button,
-  HStack,
   LinearGradient,
   Modal,
   Paragraph,
   Spacer,
   Text,
   Theme,
-  VStack,
+  XStack,
+  YStack,
   useMedia,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { useStore } from '@dish/use-store'
+import loadable from '@loadable/component'
+import { Home } from '@tamagui/feather-icons'
+import React, { memo, useLayoutEffect, useMemo, useState } from 'react'
+import { StyleSheet } from 'react-native'
 
 // import iphoneScreen from '../assets/iphone-home-screen.jpg'
 import { blue, green, pink } from '../constants/colors'
@@ -127,15 +127,15 @@ export const AppIntroLetter = memo(() => {
       </Theme>
 
       <DarkModal fullscreen hide={store.hidden} onDismiss={store.setHidden}>
-        <AbsoluteVStack top={90} pointerEvents="none" zIndex={-1}>
+        <AbsoluteYStack top={90} pointerEvents="none" zIndex={-1}>
           {!!features.length && <AppGlobe features={features} />}
           <LinearGradient
             style={StyleSheet.absoluteFill}
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
           />
-        </AbsoluteVStack>
+        </AbsoluteYStack>
 
-        <VStack
+        <YStack
           paddingVertical={20}
           paddingHorizontal={20}
           maxWidth={940}
@@ -194,7 +194,7 @@ export const AppIntroLetter = memo(() => {
 
           <Spacer size="md" />
           {/* 
-          <HStack marginBottom={-20} flexWrap="wrap" alignItems="center" justifyContent="center">
+          <XStack marginBottom={-20} flexWrap="wrap" alignItems="center" justifyContent="center">
             <GridItem
               title="Discover"
               content="Better reviews of every restaurant - search across delivery, by dish and more."
@@ -218,8 +218,8 @@ export const AppIntroLetter = memo(() => {
               image={iphoneScreen}
               position="right"
             />
-          </HStack> */}
-        </VStack>
+          </XStack> */}
+        </YStack>
       </DarkModal>
     </>
   )
@@ -241,7 +241,7 @@ export const AppIntroLetter = memo(() => {
 //               store.setHidden(true)
 //             }}
 //           />
-//           <AbsoluteVStack
+//           <AbsoluteYStack
 //             pointerEvents="none"
 //             bottom={-10}
 //             zIndex={1000}
@@ -249,10 +249,10 @@ export const AppIntroLetter = memo(() => {
 //             rotate="-10deg"
 //           >
 //             <Text fontSize={62}>🌮</Text>
-//           </AbsoluteVStack>
-//           <AbsoluteVStack pointerEvents="none" bottom={-10} zIndex={1000} left={-40} rotate="10deg">
+//           </AbsoluteYStack>
+//           <AbsoluteYStack pointerEvents="none" bottom={-10} zIndex={1000} left={-40} rotate="10deg">
 //             <Text fontSize={62}>🍜</Text>
-//           </AbsoluteVStack>
+//           </AbsoluteYStack>
 //         </>
 
 const GridItem = (props: {
@@ -267,7 +267,7 @@ const GridItem = (props: {
   const theme = useTheme()
 
   return (
-    <VStack
+    <YStack
       minWidth={250}
       minHeight={220}
       borderRadius={30}
@@ -284,7 +284,7 @@ const GridItem = (props: {
         paddingBottom: 120,
       })}
     >
-      <AbsoluteVStack fullscreen backgroundColor={props.color} zIndex={0} opacity={0.2} />
+      <AbsoluteYStack fullscreen backgroundColor={props.color} zIndex={0} opacity={0.2} />
 
       <Text
         color={theme.color}
@@ -298,7 +298,7 @@ const GridItem = (props: {
 
       <Spacer size="lg" />
 
-      <VStack
+      <YStack
         marginVertical="auto"
         maxWidth={media.sm ? '90%' : 250}
         paddingLeft={110}
@@ -314,9 +314,9 @@ const GridItem = (props: {
         <Paragraph flexShrink={1} size="md">
           {props.content}
         </Paragraph>
-      </VStack>
+      </YStack>
 
-      <VStack
+      <YStack
         position="absolute"
         top={80}
         left={-50}
@@ -336,11 +336,11 @@ const GridItem = (props: {
           bottom: -200,
         })}
       >
-        <VStack borderRadius={13} overflow="hidden">
+        <YStack borderRadius={13} overflow="hidden">
           <Image source={{ uri: props.image }} style={{ width: 380 / 2.5, height: 774 / 2.5 }} />
-        </VStack>
-      </VStack>
-    </VStack>
+        </YStack>
+      </YStack>
+    </YStack>
   )
 }
 
@@ -358,7 +358,7 @@ const SignupBetaForm = () => {
   })
 
   return (
-    <VStack alignItems="center" justifyContent="center" flex={1}>
+    <YStack alignItems="center" justifyContent="center" flex={1}>
       <SubmittableForm
         errorText={errorMessage}
         isSubmitting={isSubmitting}
@@ -386,7 +386,7 @@ const SignupBetaForm = () => {
           }}
         />
       </SubmittableForm>
-    </VStack>
+    </YStack>
   )
 }
 

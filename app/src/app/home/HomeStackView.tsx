@@ -1,7 +1,7 @@
 import { isSafari } from '@dish/helpers'
+import { AnimatedYStack, YStack, isTouchDevice, useDebounceValue, useMedia } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useMemo } from 'react'
-import { AnimatedVStack, VStack, isTouchDevice, useDebounceValue, useMedia } from 'snackui'
 
 import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants/constants'
 import { HomeStateItem } from '../../types/homeTypes'
@@ -100,7 +100,7 @@ const AppStackViewItem = memo(
     }, [isActive])
 
     const contents = (
-      <VStack
+      <YStack
         position="absolute"
         zIndex={index}
         className={`animate-up ${isFullyActive ? 'active' : 'untouchable'}`}
@@ -114,14 +114,14 @@ const AppStackViewItem = memo(
         <ErrorBoundary name={`AppStackView.${item.type}`}>
           <Suspense fallback={null}>{children}</Suspense>
         </ErrorBoundary>
-      </VStack>
+      </YStack>
     )
 
     if (!isWeb) {
       return (
-        <AnimatedVStack position="absolute" fullscreen animateState={!isRemoving ? 'in' : 'out'}>
+        <AnimatedYStack position="absolute" fullscreen animateState={!isRemoving ? 'in' : 'out'}>
           {contents}
-        </AnimatedVStack>
+        </AnimatedYStack>
       )
     }
 

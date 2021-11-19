@@ -1,6 +1,6 @@
 import { slugify } from '@dish/graph'
+import { Tooltip } from '@dish/ui'
 import React from 'react'
-import { Tooltip } from 'snackui'
 
 import { UserAvatar } from './home/user/UserAvatar'
 import { useUserStore } from './userStore'

@@ -26,26 +26,7 @@ function delete_and_link_duplicate_modules() {
   popd
 }
 
-function delete_duplicate_snack_modules() {
-  pushd $PROJECT_ROOT
-  rm -r snackui/examples/nextjs/node_modules/react &> /dev/null || true
-  rm -r snackui/examples/nextjs/node_modules/react-dom &> /dev/null || true
-  rm -r snackui/node_modules/@babel/types &> /dev/null || true # fix babel single version
-  rm -r snackui/node_modules/@o &> /dev/null || true
-  rm -r snackui/node_modules/@dish &> /dev/null || true
-  rm -r snackui/node_modules/@types/react &> /dev/null || true
-  rm -r snackui/node_modules/@types/react-dom &> /dev/null || true
-  rm -r snackui/node_modules/react &> /dev/null || true
-  rm -r snackui/node_modules/react-dom &> /dev/null || true
-  rm -r snackui/node_modules/react-native-web &> /dev/null || true
-  rm -r snackui/node_modules/esbuild-register &> /dev/null || true
-  rm -r snackui/packages/snackui-static/node_modules/snackui &> /dev/null || true
-  rm -r snackui/node_modules/react-native-safe-area-context &> /dev/null || true
-  popd
-}
-
 PROJECT_ROOT="$(dirname "$0")/.."
-delete_duplicate_snack_modules &
 delete_and_link_duplicate_modules &
 yarn patch-package || true &
 patch_app_packages &

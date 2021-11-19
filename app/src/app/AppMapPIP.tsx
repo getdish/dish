@@ -1,8 +1,8 @@
+import { useDebounceEffect } from '@dish/ui'
+import { AbsoluteYStack, YStack, useDebounceValue, useMedia } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import mapboxgl from 'mapbox-gl'
 import React, { Suspense, memo, useEffect, useRef, useState } from 'react'
-import { useDebounceEffect } from 'snackui'
-import { AbsoluteVStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN, isWeb } from '../constants/constants'
 import { useAppMapKey } from './appMapStore'
@@ -26,7 +26,7 @@ export default memo(function AppMapPIP() {
   const media = useMedia()
 
   return (
-    <VStack
+    <YStack
       className="ease-in-out"
       scale={0.8}
       x={15}
@@ -39,7 +39,7 @@ export default memo(function AppMapPIP() {
       <Suspense fallback={null}>
         <AppPIPContent />
       </Suspense>
-    </VStack>
+    </YStack>
   )
 })
 
@@ -114,7 +114,7 @@ const AppPIPContent = memo(() => {
   // }, [map, annotation])
 
   return (
-    <VStack
+    <YStack
       pointerEvents="auto"
       width={70}
       height={70}
@@ -143,7 +143,7 @@ const AppPIPContent = memo(() => {
       })}
       onPress={pipAction}
     >
-      <AbsoluteVStack pointerEvents="none" fullscreen bottom={-30} top={-15}>
+      <AbsoluteYStack pointerEvents="none" fullscreen bottom={-30} top={-15}>
         <div
           ref={mapNode}
           style={{
@@ -155,7 +155,7 @@ const AppPIPContent = memo(() => {
             background: '#eee',
           }}
         />
-      </AbsoluteVStack>
-    </VStack>
+      </AbsoluteYStack>
+    </YStack>
   )
 })

@@ -1,8 +1,8 @@
 import { graphql } from '@dish/graph'
+import { LoadingItem, Spacer, XStack, YStack } from '@dish/ui'
 import { partition } from 'lodash'
 import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Pressable } from 'react-native'
-import { HStack, LoadingItem, Spacer, VStack } from 'snackui'
 
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { getTagSlug } from '../../../helpers/getTagSlug'
@@ -31,9 +31,9 @@ export const RestaurantDishRow = (props: Props) => {
   return (
     <Suspense
       fallback={
-        <VStack height={150}>
+        <YStack height={150}>
           <LoadingItem />
-        </VStack>
+        </YStack>
       }
     >
       <RestaurantDishRowContent {...props} />
@@ -115,8 +115,8 @@ export const RestaurantDishRowContent = memo(
           }}
         >
           {hasDishes ? (
-            <VStack paddingHorizontal={40} paddingVertical={10}>
-              <HStack spacing="sm">
+            <YStack paddingHorizontal={40} paddingVertical={10}>
+              <XStack spacing="sm">
                 <ScalingPressable
                   onPress={() => {
                     onSelect?.('')
@@ -125,12 +125,12 @@ export const RestaurantDishRowContent = memo(
                   <TagButton noLink name="Dishes" isActive={selected === ''} />
                 </ScalingPressable>
                 {getDishRow(dishGroups[0])}
-              </HStack>
+              </XStack>
               <Spacer size="lg" />
-              <HStack marginLeft={24} spacing="sm">
+              <XStack marginLeft={24} spacing="sm">
                 {getDishRow(dishGroups[1])}
-              </HStack>
-            </VStack>
+              </XStack>
+            </YStack>
           ) : (
             <Spacer size="xl" />
           )}

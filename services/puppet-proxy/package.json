@@ -6,14 +6,14 @@
   "main": "dist",
   "module": "_",
   "scripts": {
-    "build": "esdx legacy",
-    "build:skip-types": "esdx skip-types legacy",
-    "watch": "esdx-watch legacy",
+    "build": "tamagui-build skip-types",
+    "build:skip-types": "tamagui-build skip-types",
+    "watch": "tamagui-build --watch skip-types",
     "start": "node dist/index.js",
     "dev": "nodemon dist/index.js"
   },
   "dependencies": {
-    "@dish/esdx": "*",
+    "@tamagui/build": "*",
     "express": "^4.17.1",
     "playwright": "^1.15.2"
   },

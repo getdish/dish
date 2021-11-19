@@ -1,6 +1,3 @@
-import { MDXProvider } from '@mdx-js/react'
-import React from 'react'
-import { Image, ImageProps } from 'react-native'
 import {
   H1,
   H2,
@@ -11,8 +8,11 @@ import {
   Text,
   UnorderedList,
   UnorderedListItem,
-  VStack,
-} from 'snackui'
+  YStack,
+} from '@dish/ui'
+import { MDXProvider } from '@mdx-js/react'
+import React from 'react'
+import { Image, ImageProps } from 'react-native'
 
 import { HighlightedText } from '../../views/HighlightedText'
 import { Link } from '../../views/Link'
@@ -41,14 +41,14 @@ const components = {
 
   LargeImage: ({ alt, ...rest }: ImageProps & { alt?: string }) => (
     <>
-      <VStack width="110%">
+      <YStack width="110%">
         <Image
           style={{
             width: '100%',
           }}
           {...rest}
         />
-      </VStack>
+      </YStack>
       {!!alt && <Alt>{alt}</Alt>}
       {contentSpaceLg}
     </>
@@ -99,7 +99,7 @@ const components = {
   )),
 
   blockquote: (props) => (
-    <VStack>
+    <YStack>
       {contentSpace}
       <Paragraph
         // padding={[12, 20, 0]}
@@ -111,7 +111,7 @@ const components = {
         {...props}
       />
       {contentSpaceLg}
-    </VStack>
+    </YStack>
   ),
 }
 

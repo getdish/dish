@@ -1,7 +1,7 @@
-import { ArrowUp, ChevronLeft } from '@dish/react-feather'
+import { YStack, useTheme } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
+import { ArrowUp, ChevronLeft } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
-import { VStack, useTheme } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { autocompletesStore } from './AutocompletesStore'
@@ -37,7 +37,7 @@ export const SearchBarActionButton = memo(() => {
       }}
       {...(!showAutocomplete && upRoute)}
     >
-      <VStack
+      <YStack
         alignSelf="center"
         skewX="-12deg"
         pointerEvents={isDisabled ? 'none' : 'auto'}
@@ -58,10 +58,10 @@ export const SearchBarActionButton = memo(() => {
           },
         })}
       >
-        <VStack skewX="12deg">
+        <YStack skewX="12deg">
           <Icon color="#fff" size={20} />
-        </VStack>
-      </VStack>
+        </YStack>
+      </YStack>
     </Link>
   )
 })

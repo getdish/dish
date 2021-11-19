@@ -1,14 +1,14 @@
-import React, { Suspense, memo } from 'react'
-import Svg, { G, Path } from 'react-native-svg'
 import {
-  AbsoluteVStack,
-  HStack,
+  AbsoluteYStack,
   Theme,
-  VStack,
+  XStack,
+  YStack,
   useMedia,
   useSafeAreaInsets,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import React, { Suspense, memo } from 'react'
+import Svg, { G, Path } from 'react-native-svg'
 
 import { drawerWidthMax } from '../../../constants/constants'
 import { titleHeight } from '../../../constants/titleHeight'
@@ -37,25 +37,25 @@ export const SearchPageNavBar = memo(() => {
   if (media.sm) {
     content = (
       <Theme name="dark">
-        <VStack position="absolute" bottom={0} left={0} right={0} zIndex={1000}>
+        <YStack position="absolute" bottom={0} left={0} right={0} zIndex={1000}>
           {/* *may have been slow dragging when on mobile safari! */}
           <>
-            <AbsoluteVStack top={-20} right={0}>
+            <AbsoluteYStack top={-20} right={0}>
               <InverseRoundedEdge />
-            </AbsoluteVStack>
-            <AbsoluteVStack top={-20} left={0} scaleX={-1}>
+            </AbsoluteYStack>
+            <AbsoluteYStack top={-20} left={0} scaleX={-1}>
               <InverseRoundedEdge />
-            </AbsoluteVStack>
+            </AbsoluteYStack>
           </>
-          <VStack backgroundColor="#000" paddingBottom={safeArea.bottom}>
+          <YStack backgroundColor="#000" paddingBottom={safeArea.bottom}>
             <SearchPageNavBarContent />
-          </VStack>
-        </VStack>
+          </YStack>
+        </YStack>
       </Theme>
     )
   } else {
     content = (
-      <VStack
+      <YStack
         position="absolute"
         top={0}
         left={0}
@@ -70,7 +70,7 @@ export const SearchPageNavBar = memo(() => {
         zIndex={10000}
       >
         <SearchPageNavBarContent />
-      </VStack>
+      </YStack>
     )
   }
 
@@ -82,7 +82,7 @@ const SearchPageNavBarContent = memo(() => {
 
   return (
     <>
-      <VStack
+      <YStack
         className="ease-in-out"
         alignItems="center"
         height={titleHeight}
@@ -94,17 +94,17 @@ const SearchPageNavBarContent = memo(() => {
         opacity={state ? 1 : 0}
       >
         {state && (
-          <HStack width="100%" alignItems="center" justifyContent="space-between" height="100%">
-            <HStack height="100%" alignItems="center" justifyContent="center">
+          <XStack width="100%" alignItems="center" justifyContent="space-between" height="100%">
+            <XStack height="100%" alignItems="center" justifyContent="center">
               <LenseButtonBar activeTags={state.activeTags} />
-            </HStack>
+            </XStack>
 
-            <VStack flex={1} />
+            <YStack flex={1} />
 
             <SearchPageFilterBar activeTags={state.activeTags} />
-          </HStack>
+          </XStack>
         )}
-      </VStack>
+      </YStack>
     </>
   )
 })

@@ -1,10 +1,10 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
-import { Loader, Search, X } from '@dish/react-feather'
+import { Spacer, XStack, YStack, getMedia, useDebounce, useMedia, useOnMount } from '@dish/ui'
 import { getStore, reaction, selector } from '@dish/use-store'
+import { Loader, Search, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import { HStack, Spacer, VStack, getMedia, useDebounce, useMedia, useOnMount } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { isTouchDevice } from '../constants/platforms'
@@ -131,7 +131,7 @@ export const AppSearchInput = memo(() => {
 
       <Spacer size="xs" />
 
-      <VStack
+      <YStack
         // @ts-ignore
         ref={searchInputContainer}
         minWidth="50%"
@@ -151,9 +151,9 @@ export const AppSearchInput = memo(() => {
             flex: 1,
           }}
         >
-          <HStack alignSelf="center" alignItems="center" minWidth="100%" height={innerHeight}>
+          <XStack alignSelf="center" alignItems="center" minWidth="100%" height={innerHeight}>
             <AppSearchInputTagsRow />
-            <HStack
+            <XStack
               height={innerHeight}
               maxWidth="100%"
               position="relative"
@@ -224,10 +224,10 @@ export const AppSearchInput = memo(() => {
                   },
                 ]}
               />
-            </HStack>
-          </HStack>
+            </XStack>
+          </XStack>
         </ScrollView>
-      </VStack>
+      </YStack>
 
       <SearchCancelButton />
 
@@ -244,13 +244,13 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
   // const isOnSearch = useIsRouteActive('search')
   const loading = isHomeLoading
   return (
-    <VStack width={16} marginLeft={0} scale={loading ? 1.2 : 1}>
+    <YStack width={16} marginLeft={0} scale={loading ? 1.2 : 1}>
       <TouchableOpacity onPress={focusSearchInput}>
         {loading ? (
           // DO NOT ROTATE THIS ON MOBILE WEB IT SLOWS THINGS DOWN *INCREDIBLY*
-          <VStack className={supportsTouchWeb ? '' : 'rotating'} opacity={1}>
+          <YStack className={supportsTouchWeb ? '' : 'rotating'} opacity={1}>
             <Loader color={color} size={16} />
-          </VStack>
+          </YStack>
         ) : (
           <Search
             color={color}
@@ -261,7 +261,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
           />
         )}
       </TouchableOpacity>
-    </VStack>
+    </YStack>
   )
 })
 
@@ -273,7 +273,7 @@ const SearchCancelButton = memo(function SearchCancelButton() {
   })
   const media = useMedia()
   return (
-    <VStack
+    <YStack
       opacity={isActive ? 0.6 : 0}
       disabled={!isActive}
       width={34}
@@ -291,7 +291,7 @@ const SearchCancelButton = memo(function SearchCancelButton() {
       }}
     >
       <X size={16} color={media.sm ? '#888' : '#fff'} style={{ marginTop: 1 }} />
-    </VStack>
+    </YStack>
   )
 })
 

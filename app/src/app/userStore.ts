@@ -10,8 +10,8 @@ import {
   userEdit,
   userFetchSimple,
 } from '@dish/graph'
+import { Toast } from '@dish/ui'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import { Toast } from 'snackui'
 
 import { queryUserQuery } from '../queries/queryUser'
 import { router } from '../router'

@@ -1,4 +1,4 @@
-import { StackProps } from 'snackui'
+import { StackProps } from '@dish/ui'
 
 export function getGroupedButtonProps({
   index,

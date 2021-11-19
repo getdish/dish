@@ -1,10 +1,10 @@
+import { AbsoluteXStack, useMedia } from '@dish/ui'
 import React from 'react'
-import { AbsoluteHStack, useMedia } from 'snackui'
 
 export const PaneControlButtons = (props: { children: any }) => {
   const media = useMedia()
   return (
-    <AbsoluteHStack
+    <AbsoluteXStack
       className="pane-control-buttons"
       zIndex={10000000000}
       top={media.sm ? -8 : -12}
@@ -12,14 +12,14 @@ export const PaneControlButtons = (props: { children: any }) => {
       spacing
     >
       {props.children}
-    </AbsoluteHStack>
+    </AbsoluteXStack>
   )
 }
 
 export const PaneControlButtonsLeft = (props: { children: any }) => {
   const media = useMedia()
   return (
-    <AbsoluteHStack
+    <AbsoluteXStack
       className="pane-control-buttons-left"
       zIndex={10000000000}
       top={media.sm ? 6 : 12}
@@ -28,6 +28,6 @@ export const PaneControlButtonsLeft = (props: { children: any }) => {
       alignItems="center"
     >
       {props.children}
-    </AbsoluteHStack>
+    </AbsoluteXStack>
   )
 }

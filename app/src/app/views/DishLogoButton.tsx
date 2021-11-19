@@ -1,5 +1,5 @@
+import { AbsoluteYStack, XStack, YStack, useDebounceValue, useMedia } from '@dish/ui'
 import React, { memo } from 'react'
-import { AbsoluteVStack, HStack, VStack, useDebounceValue, useMedia } from 'snackui'
 
 import { logoHeight, logoSmWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
 import { useHomeCurrentHomeType } from '../homeStore'
@@ -15,7 +15,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
   const wrapWithHomeLink = (el: any) => {
     return (
       <Link name={currentType.indexOf('home') === 0 ? null : 'home'}>
-        <HStack
+        <XStack
           className="ease-in-out-fast transform-origin-center"
           scale={1}
           hoverStyle={{
@@ -27,19 +27,19 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
           }}
         >
           {el}
-        </HStack>
+        </XStack>
       </Link>
     )
   }
 
   return (
-    <VStack
+    <YStack
       className="ease-in-out-faster"
       width={media.xs ? logoXsWidth : logoSmWidth}
       height={logoHeight}
       position="relative"
     >
-      <VStack
+      <YStack
         opacity={1}
         pointerEvents={media.xs ? 'none' : 'auto'}
         y={media.xs ? -3 : -4}
@@ -49,12 +49,12 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
       >
         {wrapWithHomeLink(
           // marginVertical={-7} native only? web wroks
-          <VStack marginVertical="auto">
+          <YStack marginVertical="auto">
             <LogoColor color={color} />
-          </VStack>
+          </YStack>
         )}
-      </VStack>
-      <AbsoluteVStack
+      </YStack>
+      <AbsoluteYStack
         pointerEvents={media.xs ? 'auto' : 'none'}
         opacity={media.xs ? 1 : 0}
         alignSelf="center"
@@ -64,7 +64,7 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
         y={7}
       >
         {wrapWithHomeLink(<LogoCircle />)}
-      </AbsoluteVStack>
-    </VStack>
+      </AbsoluteYStack>
+    </YStack>
   )
 })

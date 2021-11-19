@@ -1,6 +1,6 @@
-import { ExternalLink, MapPin } from '@dish/react-feather'
+import { useMedia, useTheme } from '@dish/ui'
+import { ExternalLink, MapPin } from '@tamagui/feather-icons'
 import React from 'react'
-import { useMedia, useTheme } from 'snackui'
 
 import { GeocodePlace } from '../../../types/homeTypes'
 import { homeStore } from '../../homeStore'

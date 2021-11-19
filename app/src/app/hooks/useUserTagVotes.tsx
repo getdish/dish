@@ -6,10 +6,10 @@ import {
   review_constraint,
   useRefetch,
 } from '@dish/graph'
+import { Toast, useLazyEffect } from '@dish/ui'
 import { Store, createStore, useStoreInstanceSelector, useStoreSelector } from '@dish/use-store'
 import { debounce } from 'lodash'
 import { useCallback, useEffect } from 'react'
-import { Toast, useLazyEffect } from 'snackui'
 
 import { getFullTags } from '../../helpers/getFullTags'
 import { useUserStore, userStore } from '../userStore'

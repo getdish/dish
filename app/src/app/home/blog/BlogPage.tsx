@@ -1,5 +1,5 @@
+import { Divider, Spacer, Title, YStack } from '@dish/ui'
 import React from 'react'
-import { Divider, Spacer, Title, VStack } from 'snackui'
 
 import { HomeStateItemBlog } from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -46,14 +46,14 @@ function BlogPageIndex() {
 
   return (
     <>
-      <VStack>
-        <VStack paddingHorizontal={25} paddingVertical={40}>
+      <YStack>
+        <YStack paddingHorizontal={25} paddingVertical={40}>
           <Title size="xl">Dish Blog</Title>
-        </VStack>
+        </YStack>
         <Divider />
-        <VStack spacing="lg" paddingHorizontal={25} paddingVertical={40}>
+        <YStack spacing="lg" paddingHorizontal={25} paddingVertical={40}>
           {allPosts.map((post, index) => (
-            <VStack key={index} borderRadius={10} padding={10}>
+            <YStack key={index} borderRadius={10} padding={10}>
               <Link name="blog" params={{ slug: post.id }}>
                 <Title selectable={false} textAlign="left" size="xs">
                   {post.title}
@@ -61,10 +61,10 @@ function BlogPageIndex() {
               </Link>
               <Spacer size="sm" />
               <BlogPostMeta post={post} />
-            </VStack>
+            </YStack>
           ))}
-        </VStack>
-      </VStack>
+        </YStack>
+      </YStack>
     </>
   )
 }

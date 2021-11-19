@@ -1,8 +1,8 @@
 import { fullyIdle, series } from '@dish/async'
 import { graphql } from '@dish/graph'
-import { MessageSquare } from '@dish/react-feather'
+import { Circle, Spacer, Text, XStack, YStack, useMedia, useTheme } from '@dish/ui'
+import { MessageSquare } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useEffect } from 'react'
-import { Circle, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
@@ -70,14 +70,14 @@ export const ListItemContentModern = memo(
 
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
-        <VStack
+        <YStack
           hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
           maxWidth="100%"
           width="100%"
           paddingVertical={16}
           paddingLeft={30}
         >
-          {/* <AbsoluteVStack
+          {/* <AbsoluteYStack
             backgroundColor={theme.backgroundColorSecondary}
             width={imgSize}
             height={imgSize}
@@ -94,15 +94,15 @@ export const ListItemContentModern = memo(
                 // borderRadius: 1000,
               }}
             />
-          </AbsoluteVStack> */}
+          </AbsoluteYStack> */}
 
-          <HStack flex={1} marginLeft={-15} alignItems="center" flexGrow={1} position="relative">
+          <XStack flex={1} marginLeft={-15} alignItems="center" flexGrow={1} position="relative">
             <Column width={320} flexDirection="row" justifyContent="flex-start">
-              <VStack y={3} marginRight={-12} marginLeft={-8}>
+              <YStack y={3} marginRight={-12} marginLeft={-8}>
                 <RankView rank={rank} />
-              </VStack>
+              </YStack>
               <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
-                <HStack
+                <XStack
                   paddingHorizontal={10}
                   paddingVertical={8}
                   borderRadius={8}
@@ -126,14 +126,14 @@ export const ListItemContentModern = memo(
                   >
                     {restaurantName}
                   </Text>
-                </HStack>
+                </XStack>
               </Link>
             </Column>
 
             <ReviewTagsRow list={list} review={review} restaurantSlug={restaurant.slug || ''} />
-          </HStack>
+          </XStack>
 
-          <HStack
+          <XStack
             alignItems="center"
             spacing="lg"
             // below the add comment button
@@ -141,7 +141,7 @@ export const ListItemContentModern = memo(
             position="relative"
           >
             {/* ROW: OVERVIEW */}
-            <VStack justifyContent="center" flex={1} position="relative">
+            <YStack justifyContent="center" flex={1} position="relative">
               <Suspense fallback={null}>
                 <RestaurantReview
                   hideTagsRow
@@ -159,10 +159,10 @@ export const ListItemContentModern = memo(
                   list={list}
                 />
               </Suspense>
-            </VStack>
-          </HStack>
+            </YStack>
+          </XStack>
 
-          <HStack paddingLeft={20} alignItems="center">
+          <XStack paddingLeft={20} alignItems="center">
             <Column flexDirection="row" width={!editable ? 0 : isEditing ? 300 : 230}>
               {!!editable && !isEditing && (
                 <SmallButton
@@ -179,9 +179,9 @@ export const ListItemContentModern = memo(
 
               <Spacer />
 
-              <HStack zIndex={100} position="relative" alignItems="center">
+              <XStack zIndex={100} position="relative" alignItems="center">
                 <RestaurantRatingView restaurant={restaurant} floating size={38} />
-              </HStack>
+              </XStack>
 
               <Spacer />
 
@@ -250,8 +250,8 @@ export const ListItemContentModern = memo(
                 />
               </Suspense>
             </Column>
-          </HStack>
-        </VStack>
+          </XStack>
+        </YStack>
       </HoverToZoom>
     )
   })

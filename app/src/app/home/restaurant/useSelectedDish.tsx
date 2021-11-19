@@ -1,5 +1,5 @@
+import { useGet } from '@dish/ui'
 import { useCallback, useEffect, useState } from 'react'
-import { useGet } from 'snackui'
 
 import { router } from '../../../router'
 

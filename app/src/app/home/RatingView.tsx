@@ -1,5 +1,5 @@
+import { Box, Paragraph, Text, Theme, ThemeInverse } from '@dish/ui'
 import React, { forwardRef } from 'react'
-import { Box, Paragraph, Text, Theme, ThemeInverse } from 'snackui'
 
 export type RatingViewProps = {
   size: number
@@ -67,7 +67,7 @@ export const RatingView = forwardRef(
 
 //   if (!stacked) {
 //     return (
-//       <VStack
+//       <YStack
 //         alignItems="center"
 //         justifyContent="center"
 //         position="relative"
@@ -80,13 +80,13 @@ export const RatingView = forwardRef(
 //           shadowRadius: 5,
 //         })}
 //       >
-//         {/* <AbsoluteVStack zIndex={-1} opacity={0.5}>
+//         {/* <AbsoluteYStack zIndex={-1} opacity={0.5}>
 //           <Circle size={size} backgroundColor={theme.color} opacity={0.9} />
-//         </AbsoluteVStack> */}
+//         </AbsoluteYStack> */}
 //         {outerRing}
 
 //         {typeof count !== 'undefined' && (
-//           <AbsoluteVStack
+//           <AbsoluteYStack
 //             zIndex={-1}
 //             top="-24%"
 //             right="-24%"
@@ -109,15 +109,15 @@ export const RatingView = forwardRef(
 //             >
 //               {countText}
 //             </Text>
-//           </AbsoluteVStack>
+//           </AbsoluteYStack>
 //         )}
-//       </VStack>
+//       </YStack>
 //     )
 //   }
 
 //   return (
-//     <HStack spacing="sm">
-//       <HStack display="inline-flex" alignItems="center">
+//     <XStack spacing="sm">
+//       <XStack display="inline-flex" alignItems="center">
 //         {outerRing}
 //         <Spacer size="xs" />
 //         <Text>
@@ -126,8 +126,8 @@ export const RatingView = forwardRef(
 //             {Math.round(rating)}%
 //           </Text>
 //         </Text>
-//       </HStack>
-//       <HStack alignItems="center">
+//       </XStack>
+//       <XStack alignItems="center">
 //         {middleRing}
 //         <Spacer size="xs" />
 //         <Text>
@@ -136,8 +136,8 @@ export const RatingView = forwardRef(
 //             {Math.round(ratingMiddle)}%
 //           </Text>
 //         </Text>
-//       </HStack>
-//       <HStack alignItems="center">
+//       </XStack>
+//       <XStack alignItems="center">
 //         {innerRing}
 //         <Spacer size="xs" />
 //         <Text>
@@ -146,18 +146,18 @@ export const RatingView = forwardRef(
 //             {Math.round(ratingInner)}%
 //           </Text>
 //         </Text>
-//       </HStack>
+//       </XStack>
 //       {typeof count !== 'undefined' && (
-//         <HStack alignItems="center">
-//           <VStack width={size} height={size} alignItems="center" justifyContent="center">
+//         <XStack alignItems="center">
+//           <YStack width={size} height={size} alignItems="center" justifyContent="center">
 //             <Text color={theme.color} opacity={0.5} fontWeight="600" fontSize={longText ? 10 : 12}>
 //               {countText}
 //             </Text>
-//           </VStack>
+//           </YStack>
 //           <Spacer />
 //           <Text>Reviews</Text>
-//         </HStack>
+//         </XStack>
 //       )}
-//     </HStack>
+//     </XStack>
 //   )
 // }

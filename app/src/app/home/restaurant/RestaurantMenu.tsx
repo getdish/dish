@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
+import { Grid, Paragraph, Spacer, XStack, YStack, useTheme } from '@dish/ui'
 import React, { memo, useState } from 'react'
-import { Grid, HStack, Paragraph, Spacer, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
@@ -16,12 +16,12 @@ export const RestaurantMenu = memo(
     return (
       <>
         {!items.length && (
-          <VStack width="100%" padding={40} alignItems="center" justifyContent="center">
+          <YStack width="100%" padding={40} alignItems="center" justifyContent="center">
             <Paragraph opacity={0.5}>No menu found.</Paragraph>
-          </VStack>
+          </YStack>
         )}
         {!!items.length && (
-          <VStack position="relative">
+          <YStack position="relative">
             <SlantedTitle fontWeight="700" alignSelf="center">
               Menu
             </SlantedTitle>
@@ -29,7 +29,7 @@ export const RestaurantMenu = memo(
             <HiddenSection onChangeOpen={setShowingMenu} cutoff={600}>
               <Grid itemMinWidth={320}>
                 {items.map((item, i) => (
-                  <VStack
+                  <YStack
                     paddingVertical={10}
                     paddingHorizontal={20}
                     borderBottomWidth={1}
@@ -38,7 +38,7 @@ export const RestaurantMenu = memo(
                     overflow="hidden"
                     key={i}
                   >
-                    <HStack>
+                    <XStack>
                       {!!item.image && (
                         <>
                           <Image
@@ -54,7 +54,7 @@ export const RestaurantMenu = memo(
                         </>
                       )}
                       {!item.image && (
-                        <VStack
+                        <YStack
                           minWidth={50}
                           minHeight={50}
                           maxWidth={50}
@@ -64,7 +64,7 @@ export const RestaurantMenu = memo(
                         />
                       )}
                       <Spacer />
-                      <VStack flex={1} paddingVertical={2}>
+                      <YStack flex={1} paddingVertical={2}>
                         <Paragraph sizeLineHeight={0.9} fontWeight="600">
                           {item.name}
                         </Paragraph>
@@ -72,16 +72,16 @@ export const RestaurantMenu = memo(
                         <Paragraph maxHeight={104} sizeLineHeight={0.8} opacity={0.5}>
                           {item.description}
                         </Paragraph>
-                      </VStack>
+                      </YStack>
                       <Spacer />
 
                       <Paragraph fontWeight="400">{toPrice(item.price ?? 0)}</Paragraph>
-                    </HStack>
-                  </VStack>
+                    </XStack>
+                  </YStack>
                 ))}
               </Grid>
             </HiddenSection>
-          </VStack>
+          </YStack>
         )}
       </>
     )

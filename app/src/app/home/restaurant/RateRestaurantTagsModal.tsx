@@ -1,12 +1,12 @@
+import { Button, Modal, Paragraph, Spacer, XStack, YStack } from '@dish/ui'
 import React, { useState } from 'react'
 import { FlatList } from 'react-native'
-import { Button, HStack, Modal, Paragraph, Spacer, VStack } from 'snackui'
 
 import { tagLenses } from '../../../constants/localTags'
 import { CloseButton, SmallCircleButton } from '../../views/CloseButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { ListItemHStack } from './ListItemHStack'
+import { ListItemXStack } from './ListItemXStack'
 
 // const meta = (
 //   <>
@@ -63,13 +63,13 @@ export const RateRestaurantTagsModal = ({ onDismiss }: { onDismiss: any }) => {
           data={[...tagLenses]}
           renderItem={(props) => {
             return (
-              <ListItemHStack>
+              <ListItemXStack>
                 <Paragraph>{props.item.name}</Paragraph>
-                <VStack flex={1} />
+                <YStack flex={1} />
                 <Button theme="active" onPress={() => setShowRateModal(true)}>
                   Rate
                 </Button>
-              </ListItemHStack>
+              </ListItemXStack>
             )
           }}
         />
@@ -98,11 +98,11 @@ const RateRestaurantTagModal = ({ onDismiss }: { onDismiss: any }) => {
 
       <Spacer />
 
-      <HStack spacing="xs">
+      <XStack spacing="xs">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((rating) => (
           <SmallCircleButton key={rating}>{rating}</SmallCircleButton>
         ))}
-      </HStack>
+      </XStack>
 
       <Spacer />
     </Modal>

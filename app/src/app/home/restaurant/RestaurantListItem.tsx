@@ -1,13 +1,8 @@
 import { RestaurantItemMeta, graphql } from '@dish/graph'
-import { MessageSquare } from '@dish/react-feather'
-import { useStoreInstanceSelector } from '@dish/use-store'
-import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
-import { Dimensions } from 'react-native'
 import {
-  AbsoluteVStack,
+  AbsoluteYStack,
   Button,
   Circle,
-  HStack,
   InteractiveContainer,
   LoadingItem,
   LoadingItemsSmall,
@@ -15,10 +10,15 @@ import {
   Spacer,
   StackProps,
   Text,
-  VStack,
+  XStack,
+  YStack,
   useMedia,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { useStoreInstanceSelector } from '@dish/use-store'
+import { MessageSquare } from '@tamagui/feather-icons'
+import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
+import { Dimensions } from 'react-native'
 
 import { brandColor, green, red } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
@@ -182,7 +182,7 @@ const RestaurantListItemContent = memo(
 
     return (
       <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}>
-        <VStack
+        <YStack
           className="hover-faded-in-parent"
           alignItems="flex-start"
           justifyContent="flex-start"
@@ -211,7 +211,7 @@ const RestaurantListItemContent = memo(
         >
           {/* expanded content */}
           {meta && isExpanded && (
-            <AbsoluteVStack
+            <AbsoluteYStack
               backgroundColor={theme.backgroundColorDarker}
               width={300 - 40}
               x={-320}
@@ -228,11 +228,11 @@ const RestaurantListItemContent = memo(
                   meta={meta}
                 />
               </Suspense>
-            </AbsoluteVStack>
+            </AbsoluteYStack>
           )}
 
           {/* border left */}
-          <AbsoluteVStack
+          <AbsoluteYStack
             top={0}
             bottom={0}
             zIndex={-1}
@@ -244,7 +244,7 @@ const RestaurantListItemContent = memo(
           />
 
           {/* vote button and score */}
-          <AbsoluteVStack top={34} left={-5} zIndex={200000000}>
+          <AbsoluteYStack top={34} left={-5} zIndex={200000000}>
             {above}
 
             {!hideRate && (
@@ -256,11 +256,11 @@ const RestaurantListItemContent = memo(
                 onClickPoints={toggleSetExpanded}
               />
             )}
-          </AbsoluteVStack>
+          </AbsoluteYStack>
 
           {/* ROW: TITLE */}
 
-          <VStack
+          <YStack
             hoverStyle={{ backgroundColor: theme.backgroundColorTransluscentHover }}
             width={950}
             {...(shouldShowOneLine && {
@@ -279,13 +279,13 @@ const RestaurantListItemContent = memo(
               params={{ slug: restaurantSlug }}
               zIndex={2}
             >
-              <HStack
+              <XStack
                 paddingLeft={hideRate ? 10 : 64}
                 paddingTop={shouldShowOneLine ? 10 : 15}
                 position="relative"
                 alignItems="center"
               >
-                <VStack
+                <YStack
                   backgroundColor={theme.backgroundColorSecondary}
                   borderRadius={1000}
                   width={imgSize}
@@ -302,16 +302,16 @@ const RestaurantListItemContent = memo(
                       height: imgSize,
                     }}
                   />
-                </VStack>
+                </YStack>
 
-                <VStack opacity={0.25} marginRight={-10} y={3} marginLeft={-5}>
+                <YStack opacity={0.25} marginRight={-10} y={3} marginLeft={-5}>
                   <RankView rank={rank} />
-                </VStack>
+                </YStack>
 
                 {/* SECOND LINK WITH actual <a /> */}
 
                 <Link name="restaurant" params={{ slug: restaurantSlug }}>
-                  <HStack
+                  <XStack
                     paddingHorizontal={8}
                     borderRadius={8}
                     alignItems="center"
@@ -340,18 +340,18 @@ const RestaurantListItemContent = memo(
                     >
                       {restaurantName}
                     </Text>
-                  </HStack>
+                  </XStack>
                 </Link>
-              </HStack>
+              </XStack>
             </Link>
 
             <Spacer size="md" />
-          </VStack>
+          </YStack>
 
           {/* ROW: CENTER CONTENT AREA */}
           {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
           {!shouldShowOneLine && (
-            <HStack
+            <XStack
               y={-10}
               pointerEvents="none"
               zIndex={10}
@@ -360,7 +360,7 @@ const RestaurantListItemContent = memo(
               flex={1}
               maxHeight={flexibleHeight ? 1000 : 66}
             >
-              <VStack
+              <YStack
                 {...contentSideProps}
                 className="fix-safari-shrink-height"
                 justifyContent="center"
@@ -388,8 +388,8 @@ const RestaurantListItemContent = memo(
                   restaurantSlug={restaurantSlug}
                   maxLines={flexibleHeight ? 2000 : 2}
                 />
-                {flexibleHeight ? <VStack flex={1} /> : null}
-              </VStack>
+                {flexibleHeight ? <YStack flex={1} /> : null}
+              </YStack>
 
               {/* PEEK / TAGS (RIGHT SIDE) */}
               {/* margin top: negative the titles second row height */}
@@ -405,12 +405,12 @@ const RestaurantListItemContent = memo(
                   isLoaded={isLoaded}
                 />
               </Suspense>
-            </HStack>
+            </XStack>
           )}
 
           {/* ROW: BOTTOM ROW */}
 
-          <HStack
+          <XStack
             position="relative"
             height={50}
             marginTop={-5}
@@ -419,7 +419,7 @@ const RestaurantListItemContent = memo(
             alignItems="center"
             spacing="lg"
           >
-            <HStack
+            <XStack
               paddingLeft={20}
               alignItems="center"
               spacing="lg"
@@ -431,7 +431,7 @@ const RestaurantListItemContent = memo(
             >
               {beforeBottomRow}
 
-              <HStack display={media.sm ? 'none' : 'flex'}>
+              <XStack display={media.sm ? 'none' : 'flex'}>
                 <InteractiveContainer paddingLeft={10}>
                   <Link
                     name="restaurant"
@@ -461,7 +461,7 @@ const RestaurantListItemContent = memo(
                   </Link>
 
                   <Suspense fallback={<Spacer size={44} />}>
-                    <VStack marginRight={-0.5}>
+                    <YStack marginRight={-0.5}>
                       <RestaurantFavoriteButton
                         opacity={0.5}
                         borderRadius={0}
@@ -469,7 +469,7 @@ const RestaurantListItemContent = memo(
                         size="md"
                         restaurantSlug={restaurantSlug}
                       />
-                    </VStack>
+                    </YStack>
                   </Suspense>
 
                   <Suspense fallback={<Spacer size={44} />}>
@@ -482,9 +482,9 @@ const RestaurantListItemContent = memo(
                     />
                   </Suspense>
                 </InteractiveContainer>
-              </HStack>
+              </XStack>
 
-              <HStack marginLeft={-5} alignItems="center">
+              <XStack marginLeft={-5} alignItems="center">
                 <Text
                   width={42}
                   textAlign="center"
@@ -508,7 +508,7 @@ const RestaurantListItemContent = memo(
                     address={restaurant.address}
                   />
                 )}
-              </HStack>
+              </XStack>
 
               {!!editableDescription && !state.editing && (
                 <SmallButton onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
@@ -570,12 +570,12 @@ const RestaurantListItemContent = memo(
                   />
                 </Suspense>
               )}
-            </HStack>
-          </HStack>
+            </XStack>
+          </XStack>
 
           {/* bottom spacing */}
           {!shouldShowOneLine && <Spacer size={10} />}
-        </VStack>
+        </YStack>
       </HoverToZoom>
     )
   })

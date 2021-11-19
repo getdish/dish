@@ -1,6 +1,6 @@
+import { AbsoluteXStack, Button, LinearGradient, YStack, useTheme } from '@dish/ui'
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { AbsoluteHStack, Button, LinearGradient, VStack, useTheme } from 'snackui'
 
 export const HiddenSection = (props: {
   children: any
@@ -11,9 +11,9 @@ export const HiddenSection = (props: {
   const [open, setOpen] = useState(false)
 
   return (
-    <VStack overflow="hidden" position="relative" maxHeight={open ? 10000 : props.cutoff}>
+    <YStack overflow="hidden" position="relative" maxHeight={open ? 10000 : props.cutoff}>
       {props.children}
-      <AbsoluteHStack zIndex={10} bottom={0} left={0} right={0} justifyContent="center">
+      <AbsoluteXStack zIndex={10} bottom={0} left={0} right={0} justifyContent="center">
         <Button
           onClick={() =>
             setOpen((x) => {
@@ -25,7 +25,7 @@ export const HiddenSection = (props: {
         >
           {open ? 'Close' : 'Show full menu'}
         </Button>
-      </AbsoluteHStack>
+      </AbsoluteXStack>
       <LinearGradient
         pointerEvents="none"
         style={[StyleSheet.absoluteFill, { top: '50%', opacity: open ? 0 : 1 }]}
@@ -33,6 +33,6 @@ export const HiddenSection = (props: {
         end={[0, 1]}
         colors={[theme.backgroundColorTransparent, theme.backgroundColor]}
       />
-    </VStack>
+    </YStack>
   )
 }

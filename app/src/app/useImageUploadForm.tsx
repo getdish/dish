@@ -1,6 +1,6 @@
 import { UploadType, uploadFile } from '@dish/graph'
+import { Toast } from '@dish/ui'
 import { useRef } from 'react'
-import { Toast } from 'snackui'
 
 export const useImageUploadForm = (type: UploadType) => {
   const ref = useRef<HTMLFormElement>(null)

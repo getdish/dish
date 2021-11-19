@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
-import { Trash } from '@dish/react-feather'
+import { Input, Spacer } from '@dish/ui'
+import { Trash } from '@tamagui/feather-icons'
 import React, { useEffect, useState } from 'react'
-import { Input, Spacer } from 'snackui'
 
 import { red700 } from '../../../constants/colors'
 import { AuthForm } from '../../AuthForm'

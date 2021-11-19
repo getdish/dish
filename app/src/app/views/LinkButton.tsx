@@ -1,6 +1,6 @@
 import { RoutesTable } from '@dish/router'
+import { Button, Tooltip, combineRefs } from '@dish/ui'
 import React, { forwardRef } from 'react'
-import { Button, Tooltip, combineRefs } from 'snackui'
 
 import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'

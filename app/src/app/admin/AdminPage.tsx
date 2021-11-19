@@ -1,8 +1,8 @@
 import { GRAPH_DOMAIN } from '@dish/graph'
+import { Spacer, Text, Title, XStack, YStack } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
-import { HStack, Spacer, Text, Title, VStack } from 'snackui'
 
 import { Route, RouteSwitch } from '../Route'
 import { Link } from '../views/Link'
@@ -12,8 +12,8 @@ import { SmallTitle } from '../views/SmallTitle'
 
 export default memo(function AdminPage() {
   return (
-    <VStack pointerEvents="auto" flex={1} alignItems="center" backgroundColor="#fff">
-      <HStack backgroundColor="#eee" width="100%" spacing={20} padding={5}>
+    <YStack pointerEvents="auto" flex={1} alignItems="center" backgroundColor="#fff">
+      <XStack backgroundColor="#eee" width="100%" spacing={20} padding={5}>
         <Link name="admin">
           <Text fontWeight="700">Admin</Text>
         </Link>
@@ -26,7 +26,7 @@ export default memo(function AdminPage() {
         <Spacer flex={1} />
 
         <Link name="home">Dish ⤴️</Link>
-      </HStack>
+      </XStack>
       <RouteSwitch>
         <Route name="adminTags">{() => <AdminTagsPage />}</Route>
         <Route name="adminReviews">{() => <AdminReviewsPage />}</Route>
@@ -34,11 +34,11 @@ export default memo(function AdminPage() {
         <Route name="adminPlaces">{() => <AdminPlacesPage />}</Route>
         <Route name="admin">
           <ScrollView style={{ width: '100%', height: '100%' }}>
-            <VStack alignItems="center" paddingVertical={20} spacing="xxl">
+            <YStack alignItems="center" paddingVertical={20} spacing="xxl">
               <Title>Welcome to dish</Title>
 
               <SmallTitle>Manage</SmallTitle>
-              <HStack justifyContent="center" flexWrap="wrap" spacing="lg">
+              <XStack justifyContent="center" flexWrap="wrap" spacing="lg">
                 <AdminLinkButton icon="🏷" name="adminTags">
                   Tags
                 </AdminLinkButton>
@@ -48,10 +48,10 @@ export default memo(function AdminPage() {
                 <AdminLinkButton icon="👥" name="adminUsers">
                   Users
                 </AdminLinkButton>
-              </HStack>
+              </XStack>
 
               <SmallTitle>Services</SmallTitle>
-              <HStack justifyContent="center" flexWrap="wrap" spacing="lg">
+              <XStack justifyContent="center" flexWrap="wrap" spacing="lg">
                 <AdminLinkButton icon="💽" href={GRAPH_DOMAIN}>
                   Hasura
                 </AdminLinkButton>
@@ -76,22 +76,22 @@ export default memo(function AdminPage() {
                 <AdminLinkButton icon="🐝" href="http://104.243.45.240:9001">
                   Swarm (Portainer)
                 </AdminLinkButton>
-              </HStack>
+              </XStack>
 
               <SmallTitle>Intranet</SmallTitle>
-              <HStack justifyContent="center" flexWrap="wrap" spacing="lg">
+              <XStack justifyContent="center" flexWrap="wrap" spacing="lg">
                 <AdminLinkButton icon="💬" href="http://dish-headquarters.slack.com/">
                   Slack
                 </AdminLinkButton>
                 <AdminLinkButton icon="👨‍💻" href="https://github.com/getdish/dish">
                   Github
                 </AdminLinkButton>
-              </HStack>
-            </VStack>
+              </XStack>
+            </YStack>
           </ScrollView>
         </Route>
       </RouteSwitch>
-    </VStack>
+    </YStack>
   )
 })
 
@@ -110,12 +110,12 @@ const AdminLinkButton = ({
       }}
       {...props}
     >
-      <VStack spacing alignItems="center">
+      <YStack spacing alignItems="center">
         <Text height={80 + 20} fontSize={80}>
           {icon}
         </Text>
         <Text color="rgba(0,0,0,0.4)">{children}</Text>
-      </VStack>
+      </YStack>
     </LinkButton>
   )
 }

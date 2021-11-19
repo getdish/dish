@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "main": "dist",
-  "module": "_",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "scripts": {
-    "build": "esdx legacy",
-    "watch": "esdx-watch legacy",
+    "build": "tamagui-build legacy",
+    "watch": "tamagui-build legacy --watch",
     "test": "DISH_ENV=test ava test/* --verbose",
     "test:watch": "DISH_ENV=test ava test/* --watch"
   },
@@ -28,7 +29,7 @@
     "redis": "^3.1.2"
   },
   "devDependencies": {
-    "@dish/esdx": "*",
+    "@tamagui/build": "*",
     "ava": "^3.14.0"
   }
 }

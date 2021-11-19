@@ -1,5 +1,5 @@
+import { AbsoluteYStack, Theme, YStack, useMedia } from '@dish/ui'
 import React, { Suspense } from 'react'
-import { AbsoluteVStack, Theme, VStack, useMedia } from 'snackui'
 
 import {
   searchBarBorderRadius,
@@ -37,7 +37,7 @@ export const AppSearchBarFloating = () => {
 
   return (
     <Theme name={barThemeName}>
-      <AbsoluteVStack
+      <AbsoluteYStack
         className="searchbar-container ease-in-out"
         zIndex={zIndexSearchBarFloating}
         position="absolute"
@@ -48,9 +48,9 @@ export const AppSearchBarFloating = () => {
         top={0}
       >
         {/* container */}
-        <AbsoluteVStack top={0} left={-20} right={-20} alignItems="center">
+        <AbsoluteYStack top={0} left={-20} right={-20} alignItems="center">
           {/* bg/shadows */}
-          <VStack
+          <YStack
             position="relative"
             alignItems="center"
             justifyContent="center"
@@ -58,7 +58,7 @@ export const AppSearchBarFloating = () => {
             height={height}
           >
             {/* SHADOW AND BACKGROUND */}
-            <AbsoluteVStack
+            <AbsoluteYStack
               borderRadius={searchBarBorderRadius}
               className="searchbar-shadow"
               overflow="hidden"
@@ -74,7 +74,7 @@ export const AppSearchBarFloating = () => {
               shadowOffset={{ height: 0, width: 0 }}
               shadowRadius={5}
             />
-            <VStack
+            <YStack
               width="100%"
               position="relative"
               zIndex={104}
@@ -88,10 +88,10 @@ export const AppSearchBarFloating = () => {
               <Suspense fallback={null}>
                 <AppSearchBarContents isColored={isColored} />
               </Suspense>
-            </VStack>
-          </VStack>
-        </AbsoluteVStack>
-      </AbsoluteVStack>
+            </YStack>
+          </YStack>
+        </AbsoluteYStack>
+      </AbsoluteYStack>
     </Theme>
   )
 }

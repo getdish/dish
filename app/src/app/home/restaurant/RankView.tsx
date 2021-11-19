@@ -1,5 +1,5 @@
+import { AbsoluteYStack, Text, YStack, useTheme } from '@dish/ui'
 import React, { memo } from 'react'
-import { AbsoluteVStack, Text, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { TextSuperScript } from '../../views/TextSuperScript'
@@ -7,7 +7,7 @@ import { TextSuperScript } from '../../views/TextSuperScript'
 export const RankView = memo(({ rank }: { rank: number }) => {
   const theme = useTheme()
   return (
-    <VStack
+    <YStack
       width={44}
       height={44}
       {...(isWeb &&
@@ -24,7 +24,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       alignItems="center"
       justifyContent="center"
     >
-      <AbsoluteVStack
+      <AbsoluteYStack
         borderRadius={1000}
         fullscreen
         // backgroundColor={theme.backgroundColorSecondary}
@@ -43,6 +43,6 @@ export const RankView = memo(({ rank }: { rank: number }) => {
           {rank}
         </Text>
       </Text>
-    </VStack>
+    </YStack>
   )
 })

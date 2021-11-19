@@ -2,11 +2,13 @@
   "name": "@dish/helpers-node",
   "version": "0.0.1",
   "sideEffects": false,
-  "main": "dist",
-  "module": "_",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "typings": "types",
   "scripts": {
-    "build": "esdx legacy",
-    "watch": "esdx-watch legacy"
+    "build": "tamagui-build legacy",
+    "watch": "tamagui-build --watch legacy"
   },
   "dependencies": {
     "@dish/async": "*",
@@ -19,7 +21,7 @@
     "pg": "^8.7.1"
   },
   "devDependencies": {
-    "@dish/esdx": "*"
+    "@tamagui/build": "*"
   },
   "publishConfig": {
     "access": "public"

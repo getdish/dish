@@ -40,19 +40,18 @@ export async function userFetchSimple(
   method: 'POST' | 'GET',
   path: string,
   data: any = {},
-  { handleLogOut, rawData, isAdmin, headers: userHeaders }: UserFetchOpts = {}
+  { handleLogOut, rawData, isAdmin, headers }: UserFetchOpts = {}
 ) {
-  const headers = {
-    ...userHeaders,
-    ...getAuthHeaders(isAdmin),
-    ...(!rawData && {
-      'Content-Type': 'application/json',
-    }),
-    Accept: 'application/json',
-  }
   const init: RequestInit = {
     method,
-    headers,
+    headers: {
+      ...headers,
+      ...getAuthHeaders(isAdmin),
+      ...(!rawData && {
+        'Content-Type': 'application/json',
+      }),
+      Accept: 'application/json',
+    },
     body: rawData ? data : JSON.stringify(data),
   }
   const url = DISH_API_ENDPOINT + path

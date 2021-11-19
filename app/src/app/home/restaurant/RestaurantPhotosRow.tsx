@@ -1,7 +1,7 @@
 import { graphql, restaurant } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
+import { Spacing, XStack, YStack, useConstant, useTheme } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { HStack, Spacing, VStack, useConstant, useTheme } from 'snackui'
 
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { Image } from '../../views/Image'
@@ -26,9 +26,9 @@ export const RestaurantPhotosRow = (props: Props) => {
   return (
     <Suspense
       fallback={
-        <VStack height={props.height}>
+        <YStack height={props.height}>
           <PhotoCard {...props} />
-        </VStack>
+        </YStack>
       }
     >
       <RestaurantPhotosRowContent {...props} />
@@ -139,9 +139,9 @@ export const RestaurantPhotosRowContent = memo(
 
       return (
         // an attempt to get native to scroll but not working
-        <HStack spacing={spacing} minWidth={fullWidth}>
+        <XStack spacing={spacing} minWidth={fullWidth}>
           {slanted ? <SkewedCardCarousel>{contents}</SkewedCardCarousel> : contents}
-        </HStack>
+        </XStack>
       )
     }
   )

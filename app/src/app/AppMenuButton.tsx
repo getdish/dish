@@ -1,7 +1,7 @@
-import { Menu } from '@dish/react-feather'
+import { Popover, Text, Theme, XStack, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
+import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
-import { HStack, Popover, Text, Theme, useMedia } from 'snackui'
 
 import { AppMenuContents } from './AppMenuContents'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
@@ -16,7 +16,7 @@ export const AppMenuButton = memo(() => {
   // const pageName = useRouterCurPage().name
 
   return (
-    <HStack alignItems="center">
+    <XStack alignItems="center">
       <Popover
         placement="bottom"
         isOpen={showUserMenu}
@@ -40,6 +40,6 @@ export const AppMenuButton = memo(() => {
           </Theme>
         </Popover.Content>
       </Popover>
-    </HStack>
+    </XStack>
   )
 })

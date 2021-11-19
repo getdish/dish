@@ -1,8 +1,18 @@
+import {
+  Button,
+  Form,
+  Input,
+  InputProps,
+  Paragraph,
+  Text,
+  XStack,
+  YStack,
+  useTheme,
+} from '@dish/ui'
 import { getStore } from '@dish/use-store'
 import { capitalize } from 'lodash'
 import React, { Suspense, useContext } from 'react'
 import { Controller, FieldError, RegisterOptions } from 'react-hook-form'
-import { Button, Form, HStack, Input, InputProps, Paragraph, Text, VStack, useTheme } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { drawerStore } from '../drawerStore'
@@ -36,16 +46,16 @@ export function SubmittableForm({
         }
       }}
     >
-      <VStack spacing="sm" minWidth={260}>
+      <YStack spacing="sm" minWidth={260}>
         {!isSuccess && (
           <Suspense fallback={null}>
-            <VStack spacing="sm">{children}</VStack>
+            <YStack spacing="sm">{children}</YStack>
           </Suspense>
         )}
 
         {!isSuccess && (
-          <HStack>
-            <VStack flex={1} />
+          <XStack>
+            <YStack flex={1} />
             <Button
               accessible
               accessibilityRole="button"
@@ -60,7 +70,7 @@ export function SubmittableForm({
               {submitText}
               {isSubmitting ? '...' : ''}
             </Button>
-          </HStack>
+          </XStack>
         )}
 
         {isSuccess && (
@@ -72,7 +82,7 @@ export function SubmittableForm({
         {!!errorText && <ErrorParagraph>{errorText}</ErrorParagraph>}
 
         {after}
-      </VStack>
+      </YStack>
     </Form>
   )
 }

@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
+import { StackProps, Text, XStack, YStack, useTheme } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack, StackProps, Text, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
@@ -29,7 +29,7 @@ export const RestaurantDeliveryButtons = memo(
     const sources = getRestaurantDeliverySources(restaurant.sources)
 
     return (
-      <HStack flexWrap="wrap" alignItems="center" spacing="xxs" {...props}>
+      <XStack flexWrap="wrap" alignItems="center" spacing="xxs" {...props}>
         {!!label && (
           <Text fontSize={14} color={theme.colorQuartenary} marginRight={8} y={-1}>
             {label}
@@ -37,7 +37,7 @@ export const RestaurantDeliveryButtons = memo(
         )}
         {sources.map((source, i) => {
           return (
-            <VStack zIndex={1000 - i} key={source.id} marginHorizontal={-5}>
+            <YStack zIndex={1000 - i} key={source.id} marginHorizontal={-5}>
               <RestaurantDeliveryButton
                 name={source.name}
                 image={typeof source.image === 'string' ? source.image : null}
@@ -45,7 +45,7 @@ export const RestaurantDeliveryButtons = memo(
                 restaurantSlug={restaurantSlug}
                 showLabels={showLabels}
               />
-            </VStack>
+            </YStack>
           )
         })}
         {!sources.length && label !== false && (
@@ -53,7 +53,7 @@ export const RestaurantDeliveryButtons = memo(
             No delivery
           </Text>
         )}
-      </HStack>
+      </XStack>
     )
   })
 )

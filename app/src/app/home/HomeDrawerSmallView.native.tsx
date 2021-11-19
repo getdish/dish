@@ -1,4 +1,5 @@
 import { AssertionError } from '@dish/helpers'
+import { YStack } from '@dish/ui'
 import { getStore } from '@dish/use-store'
 import React, { memo, useMemo, useRef } from 'react'
 import {
@@ -9,7 +10,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import { VStack } from 'snackui'
 
 import {
   isNative,
@@ -229,14 +229,14 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         () => (
           <BottomSheetContainer>
             <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
-              <VStack height={searchBarHeight} zIndex={1000}>
+              <YStack height={searchBarHeight} zIndex={1000}>
                 <AppSearchBarInline />
-              </VStack>
-              <VStack position="relative" flex={1}>
+              </YStack>
+              <YStack position="relative" flex={1}>
                 <AppAutocompleteLocation />
                 <AppAutocompleteSearch />
                 {props.children}
-              </VStack>
+              </YStack>
             </View>
           </BottomSheetContainer>
         ),

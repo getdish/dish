@@ -1,7 +1,7 @@
-import { MapPin, Navigation } from '@dish/react-feather'
+import { AbsoluteXStack, AbsoluteYStack, Button, XStack, YStack } from '@dish/ui'
+import { MapPin, Navigation } from '@tamagui/feather-icons'
 import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'
-import { AbsoluteHStack, AbsoluteVStack, Button, HStack, VStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
@@ -75,9 +75,9 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
   return (
     // needs overflow hidden or else search box expands past edge on media.sm
     // while searching location
-    <VStack position="relative" flex={1} overflow="hidden">
+    <YStack position="relative" flex={1} overflow="hidden">
       <InputFrame>
-        <HStack
+        <XStack
           position="relative"
           minWidth="78.7%" // this is the hackiest ever fix for react native width issue for now
           flexShrink={1}
@@ -87,7 +87,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
           }}
           flexWrap="nowrap"
         >
-          <AbsoluteVStack
+          <AbsoluteYStack
             top={0}
             left={0}
             bottom={0}
@@ -96,12 +96,12 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
             pointerEvents="none"
           >
             <MapPin color={color} size={18} opacity={0.35} />
-          </AbsoluteVStack>
+          </AbsoluteYStack>
 
           {isTouchDevice && <SearchInputNativeDragFix name="location" />}
 
           {showLocationTag && (
-            <AbsoluteHStack
+            <AbsoluteXStack
               alignItems="center"
               justifyContent="center"
               pointerEvents="none"
@@ -111,7 +111,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
               zIndex={100}
             >
               <InputTagButton noLink name={curLocName} />
-            </AbsoluteHStack>
+            </AbsoluteXStack>
           )}
 
           <TextInput
@@ -144,7 +144,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
               }
             }}
           />
-        </HStack>
+        </XStack>
         <Button
           alignSelf="center"
           backgroundColor="transparent"
@@ -159,6 +159,6 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
           noTextWrap
         />
       </InputFrame>
-    </VStack>
+    </YStack>
   )
 })

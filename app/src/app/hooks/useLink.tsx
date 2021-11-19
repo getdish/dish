@@ -1,8 +1,8 @@
 import { series, sleep } from '@dish/async'
+import { useForceUpdate } from '@dish/ui'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
 import { Pressable } from 'react-native'
-import { useForceUpdate } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { addTagsToCache, allTags, getFullTagFromNameAndType } from '../../helpers/allTags'

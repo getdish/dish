@@ -1,9 +1,9 @@
 import { series, sleep } from '@dish/async'
 import { order_by, query, resolved } from '@dish/graph'
+import { Theme, Toast, useDebounceValue, useGet } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { groupBy } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useMemo } from 'react'
-import { Theme, Toast, useDebounceValue, useGet } from 'snackui'
 
 import { tagDefaultAutocomplete } from '../constants/localTags'
 import { isTouchDevice } from '../constants/platforms'

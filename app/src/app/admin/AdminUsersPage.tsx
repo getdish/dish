@@ -1,8 +1,8 @@
 import { graphql, order_by, query } from '@dish/graph'
+import { Text, XStack, YStack, useDebounceValue } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
-import { HStack, Text, VStack, useDebounceValue } from 'snackui'
 
 import { useQueryPaginated } from '../hooks/useQueryPaginated'
 import { PaginationNav } from '../views/PaginationNav'
@@ -20,20 +20,20 @@ export class AdminUsersStore extends Store {
 
 export default graphql(() => {
   return (
-    <VStack flex={1} overflow="hidden" width="100%">
-      <HStack overflow="hidden" width="100%" flex={1}>
+    <YStack flex={1} overflow="hidden" width="100%">
+      <XStack overflow="hidden" width="100%" flex={1}>
         <ScrollView horizontal>
-          <HStack>
+          <XStack>
             <VerticalColumn>
               <UsersList />
             </VerticalColumn>
             <VerticalColumn width={400} maxWidth={400} padding={20}>
               <UserDisplay />
             </VerticalColumn>
-          </HStack>
+          </XStack>
         </ScrollView>
-      </HStack>
-    </VStack>
+      </XStack>
+    </YStack>
   )
 })
 
@@ -72,7 +72,7 @@ const UsersListContent = graphql(({ search }: { search: string }) => {
   return (
     <ScrollView style={{ paddingBottom: 100 }}>
       <PaginationNav totalPages={totalPages} setPage={setPage} page={page} />
-      <HStack
+      <XStack
         paddingVertical={2}
         alignItems="center"
         justifyContent="center"
@@ -80,7 +80,7 @@ const UsersListContent = graphql(({ search }: { search: string }) => {
         borderBottomWidth={1}
       >
         <Text opacity={0.5}>{total} total</Text>
-      </HStack>
+      </XStack>
       {results.map((item, row) => {
         return (
           <AdminListItem
@@ -119,11 +119,11 @@ const UserDisplay = graphql(() => {
       {!user && <Text>No User Selected</Text>}
       {!!user && (
         <ScrollView>
-          <VStack spacing={10}>
+          <YStack spacing={10}>
             <Text>username: {user.username}</Text>
             <Text>username: {user.email}</Text>
             <Text>has_onboarded: {user.has_onboarded}</Text>
-          </VStack>
+          </YStack>
         </ScrollView>
       )}
     </>

@@ -1,18 +1,18 @@
-import { User } from '@dish/react-feather'
-import React, { useState } from 'react'
-import { ScrollView } from 'react-native'
 import {
-  AbsoluteVStack,
+  AbsoluteYStack,
   Circle,
-  HStack,
   Modal,
   Paragraph,
   Spacer,
   StackProps,
   Text,
-  VStack,
+  XStack,
+  YStack,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { User } from '@tamagui/feather-icons'
+import React, { useState } from 'react'
+import { ScrollView } from 'react-native'
 
 import { grey } from '../../constants/colors'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
@@ -68,7 +68,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
   } = props
 
   return (
-    <VStack
+    <YStack
       borderRadius={10}
       padding={4}
       alignItems="flex-start"
@@ -91,14 +91,14 @@ export const CommentBubble = (props: CommentBubbleProps) => {
           <PaneControlButtons>
             <CloseButton onPress={() => setIsExpanded(false)} />
           </PaneControlButtons>
-          <VStack paddingTop={20} maxWidth="100%" flex={1} overflow="hidden">
+          <YStack paddingTop={20} maxWidth="100%" flex={1} overflow="hidden">
             <CommentBubbleContents {...props} scrollable expanded />
-          </VStack>
+          </YStack>
         </Modal>
       )}
 
       <CommentBubbleContents {...props} onExpand={() => setIsExpanded(true)} expanded={false} />
-    </VStack>
+    </YStack>
   )
 }
 
@@ -197,13 +197,13 @@ function CommentBubbleContents(
   }
 
   const metaContents = (
-    <HStack alignItems="center" pointerEvents="auto">
+    <XStack alignItems="center" pointerEvents="auto">
       {hideMeta ? (
-        <VStack flex={1} />
+        <YStack flex={1} />
       ) : (
         <>
-          <HStack spacing="sm" alignItems="center">
-            <VStack
+          <XStack spacing="sm" alignItems="center">
+            <YStack
               width={circleSize}
               height={circleSize}
               marginVertical={size === 'lg' ? -4 : 0}
@@ -224,9 +224,9 @@ function CommentBubbleContents(
                   )}
                 </>
               )}
-            </VStack>
+            </YStack>
             {!!externalSource?.image && (
-              <VStack
+              <YStack
                 shadowColor={theme.shadowColor}
                 shadowRadius={4}
                 shadowOffset={{ height: 2, width: 0 }}
@@ -241,21 +241,21 @@ function CommentBubbleContents(
                   source={{ uri: externalSource.image }}
                   style={{ width: extImgSize, height: extImgSize }}
                 />
-              </VStack>
+              </YStack>
             )}
-          </HStack>
+          </XStack>
 
           <Spacer size="lg" />
 
-          <HStack flex={1} pointerEvents="auto" alignItems="center" spacing>
+          <XStack flex={1} pointerEvents="auto" alignItems="center" spacing>
             {!!name && (
-              <VStack>
+              <YStack>
                 {wrapLink(
                   <Text color={theme.color} fontSize={size === 'lg' ? 18 : 14} fontWeight="800">
                     {isExternalUser ? `via ${externalSource?.name || '-'}` : name}
                   </Text>
                 )}
-              </VStack>
+              </YStack>
             )}
 
             {!!name && <Middot />}
@@ -267,16 +267,16 @@ function CommentBubbleContents(
                 </Paragraph>
               </>
             )}
-          </HStack>
+          </XStack>
         </>
       )}
 
       {after}
-    </HStack>
+    </XStack>
   )
 
   return (
-    <VStack
+    <YStack
       maxWidth="100%"
       overflow="hidden"
       paddingRight={15}
@@ -291,7 +291,7 @@ function CommentBubbleContents(
 
       {/* main card */}
       {hasContents && (
-        <VStack
+        <YStack
           paddingHorizontal={15}
           paddingVertical={15}
           marginLeft={20}
@@ -319,7 +319,7 @@ function CommentBubbleContents(
         >
           {/* tiny bottom left bubble */}
           {!chromeless && (
-            <AbsoluteVStack
+            <AbsoluteYStack
               bottom={-6}
               left={0}
               width={20}
@@ -342,10 +342,10 @@ function CommentBubbleContents(
           ) : (
             contents
           )}
-        </VStack>
+        </YStack>
       )}
 
       {metaContents}
-    </VStack>
+    </YStack>
   )
 }

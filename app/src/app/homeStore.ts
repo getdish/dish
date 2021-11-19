@@ -1,8 +1,8 @@
 import { HistoryItem } from '@dish/router'
+import { Toast } from '@dish/ui'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import _, { clamp, findLast } from 'lodash'
 import { Keyboard } from 'react-native'
-import { Toast } from 'snackui'
 
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'

@@ -1,8 +1,8 @@
 import { graphql, query } from '@dish/graph'
+import { LoadingItems, Modal, Text, Toast, YStack } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
-import { LoadingItems, Modal, Text, Toast, VStack } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemReview } from '../../../types/homeTypes'
@@ -39,9 +39,9 @@ function RestaurantReviewPageContent() {
         }}
       >
         <Suspense fallback={<LoadingItems />}>
-          <VStack padding={20}>
+          <YStack padding={20}>
             <HomePageReviewContent state={state} />
-          </VStack>
+          </YStack>
         </Suspense>
       </ScrollView>
     </Modal>
@@ -53,9 +53,9 @@ const HomePageReviewContent = memo(
     const { user } = useUserStore()
     if (!state.restaurantSlug) {
       return (
-        <VStack>
+        <YStack>
           <Text>no slug?</Text>
-        </VStack>
+        </YStack>
       )
     }
     const [restaurant] = queryRestaurant(state.restaurantSlug)
@@ -71,7 +71,7 @@ const HomePageReviewContent = memo(
     }
 
     return (
-      <VStack width="100%" maxWidth="100%" flex={1}>
+      <YStack width="100%" maxWidth="100%" flex={1}>
         <SmallTitle fontWeight="600">{restaurant.name}</SmallTitle>
         <Suspense fallback={<LoadingItems />}>
           <RestaurantReviewEdit
@@ -92,7 +92,7 @@ const HomePageReviewContent = memo(
             }}
           />
         </Suspense>
-      </VStack>
+      </YStack>
     )
   })
 )

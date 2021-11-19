@@ -16,8 +16,8 @@ import {
   setCache,
   useRefetch,
 } from '@dish/graph'
+import { Toast } from '@dish/ui'
 import { useEffect, useState } from 'react'
-import { Toast } from 'snackui'
 
 import { useUserStore, userStore } from '../userStore'
 

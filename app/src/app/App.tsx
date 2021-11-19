@@ -1,6 +1,6 @@
+import { AbsoluteYStack, LoadingItems, ToastRoot, useTheme } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
-import { AbsoluteVStack, LoadingItems, ToastRoot, useTheme } from 'snackui'
 
 import { isSSR } from '../constants/constants'
 import AdminPage from './admin/AdminPage'
@@ -79,7 +79,7 @@ function AppHomeContent(props: { children?: any }) {
   return (
     <>
       {/* background */}
-      <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
+      <AbsoluteYStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
 
       <RootPortalProvider />
 
@@ -113,7 +113,7 @@ function AppHomeContent(props: { children?: any }) {
         <AppSearchBarFloating />
       </Suspense>
 
-      {/* Modals outside the above VStack to stay above */}
+      {/* Modals outside the above YStack to stay above */}
       <Suspense fallback={null}>
         <UserEditPage />
       </Suspense>

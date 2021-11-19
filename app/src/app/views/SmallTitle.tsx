@@ -1,5 +1,5 @@
+import { Divider, Spacer, StackProps, Text, TextProps, XStack, YStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { Divider, HStack, Spacer, StackProps, Text, TextProps, VStack } from 'snackui'
 
 export const SmallTitle = memo(
   ({
@@ -22,8 +22,8 @@ export const SmallTitle = memo(
     }) => {
     const dividerElement = color ? <Divider backgroundColor={color} opacity={0.1} /> : <Divider />
     return (
-      <VStack width="100%" alignItems="center" {...rest}>
-        <HStack width="100%" alignItems="center">
+      <YStack width="100%" alignItems="center" {...rest}>
+        <XStack width="100%" alignItems="center">
           {divider === 'center' && dividerElement}
           <Text
             paddingHorizontal={20}
@@ -43,7 +43,7 @@ export const SmallTitle = memo(
             {children}
           </Text>
           {divider === 'center' && dividerElement}
-        </HStack>
+        </XStack>
 
         {after && (
           <>
@@ -58,7 +58,7 @@ export const SmallTitle = memo(
             {dividerElement}
           </>
         )}
-      </VStack>
+      </YStack>
     )
   }
 )
@@ -66,13 +66,13 @@ export const SmallTitle = memo(
 export const SmallerTitle = memo(
   ({ children, hideDivider, ...rest }: StackProps & { hideDivider?: boolean }) => {
     return (
-      <HStack alignItems="center" justifyContent="center" spacing {...rest}>
+      <XStack alignItems="center" justifyContent="center" spacing {...rest}>
         {!hideDivider && <Divider flex />}
         <Text opacity={0.5} fontSize={14} fontWeight="500">
           {children}
         </Text>
         {!hideDivider && <Divider flex />}
-      </HStack>
+      </XStack>
     )
   }
 )

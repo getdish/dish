@@ -1,8 +1,8 @@
 import { sleep } from '@dish/async'
 import { Auth } from '@dish/graph'
 import { isSafari } from '@dish/helpers'
+import { Text, Toast, XStack, YStack } from '@dish/ui'
 import React, { useEffect, useState } from 'react'
-import { HStack, Text, Toast, VStack } from 'snackui'
 
 import { useIsMountedRef } from '../../helpers/useIsMountedRef'
 import { userStore } from '../userStore'
@@ -66,8 +66,8 @@ export function SignInAppleButtonContents() {
   }
 
   return (
-    <VStack onHoverIn={() => setHovered(true)} onPress={handleSignIn}>
-      <VStack
+    <YStack onHoverIn={() => setHovered(true)} onPress={handleSignIn}>
+      <YStack
         borderRadius={9}
         borderColor="rgba(255,255,255,0.3)"
         borderWidth={2}
@@ -77,7 +77,7 @@ export function SignInAppleButtonContents() {
           borderColor: 'rgba(255,255,255,0.5)',
         }}
       >
-        <HStack paddingRight={20} backgroundColor="#000" alignItems="center">
+        <XStack paddingRight={20} backgroundColor="#000" alignItems="center">
           <AppleLogoWhite />
           <Text
             textAlign="center"
@@ -91,8 +91,8 @@ export function SignInAppleButtonContents() {
           >
             {loading ? 'Loading...' : 'Sign in with Apple'}
           </Text>
-        </HStack>
-      </VStack>
-    </VStack>
+        </XStack>
+      </YStack>
+    </YStack>
   )
 }

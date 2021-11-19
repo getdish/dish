@@ -1,9 +1,9 @@
 import { slugify } from '@dish/graph'
-import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@dish/react-feather'
+import { Box, BoxProps, Divider, Spacer, Toast, YStack, useDebounceEffect } from '@dish/ui'
+import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@tamagui/feather-icons'
 import { capitalize } from 'lodash'
 import React, { forwardRef, memo, useState } from 'react'
 import { ScrollView, useColorScheme } from 'react-native'
-import { Box, BoxProps, Divider, Spacer, Toast, VStack, useDebounceEffect } from 'snackui'
 
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
@@ -42,21 +42,21 @@ export const AppMenuContents = memo(
         {...props}
       >
         {/* safari y={} fix overflow */}
-        <VStack overflow="hidden" borderRadius={12} y={0.01}>
+        <YStack overflow="hidden" borderRadius={12} y={0.01}>
           {showContents && (
             <ScrollView>
               {!isWeb && (
-                <VStack alignItems="center" justifyContent="center">
+                <YStack alignItems="center" justifyContent="center">
                   <LogoColor scale={1.5} />
                   <Spacer />
-                </VStack>
+                </YStack>
               )}
 
               {!isLoggedIn && (
                 <>
-                  <VStack padding={20}>
+                  <YStack padding={20}>
                     <AuthForm autoFocus onDidLogin={hideUserMenu} />
-                  </VStack>
+                  </YStack>
                   <Divider />
                 </>
               )}
@@ -172,7 +172,7 @@ export const AppMenuContents = memo(
               </MenuLinkButton>
             </ScrollView>
           )}
-        </VStack>
+        </YStack>
       </Box>
     )
   })

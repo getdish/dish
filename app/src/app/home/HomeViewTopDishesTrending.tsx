@@ -1,5 +1,5 @@
 // import React, { memo } from 'react'
-// import { AbsoluteVStack, HStack, LoadingItem, VStack } from 'snackui'
+// import { AbsoluteYStack, XStack, LoadingItem, YStack } from '@dish/ui'
 
 // import { useHomeStore } from '../homeStore'
 // import { LinkButton } from '../views/LinkButton'
@@ -31,10 +31,10 @@
 //   const total = 5
 
 //   return (
-//     <VStack height={188 + listSpace * (total - 1)}>
-//       <HStack spacing="lg" paddingHorizontal={10}>
-//         <VStack flex={1}>
-//           <AbsoluteVStack position="absolute" top={-5} left={-12} zIndex={100}>
+//     <YStack height={188 + listSpace * (total - 1)}>
+//       <XStack spacing="lg" paddingHorizontal={10}>
+//         <YStack flex={1}>
+//           <AbsoluteYStack position="absolute" top={-5} left={-12} zIndex={100}>
 //             <LinkButton
 //               paddingVertical={5}
 //               paddingHorizontal={6}
@@ -47,32 +47,32 @@
 //             >
 //               Trending
 //             </LinkButton>
-//           </AbsoluteVStack>
-//           <VStack spacing={6}>
+//           </AbsoluteYStack>
+//           <YStack spacing={6}>
 //             {/* <SmallerTitle marginBottom={5}>Restaurants</SmallerTitle> */}
-//             <VStack spacing={listSpace} overflow="hidden">
+//             <YStack spacing={listSpace} overflow="hidden">
 //               {!hasLoaded && <LoadingItem />}
 //               {topRestaurants.slice(0, total).map(getTrending)}
-//             </VStack>
-//           </VStack>
-//         </VStack>
-//         <VStack flex={1} spacing={6}>
+//             </YStack>
+//           </YStack>
+//         </YStack>
+//         <YStack flex={1} spacing={6}>
 //           {/* <SmallerTitle marginBottom={5}>Dishes</SmallerTitle> */}
-//           <VStack spacing={listSpace} overflow="hidden">
+//           <YStack spacing={listSpace} overflow="hidden">
 //             {!hasLoaded && <LoadingItem />}
 //             {topRestaurants.slice(0, total).map(getTrending)}
-//           </VStack>
-//         </VStack>
+//           </YStack>
+//         </YStack>
 //         {/* <MediaQuery query={mediaQueries.md}>
-//           <VStack flex={1} spacing={6}>
+//           <YStack flex={1} spacing={6}>
 //             <SmallerTitle marginBottom={5}>Topics</SmallerTitle>
-//             <VStack spacing={listSpace} overflow="hidden">
+//             <YStack spacing={listSpace} overflow="hidden">
 //               {!hasLoaded && <LoadingItem />}
 //               {topRestaurants.slice(0, total).map(getTrending)}
-//             </VStack>
-//           </VStack>
+//             </YStack>
+//           </YStack>
 //         </MediaQuery> */}
-//       </HStack>
-//     </VStack>
+//       </XStack>
+//     </YStack>
 //   )
 // })

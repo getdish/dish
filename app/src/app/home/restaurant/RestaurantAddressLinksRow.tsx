@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
-import { ExternalLink, Link2, PhoneCall } from '@dish/react-feather'
+import { Box, HoverablePopover, Paragraph, XStack, YStack, useTheme } from '@dish/ui'
+import { ExternalLink, Link2, PhoneCall } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
-import { Box, HStack, HoverablePopover, Paragraph, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { GeocodePlace } from '../../../types/homeTypes'
@@ -35,7 +35,7 @@ export const RestaurantAddressLinksRow = memo(
       }
 
       const linkElements = (
-        <HStack alignItems="center" spacing="xs">
+        <XStack alignItems="center" spacing="xs">
           {!!restaurant.telephone && (
             <Link href={`tel:${restaurant.telephone}`}>
               <SmallButton
@@ -54,11 +54,11 @@ export const RestaurantAddressLinksRow = memo(
               />
             </Link>
           )}
-        </HStack>
+        </XStack>
       )
 
       return (
-        <VStack>
+        <YStack>
           {!!(curLocInfo && showAddress) && size !== 'xs' && (
             <Paragraph color={theme.color} selectable ellipse fontSize={12} maxWidth={240}>
               {getAddressText(
@@ -85,7 +85,7 @@ export const RestaurantAddressLinksRow = memo(
             ))}
 
           {size !== 'sm' && linkElements}
-        </VStack>
+        </YStack>
       )
     }
   )

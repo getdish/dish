@@ -1,7 +1,7 @@
+import { YStack, isTouchDevice, useDebounce, useGet } from '@dish/ui'
 import { useStoreSelector } from '@dish/use-store'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
-import { VStack, isTouchDevice, useDebounce, useGet } from 'snackui'
 
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
 import { ContentScrollContext, ScrollStore } from './ContentScrollView'
@@ -70,7 +70,7 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
 
   return (
     // needs both pointer events to prevent/enable scroll on safari
-    <VStack
+    <YStack
       overflow="hidden"
       width="100%"
       pointerEvents={isLockedOut ? 'none' : 'auto'}
@@ -85,10 +85,10 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
     >
       {/* DEBUG VIEW */}
       {/* {isScrolling && (
-          <AbsoluteVStack fullscreen backgroundColor="rgba(255,255,0,0.1)" />
+          <AbsoluteYStack fullscreen backgroundColor="rgba(255,255,0,0.1)" />
         )} */}
       {children}
-    </VStack>
+    </YStack>
   )
 }
 

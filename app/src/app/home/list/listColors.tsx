@@ -1,5 +1,5 @@
+import { useThemeName } from '@dish/ui'
 import { useMemo } from 'react'
-import { useThemeName } from 'snackui'
 
 import * as Colors from '../../../constants/colors'
 

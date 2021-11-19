@@ -1,4 +1,4 @@
-import { Title as SnackTitle, TitleProps } from 'snackui'
+import { Title as SnackTitle, TitleProps } from '@dish/ui'
 
 export type FontTheme = 'slab' | 'sans'
 

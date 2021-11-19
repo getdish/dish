@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
+import { XStack, YStack, getMedia } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack, VStack, getMedia } from 'snackui'
 
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
@@ -50,7 +50,7 @@ export const RestaurantPeekDishes = memo(
 
     return (
       <>
-        <HStack
+        <XStack
           position="relative"
           pointerEvents="none"
           paddingHorizontal={20}
@@ -67,12 +67,12 @@ export const RestaurantPeekDishes = memo(
               onChange={props.onChangeTags}
             />
           )}
-          <VStack flexWrap="wrap" maxHeight="100%">
+          <YStack flexWrap="wrap" maxHeight="100%">
             {!!dishes[0]?.name &&
               dishes.map((dish, i) => {
                 const preventLoad = !isLoaded && i > showInitial
                 return (
-                  <VStack
+                  <YStack
                     flex={1}
                     pointerEvents="auto"
                     marginRight={2}
@@ -113,11 +113,11 @@ export const RestaurantPeekDishes = memo(
                         {...dish}
                       />
                     </Link>
-                  </VStack>
+                  </YStack>
                 )
               })}
-          </VStack>
-        </HStack>
+          </YStack>
+        </XStack>
       </>
     )
   })

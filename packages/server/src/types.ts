@@ -32,7 +32,7 @@ export type CreateWebpackConfig = {
   env: 'development' | 'production'
   cwd?: string
   babelInclude?: (path: string) => boolean
-  snackOptions: {
+  tamaguiOptions: {
     // user options
     themesFile?: string
     evaluateVars?: boolean

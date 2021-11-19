@@ -1,6 +1,6 @@
+import { XStack } from '@dish/ui'
 import React from 'react'
 import { ScrollView } from 'react-native'
-import { HStack } from 'snackui'
 
 import { SmallButton } from './SmallButton'
 
@@ -18,7 +18,7 @@ export const PaginationNav = ({
     <>
       {totalPages > 1 && (
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <HStack>
+          <XStack>
             {pageItems.map((_, index) => {
               return (
                 <SmallButton
@@ -30,7 +30,7 @@ export const PaginationNav = ({
                 </SmallButton>
               )
             })}
-          </HStack>
+          </XStack>
         </ScrollView>
       )}
     </>

@@ -1,6 +1,6 @@
 import { getUserName, graphql, list, review } from '@dish/graph'
+import { Spacer, Text, XStack, YStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack, Spacer, Text, VStack } from 'snackui'
 
 import { CommentBubble, CommentBubbleProps } from '../../views/CommentBubble'
 import { Link } from '../../views/Link'
@@ -82,7 +82,7 @@ export const RestaurantReview = memo(
       return (
         <>
           {/* {showAddTag && <RateRestaurantTagsModal onDismiss={() => setShowAddTag(false)} />} */}
-          <VStack maxWidth={720} alignSelf="center" width="100%">
+          <YStack maxWidth={720} alignSelf="center" width="100%">
             {!!(review || showEmptyReview) && (
               <CommentBubble
                 // chromeless={listTheme === 'minimal'}
@@ -111,10 +111,10 @@ export const RestaurantReview = memo(
                 name={userName}
                 username={review?.user.username || ''}
                 after={
-                  <HStack flex={1} overflow="hidden" alignItems="center" maxWidth="100%">
-                    <VStack flex={1} />
+                  <XStack flex={1} overflow="hidden" alignItems="center" maxWidth="100%">
+                    <YStack flex={1} />
                     {after}
-                  </HStack>
+                  </XStack>
                 }
                 {...commentBubbleProps}
               />
@@ -133,7 +133,7 @@ export const RestaurantReview = memo(
                 />
               </>
             )}
-          </VStack>
+          </YStack>
         </>
       )
     },

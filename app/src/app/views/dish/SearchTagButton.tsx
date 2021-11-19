@@ -1,6 +1,6 @@
-import { Search } from '@dish/react-feather'
+import { YStack } from '@dish/ui'
+import { Search } from '@tamagui/feather-icons'
 import React from 'react'
-import { VStack } from 'snackui'
 
 import { NavigableTag } from '../../../types/tagTypes'
 import { Link } from '../Link'
@@ -16,7 +16,7 @@ export const SearchTagButton = ({
 }) => {
   return (
     <Link tag={tag}>
-      <VStack
+      <YStack
         width={28}
         height={28}
         borderRadius={1000}
@@ -32,7 +32,7 @@ export const SearchTagButton = ({
         }}
       >
         <Search size={16} color={color} />
-      </VStack>
+      </YStack>
     </Link>
   )
 }

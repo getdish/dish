@@ -1,9 +1,9 @@
 import { ZeroUUID, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Search, Tag, X } from '@dish/react-feather'
+import { Input, XStack, useDebounce, useLazyEffect } from '@dish/ui'
+import { Search, Tag, X } from '@tamagui/feather-icons'
 import { sortBy, uniqBy } from 'lodash'
 import React, { memo, useState } from 'react'
-import { HStack, Input, useDebounce, useLazyEffect } from 'snackui'
 
 import { tagCategoriesPopular, tagFilters, tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
@@ -233,8 +233,8 @@ export const ReviewTagsRow = memo(
       }
 
       return (
-        <HStack flex={1} alignItems="center" pointerEvents="auto" zIndex={1000} {...props}>
-          <HStack
+        <XStack flex={1} alignItems="center" pointerEvents="auto" zIndex={1000} {...props}>
+          <XStack
             alignItems="center"
             spacing="sm"
             paddingRight={10}
@@ -247,18 +247,18 @@ export const ReviewTagsRow = memo(
           >
             {isFocused && (
               <>
-                <HStack onPress={() => setIsFocused(false)} opacity={isFocused ? 1 : 0}>
+                <XStack onPress={() => setIsFocused(false)} opacity={isFocused ? 1 : 0}>
                   <X size={16} color="#777" />
-                </HStack>
+                </XStack>
 
-                <HStack
+                <XStack
                   marginRight={-10}
                   marginLeft={10}
                   alignItems="center"
                   opacity={isFocused ? 0.5 : 0}
                 >
                   <Search size={16} color="#777" />
-                </HStack>
+                </XStack>
               </>
             )}
 
@@ -326,8 +326,8 @@ export const ReviewTagsRow = memo(
                 />
               )
             })}
-          </HStack>
-        </HStack>
+          </XStack>
+        </XStack>
       )
     },
     { suspense: false }

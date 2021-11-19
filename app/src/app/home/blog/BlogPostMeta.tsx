@@ -1,11 +1,11 @@
+import { Paragraph, XStack } from '@dish/ui'
 import React from 'react'
-import { HStack, Paragraph } from 'snackui'
 
 import { PostEntry } from './posts'
 
 export const BlogPostMeta = ({ post }: { post: PostEntry }) => {
   return (
-    <HStack alignItems="center">
+    <XStack alignItems="center">
       {/* <Avatar size={28} src={post.authorImage} /> */}
       <Paragraph opacity={0.7}>
         {post.author.trim()}
@@ -20,6 +20,6 @@ export const BlogPostMeta = ({ post }: { post: PostEntry }) => {
           .replace(/\//g, '·')
           .trim()}
       </Paragraph>
-    </HStack>
+    </XStack>
   )
 }

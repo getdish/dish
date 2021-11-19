@@ -1,10 +1,10 @@
+import { StackProps, YStack, useTheme } from '@dish/ui'
 import React from 'react'
-import { StackProps, VStack, useTheme } from 'snackui'
 
 export const CircleButton = (props: StackProps & { floating?: boolean }) => {
   const theme = useTheme()
   return (
-    <VStack
+    <YStack
       borderRadius={1000}
       backgroundColor={theme.backgroundColorSecondary}
       width={44}

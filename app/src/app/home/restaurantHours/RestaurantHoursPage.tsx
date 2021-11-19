@@ -1,6 +1,4 @@
 import { graphql } from '@dish/graph'
-import React, { memo } from 'react'
-import { ScrollView } from 'react-native'
 import {
   Modal,
   Spacer,
@@ -11,8 +9,10 @@ import {
   TableHeadText,
   TableRow,
   Text,
-  VStack,
-} from 'snackui'
+  YStack,
+} from '@dish/ui'
+import React, { memo } from 'react'
+import { ScrollView } from 'react-native'
 
 import { bgLight } from '../../../constants/colors'
 import { dateTimeFormat } from '../../../helpers/dateTimeFormat'
@@ -51,9 +51,9 @@ export default memo(
           <PaneControlButtons>
             <StackViewCloseButton />
           </PaneControlButtons>
-          <VStack width="100%" height="100%" flex={1}>
+          <YStack width="100%" height="100%" flex={1}>
             <ScrollView style={{ width: '100%' }}>
-              <VStack padding={18} spacing="lg">
+              <YStack padding={18} spacing="lg">
                 <SmallTitle fontWeight="600">{title}</SmallTitle>
 
                 <Table className="hide-when-small">
@@ -73,12 +73,12 @@ export default memo(
                     }
                     const isToday = (hour.hoursInfo.day ?? '').startsWith(dayOfWeek)
                     return (
-                      <TableRow backgroundColor={isToday ? bgLight : 'transparent'} key={i}>
+                      <TableRow backgroundColor={isToday ? '$bg2' : 'transparent'} key={i}>
                         <TableCell fontWeight="600" {...col0Props}>
                           {hour.hoursInfo.day}
                         </TableCell>
                         <TableCell {...col1Props}>
-                          <VStack>
+                          <YStack>
                             {hour.hoursInfo.hours.map((text, i) => {
                               return (
                                 <Text
@@ -93,15 +93,15 @@ export default memo(
                                 </Text>
                               )
                             })}
-                          </VStack>
+                          </YStack>
                         </TableCell>
                       </TableRow>
                     )
                   })}
                 </Table>
-              </VStack>
+              </YStack>
             </ScrollView>
-          </VStack>
+          </YStack>
         </Modal>
       </>
     )

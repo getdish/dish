@@ -1,5 +1,5 @@
+import { Box, Theme, YStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { Box, Theme, VStack } from 'snackui'
 
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { useHomeStore } from '../homeStore'
@@ -19,7 +19,7 @@ export const SearchPageDeliveryFilterButtons = memo(() => {
   const noneActive = sources.every((x) => !activeTags[x])
   return (
     <Box pointerEvents="auto" width={200}>
-      <VStack spacing={4} padding={10} alignItems="stretch">
+      <YStack spacing={4} padding={10} alignItems="stretch">
         {sources.map((key) => {
           const item = thirdPartyCrawlSources[key]
           const isActive = noneActive ? true : activeTags[key]
@@ -50,7 +50,7 @@ export const SearchPageDeliveryFilterButtons = memo(() => {
             </FilterButton>
           )
         })}
-      </VStack>
+      </YStack>
     </Box>
   )
 })

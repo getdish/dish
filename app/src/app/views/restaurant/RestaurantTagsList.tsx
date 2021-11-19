@@ -1,7 +1,7 @@
 import { graphql, restaurant } from '@dish/graph'
+import { Spacer, YStack } from '@dish/ui'
 import { sortBy, uniqBy } from 'lodash'
 import React, { Suspense, memo } from 'react'
-import { HStack, Spacer, VStack } from 'snackui'
 
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { QueryRestaurantTagsProps, queryRestaurantTags } from '../../../queries/queryRestaurantTags'
@@ -27,7 +27,7 @@ export const RestaurantTagsList = (props: TagRowProps) => {
   return (
     <>
       {/* may jump up a bit on load */}
-      <Suspense fallback={<VStack height={rowHeight} />}>
+      <Suspense fallback={<YStack height={rowHeight} />}>
         <Content {...props} />
       </Suspense>
     </>

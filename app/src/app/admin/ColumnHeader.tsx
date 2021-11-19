@@ -1,8 +1,8 @@
-import { HStack, Spacer, Text } from 'snackui'
+import { Spacer, Text, XStack } from '@dish/ui'
 
 export const ColumnHeader = ({ children, after }: { children: any; after?: any }) => {
   return (
-    <HStack
+    <XStack
       minHeight={30}
       padding={2}
       maxWidth="100%"
@@ -17,6 +17,6 @@ export const ColumnHeader = ({ children, after }: { children: any; after?: any }
       </Text>
       <Spacer />
       {after}
-    </HStack>
+    </XStack>
   )
 }

@@ -3,11 +3,13 @@
   "version": "0.0.1",
   "sideEffects": false,
   "bin": "jest",
-  "main": "dist",
-  "module": "_",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "typings": "types",
   "scripts": {
-    "build": "esdx legacy",
-    "watch": "esdx-watch legacy"
+    "build": "tamagui-build legacy",
+    "watch": "tamagui-build legacy --watch"
   },
   "dependencies": {
     "lodash": "^4.17.21",
@@ -15,8 +17,8 @@
     "react-dom": "*"
   },
   "devDependencies": {
-    "@dish/esdx": "*",
     "@dish/react-test-env": "*",
+    "@tamagui/build": "*",
     "@testing-library/react": "^11.2.7",
     "@types/jest": "^26.0.20",
     "esbuild-jest": "^0.5.0",

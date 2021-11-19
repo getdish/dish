@@ -1,5 +1,5 @@
+import { AbsoluteYStack, Spacer, Text, XStack, YStack, useMedia, useTheme } from '@dish/ui'
 import React, { Suspense, memo, useContext } from 'react'
-import { AbsoluteVStack, HStack, Spacer, Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { isNative, isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
@@ -35,12 +35,12 @@ export const SearchHeader = memo(() => {
   return (
     <>
       <ContentScrollViewHorizontalFitted width={width} setWidth={setWidthDebounce}>
-        <VStack width="100%">
-          <VStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
-          <HStack position="relative" zIndex={100}>
-            <VStack position="relative" zIndex={100} x={-10}>
-              <VStack paddingHorizontal={16} paddingVertical={8} marginBottom={-3}>
-                <VStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 15 : 20}>
+        <YStack width="100%">
+          <YStack paddingTop={media.sm ? 12 : 12 + 52 + 10} />
+          <XStack position="relative" zIndex={100}>
+            <YStack position="relative" zIndex={100} x={-10}>
+              <YStack paddingHorizontal={16} paddingVertical={8} marginBottom={-3}>
+                <YStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 15 : 20}>
                   <Text
                     className="font-title"
                     fontFamily="WhyteHeavy"
@@ -72,27 +72,27 @@ export const SearchHeader = memo(() => {
                       </Text>
                     )}
                   </Text>
-                </VStack>
-              </VStack>
+                </YStack>
+              </YStack>
               <Spacer size="xs" />
               <SearchPageScoring />
-            </VStack>
-            <HStack marginLeft={-10} marginBottom={8} position="relative">
-              <VStack position="relative" alignItems="center" justifyContent="center" x={-10}>
+            </YStack>
+            <XStack marginLeft={-10} marginBottom={8} position="relative">
+              <YStack position="relative" alignItems="center" justifyContent="center" x={-10}>
                 <SlantedTitle size="xs">Lists</SlantedTitle>
-                <AbsoluteVStack right={-14} rotate="90deg">
+                <AbsoluteYStack right={-14} rotate="90deg">
                   <Arrow />
-                </AbsoluteVStack>
-              </VStack>
+                </AbsoluteYStack>
+              </YStack>
 
               {/* <SearchForkListButton size="sm" /> */}
 
               <Suspense fallback={null}>
                 <SearchPageListsRow />
               </Suspense>
-            </HStack>
-          </HStack>
-        </VStack>
+            </XStack>
+          </XStack>
+        </YStack>
       </ContentScrollViewHorizontalFitted>
       <Suspense fallback={null}>
         {/* <SearchPageResultsInfoBox state={curProps.item} /> */}

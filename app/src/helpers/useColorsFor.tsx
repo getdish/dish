@@ -1,4 +1,4 @@
-import { useTheme } from 'snackui'
+import { useTheme } from '@dish/ui'
 
 import { getColorsForName } from './getColorsForName'
 

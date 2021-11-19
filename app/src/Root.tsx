@@ -1,7 +1,7 @@
 // // debug
 // // for testing quickly
 // import React from 'react'
-// import { Paragraph, ThemeProvider, configureThemes } from 'snackui'
+// import { Paragraph, ThemeProvider, configureThemes } from '@dish/ui'
 
 // import themes from './constants/themes'
 
@@ -23,18 +23,11 @@ import './globals'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
+import { AbsoluteYStack, Paragraph, Toast, useSafeAreaInsets } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
-import {
-  AbsoluteVStack,
-  Paragraph,
-  SnackUIProvider,
-  Toast,
-  configureThemes,
-  useSafeAreaInsets,
-} from 'snackui'
 
 import { App } from './app/App'
 // import { App } from './app/App'
@@ -44,14 +37,9 @@ import { showRadar } from './constants/constants'
 import { initialHomeState } from './constants/initialHomeState'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
 import { isHermes } from './constants/platforms'
-import themes, { MyTheme, MyThemes } from './constants/themes'
 import { addTagsToCache } from './helpers/allTags'
 import { DRoutesTable, router, routes } from './router'
-
-declare module 'snackui' {
-  interface ThemeObject extends MyTheme {}
-  interface Themes extends MyThemes {}
-}
+import Tamagui from './tamagui.config'
 
 declare module '@dish/router' {
   interface RoutesTable extends DRoutesTable {}
@@ -90,7 +78,6 @@ async function start() {
   isStarted = true
 }
 
-configureThemes(themes)
 configureUseStore({
   logLevel: process.env.LOG_LEVEL ? 'info' : 'error',
 })
@@ -167,14 +154,14 @@ export function Root() {
 
   return (
     <>
-      <SnackUIProvider themes={themes} defaultTheme={defaultTheme}>
+      <Tamagui.Provider>
         <ProvideRouter routes={routes}>
           <Suspense fallback={null}>
             {isLoaded ? <App /> : null}
             {process.env.NODE_ENV === 'development' && <DebugHUD />}
           </Suspense>
         </ProvideRouter>
-      </SnackUIProvider>
+      </Tamagui.Provider>
       {showRadar && <Radar />}
     </>
   )
@@ -184,9 +171,9 @@ function Radar() {
   if (process.env.NODE_ENV === 'development') {
     const LagRadar = require('react-lag-radar').default
     return (
-      <AbsoluteVStack bottom={20} right={20} zIndex={10000} pointerEvents="none">
+      <AbsoluteYStack bottom={20} right={20} zIndex={10000} pointerEvents="none">
         <LagRadar frames={20} speed={0.0017} size={100} inset={3} />
-      </AbsoluteVStack>
+      </AbsoluteYStack>
     )
   }
 

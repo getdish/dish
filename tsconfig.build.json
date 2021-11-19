@@ -7,7 +7,6 @@
   },
   "references": [
     { "path": "app" },
-    { "path": "snackui" },
     { "path": "packages/server" },
     { "path": "packages/worker" },
     { "path": "packages/react-feather" },

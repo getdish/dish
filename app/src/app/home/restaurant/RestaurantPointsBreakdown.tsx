@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
+import { Divider, Paragraph, Spacer, Text, TextProps, XStack, YStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { View } from 'react-native'
-import { Divider, HStack, Paragraph, Spacer, Text, TextProps, VStack } from 'snackui'
 
 import { green200, yellow200 } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
@@ -56,8 +56,8 @@ export const RestaurantPointsBreakdown = memo(
       const photosBreakdown = restaurant.score_breakdown?.['photos'] ?? {}
 
       return (
-        <HStack overflow="hidden" paddingVertical={12}>
-          <VStack alignItems="stretch" flex={1}>
+        <XStack overflow="hidden" paddingVertical={12}>
+          <YStack alignItems="stretch" flex={1}>
             <Text textAlign="center" fontSize={40} fontWeight="600">
               {numberFormat(Math.round(restaurant.score))}
             </Text>
@@ -121,8 +121,8 @@ export const RestaurantPointsBreakdown = memo(
                 </SmallButton>
               </>
             )}
-          </VStack>
-        </HStack>
+          </YStack>
+        </XStack>
       )
     }
   )

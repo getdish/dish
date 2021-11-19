@@ -1,6 +1,6 @@
 import { RestaurantItemMeta, graphql, restaurant } from '@dish/graph'
+import { YStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { VStack } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
@@ -22,7 +22,7 @@ export const RestaurantListItemScoreBreakdown = memo(
         tagSlugs: activeTagSlugs ?? [],
       })
       return (
-        <VStack spacing>
+        <YStack spacing>
           {restaurantTags.map((rtag) => {
             return (
               <TagButton
@@ -36,7 +36,7 @@ export const RestaurantListItemScoreBreakdown = memo(
           {isWeb && process.env.NODE_ENV === 'development' && (
             <pre style={{ color: '#777' }}>{JSON.stringify(meta ?? null, null, 2)}</pre>
           )}
-        </VStack>
+        </YStack>
       )
     }
   )

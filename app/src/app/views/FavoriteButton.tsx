@@ -1,6 +1,6 @@
-import { Heart } from '@dish/react-feather'
+import { Button, ButtonProps, Text, Tooltip, prevent } from '@dish/ui'
+import { Heart } from '@tamagui/feather-icons'
 import React from 'react'
-import { Button, ButtonProps, Text, Tooltip, prevent } from 'snackui'
 
 import { red } from '../../constants/colors'
 import { SmallButton } from './SmallButton'

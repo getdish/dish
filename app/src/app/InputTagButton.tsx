@@ -1,5 +1,5 @@
+import { Theme, useTheme } from '@dish/ui'
 import React from 'react'
-import { Theme, useTheme } from 'snackui'
 
 import { TagButton, TagButtonProps } from './views/TagButton'
 

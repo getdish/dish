@@ -1,9 +1,9 @@
 import { listFindOne, listInsert, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
-import { Edit2 } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
+import { Toast, Tooltip } from '@dish/ui'
+import { Edit2 } from '@tamagui/feather-icons'
 import React, { memo, useContext } from 'react'
-import { Toast, Tooltip } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getFullTags } from '../../../helpers/getFullTags'

@@ -1,8 +1,8 @@
-import { Menu } from '@dish/react-feather'
+import { AbsoluteYStack, Modal, XStack, YStack, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
+import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { AbsoluteVStack, HStack, Modal, VStack, useMedia } from 'snackui'
 
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
@@ -44,13 +44,13 @@ export const AppMenuButtonFloating = memo(() => {
           <CloseButton onPress={appMenu.hide} />
         </PaneControlButtons>
       </Modal>
-      <AbsoluteVStack
+      <AbsoluteYStack
         top={safeArea.top ? safeArea.top : 10}
         right={10}
         zIndex={zIndexDrawer - 1}
         pointerEvents="none"
       >
-        <VStack
+        <YStack
           // className="ease-in-out-faster"
           shadowColor="rgba(0,0,0,0.25)"
           shadowRadius={6}
@@ -67,7 +67,7 @@ export const AppMenuButtonFloating = memo(() => {
           }}
           onPress={appMenu.show}
         >
-          <HStack
+          <XStack
             width={50}
             height={50}
             alignItems="center"
@@ -79,9 +79,9 @@ export const AppMenuButtonFloating = memo(() => {
             ) : (
               <Menu color="#fff" size={24} />
             )}
-          </HStack>
-        </VStack>
-      </AbsoluteVStack>
+          </XStack>
+        </YStack>
+      </AbsoluteYStack>
     </>
   )
 })

@@ -3,15 +3,16 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "main": "dist",
-  "types": "./types",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "typings": "types",
   "testConfig": {
     "isolate": true
   },
-  "module": "_",
   "scripts": {
-    "build": "esdx legacy legacy",
-    "watch": "esdx-watch legacy",
+    "build": "tamagui-build legacy",
+    "watch": "tamagui-build --watch legacy",
     "generate": "DISH_ENV=development ../../dsh run 'node ./dist/generate.js'",
     "test": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
     "test:only": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
@@ -33,11 +34,11 @@
     "react": "*"
   },
   "devDependencies": {
-    "@dish/esdx": "*",
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
     "@gqty/cli": "^2.0.1",
-    "@types/node": "*",
+    "@tamagui/build": "*",
+    "@types/node": "^16.11.8",
     "ava": "^3.14.0"
   }
 }

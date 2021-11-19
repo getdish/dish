@@ -1,6 +1,6 @@
+import { useThemeName } from '@dish/ui'
 import React, { memo, useRef } from 'react'
 import { Defs, Ellipse, G, Mask, Path, Svg, Use } from 'react-native-svg'
-import { useThemeName } from 'snackui'
 
 import { brandColor } from '../../constants/colors'
 import {

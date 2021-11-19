@@ -1,7 +1,7 @@
 import { graphql, order_by, query } from '@dish/graph'
+import { AbsoluteYStack, Text, Theme, XStack, YStack, useTheme } from '@dish/ui'
 import { uniqBy } from 'lodash'
 import React from 'react'
-import { AbsoluteVStack, HStack, Text, Theme, VStack, useTheme } from 'snackui'
 
 import { ColorShades } from '../../helpers/getColorsForName'
 import { selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
@@ -56,10 +56,10 @@ export const RestaurantStatBars = graphql(
 
     return (
       <Theme name={theme.name === 'dark' ? 'darkTranslucent' : 'lightTranslucent'}>
-        <VStack alignItems="flex-end" justifyContent="flex-end">
+        <YStack alignItems="flex-end" justifyContent="flex-end">
           {rtags.map((rtag, index) => {
             return (
-              <VStack
+              <YStack
                 key={rtag.tag.slug}
                 width="100%"
                 backgroundColor={`rgba(0,0,0,0.${index + 3})`}
@@ -72,10 +72,10 @@ export const RestaurantStatBars = graphql(
                   backgroundColor="transparent"
                   color="#fff"
                 />
-              </VStack>
+              </YStack>
             )
             // return (
-            //   <HStack
+            //   <XStack
             //     key={rtag.tag.slug}
             //     width="100%"
             //     height={42}
@@ -95,21 +95,21 @@ export const RestaurantStatBars = graphql(
             //     >
             //       {rtag.tag.name} {rtag.tag.icon}
             //     </Text>
-            //     <AbsoluteVStack
+            //     <AbsoluteYStack
             //       backgroundColor={colors.altPastelColor}
             //       height="100%"
             //       bottom={0}
             //       left={0}
             //       width={`${rtag.rating * 100}%`}
             //     />
-            //     <AbsoluteVStack
+            //     <AbsoluteYStack
             //       fullscreen
             //       backgroundColor="rgba(0,0,0,0.15)"
             //     />
-            //   </HStack>
+            //   </XStack>
             // )
           })}
-        </VStack>
+        </YStack>
       </Theme>
     )
   }

@@ -1,7 +1,7 @@
 import { graphql, useRefetch } from '@dish/graph'
-import { PenTool, X } from '@dish/react-feather'
+import { LoadingItem, Text, XStack, YStack, useMedia, useTheme, useThemeName } from '@dish/ui'
+import { PenTool, X } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useState } from 'react'
-import { HStack, LoadingItem, Text, VStack, useMedia, useTheme, useThemeName } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { getWindowWidth } from '../../../helpers/getWindow'
@@ -26,7 +26,7 @@ import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 export const ListItemContentMinimal = (props: ListItemContentProps) => {
   const [width, setWidth] = useState(getWindowWidth())
   return (
-    <VStack overflow="hidden" flex={1}>
+    <YStack overflow="hidden" flex={1}>
       <Suspense fallback={<LoadingItem size="lg" />}>
         <ContentScrollViewHorizontalFitted
           width={width}
@@ -38,7 +38,7 @@ export const ListItemContentMinimal = (props: ListItemContentProps) => {
         </ContentScrollViewHorizontalFitted>
         <Body {...props} />
       </Suspense>
-    </VStack>
+    </YStack>
   )
 }
 
@@ -93,7 +93,7 @@ const Header = memo(
 
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
-        <VStack
+        <YStack
           // hoverStyle={{ backgroundColor: `${listColors.backgroundColor}11` }}
           hoverStyle={{
             backgroundColor: theme.backgroundColorTransluscent,
@@ -104,21 +104,21 @@ const Header = memo(
           pointerEvents="auto"
           flex={1}
         >
-          <HStack>
-            <VStack maxWidth={Math.min(drawerWidth - 100, 680)}>
+          <XStack>
+            <YStack maxWidth={Math.min(drawerWidth - 100, 680)}>
               {ensureFlexText}
-              <HStack
+              <XStack
                 className="hover-faded-in-parent"
                 alignItems="center"
                 flexGrow={1}
                 position="relative"
               >
-                <VStack y={3} marginLeft={-35} marginRight={3} width={35}>
+                <YStack y={3} marginLeft={-35} marginRight={3} width={35}>
                   <RankView rank={rank} />
-                </VStack>
+                </YStack>
 
                 <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
-                  <HStack
+                  <XStack
                     marginVertical={-4}
                     alignItems="center"
                     maxWidth="100%"
@@ -146,12 +146,12 @@ const Header = memo(
                     >
                       {restaurantName}
                     </TitleStyled>
-                  </HStack>
+                  </XStack>
                 </Link>
-              </HStack>
+              </XStack>
 
               {!minimal && (
-                <HStack spacing="xs" alignItems="center" marginVertical={-7} marginLeft={-10}>
+                <XStack spacing="xs" alignItems="center" marginVertical={-7} marginLeft={-10}>
                   {!isFocused && !!editable && (
                     <SmallButton
                       backgroundColor="transparent"
@@ -188,13 +188,13 @@ const Header = memo(
                   )}
 
                   {/* 
-                  <HStack marginHorizontal={10}>
+                  <XStack marginHorizontal={10}>
                     <Circle size={4} backgroundColor={open.isOpen ? green : `${red}55`} />
-                  </HStack>
+                  </XStack>
 
-                  <VStack marginHorizontal={10} opacity={0.5}>
+                  <YStack marginHorizontal={10} opacity={0.5}>
                     <RestaurantRatingView restaurant={restaurant} size={28} />
-                  </VStack> */}
+                  </YStack> */}
 
                   <Text
                     marginHorizontal={10}
@@ -239,12 +239,12 @@ const Header = memo(
                       restaurantSlug={restaurant.slug || ''}
                     />
                   </Suspense>
-                </HStack>
+                </XStack>
               )}
-            </VStack>
+            </YStack>
 
             {!minimal && !!review && (
-              <VStack marginTop={-20}>
+              <YStack marginTop={-20}>
                 <ReviewImagesRow
                   marginTop={10}
                   showGenericImages
@@ -255,9 +255,9 @@ const Header = memo(
                   list={list}
                   review={review}
                 />
-              </VStack>
+              </YStack>
             )}
-          </HStack>
+          </XStack>
 
           {!minimal && (
             <ReviewTagsRow
@@ -271,7 +271,7 @@ const Header = memo(
               marginTop={10}
             />
           )}
-        </VStack>
+        </YStack>
       </HoverToZoom>
     )
   })
@@ -301,7 +301,7 @@ export const Body = memo(
     }
 
     return (
-      <VStack
+      <YStack
         zIndex={100}
         position="relative"
         paddingHorizontal={media.sm ? 0 : 25}
@@ -327,7 +327,7 @@ export const Body = memo(
             listSlug={props.listSlug}
           />
         </Suspense>
-      </VStack>
+      </YStack>
     )
   })
 )

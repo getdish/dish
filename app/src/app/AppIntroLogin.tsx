@@ -1,6 +1,6 @@
+import { Spacer, YStack, useTheme } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import React, { memo } from 'react'
-import { Spacer, VStack, useTheme } from 'snackui'
 
 import { AuthForm } from './AuthForm'
 import { IntroModalStore } from './IntroModalStore'
@@ -14,7 +14,7 @@ export const AppIntroLogin = memo(() => {
 
   return (
     <>
-      <VStack overflow="hidden" borderRadius={20} padding={30} alignItems="center" spacing="md">
+      <YStack overflow="hidden" borderRadius={20} padding={30} alignItems="center" spacing="md">
         <LogoColor scale={1.4} />
         <TagLine />
         {!userStore.isLoggedIn && (
@@ -35,7 +35,7 @@ export const AppIntroLogin = memo(() => {
         </LinkButton>
 
         <Spacer />
-      </VStack>
+      </YStack>
     </>
   )
 })

@@ -1,5 +1,5 @@
+import { useForceUpdate } from '@dish/ui'
 import React, { createContext, useContext, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useForceUpdate } from 'snackui'
 
 import { routePathToName, routes, useRouter, useRouterCurPage } from '../router'
 import { useLastValueWhen } from './hooks/useLastValueWhen'

@@ -1,6 +1,6 @@
 import { graphql, useRefetch } from '@dish/graph'
+import { Input, Paragraph, Spacer, Text, TextArea, Toast, XStack, YStack } from '@dish/ui'
 import React, { useEffect, useRef } from 'react'
-import { HStack, Input, Paragraph, Spacer, Text, TextArea, Toast, VStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { queryUser } from '../queries/queryUser'
@@ -57,7 +57,7 @@ export const UserOnboard = graphql(
 
     return (
       <>
-        <VStack
+        <YStack
           spacing
           alignItems="center"
           justifyContent="center"
@@ -65,7 +65,7 @@ export const UserOnboard = graphql(
           paddingHorizontal={20}
         >
           {!hideLogo && (
-            <VStack marginTop={20} spacing alignItems="center">
+            <YStack marginTop={20} spacing alignItems="center">
               <LogoColor scale={2} />
 
               <Paragraph zIndex={10} color="#fff">
@@ -73,12 +73,12 @@ export const UserOnboard = graphql(
               </Paragraph>
 
               {divider}
-            </VStack>
+            </YStack>
           )}
 
           <Spacer />
 
-          <HStack position="relative" alignItems="center" justifyContent="center">
+          <XStack position="relative" alignItems="center" justifyContent="center">
             <UserAvatar avatar={user.avatar ?? ''} charIndex={charIndex} />
             <Spacer />
             {isWeb && (
@@ -109,7 +109,7 @@ export const UserOnboard = graphql(
                 />
               </form>
             )}
-          </HStack>
+          </XStack>
 
           <Spacer />
 
@@ -126,10 +126,10 @@ export const UserOnboard = graphql(
 
           <Spacer />
 
-          <HStack alignItems="center" justifyContent="center" flexWrap="wrap">
+          <XStack alignItems="center" justifyContent="center" flexWrap="wrap">
             {characters.map((icon, i) => {
               return (
-                <HStack
+                <XStack
                   key={i}
                   cursor="pointer"
                   borderRadius={100}
@@ -149,10 +149,10 @@ export const UserOnboard = graphql(
                   <Text fontSize={30} lineHeight={25} key={i}>
                     {icon}
                   </Text>
-                </HStack>
+                </XStack>
               )
             })}
-          </HStack>
+          </XStack>
 
           <Spacer />
 
@@ -197,14 +197,14 @@ export const UserOnboard = graphql(
           >
             Save!
           </SmallButton>
-        </VStack>
+        </YStack>
       </>
     )
   }
 )
 
 const divider = (
-  <VStack
+  <YStack
     marginVertical={8}
     width="80%"
     minHeight={1}

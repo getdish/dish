@@ -3,11 +3,13 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "main": "dist",
-  "module": "_",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "typings": "types.d.ts",
   "scripts": {
-    "build": "esdx legacy",
-    "watch": "esdx-watch legacy",
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch",
     "test": "NODE_ENV=test jest test"
   },
   "tests": {
@@ -20,8 +22,8 @@
     "use-sync-external-store": "0.0.0-experimental-5b57bc6e3-20210921"
   },
   "devDependencies": {
-    "@dish/esdx": "*",
     "@dish/testy": "*",
+    "@tamagui/build": "*",
     "@types/jest": "*",
     "jest": "*"
   }

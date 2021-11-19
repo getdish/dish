@@ -12,11 +12,11 @@ import {
   tagUpsert,
   useRefetch,
 } from '@dish/graph'
+import { LoadingItems, Text, Toast, XStack, YStack, useDebounce, useDebounceValue } from '@dish/ui'
 import { Store, useStore, useStoreSelector } from '@dish/use-store'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
-import { HStack, LoadingItems, Text, Toast, VStack, useDebounce, useDebounceValue } from 'snackui'
 
 import { queryTag } from '../../queries/queryTag'
 import { useQueryPaginated } from '../hooks/useQueryPaginated'
@@ -73,10 +73,10 @@ const AdminTagsPageContent = graphql(() => {
   // }, [active])
 
   return (
-    <VStack overflow="hidden" maxHeight="100vh" maxWidth="100vw" width="100%">
-      <HStack overflow="hidden" width="100%" height="100%" flex={1}>
+    <YStack overflow="hidden" maxHeight="100vh" maxWidth="100vw" width="100%">
+      <XStack overflow="hidden" width="100%" height="100%" flex={1}>
         <ScrollView horizontal>
-          <HStack>
+          <XStack>
             <VerticalColumn>
               <TagList column={0} />
             </VerticalColumn>
@@ -106,7 +106,7 @@ const AdminTagsPageContent = graphql(() => {
                 <Search />
               </Suspense>
             </VerticalColumn> */}
-          </HStack>
+          </XStack>
         </ScrollView>
 
         <VerticalColumn
@@ -127,8 +127,8 @@ const AdminTagsPageContent = graphql(() => {
             </Suspense>
           </ScrollView>
         </VerticalColumn>
-      </HStack>
-    </VStack>
+      </XStack>
+    </YStack>
   )
 })
 
@@ -146,10 +146,10 @@ const TagList = memo(
     const search = useDebounceValue(searchRaw, 100)
 
     return (
-      <VStack flex={1} maxHeight="100%">
+      <YStack flex={1} maxHeight="100%">
         <ColumnHeader
           after={
-            <HStack flex={1} spacing={10} alignItems="center" justifyContent="space-between">
+            <XStack flex={1} spacing={10} alignItems="center" justifyContent="space-between">
               <TextInput
                 placeholder="Search..."
                 style={[styles.textInput, { flex: 1, maxWidth: '70%' }]}
@@ -165,7 +165,7 @@ const TagList = memo(
               >
                 +
               </SmallButton>
-            </HStack>
+            </XStack>
           }
         >
           {capitalize(type)} {lastRowSelection ? `(${lastRowSelection.name})` : ''}
@@ -180,7 +180,7 @@ const TagList = memo(
             lastRowSelection={lastRowSelection}
           />
         </Suspense>
-      </VStack>
+      </YStack>
     )
   })
 )
@@ -265,7 +265,7 @@ const TagListContent = memo(
 
       return (
         <ScrollView showsVerticalScrollIndicator={false} style={{ paddingBottom: 50 }}>
-          <HStack
+          <XStack
             paddingVertical={2}
             alignItems="center"
             justifyContent="center"
@@ -273,7 +273,7 @@ const TagListContent = memo(
             borderBottomWidth={1}
           >
             <Text opacity={0.5}>{total} total</Text>
-          </HStack>
+          </XStack>
           <PaginationNav totalPages={totalPages} setPage={setPage} page={page} />
           <Suspense fallback={<LoadingItems />}>
             {allResults.map((tag, row) => {
@@ -358,7 +358,7 @@ const TagEditColumn = memo(() => {
   const refetch = useRefetch()
 
   return (
-    <VStack spacing="lg">
+    <YStack spacing="lg">
       <>
         <Text>Create</Text>
         <SmallButton onPress={() => tagStore.setShowCreate(!tagStore.showCreate)}>
@@ -390,7 +390,7 @@ const TagEditColumn = memo(() => {
           <TagEdit />
         </Suspense>
       </>
-    </VStack>
+    </YStack>
   )
 })
 
@@ -525,7 +525,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
   }, [tag.name])
 
   return (
-    <VStack
+    <YStack
       margin={5}
       padding={10}
       borderColor="#eee"
@@ -607,9 +607,9 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
           defaultValue={tag.icon ?? ''}
         />
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <VStack flexWrap="wrap" maxHeight={140}>
+          <YStack flexWrap="wrap" maxHeight={140}>
             {foodIcons.map((icon, index) => (
-              <VStack
+              <YStack
                 key={index}
                 cursor="default"
                 onPress={() => onChange?.({ icon })}
@@ -622,9 +622,9 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
                 <Text lineHeight={24} fontSize={26}>
                   {icon}
                 </Text>
-              </VStack>
+              </YStack>
             ))}
-          </VStack>
+          </YStack>
         </ScrollView>
       </TableRow>
 
@@ -646,7 +646,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
           <ScrollView style={{ marginTop: 20, maxHeight: 300 }}>
             {info.map(({ name, description }, index) => {
               return (
-                <VStack
+                <YStack
                   key={index}
                   marginBottom={10}
                   hoverStyle={{
@@ -655,22 +655,22 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
                 >
                   <Text fontWeight="600">{name}</Text>
                   <Text>{description ?? 'None found'}</Text>
-                </VStack>
+                </YStack>
               )
             })}
           </ScrollView>
         )}
       </TableRow>
-    </VStack>
+    </YStack>
   )
 })
 
 const TableRow = ({ label, children }: { label: string; children: any }) => {
   return (
-    <VStack marginBottom={10}>
+    <YStack marginBottom={10}>
       <Text fontSize={13}>{label}</Text>
       {children}
-    </VStack>
+    </YStack>
   )
 }
 
@@ -686,10 +686,10 @@ const MenuItemsResults = memo(
       ],
     })
     return (
-      <VStack flex={1}>
+      <YStack flex={1}>
         {dishes.map((dish, index) => {
           return (
-            <VStack
+            <YStack
               key={dish.id}
               onPress={() => {
                 // setTimeout(() => {
@@ -700,10 +700,10 @@ const MenuItemsResults = memo(
               }}
             >
               <Text>{dish.name}</Text>
-            </VStack>
+            </YStack>
           )
         })}
-      </VStack>
+      </YStack>
     )
   })
 )

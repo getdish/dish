@@ -1,8 +1,8 @@
 import { graphql, restaurant, tagSlug } from '@dish/graph'
-import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@dish/react-feather'
+import { Text, Tooltip, XStack, YStack, useTheme } from '@dish/ui'
+import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@tamagui/feather-icons'
 import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
-import { AbsoluteVStack, HStack, Text, Tooltip, VStack, useTheme } from 'snackui'
 
 import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
@@ -60,8 +60,9 @@ const RestaurantUpVoteDownVoteContents = graphql(
       display === 'ratio' ? Math.round(ratio * 100) : score ?? Math.round(restaurant.score) + vote
 
     return (
-      <VStack pointerEvents="auto" position="relative">
-        <AbsoluteVStack
+      <YStack pointerEvents="auto" position="relative">
+        <YStack
+          position="absolute"
           bottom={-15}
           right={-30}
           zIndex={2}
@@ -72,7 +73,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           shadowRadius={3}
         >
           <RestaurantRatingView restaurant={restaurant} floating size={36} />
-        </AbsoluteVStack>
+        </YStack>
         <RatingWithVotes
           score={score || 0}
           ratio={ratio}
@@ -82,7 +83,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           isMultiple={tagSlug ? tagSlug.length > 1 : false}
           display={display}
         />
-      </VStack>
+      </YStack>
     )
   }
 )
@@ -152,7 +153,7 @@ const RatingWithVotes = memo(
     const fontSize = (len === 1 ? 16 : len === 2 ? 15 : len === 3 ? 13 : 12) * scale
 
     return (
-      <VStack
+      <YStack
         alignItems="center"
         justifyContent="center"
         width={sizePx}
@@ -161,7 +162,7 @@ const RatingWithVotes = memo(
         elevation={1}
         borderRadius={100}
       >
-        <AbsoluteVStack top={-34}>
+        <YStack position="absolute" top={-34}>
           {subtle ? (
             getUpvote({})
           ) : (
@@ -169,8 +170,8 @@ const RatingWithVotes = memo(
               Upvote
             </Tooltip>
           )}
-        </AbsoluteVStack>
-        <HStack position="relative" zIndex={10}>
+        </YStack>
+        <XStack position="relative" zIndex={10}>
           <Text
             fontSize={fontSize}
             fontWeight="600"
@@ -186,8 +187,8 @@ const RatingWithVotes = memo(
               %
             </TextSuperScript>
           )}
-        </HStack>
-        <AbsoluteVStack bottom={-34}>
+        </XStack>
+        <YStack position="absolute" bottom={-34}>
           {subtle ? (
             getDownvote({})
           ) : (
@@ -195,8 +196,8 @@ const RatingWithVotes = memo(
               Downvote
             </Tooltip>
           )}
-        </AbsoluteVStack>
-      </VStack>
+        </YStack>
+      </YStack>
     )
   }
 )

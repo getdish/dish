@@ -1,20 +1,20 @@
 import { graphql, order_by, query, refetch, useMutation, useRefetch } from '@dish/graph'
-import { Plus, X } from '@dish/react-feather'
-import React from 'react'
-import { ScrollView } from 'react-native'
 import {
-  AbsoluteVStack,
+  AbsoluteYStack,
   Box,
   Button,
-  HStack,
   Modal,
   Spacer,
   Text,
   Theme,
   Title,
   Toast,
-  VStack,
-} from 'snackui'
+  XStack,
+  YStack,
+} from '@dish/ui'
+import { Plus, X } from '@tamagui/feather-icons'
+import React from 'react'
+import { ScrollView } from 'react-native'
 
 import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -77,9 +77,9 @@ export const RestaurantAddToListModal = graphql(
           <CloseButton onPress={onDismiss} />
         </PaneControlButtons>
 
-        <AbsoluteVStack alignItems="center" top={-15}>
+        <AbsoluteYStack alignItems="center" top={-15}>
           <SlantedTitle size="xs">Add to list</SlantedTitle>
-        </AbsoluteVStack>
+        </AbsoluteYStack>
 
         <ScrollView style={{ width: '100%', flex: 1, paddingVertical: 30 }}>
           <Spacer />
@@ -107,10 +107,10 @@ export const RestaurantAddToListModal = graphql(
                 }}
                 onPress={onDismiss}
               >
-                <HStack paddingHorizontal={20} paddingVertical={3}>
-                  <VStack flex={1}>
+                <XStack paddingHorizontal={20} paddingVertical={3}>
+                  <YStack flex={1}>
                     <Title size="sm">{list?.name}</Title>
-                  </VStack>
+                  </YStack>
 
                   {!isAdded && (
                     <Button
@@ -155,7 +155,7 @@ export const RestaurantAddToListModal = graphql(
                       }}
                     />
                   )}
-                </HStack>
+                </XStack>
               </Link>
             )
           })}

@@ -1,8 +1,8 @@
 import { OneUUID, ZeroUUID, order_by, review, useQuery, useRefetch } from '@dish/graph'
-import { ChevronDown, ChevronUp } from '@dish/react-feather'
+import { Button, Input, InteractiveContainer, Paragraph, Spacer, XStack, YStack } from '@dish/ui'
+import { ChevronDown, ChevronUp } from '@tamagui/feather-icons'
 import React, { useCallback, useState } from 'react'
 import { FlatList } from 'react-native'
-import { Button, HStack, Input, InteractiveContainer, Paragraph, Spacer, VStack } from 'snackui'
 
 import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
@@ -85,9 +85,9 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
     <StackDrawer closable title="Roadmap">
       <ContentScrollView id="roadmap">
         <PageContentWithFooter>
-          <VStack spacing="xl">
-            <VStack paddingHorizontal="5%" spacing="xxl">
-              <VStack />
+          <YStack spacing="xl">
+            <YStack paddingHorizontal="5%" spacing="xxl">
+              <YStack />
 
               <Paragraph fontWeight="800" size={4} sizeLineHeight={0.66}>
                 Roadmap
@@ -125,7 +125,7 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
                     return <Button onPress={() => setPage((x) => x + 1)}>Load more</Button>
                   }
                   return (
-                    <HStack spacing="lg" alignItems="center">
+                    <XStack spacing="lg" alignItems="center">
                       <InteractiveContainer scale={0.7} marginVertical={-5} flexDirection="column">
                         <Button
                           onPress={() => vote(1)}
@@ -141,14 +141,14 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
                       <Paragraph size="xl">{`${item.votes}`}</Paragraph>
                       <Paragraph>{item.icon}</Paragraph>
                       <Paragraph>{removeEmojis(item.text || '')}</Paragraph>
-                    </HStack>
+                    </XStack>
                   )
                 }}
               />
 
               <Spacer />
-            </VStack>
-          </VStack>
+            </YStack>
+          </YStack>
         </PageContentWithFooter>
       </ContentScrollView>
     </StackDrawer>
@@ -167,7 +167,7 @@ const Add = ({ items }: { items: review[] }) => {
   const [text, setText] = useState('')
   const [curIcon, setIcon] = useState(icons[0])
   return (
-    <HStack spacing alignItems="center">
+    <XStack spacing alignItems="center">
       <InteractiveContainer>
         {icons.map((icon) => (
           <Button
@@ -200,6 +200,6 @@ const Add = ({ items }: { items: review[] }) => {
       >
         Add
       </LinkButton>
-    </HStack>
+    </XStack>
   )
 }

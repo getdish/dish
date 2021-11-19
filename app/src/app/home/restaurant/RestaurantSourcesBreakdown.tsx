@@ -1,8 +1,5 @@
 import { graphql } from '@dish/graph'
-import { sortBy } from 'lodash'
-import React, { memo } from 'react'
 import {
-  HStack,
   Spacer,
   Table,
   TableCell,
@@ -11,8 +8,11 @@ import {
   TableHeadText,
   TableRow,
   Text,
-  VStack,
-} from 'snackui'
+  XStack,
+  YStack,
+} from '@dish/ui'
+import { sortBy } from 'lodash'
+import React, { memo } from 'react'
 
 import { tagDisplayName } from '../../../constants/tagDisplayName'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
@@ -117,12 +117,12 @@ export const RestaurantSourcesBreakdown = memo(
                     <TableCell {...col0Props} />
 
                     <TableCell>
-                      <HStack flexWrap="nowrap" overflow="hidden" alignItems="center">
-                        <VStack className="dotted-line" width={10} marginRight={5} />
+                      <XStack flexWrap="nowrap" overflow="hidden" alignItems="center">
+                        <YStack className="dotted-line" width={10} marginRight={5} />
                         <Text ellipse fontSize={12} opacity={0.5}>
                           {tagDisplayName(tag)}
                         </Text>
-                      </HStack>
+                      </XStack>
                     </TableCell>
 
                     <TableCell></TableCell>

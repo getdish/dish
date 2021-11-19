@@ -1,5 +1,5 @@
+import { Paragraph, ParagraphProps } from '@dish/ui'
 import React from 'react'
-import { Paragraph, ParagraphProps } from 'snackui'
 
 import markSolid from '../../../assets/d.svg'
 import { Image } from '../../views/Image'

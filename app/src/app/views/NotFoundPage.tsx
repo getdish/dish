@@ -1,5 +1,5 @@
+import { Modal, Paragraph, Text, YStack } from '@dish/ui'
 import React, { useState } from 'react'
-import { Modal, Paragraph, Text, VStack } from 'snackui'
 
 import { CloseButton } from './CloseButton'
 import { PaneControlButtons } from './PaneControlButtons'
@@ -14,11 +14,11 @@ export function NotFoundPage(props: { title?: string }) {
         <CloseButton onPress={() => setShown(false)} />
       </PaneControlButtons>
 
-      <VStack alignItems="center" justifyContent="center">
+      <YStack alignItems="center" justifyContent="center">
         <SlantedTitle>{props.title ?? 'Not found!'} 😞</SlantedTitle>
 
         <Paragraph paddingVertical={40}>Uh oh! We're looking into it...</Paragraph>
-      </VStack>
+      </YStack>
     </Modal>
   )
 }

@@ -7,8 +7,8 @@ import {
   review_constraint,
   useRefetch,
 } from '@dish/graph'
+import { Toast } from '@dish/ui'
 import { useEffect, useState } from 'react'
-import { Toast } from 'snackui'
 
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { useListColors } from '../../home/list/listColors'

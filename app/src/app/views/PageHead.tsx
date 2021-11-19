@@ -1,5 +1,5 @@
+import { useMedia, useThemeName } from '@dish/ui'
 import React from 'react'
-import { useMedia, useThemeName } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { rgbString } from '../../helpers/rgb'

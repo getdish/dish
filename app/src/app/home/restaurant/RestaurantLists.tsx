@@ -1,6 +1,6 @@
 import { graphql, order_by } from '@dish/graph'
+import { YStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { VStack } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ListCard } from '../../views/list/ListCard'
@@ -25,7 +25,7 @@ export const RestaurantLists = memo(
     }
 
     return (
-      <VStack marginBottom={15}>
+      <YStack marginBottom={15}>
         <SlantedTitle size="xs" marginBottom={-26} alignSelf="center" fontWeight="700">
           Lists
         </SlantedTitle>
@@ -36,7 +36,7 @@ export const RestaurantLists = memo(
             )
           })}
         </CardCarousel>
-      </VStack>
+      </YStack>
     )
   })
 )

@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
+import { Box, HoverablePopover, Text, XStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { Box, HStack, HoverablePopover, Text } from 'snackui'
 
 import { bgLight } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
@@ -29,12 +29,12 @@ export const RestaurantSourcesBreakdownRow = memo(
         delay={800}
         placement="right"
         trigger={(props) => (
-          <HStack
+          <XStack
             padding={6}
             marginVertical={-6}
             borderRadius={100}
             hoverStyle={{
-              backgroundColor: bgLight,
+              backgroundColor: '$bg2',
             }}
             position="relative"
             alignItems="center"
@@ -47,9 +47,9 @@ export const RestaurantSourcesBreakdownRow = memo(
                 const info = thirdPartyCrawlSources[source]
                 return (
                   <Link key={source} href={item.url}>
-                    <HStack alignItems="center" paddingHorizontal={5} paddingVertical={3}>
+                    <XStack alignItems="center" paddingHorizontal={5} paddingVertical={3}>
                       {/* {info?.image ? (
-                      <VStack className="faded-out">
+                      <YStack className="faded-out">
                         <Image
                           source={info.image}
                           style={{
@@ -58,7 +58,7 @@ export const RestaurantSourcesBreakdownRow = memo(
                             borderRadius: 100,
                           }}
                         />
-                      </VStack>
+                      </YStack>
                     ) : null} */}
                       {/* <Spacer size={3} /> */}
                       <Text fontSize={14} color="rgba(0,0,0,0.7)">
@@ -67,11 +67,11 @@ export const RestaurantSourcesBreakdownRow = memo(
                       {size !== 'sm' && (
                         <PointsText marginLeft={4} points={+(item.rating ?? 0) * 10} color="#999" />
                       )}
-                    </HStack>
+                    </XStack>
                   </Link>
                 )
               })}
-          </HStack>
+          </XStack>
         )}
       >
         {(isOpen) => {

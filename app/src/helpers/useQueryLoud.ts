@@ -1,5 +1,5 @@
+import { Toast } from '@dish/ui'
 import { useEffect } from 'react'
-import { Toast } from 'snackui'
 import useSWR, { SWRConfiguration } from 'swr'
 
 // automatically logs errors to toast

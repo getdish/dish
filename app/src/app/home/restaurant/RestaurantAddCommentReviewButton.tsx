@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
-import { Edit } from '@dish/react-feather'
+import { Theme } from '@dish/ui'
+import { Edit } from '@tamagui/feather-icons'
 import React from 'react'
-import { Theme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { useUserReviewQuery } from '../../hooks/useUserReview'

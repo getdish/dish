@@ -1,5 +1,5 @@
-import { useDebounceValue } from 'snackui'
-import { useThemeName } from 'snackui'
+import { useDebounceValue } from '@dish/ui'
+import { useThemeName } from '@dish/ui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
 import { RGB, hexToRGB } from '../../helpers/rgb'

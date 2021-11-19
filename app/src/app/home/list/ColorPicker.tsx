@@ -1,5 +1,5 @@
+import { Box, Popover, StackProps, YStack } from '@dish/ui'
 import React, { useState } from 'react'
-import { Box, Popover, StackProps, VStack } from 'snackui'
 
 export function ColorPicker({
   colors,
@@ -17,9 +17,9 @@ export function ColorPicker({
       onChangeOpen={setIsOpen}
       trigger={(props) => {
         return (
-          <VStack {...props} onPress={() => setIsOpen((x) => !x)}>
+          <YStack {...props} onPress={() => setIsOpen((x) => !x)}>
             <ColorBubble backgroundColor={color} />
-          </VStack>
+          </YStack>
         )
       }}
     >
@@ -50,7 +50,7 @@ export function ColorPicker({
 
 function ColorBubble(props: StackProps) {
   return (
-    <VStack
+    <YStack
       borderWidth={2}
       borderColor="#000"
       borderRadius={1000}

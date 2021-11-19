@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
+import { Box, Spacer, Text, XStack, YStack } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useEffect, useState } from 'react'
-import { Box, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { appMapStore } from './appMapStore'
@@ -69,7 +69,7 @@ export const AppMapRestaurantPeek = memo(
 
     // return containerWrap(
     //   <>
-    //     <HStack
+    //     <XStack
     //       flex={1}
     //       paddingHorizontal={8}
     //       paddingVertical={8}
@@ -77,13 +77,13 @@ export const AppMapRestaurantPeek = memo(
     //       alignItems="center"
     //       borderRadius={20}
     //     >
-    //       <VStack flex={5} overflow="hidden">
+    //       <YStack flex={5} overflow="hidden">
     //         <LinkButton pointerEvents="auto" key={slug} name="restaurant" params={{ slug }}>
     //           <Text ellipse selectable fontSize={16} fontWeight="600" paddingRight={30}>
     //             {restaurant.name}
     //           </Text>
     //         </LinkButton>
-    //       </VStack>
+    //       </YStack>
 
     //       {!!restaurant.image && (
     //         <>
@@ -101,7 +101,7 @@ export const AppMapRestaurantPeek = memo(
     //           />
     //         </>
     //       )}
-    //     </HStack>
+    //     </XStack>
     //   </>
     // )
   })

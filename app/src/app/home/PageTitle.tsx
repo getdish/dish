@@ -1,5 +1,5 @@
+import { Text, XStack, YStack, isStringChild, useMedia, useTheme } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack, Text, VStack, isStringChild, useMedia, useTheme } from 'snackui'
 
 export const PageTitle = memo(
   ({
@@ -43,7 +43,7 @@ export const PageTitle = memo(
       </>
     )
     return (
-      <HStack
+      <XStack
         paddingHorizontal={15}
         paddingBottom={12}
         overflow="hidden"
@@ -52,8 +52,8 @@ export const PageTitle = memo(
         position="relative"
       >
         {before}
-        <HStack spacing="xxl" flex={1} alignItems="center" justifyContent="center">
-          {!noDivider && <VStack backgroundColor={theme.borderColor} height={1} flex={1} />}
+        <XStack spacing="xxl" flex={1} alignItems="center" justifyContent="center">
+          {!noDivider && <YStack backgroundColor={theme.borderColor} height={1} flex={1} />}
           {isStringChild(contents) ? (
             <Text
               textAlign="center"
@@ -69,10 +69,10 @@ export const PageTitle = memo(
           ) : (
             contents
           )}
-          {!noDivider && <VStack backgroundColor={theme.borderColor} height={1} flex={1} />}
-        </HStack>
+          {!noDivider && <YStack backgroundColor={theme.borderColor} height={1} flex={1} />}
+        </XStack>
         {after}
-      </HStack>
+      </XStack>
     )
   }
 )

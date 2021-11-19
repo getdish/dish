@@ -3,7 +3,7 @@ export type CancelFn = () => void
 
 const emptyFn = () => {}
 
-export class CancellablePromise<T> extends Promise<T> {
+export class CancellablePromise<T = any> extends Promise<T> {
   cancel: () => any = emptyFn
 
   constructor(

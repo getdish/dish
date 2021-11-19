@@ -1,9 +1,9 @@
 import { fullyIdle, series } from '@dish/async'
-import { X } from '@dish/react-feather'
+import { Text, XStack, YStack } from '@dish/ui'
 import { useStoreSelector } from '@dish/use-store'
+import { X } from '@tamagui/feather-icons'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { TextInput } from 'react-native'
-import { HStack, Text, VStack } from 'snackui'
 
 import {
   ColumnSelectionStore,
@@ -74,7 +74,7 @@ export const AdminListItem = memo(
     }
 
     return (
-      <HStack
+      <XStack
         height={32}
         {...(!isActive &&
           !isFormerlyActive && {
@@ -138,7 +138,7 @@ export const AdminListItem = memo(
         <div style={{ flex: 1 }} />
 
         {deletable && (
-          <VStack
+          <YStack
             padding={4}
             onPress={(e) => {
               e.stopPropagation()
@@ -149,9 +149,9 @@ export const AdminListItem = memo(
             }}
           >
             <X size={12} color="#999" />
-          </VStack>
+          </YStack>
         )}
-      </HStack>
+      </XStack>
     )
   }
 )

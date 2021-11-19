@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
-import { Circle } from '@dish/react-feather'
+import { Text, YStack, useTheme } from '@dish/ui'
+import { Circle } from '@tamagui/feather-icons'
 import React from 'react'
-import { Text, VStack, useTheme } from 'snackui'
 
 import { VoteNumber } from '../hooks/useUserTagVotes'
 import { TagButtonProps, TagVotePopover } from './TagButton'
@@ -22,7 +22,7 @@ export const TagButtonVote = graphql(
       color: 'rgba(150,150,150,0.25)',
     }
     const contents = (
-      <VStack
+      <YStack
         alignItems="center"
         pointerEvents="auto"
         zIndex={100}
@@ -36,7 +36,7 @@ export const TagButtonVote = graphql(
       >
         {!props.disablePopover && !vote && <Circle {...iconProps} />}
         {!!vote && (
-          <VStack
+          <YStack
             width={28 * scale}
             paddingLeft={6}
             height={28 * scale}
@@ -51,9 +51,9 @@ export const TagButtonVote = graphql(
             <Text color={theme.color} letterSpacing={-1} fontSize={20 * scale} fontWeight="400">
               {vote < 0 ? vote : `${vote}`}
             </Text>
-          </VStack>
+          </YStack>
         )}
-      </VStack>
+      </YStack>
     )
 
     if (props.disablePopover) {

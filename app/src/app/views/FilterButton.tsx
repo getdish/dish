@@ -1,6 +1,6 @@
-import { Clock, ShoppingBag } from '@dish/react-feather'
+import { YStack, useTheme, useThemeName } from '@dish/ui'
+import { Clock, ShoppingBag } from '@tamagui/feather-icons'
 import React, { useEffect, useState } from 'react'
-import { VStack, useTheme, useThemeName } from 'snackui'
 
 import { tagDisplayNames } from '../../constants/tagMeta'
 import { rgbString } from '../../helpers/rgb'
@@ -50,7 +50,7 @@ export const FilterButton = ({
   return (
     <Link tag={tag} replace asyncClick>
       <SmallButton
-        icon={iconElement ? <VStack opacity={0.45}>{iconElement}</VStack> : null}
+        icon={iconElement ? <YStack opacity={0.45}>{iconElement}</YStack> : null}
         {...rest}
         zIndex={100 - index + (isActive ? 1 : 0)}
         // borderWidth={0}

@@ -1,11 +1,11 @@
+import { XStack, useMedia, useTheme } from '@dish/ui'
 import React, { forwardRef } from 'react'
-import { HStack, useMedia, useTheme } from 'snackui'
 
 export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
   const theme = useTheme()
   const media = useMedia()
   return (
-    <HStack
+    <XStack
       alignItems="center"
       borderRadius={10}
       width="100%"
@@ -37,6 +37,6 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       })}
     >
       {children}
-    </HStack>
+    </XStack>
   )
 })

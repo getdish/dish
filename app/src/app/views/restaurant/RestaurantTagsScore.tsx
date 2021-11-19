@@ -1,8 +1,6 @@
 import { graphql } from '@dish/graph'
-import React from 'react'
 import {
   Box,
-  HStack,
   Spacer,
   Table,
   TableCell,
@@ -11,7 +9,9 @@ import {
   TableHeadText,
   TableRow,
   Text,
-} from 'snackui'
+  XStack,
+} from '@dish/ui'
+import React from 'react'
 
 import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -51,7 +51,7 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
     >
       <SmallTitle>Points Breakdown</SmallTitle>
       <Spacer />
-      <HStack flex={1}>
+      <XStack flex={1}>
         <Table flex={1} maxWidth="100%">
           <TableHeadRow>
             <TableCell {...col0Props}></TableCell>
@@ -77,12 +77,12 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
             return (
               <TableRow key={i}>
                 <TableCell {...col0Props}>
-                  <HStack paddingTop={10}>
+                  <XStack paddingTop={10}>
                     <Text ellipse fontWeight="500">
                       {tscore.icon} {tscore.name}
                     </Text>
                     {ensureFlexText}
-                  </HStack>
+                  </XStack>
                 </TableCell>
                 <TableCell {...col1Props}>
                   {i === 0 && <PointsText points={breakdownScoreDown(breakdown)} />}
@@ -97,7 +97,7 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
             )
           })}
         </Table>
-      </HStack>
+      </XStack>
     </Box>
   )
 })

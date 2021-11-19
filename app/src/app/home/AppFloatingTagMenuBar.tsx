@@ -1,8 +1,8 @@
+import { AbsoluteYStack, LinearGradient, XStack, useMedia, useThemeName } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
 import { StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import { AbsoluteVStack, HStack, LinearGradient, useMedia, useThemeName } from 'snackui'
 
 import { autocompletesStore } from '../AutocompletesStore'
 import { HomeRegionTitle } from './HomeRegionTitle'
@@ -18,7 +18,7 @@ export const AppFloatingTagMenuBar = memo(() => {
   const shouldHide = media.notSm && isShowingLocationAutocomplete
 
   return (
-    <HStack
+    <XStack
       className="ease-in-out-slow"
       position="relative"
       pointerEvents={shouldHide ? 'none' : 'auto'}
@@ -26,7 +26,7 @@ export const AppFloatingTagMenuBar = memo(() => {
       y={shouldHide ? -80 : 0}
       maxWidth="100%"
     >
-      <AbsoluteVStack left={0} right={0} bottom={-20} top={-10} zIndex={-1}>
+      <AbsoluteYStack left={0} right={0} bottom={-20} top={-10} zIndex={-1}>
         <LinearGradient
           pointerEvents="none"
           style={StyleSheet.absoluteFill}
@@ -36,7 +36,7 @@ export const AppFloatingTagMenuBar = memo(() => {
               : [`#22222233`, `#22222200`]
           }
         />
-      </AbsoluteVStack>
+      </AbsoluteYStack>
 
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -44,7 +44,7 @@ export const AppFloatingTagMenuBar = memo(() => {
         horizontal
         style={{ width: '100%' }}
       >
-        <HStack
+        <XStack
           alignItems="center"
           paddingVertical={20}
           paddingHorizontal={15}
@@ -55,8 +55,8 @@ export const AppFloatingTagMenuBar = memo(() => {
         >
           <HomeRegionTitle />
           <HomeTopSearches />
-        </HStack>
+        </XStack>
       </ScrollView>
-    </HStack>
+    </XStack>
   )
 })

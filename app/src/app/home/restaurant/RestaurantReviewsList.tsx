@@ -1,6 +1,6 @@
 import { graphql, order_by, query } from '@dish/graph'
+import { AbsoluteYStack, Grid, Spacer, Text, XStack, YStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, Grid, HStack, Spacer, Text, VStack } from 'snackui'
 
 import { useUserReviewQuery } from '../../hooks/useUserReview'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -60,8 +60,8 @@ export const RestaurantReviewsList = memo(
       const [review] = useUserReviewQuery(restaurantSlug)
 
       return (
-        <VStack paddingHorizontal="3%">
-          <HStack
+        <YStack paddingHorizontal="3%">
+          <XStack
             position="relative"
             marginHorizontal={10}
             alignItems="center"
@@ -71,12 +71,12 @@ export const RestaurantReviewsList = memo(
               Reviews
             </SlantedTitle>
 
-            <AbsoluteVStack top={-30} right={0}>
+            <AbsoluteYStack top={-30} right={0}>
               <Suspense fallback={null}>
                 <RestaurantAddCommentButton restaurantSlug={restaurantSlug} />
               </Suspense>
-            </AbsoluteVStack>
-          </HStack>
+            </AbsoluteYStack>
+          </XStack>
 
           <Spacer />
 
@@ -84,11 +84,11 @@ export const RestaurantReviewsList = memo(
 
           <Suspense fallback={null}>
             {!topReviews.length && !review && (
-              <VStack minHeight={100} alignItems="center" justifyContent="center">
+              <YStack minHeight={100} alignItems="center" justifyContent="center">
                 <Text opacity={0.5} fontSize={12}>
                   No reviews, yet!
                 </Text>
-              </VStack>
+              </YStack>
             )}
             <Grid itemMinWidth={320}>
               {!!review && (
@@ -97,8 +97,8 @@ export const RestaurantReviewsList = memo(
 
               {topReviews.map((review, i) => {
                 return (
-                  <VStack marginVertical={20} flex={1} key={i}>
-                    <VStack flex={1} />
+                  <YStack marginVertical={20} flex={1} key={i}>
+                    <YStack flex={1} />
                     <RestaurantReview
                       hideGeneralTags
                       wrapTagsRow
@@ -106,12 +106,12 @@ export const RestaurantReviewsList = memo(
                       votable={false}
                       review={review}
                     />
-                  </VStack>
+                  </YStack>
                 )
               })}
             </Grid>
           </Suspense>
-        </VStack>
+        </YStack>
       )
     }
   )

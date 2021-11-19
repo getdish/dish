@@ -1,5 +1,5 @@
+import { AbsoluteYStack, XStack, useMedia, useSafeAreaInsets } from '@dish/ui'
 import React, { useMemo } from 'react'
-import { AbsoluteVStack, HStack, useMedia, useSafeAreaInsets } from 'snackui'
 
 import { PortalItem } from '../Portal'
 
@@ -9,15 +9,15 @@ export function BottomFloatingArea(props: { children: any }) {
   const media = useMedia()
   return (
     <PortalItem id={media.sm ? 'root' : 'drawer'}>
-      <AbsoluteVStack
+      <AbsoluteYStack
         zIndex={1000000000}
         pointerEvents="none"
         bottom={20 + safeArea.bottom}
         right={20}
         left={20}
       >
-        <HStack pointerEvents="auto">{children}</HStack>
-      </AbsoluteVStack>
+        <XStack pointerEvents="auto">{children}</XStack>
+      </AbsoluteYStack>
     </PortalItem>
   )
 }

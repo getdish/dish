@@ -1,23 +1,23 @@
 import { sleep } from '@dish/async'
 import { ReviewQuery, graphql, order_by, query, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Plus } from '@dish/react-feather'
 import { useRouterSelector } from '@dish/router'
-import React, { Suspense, memo, useState } from 'react'
 import {
-  AbsoluteVStack,
+  AbsoluteYStack,
   Divider,
-  HStack,
   LoadingItem,
   LoadingItems,
   Paragraph,
   ParagraphProps,
   Spacer,
-  VStack,
+  XStack,
+  YStack,
   useLazyEffect,
   useMedia,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { Plus } from '@tamagui/feather-icons'
+import React, { Suspense, memo, useState } from 'react'
 
 import { getTimeFormat } from '../../../helpers/getTimeFormat'
 import { queryUser } from '../../../queries/queryUser'
@@ -263,9 +263,9 @@ const UserPageContent = memo(
           <PageContentWithFooter>
             <Suspense
               fallback={
-                <VStack height={160} borderColor="#eee" borderBottomWidth={1}>
+                <YStack height={160} borderColor="#eee" borderBottomWidth={1}>
                   <LoadingItem lines={2} />
-                </VStack>
+                </YStack>
               }
             >
               <UserHeader {...props} />
@@ -273,7 +273,7 @@ const UserPageContent = memo(
 
             <Spacer />
 
-            <HStack spacing="sm" justifyContent="center">
+            <XStack spacing="sm" justifyContent="center">
               <SmallButton
                 textProps={{
                   fontWeight: '800',
@@ -318,14 +318,14 @@ const UserPageContent = memo(
               >
                 Votes
               </SmallButton>
-            </HStack>
+            </XStack>
 
             <Spacer size="lg" />
 
-            {/* <VStack>
+            {/* <YStack>
               <Divider />
               <Spacer />
-              <HStack spacing alignItems="center" justifyContent="center">
+              <XStack spacing alignItems="center" justifyContent="center">
                 <Paragraph size="sm" fontWeight="700">
                   {characters[user.charIndex ?? 0] || '👻'}
                 </Paragraph>
@@ -340,16 +340,16 @@ const UserPageContent = memo(
                 <Paragraph size="sm" opacity={0.5}>
                   {pluralize(favoritesCount, 'favorite')}
                 </Paragraph>
-              </HStack>
+              </XStack>
               <Spacer />
               <Divider />
-            </VStack> */}
+            </YStack> */}
 
             {/* <Spacer size="lg" /> */}
 
-            <VStack spacing="lg" paddingVertical={20}>
+            <YStack spacing="lg" paddingVertical={20}>
               {/* PHOTOS FEED */}
-              <HStack spacing>
+              <XStack spacing>
                 {user
                   .reviews({
                     order_by: [{ authored_at: order_by.desc }],
@@ -363,7 +363,7 @@ const UserPageContent = memo(
                   })
                   .map((review, index) => {
                     return (
-                      <VStack
+                      <YStack
                         key={review.id || index}
                         borderRadius={1000}
                         overflow="hidden"
@@ -374,25 +374,25 @@ const UserPageContent = memo(
                           source={{ uri: review.photos({ limit: 1 })[0]?.photo?.url || '' }}
                           style={{ width: 60, height: 60 }}
                         />
-                      </VStack>
+                      </YStack>
                     )
                   })}
-              </HStack>
+              </XStack>
 
               {/* ABOUT */}
               {!pane && !!user.about && (
-                <VStack>
+                <YStack>
                   <SmallTitle>About</SmallTitle>
                   <Paragraph size="lg">{user.about}</Paragraph>
-                </VStack>
+                </YStack>
               )}
 
               {/* PLAYLISTS */}
               {!pane && !!lists.length && (
-                <VStack position="relative">
-                  <AbsoluteVStack zIndex={100} top={-15} left={10}>
+                <YStack position="relative">
+                  <AbsoluteYStack zIndex={100} top={-15} left={10}>
                     <SlantedTitle size="xs">Playlists</SlantedTitle>
-                  </AbsoluteVStack>
+                  </AbsoluteYStack>
                   <CardCarousel>
                     {lists.map((list, i) => {
                       return (
@@ -407,15 +407,15 @@ const UserPageContent = memo(
                       )
                     })}
                   </CardCarousel>
-                </VStack>
+                </YStack>
               )}
 
               {/* FAVORITE LISTS */}
               {!pane && !!favoriteLists.length && (
-                <VStack position="relative">
-                  <AbsoluteVStack zIndex={100} top={-15} left={10}>
+                <YStack position="relative">
+                  <AbsoluteYStack zIndex={100} top={-15} left={10}>
                     <SlantedTitle size="xs">Liked lists</SlantedTitle>
-                  </AbsoluteVStack>
+                  </AbsoluteYStack>
                   <CardCarousel>
                     {favoriteLists.map((list, i) => {
                       return (
@@ -429,17 +429,17 @@ const UserPageContent = memo(
                       )
                     })}
                   </CardCarousel>
-                </VStack>
+                </YStack>
               )}
 
-              <VStack position="relative" paddingHorizontal={20}>
-                <AbsoluteVStack zIndex={100} top={-15} left={10}>
+              <YStack position="relative" paddingHorizontal={20}>
+                <AbsoluteYStack zIndex={100} top={-15} left={10}>
                   <SlantedTitle size="xs">
                     {pane === 'review' ? 'Reviews' : pane === 'vote' ? 'Votes' : 'Recently'}
                   </SlantedTitle>
-                </AbsoluteVStack>
+                </AbsoluteYStack>
 
-                <VStack paddingVertical={25}>
+                <YStack paddingVertical={25}>
                   {!hasReviews && <Paragraph padding={30}>None yet...</Paragraph>}
                   {hasReviews &&
                     reviews.map((review, i) => (
@@ -447,9 +447,9 @@ const UserPageContent = memo(
                         <Review review={review} />
                       </SuspenseFallback>
                     ))}
-                </VStack>
-              </VStack>
-            </VStack>
+                </YStack>
+              </YStack>
+            </YStack>
           </PageContentWithFooter>
         </ContentScrollView>
       )
@@ -497,7 +497,7 @@ const UserHeader = memo(
       }
 
       return (
-        <VStack position="relative">
+        <YStack position="relative">
           <PaneControlButtonsLeft>
             {isOwnProfile && (
               <Link name="userEdit">
@@ -507,17 +507,17 @@ const UserHeader = memo(
             <UserSubscribeButton elevation={1} username={username} />
           </PaneControlButtonsLeft>
 
-          <VStack flex={1} paddingHorizontal={20} paddingTop={55}>
-            <HStack alignItems="flex-end" flex={1} position="relative">
-              <VStack marginLeft={media.sm ? -60 : -40} marginBottom={-10} marginRight={10}>
+          <YStack flex={1} paddingHorizontal={20} paddingTop={55}>
+            <XStack alignItems="flex-end" flex={1} position="relative">
+              <YStack marginLeft={media.sm ? -60 : -40} marginBottom={-10} marginRight={10}>
                 <UserAvatar size={170} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
-              </VStack>
-              <VStack paddingTop={20} flex={1}>
+              </YStack>
+              <YStack paddingTop={20} flex={1}>
                 <TitleStyled size="xxxxl" paddingRight={30}>
                   {user.name || user.username}
                 </TitleStyled>
                 <Spacer size="xl" />
-                <HStack flexWrap="wrap">
+                <XStack flexWrap="wrap">
                   <Paragraph opacity={0.5}>{user.username}</Paragraph>
 
                   {!!user.location && (
@@ -537,16 +537,16 @@ const UserHeader = memo(
                       <Paragraph opacity={0.5}>Joined {getTimeFormat(new Date(date))}</Paragraph>
                     </>
                   )}
-                </HStack>
+                </XStack>
                 <Spacer size={12} />
-              </VStack>
-            </HStack>
+              </YStack>
+            </XStack>
 
             <Spacer />
 
             <Divider />
-          </VStack>
-        </VStack>
+          </YStack>
+        </YStack>
       )
     },
     {

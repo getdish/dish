@@ -1,0 +1,22 @@
+{
+  "name": "@dish/ui",
+  "version": "0.0.1",
+  "sideEffects": [
+    "*.css"
+  ],
+  "private": true,
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "typings": "types.d.ts",
+  "scripts": {
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch"
+  },
+  "dependencies": {
+    "tamagui": "*"
+  },
+  "devDependencies": {
+    "@tamagui/build": "*"
+  }
+}

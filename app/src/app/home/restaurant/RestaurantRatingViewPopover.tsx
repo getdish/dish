@@ -3,16 +3,16 @@
 // import { Image, Linking } from 'react-native'
 // import {
 //   Box,
-//   HStack,
+//   XStack,
 //   HoverablePopover,
 //   SmallTitle,
 //   TableCell,
 //   TableRow,
 //   Text,
 //   TextProps,
-//   VStack,
+//   YStack,
 //   prevent,
-// } from 'snackui'
+// } from '@dish/ui'
 
 // import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 // import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -58,7 +58,7 @@
 //                   </Text>
 //                 </TableRow>
 
-//                 <VStack>
+//                 <YStack>
 //                   {Object.keys(sources).map((source, i) => {
 //                     const item = sources[source]
 //                     if (!item) {
@@ -74,7 +74,7 @@
 //                         cursor="pointer"
 //                         onPress={() => Linking.openURL(item.url)}
 //                       >
-//                         <HStack width="50%" spacing={6} alignItems="center">
+//                         <XStack width="50%" spacing={6} alignItems="center">
 //                           {info?.image ? (
 //                             <Image
 //                               source={info.image}
@@ -86,7 +86,7 @@
 //                             />
 //                           ) : null}
 //                           <Text>{info?.name ?? source}</Text>
-//                         </HStack>
+//                         </XStack>
 //                         <TableCell width="25%">{item.rating}</TableCell>
 //                         <TableCell flex={1}>
 //                           {RESTAURANT_WEIGHTS[source]}
@@ -94,18 +94,18 @@
 //                       </TableRow>
 //                     )
 //                   })}
-//                 </VStack>
+//                 </YStack>
 //               </Box>
 //             )
 //           }}
 //         >
-//           <VStack cursor="default" pointerEvents="auto" onPress={prevent}>
+//           <YStack cursor="default" pointerEvents="auto" onPress={prevent}>
 //             <RestaurantRatingView
 //               size={size}
 //               rating={restaurant?.rating}
 //               restaurantSlug={restaurantSlug}
 //             />
-//           </VStack>
+//           </YStack>
 //         </HoverablePopover>
 //       )
 //     }

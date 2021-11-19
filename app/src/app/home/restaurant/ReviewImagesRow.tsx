@@ -1,7 +1,7 @@
 import { useRefetch } from '@dish/graph'
-import { Camera } from '@dish/react-feather'
+import { AbsoluteYStack, Button, StackProps, Toast, XStack, YStack, useTheme } from '@dish/ui'
+import { Camera } from '@tamagui/feather-icons'
 import React, { useEffect } from 'react'
-import { AbsoluteVStack, Button, HStack, StackProps, Toast, VStack, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
@@ -93,14 +93,14 @@ export const ReviewImagesRow = ({
   )
 
   if (!allImages.length) {
-    return <HStack flex={1}>{addButton}</HStack>
+    return <XStack flex={1}>{addButton}</XStack>
   }
 
   return (
-    <HStack position="relative" alignItems="center" spacing {...stackProps}>
-      <AbsoluteVStack top={5} left={0} zIndex={100}>
+    <XStack position="relative" alignItems="center" spacing {...stackProps}>
+      <AbsoluteYStack top={5} left={0} zIndex={100}>
         {isEditing ? addButton : null}
-      </AbsoluteVStack>
+      </AbsoluteYStack>
       {allImages.map((uri, index) => {
         if (uri === '') {
           return <ImageFrame key={uri || index} />
@@ -131,11 +131,11 @@ export const ReviewImagesRow = ({
 
         return content
       })}
-    </HStack>
+    </XStack>
   )
 }
 
 const ImageFrame = (props: StackProps) => {
   const theme = useTheme()
-  return <VStack backgroundColor={theme.backgroundColorSecondary} {...props} />
+  return <YStack backgroundColor={theme.backgroundColorSecondary} {...props} />
 }

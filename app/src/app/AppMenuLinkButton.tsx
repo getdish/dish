@@ -1,5 +1,5 @@
+import { Text, Tooltip, XStack } from '@dish/ui'
 import React, { forwardRef, memo } from 'react'
-import { HStack, Text, Tooltip } from 'snackui'
 
 import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { LinkButtonAutoActive } from './views/LinkButtonAutoActive'
@@ -43,14 +43,14 @@ export const AppMenuLinkButton = memo(
           {(isActive) => {
             const IconElement = isActive ? ActiveIcon ?? Icon : Icon
             return (
-              <HStack spacing alignItems="center" justifyContent="center">
+              <XStack spacing alignItems="center" justifyContent="center">
                 <IconElement color={color} size={22} />
                 {!!text && (
                   <Text color={color} fontSize={13} fontWeight="500">
                     {text}
                   </Text>
                 )}
-              </HStack>
+              </XStack>
             )
           }}
         </LinkButtonAutoActive>

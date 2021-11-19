@@ -1,11 +1,11 @@
+import { BlurView, StackProps, YStack } from '@dish/ui'
 import React from 'react'
-import { BlurView, StackProps, VStack } from 'snackui'
 
 import { drawerBorderRadius } from '../../constants/constants'
 
 export const BottomSheetContainer = ({ children, ...props }: StackProps) => {
   return (
-    <VStack
+    <YStack
       width="100%"
       height="100%"
       shadowColor="rgba(0,0,0,0.15)"
@@ -27,6 +27,6 @@ export const BottomSheetContainer = ({ children, ...props }: StackProps) => {
       >
         {children}
       </BlurView>
-    </VStack>
+    </YStack>
   )
 }

@@ -1,5 +1,5 @@
+import { LoadingItems, Spacer, YStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { LoadingItems, Spacer, VStack } from 'snackui'
 
 import { router } from '../../../router'
 import { useIsHomeTypeActive } from '../../homeStore'
@@ -25,7 +25,7 @@ export default memo(function UserEditPage() {
         </>
       }
     >
-      <VStack pointerEvents="auto" width="95%" maxWidth={880} height="100%" flex={1}>
+      <YStack pointerEvents="auto" width="95%" maxWidth={880} height="100%" flex={1}>
         <Suspense fallback={<LoadingItems />}>
           <UserOnboard
             hideLogo
@@ -39,7 +39,7 @@ export default memo(function UserEditPage() {
             }}
           />
         </Suspense>
-      </VStack>
+      </YStack>
     </DarkModal>
   )
 })
@@ -49,8 +49,8 @@ const UserSlantedTitle = memo(({}) => {
   const username = userStore.user?.username ?? ''
 
   return (
-    <VStack marginTop={-20}>
+    <YStack marginTop={-20}>
       <SlantedTitle alignSelf="center">{username}</SlantedTitle>
-    </VStack>
+    </YStack>
   )
 })

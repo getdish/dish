@@ -1,6 +1,6 @@
+import { YStack, useLayout } from '@dish/ui'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { VStack, useLayout } from 'snackui'
 
 import {
   ContentScrollViewHorizontal,
@@ -22,7 +22,7 @@ export const ContentScrollViewHorizontalFitted = (
   const width = layoutProps.layout?.width ?? '100%'
 
   return (
-    <VStack
+    <YStack
       {...layoutProps}
       minWidth={width}
       width="100%"
@@ -40,7 +40,7 @@ export const ContentScrollViewHorizontalFitted = (
           props.contentContainerStyle,
         ]}
       />
-    </VStack>
+    </YStack>
   )
 }
 

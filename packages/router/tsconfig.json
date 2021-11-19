@@ -1,17 +1,8 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "composite": true,
     "outDir": ".",
     "rootDir": "src"
   },
-  "include": ["src"],
-  "references": [
-    {
-      "path": "../use-store"
-    },
-    {
-      "path": "../react-test-env"
-    }
-  ]
+  "include": ["src"]
 }

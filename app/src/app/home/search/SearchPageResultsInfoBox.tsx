@@ -1,6 +1,6 @@
 import { graphql, order_by, query } from '@dish/graph'
+import { Paragraph, Text, XStack, YStack, useMedia } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack, Paragraph, Text, VStack, useMedia } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
@@ -52,7 +52,7 @@ const HomeSearchInfoBoxCountry = memo(
     })
 
     return (
-      <HStack
+      <XStack
         // borderColor="#eee"
         // borderWidth={1}
         borderRadius={100}
@@ -61,7 +61,7 @@ const HomeSearchInfoBoxCountry = memo(
         marginBottom={10}
       >
         <ContentScrollViewHorizontal>
-          <HStack paddingHorizontal={20} paddingVertical={5} spacing="xs" alignItems="center">
+          <XStack paddingHorizontal={20} paddingVertical={5} spacing="xs" alignItems="center">
             <Paragraph
               width={media.sm ? 0 : 'auto'}
               overflow="hidden"
@@ -81,9 +81,9 @@ const HomeSearchInfoBoxCountry = memo(
                 />
               )
             })}
-          </HStack>
+          </XStack>
         </ContentScrollViewHorizontal>
-      </HStack>
+      </XStack>
     )
   })
 )
@@ -98,7 +98,7 @@ const HomeSearchInfoBoxDish = memo(({ state }: { state: HomeStateItemSearch }) =
   }
 
   return (
-    <HStack
+    <XStack
       paddingHorizontal={20}
       paddingRight={0}
       marginVertical={10}
@@ -111,13 +111,13 @@ const HomeSearchInfoBoxDish = memo(({ state }: { state: HomeStateItemSearch }) =
       maxWidth={620}
       alignSelf="center"
     >
-      <VStack flex={1}>
+      <YStack flex={1}>
         <Text fontSize={16} color="rgba(0,0,0,0.65)" lineHeight={24}>
           A rich, creamy soup with aromatics and shrimp paste, a classic Northern Thai dish with
           braised chicken in a coconut curry broth.
         </Text>
-      </VStack>
-      <VStack
+      </YStack>
+      <YStack
         marginLeft={10}
         marginVertical={-20}
         marginRight={-10}
@@ -138,7 +138,7 @@ const HomeSearchInfoBoxDish = memo(({ state }: { state: HomeStateItemSearch }) =
         <Text bottom={-5} left={-15} position="absolute" fontSize={42}>
           🍜
         </Text>
-      </VStack>
-    </HStack>
+      </YStack>
+    </XStack>
   )
 })

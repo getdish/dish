@@ -1,12 +1,12 @@
+import { StackProps, YStack } from '@dish/ui'
 import React from 'react'
-import { StackProps, VStack } from 'snackui'
 
 export type ColumnProps = StackProps & { allowOverflow?: boolean }
 
 export const Column = (props: ColumnProps) => {
   // const theme = useTheme()
   return (
-    <VStack
+    <YStack
       width={150}
       // borderLeftColor={theme.borderColor}
       // borderLeftWidth={2}

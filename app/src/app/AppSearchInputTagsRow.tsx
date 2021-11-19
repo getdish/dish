@@ -1,6 +1,6 @@
 import { fullyIdle } from '@dish/async'
+import { XStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack } from 'snackui'
 
 import { isWeb } from '../constants/constants'
 import { getTagSlug } from '../helpers/getTagSlug'
@@ -18,7 +18,7 @@ export const AppSearchInputTagsRow = memo(() => {
     <>
       {!!tags.length && (
         // web no margin top, native may want -1
-        <HStack marginLeft={10} marginTop={isWeb ? 0 : -1} spacing={4}>
+        <XStack marginLeft={10} marginTop={isWeb ? 0 : -1} spacing={4}>
           {tags.map((tag) => {
             const isActive = focusedTag === tag
             return (
@@ -38,7 +38,7 @@ export const AppSearchInputTagsRow = memo(() => {
               />
             )
           })}
-        </HStack>
+        </XStack>
       )}
     </>
   )

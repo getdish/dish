@@ -1,7 +1,5 @@
+import { AbsoluteYStack, StackProps, YStack, prevent, useMedia, useTheme } from '@dish/ui'
 import React, { forwardRef, useState } from 'react'
-import { AbsoluteVStack, StackProps, VStack, prevent, useMedia, useTheme } from 'snackui'
-
-// TODO snackui advanced extraction case
 
 export type VoteButtonProps = StackProps & {
   hoverColor?: string
@@ -24,7 +22,7 @@ export const VoteButton = forwardRef(
     const isUp = shadowDirection === 'up'
     const translateDir = isUp ? -1 : 1
     return (
-      <VStack
+      <YStack
         ref={ref as any}
         position="relative"
         width={32 * scale}
@@ -42,7 +40,7 @@ export const VoteButton = forwardRef(
         }}
         {...props}
       >
-        <VStack
+        <YStack
           opacity={voted ? 1 : 0.5}
           hoverStyle={{
             opacity: 1,
@@ -52,15 +50,15 @@ export const VoteButton = forwardRef(
             size={size * (voted ? 1.2 : 1)}
             color={!voted && hovered ? hoverColor ?? theme.colorSecondary : color ?? '#ccc'}
           />
-        </VStack>
-        <AbsoluteVStack
+        </YStack>
+        <AbsoluteYStack
           top={translateDir * 8}
           left={-8}
           right={-8}
           bottom={-translateDir * 8}
           overflow="hidden"
         >
-          <AbsoluteVStack
+          <AbsoluteYStack
             top={0}
             bottom={0}
             left={10}
@@ -71,8 +69,8 @@ export const VoteButton = forwardRef(
             shadowRadius={4}
             y={translateDir * -10}
           />
-        </AbsoluteVStack>
-      </VStack>
+        </AbsoluteYStack>
+      </YStack>
     )
   }
 )

@@ -1,7 +1,7 @@
 import { Restaurant, graphql, restaurant } from '@dish/graph'
+import { AbsoluteYStack, Hoverable, XStack } from '@dish/ui'
 import { debounce } from 'lodash'
 import React, { Suspense } from 'react'
-import { AbsoluteVStack, HStack, Hoverable } from 'snackui'
 
 import { cardFrameHeight, cardFrameWidth } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
@@ -94,13 +94,13 @@ export const RestaurantCardContent = graphql(
           outside={(colors) => (
             <>
               {!!below && (
-                <HStack zIndex={10000} pointerEvents="none" position="absolute" fullscreen>
+                <XStack zIndex={10000} pointerEvents="none" position="absolute" fullscreen>
                   {typeof below === 'function' ? below(colors) : below}
-                </HStack>
+                </XStack>
               )}
-              <AbsoluteVStack scale={size === 'xs' ? 0.9 : 1} top={-6} right={-6} zIndex={100}>
+              <AbsoluteYStack scale={size === 'xs' ? 0.9 : 1} top={-6} right={-6} zIndex={100}>
                 <RestaurantRatingView restaurant={restaurant} floating size={32} />
-              </AbsoluteVStack>
+              </AbsoluteYStack>
             </>
           )}
           photo={photo}

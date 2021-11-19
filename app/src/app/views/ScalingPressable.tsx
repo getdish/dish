@@ -1,8 +1,8 @@
-import { StackProps, VStack } from 'snackui'
+import { StackProps, YStack } from '@dish/ui'
 
 export function ScalingPressable(props: StackProps) {
   return (
-    <VStack
+    <YStack
       className="ease-in-out-faster"
       position="relative"
       zIndex={0}

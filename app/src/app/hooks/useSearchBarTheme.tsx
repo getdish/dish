@@ -1,5 +1,5 @@
-import { useTheme } from 'snackui'
-import { useMedia } from 'snackui'
+import { useTheme } from '@dish/ui'
+import { useMedia } from '@dish/ui'
 
 import { rgbString } from '../../helpers/rgb'
 import {

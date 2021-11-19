@@ -1,8 +1,8 @@
-import { Filter } from '@dish/react-feather'
+import { Modal, Text, Theme, XStack, YStack, useMedia, useTheme } from '@dish/ui'
+import { Filter } from '@tamagui/feather-icons'
 import { groupBy, sortBy } from 'lodash'
 import React, { memo, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { HStack, Modal, Text, Theme, VStack, useMedia, useTheme } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { tagFilters } from '../../../constants/localTags'
@@ -30,9 +30,9 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
 const HomePageFilterBarLarge = ({ activeTags }: FilterBarProps) => {
   const filterButtons = useSearchFilterButtons({ activeTags })
   return (
-    <HStack alignItems="center" spacing={4} justifyContent="center">
+    <XStack alignItems="center" spacing={4} justifyContent="center">
       {filterButtons}
-    </HStack>
+    </XStack>
   )
 }
 
@@ -76,9 +76,9 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
               </PaneControlButtons>
 
               <SlantedTitle alignSelf="center">Filters</SlantedTitle>
-              <VStack alignItems="center" justifyContent="center" flex={1} spacing="sm">
+              <YStack alignItems="center" justifyContent="center" flex={1} spacing="sm">
                 {filterButtons}
-              </VStack>
+              </YStack>
             </SafeAreaView>
           </Modal>
         </Theme>
@@ -96,7 +96,7 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
   const groupedList = Object.keys(grouped).map((k) => grouped[k])
   return groupedList.map((group, index) => {
     return (
-      <HStack key={index} borderRadius={100}>
+      <XStack key={index} borderRadius={100}>
         {group.map((tag, groupIndex) => {
           const isActive = activeTags[getTagSlug(tag.slug)] ?? false
           return (
@@ -113,7 +113,7 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
             />
           )
         })}
-      </HStack>
+      </XStack>
     )
   })
 }

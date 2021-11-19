@@ -1,5 +1,5 @@
+import { Text, XStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack, Text } from 'snackui'
 
 import { blue, green, orange, red } from '../../constants/colors'
 import { CircularProgress } from './CircularProgress'
@@ -34,11 +34,11 @@ export const SentimentCircle = memo(({ ratio, scale = 1 }: { ratio: number; scal
       backgroundColor="rgba(100,100,100,0.25)"
       rotation={(1 - ratio) * 180}
     >
-      <HStack height="100%" alignItems="center" justifyContent="center">
+      <XStack height="100%" alignItems="center" justifyContent="center">
         <Text cursor="default" fontSize={textSize} lineHeight={textSize}>
           {sentiments[key]}
         </Text>
-      </HStack>
+      </XStack>
     </CircularProgress>
   )
 })

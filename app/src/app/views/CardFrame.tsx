@@ -1,6 +1,6 @@
+import { YStack, useTheme } from '@dish/ui'
 // TODO variant for width/height
 import React from 'react'
-import { VStack, useTheme } from 'snackui'
 
 import {
   cardFrameBorderRadius,
@@ -54,7 +54,7 @@ export const CardFrame = ({
 }: CardFrameProps) => {
   const theme = useTheme()
   return (
-    <VStack
+    <YStack
       className={`hover-parent ease-in-out-fastest ${className || ''}`}
       contain="layout"
       borderRadius={cardFrameBorderRadius}
@@ -162,6 +162,6 @@ export const CardFrame = ({
       })}
     >
       {children}
-    </VStack>
+    </YStack>
   )
 }

@@ -1,21 +1,21 @@
 import { series } from '@dish/async'
 import { resolved } from '@dish/graph'
-import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import loadable from '@loadable/component'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { Animated, StyleSheet } from 'react-native'
 // import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import {
-  AbsoluteVStack,
-  HStack,
+  AbsoluteYStack,
   LinearGradient,
-  VStack,
+  XStack,
+  YStack,
   useDebounceValue,
   useGet,
   useMedia,
   useTheme,
   useThemeName,
-} from 'snackui'
+} from '@dish/ui'
+import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import loadable from '@loadable/component'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { Animated, StyleSheet } from 'react-native'
 
 import { isWeb, pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
@@ -275,7 +275,7 @@ export const AppMapContents = memo(function AppMapContents() {
   }
 
   return (
-    <HStack
+    <XStack
       position="absolute"
       fullscreen
       maxHeight="100%"
@@ -285,7 +285,7 @@ export const AppMapContents = memo(function AppMapContents() {
       margin="auto"
     >
       <MapFlexItem />
-      <VStack
+      <YStack
         position="relative"
         pointerEvents="auto"
         contain="strict"
@@ -312,7 +312,7 @@ export const AppMapContents = memo(function AppMapContents() {
             <AppAutocompleteLocation />
             <AppMapControls />
 
-            <AbsoluteVStack
+            <AbsoluteYStack
               pointerEvents="none"
               top={searchBarHeight}
               left={0}
@@ -320,7 +320,7 @@ export const AppMapContents = memo(function AppMapContents() {
               zIndex={1000}
             >
               <AppFloatingTagMenuBar />
-            </AbsoluteVStack>
+            </AbsoluteYStack>
           </>
         )}
         {media.sm && <AppMapBottomFade />}
@@ -344,8 +344,8 @@ export const AppMapContents = memo(function AppMapContents() {
           showRank={showRank}
           hideRegions={hideRegions}
         />
-      </VStack>
-    </HStack>
+      </YStack>
+    </XStack>
   )
 })
 
@@ -353,9 +353,9 @@ const MapFlexItem = () => {
   const drawerWidth = useAppDrawerWidth()
   const media = useMedia()
   return (
-    <VStack maxWidth={drawerWidth} display={media.sm ? 'none' : 'flex'} height="100%" flex={2}>
+    <YStack maxWidth={drawerWidth} display={media.sm ? 'none' : 'flex'} height="100%" flex={2}>
       {ensureFlexText}
-    </VStack>
+    </YStack>
   )
 }
 
@@ -368,13 +368,13 @@ const AppMapBottomFade = memo(() => {
   }
 
   return (
-    <AbsoluteVStack zIndex={100} pointerEvents="none" bottom={0} left={0} right={0}>
+    <AbsoluteYStack zIndex={100} pointerEvents="none" bottom={0} left={0} right={0}>
       <LinearGradient
         pointerEvents="none"
         style={StyleSheet.absoluteFill}
         colors={[`${theme.mapBackground}00`, theme.mapBackground]}
       />
-    </AbsoluteVStack>
+    </AbsoluteYStack>
   )
 })
 
@@ -387,7 +387,7 @@ const AppMapRightFade = memo(() => {
   }
 
   return (
-    <AbsoluteVStack zIndex={300} pointerEvents="none" bottom={0} top={0} right={0} width={100}>
+    <AbsoluteYStack zIndex={300} pointerEvents="none" bottom={0} top={0} right={0} width={100}>
       <LinearGradient
         pointerEvents="none"
         style={StyleSheet.absoluteFill}
@@ -395,7 +395,7 @@ const AppMapRightFade = memo(() => {
         end={[1, 0]}
         colors={[`${theme.mapBackground}00`, theme.mapBackground]}
       />
-    </AbsoluteVStack>
+    </AbsoluteYStack>
   )
 })
 

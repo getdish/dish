@@ -1,15 +1,15 @@
 import { Auth } from '@dish/graph'
-import React, { memo, useEffect, useState } from 'react'
 import {
   Button,
-  HStack,
   InteractiveContainer,
   Paragraph,
   Spacer,
   Text,
   Title,
-  VStack,
-} from 'snackui'
+  XStack,
+  YStack,
+} from '@dish/ui'
+import React, { memo, useEffect, useState } from 'react'
 
 import { isWeb } from '../constants/constants'
 import { router, useRouterCurPage } from '../router'
@@ -71,12 +71,12 @@ export const AuthForm = memo(
     }
 
     return (
-      <VStack alignItems="center" spacing="sm">
+      <YStack alignItems="center" spacing="sm">
         {isWeb && (
           <>
-            <VStack>
+            <YStack>
               <SignInAppleButton />
-            </VStack>
+            </YStack>
             <Spacer />
             <SmallTitle fontSize={14} divider="center">
               or
@@ -113,14 +113,14 @@ export const AuthForm = memo(
 
         {getContent()}
 
-        <VStack maxWidth={320}>
+        <YStack maxWidth={320}>
           {!!userStore.messages.length && (
             <ErrorParagraph>{userStore.messages.join(', ')}</ErrorParagraph>
           )}
-        </VStack>
+        </YStack>
 
         <Spacer />
-      </VStack>
+      </YStack>
     )
   }
 )
@@ -198,11 +198,11 @@ export const ForgotPassword = ({ autoFocus, setFormPage }: AuthFormPageProps) =>
       isSuccess={isSuccess}
       errorText={errorMessage}
       after={
-        <HStack alignSelf="flex-end">
+        <XStack alignSelf="flex-end">
           <Text fontSize={14}>
             <Link onClick={() => setFormPage?.('login')}>Back to login</Link>{' '}
           </Text>
-        </HStack>
+        </XStack>
       }
     >
       <Paragraph maxWidth={280} paddingVertical={15}>

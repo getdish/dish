@@ -35,7 +35,7 @@ module.exports = function (api) {
       'react-native-reanimated/plugin',
       ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
       [
-        '@snackui/babel-plugin',
+        '@tamagui/babel-plugin',
         {
           exclude: /node_modules/,
         },

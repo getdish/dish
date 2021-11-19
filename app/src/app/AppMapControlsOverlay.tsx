@@ -1,6 +1,6 @@
+import { AbsoluteYStack, XStack, YStack, useMedia, useSafeAreaInsets } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { Suspense, memo } from 'react'
-import { AbsoluteVStack, HStack, VStack, useMedia, useSafeAreaInsets } from 'snackui'
 
 import { searchBarHeight, zIndexMapControls } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
@@ -20,14 +20,14 @@ export const AppMapControlsOverlay = memo(() => {
   }
 
   return (
-    <AbsoluteVStack
+    <AbsoluteYStack
       zIndex={zIndexMapControls}
       marginLeft="auto"
       fullscreen
       width={width}
       pointerEvents="none"
     >
-      <AbsoluteVStack
+      <AbsoluteYStack
         className="ease-in-out-slower"
         fullscreen
         padding={20}
@@ -45,8 +45,8 @@ export const AppMapControlsOverlay = memo(() => {
         alignItems="center"
         justifyContent="center"
       >
-        <HStack position="absolute" bottom={0} right={0} left={0}>
-          <HStack
+        <XStack position="absolute" bottom={0} right={0} left={0}>
+          <XStack
             flexDirection="row-reverse"
             alignItems="flex-end"
             flex={1}
@@ -72,20 +72,20 @@ export const AppMapControlsOverlay = memo(() => {
             )}
 
             <ReviewImagesRow floating showGenericImages isEditing imgWidth={66} imgHeight={66} />
-          </HStack>
+          </XStack>
 
-          <VStack flex={1} />
-        </HStack>
-      </AbsoluteVStack>
-    </AbsoluteVStack>
+          <YStack flex={1} />
+        </XStack>
+      </AbsoluteYStack>
+    </AbsoluteYStack>
   )
 })
 
 // DOWNLOAD APP ICON
 // {/* {isWeb && (
-//               <VStack>
+//               <YStack>
 //                 <Tooltip contents="Soon!">
-//                   <VStack
+//                   <YStack
 //                     pointerEvents="auto"
 //                     opacity={0.6}
 //                     alignSelf="flex-end"
@@ -105,7 +105,7 @@ export const AppMapControlsOverlay = memo(() => {
 //                         margin: -1.5,
 //                       }}
 //                     />
-//                   </VStack>
+//                   </YStack>
 //                 </Tooltip>
-//               </VStack>
+//               </YStack>
 //             )} */}

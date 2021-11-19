@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
+import { LoadingItems, XStack, YStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import { HStack, LoadingItems, VStack } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
@@ -14,7 +14,7 @@ type Props = {
 
 export const RestaurantTagPhotos = (props: Props) => {
   return (
-    <Suspense fallback={<VStack height={220} />}>
+    <Suspense fallback={<YStack height={220} />}>
       <RestaurantTagPhotosContent {...props} />
     </Suspense>
   )
@@ -47,7 +47,7 @@ export const RestaurantTagPhotosContent = memo(
     return (
       <ContentScrollViewHorizontal height={220}>
         <Suspense fallback={<LoadingItems />}>
-          <HStack spacing paddingHorizontal={20} paddingVertical={5}>
+          <XStack spacing paddingHorizontal={20} paddingVertical={5}>
             {[...tagPhotos, 0, 0, 0, 0, 0, 0].slice(0, Math.max(numTags, 5)).map((photo, index) => {
               return (
                 <Link
@@ -59,7 +59,7 @@ export const RestaurantTagPhotosContent = memo(
                     offset: index,
                   }}
                 >
-                  <VStack
+                  <YStack
                     width={180}
                     height={180}
                     backgroundColor={`rgba(0,0,0,0.0${5 - index})`}
@@ -75,11 +75,11 @@ export const RestaurantTagPhotosContent = memo(
                         }}
                       />
                     )}
-                  </VStack>
+                  </YStack>
                 </Link>
               )
             })}
-          </HStack>
+          </XStack>
         </Suspense>
       </ContentScrollViewHorizontal>
     )

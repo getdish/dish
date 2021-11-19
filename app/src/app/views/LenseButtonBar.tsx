@@ -1,5 +1,5 @@
+import { YStack } from '@dish/ui'
 import React, { memo, useLayoutEffect, useState } from 'react'
-import { VStack } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
 import { HomeActiveTagsRecord } from '../../types/homeTypes'
@@ -24,7 +24,7 @@ export const LenseButtonBar = memo(
         {tagLenses.map((lense, index) => {
           const isActive = active[lense.slug] || false
           return (
-            <VStack
+            <YStack
               height="100%"
               zIndex={isActive ? 1 : 0}
               marginRight={4}
@@ -45,7 +45,7 @@ export const LenseButtonBar = memo(
                   })
                 }}
               />
-            </VStack>
+            </YStack>
           )
         })}
       </>

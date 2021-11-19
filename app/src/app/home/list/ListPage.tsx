@@ -1,14 +1,9 @@
 import { series } from '@dish/async'
 import { List, getUserName, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
-import { List as ListIcon, Move, Plus, Trash, X } from '@dish/react-feather'
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, StyleSheet, Switch } from 'react-native'
-import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
-import { FlatList } from 'react-native-gesture-handler'
 import {
+  AbsoluteYStack,
   Button,
-  HStack,
   Input,
   InteractiveContainer,
   LinearGradient,
@@ -17,15 +12,19 @@ import {
   Spacer,
   Text,
   Toast,
-  VStack,
+  XStack,
+  YStack,
   useForceUpdate,
   useMedia,
   useTheme,
   useThemeName,
-} from 'snackui'
-import { AbsoluteVStack } from 'snackui/dist'
+} from '@dish/ui'
+import { List as ListIcon, Move, Plus, Trash, X } from '@tamagui/feather-icons'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { Pressable, StyleSheet, Switch } from 'react-native'
+import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
+import { FlatList } from 'react-native-gesture-handler'
 
-import { red400 } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
 import { getRestaurantIdentifiers } from '../../../helpers/getRestaurantIdentifiers'
@@ -115,9 +114,9 @@ export default function ListPage(props: Props) {
     <>
       {isCreating && (
         <StackDrawer closable title={`Create list`}>
-          <VStack paddingBottom="50%" alignItems="center" justifyContent="center" flex={1}>
+          <YStack paddingBottom="50%" alignItems="center" justifyContent="center" flex={1}>
             <Paragraph opacity={0.5}>Creating...</Paragraph>
-          </VStack>
+          </YStack>
         </StackDrawer>
       )}
 
@@ -337,7 +336,7 @@ const ListPageContent = memo(
               >
                 <Plus size={20} color="#888" />
               </Button>
-              <VStack pointerEvents="none" flex={1} />
+              <YStack pointerEvents="none" flex={1} />
             </BottomFloatingArea>
           )}
 
@@ -364,20 +363,20 @@ const ListPageContent = memo(
           )}
 
           <ContentScrollView id="list">
-            <AbsoluteVStack
+            <AbsoluteYStack
               fullscreen
               zIndex={-1}
               backgroundColor={listColors.backgroundForTheme}
               opacity={0.5}
             />
-            <AbsoluteVStack opacity={0.5} fullscreen maxHeight={300} zIndex={0}>
+            <AbsoluteYStack opacity={0.5} fullscreen maxHeight={300} zIndex={0}>
               <LinearGradient
                 start={[0, 1]}
                 end={[0, 0]}
                 style={StyleSheet.absoluteFill}
                 colors={[`${listColors.backgroundForTheme}00`, listColors.backgroundForTheme]}
               />
-            </AbsoluteVStack>
+            </AbsoluteYStack>
             <>
               <PaneControlButtonsLeft>
                 <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
@@ -431,7 +430,7 @@ const ListPageContent = memo(
 
                     <Spacer />
 
-                    <VStack
+                    <YStack
                       opacity={0.8}
                       hoverStyle={{
                         opacity: 1,
@@ -442,24 +441,24 @@ const ListPageContent = memo(
                       }}
                     >
                       <X color={listColors.color} size={24} />
-                    </VStack>
+                    </YStack>
                     <Spacer size="lg" />
                   </>
                 )}
               </PaneControlButtonsLeft>
 
-              <VStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
+              <YStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
                 {/* START HEADER */}
-                <VStack paddingBottom={5} position="relative">
+                <YStack paddingBottom={5} position="relative">
                   {/* BACKGROUND */}
-                  {/* <AbsoluteVStack
+                  {/* <AbsoluteYStack
                     fullscreen
                     zIndex={-1}
                     backgroundColor={listColors.backgroundForTheme}
                     // opacity={0.05}
                   /> */}
-                  <HStack paddingHorizontal={20}>
-                    {/* <AbsoluteVStack
+                  <XStack paddingHorizontal={20}>
+                    {/* <AbsoluteYStack
                       overflow="hidden"
                       zIndex={-1}
                       borderRadius={1000}
@@ -471,8 +470,8 @@ const ListPageContent = memo(
                         source={{ uri: getListPhoto(list) }}
                         style={{ width: 400, height: 400 }}
                       />
-                    </AbsoluteVStack> */}
-                    <VStack
+                    </AbsoluteYStack> */}
+                    <YStack
                       // maxWidth={660}
                       // minWidth={380}
                       alignItems="flex-start"
@@ -481,8 +480,8 @@ const ListPageContent = memo(
                       flex={1}
                       maxWidth={550}
                     >
-                      <VStack minHeight={75} flex={1} />
-                      <VStack display={isWeb ? 'block' : 'flex'}>
+                      <YStack minHeight={75} flex={1} />
+                      <YStack display={isWeb ? 'block' : 'flex'}>
                         <TitleStyled
                           {...titleColors}
                           fontTheme={listFont === 0 ? 'slab' : 'sans'}
@@ -513,8 +512,8 @@ const ListPageContent = memo(
                             list.name?.trim() || ''
                           )}
                         </TitleStyled>
-                      </VStack>
-                      <VStack
+                      </YStack>
+                      <YStack
                         maxWidth={800}
                         alignSelf="center"
                         width="100%"
@@ -532,9 +531,9 @@ const ListPageContent = memo(
                           after={
                             <>
                               {!!tagButtons.length && (
-                                <HStack spacing="sm" justifyContent="center">
+                                <XStack spacing="sm" justifyContent="center">
                                   {tagButtons}
-                                </HStack>
+                                </XStack>
                               )}
                             </>
                           }
@@ -586,26 +585,26 @@ const ListPageContent = memo(
                         </CommentBubble>
 
                         {isMyList && isSorting && (
-                          <HStack spacing alignSelf="center">
+                          <XStack spacing alignSelf="center">
                             <Move size={16} color={listColors.color} />
                             <Paragraph opacity={0.6} size="sm">
                               press and hold on any item to sort
                             </Paragraph>
-                          </HStack>
+                          </XStack>
                         )}
-                      </VStack>
-                    </VStack>
-                  </HStack>
+                      </YStack>
+                    </YStack>
+                  </XStack>
 
                   {isMyList && isEditing && (
-                    <HStack
+                    <XStack
                       position="relative"
                       zIndex={1000}
                       marginTop={15}
                       alignItems="center"
                       justifyContent="center"
                     >
-                      <HStack
+                      <XStack
                         backgroundColor={theme.backgroundColor}
                         padding={5}
                         paddingHorizontal={20}
@@ -617,7 +616,7 @@ const ListPageContent = memo(
                         flexWrap="wrap"
                         spacing="xxl"
                       >
-                        <HStack alignItems="center" spacing="xs">
+                        <XStack alignItems="center" spacing="xs">
                           <Paragraph>Color:</Paragraph>
                           <ColorPicker
                             colors={allListColors}
@@ -627,7 +626,7 @@ const ListPageContent = memo(
                               setListColors(getListColors(index, themeName))
                             }}
                           />
-                        </HStack>
+                        </XStack>
 
                         <InteractiveContainer alignItems="center">
                           <SmallButton
@@ -680,13 +679,13 @@ const ListPageContent = memo(
                             Minimal
                           </Paragraph>
                         </InteractiveContainer>
-                        <HStack alignItems="center" spacing="xs">
+                        <XStack alignItems="center" spacing="xs">
                           <Paragraph>Public:&nbsp;</Paragraph>
                           <Switch value={isPublic} onValueChange={setPublic} />
-                        </HStack>
+                        </XStack>
                         <SmallButton
                           tooltip="Delete"
-                          icon={<Trash color={red400} size={20} />}
+                          icon={<Trash color="var(--red10)" size={20} />}
                           onPress={async () => {
                             assertPresent(list.id, 'no list id')
                             if (confirm('Permanently delete this list?')) {
@@ -705,19 +704,19 @@ const ListPageContent = memo(
                             }
                           }}
                         />
-                      </HStack>
-                    </HStack>
+                      </XStack>
+                    </XStack>
                   )}
-                </VStack>
+                </YStack>
                 {/* END HEADER */}
 
                 {!listItems.items.length && (
-                  <VStack padding={20} margin={20} borderRadius={10}>
+                  <YStack padding={20} margin={20} borderRadius={10}>
                     <Paragraph>Nothing on this list, yet.</Paragraph>
-                  </VStack>
+                  </YStack>
                 )}
 
-                <VStack flex={1}>
+                <YStack flex={1}>
                   <ListViewElement
                     keyExtractor={(item, index) => `draggable-item-${item?.key}-${isMyList}`}
                     data={listItems.items}
@@ -737,12 +736,12 @@ const ListPageContent = memo(
                       }
                     }}
                   />
-                </VStack>
+                </YStack>
 
                 {isMyList && (
                   <>
                     <Spacer size="lg" />
-                    <HStack paddingHorizontal={20}>
+                    <XStack paddingHorizontal={20}>
                       <Button
                         onPress={() => {
                           setShowAddModal(true)
@@ -756,13 +755,13 @@ const ListPageContent = memo(
                       >
                         Add
                       </Button>
-                    </HStack>
+                    </XStack>
                     <Spacer size="xl" />
                   </>
                 )}
-              </VStack>
+              </YStack>
 
-              <VStack width={1} height={media.sm ? 600 : 300} />
+              <YStack width={1} height={media.sm ? 600 : 300} />
             </>
           </ContentScrollView>
         </>

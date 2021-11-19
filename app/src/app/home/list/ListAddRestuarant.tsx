@@ -1,10 +1,10 @@
 import { series, sleep } from '@dish/async'
 import { graphql, query, resolved, slugify, useRefetch } from '@dish/graph'
-import { Loader } from '@dish/react-feather'
+import { Input, Spacer, Text, YStack, useTheme } from '@dish/ui'
+import { Loader } from '@tamagui/feather-icons'
 import { debounce, uniqBy } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { Input, Spacer, Text, VStack, useTheme } from 'snackui'
 
 import { blue } from '../../../constants/colors'
 import { AutocompleteItemFull } from '../../../helpers/createAutocomplete'
@@ -145,11 +145,11 @@ export const ListAddRestuarant = graphql(
     }, 16)
 
     return (
-      <VStack width="100%" height="100%" flex={1}>
+      <YStack width="100%" height="100%" flex={1}>
         <SlantedTitle size="sm" alignSelf="center" marginTop={-15}>
           Add
         </SlantedTitle>
-        <VStack width="100%" flexShrink={0}>
+        <YStack width="100%" flexShrink={0}>
           <Input
             backgroundColor={theme.backgroundColorSecondary}
             marginHorizontal={20}
@@ -158,13 +158,13 @@ export const ListAddRestuarant = graphql(
             onChangeText={setQuery}
           />
           <Spacer size="sm" />
-        </VStack>
+        </YStack>
         <ScrollView style={{ width: '100%', flex: 1 }}>
-          <VStack>
+          <YStack>
             {isSearching && (
-              <VStack className="rotating" margin="auto" marginVertical={20}>
+              <YStack className="rotating" margin="auto" marginVertical={20}>
                 <Loader size={16} color={blue} />
-              </VStack>
+              </YStack>
             )}
             {!isSearching && (
               <>
@@ -188,9 +188,9 @@ export const ListAddRestuarant = graphql(
                 })}
               </>
             )}
-          </VStack>
+          </YStack>
         </ScrollView>
-      </VStack>
+      </YStack>
     )
   }
 )

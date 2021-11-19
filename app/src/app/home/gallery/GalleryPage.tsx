@@ -1,10 +1,10 @@
 import { order_by, photo, useLazyQuery, useQuery, useTransactionQuery } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { ChevronLeft, ChevronRight } from '@dish/react-feather'
+import { AbsoluteYStack, LoadingItems, XStack, YStack, useWindowSize } from '@dish/ui'
+import { ChevronLeft, ChevronRight } from '@tamagui/feather-icons'
 import { last, orderBy, uniqBy } from 'lodash'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { AbsoluteVStack, HStack, LoadingItems, VStack, useWindowSize } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
@@ -25,22 +25,22 @@ export default memo(function GalleryPage() {
   const route = router.curPage
 
   return (
-    <AbsoluteVStack
+    <AbsoluteYStack
       fullscreen
       backgroundColor="rgba(0,0,0,0.85)"
       zIndex={1000}
       pointerEvents="auto"
     >
-      <AbsoluteVStack top={10} right={10} zIndex={100000}>
+      <AbsoluteYStack top={10} right={10} zIndex={100000}>
         <StackViewCloseButton />
-      </AbsoluteVStack>
+      </AbsoluteYStack>
       <Suspense fallback={<LoadingItems />}>
         <GalleryLightbox
           restaurantSlug={route.params.restaurantSlug}
           index={route.params.offset ? +route.params.offset : 0}
         />
       </Suspense>
-    </AbsoluteVStack>
+    </AbsoluteYStack>
   )
 })
 
@@ -242,8 +242,8 @@ export const GalleryLightbox = memo(
 
     return (
       <>
-        <HStack flex={1}>
-          <VStack
+        <XStack flex={1}>
+          <YStack
             onPress={setLeftImage}
             cursor="pointer"
             zIndex={100}
@@ -252,8 +252,8 @@ export const GalleryLightbox = memo(
             justifyContent="center"
           >
             <ChevronLeft color="#fff" size={30} />
-          </VStack>
-          <VStack alignItems="center" justifyContent="center" flex={1} marginVertical={3}>
+          </YStack>
+          <YStack alignItems="center" justifyContent="center" flex={1} marginVertical={3}>
             {!!activeImage.url && (
               <Image
                 source={{ uri: activeImage.url }}
@@ -268,8 +268,8 @@ export const GalleryLightbox = memo(
                 resizeMode="contain"
               />
             )}
-          </VStack>
-          <VStack
+          </YStack>
+          <YStack
             onPress={setRightImage}
             justifyContent="center"
             cursor="pointer"
@@ -278,10 +278,10 @@ export const GalleryLightbox = memo(
             paddingHorizontal={10}
           >
             <ChevronRight color="#fff" size={30} />
-          </VStack>
-        </HStack>
+          </YStack>
+        </XStack>
 
-        <VStack height={ThumbnailSize}>
+        <YStack height={ThumbnailSize}>
           {hasLoadedFirstImage && (
             <GalleryLightboxPhotosList
               // @ts-expect-error
@@ -312,7 +312,7 @@ export const GalleryLightbox = memo(
               activeImage={activeImage}
             />
           )}
-        </VStack>
+        </YStack>
       </>
     )
   }
@@ -371,7 +371,7 @@ const GalleryLightboxPhotosList = ({
       }}
       scrollEventThrottle={100}
     >
-      <HStack
+      <XStack
         bottom={0}
         position="absolute"
         paddingTop={2}
@@ -384,14 +384,14 @@ const GalleryLightboxPhotosList = ({
           const isActive = activeImageUrl === url
 
           return (
-            <VStack
+            <YStack
               key={index}
               onPress={() => {
                 onPhotoPress(photo, index)
               }}
               zIndex={isActive ? 1 : 0}
             >
-              <VStack
+              <YStack
                 scale={isActive ? 1.1 : 1}
                 shadowOpacity={isActive ? 1 : 0}
                 shadowColor="#000"
@@ -408,11 +408,11 @@ const GalleryLightboxPhotosList = ({
                   }}
                   resizeMode="cover"
                 />
-              </VStack>
-            </VStack>
+              </YStack>
+            </YStack>
           )
         })}
-      </HStack>
+      </XStack>
     </ScrollView>
   )
 }

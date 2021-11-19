@@ -31,7 +31,6 @@ COPY .env .env.test .env.production .env.development package.json ava.config.js 
 COPY packages packages
 COPY app app
 COPY services services
-COPY snackui snackui
 
 ARG GIT_BRANCH=""
 ARG GIT_COMMIT=""

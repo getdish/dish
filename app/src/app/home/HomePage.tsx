@@ -1,17 +1,17 @@
 import { slugify } from '@dish/graph'
-import { useStore, useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo, useEffect } from 'react'
 import {
-  AbsoluteVStack,
-  AnimatedVStack,
+  AbsoluteYStack,
+  AnimatedYStack,
   LoadingItems,
   Paragraph,
   Text,
   Theme,
-  VStack,
+  YStack,
   useMedia,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { useStore, useStoreInstance } from '@dish/use-store'
+import React, { Suspense, memo, useEffect } from 'react'
 
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { getDefaultLocation, setDefaultLocation } from '../../constants/initialHomeState'
@@ -42,9 +42,9 @@ export default memo(function HomePage(props: Props) {
   return (
     <Suspense
       fallback={
-        <VStack marginTop={media.sm ? 0 : searchBarHeight}>
+        <YStack marginTop={media.sm ? 0 : searchBarHeight}>
           <LoadingItems />
-        </VStack>
+        </YStack>
       }
     >
       <HomePageContent {...props} />
@@ -152,7 +152,7 @@ const HomePageContent = (props: Props) => {
       <HomePageWelcomeBubble />
 
       {/* TOP FADE */}
-      <AbsoluteVStack
+      <AbsoluteYStack
         top={-searchBarHeight + 4}
         right={0}
         left={0}
@@ -162,7 +162,7 @@ const HomePageContent = (props: Props) => {
         opacity={isActive ? 1 : 0}
         pointerEvents="none"
       >
-        <AbsoluteVStack
+        <AbsoluteYStack
           bottom={10}
           left={0}
           right={0}
@@ -171,9 +171,9 @@ const HomePageContent = (props: Props) => {
           shadowRadius={10}
           height={searchBarHeight + 10}
         />
-      </AbsoluteVStack>
+      </AbsoluteYStack>
 
-      <VStack
+      <YStack
         flex={1}
         width="100%"
         maxHeight="100%"
@@ -187,7 +187,7 @@ const HomePageContent = (props: Props) => {
             {wasEverActive && <HomePageFeed {...homePageFeedProps} />}
           </PageContentWithFooter>
         </ContentScrollView>
-      </VStack>
+      </YStack>
     </>
   )
 }
@@ -212,15 +212,15 @@ const Inner = () => {
   }
 
   return (
-    <AbsoluteVStack
+    <AbsoluteYStack
       pointerEvents="none"
       zIndex={100000000}
       fullscreen
       alignItems="flex-end"
       justifyContent="flex-end"
     >
-      <AnimatedVStack>
-        <VStack
+      <AnimatedYStack>
+        <YStack
           backgroundColor={theme.backgroundColor}
           borderColor={theme.borderColor}
           borderWidth={1}
@@ -235,7 +235,7 @@ const Inner = () => {
           <PaneControlButtons>
             <CloseButton onPress={() => setShow(false)} />
           </PaneControlButtons>
-          <VStack paddingVertical={20} paddingHorizontal={20}>
+          <YStack paddingVertical={20} paddingHorizontal={20}>
             <Paragraph size="md" sizeLineHeight={0.9}>
               <Text fontWeight="800">A better pocket guide to the world.</Text> Find and make
               playlists of the real world and earn money.{' '}
@@ -243,14 +243,14 @@ const Inner = () => {
                 Learn more
               </Link>
             </Paragraph>
-          </VStack>
-        </VStack>
-      </AnimatedVStack>
-    </AbsoluteVStack>
+          </YStack>
+        </YStack>
+      </AnimatedYStack>
+    </AbsoluteYStack>
   )
 }
 
 const HomeTopSpacer = () => {
   const media = useMedia()
-  return <VStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight + 20} />
+  return <YStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight + 20} />
 }

@@ -1,5 +1,5 @@
+import { Input, InputProps } from '@dish/ui'
 import React, { useState } from 'react'
-import { Input, InputProps } from 'snackui'
 
 // only works for mulitline
 export function ExpandingInput(props: InputProps) {

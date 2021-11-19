@@ -1,10 +1,10 @@
+import { StackProps, XStack, useTheme } from '@dish/ui'
 import React from 'react'
-import { HStack, StackProps, useTheme } from 'snackui'
 
-export const ListItemHStack = (props: StackProps) => {
+export const ListItemXStack = (props: StackProps) => {
   const theme = useTheme()
   return (
-    <HStack
+    <XStack
       paddingVertical={12}
       paddingHorizontal={8}
       width="100%"
@@ -14,6 +14,6 @@ export const ListItemHStack = (props: StackProps) => {
       {...props}
     >
       {props.children}
-    </HStack>
+    </XStack>
   )
 }

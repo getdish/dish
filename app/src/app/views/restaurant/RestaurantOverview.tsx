@@ -1,20 +1,11 @@
 import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
+import { Input, Text, XStack, YStack, useDebounce, useTheme } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { memo } from 'react'
-import { AbsoluteVStack, HStack, Input, Text, VStack, useDebounce, useTheme } from 'snackui'
 
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
-import { CommentBubble } from '../CommentBubble'
-
-const quote = (
-  <AbsoluteVStack top={-10} left={-0}>
-    <Text color="#000" fontSize={60} opacity={0.1}>
-      &ldquo;
-    </Text>
-  </AbsoluteVStack>
-)
 
 const idFn = (_) => _
 
@@ -63,13 +54,13 @@ export const RestaurantOverview = memo(
     if (summary || isEditingDescription) {
       const content = (
         // height 100% necessary for native
-        <VStack
+        <YStack
           width="100%"
           marginVertical={lineHeight * 0.5}
           height={fullHeight ? 'auto' : undefined}
           maxHeight={lineHeight * maxLines}
         >
-          <HStack
+          <XStack
             maxWidth="100%"
             width="100%"
             overflow="hidden"
@@ -81,7 +72,7 @@ export const RestaurantOverview = memo(
           >
             {/* {quote} */}
             {isEditingDescription ? (
-              <VStack flex={1} overflow="hidden" pointerEvents="auto">
+              <YStack flex={1} overflow="hidden" pointerEvents="auto">
                 {ensureFlexText}
                 <Input
                   defaultValue={summary}
@@ -95,7 +86,7 @@ export const RestaurantOverview = memo(
                   color={theme.color}
                   onChangeText={onChangeDescriptionDbc}
                 />
-              </VStack>
+              </YStack>
             ) : (
               <Text
                 className="break-word"
@@ -123,21 +114,21 @@ export const RestaurantOverview = memo(
                     )}
               </Text>
             )}
-          </HStack>
+          </XStack>
           {ensureFlexText}
-        </VStack>
+        </YStack>
       )
 
       if (isDishBot) {
         return content
         // return (
-        //   <VStack padding={20}>
+        //   <YStack padding={20}>
         //     <Text>
         //       <Text fontWeight="800">DishBot</Text> summarizes...
         //     </Text>
         //     <Spacer />
         //     {content}
-        //   </VStack>
+        //   </YStack>
         // )
         // return (
         //   <CommentBubble

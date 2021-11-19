@@ -16,7 +16,6 @@ RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr
   && apt-get clean
 
 # copy everything needed for install
-COPY snackui snackui
 COPY app app
 COPY services services
 COPY packages packages
@@ -42,12 +41,11 @@ COPY packages packages
 COPY services/crawlers services/crawlers
 COPY services/worker services/worker
 COPY app app
-COPY snackui snackui
 COPY dsh dsh
 COPY etc/dsh_ctl_sh_deps etc/dsh_ctl_sh_deps
 
-# link esdx bugfix
-RUN ln -s /app/packages/esdx/esdx.js /app/node_modules/.bin/esdx
+# link tamagui-build bugfix
+# RUN ln -s /app/packages/tamagui-build/tamagui-build.js /app/node_modules/.bin/tamagui-build
 
 RUN yarn build:js
 

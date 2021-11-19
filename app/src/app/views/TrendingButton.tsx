@@ -1,7 +1,7 @@
-import { ChevronDown, ChevronUp } from '@dish/react-feather'
 import { RoutesTable } from '@dish/router'
+import { Text, XStack } from '@dish/ui'
+import { ChevronDown, ChevronUp } from '@tamagui/feather-icons'
 import React from 'react'
-import { HStack, Text } from 'snackui'
 
 import { DRouteName } from '../../router'
 import { LinkButton } from './LinkButton'
@@ -18,7 +18,7 @@ export const TrendingButton = <
   rank?: number
 }) => {
   return (
-    <HStack alignItems="center">
+    <XStack alignItems="center">
       <LinkButton
         backgroundColor="transparent"
         flexDirection="row"
@@ -35,7 +35,7 @@ export const TrendingButton = <
           {children}
         </Text>
       </LinkButton>
-    </HStack>
+    </XStack>
   )
 }
 

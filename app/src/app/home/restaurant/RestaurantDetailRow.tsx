@@ -1,6 +1,6 @@
 import { RestaurantQuery, graphql } from '@dish/graph'
+import { StackProps, Text, XStack, YStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack, StackProps, Text, VStack } from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -65,11 +65,11 @@ export const RestaurantDetailRow = memo(
       const spaceSize = sizeSm ? 0 : '6%'
 
       return (
-        <HStack alignItems="center" spacing={spaceSize} overflow="visible" {...rest}>
+        <XStack alignItems="center" spacing={spaceSize} overflow="visible" {...rest}>
           {rows
             .filter((x) => !sizeSm || x.content !== '')
             .map((row, index) => (
-              <HStack
+              <XStack
                 flex={1}
                 width="33%"
                 {...(sizeSm && {
@@ -77,7 +77,7 @@ export const RestaurantDetailRow = memo(
                 })}
                 key={`${index}${row.title}`}
               >
-                <VStack
+                <YStack
                   {...(sizeSm && {
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -96,7 +96,7 @@ export const RestaurantDetailRow = memo(
                       {row.title}
                     </Text>
                   )}
-                  <VStack
+                  <YStack
                     {...(!sizeSm && {
                       minHeight: 34,
                       alignItems: 'center',
@@ -113,12 +113,12 @@ export const RestaurantDetailRow = memo(
                     >
                       {row.content !== '' ? row.content : sizeSm ? '' : '~'}
                     </Text>
-                  </VStack>
-                </VStack>
+                  </YStack>
+                </YStack>
                 {after}
-              </HStack>
+              </XStack>
             ))}
-        </HStack>
+        </XStack>
       )
     }
   )

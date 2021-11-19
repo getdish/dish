@@ -1,5 +1,5 @@
+import { Spacer, Text, useTheme } from '@dish/ui'
 import React from 'react'
-import { Spacer, Text, useTheme } from 'snackui'
 
 import { tagDisplayName } from '../../constants/tagDisplayName'
 

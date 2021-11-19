@@ -1,6 +1,6 @@
 import { RoutesTable } from '@dish/router'
+import { ParagraphContext, Text, useTheme } from '@dish/ui'
 import React, { forwardRef, useContext } from 'react'
-import { ParagraphContext, Text, useTheme } from 'snackui'
 
 import { red400 } from '../../constants/colors'
 import { isStringChild } from '../../helpers/isStringChild'

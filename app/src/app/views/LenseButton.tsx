@@ -1,6 +1,6 @@
+import { Text, YStack, useMedia, useTheme } from '@dish/ui'
 import React, { useEffect, useState } from 'react'
 import { Pressable } from 'react-native'
-import { Text, VStack, useMedia, useTheme } from 'snackui'
 
 import { tagDisplayName } from '../../constants/tagDisplayName'
 import { rgbString } from '../../helpers/rgb'
@@ -42,7 +42,7 @@ export const LenseButton = ({
   return (
     <Pressable onPress={onPress}>
       <Link tag={lense} replace asyncClick disallowDisableWhenActive>
-        <VStack
+        <YStack
           className="unselectable ease-in-out-fastest"
           alignItems="center"
           justifyContent="center"
@@ -72,7 +72,7 @@ export const LenseButton = ({
           <Text fontSize={iconSize} lineHeight={scaledSize} textAlign="center">
             {(lense.icon ?? '').trim()}
           </Text>
-          <VStack
+          <YStack
             rotate="-10deg"
             zIndex={100}
             alignItems="center"
@@ -95,8 +95,8 @@ export const LenseButton = ({
             >
               {name}
             </Text>
-          </VStack>
-        </VStack>
+          </YStack>
+        </YStack>
       </Link>
     </Pressable>
   )

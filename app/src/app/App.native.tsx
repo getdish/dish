@@ -1,7 +1,7 @@
+import { AbsoluteYStack, useTheme } from '@dish/ui'
 // import { StatusBar } from 'expo-status-bar'
 import React, { Suspense } from 'react'
 import { LogBox } from 'react-native'
-import { AbsoluteVStack, useTheme } from 'snackui'
 
 import AppMap from './AppMap'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
@@ -23,7 +23,7 @@ export function App() {
       <RootPortalProvider />
       {/* <StatusBar style="dark" /> */}
       <AutocompleteEffects />
-      <AbsoluteVStack fullscreen backgroundColor={theme.mapBackground}>
+      <AbsoluteYStack fullscreen backgroundColor={theme.mapBackground}>
         <Suspense fallback={null}>
           {/* keep indent  */}
           <AppMap />
@@ -40,7 +40,7 @@ export function App() {
             <RestaurantHoursPage />
           </Route>
         </Suspense>
-      </AbsoluteVStack>
+      </AbsoluteYStack>
     </>
   )
 }

@@ -1,5 +1,5 @@
+import { Theme, XStack } from '@dish/ui'
 import React, { memo } from 'react'
-import { HStack, Theme } from 'snackui'
 
 import { tagLenses } from '../../constants/localTags'
 import { NavigableTag } from '../../types/tagTypes'
@@ -12,7 +12,7 @@ export const HomeTopSearches = memo(() => {
   const activeTags = useHomeStoreSelector((x) => x.currentState['activeTags'] || {})
 
   return (
-    <HStack
+    <XStack
       paddingHorizontal={10}
       // for easier touchability
       paddingVertical={10}
@@ -42,7 +42,7 @@ export const HomeTopSearches = memo(() => {
         }
         return contents
       })}
-    </HStack>
+    </XStack>
   )
 })
 

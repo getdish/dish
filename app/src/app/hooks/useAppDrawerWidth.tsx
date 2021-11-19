@@ -1,4 +1,4 @@
-import { defaultMediaQueries, useWindowSize } from 'snackui'
+import { defaultMediaQueries, useWindowSize } from '@dish/ui'
 
 import { drawerWidthMax } from '../../constants/constants'
 import { getWindowWidth } from '../../helpers/getWindow'

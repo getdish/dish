@@ -1,7 +1,7 @@
 import { Restaurant } from '@dish/graph'
-import { Plus } from '@dish/react-feather'
+import { Box, Popover } from '@dish/ui'
+import { Plus } from '@tamagui/feather-icons'
 import React, { useState } from 'react'
-import { Box, Popover } from 'snackui'
 
 import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { LinkButton } from '../../views/LinkButton'

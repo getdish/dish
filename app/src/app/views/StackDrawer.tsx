@@ -1,6 +1,6 @@
 import { series, sleep } from '@dish/async'
+import { AbsoluteYStack, LoadingItems, StackProps, YStack, useMedia, useTheme } from '@dish/ui'
 import { default as React, useEffect, useState } from 'react'
-import { AbsoluteVStack, LoadingItems, StackProps, VStack, useMedia, useTheme } from 'snackui'
 
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
 import { STACK_ANIMATION_DURATION } from '../home/HomeStackView'
@@ -31,14 +31,14 @@ export const StackDrawer = ({
   const controls = (
     <>
       {!!topLeftControls && (
-        <AbsoluteVStack
+        <AbsoluteYStack
           className="top-left-controls"
           zIndex={1000000000000}
           left={media.sm ? 6 : 12}
           top={media.sm ? 6 : 72}
         >
           {topLeftControls}
-        </AbsoluteVStack>
+        </AbsoluteYStack>
       )}
       {closable && <StackCloseButton />}
     </>
@@ -63,7 +63,7 @@ export const StackDrawer = ({
 
   return (
     <>
-      <AbsoluteVStack
+      <AbsoluteYStack
         position="absolute"
         left={media.sm ? 0 : 'auto'}
         right={media.sm ? 0 : 0}
@@ -79,7 +79,7 @@ export const StackDrawer = ({
         shadowColor={theme.shadowColor}
       >
         {controls}
-        <VStack
+        <YStack
           // keep this nested, fix-overflow hides box-shadow otherwise
           className="safari-fix-overflow"
           position="relative"
@@ -94,8 +94,8 @@ export const StackDrawer = ({
           <HomeSuspense fallback={fallback ?? <LoadingItems />}>
             {isLoaded ? children : null}
           </HomeSuspense>
-        </VStack>
-      </AbsoluteVStack>
+        </YStack>
+      </AbsoluteYStack>
     </>
   )
 }

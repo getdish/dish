@@ -5,14 +5,16 @@
   "publishConfig": {
     "access": "public"
   },
-  "main": "dist",
-  "module": "_",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "typings": "types",
   "scripts": {
-    "build": "esdx legacy",
-    "watch": "esdx-watch legacy"
+    "build": "tamagui-build legacy",
+    "watch": "tamagui-build --watch legacy"
   },
   "dependencies": {
-    "@dish/esdx": "*",
+    "@tamagui/build": "*",
     "@testing-library/react": "13.0.0-alpha.1",
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",

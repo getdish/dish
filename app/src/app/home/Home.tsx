@@ -1,16 +1,16 @@
-import { reaction } from '@dish/use-store'
-import React, { Suspense, memo, useEffect } from 'react'
-import { Keyboard, StyleSheet } from 'react-native'
 // import { createReparentableSpace } from 'react-reparenting'
 import {
-  AbsoluteVStack,
-  HStack,
+  AbsoluteYStack,
   LinearGradient,
-  VStack,
+  XStack,
+  YStack,
   supportsTouchWeb,
   useMedia,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { reaction } from '@dish/use-store'
+import React, { Suspense, memo, useEffect } from 'react'
+import { Keyboard, StyleSheet } from 'react-native'
 
 import {
   drawerWidthMax,
@@ -140,7 +140,7 @@ const HomeContainerLarge = (props) => {
   const theme = useTheme()
 
   return (
-    <VStack
+    <YStack
       fullscreen
       display={media.sm ? 'none' : 'flex'}
       margin="auto"
@@ -153,7 +153,7 @@ const HomeContainerLarge = (props) => {
       alignItems="flex-start"
       zIndex={zIndexDrawer}
     >
-      <HStack
+      <XStack
         pointerEvents="auto"
         position="absolute"
         top={0}
@@ -177,7 +177,7 @@ const HomeContainerLarge = (props) => {
         {props.children}
 
         <DrawerPortalProvider />
-      </HStack>
-    </VStack>
+      </XStack>
+    </YStack>
   )
 }

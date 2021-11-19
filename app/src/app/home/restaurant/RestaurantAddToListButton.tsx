@@ -1,6 +1,6 @@
-import { Plus } from '@dish/react-feather'
+import { Button, Tooltip, useTheme } from '@dish/ui'
+import { Plus } from '@tamagui/feather-icons'
 import React, { Suspense, useState } from 'react'
-import { Button, Tooltip, useTheme } from 'snackui'
 
 import { userStore } from '../../userStore'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'

@@ -1,10 +1,7 @@
 import { Tag, TagQuery, TagType, graphql, restaurant, review } from '@dish/graph'
-import { Plus, X } from '@dish/react-feather'
-import React, { memo, useRef } from 'react'
 import {
-  AbsoluteVStack,
+  AbsoluteYStack,
   Box,
-  HStack,
   HoverablePopover,
   HoverablePopoverProps,
   HoverablePopoverRef,
@@ -14,11 +11,14 @@ import {
   Theme,
   ThemeName,
   Tooltip,
-  VStack,
+  XStack,
+  YStack,
   prevent,
   useTheme,
   useThemeName,
-} from 'snackui'
+} from '@dish/ui'
+import { Plus, X } from '@tamagui/feather-icons'
+import React, { memo, useRef } from 'react'
 
 import { blue } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
@@ -185,7 +185,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   const showRank = !hideRank
 
   const rankElement = !onlyIcon && showRank && (
-    <HStack
+    <XStack
       alignItems="flex-start"
       flexWrap="nowrap"
       flexShrink={0}
@@ -207,7 +207,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       >
         {rank}
       </Text>
-    </HStack>
+    </XStack>
   )
 
   const iconElement =
@@ -241,7 +241,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       : props.vote
 
   let contents = (
-    <HStack
+    <XStack
       className="hover-parent"
       position="relative"
       spacing={fontSize * 0.5}
@@ -289,13 +289,13 @@ const TagButtonInner = (props: TagButtonProps) => {
       {!hideRating && typeof rating !== 'undefined' && (
         <>
           {ratingStyle === 'pie' && (
-            <VStack marginVertical={-2} position="relative">
+            <YStack marginVertical={-2} position="relative">
               {/* {rating === 0 ? null : rating * 10 < 18 ? (
                 <Text fontSize={16}>😕</Text>
               ) : rating * 10 > 90 ? (
                 <Text fontSize={16}>💎</Text>
               ) : ( */}
-              <VStack
+              <YStack
                 position="relative"
                 backgroundColor={theme.backgroundColorQuartenary}
                 borderRadius={100}
@@ -307,17 +307,17 @@ const TagButtonInner = (props: TagButtonProps) => {
                 opacity={floating ? 1 : 0.7}
               >
                 <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
-              </VStack>
+              </YStack>
               {/* )} */}
-            </VStack>
+            </YStack>
           )}
 
           {ratingStyle !== 'pie' && (
-            <VStack position="relative" backgroundColor={floating ? `#fff` : theme.color}>
+            <YStack position="relative" backgroundColor={floating ? `#fff` : theme.color}>
               <Text color={theme.color} fontSize={13} fontWeight="900" letterSpacing={-0.5}>
                 {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
               </Text>
-            </VStack>
+            </YStack>
           )}
         </>
       )}
@@ -368,7 +368,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       )}
 
       {!!closable && (
-        <VStack
+        <YStack
           onPress={prevent}
           onPressIn={prevent}
           onPressOut={onClose as any}
@@ -384,11 +384,11 @@ const TagButtonInner = (props: TagButtonProps) => {
           alignSelf="center"
         >
           <X size={13} color={theme.color} />
-        </VStack>
+        </YStack>
       )}
 
       {isWeb && showSearchButton && !!slug && (
-        <AbsoluteVStack
+        <AbsoluteYStack
           className="hover-100-opacity-child"
           opacity={0}
           bottom={-10}
@@ -397,9 +397,9 @@ const TagButtonInner = (props: TagButtonProps) => {
           hoverStyle={{ scale: 0.75 }}
         >
           <SearchTagButton tag={{ type: 'dish', slug }} backgroundColor="#fff" color="#000" />
-        </AbsoluteVStack>
+        </AbsoluteYStack>
       )}
-    </HStack>
+    </XStack>
   )
 
   // make entire button votable in this case
@@ -433,7 +433,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   if (tooltip) {
-    return <Tooltip trigger={(props) => <VStack {...props}>{contents}</VStack>}>{tooltip}</Tooltip>
+    return <Tooltip trigger={(props) => <YStack {...props}>{contents}</YStack>}>{tooltip}</Tooltip>
   }
 
   return contents
@@ -464,7 +464,7 @@ export const TagVotePopover = graphql(
       >
         <Theme name="dark">
           <Box paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
-            <HStack>
+            <XStack>
               {tagRatings.map((rating) => (
                 <LinkButton
                   promptLogin
@@ -497,7 +497,7 @@ export const TagVotePopover = graphql(
                   {rating}
                 </LinkButton>
               ))}
-            </HStack>
+            </XStack>
           </Box>
         </Theme>
       </HoverablePopover>

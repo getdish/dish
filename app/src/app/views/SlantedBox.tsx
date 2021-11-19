@@ -1,5 +1,5 @@
+import { BoxProps, YStack, useTheme } from '@dish/ui'
 import React from 'react'
-import { BoxProps, VStack, useTheme } from 'snackui'
 
 import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
@@ -19,7 +19,7 @@ export const slantedBoxStyle: BoxProps = {
 
 export const SlantedBox = (props: BoxProps) => {
   const theme = useTheme()
-  return <VStack {...slantedBoxStyle} backgroundColor={theme.cardBackgroundColor} {...props} />
+  return <YStack {...slantedBoxStyle} backgroundColor={theme.cardBackgroundColor} {...props} />
 }
 
 export const SlantedLinkButton = (props: LinkButtonProps) => {

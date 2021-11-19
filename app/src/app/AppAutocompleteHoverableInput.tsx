@@ -1,5 +1,5 @@
+import { Hoverable, isTouchDevice } from '@dish/ui'
 import React, { useRef } from 'react'
-import { Hoverable, isTouchDevice } from 'snackui'
 
 import { autocompletesStore } from './AutocompletesStore'
 import { homeStore } from './homeStore'

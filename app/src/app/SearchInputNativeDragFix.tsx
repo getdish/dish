@@ -1,9 +1,9 @@
 import { series, sleep } from '@dish/async'
 import { isSafari } from '@dish/helpers'
+import { YStack, useConstant, useGet } from '@dish/ui'
 import { useSelector } from '@dish/use-store'
 import React from 'react'
 import { PanResponder, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
-import { VStack, useConstant, useGet } from 'snackui'
 
 import { autocompletesStore } from './AutocompletesStore'
 import { drawerStore } from './drawerStore'
@@ -51,7 +51,7 @@ export const SearchInputNativeDragFix = ({ name }: { name: 'search' | 'location'
   // return null
 
   return (
-    <VStack position="absolute" top={-2} left={0} right={0} bottom={-2} zIndex={1000000}>
+    <YStack position="absolute" top={-2} left={0} right={0} bottom={-2} zIndex={1000000}>
       <TouchableWithoutFeedback
         style={StyleSheet.absoluteFill}
         onPressIn={() => {
@@ -90,6 +90,6 @@ export const SearchInputNativeDragFix = ({ name }: { name: 'search' | 'location'
       >
         <View style={StyleSheet.absoluteFill} {...panResponder.panHandlers} />
       </TouchableWithoutFeedback>
-    </VStack>
+    </YStack>
   )
 }

@@ -1,5 +1,5 @@
+import { ThemeInverse } from '@dish/ui'
 import React, { memo } from 'react'
-import { ThemeInverse } from 'snackui'
 
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { getColorsForName } from '../../helpers/getColorsForName'

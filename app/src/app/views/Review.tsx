@@ -1,8 +1,8 @@
 import { getUserName, graphql, review, useRefetch } from '@dish/graph'
+import { Divider, Paragraph, Text, XStack, useLazyEffect } from '@dish/ui'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
-import { Divider, HStack, Paragraph, Text, useLazyEffect } from 'snackui'
 
 import { green400, red400, yellow400 } from '../../constants/colors'
 import { SentimentText } from '../home/restaurant/SentimentText'
@@ -110,7 +110,7 @@ export const Review = memo(
         username={review.user?.username}
         after={
           !!review.text ? (
-            <HStack width="100%" overflow="hidden" alignItems="center" maxWidth="100%">
+            <XStack width="100%" overflow="hidden" alignItems="center" maxWidth="100%">
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {!!review.sentiments?.length
                   ? uniqBy(review.sentiments, (x) => x.name).map((x, i) => {
@@ -125,7 +125,7 @@ export const Review = memo(
               </ScrollView>
 
               <Divider flex />
-            </HStack>
+            </XStack>
           ) : null
         }
       >

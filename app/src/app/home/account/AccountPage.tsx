@@ -1,5 +1,5 @@
+import { Divider, YStack, useTheme } from '@dish/ui'
 import React from 'react'
-import { Divider, VStack, useTheme } from 'snackui'
 
 import { HomeStateItemAccount } from '../../../types/homeTypes'
 import { PasswordReset } from '../../AuthForm'
@@ -19,7 +19,7 @@ export default function AccountPage(props: HomeStackViewProps<HomeStateItemAccou
 
           <Divider />
 
-          <VStack
+          <YStack
             margin={20}
             padding={20}
             borderWidth={1}
@@ -27,7 +27,7 @@ export default function AccountPage(props: HomeStackViewProps<HomeStateItemAccou
             borderRadius={20}
           >
             <PasswordReset />
-          </VStack>
+          </YStack>
         </PageContentWithFooter>
       </ContentScrollView>
     </StackDrawer>

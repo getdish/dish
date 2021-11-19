@@ -1,9 +1,9 @@
 import { graphql, order_by, query } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
+import { Divider, Text, XStack, YStack, useDebounceValue } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, useEffect, useState } from 'react'
 import { ScrollView, TextInput } from 'react-native'
-import { Divider, HStack, Text, VStack, useDebounceValue } from 'snackui'
 
 import { green100, red100 } from '../../constants/colors'
 import { defaultLocationAutocompleteResults } from '../../constants/defaultLocationAutocompleteResults'
@@ -34,10 +34,10 @@ export class AdminReviewsStore extends Store {
 
 export default graphql(() => {
   return (
-    <VStack flex={1} overflow="hidden" width="100%">
-      <HStack overflow="hidden" width="100%" flex={1}>
+    <YStack flex={1} overflow="hidden" width="100%">
+      <XStack overflow="hidden" width="100%" flex={1}>
         <ScrollView horizontal>
-          <HStack>
+          <XStack>
             <VerticalColumn>
               <PlacesList />
             </VerticalColumn>
@@ -50,7 +50,7 @@ export default graphql(() => {
             <VerticalColumn width={400} maxWidth={400} padding={20}>
               <ReviewDisplay />
             </VerticalColumn>
-          </HStack>
+          </XStack>
         </ScrollView>
 
         {/* <VerticalColumn>
@@ -58,8 +58,8 @@ export default graphql(() => {
             <TagEditColumn />
           </Suspense>
         </VerticalColumn> */}
-      </HStack>
-    </VStack>
+      </XStack>
+    </YStack>
   )
 })
 
@@ -80,7 +80,7 @@ const ReviewDisplay = graphql(() => {
       {!review && <Text>No Review Selected</Text>}
       {!!review && (
         <ScrollView>
-          <VStack spacing={10}>
+          <YStack spacing={10}>
             <Text>rating: {review.rating}</Text>
             <Text>username: {review.username}</Text>
             <Text>text: {review.text}</Text>
@@ -88,7 +88,7 @@ const ReviewDisplay = graphql(() => {
             <Divider />
 
             <ReviewSentiment key={review.text} text={review.text ?? ''} />
-          </VStack>
+          </YStack>
         </ScrollView>
       )}
     </>
@@ -129,7 +129,7 @@ const ReviewSentiment = (props: { text: string }) => {
   }, [aspectSlow])
 
   return (
-    <VStack spacing="lg">
+    <YStack spacing="lg">
       <SmallTitle>Sentiment</SmallTitle>
 
       <TextInput style={{ borderWidth: 1, padding: 5 }} onChangeText={(text) => setAspect(text)} />
@@ -143,7 +143,7 @@ const ReviewSentiment = (props: { text: string }) => {
           </Text>
         )
       })}
-    </VStack>
+    </YStack>
   )
 }
 
@@ -269,7 +269,7 @@ const RestaurantsListContent = graphql(({ search, column }: { search: string; co
       })}
 
       {results.length === limit && (
-        <HStack
+        <XStack
           height={32}
           padding={6}
           hoverStyle={{
@@ -280,7 +280,7 @@ const RestaurantsListContent = graphql(({ search, column }: { search: string; co
           }}
         >
           <Text>Next page</Text>
-        </HStack>
+        </XStack>
       )}
     </ScrollView>
   )
@@ -343,7 +343,7 @@ const ReviewListContent = graphql(({ search, column }: { search: string; column:
       })}
 
       {results.length === limit && (
-        <HStack
+        <XStack
           height={32}
           padding={6}
           hoverStyle={{
@@ -354,7 +354,7 @@ const ReviewListContent = graphql(({ search, column }: { search: string; column:
           }}
         >
           <Text>Next page</Text>
-        </HStack>
+        </XStack>
       )}
     </ScrollView>
   )

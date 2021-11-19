@@ -1,7 +1,7 @@
+import { AbsoluteYStack, YStack, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import React, { memo, useEffect, useMemo } from 'react'
 import { Animated, PanResponder, StyleSheet, View } from 'react-native'
-import { AbsoluteVStack, VStack, useMedia } from 'snackui'
 
 import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { isWebIOS } from '../../helpers/isIOS'
@@ -63,7 +63,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
   }, [props.children])
 
   return (
-    <VStack
+    <YStack
       pointerEvents="none"
       opacity={media.sm ? 1 : 0}
       zIndex={media.sm ? zIndexDrawer : -1}
@@ -97,23 +97,23 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
             <AppSearchBarInline />
           </View>
 
-          <VStack flex={1} maxHeight="100%" position="relative">
+          <YStack flex={1} maxHeight="100%" position="relative">
             {/* overlay over entire content to make dragging it up easy */}
             {(isWebIOS || drawerStore.snapIndex === 2) && (
-              <AbsoluteVStack pointerEvents="auto" fullscreen zIndex={1000000}>
+              <AbsoluteYStack pointerEvents="auto" fullscreen zIndex={1000000}>
                 <View style={{ width: '100%', height: '100%' }} {...panResponder.panHandlers} />
-              </AbsoluteVStack>
+              </AbsoluteYStack>
             )}
 
-            <VStack position="relative" flex={1}>
+            <YStack position="relative" flex={1}>
               <AppAutocompleteLocation />
               <AppAutocompleteSearch />
               {children}
-            </VStack>
-          </VStack>
+            </YStack>
+          </YStack>
         </BottomSheetContainer>
       </Animated.View>
-    </VStack>
+    </YStack>
   )
 })
 

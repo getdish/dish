@@ -1,11 +1,11 @@
+import { LoadingItems, StackProps, YStack } from '@dish/ui'
 import { Suspense } from 'react'
-import { LoadingItems, StackProps, VStack } from 'snackui'
 
 import { ColumnHeader } from './ColumnHeader'
 
 export const VerticalColumn = ({ children, title, ...props }: StackProps & { title?: any }) => {
   return (
-    <VStack
+    <YStack
       minWidth={180}
       maxWidth={250}
       height="100%"
@@ -16,6 +16,6 @@ export const VerticalColumn = ({ children, title, ...props }: StackProps & { tit
     >
       {!!title && <ColumnHeader>{title}</ColumnHeader>}
       <Suspense fallback={<LoadingItems />}>{children}</Suspense>
-    </VStack>
+    </YStack>
   )
 }

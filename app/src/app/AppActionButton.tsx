@@ -1,8 +1,8 @@
 import { slugify } from '@dish/graph'
-import { Plus } from '@dish/react-feather'
+import { Box, Popover, Theme, YStack } from '@dish/ui'
+import { Plus } from '@tamagui/feather-icons'
 import React, { useState } from 'react'
 import { GestureResponderEvent } from 'react-native'
-import { Box, Popover, Theme, VStack } from 'snackui'
 
 import { searchBarHeight } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
@@ -51,7 +51,7 @@ const AppActionButtonContents = ({ hide }: { hide?: (e: GestureResponderEvent) =
       width={240}
     >
       {/* safari y={} fix overflow */}
-      <VStack overflow="hidden" borderRadius={12} y={0.01}>
+      <YStack overflow="hidden" borderRadius={12} y={0.01}>
         <MenuLinkButton
           promptLogin
           name="list"
@@ -63,7 +63,7 @@ const AppActionButtonContents = ({ hide }: { hide?: (e: GestureResponderEvent) =
         >
           Create list
         </MenuLinkButton>
-      </VStack>
+      </YStack>
     </Box>
   )
 }

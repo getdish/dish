@@ -51,7 +51,7 @@ export function createWebpackConfig({
   target,
   cwd = process.cwd(),
   babelInclude,
-  snackOptions,
+  tamaguiOptions,
   disableHot,
   resolve,
   polyFillPath,
@@ -82,7 +82,7 @@ export function createWebpackConfig({
       process: '({})',
       'process.env': '({})',
       'process.env.IS_SSR_RENDERING': isSSR,
-      'process.env.SNACKUI_COMPILE_PROCESS': false,
+      // 'process.env.TAMAGUI_COMPILE_PROCESS': false,
       'process.env.NODE_ENV': JSON.stringify(env),
       'process.env.TARGET': JSON.stringify(target || null),
       'process.env.IS_STATIC': false,
@@ -265,8 +265,8 @@ export function createWebpackConfig({
 
                   isStaticExtracted
                     ? {
-                        loader: require.resolve('snackui-loader'),
-                        options: snackOptions,
+                        loader: require.resolve('tamagui-loader'),
+                        options: tamaguiOptions,
                       }
                     : null,
                 ].filter(isPresent),
@@ -396,8 +396,7 @@ export function createWebpackConfig({
         isHot &&
           new ReactRefreshPlugin({
             overlay: false,
-            exclude: /gqty|react-refresh|node_modules\/(?!snackui)/,
-            // include: /snackui/,
+            exclude: /gqty|react-refresh|node_modules\/(?!tamagui)/,
           }),
 
         isHot && new Webpack.HotModuleReplacementPlugin({}),

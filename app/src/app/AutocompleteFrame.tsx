@@ -1,16 +1,16 @@
 import { isSafari } from '@dish/helpers'
-import { useStore, useStoreInstance } from '@dish/use-store'
-import React, { memo, useEffect } from 'react'
 import {
-  AbsoluteVStack,
+  AbsoluteYStack,
   BlurView,
-  VStack,
+  YStack,
   isTouchDevice,
   prevent,
   useDebounceValue,
   useMedia,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { useStore, useStoreInstance } from '@dish/use-store'
+import React, { memo, useEffect } from 'react'
 
 import { drawerWidthMax, searchBarHeight, zIndexAutocomplete } from '../constants/constants'
 import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
@@ -41,7 +41,7 @@ export const AutocompleteFrame = memo(
     }, [isShowing])
 
     return (
-      <AbsoluteVStack
+      <AbsoluteYStack
         fullscreen
         opacity={isShowing ? 1 : 0}
         pointerEvents={isShowing ? 'auto' : 'none'}
@@ -62,7 +62,7 @@ export const AutocompleteFrame = memo(
 
         // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
       >
-        <VStack
+        <YStack
           maxWidth={drawerWidthMax}
           width="100%"
           height="100%"
@@ -70,12 +70,12 @@ export const AutocompleteFrame = memo(
           overflow="hidden"
           // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
         >
-          <AbsoluteVStack
+          <AbsoluteYStack
             backgroundColor={theme.backgroundColor}
             fullscreen
             opacity={isSafari ? 1 : 0.9}
           />
-          <AbsoluteVStack fullscreen display={media.sm ? 'none' : 'flex'}>
+          <AbsoluteYStack fullscreen display={media.sm ? 'none' : 'flex'}>
             {!isSafari && (
               <BlurView
                 fallbackBackgroundColor="transparent"
@@ -85,16 +85,16 @@ export const AutocompleteFrame = memo(
                 fullscreen
               />
             )}
-          </AbsoluteVStack>
-          <AbsoluteVStack
+          </AbsoluteYStack>
+          <AbsoluteYStack
             zIndex={10000}
             top={media.sm ? 10 : searchBarHeight + 18}
             right={10}
             pointerEvents="auto"
           >
             <CloseButton shadowed onPressOut={prevent} zIndex={1000} onPress={hideAutocompletes} />
-          </AbsoluteVStack>
-          <VStack
+          </AbsoluteYStack>
+          <YStack
             className="ease-in-out"
             position="relative"
             // width 100% messes up width on web to be too wide, using alignSelf instead
@@ -118,11 +118,11 @@ export const AutocompleteFrame = memo(
               {children}
 
               {/* pad bottom to scroll */}
-              <VStack height={100} />
+              <YStack height={100} />
             </ContentScrollView>
-          </VStack>
-        </VStack>
-      </AbsoluteVStack>
+          </YStack>
+        </YStack>
+      </AbsoluteYStack>
     )
   }
 )

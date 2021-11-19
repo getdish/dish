@@ -1,16 +1,16 @@
-import { ChevronRight } from '@dish/react-feather'
-import React, { RefObject, useRef, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
 import {
-  AbsoluteHStack,
-  AbsoluteVStack,
-  HStack,
+  AbsoluteXStack,
+  AbsoluteYStack,
   LinearGradient,
   Paragraph,
-  VStack,
+  XStack,
+  YStack,
   prevent,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { ChevronRight } from '@tamagui/feather-icons'
+import React, { RefObject, useRef, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 
 import { isWeb } from '../../constants/constants'
 import { getImageUrl } from '../../helpers/getImageUrl'
@@ -87,15 +87,15 @@ export const FeedCard = (props: FeedCardProps) => {
                     return <FeedCardContent galleryRef={galleryRef} {...props} />
                   }
                   return (
-                    <VStack>
-                      <AbsoluteVStack zIndex={0} borderRadius={10} overflow="hidden" fullscreen>
+                    <YStack>
+                      <AbsoluteYStack zIndex={0} borderRadius={10} overflow="hidden" fullscreen>
                         <Image
                           source={{ uri: item.image }}
                           resizeMode="cover"
                           style={StyleSheet.absoluteFill}
                         />
-                      </AbsoluteVStack>
-                      <AbsoluteVStack
+                      </AbsoluteYStack>
+                      <AbsoluteYStack
                         fullscreen
                         alignItems="flex-start"
                         justifyContent="flex-end"
@@ -112,8 +112,8 @@ export const FeedCard = (props: FeedCardProps) => {
                         <TitleStyled zIndex={10} size="xxl" color="#fff">
                           {item.title}
                         </TitleStyled>
-                      </AbsoluteVStack>
-                    </VStack>
+                      </AbsoluteYStack>
+                    </YStack>
                   )
                 })()}
               </View>
@@ -154,7 +154,7 @@ const FeedCardContent = ({
   const imgSize = 80
   const theme = useTheme()
   return (
-    <HStack
+    <XStack
       className="safari-fix-overflow"
       borderRadius={10}
       overflow="hidden"
@@ -162,9 +162,9 @@ const FeedCardContent = ({
       padding={10}
       alignItems="center"
     >
-      <VStack marginTop="auto" maxWidth="85%">
+      <YStack marginTop="auto" maxWidth="85%">
         {typeof photo === 'string' && (
-          <AbsoluteVStack
+          <AbsoluteYStack
             pointerEvents="none"
             borderRadius={100}
             width={imgSize}
@@ -177,7 +177,7 @@ const FeedCardContent = ({
               source={{ uri: getImageUrl(photo, imgSize, imgSize) }}
               style={{ width: imgSize, height: imgSize }}
             />
-          </AbsoluteVStack>
+          </AbsoluteYStack>
         )}
         <LinearGradient
           style={StyleSheet.absoluteFill}
@@ -185,7 +185,7 @@ const FeedCardContent = ({
           end={[1, 1]}
           colors={[`${listColors?.backgroundForTheme}00`, `${listColors?.backgroundForTheme}33`]}
         />
-        <AbsoluteHStack
+        <AbsoluteXStack
           top={0}
           right={0}
           scale={emphasizeTag ? 1.075 : 0.75}
@@ -205,13 +205,13 @@ const FeedCardContent = ({
               {...tag}
             />
           ))}
-        </AbsoluteHStack>
+        </AbsoluteXStack>
 
         {children}
 
-        <VStack flex={1} />
+        <YStack flex={1} />
 
-        <VStack
+        <YStack
           backgroundColor={`${listColors?.backgroundForTheme}77`}
           padding={10}
           borderRadius={10}
@@ -219,7 +219,7 @@ const FeedCardContent = ({
           overflow="hidden"
           spacing="xs"
         >
-          <VStack position="relative" display={isWeb ? 'block' : 'flex'}>
+          <YStack position="relative" display={isWeb ? 'block' : 'flex'}>
             <TitleStyled
               fontTheme={fontTheme}
               // backgroundColor={cardProps.backgroundColor as any}
@@ -233,7 +233,7 @@ const FeedCardContent = ({
             >
               {title}
             </TitleStyled>
-          </VStack>
+          </YStack>
 
           {!!(author || typeof numItems !== 'undefined') && (
             <Paragraph
@@ -250,12 +250,12 @@ const FeedCardContent = ({
               {author ?? ''}
             </Paragraph>
           )}
-        </VStack>
-      </VStack>
+        </YStack>
+      </YStack>
 
-      <VStack flex={1} />
+      <YStack flex={1} />
 
-      <VStack
+      <YStack
         onPress={(e) => {
           prevent(e)
           galleryRef.current?.setIndex(1)
@@ -266,7 +266,7 @@ const FeedCardContent = ({
         position="relative"
       >
         <ChevronRight color="#fff" size={20} />
-      </VStack>
-    </HStack>
+      </YStack>
+    </XStack>
   )
 }

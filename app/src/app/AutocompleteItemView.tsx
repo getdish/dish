@@ -1,7 +1,7 @@
-import { Plus } from '@dish/react-feather'
+import { Spacer, Text, Theme, XStack, YStack, useDebounce, useTheme } from '@dish/ui'
+import { Plus } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 import { Keyboard } from 'react-native'
-import { HStack, Spacer, Text, Theme, VStack, useDebounce, useTheme } from 'snackui'
 
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteSelectCb } from './AutocompleteResults'
@@ -41,14 +41,14 @@ export const AutocompleteItemView = memo(
     const hideAutocompleteSlow = useDebounce(() => autocompletesStore.setVisible(false), 50)
     const plusButtonEl = showAddButton ? (
       <>
-        <VStack flex={1} />
-        <VStack padding={3} flexShrink={0}>
+        <YStack flex={1} />
+        <YStack padding={3} flexShrink={0}>
           <Theme name={isAdded ? 'active' : null}>
             <CircleButton onPress={onAdd}>
               <Plus color={isAdded ? '#fff' : theme.colorQuartenary} size={16} />
             </CircleButton>
           </Theme>
-        </VStack>
+        </YStack>
       </>
     ) : null
 
@@ -92,9 +92,9 @@ export const AutocompleteItemView = memo(
         {...getLinkForAutocomplete(result)}
         noTextWrap
       >
-        <HStack alignItems="center" width="100%">
-          <VStack overflow="hidden" flex={1}>
-            <HStack width="100%" marginVertical={-3} flex={1} alignItems="center">
+        <XStack alignItems="center" width="100%">
+          <YStack overflow="hidden" flex={1}>
+            <XStack width="100%" marginVertical={-3} flex={1} alignItems="center">
               <Text fontWeight="600" ellipse color={theme.color} fontSize={18} lineHeight={30}>
                 {!!result.namePrefix && (
                   <>
@@ -103,7 +103,7 @@ export const AutocompleteItemView = memo(
                 )}
                 {result.name}
               </Text>
-            </HStack>
+            </XStack>
             {!!result.description && (
               <>
                 <Spacer size="xs" />
@@ -112,15 +112,15 @@ export const AutocompleteItemView = memo(
                 </Text>
               </>
             )}
-          </VStack>
+          </YStack>
           {!hideIcon && (
             <>
-              <VStack flex={1} />
+              <YStack flex={1} />
               {icon}
             </>
           )}
           {plusButtonEl}
-        </HStack>
+        </XStack>
       </LinkButton>
     )
   }

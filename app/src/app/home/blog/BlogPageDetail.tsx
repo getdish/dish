@@ -1,5 +1,5 @@
+import { Divider, Spacer, Title, YStack } from '@dish/ui'
 import React from 'react'
-import { Divider, Spacer, Title, VStack } from 'snackui'
 
 import { Link } from '../../views/Link'
 import { NotFoundPage } from '../../views/NotFoundPage'
@@ -13,7 +13,7 @@ export function BlogPageDetail({ post }: { post: PostEntry }) {
   }
   const { View, title } = post
   return (
-    <VStack paddingHorizontal={25} paddingVertical={20}>
+    <YStack paddingHorizontal={25} paddingVertical={20}>
       <Link name="blog">
         <SmallButton marginTop={-15} marginBottom={10}>
           Back to blog
@@ -28,6 +28,6 @@ export function BlogPageDetail({ post }: { post: PostEntry }) {
       <Divider />
       <Spacer size="lg" />
       <View />
-    </VStack>
+    </YStack>
   )
 }

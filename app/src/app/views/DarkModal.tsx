@@ -1,7 +1,7 @@
 import { series, sleep } from '@dish/async'
+import { AbsoluteYStack, AnimatedYStack, Theme, YStack, prevent, useMedia } from '@dish/ui'
 import React, { useLayoutEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
-import { AbsoluteVStack, AnimatedVStack, Theme, VStack, prevent, useMedia } from 'snackui'
 
 export const DarkModal = ({
   hide,
@@ -29,7 +29,7 @@ export const DarkModal = ({
 
   return (
     <Theme name="dark">
-      <AbsoluteVStack
+      <AbsoluteYStack
         className="dark inset-shadow-xxxl ease-in-out-slow"
         fullscreen
         zIndex={10000000000}
@@ -44,7 +44,7 @@ export const DarkModal = ({
           paddingHorizontal: 0,
         })}
       >
-        <VStack
+        <YStack
           maxWidth={450}
           maxHeight="80%"
           width="100%"
@@ -57,7 +57,7 @@ export const DarkModal = ({
           })}
           // animateState={hide ? 'out' : 'in'}
         >
-          <VStack
+          <YStack
             flex={1}
             maxHeight="100%" // needed for chrome
             position="relative"
@@ -79,13 +79,13 @@ export const DarkModal = ({
                 minHeight: '100%',
               }}
             >
-              <VStack flex={1} justifyContent="center" minHeight="100%" alignItems="center">
+              <YStack flex={1} justifyContent="center" minHeight="100%" alignItems="center">
                 {children}
-              </VStack>
+              </YStack>
             </ScrollView>
-          </VStack>
-        </VStack>
-      </AbsoluteVStack>
+          </YStack>
+        </YStack>
+      </AbsoluteYStack>
     </Theme>
   )
 }

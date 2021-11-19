@@ -1,10 +1,10 @@
-import { VStack } from 'snackui'
+import { YStack } from '@dish/ui'
 
 import { SignInAppleButtonContents } from './SignInAppleButtonContents'
 
 export const SignInAppleButton = () => {
   return (
-    <VStack
+    <YStack
       className="ease-in-out-fast"
       width={230}
       height={60}
@@ -17,6 +17,6 @@ export const SignInAppleButton = () => {
       }}
     >
       <SignInAppleButtonContents />
-    </VStack>
+    </YStack>
   )
 }

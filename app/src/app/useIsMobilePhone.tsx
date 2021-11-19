@@ -1,4 +1,4 @@
-import { isTouchDevice, useWindowSize } from 'snackui'
+import { isTouchDevice, useWindowSize } from '@dish/ui'
 
 import { isWeb } from '../constants/constants'
 import { getWindowHeight, getWindowWidth } from '../helpers/getWindow'

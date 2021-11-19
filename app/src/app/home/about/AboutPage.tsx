@@ -1,15 +1,15 @@
-import React from 'react'
-import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg'
 import {
-  AbsoluteVStack,
+  AbsoluteYStack,
   Divider,
   Paragraph,
   Spacer,
   Theme,
   UnorderedList,
   UnorderedListItem,
-  VStack,
-} from 'snackui'
+  YStack,
+} from '@dish/ui'
+import React from 'react'
+import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg'
 
 import dontPanic from '../../../assets/dont-panic.svg'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
@@ -47,8 +47,8 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
   return (
     <StackDrawer closable title="About Dish">
       <ContentScrollView id="about">
-        <VStack spacing="xl">
-          <VStack
+        <YStack spacing="xl">
+          <YStack
             // marginLeft={-60}
             // marginRight={20}
             // paddingLeft={60}
@@ -59,9 +59,9 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
           >
             <Spacer size="xl" />
             <LogoColor scale={2} />
-          </VStack>
+          </YStack>
 
-          <VStack paddingHorizontal="5%" spacing="xxl">
+          <YStack paddingHorizontal="5%" spacing="xxl">
             <Paragraph fontWeight="800" size={5} sizeLineHeight={0.66}>
               Hitchikers' guides to our galaxy.
             </Paragraph>
@@ -85,7 +85,7 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
             </Link>
 
             <Paragraph size="xl">
-              <AbsoluteVStack
+              <AbsoluteYStack
                 zIndex={1}
                 bottom={0}
                 right={15}
@@ -98,11 +98,11 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
                   source={{ uri: dontPanic }}
                   resizeMode="contain"
                 />
-              </AbsoluteVStack>
+              </AbsoluteYStack>
             </Paragraph>
             <Spacer />
-          </VStack>
-        </VStack>
+          </YStack>
+        </YStack>
       </ContentScrollView>
     </StackDrawer>
   )

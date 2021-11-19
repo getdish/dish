@@ -1,3 +1,4 @@
+import { combineRefs, useGet } from '@dish/ui'
 import { Store, getStore, selector } from '@dish/use-store'
 import React, {
   Suspense,
@@ -9,7 +10,6 @@ import React, {
   useState,
 } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
-import { combineRefs, useGet } from 'snackui'
 
 import { isWeb } from '../../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'

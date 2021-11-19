@@ -1,5 +1,5 @@
+import { Text, YStack, useTheme } from '@dish/ui'
 import React, { memo } from 'react'
-import { Text, VStack, useTheme } from 'snackui'
 
 import { defaultUserImage } from '../../../constants/defaultUserImage'
 import { Image } from '../../views/Image'
@@ -18,7 +18,7 @@ export const UserAvatar = memo(
     const char = characters[charIndex ?? 0]
     const theme = useTheme()
     return (
-      <VStack
+      <YStack
         borderRadius={1000}
         backgroundColor={theme.backgroundColorSecondary}
         width={size}
@@ -36,7 +36,7 @@ export const UserAvatar = memo(
           />
         )}
         {!avatar && (
-          <VStack
+          <YStack
             borderRadius={1000}
             backgroundColor={theme.backgroundColor}
             borderWidth={2}
@@ -48,7 +48,7 @@ export const UserAvatar = memo(
         <Text position="absolute" bottom={0} right={0} fontSize={size * 0.33}>
           {char ?? '👻'}
         </Text>
-      </VStack>
+      </YStack>
     )
   }
 )

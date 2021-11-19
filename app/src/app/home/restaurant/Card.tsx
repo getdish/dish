@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
-import { StyleSheet } from 'react-native'
 import {
-  AbsoluteVStack,
-  HStack,
+  AbsoluteYStack,
   Hoverable,
   HoverableProps,
   LinearGradient,
   Paragraph,
   Spacer,
   Text,
-  VStack,
+  XStack,
+  YStack,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import React, { useState } from 'react'
+import { StyleSheet } from 'react-native'
 
 import {
   cardFrameBorderRadius,
@@ -118,7 +118,7 @@ export function Card(props: CardProps) {
   const content = (
     <CardFrame size={size} {...cardFrameProps}>
       {!!backgroundColor && (
-        <AbsoluteVStack
+        <AbsoluteYStack
           fullscreen
           className={
             (cardFrameProps.hoverEffect === 'background' ? 'hover-100-opacity-child ' : '') +
@@ -137,7 +137,7 @@ export function Card(props: CardProps) {
       {/* behind shadow */}
       {/* on native this causes laggy scrolls */}
       {!props.chromeless && isWeb && isBehind && (
-        <AbsoluteVStack
+        <AbsoluteYStack
           className="ease-in-out"
           opacity={hideInfo ? 0 : 1}
           zIndex={1002}
@@ -151,7 +151,7 @@ export function Card(props: CardProps) {
 
       {typeof outside === 'function' ? outside(colors) : outside}
 
-      <VStack
+      <YStack
         className="safari-fix-overflow"
         fullscreen
         justifyContent="flex-end"
@@ -164,7 +164,7 @@ export function Card(props: CardProps) {
         position="relative"
       >
         {children ?? (
-          <VStack
+          <YStack
             className="ease-in-out"
             opacity={hideInfo ? 0 : 1}
             paddingHorizontal={size.endsWith('xs') ? 30 : 20}
@@ -172,7 +172,7 @@ export function Card(props: CardProps) {
             flex={1}
           >
             {typeof photo === 'string' && (
-              <AbsoluteVStack
+              <AbsoluteYStack
                 opacity={0.15}
                 pointerEvents="auto"
                 zIndex={0}
@@ -184,7 +184,7 @@ export function Card(props: CardProps) {
                 }}
               >
                 <Image source={{ uri: photo }} resizeMode="cover" style={StyleSheet.absoluteFill} />
-                <AbsoluteVStack
+                <AbsoluteYStack
                   fullscreen
                   alignItems="flex-start"
                   justifyContent="flex-end"
@@ -198,17 +198,17 @@ export function Card(props: CardProps) {
                     end={[0, 0]}
                     colors={[`#000000`, `#00000000`]}
                   />
-                </AbsoluteVStack>
-              </AbsoluteVStack>
+                </AbsoluteYStack>
+              </AbsoluteYStack>
             )}
-            <HStack alignItems="flex-end" flex={1} width="100%" maxWidth="100%">
-              <VStack minWidth={10} flex={1} />
-              <VStack flexShrink={1} flex={10} alignItems="flex-end">
-                <VStack position="relative">
+            <XStack alignItems="flex-end" flex={1} width="100%" maxWidth="100%">
+              <YStack minWidth={10} flex={1} />
+              <YStack flexShrink={1} flex={10} alignItems="flex-end">
+                <YStack position="relative">
                   <TitleStyled textAlign="right" fontSize={fontSize} lineHeight={fontSize * 1.1}>
                     {title} {!!afterTitle ? <Text fontWeight="300">{afterTitle}</Text> : null}
                   </TitleStyled>
-                </VStack>
+                </YStack>
                 <Spacer size="xs" />
                 {!!subTitle && !size.endsWith('xs') && (
                   <Paragraph
@@ -223,11 +223,11 @@ export function Card(props: CardProps) {
                 )}
 
                 {typeof below === 'function' ? below(colors) : below}
-              </VStack>
-            </HStack>
-          </VStack>
+              </YStack>
+            </XStack>
+          </YStack>
         )}
-      </VStack>
+      </YStack>
     </CardFrame>
   )
 
@@ -244,7 +244,7 @@ export function Card(props: CardProps) {
 
 export const CardOverlay = (props: { children: any; flat?: boolean }) => {
   return (
-    <AbsoluteVStack
+    <AbsoluteYStack
       fullscreen
       borderRadius={props.flat ? 0 : cardFrameBorderRadius}
       overflow="hidden"
@@ -256,9 +256,9 @@ export const CardOverlay = (props: { children: any; flat?: boolean }) => {
           style={StyleSheet.absoluteFill}
         />
       )}
-      <VStack overflow="hidden" flex={1} paddingHorizontal={10} paddingVertical={10} zIndex={10}>
+      <YStack overflow="hidden" flex={1} paddingHorizontal={10} paddingVertical={10} zIndex={10}>
         {props.children}
-      </VStack>
-    </AbsoluteVStack>
+      </YStack>
+    </AbsoluteYStack>
   )
 }

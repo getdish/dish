@@ -1,7 +1,7 @@
 import { getUserName, graphql, mutate, query, resolved, slugify } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
+import { AbsoluteYStack, Hoverable, Toast, YStack, isTouchDevice, useThemeName } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
-import { AbsoluteVStack, Hoverable, Toast, VStack, isTouchDevice, useThemeName } from 'snackui'
 
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
@@ -96,7 +96,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
               userStore.isAdmin ||
               (userSlug && userStore.user?.username === userSlug && deletable)
             ) && (
-              <AbsoluteVStack zIndex={1000} pointerEvents="auto" top={-5} right={-5}>
+              <AbsoluteYStack zIndex={1000} pointerEvents="auto" top={-5} right={-5}>
                 <CloseButton
                   size={40}
                   shadowed
@@ -151,7 +151,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
                     }
                   }}
                 />
-              </AbsoluteVStack>
+              </AbsoluteYStack>
             )}
           </>
         }
@@ -162,11 +162,11 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
         {...feedCardProps}
       >
         {!props.size?.endsWith('xs') && (
-          <VStack x={-5}>
+          <YStack x={-5}>
             <Suspense fallback={null}>
               <ListFavoriteButton list={props.list} query={props.query} />
             </Suspense>
-          </VStack>
+          </YStack>
         )}
       </FeedCard>
     </Link>

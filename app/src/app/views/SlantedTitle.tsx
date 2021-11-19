@@ -1,5 +1,5 @@
+import { BoxProps, SizableTextProps, Title, useTextProps } from '@dish/ui'
 import React from 'react'
-import { BoxProps, SizableTextProps, Title, useTextProps } from 'snackui'
 
 import { isStringChild } from '../../helpers/isStringChild'
 import { SlantedBox } from './SlantedBox'

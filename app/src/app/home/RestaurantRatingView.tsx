@@ -1,6 +1,6 @@
 import { graphql, restaurant } from '@dish/graph'
+import { AbsoluteXStack, BlurView, Box, HoverablePopover, XStack, YStack, useTheme } from '@dish/ui'
 import React from 'react'
-import { AbsoluteHStack, BlurView, Box, HStack, HoverablePopover, VStack, useTheme } from 'snackui'
 
 import { suspense } from '../hoc/suspense'
 import { ratingCount } from './ratingCount'
@@ -61,10 +61,10 @@ export const RestaurantRatingView = suspense(
 
       if (showBreakdown) {
         getRatingEl = (props) => (
-          <HStack position="relative" {...props}>
+          <XStack position="relative" {...props}>
             {getRatingInnerEl({})}
-            <AbsoluteHStack zIndex={-1} top="-24%" right="-24%">
-              <AbsoluteHStack
+            <AbsoluteXStack zIndex={-1} top="-24%" right="-24%">
+              <AbsoluteXStack
                 // width={400}
                 borderRadius={100}
                 alignItems="center"
@@ -75,7 +75,7 @@ export const RestaurantRatingView = suspense(
                 shadowColor={theme.shadowColor}
                 overflow="hidden"
               >
-                <AbsoluteHStack
+                <AbsoluteXStack
                   backgroundColor={theme.backgroundColorDarker}
                   opacity={0.75}
                   fullscreen
@@ -83,9 +83,9 @@ export const RestaurantRatingView = suspense(
                 <BlurView>
                   <RatingView {...ratingViewProps} stacked size={size * 0.66} />
                 </BlurView>
-              </AbsoluteHStack>
-            </AbsoluteHStack>
-          </HStack>
+              </AbsoluteXStack>
+            </AbsoluteXStack>
+          </XStack>
         )
       }
 
@@ -94,7 +94,7 @@ export const RestaurantRatingView = suspense(
       }
 
       return (
-        <VStack pointerEvents="auto">
+        <YStack pointerEvents="auto">
           <HoverablePopover allowHoverOnContent placement="bottom right" trigger={getRatingEl}>
             {({ open }) => {
               if (open) {
@@ -112,9 +112,9 @@ export const RestaurantRatingView = suspense(
               return null
             }}
           </HoverablePopover>
-        </VStack>
+        </YStack>
       )
     }
   ),
-  (props) => <VStack width={props.size} height={props.size} />
+  (props) => <YStack width={props.size} height={props.size} />
 )

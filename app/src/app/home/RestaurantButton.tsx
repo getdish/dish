@@ -1,7 +1,7 @@
 import { graphql } from '@dish/graph'
+import { Button, Hoverable, Text, XStack, YStack, useTheme } from '@dish/ui'
 import { debounce } from 'lodash'
 import React, { useCallback } from 'react'
-import { Button, HStack, Hoverable, Text, VStack, useTheme } from 'snackui'
 
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { queryRestaurant } from '../../queries/queryRestaurant'
@@ -32,7 +32,7 @@ export const RestaurantButton = graphql(
     const content = (
       <Link name="restaurant" params={{ slug: slug }} asyncClick>
         <Button backgroundColor={theme.backgroundColorAlt} noTextWrap>
-          <HStack maxWidth={300}>
+          <XStack maxWidth={300}>
             {!!restaurant.image && (
               <Image
                 source={{ uri: getImageUrl(restaurant.image, 80, 80) }}
@@ -48,10 +48,10 @@ export const RestaurantButton = graphql(
             <Text ellipse color={theme.colorSecondary} fontWeight="400">
               {restaurant.name}
             </Text>
-            <VStack margin={-6} marginLeft={10}>
+            <YStack margin={-6} marginLeft={10}>
               <RestaurantRatingView size={32} restaurant={restaurant} />
-            </VStack>
-          </HStack>
+            </YStack>
+          </XStack>
         </Button>
       </Link>
     )

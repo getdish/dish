@@ -3,11 +3,13 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "main": "dist",
-  "module": "_",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "typings": "types",
   "scripts": {
-    "build": "esdx legacy",
-    "watch": "esdx-watch legacy",
+    "build": "tamagui-build legacy",
+    "watch": "tamagui-build --watch legacy",
     "test": "TARGET=node DISH_ENV=test jest --runInBand --forceExit"
   },
   "tests": {
@@ -20,8 +22,8 @@
     "tiny-request-router": "^1.2.2"
   },
   "devDependencies": {
-    "@dish/esdx": "*",
     "@dish/testy": "*",
+    "@tamagui/build": "*",
     "jest": "*"
   }
 }

@@ -1,4 +1,4 @@
-import { Paragraph, ParagraphProps, Theme, useTheme } from 'snackui'
+import { Paragraph, ParagraphProps, Theme, useTheme } from '@dish/ui'
 
 export const HighlightedText = (props: ParagraphProps) => {
   const theme = useTheme()

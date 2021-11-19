@@ -43,7 +43,7 @@ export async function createServer(serverConf: ServerConfig) {
       noMinify: noOptimize,
       entry: join(rootDir, 'src', 'index.ts'),
       env: serverConf.env,
-      snackOptions: {
+      tamaguiOptions: {
         evaluateImportsWhitelist: ['constants.js', 'colors.js'],
       },
     },

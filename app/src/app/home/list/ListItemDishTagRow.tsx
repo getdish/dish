@@ -1,6 +1,6 @@
 // import { graphql } from '@dish/graph'
 // import React, { memo } from 'react'
-// import { HStack, VStack } from 'snackui'
+// import { XStack, YStack } from '@dish/ui'
 
 // import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 // import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
@@ -39,7 +39,7 @@
 //         })
 
 //     return (
-//       <HStack position="relative" alignItems="center" spacing>
+//       <XStack position="relative" alignItems="center" spacing>
 //         {props.editable && (
 //           <EditRestaurantTagsButton
 //             restaurantSlug={props.restaurantSlug}
@@ -50,16 +50,16 @@
 //         {!!dishes[0]?.name &&
 //           dishes.map((dish, i) => {
 //             return (
-//               <VStack key={dish.slug} marginRight={-2} zIndex={100 - i}>
+//               <YStack key={dish.slug} marginRight={-2} zIndex={100 - i}>
 //                 <TagButton
 //                   restaurantSlug={props.restaurantSlug}
 //                   {...getTagButtonProps(dish)}
 //                   showSearchButton={!props.editable}
 //                 />
-//               </VStack>
+//               </YStack>
 //             )
 //           })}
-//       </HStack>
+//       </XStack>
 //     )
 //   })
 // )

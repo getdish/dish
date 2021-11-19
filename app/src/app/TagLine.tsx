@@ -1,5 +1,5 @@
+import { Paragraph } from '@dish/ui'
 import React from 'react'
-import { Paragraph } from 'snackui'
 
 export const TagLine = (props: { scale?: number }) => {
   return (

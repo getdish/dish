@@ -1,5 +1,5 @@
+import { StackProps, YStack } from '@dish/ui'
 import React from 'react'
-import { StackProps, VStack } from 'snackui'
 
 export const ColoredCircle = ({
   size,
@@ -10,7 +10,7 @@ export const ColoredCircle = ({
   size: number | string
 }) => {
   return (
-    <VStack
+    <YStack
       position="relative"
       zIndex={0}
       className="ease-in-out-faster"

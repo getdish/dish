@@ -23,7 +23,6 @@
       "./types",
       "../../node_modules/@types"
     ],
-    "composite": true
   },
 
   "include": [

@@ -1,21 +1,21 @@
 import { graphql, restaurant_tag } from '@dish/graph'
-import { ChevronDown, ChevronUp, Edit, Plus, X } from '@dish/react-feather'
-import { sortBy } from 'lodash'
-import React, { memo, useCallback, useEffect, useState } from 'react'
-import { Image, ScrollView } from 'react-native'
 import {
   Button,
   Circle,
   Divider,
-  HStack,
   Input,
   Modal,
   Spacer,
   Theme,
   Title,
-  VStack,
+  XStack,
+  YStack,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { ChevronDown, ChevronUp, Edit, Plus, X } from '@tamagui/feather-icons'
+import { sortBy } from 'lodash'
+import React, { memo, useCallback, useEffect, useState } from 'react'
+import { Image, ScrollView } from 'react-native'
 
 import { promote } from '../../../helpers/listHelpers'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -98,7 +98,7 @@ const EditTagsModal = memo(
     function getDishItem(dish?: restaurant_tag, before: any = null, after: any = null) {
       if (!dish) return null
       return (
-        <HStack key={dish.tag?.slug} spacing padding={5} alignItems="center">
+        <XStack key={dish.tag?.slug} spacing padding={5} alignItems="center">
           {before}
           {!!dish.photos ? (
             <Image
@@ -109,9 +109,9 @@ const EditTagsModal = memo(
             <Circle backgroundColor="rgba(150,150,150,0.29)" size={40} />
           )}
           <Title>{dish.tag?.name}</Title>
-          <VStack flex={1} />
+          <YStack flex={1} />
           {after}
-        </HStack>
+        </XStack>
       )
     }
 
@@ -127,21 +127,21 @@ const EditTagsModal = memo(
 
         <Spacer />
 
-        <VStack width="100%" flexShrink={0}>
+        <YStack width="100%" flexShrink={0}>
           <Input
             backgroundColor={theme.backgroundColorSecondary}
             marginHorizontal={20}
             placeholder="Search dishes..."
           />
-        </VStack>
+        </YStack>
 
         <ScrollView style={{ width: '100%' }}>
-          <VStack padding={18}>
+          <YStack padding={18}>
             {dishes.map((dish, index) => {
               return getDishItem(
                 dish,
-                <VStack alignItems="center" justifyContent="center">
-                  <VStack
+                <YStack alignItems="center" justifyContent="center">
+                  <YStack
                     padding={10}
                     onPress={() => {
                       const next = promote(slugs, index)
@@ -149,8 +149,8 @@ const EditTagsModal = memo(
                     }}
                   >
                     <ChevronUp size={16} color="rgba(150,150,150,0.9)" />
-                  </VStack>
-                  <VStack
+                  </YStack>
+                  <YStack
                     padding={10}
                     onPress={() => {
                       const next = promote(slugs, index + 1)
@@ -158,9 +158,9 @@ const EditTagsModal = memo(
                     }}
                   >
                     <ChevronDown size={16} color="rgba(150,150,150,0.9)" />
-                  </VStack>
-                </VStack>,
-                <VStack
+                  </YStack>
+                </YStack>,
+                <YStack
                   padding={10}
                   onPress={() => {
                     const next = [...slugs]
@@ -169,7 +169,7 @@ const EditTagsModal = memo(
                   }}
                 >
                   <X size={16} color="#000" />
-                </VStack>
+                </YStack>
               )
             })}
 
@@ -181,7 +181,7 @@ const EditTagsModal = memo(
               dish.tag?.slug
               return getDishItem(
                 dish,
-                <VStack
+                <YStack
                   padding={10}
                   onPress={() => {
                     if (dish.tag.slug) {
@@ -192,17 +192,17 @@ const EditTagsModal = memo(
                   justifyContent="center"
                 >
                   <Plus size={16} color="rgba(150,150,150,0.9)" />
-                </VStack>
+                </YStack>
               )
             })}
-          </VStack>
+          </YStack>
         </ScrollView>
 
-        <HStack flexShrink={0}>
+        <XStack flexShrink={0}>
           <Theme name="active">
             <Button onPress={() => onChange?.(slugs)}>Save</Button>
           </Theme>
-        </HStack>
+        </XStack>
 
         <Spacer />
       </>

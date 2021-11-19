@@ -1,6 +1,6 @@
+import { Hoverable } from '@dish/ui'
 import { debounce } from 'lodash'
 import React from 'react'
-import { Hoverable } from 'snackui'
 
 import { appMapStore } from '../../appMapStore'
 

@@ -1,8 +1,23 @@
 import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
-import { ArrowUp } from '@dish/react-feather'
 import { HistoryItem } from '@dish/router'
+import {
+  AbsoluteYStack,
+  Button,
+  LoadingItem,
+  Paragraph,
+  Spacer,
+  StackProps,
+  Text,
+  XStack,
+  YStack,
+  combineRefs,
+  useDebounceEffect,
+  useLayout,
+  useMedia,
+} from '@dish/ui'
 import { Store, compareStrict, reaction, useStore, useStoreInstanceSelector } from '@dish/use-store'
+import { ArrowUp } from '@tamagui/feather-icons'
 import React, {
   Suspense,
   forwardRef,
@@ -15,21 +30,6 @@ import React, {
 } from 'react'
 import { LayoutRectangle, ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
-import {
-  AbsoluteVStack,
-  Button,
-  HStack,
-  LoadingItem,
-  Paragraph,
-  Spacer,
-  StackProps,
-  Text,
-  VStack,
-  combineRefs,
-  useDebounceEffect,
-  useLayout,
-  useMedia,
-} from 'snackui'
 
 import { isWeb } from '../../../constants/constants'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
@@ -230,7 +230,7 @@ const SearchPageContent = memo(function SearchPageContent(
 
   return (
     <Suspense fallback={<SearchLoading />}>
-      <VStack
+      <YStack
         flex={1}
         overflow="hidden"
         opacity={isLoading ? 0.5 : 1}
@@ -243,7 +243,7 @@ const SearchPageContent = memo(function SearchPageContent(
           {/* <SearchResultsSimpleScroll key={`${isLoading}`} {...props} /> */}
           <SearchResultsInfiniteScroll {...props} />
         </SearchPagePropsContext.Provider>
-      </VStack>
+      </YStack>
     </Suspense>
   )
 })
@@ -257,22 +257,22 @@ const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
   let contents = isActive ? <SearchPageNavBar /> : null
 
   if (!media.sm) {
-    return <HStack>{contents}</HStack>
+    return <XStack>{contents}</XStack>
   }
 
   if (!isWeb) {
     contents = (
-      <AbsoluteVStack pointerEvents="none" bottom={0} height={150} width="100%">
+      <AbsoluteYStack pointerEvents="none" bottom={0} height={150} width="100%">
         {contents}
-      </AbsoluteVStack>
+      </AbsoluteYStack>
     )
   }
 
   return (
     <RootPortalItem key={`${isActive}${isDrawerAtBottom}`}>
-      <AbsoluteVStack className="ease-in-out-slower" fullscreen y={isDrawerAtBottom ? 50 : 0}>
+      <AbsoluteYStack className="ease-in-out-slower" fullscreen y={isDrawerAtBottom ? 50 : 0}>
         {contents}
-      </AbsoluteVStack>
+      </AbsoluteYStack>
     </RootPortalItem>
   )
 })
@@ -391,10 +391,10 @@ const SearchEmptyResults = () => {
   return (
     <>
       <SearchHeader />
-      <VStack paddingVertical={100} alignItems="center" spacing>
+      <YStack paddingVertical={100} alignItems="center" spacing>
         <Paragraph fontSize={22}>No results</Paragraph>
         <Text fontSize={32}>😞</Text>
-      </VStack>
+      </YStack>
     </>
   )
 }
@@ -535,9 +535,9 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
 const SearchContent = memo(({ id }: { id: string }) => {
   const { children } = useStore(SearchPageChildrenStore, { id })
   return (
-    <VStack position="relative">
+    <YStack position="relative">
       <Suspense fallback={null}>{children}</Suspense>
-    </VStack>
+    </YStack>
   )
 })
 
@@ -547,7 +547,7 @@ const SearchFooter = memo(({ scrollToTop, id }: { scrollToTop: Function; id: str
     id,
   })
   return (
-    <VStack alignItems="center" justifyContent="center" minHeight={300} width="100%">
+    <YStack alignItems="center" justifyContent="center" minHeight={300} width="100%">
       <Button
         alignSelf="center"
         borderRadius={1000}
@@ -560,18 +560,18 @@ const SearchFooter = memo(({ scrollToTop, id }: { scrollToTop: Function; id: str
       <Spacer size={40} />
       <Paragraph opacity={0.5}>Showing {results.length} results</Paragraph>
       <Spacer size={40} />
-      <HStack>
+      <XStack>
         <LenseButtonBar activeTags={state.activeTags} />
-      </HStack>
-    </VStack>
+      </XStack>
+    </YStack>
   )
 })
 
 const SearchLoading = (props: StackProps) => {
   return (
-    <VStack flex={1} width="100%" minHeight={300} {...props}>
+    <YStack flex={1} width="100%" minHeight={300} {...props}>
       <LoadingItem />
-    </VStack>
+    </YStack>
   )
 }
 

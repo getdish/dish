@@ -1,18 +1,18 @@
 import { graphql, restaurant } from '@dish/graph'
 import { ellipseText, isPresent } from '@dish/helpers'
-import { Store, useStore } from '@dish/use-store'
-import React, { Suspense, memo } from 'react'
-import { StyleSheet } from 'react-native'
 import {
-  AbsoluteVStack,
-  HStack,
+  AbsoluteYStack,
   LinearGradient,
   Paragraph,
   Spacer,
   Text,
-  VStack,
+  XStack,
+  YStack,
   useTheme,
-} from 'snackui'
+} from '@dish/ui'
+import { Store, useStore } from '@dish/use-store'
+import React, { Suspense, memo } from 'react'
+import { StyleSheet } from 'react-native'
 
 import { green, grey } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
@@ -49,11 +49,11 @@ type Props = {
 export const RestaurantOverallAndTagReviews = (props: Props) => {
   const scrollHeight = props.size === 'sm' ? 80 : props.size === 'lg' ? 200 : 140
   return (
-    <VStack height={scrollHeight}>
+    <YStack height={scrollHeight}>
       <Suspense fallback={null}>
         <Content {...props} />
       </Suspense>
-    </VStack>
+    </YStack>
   )
 }
 
@@ -123,11 +123,11 @@ const Content = memo(
 
       if (size === 'sm') {
         return (
-          <HStack paddingHorizontal={10} marginVertical="auto" spacing="lg">
+          <XStack paddingHorizontal={10} marginVertical="auto" spacing="lg">
             {items.map((props) => {
               const { name, image, rating } = props
               return (
-                <HStack alignItems="center" spacing="sm" key={name}>
+                <XStack alignItems="center" spacing="sm" key={name}>
                   <Image
                     source={{ uri: image }}
                     style={{
@@ -140,26 +140,26 @@ const Content = memo(
                   <Text letterSpacing={-1} fontSize={ratingFontSizes[size]} color={theme.color}>
                     {rating}
                   </Text>
-                </HStack>
+                </XStack>
               )
             })}
-          </HStack>
+          </XStack>
         )
       }
 
       return (
-        <VStack maxWidth="100%" width="100%" height={scrollHeight} position="relative">
+        <YStack maxWidth="100%" width="100%" height={scrollHeight} position="relative">
           {closable && (
-            <AbsoluteVStack zIndex={1000} top={10} right={10}>
+            <AbsoluteYStack zIndex={1000} top={10} right={10}>
               <CloseButton onPress={store.toggleShowComments} />
-            </AbsoluteVStack>
+            </AbsoluteYStack>
           )}
 
           {/* <SlantedTitle fontSize={12} marginBottom={-30} alignSelf="center" size="sm">
             {tagName ?? 'Overall'}
           </SlantedTitle> */}
 
-          <VStack
+          <YStack
             minWidth={260}
             {...(hideDescription && {
               minWidth: 80,
@@ -174,11 +174,11 @@ const Content = memo(
             spacing={10}
           >
             <ContentScrollViewHorizontal height={scrollHeight}>
-              <HStack>
+              <XStack>
                 {items.map(({ name, sentence, image, rating, url }) => {
                   return (
-                    <VStack key={name}>
-                      <VStack
+                    <YStack key={name}>
+                      <YStack
                         margin={spacing / 2}
                         shadowColor="#000"
                         shadowOpacity={0.05}
@@ -197,7 +197,7 @@ const Content = memo(
                         position="relative"
                         flex={1}
                       >
-                        <VStack position="relative" alignSelf="center">
+                        <YStack position="relative" alignSelf="center">
                           <SlantedTitle
                             marginTop={-20}
                             size="xs"
@@ -208,10 +208,10 @@ const Content = memo(
                             {name}
                           </SlantedTitle>
                           <Spacer size="xs" />
-                        </VStack>
+                        </YStack>
 
-                        <HStack paddingHorizontal={20} flex={1} maxHeight="100%">
-                          <VStack spacing alignItems="center">
+                        <XStack paddingHorizontal={20} flex={1} maxHeight="100%">
+                          <YStack spacing alignItems="center">
                             <Link href={url}>
                               <Image
                                 source={{ uri: image }}
@@ -232,21 +232,21 @@ const Content = memo(
                               {rating}
                             </Text>
 
-                            {/* <HStack spacing="xs">
+                            {/* <XStack spacing="xs">
                             <SentimentText sentiment={1}>
                               {numberFormat(positive || 0, 'sm')}
                             </SentimentText>
                             <SentimentText sentiment={-1}>
                               {numberFormat(Math.abs(negative || 0), 'sm')}
                             </SentimentText>
-                          </HStack> */}
-                          </VStack>
+                          </XStack> */}
+                          </YStack>
 
                           {!hideDescription && (
                             <>
                               <Spacer size="md" />
 
-                              <VStack
+                              <YStack
                                 overflow="hidden"
                                 position="relative"
                                 flex={1}
@@ -277,7 +277,7 @@ const Content = memo(
                                   )}
                                 </Paragraph>
 
-                                <AbsoluteVStack
+                                <AbsoluteYStack
                                   zIndex={10}
                                   bottom={0}
                                   left={0}
@@ -291,19 +291,19 @@ const Content = memo(
                                     ]}
                                     style={StyleSheet.absoluteFill}
                                   />
-                                </AbsoluteVStack>
-                              </VStack>
+                                </AbsoluteYStack>
+                              </YStack>
                             </>
                           )}
-                        </HStack>
-                      </VStack>
-                    </VStack>
+                        </XStack>
+                      </YStack>
+                    </YStack>
                   )
                 })}
-              </HStack>
+              </XStack>
             </ContentScrollViewHorizontal>
-          </VStack>
-        </VStack>
+          </YStack>
+        </YStack>
       )
     }
   )

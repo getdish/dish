@@ -1,15 +1,15 @@
-import { Minus, Plus, RefreshCcw, X } from '@dish/react-feather'
-import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import React, { memo } from 'react'
 import {
-  AbsoluteHStack,
-  AbsoluteVStack,
+  AbsoluteXStack,
+  AbsoluteYStack,
   Theme,
   Tooltip,
-  VStack,
+  YStack,
   useMedia,
   useSafeAreaInsets,
-} from 'snackui'
+} from '@dish/ui'
+import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import { Minus, Plus, RefreshCcw, X } from '@tamagui/feather-icons'
+import React, { memo } from 'react'
 
 import { isWeb, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
@@ -30,13 +30,13 @@ export const AppMapControls = memo(() => {
   )
   return (
     <Theme name="darkTranslucent">
-      <AbsoluteVStack
+      <AbsoluteYStack
         zIndex={media.sm ? zIndexDrawer - 1 : zIndexDrawer + 1}
         marginLeft="auto"
         fullscreen
         pointerEvents="none"
       >
-        <AbsoluteVStack
+        <AbsoluteYStack
           fullscreen
           left={5}
           right={5}
@@ -48,7 +48,7 @@ export const AppMapControls = memo(() => {
           pointerEvents="none"
           justifyContent="center"
         >
-          <AbsoluteHStack
+          <AbsoluteXStack
             top={8}
             right={0}
             minHeight={50}
@@ -93,10 +93,10 @@ export const AppMapControls = memo(() => {
               </OverlayLinkButton>
             )}
 
-            <VStack flex={media.sm ? 1 : 0} />
-          </AbsoluteHStack>
-        </AbsoluteVStack>
-      </AbsoluteVStack>
+            <YStack flex={media.sm ? 1 : 0} />
+          </AbsoluteXStack>
+        </AbsoluteYStack>
+      </AbsoluteYStack>
     </Theme>
   )
 })
@@ -109,17 +109,17 @@ export const AppMapControls = memo(() => {
 //   }
 //   return (
 //     <OverlayLinkButton onPress={toggleSearchRegion}>
-//       <HStack pointerEvents="none" alignItems="center" spacing="sm">
+//       <XStack pointerEvents="none" alignItems="center" spacing="sm">
 //         <Text userSelect="none" fontSize={12}>
 //           Area
 //         </Text>
-//         <VStack scale={0.8}>
+//         <YStack scale={0.8}>
 //           <Switch value={!searchRegion} />
-//         </VStack>
+//         </YStack>
 //         <Text userSelect="none" fontSize={12}>
 //           All
 //         </Text>
-//       </HStack>
+//       </XStack>
 //     </OverlayLinkButton>
 //   )
 // })

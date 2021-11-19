@@ -1,5 +1,5 @@
+import { YStack, useTheme } from '@dish/ui'
 import React from 'react'
-import { VStack, useTheme } from 'snackui'
 
 import { drawerBorderRadius } from '../../constants/constants'
 import { DrawerPortalProvider } from '../Portal'
@@ -9,7 +9,7 @@ import { DrawerPortalProvider } from '../Portal'
 export const BottomSheetContainer = (props: { children: any }) => {
   const theme = useTheme()
   return (
-    <VStack
+    <YStack
       width="100%"
       height="100%"
       flex={1}
@@ -24,6 +24,6 @@ export const BottomSheetContainer = (props: { children: any }) => {
     >
       <DrawerPortalProvider />
       {props.children}
-    </VStack>
+    </YStack>
   )
 }

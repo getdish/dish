@@ -1,5 +1,5 @@
+import { AbsoluteYStack, StackProps, XStack, YStack, useTheme } from '@dish/ui'
 import React from 'react'
-import { AbsoluteVStack, HStack, StackProps, VStack, useTheme } from 'snackui'
 
 import {
   cardFrameBorderRadius,
@@ -20,7 +20,7 @@ export type SimpleCardProps = StackProps & {
 export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: SimpleCardProps) => {
   const theme = useTheme()
   return (
-    <VStack
+    <YStack
       backgroundColor={theme.backgroundColorSecondary}
       marginRight={size === 'sm' ? -3 : -8}
       className="disable-hover-touch ease-in-out-fast"
@@ -59,7 +59,7 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
       {/* on native this causes laggy scrolls */}
       {/* didnt scale properly */}
       {/* {isWeb && isBehind && (
-        <AbsoluteVStack
+        <AbsoluteYStack
           className="ease-in-out"
           zIndex={1002}
           borderRadius={cardFrameBorderRadius}
@@ -77,15 +77,15 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
         />
       )} */}
       {children}
-    </VStack>
+    </YStack>
   )
 }
 
 export const SkewedCardCarousel = ({ children }: { children: any }) => {
   return (
     <ContentScrollViewHorizontal>
-      <HStack paddingVertical={10}>{children}</HStack>
-      <VStack width={100} height={100} />
+      <XStack paddingVertical={10}>{children}</XStack>
+      <YStack width={100} height={100} />
     </ContentScrollViewHorizontal>
   )
 }

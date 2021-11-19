@@ -1,8 +1,8 @@
 import { supportsTouchWeb } from '@dish/helpers'
-import { ArrowDown, ArrowUp } from '@dish/react-feather'
+import { InteractiveContainer, Paragraph, XStack } from '@dish/ui'
+import { AbsoluteYStack, StackProps, Text, Tooltip, YStack, useTheme } from '@dish/ui'
+import { ArrowDown, ArrowUp } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
-import { HStack, InteractiveContainer, Paragraph } from 'snackui'
-import { AbsoluteVStack, StackProps, Text, Tooltip, VStack, useTheme } from 'snackui'
 
 import { green, grey, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
@@ -120,7 +120,7 @@ export const Score = memo(
     )
 
     return (
-      <HStack
+      <XStack
         position="relative"
         pointerEvents="auto"
         alignItems="center"
@@ -130,7 +130,7 @@ export const Score = memo(
         {...props}
       >
         {typeof rating === 'number' && (
-          <VStack
+          <YStack
             borderRadius={1000}
             backgroundColor={theme.cardBackgroundColor}
             height={sizePx}
@@ -141,21 +141,21 @@ export const Score = memo(
               shadowOffset: { height: 3, width: -1 },
             })}
           >
-            <AbsoluteVStack fullscreen alignItems="center" justifyContent="center">
+            <AbsoluteYStack fullscreen alignItems="center" justifyContent="center">
               <Paragraph fontSize={fontSize} fontWeight="300" letterSpacing={-1}>
                 {numberFormat(score, 'sm')}
               </Paragraph>
-            </AbsoluteVStack>
+            </AbsoluteYStack>
             <ProgressRing
               size={Math.round(sizePx)}
               color={colors.color400}
               percent={rating * 10}
               width={sizePx * 0.05}
             />
-          </VStack>
+          </YStack>
         )}
         {voteContent}
-      </HStack>
+      </XStack>
     )
   }
 )

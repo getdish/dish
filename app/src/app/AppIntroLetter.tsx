@@ -1,7 +1,7 @@
-import { Home } from '@dish/react-feather'
+import { AbsoluteYStack, Text } from '@dish/ui'
 import { useStore } from '@dish/use-store'
+import { Home } from '@tamagui/feather-icons'
 import React, { memo, useLayoutEffect } from 'react'
-import { AbsoluteVStack, Text } from 'snackui'
 
 import { useRouterCurPage } from '../router'
 import { AppIntroLogin } from './AppIntroLogin'
@@ -57,7 +57,7 @@ export const AppIntroLetter = memo(() => {
               store.setHidden(true)
             }}
           />
-          <AbsoluteVStack
+          <AbsoluteYStack
             pointerEvents="none"
             bottom={-10}
             zIndex={1000}
@@ -65,10 +65,10 @@ export const AppIntroLetter = memo(() => {
             rotate="-10deg"
           >
             <Text fontSize={62}>🌮</Text>
-          </AbsoluteVStack>
-          <AbsoluteVStack pointerEvents="none" bottom={-10} zIndex={1000} left={-40} rotate="10deg">
+          </AbsoluteYStack>
+          <AbsoluteYStack pointerEvents="none" bottom={-10} zIndex={1000} left={-40} rotate="10deg">
             <Text fontSize={62}>🍜</Text>
-          </AbsoluteVStack>
+          </AbsoluteYStack>
         </>
       }
     >

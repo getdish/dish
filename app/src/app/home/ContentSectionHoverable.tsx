@@ -1,10 +1,10 @@
+import { StackProps, YStack } from '@dish/ui'
 import React from 'react'
-import { StackProps, VStack } from 'snackui'
 
 export const ContentSectionHoverable = (props: StackProps) => {
   // const theme = useTheme()
   return (
-    <VStack
+    <YStack
       position="relative"
       width="100%"
       hoverStyle={{

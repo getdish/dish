@@ -1,5 +1,5 @@
+import { LoadingItems, StackProps, YStack } from '@dish/ui'
 import React, { Suspense, SuspenseList, SuspenseListProps, SuspenseProps } from 'react'
-import { LoadingItems, StackProps, VStack } from 'snackui'
 
 import { searchBarHeight } from '../../constants/constants'
 import { getWindowHeight } from '../../helpers/getWindow'
@@ -13,7 +13,7 @@ export const PageContentWithFooter = ({
   suspenseOrder?: SuspenseListProps['revealOrder']
 }) => {
   return (
-    <VStack minHeight={Math.min(250, getWindowHeight() * 1 - searchBarHeight)} {...props}>
+    <YStack minHeight={Math.min(250, getWindowHeight() * 1 - searchBarHeight)} {...props}>
       <Suspense
         fallback={
           <>
@@ -28,8 +28,8 @@ export const PageContentWithFooter = ({
           children
         )}
       </Suspense>
-      <VStack height={40} />
+      <YStack height={40} />
       <PageFooter />
-    </VStack>
+    </YStack>
   )
 }

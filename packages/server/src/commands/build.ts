@@ -41,7 +41,7 @@ export class Build extends Command {
           noMinify: flags['no-optimize'] || false,
           entry: join(rootDir, 'src', 'index.ts'),
           env: 'production',
-          snackOptions: {
+          tamaguiOptions: {
             evaluateImportsWhitelist: ['constants.js', 'colors.js'],
           },
         },

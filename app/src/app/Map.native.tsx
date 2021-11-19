@@ -1,9 +1,9 @@
 import { series, sleep } from '@dish/async'
 import { DISH_API_ENDPOINT } from '@dish/graph'
+import { useDebounce, useTheme } from '@dish/ui'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, useWindowDimensions } from 'react-native'
-import { useDebounce, useTheme } from 'snackui'
 
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'

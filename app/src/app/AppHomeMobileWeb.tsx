@@ -1,6 +1,6 @@
+import { AbsoluteYStack, ToastRoot, YStack, useTheme } from '@dish/ui'
 import { reaction } from '@dish/use-store/dist'
 import React, { Suspense, useEffect, useLayoutEffect } from 'react'
-import { AbsoluteVStack, ToastRoot, VStack, useTheme } from 'snackui'
 
 import { router } from '../router'
 import { AppAutocompleteLocation } from './AppAutocompleteLocation'
@@ -66,7 +66,7 @@ export const AppHomeMobileWeb = () => {
         <ToastRoot />
         <AutocompleteEffects />
       </Suspense>
-      <AbsoluteVStack
+      <AbsoluteYStack
         // @ts-ignore
         position="fixed"
         fullscreen
@@ -79,18 +79,18 @@ export const AppHomeMobileWeb = () => {
         zIndex={1000000}
       >
         <RootPortalProvider />
-      </AbsoluteVStack>
-      <VStack marginBottom={-40} height={mapHeight} position="relative" zIndex={0}>
+      </AbsoluteYStack>
+      <YStack marginBottom={-40} height={mapHeight} position="relative" zIndex={0}>
         <Suspense fallback={null}>
-          <AbsoluteVStack zIndex={10000} pointerEvents="none" bottom={40}>
+          <AbsoluteYStack zIndex={10000} pointerEvents="none" bottom={40}>
             <AppFloatingTagMenuBar />
-          </AbsoluteVStack>
+          </AbsoluteYStack>
           <AppMenuButtonFloating />
           <AppMapControls />
           <AppMapContents />
         </Suspense>
-      </VStack>
-      <VStack
+      </YStack>
+      <YStack
         shadowColor="#000"
         shadowRadius={25}
         shadowOpacity={0.1}
@@ -99,14 +99,14 @@ export const AppHomeMobileWeb = () => {
         overflow="hidden"
         position="relative"
       >
-        <AbsoluteVStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
+        <AbsoluteYStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
         <AppSearchBarInline />
-        <VStack position="relative" minHeight={600}>
+        <YStack position="relative" minHeight={600}>
           <AppAutocompleteSearch />
           <AppAutocompleteLocation />
           <HomeStackViewPages key={currentState.id} isActive item={currentState} index={0} />
-        </VStack>
-      </VStack>
+        </YStack>
+      </YStack>
       <Suspense fallback={null}>
         <GalleryPage />
         <RestaurantReviewPage />

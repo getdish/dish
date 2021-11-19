@@ -1,7 +1,7 @@
+import { AbsoluteYStack, Button, Paragraph, Spacer, Text, YStack } from '@dish/ui'
 import React, { useState } from 'react'
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 import { ScrollView } from 'react-native'
-import { AbsoluteVStack, Button, Paragraph, Spacer, Text, VStack } from 'snackui'
 
 export function ErrorBoundary({ children, name }: { children: any; name: string }) {
   const [errorState, setErrorState] = useState<{
@@ -32,7 +32,7 @@ export function ErrorBoundary({ children, name }: { children: any; name: string 
           </Button>
         )
         return (
-          <AbsoluteVStack
+          <AbsoluteYStack
             fullscreen
             alignItems="center"
             justifyContent="center"
@@ -43,9 +43,9 @@ export function ErrorBoundary({ children, name }: { children: any; name: string 
             {process.env.NODE_ENV === 'production' && <Paragraph size="xxxl">😭😭😭 err</Paragraph>}
 
             {process.env.NODE_ENV === 'development' && (
-              <VStack maxWidth="100%" flex={1} overflow="hidden">
+              <YStack maxWidth="100%" flex={1} overflow="hidden">
                 <ScrollView style={{ width: '100%' }}>
-                  <VStack spacing>
+                  <YStack spacing>
                     {tryButton}
                     <Text fontWeight="400" className="white-space-pre font-mono" color="#fff">
                       {error?.message}
@@ -59,12 +59,12 @@ export function ErrorBoundary({ children, name }: { children: any; name: string 
                       {errorState?.componentStack}
                     </Text>
                     {tryButton}
-                    <VStack height={400} />
-                  </VStack>
+                    <YStack height={400} />
+                  </YStack>
                 </ScrollView>
-              </VStack>
+              </YStack>
             )}
-          </AbsoluteVStack>
+          </AbsoluteYStack>
         )
       }}
     >

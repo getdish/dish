@@ -1,5 +1,5 @@
+import { YStack } from '@dish/ui'
 import React from 'react'
-import { VStack } from 'snackui'
 
 import { Link } from '../views/Link'
 import { LinkButtonNamedProps, LinkSharedProps } from '../views/LinkProps'
@@ -8,9 +8,9 @@ import { SlantedTitle, SlantedTitleProps } from '../views/SlantedTitle'
 
 const TitleContainer = ({ children }: { children: any }) => {
   return (
-    <VStack alignSelf="center" position="relative" zIndex={10}>
+    <YStack alignSelf="center" position="relative" zIndex={10}>
       {children}
-    </VStack>
+    </YStack>
   )
 }
 

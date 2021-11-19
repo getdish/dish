@@ -1,8 +1,8 @@
 import { series, sleep } from '@dish/async'
 import { isPresent } from '@dish/helpers'
+import { Theme, useDebounceValue } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useCallback, useEffect } from 'react'
-import { Theme, useDebounceValue } from 'snackui'
 
 import { defaultLocationAutocompleteResults } from '../constants/defaultLocationAutocompleteResults'
 import { AutocompleteItemFull, AutocompleteItemLocation } from '../helpers/createAutocomplete'

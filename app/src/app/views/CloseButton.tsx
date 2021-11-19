@@ -1,6 +1,6 @@
-import { CornerLeftUp, X } from '@dish/react-feather'
+import { Button, ButtonProps } from '@dish/ui'
+import { CornerLeftUp, X } from '@tamagui/feather-icons'
 import React, { forwardRef, memo } from 'react'
-import { Button, ButtonProps } from 'snackui'
 
 type CircleButtonProps = ButtonProps & {
   size?: number

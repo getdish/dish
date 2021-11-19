@@ -1,6 +1,6 @@
+import { AbsoluteYStack, Paragraph, Text, XStack, YStack, useTheme } from '@dish/ui'
 import { sortBy } from 'lodash'
 import React, { memo, useContext } from 'react'
-import { AbsoluteVStack, HStack, Paragraph, Text, VStack, useTheme } from 'snackui'
 
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { SlantedTitle } from '../../views/SlantedTitle'
@@ -33,10 +33,10 @@ export const SearchPageScoring = memo(() => {
   )
 
   return (
-    <HStack alignItems="center" paddingBottom={0} position="relative" zIndex={100}>
-      <HStack flex={1} position="relative">
-        <HStack y={-7} position="absolute" fullscreen>
-          <VStack
+    <XStack alignItems="center" paddingBottom={0} position="relative" zIndex={100}>
+      <XStack flex={1} position="relative">
+        <XStack y={-7} position="absolute" fullscreen>
+          <YStack
             borderLeftWidth={2}
             borderColor={theme.borderColor}
             minWidth={40}
@@ -47,13 +47,13 @@ export const SearchPageScoring = memo(() => {
             marginLeft={20}
             rotate="45deg"
           />
-          <AbsoluteVStack bottom={-32} left={15} rotate="180deg">
+          <AbsoluteYStack bottom={-32} left={15} rotate="180deg">
             <Arrow />
-          </AbsoluteVStack>
-          <VStack borderBottomWidth={2} y={-1} borderBottomColor={theme.borderColor} flex={1} />
-        </HStack>
-      </HStack>
-      <HStack
+          </AbsoluteYStack>
+          <YStack borderBottomWidth={2} y={-1} borderBottomColor={theme.borderColor} flex={1} />
+        </XStack>
+      </XStack>
+      <XStack
         alignItems="center"
         // borderWidth={1}
         // borderColor={theme.borderColor}
@@ -64,13 +64,13 @@ export const SearchPageScoring = memo(() => {
         height={48}
         position="relative"
       >
-        <AbsoluteVStack left={-62}>
+        <AbsoluteYStack left={-62}>
           <SlantedTitle size="xxs" fontWeight="500">
             Scoring
           </SlantedTitle>
-        </AbsoluteVStack>
+        </AbsoluteYStack>
 
-        <HStack marginLeft={-5} spacing="sm">
+        <XStack marginLeft={-5} spacing="sm">
           {tagsWithPct.map(({ tag, pct }, index) => {
             return (
               <TagButton
@@ -84,10 +84,10 @@ export const SearchPageScoring = memo(() => {
               />
             )
           })}
-        </HStack>
-      </HStack>
+        </XStack>
+      </XStack>
 
-      <HStack flex={1} />
-    </HStack>
+      <XStack flex={1} />
+    </XStack>
   )
 })

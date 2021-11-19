@@ -30,7 +30,7 @@ if (isSSR) {
 }
 
 if (process.env.TARGET === 'native') {
-  global['matchMedia'] = require('snackui').matchMedia
+  global['matchMedia'] = require('@tamagui/core').matchMedia
   window['matchMedia'] = global['matchMedia']
 
   if (process.env.NODE_ENV === 'development') {
