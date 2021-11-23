@@ -16,7 +16,6 @@ import { userStore } from '../../userStore'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
-import { randomListColor } from '../list/listColors'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { getLocationFromRoute, useLocationFromRoute } from './useLocationFromRoute'
 
@@ -84,7 +83,7 @@ export const SearchForkListButton = memo(
                     slug,
                     // region,
                     description: subTitle,
-                    color: randomListColor(),
+                    color: 0, //randomListColor(),
                     user_id: id,
                     location: null,
                   },

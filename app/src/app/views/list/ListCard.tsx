@@ -1,12 +1,11 @@
 import { getUserName, graphql, mutate, query, resolved, slugify } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { AbsoluteYStack, Hoverable, Toast, YStack, isTouchDevice, useThemeName } from '@dish/ui'
+import { AbsoluteYStack, Hoverable, Toast, YStack, isTouchDevice } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
 
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
 import { getListPhoto } from '../../home/getListPhoto'
-import { useListColors } from '../../home/list/listColors'
 import { ListFavoriteButton } from '../../home/restaurant/ListFavoriteButton'
 import { useUserStore } from '../../userStore'
 import { CloseButton } from '../CloseButton'
@@ -69,7 +68,8 @@ const ListCardContent = graphql((props: ListCardProps) => {
 export const ListCardFrame = graphql((props: ListCardProps) => {
   const [hidden, setHidden] = useState(false)
   const { list, onHover, outside, deletable, onDelete, theme, ...feedCardProps } = props
-  const listColors = useListColors(list?.color)
+  // list?.color
+  // const listColors = useListColors()
   const userStore = useUserStore()
 
   if (hidden) {
@@ -80,15 +80,15 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
   const contents = (
     <Link width="100%" asyncClick name="list" params={{ slug: list.slug || '', userSlug }}>
       <FeedCard
-        listColors={listColors}
+        // listColors={listColors}
         theme={theme}
         fontTheme={!list.font ? 'slab' : 'sans'}
-        {...(props.colored && {
-          color: listColors.colorForTheme,
-          backgroundColor: `${listColors.backgroundColor}22`,
-          chromeless: true,
-          flat: true,
-        })}
+        // {...(props.colored && {
+        //   color: listColors.colorForTheme,
+        //   backgroundColor: `${listColors.backgroundColor}22`,
+        //   chromeless: true,
+        //   flat: true,
+        // })}
         outside={
           <>
             {outside}

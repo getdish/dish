@@ -181,7 +181,6 @@ function CommentBubbleContents(
   const circleSize = size === 'lg' ? 52 : 44
   const extImgSize = size === 'lg' ? 44 : 38
   const charSize = 22
-  // const colors = getColorsForName(`${name}`)
 
   const externalSource = source && source !== 'dish' ? thirdPartyCrawlSources[source] : null
   const backgroundColor = avatarBackgroundColor || grey

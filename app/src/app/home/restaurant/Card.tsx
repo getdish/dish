@@ -10,7 +10,7 @@ import {
   YStack,
   useTheme,
 } from '@dish/ui'
-import React, { useState } from 'react'
+import React from 'react'
 import { StyleSheet } from 'react-native'
 
 import {
@@ -21,7 +21,7 @@ import {
   cardFrameWidthSm,
   isWeb,
 } from '../../../constants/constants'
-import { ColorShades, getColorsForColor, getColorsForName } from '../../../helpers/getColorsForName'
+import { ColorShades } from '../../../helpers/getColorsForName'
 import { CardFrame, CardFrameProps } from '../../views/CardFrame'
 import { Image } from '../../views/Image'
 import { TitleStyled } from '../../views/TitleStyled'
@@ -100,11 +100,6 @@ export function Card(props: CardProps) {
     ...cardFrameProps
   } = props
   const hoverable = !!(onHoverIn || onHoverMove || onHoverOut)
-  const colors = backgroundColor
-    ? getColorsForColor(backgroundColor)
-    : typeof title === 'string'
-    ? getColorsForName(colorsKey || title || '')
-    : getColorsForName('')
   const isSm = size === 'sm'
   const strTitle = typeof title === 'string' ? title : 'hello world'
   const len = strTitle.length
@@ -149,7 +144,7 @@ export function Card(props: CardProps) {
         />
       )}
 
-      {typeof outside === 'function' ? outside(colors) : outside}
+      {typeof outside === 'function' ? outside({}) : outside}
 
       <YStack
         className="safari-fix-overflow"
@@ -222,7 +217,7 @@ export function Card(props: CardProps) {
                   </Paragraph>
                 )}
 
-                {typeof below === 'function' ? below(colors) : below}
+                {typeof below === 'function' ? below({}) : below}
               </YStack>
             </XStack>
           </YStack>

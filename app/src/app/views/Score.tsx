@@ -115,9 +115,8 @@ export const Score = memo(
 
     const theme = useTheme()
 
-    const colors = getColorsForColor(
-      typeof rating === 'number' ? (rating >= 7 ? green : rating < 5 ? red : grey) : grey
-    )
+    const colors =
+      typeof rating === 'number' ? (rating >= 7 ? 'green' : rating < 5 ? 'red' : 'grey') : 'grey'
 
     return (
       <XStack
@@ -148,7 +147,7 @@ export const Score = memo(
             </AbsoluteYStack>
             <ProgressRing
               size={Math.round(sizePx)}
-              color={colors.color400}
+              color={`$${colors}`}
               percent={rating * 10}
               width={sizePx * 0.05}
             />

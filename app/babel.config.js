@@ -18,7 +18,6 @@ module.exports = function (api) {
   }
 
   if (useOurBabel) {
-    console.log('using our babel', process.env.TARGET)
     return {
       presets: ['@dish/babel-preset'],
     }

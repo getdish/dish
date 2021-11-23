@@ -28,6 +28,7 @@ import { configureUseStore } from '@dish/use-store'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { App } from './app/App'
 // import { App } from './app/App'
@@ -153,8 +154,8 @@ export function Root() {
     (userStore.theme === 'auto' ? colorScheme : userStore.theme) ?? colorScheme ?? 'dark'
 
   return (
-    <>
-      <Tamagui.Provider>
+    <SafeAreaProvider>
+      <Tamagui.Provider defaultTheme={defaultTheme}>
         <ProvideRouter routes={routes}>
           <Suspense fallback={null}>
             {isLoaded ? <App /> : null}
@@ -163,7 +164,7 @@ export function Root() {
         </ProvideRouter>
       </Tamagui.Provider>
       {showRadar && <Radar />}
-    </>
+    </SafeAreaProvider>
   )
 }
 

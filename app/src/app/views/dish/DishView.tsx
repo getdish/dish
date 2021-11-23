@@ -2,7 +2,6 @@ import { restaurant } from '@dish/graph'
 import { supportsTouchWeb } from '@dish/helpers'
 import {
   AbsoluteYStack,
-  Box,
   Paragraph,
   StackProps,
   Text,
@@ -14,8 +13,7 @@ import {
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useState } from 'react'
 
-import { cardFrameBorderRadius, isWeb } from '../../../constants/constants'
-import { getColorsForName } from '../../../helpers/getColorsForName'
+import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
 import { NavigableTag } from '../../../types/tagTypes'
@@ -99,10 +97,8 @@ const DishViewContent = (props: DishViewProps) => {
   const isLong = dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115
   const fontSize = Math.max(13, (isLong ? 14 : 16) * (isTiny ? 0.75 : 1))
-  const colors = getColorsForName(name)
   const themeName = useThemeName()
   const theme = useTheme()
-  const backgroundColor = themeName === 'dark' ? colors.color600 : colors.color200
   const isActive = (isHovered || selected) ?? false
 
   const showVote = !hideVote && typeof score === 'number' && !!restaurant && !!name
@@ -144,12 +140,7 @@ const DishViewContent = (props: DishViewProps) => {
           bottom="-10%"
           right="-10%"
         >
-          <SearchTagButton
-            backgroundColor={colors.color200}
-            color={colors.color400}
-            // @ts-ignore
-            tag={{ slug, type: 'dish' }}
-          />
+          <SearchTagButton tag={{ slug, type: 'dish' }} />
         </AbsoluteYStack>
 
         <YStack
@@ -237,7 +228,6 @@ const DishViewContent = (props: DishViewProps) => {
 
   return (
     <SimpleCard
-      backgroundColor={backgroundColor}
       borderColor={selected ? '#000' : 'transparent'}
       borderRadius={1000}
       // borderWidth={1}

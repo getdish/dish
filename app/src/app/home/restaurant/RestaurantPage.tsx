@@ -16,6 +16,7 @@ import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'rea
 import { ScrollView, View } from 'react-native'
 
 import { drawerBorderRadius, isWeb, searchBarHeight } from '../../../constants/constants'
+import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
 import { UseColors, useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -59,14 +60,15 @@ type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
 export default function RestaurantPageContainer(props: Props) {
   const theme = useTheme()
-  const colors = useColorsFor(props.item.restaurantSlug)
+  const colors = getColorsForName(props.item.restaurantSlug)
+  console.log('TODO theme', colors)
   return (
     <StackDrawer
       closable
       fallback={
         <YStack
-          backgroundColor={colors.themeColor}
-          borderBottomColor={theme.borderColor}
+          // backgroundColor={colors.themeColor}
+          // borderBottomColor={theme.borderColor}
           borderBottomWidth={1}
           minHeight={450}
         >
@@ -105,7 +107,7 @@ const RestaurantPage = memo(
       const fontSize = Math.round(scale * fontSizeBase * fontScale)
       // const restaurantId = restaurant.id
       const [hasScrolled, setHasScrolled] = useState(false)
-      const colors = useColorsFor(restaurantSlug)
+      const colors = getColorsForName(restaurantSlug)
 
       useAsyncEffect(async (mounted) => {
         await sleep(500)
@@ -188,7 +190,7 @@ const RestaurantPage = memo(
       }).map((x) => x.tag.name)
 
       const themeName = useThemeName()
-      const headerThemeName = themeName === 'dark' ? `${colors.name}-dark` : `${colors.name}-light`
+      const headerThemeName = colors
 
       if (!restaurant) {
         return <NotFoundPage />
@@ -265,9 +267,7 @@ const RestaurantPage = memo(
                           <Text
                             className="font-title"
                             fontFamily="WhyteHeavy"
-                            // backgroundColor={theme.backgroundColor}
-                            // color={theme.color}
-                            color={colors.color}
+                            color="$color"
                             maxWidth={500}
                             alignSelf="flex-start"
                             selectable

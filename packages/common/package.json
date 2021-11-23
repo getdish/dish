@@ -17,6 +17,6 @@
     "find-up": "^4.1.0"
   },
   "devDependencies": {
-    "@tamagui/build": "*"
+    "@tamagui/build": "^1.0.0-alpha.2"
   }
 }

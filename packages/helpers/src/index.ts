@@ -24,7 +24,6 @@ export const allSettledFirstFulfilled = async <A, B extends Promise<A> = Promise
   args: B[]
 ): Promise<A | undefined> => {
   const res = await Promise.allSettled(args)
-  // @ts-expect-error
   return res.flatMap((x) => (x.status === 'fulfilled' ? x.value : []))[0]
 }
 

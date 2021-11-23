@@ -124,7 +124,6 @@ const RestaurantListItemContent = memo(
     } = props
     const media = useMedia()
     const [restaurant] = queryRestaurant(restaurantSlug)
-    // const colors = useColorsFor(restaurantSlug)
     const [state, setState] = useState({
       editing: false,
       description: null as null | string,

@@ -10,7 +10,7 @@ module.exports = {
   resolver: {
     ...config.resolver,
     blockList: block([/.*\/android\/React(Android|Common)\/.*/, /.*\/versioned-react-native\/.*/]),
-    resolverMainFields: ['react-native', 'browser', 'tsmain', 'main'],
+    resolverMainFields: ['react-native', 'browser', 'main'],
   },
   transformer: {
     ...config.transformer,

@@ -14,9 +14,9 @@
     "watch": "tamagui-build --watch"
   },
   "dependencies": {
-    "tamagui": "*"
+    "tamagui": "^1.0.0-alpha.3"
   },
   "devDependencies": {
-    "@tamagui/build": "*"
+    "@tamagui/build": "^1.0.0-alpha.2"
   }
 }

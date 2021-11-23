@@ -31,6 +31,8 @@ module.exports = (opts) => {
     },
     pollyFillPath: path.join(__dirname, 'src', 'web', 'polyfill.legacy.js'),
     tamaguiOptions: {
+      config: 'src/tamagui.config.ts',
+      components: ['tamagui'],
       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
       themesFile: require.resolve('./src/constants/themes.ts'),
       logTimings: true,

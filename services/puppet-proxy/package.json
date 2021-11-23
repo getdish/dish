@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "main": "dist",
-  "module": "_",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "scripts": {
     "build": "tamagui-build skip-types",
     "build:skip-types": "tamagui-build skip-types",
@@ -13,11 +14,11 @@
     "dev": "nodemon dist/index.js"
   },
   "dependencies": {
-    "@tamagui/build": "*",
+    "@tamagui/build": "^1.0.0-alpha.2",
     "express": "^4.17.1",
     "playwright": "^1.15.2"
   },
   "devDependencies": {
-    "typescript": "^4.2.4"
+    "typescript": "^4.5.2"
   }
 }

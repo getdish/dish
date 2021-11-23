@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@dish/react-test-env": "*",
-    "@tamagui/build": "*",
+    "@tamagui/build": "^1.0.0-alpha.2",
     "@testing-library/react": "^11.2.7",
     "@types/jest": "^26.0.20",
     "esbuild-jest": "^0.5.0",

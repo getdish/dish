@@ -1,4 +1,4 @@
-import { graphql, order_by, query, refetch, useMutation, useRefetch } from '@dish/graph'
+import { graphql, order_by, query, useMutation } from '@dish/graph'
 import {
   AbsoluteYStack,
   Box,
@@ -16,20 +16,17 @@ import { Plus, X } from '@tamagui/feather-icons'
 import React from 'react'
 import { ScrollView } from 'react-native'
 
-import { useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryUser } from '../../../queries/queryUser'
 import { userStore } from '../../userStore'
 import { CloseButton } from '../../views/CloseButton'
 import { Link } from '../../views/Link'
-import { LinkButton } from '../../views/LinkButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const RestaurantAddToListModal = graphql(
   ({ slug, onDismiss }: { slug: string; onDismiss: () => any }) => {
     const user = queryUser(userStore.user?.username ?? '')
-    const colors = useColorsFor(slug)
     const [restaurant] = queryRestaurant(slug)
     if (!restaurant) {
       return null

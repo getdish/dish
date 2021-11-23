@@ -10,14 +10,11 @@ import {
 import { Toast } from '@dish/ui'
 import { useEffect, useState } from 'react'
 
-import { getColorsForName } from '../../../helpers/getColorsForName'
-import { useListColors } from '../../home/list/listColors'
 import { useUserStore, userStore } from '../../userStore'
 
 export type ListQueryProps = { list: list; query: list[] | list_restaurant[] }
 
 export const useList = ({ list }: ListQueryProps) => {
-  const colors = getColorsForName(list?.name ?? '')
   const photos = list
     ?.restaurants({
       limit: 2,
@@ -30,8 +27,8 @@ export const useList = ({ list }: ListQueryProps) => {
       },
     })
     .map((x) => x.restaurant.image)
-  const backgroundColor = useListColors(list?.color) ?? colors.color
-  return { list, colors, photos, backgroundColor }
+  // const backgroundColor = useListColors(list?.color) ?? 'red'
+  return { list, photos, backgroundColor: 'red' }
 }
 
 export const useListFavorite = ({ query, list }: ListQueryProps) => {

@@ -46,8 +46,8 @@ export const useCurrentLenseColor = () => {
       const state = home.currentState as HomeStateItemRestaurant
       const colors = getColorsForName(state.restaurantSlug)
       return {
-        name: `${colors.name}-dark`,
-        rgb: hexToRGB(colors.color600).rgb,
+        name: `${colors}-dark`,
+        rgb: hexToRGB(colors).rgb,
       }
     }
     return null

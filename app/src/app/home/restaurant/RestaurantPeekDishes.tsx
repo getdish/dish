@@ -11,9 +11,6 @@ import { TagButton } from '../../views/TagButton'
 import { SkewedCardCarousel } from '../SimpleCard'
 import { EditRestaurantTagsButton } from './EditRestaurantTagsButton'
 
-const media = getMedia()
-const showInitial = media.xs ? 1 : media.sm ? 2 : 3
-
 export const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeekDishes(props: {
     size?: 'lg' | 'md'
@@ -25,6 +22,9 @@ export const RestaurantPeekDishes = memo(
     editable?: boolean
     onChangeTags?: (slugs: string[]) => void
   }) {
+    const media = getMedia()
+    const showInitial = media.xs ? 1 : media.sm ? 2 : 3
+
     const { isLoaded, size = 'md' } = props
     const restaurant = queryRestaurant(props.restaurantSlug)[0]
     const dishes = props.tagSlugs

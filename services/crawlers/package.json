@@ -1,7 +1,9 @@
 {
   "name": "@dish/crawlers",
   "version": "0.0.1",
-  "main": "dist",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "sideEffects": false,
   "testConfig": {
     "isolate": [
@@ -26,7 +28,7 @@
     "@dish/helpers": "*",
     "@dish/helpers-node": "*",
     "@dish/worker": "*",
-    "@tamagui/build": "*",
+    "@tamagui/build": "^1.0.0-alpha.2",
     "acorn": "^7.1.1",
     "ava": "^3.14.0",
     "aws-sdk": "^2.762.0",

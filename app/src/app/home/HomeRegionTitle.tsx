@@ -13,7 +13,6 @@ export const HomeRegionTitle = memo(() => {
   // const media = useMedia()
   const state = useLastHomeState('home', 'homeRegion') as HomeStateItemHome
   const enabled = !!state.region
-  const regionColors = getColorsForName(state.region)
   const regionResponse = useRegionQuery(state.region, {
     isPaused() {
       return !enabled
@@ -27,9 +26,6 @@ export const HomeRegionTitle = memo(() => {
     <Link onPress={() => autocompletesStore.setTarget('location')}>
       <ThemeInverse>
         <SlantedTitle
-          backgroundColor={regionColors.color}
-          // backgroundColor="#000"
-          // color="#fff"
           alignSelf="center"
           fontWeight="900"
           size={

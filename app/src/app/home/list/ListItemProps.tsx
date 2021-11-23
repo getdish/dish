@@ -1,10 +1,8 @@
 import { list, restaurant, review } from '@dish/graph'
 import React from 'react'
 
-import { ListColors } from './listColors'
-
 export type ListItemProps = {
-  listColors: ListColors
+  // listColors: ListColors
   list?: list | null
   listTheme?: 'modern' | 'minimal'
   reviewQuery?: review[] | null

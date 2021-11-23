@@ -1,7 +1,10 @@
 {
   "name": "@dish/worker-app",
   "version": "0.0.1",
-  "main": "dist",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "typings": "types.d.ts",
   "sideEffects": false,
   "license": "none",
   "scripts": {
@@ -19,7 +22,7 @@
     "@dish/crawlers": "*",
     "@dish/helpers": "*",
     "@dish/worker": "*",
-    "@tamagui/build": "*",
+    "@tamagui/build": "^1.0.0-alpha.2",
     "@types/bull": "^3.15.0",
     "bull": "^3.22.8",
     "bull-board": "^2.1.2",

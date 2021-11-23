@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@dish/testy": "*",
-    "@tamagui/build": "*",
+    "@tamagui/build": "^1.0.0-alpha.2",
     "@types/jest": "*",
     "jest": "*"
   }

@@ -21,7 +21,6 @@ import { GalleryRef, SwipeGallery } from '../../SwipeGallery'
 import { Image } from '../views/Image'
 import { TagButton } from '../views/TagButton'
 import { FontTheme, TitleStyled } from '../views/TitleStyled'
-import { ListColors } from './list/listColors'
 import { Card, CardProps } from './restaurant/Card'
 
 export type FeedCardProps = CardProps & {
@@ -34,7 +33,7 @@ export type FeedCardProps = CardProps & {
   emphasizeTag?: boolean
   color?: string
   theme?: 'modern' | 'minimal'
-  listColors?: ListColors
+  // listColors?: ListColors
 }
 
 export const FeedCard = (props: FeedCardProps) => {
@@ -43,7 +42,7 @@ export const FeedCard = (props: FeedCardProps) => {
     author,
     tags = [],
     color,
-    listColors,
+    // listColors,
     size = 'sm',
     fontTheme,
     children,
@@ -179,12 +178,12 @@ const FeedCardContent = ({
             />
           </AbsoluteYStack>
         )}
-        <LinearGradient
+        {/* <LinearGradient
           style={StyleSheet.absoluteFill}
           start={[0, 0]}
           end={[1, 1]}
           colors={[`${listColors?.backgroundForTheme}00`, `${listColors?.backgroundForTheme}33`]}
-        />
+        /> */}
         <AbsoluteXStack
           top={0}
           right={0}
@@ -212,7 +211,7 @@ const FeedCardContent = ({
         <YStack flex={1} />
 
         <YStack
-          backgroundColor={`${listColors?.backgroundForTheme}77`}
+          // backgroundColor={`${listColors?.backgroundForTheme}77`}
           padding={10}
           borderRadius={10}
           position="relative"
@@ -228,7 +227,7 @@ const FeedCardContent = ({
               fontSize={fontSize}
               lineHeight={fontSize * 1.2}
               // color="#000"
-              color={listColors?.colorForTheme}
+              // color={listColors?.colorForTheme}
               // backgroundColor={listColors?.backgroundForTheme}
             >
               {title}

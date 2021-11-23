@@ -1,22 +1,15 @@
 import * as Colors from '../constants/colors'
 
-if (Colors.colors.length !== Colors.colors100.length) {
-  throw new Error('must be same')
-}
+const all = Object.keys(Colors.light)
 
 export const getColorsForName = (name?: string | null) => {
   const charCode = name && name.length > 0 ? name.charCodeAt(0) : 0
-  const index = charCode % Colors.colors.length
+  const index = charCode % all.length
   return getColorsForIndex(index)
 }
 
-export const getColorsForColor = (color: string) => {
-  const index = Colors.colors.indexOf(color)
-  return getColorsForIndex(index == -1 ? 0 : index)
-}
-
 const getColorsForIndex = (index = 0) => {
-  return Colors.colorObjects[index]
+  return all[index]
 }
 
 export type ColorShades = ReturnType<typeof getColorsForIndex>

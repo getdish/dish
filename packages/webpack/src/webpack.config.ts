@@ -91,14 +91,13 @@ export function createWebpackConfig({
       'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
       'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 0),
       'process.env.DEBUG_ASSERT': JSON.stringify(process.env.DEBUG_ASSERT || false),
+      'process.env.TAMAGUI_TARGET': '"web"',
       ...Object.fromEntries(
         Object.entries(defineOptions || {}).map(([key, value]) => [key, JSON.stringify(value)])
       ),
     }
 
-    if (process.env.NODE_ENV === 'production') {
-      console.log('defines', defines)
-    }
+    console.log('defines', defines)
 
     // i had to manually create the webpack cache folder or else it didnt work!
     const rootNodeModules = join(require.resolve('webpack'), '..', '..', '..')
@@ -165,7 +164,7 @@ export function createWebpackConfig({
       },
       resolve: {
         extensions: ['.ts', '.tsx', '.web.js', '.js'],
-        mainFields: ['browser', 'tsmain', 'module', 'main'],
+        mainFields: ['module:jsx', 'browser', 'module', 'main'],
         ...resolve,
       },
       resolveLoader: {
@@ -446,6 +445,9 @@ function defaultBabelInclude(inputPath) {
     return true
   }
   if (inputPath.includes('@dish/')) {
+    return true
+  }
+  if (inputPath.includes('tamagui')) {
     return true
   }
   if (inputPath.includes('react-native-animatable')) {

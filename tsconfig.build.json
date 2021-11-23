@@ -9,7 +9,6 @@
     { "path": "app" },
     { "path": "packages/server" },
     { "path": "packages/worker" },
-    { "path": "packages/react-feather" },
     { "path": "services/crawlers" },
     { "path": "services/worker" }
   ]

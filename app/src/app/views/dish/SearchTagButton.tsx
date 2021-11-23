@@ -5,22 +5,14 @@ import React from 'react'
 import { NavigableTag } from '../../../types/tagTypes'
 import { Link } from '../Link'
 
-export const SearchTagButton = ({
-  tag,
-  backgroundColor,
-  color,
-}: {
-  tag: NavigableTag
-  backgroundColor: string
-  color: string
-}) => {
+export const SearchTagButton = ({ tag, color }: { tag: NavigableTag; color: string }) => {
   return (
     <Link tag={tag}>
       <YStack
         width={28}
         height={28}
         borderRadius={1000}
-        backgroundColor={backgroundColor}
+        backgroundColor="$bg"
         shadowColor="#000"
         shadowOpacity={0.1}
         shadowRadius={5}

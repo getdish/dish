@@ -30,27 +30,5 @@
     "declaration.d.ts"
   ],
 
-  "exclude": ["_"],
-
-  "references": [{
-    "path": "../packages/api"
-  }, {
-    "path": "../packages/webpack"
-  }, {
-    "path": "../packages/helpers-node"
-  }, {
-    "path": "../packages/async"
-  }, {
-    "path": "../packages/graph"
-  }, {
-    "path": "../packages/router"
-  }, {
-    "path": "../packages/helpers"
-  }, {
-    "path": "../packages/use-store"
-  }, {
-    "path": "../packages/react-feather"
-  }, {
-    "path": "../packages/fast-compare"
-  }]
+  "exclude": ["_"]
 }
