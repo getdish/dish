@@ -53,7 +53,7 @@ export default memo(
           </PaneControlButtons>
           <YStack width="100%" height="100%" flex={1}>
             <ScrollView style={{ width: '100%' }}>
-              <YStack padding={18} spacing="lg">
+              <YStack padding={18} space="$6">
                 <SmallTitle fontWeight="600">{title}</SmallTitle>
 
                 <Table className="hide-when-small">
@@ -89,7 +89,7 @@ export default memo(
                                   key={i}
                                 >
                                   {text}
-                                  {i < hour.hoursInfo.hours.length - 1 && <Spacer size="sm" />}
+                                  {i < hour.hoursInfo.hours.length - 1 && <Spacer size="$2" />}
                                 </Text>
                               )
                             })}

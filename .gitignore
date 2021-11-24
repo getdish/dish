@@ -59,7 +59,7 @@ xcuserdata/
 *.xccheckout
 
 ## compatibility with Xcode 3 and earlier (ignoring not required starting Xcode 4)
-build/
+app/**/build/
 DerivedData/
 *.moved-aside
 *.pbxuser
@@ -111,8 +111,6 @@ iOSInjectionProject/
 .vim
 
 hasura.logs
-
-build/
 
 services/search/m
 services/search/embedded.go

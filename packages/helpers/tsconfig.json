@@ -5,10 +5,5 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src"],
-  "references": [
-    {
-      "path": "../fast-compare"
-    }
-  ]
+  "include": ["src"]
 }

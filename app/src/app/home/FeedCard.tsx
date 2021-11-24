@@ -59,7 +59,7 @@ export const FeedCard = (props: FeedCardProps) => {
       className="hover-parent"
       overflowHidden
       dimImage
-      borderless={!!cardProps.backgroundColor}
+      borderless
       hoverEffect={'background'}
       size={size}
       {...cardProps}
@@ -130,8 +130,6 @@ const FeedCardContent = ({
   title,
   author,
   tags = [],
-  color,
-  listColors,
   size = 'sm',
   fontTheme,
   children,
@@ -155,14 +153,15 @@ const FeedCardContent = ({
   return (
     <XStack
       className="safari-fix-overflow"
-      borderRadius={10}
+      borderRadius="$3"
       overflow="hidden"
       height="100%"
       padding={10}
       alignItems="center"
+      bc="$bg2"
     >
       <YStack marginTop="auto" maxWidth="85%">
-        {typeof photo === 'string' && (
+        {/* {typeof photo === 'string' && (
           <AbsoluteYStack
             pointerEvents="none"
             borderRadius={100}
@@ -177,7 +176,7 @@ const FeedCardContent = ({
               style={{ width: imgSize, height: imgSize }}
             />
           </AbsoluteYStack>
-        )}
+        )} */}
         {/* <LinearGradient
           style={StyleSheet.absoluteFill}
           start={[0, 0]}
@@ -210,25 +209,14 @@ const FeedCardContent = ({
 
         <YStack flex={1} />
 
-        <YStack
-          // backgroundColor={`${listColors?.backgroundForTheme}77`}
-          padding={10}
-          borderRadius={10}
-          position="relative"
-          overflow="hidden"
-          spacing="xs"
-        >
+        <YStack padding={10} borderRadius={10} position="relative" overflow="hidden" space="$1">
           <YStack position="relative" display={isWeb ? 'block' : 'flex'}>
             <TitleStyled
               fontTheme={fontTheme}
-              // backgroundColor={cardProps.backgroundColor as any}
               letterSpacing={-1}
               fontWeight="300"
               fontSize={fontSize}
               lineHeight={fontSize * 1.2}
-              // color="#000"
-              // color={listColors?.colorForTheme}
-              // backgroundColor={listColors?.backgroundForTheme}
             >
               {title}
             </TitleStyled>
@@ -239,7 +227,6 @@ const FeedCardContent = ({
               size={size === 'xxs' || size === 'xs' || size === 'sm' ? 'xs' : 'sm'}
               fontWeight="300"
               opacity={0.6}
-              // color="#fff"
             >
               {typeof numItems !== 'undefined' ? (
                 <>{`${pluralize(numItems, 'item')}`} &middot; </>

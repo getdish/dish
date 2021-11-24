@@ -51,7 +51,7 @@ function BlogPageIndex() {
           <Title size="xl">Dish Blog</Title>
         </YStack>
         <Separator />
-        <YStack spacing="lg" paddingHorizontal={25} paddingVertical={40}>
+        <YStack space="$6" paddingHorizontal={25} paddingVertical={40}>
           {allPosts.map((post, index) => (
             <YStack key={index} borderRadius={10} padding={10}>
               <Link name="blog" params={{ slug: post.id }}>
@@ -59,7 +59,7 @@ function BlogPageIndex() {
                   {post.title}
                 </Title>
               </Link>
-              <Spacer size="sm" />
+              <Spacer size="$2" />
               <BlogPostMeta post={post} />
             </YStack>
           ))}

@@ -46,10 +46,10 @@ export function SubmittableForm({
         }
       }}
     >
-      <YStack spacing="sm" minWidth={260}>
+      <YStack space="$2" minWidth={260}>
         {!isSuccess && (
           <Suspense fallback={null}>
-            <YStack spacing="sm">{children}</YStack>
+            <YStack space="$2">{children}</YStack>
           </Suspense>
         )}
 

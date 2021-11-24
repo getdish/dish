@@ -22,11 +22,11 @@ export function BlogPageDetail({ post }: { post: PostEntry }) {
       <Title size="xxl" fontWeight="800">
         {title}
       </Title>
-      <Spacer size="sm" />
+      <Spacer size="$2" />
       <BlogPostMeta post={post} />
-      <Spacer size="lg" />
+      <Spacer size="$6" />
       <Separator />
-      <Spacer size="lg" />
+      <Spacer size="$6" />
       <View />
     </YStack>
   )

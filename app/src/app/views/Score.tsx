@@ -123,7 +123,7 @@ export const Score = memo(
         position="relative"
         pointerEvents="auto"
         alignItems="center"
-        spacing="sm"
+        space="$2"
         justifyContent="center"
         className={isWeb && !supportsTouchWeb && showVoteOnHover ? ' show-on-hover' : ''}
         {...props}

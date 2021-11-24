@@ -116,7 +116,7 @@ export const RestaurantDishRowContent = memo(
         >
           {hasDishes ? (
             <YStack paddingHorizontal={40} paddingVertical={10}>
-              <XStack spacing="sm">
+              <XStack space="$2">
                 <ScalingPressable
                   onPress={() => {
                     onSelect?.('')
@@ -126,13 +126,13 @@ export const RestaurantDishRowContent = memo(
                 </ScalingPressable>
                 {getDishRow(dishGroups[0])}
               </XStack>
-              <Spacer size="lg" />
-              <XStack marginLeft={24} spacing="sm">
+              <Spacer size="$6" />
+              <XStack marginLeft={24} space="$2">
                 {getDishRow(dishGroups[1])}
               </XStack>
             </YStack>
           ) : (
-            <Spacer size="xl" />
+            <Spacer size="$8" />
           )}
         </ContentScrollViewHorizontal>
       )

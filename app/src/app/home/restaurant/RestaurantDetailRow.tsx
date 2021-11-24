@@ -65,7 +65,7 @@ export const RestaurantDetailRow = memo(
       const spaceSize = sizeSm ? 0 : '6%'
 
       return (
-        <XStack alignItems="center" spacing={spaceSize} overflow="visible" {...rest}>
+        <XStack alignItems="center" space={spaceSize} overflow="visible" {...rest}>
           {rows
             .filter((x) => !sizeSm || x.content !== '')
             .map((row, index) => (

@@ -8,8 +8,8 @@
   "module": "dist/index.js",
   "typings": "types.d.ts",
   "scripts": {
-    "build": "tamagui-build",
-    "watch": "tamagui-build --watch"
+    "build": "dish-build",
+    "watch": "dish-build --watch"
   },
   "dependencies": {
     "@dish/graph": "*",
@@ -17,6 +17,6 @@
     "find-up": "^4.1.0"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-alpha.2"
+    "@dish/build": "^1.0.0-alpha.2"
   }
 }

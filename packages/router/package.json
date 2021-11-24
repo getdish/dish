@@ -8,8 +8,8 @@
   "module": "dist/index.js",
   "typings": "types",
   "scripts": {
-    "build": "tamagui-build legacy",
-    "watch": "tamagui-build --watch legacy",
+    "build": "dish-build legacy",
+    "watch": "dish-build --watch legacy",
     "test": "TARGET=node DISH_ENV=test jest --runInBand --forceExit"
   },
   "tests": {
@@ -22,8 +22,7 @@
     "tiny-request-router": "^1.2.2"
   },
   "devDependencies": {
-    "@dish/testy": "*",
-    "@tamagui/build": "^1.0.0-alpha.2",
+    "@dish/build": "^1.0.0-alpha.2",
     "jest": "*"
   }
 }

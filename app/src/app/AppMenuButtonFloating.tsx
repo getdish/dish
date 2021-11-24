@@ -1,8 +1,7 @@
-import { AbsoluteYStack, Modal, XStack, YStack, useMedia } from '@dish/ui'
+import { AbsoluteYStack, Modal, XStack, YStack, useMedia, useSafeAreaInsets } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'

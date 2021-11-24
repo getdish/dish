@@ -230,13 +230,13 @@ const Inner = () => {
           position="relative"
           maxWidth={600}
           pointerEvents="auto"
-          elevation={1}
+          elevation="$1"
         >
           <PaneControlButtons>
             <CloseButton onPress={() => setShow(false)} />
           </PaneControlButtons>
           <YStack paddingVertical={20} paddingHorizontal={20}>
-            <Paragraph size="md">
+            <Paragraph>
               <Text fontWeight="800">A better pocket guide to the world.</Text> Find and make
               playlists of the real world and earn money.{' '}
               <Link name="about" fontWeight="600">

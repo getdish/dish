@@ -36,7 +36,7 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
   return (
     <StackDrawer closable title="About Dish">
       <ContentScrollView id="about">
-        <YStack spacing="xl">
+        <YStack space="$8">
           <YStack
             // marginLeft={-60}
             // marginRight={20}
@@ -46,11 +46,11 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
             alignItems="center"
             position="relative"
           >
-            <Spacer size="xl" />
+            <Spacer size="$8" />
             <LogoColor scale={2} />
           </YStack>
 
-          <YStack paddingHorizontal="5%" spacing="xxl">
+          <YStack paddingHorizontal="5%" space="$8">
             <Paragraph fontWeight="800" size="$7">
               Hitchikers' guides to our galaxy.
             </Paragraph>

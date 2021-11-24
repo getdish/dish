@@ -16,14 +16,12 @@ import { Route } from './Route'
 LogBox.ignoreAllLogs(true)
 
 export function App() {
-  const theme = useTheme()
-
   return (
     <>
       <RootPortalProvider />
       {/* <StatusBar style="dark" /> */}
       <AutocompleteEffects />
-      <AbsoluteYStack fullscreen backgroundColor={theme.mapBackground}>
+      <AbsoluteYStack fullscreen backgroundColor="$mapBackground">
         <Suspense fallback={null}>
           {/* keep indent  */}
           <AppMap />

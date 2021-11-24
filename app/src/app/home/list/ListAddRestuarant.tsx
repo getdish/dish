@@ -6,7 +6,6 @@ import { debounce, uniqBy } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 
-import { blue } from '../../../constants/colors'
 import { AutocompleteItemFull } from '../../../helpers/createAutocomplete'
 import { createRestaurantAutocomplete } from '../../../helpers/createRestaurantAutocomplete'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
@@ -157,13 +156,13 @@ export const ListAddRestuarant = graphql(
             autoFocus
             onChangeText={setQuery}
           />
-          <Spacer size="sm" />
+          <Spacer size="$2" />
         </YStack>
         <ScrollView style={{ width: '100%', flex: 1 }}>
           <YStack>
             {isSearching && (
               <YStack className="rotating" margin="auto" marginVertical={20}>
-                <Loader size={16} color={blue} />
+                <Loader size={16} color="blue" />
               </YStack>
             )}
             {!isSearching && (

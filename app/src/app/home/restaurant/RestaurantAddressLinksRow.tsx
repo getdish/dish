@@ -35,7 +35,7 @@ export const RestaurantAddressLinksRow = memo(
       }
 
       const linkElements = (
-        <XStack alignItems="center" spacing="xs">
+        <XStack alignItems="center" space="$1">
           {!!restaurant.telephone && (
             <Link href={`tel:${restaurant.telephone}`}>
               <SmallButton

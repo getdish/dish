@@ -106,7 +106,7 @@ export const AutocompleteItemView = memo(
             </XStack>
             {!!result.description && (
               <>
-                <Spacer size="xs" />
+                <Spacer size="$1" />
                 <Text ellipse color={theme.color2} fontSize={15}>
                   {result.description}
                 </Text>

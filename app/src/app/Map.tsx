@@ -11,7 +11,7 @@ import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl'
 import React, { useEffect, useRef, useState } from 'react'
 import { Dimensions } from 'react-native'
 
-import { pink, pink300, pink400, purple700 } from '../constants/colors'
+import { light } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import * as mapHelpers from '../helpers/mapHelpers'
 import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'
@@ -461,7 +461,9 @@ export default function Map(props: MapProps) {
           })
 
           const pointColor =
-            themeName === 'dark' ? hexToRGB(pink300, 0.44).string : hexToRGB(pink, 0.44).string
+            themeName === 'dark'
+              ? hexToRGB(light.pink3, 0.44).string
+              : hexToRGB(light.pink10, 0.44).string
           map.addLayer({
             id: POINT_LAYER_ID,
             type: 'circle',
@@ -530,7 +532,7 @@ export default function Map(props: MapProps) {
               // 'text-anchor': 'bottom',
             },
             paint: {
-              'text-color': isDark ? pink400 : purple700,
+              'text-color': isDark ? light.pink4 : light.pink10,
               // 'text-halo-color': blue,
               // 'text-halo-width': 1,
             },

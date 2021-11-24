@@ -70,7 +70,7 @@ export const SearchPageScoring = memo(() => {
           </SlantedTitle>
         </AbsoluteYStack>
 
-        <XStack marginLeft={-5} spacing="sm">
+        <XStack marginLeft={-5} space="$2">
           {tagsWithPct.map(({ tag, pct }, index) => {
             return (
               <TagButton

@@ -116,10 +116,10 @@ export const RatingView = forwardRef(
 //   }
 
 //   return (
-//     <XStack spacing="sm">
+//     <XStack space="$2">
 //       <XStack display="inline-flex" alignItems="center">
 //         {outerRing}
-//         <Spacer size="xs" />
+//         <Spacer size="$1" />
 //         <Text>
 //           Food
 //           <Text fontSize={13} marginHorizontal={5} opacity={0.5}>
@@ -129,7 +129,7 @@ export const RatingView = forwardRef(
 //       </XStack>
 //       <XStack alignItems="center">
 //         {middleRing}
-//         <Spacer size="xs" />
+//         <Spacer size="$1" />
 //         <Text>
 //           Service
 //           <Text fontSize={13} marginHorizontal={5} opacity={0.5}>
@@ -139,7 +139,7 @@ export const RatingView = forwardRef(
 //       </XStack>
 //       <XStack alignItems="center">
 //         {innerRing}
-//         <Spacer size="xs" />
+//         <Spacer size="$1" />
 //         <Text>
 //           Ambience
 //           <Text fontSize={13} marginHorizontal={5} opacity={0.5}>

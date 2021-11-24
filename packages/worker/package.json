@@ -7,8 +7,8 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "scripts": {
-    "build": "tamagui-build legacy",
-    "watch": "tamagui-build legacy --watch",
+    "build": "dish-build legacy",
+    "watch": "dish-build legacy --watch",
     "test": "DISH_ENV=test ava test/* --verbose",
     "test:watch": "DISH_ENV=test ava test/* --watch"
   },
@@ -29,7 +29,7 @@
     "redis": "^3.1.2"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-alpha.2",
+    "@dish/build": "^1.0.0-alpha.2",
     "ava": "^3.14.0"
   }
 }

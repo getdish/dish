@@ -17,23 +17,25 @@ export const LinkButton = forwardRef(function LinkButtonContent<
     tooltip,
     disallowDisableWhenActive,
     tags,
+    preventNavigate,
     tag,
     name,
     params,
     onPress,
     isActive,
     activeStyle,
+    stopPropagation,
     activeTextStyle,
     textProps,
     opacity,
     theme,
     ...restProps
   } = props
-  const getElement = (innerProps) =>
+  const getElement = () =>
     wrapWithLinkElement(
       <Button
         {...restProps}
-        ref={combineRefs(innerProps.ref, ref)}
+        ref={ref}
         {...(isActive && activeStyle)}
         textProps={isActive ? props.activeTextStyle : textProps}
       >
@@ -41,9 +43,9 @@ export const LinkButton = forwardRef(function LinkButtonContent<
       </Button>
     )
   if (!!tooltip) {
-    return <Tooltip trigger={getElement}>{tooltip}</Tooltip>
+    return <Tooltip contents={tooltip}>{getElement()}</Tooltip>
   }
-  return getElement({})
+  return getElement()
 })
 
 const getChildren = (props: LinkButtonProps, isActive?: boolean) => {

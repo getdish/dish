@@ -74,7 +74,7 @@
 //                         cursor="pointer"
 //                         onPress={() => Linking.openURL(item.url)}
 //                       >
-//                         <XStack width="50%" spacing={6} alignItems="center">
+//                         <XStack width="50%" space={6} alignItems="center">
 //                           {info?.image ? (
 //                             <Image
 //                               source={info.image}

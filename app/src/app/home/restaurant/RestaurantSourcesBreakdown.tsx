@@ -51,7 +51,7 @@ export const RestaurantSourcesBreakdown = memo(
 
     return (
       <>
-        <Spacer size="lg" />
+        <Spacer size="$6" />
 
         <Table>
           <TableHeadRow>
@@ -135,7 +135,7 @@ export const RestaurantSourcesBreakdown = memo(
                   </TableRow>
                 ))}
 
-                <Spacer size="sm" />
+                <Spacer size="$2" />
               </React.Fragment>
             )
           })}

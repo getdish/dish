@@ -244,7 +244,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     <XStack
       className="hover-parent"
       position="relative"
-      spacing={fontSize * 0.5}
+      space={fontSize * 0.5}
       borderRadius={8}
       backgroundColor={theme.bg}
       borderWidth={bordered ? 0.5 : 0}
@@ -432,7 +432,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   if (tooltip) {
-    return <Tooltip trigger={(props) => <YStack {...props}>{contents}</YStack>}>{tooltip}</Tooltip>
+    return <Tooltip contents={tooltip}>{contents}</Tooltip>
   }
 
   return contents

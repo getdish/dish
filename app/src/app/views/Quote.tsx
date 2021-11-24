@@ -9,11 +9,11 @@ export const Quote = memo(
     by?: string
   }) => {
     return (
-      <XStack spacing={10}>
+      <XStack space={10}>
         <Text fontSize={40} color="#ccc" marginTop={-10} marginBottom={0}>
           “
         </Text>
-        <YStack spacing={6} flex={1}>
+        <YStack space={6} flex={1}>
           <Text fontSize={props.fontSize ?? 16} color={props.color ?? '#999'}>
             “
           </Text>

@@ -148,11 +148,11 @@ export const HomePageFeed = memo(
 
           <HomeNearbyRegions lng={center?.lng} lat={center?.lat} />
 
-          <Spacer size="xxl" />
+          <Spacer size="$6" />
 
           <YStack paddingHorizontal={10} position="relative">
             <AbsoluteYStack zIndex={100} top={-15} left={10}>
-              <SlantedTitle size="xs">Top Playlists</SlantedTitle>
+              <SlantedTitle size="$1">Top Playlists</SlantedTitle>
             </AbsoluteYStack>
 
             <Grid itemMinWidth={220}>
@@ -165,7 +165,7 @@ export const HomePageFeed = memo(
                     key={`${list.id ?? i}`}
                     marginBottom={5}
                   >
-                    <Spacer size="xxs" />
+                    <Spacer size="$1" />
                     <ListCard
                       onDelete={refetch}
                       query={trendingLists}
@@ -180,7 +180,7 @@ export const HomePageFeed = memo(
                         onHoverOut: setHoverCancel,
                       })}
                     />
-                    <Spacer size="xxs" />
+                    <Spacer size="$1" />
                   </XStack>
                 )
               })}
@@ -245,10 +245,10 @@ const HomeTrendingSpots = memo(({ region }: { region: string }) => {
     <>
       <YStack position="relative">
         <AbsoluteYStack zIndex={100} top={-15} left={0}>
-          <SlantedTitle size="xs">Trending Spots</SlantedTitle>
+          <SlantedTitle size="$2">Trending Spots</SlantedTitle>
         </AbsoluteYStack>
         <ContentScrollViewHorizontal>
-          <XStack alignItems="center" spacing="md" paddingVertical={10}>
+          <XStack alignItems="center" space="$4" paddingVertical={10}>
             {trendingSpots.map((spot, index) => {
               return <RestaurantCard key={spot.id || index} size="sm" restaurant={spot} />
             })}
@@ -262,7 +262,7 @@ const HomeTrendingSpots = memo(({ region }: { region: string }) => {
 const HomeTagLenses = memo(() => {
   return (
     <ContentScrollViewHorizontal>
-      <XStack alignItems="center" spacing="xxl" paddingHorizontal={16}>
+      <XStack alignItems="center" space="$8" paddingHorizontal={16}>
         {tagLenses.map((lense, i) => {
           return (
             <Link key={i} tag={lense}>
@@ -311,16 +311,17 @@ const HomeNearbyRegions = memo(
 
     return (
       <>
-        {!!nearbyRegions.length && <Spacer size="sm" />}
+        {!!nearbyRegions.length && <Spacer size="$2" />}
 
         <ContentScrollViewHorizontal>
-          <XStack alignItems="center" spacing="sm" paddingHorizontal={16}>
+          <XStack alignItems="center" space="$2" paddingHorizontal={16}>
             {nearbyRegions.map((r, i) => {
               const regionName = capitalize(r.hrrcity?.replace(/[a-z]+\-\s*/i, '') || '')
               const center = r.wkb_geometry ? getCenter(r.wkb_geometry) : null
               const region = r.slug || ''
               return (
                 <Button
+                  chromeless
                   {...(center && {
                     onPress: () =>
                       setLocation({
@@ -335,7 +336,7 @@ const HomeNearbyRegions = memo(
                   })}
                   key={i}
                 >
-                  <Title size="xs" key={i} paddingVertical={5}>
+                  <Title size="$4" key={i} paddingVertical={5}>
                     {regionName}
                   </Title>
                 </Button>

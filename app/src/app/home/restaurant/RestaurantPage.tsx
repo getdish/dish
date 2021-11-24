@@ -286,7 +286,7 @@ const RestaurantPage = memo(
                       <RestaurantPhotosRow
                         // slanted
                         restaurant={restaurant}
-                        spacing="sm"
+                        space="$2"
                         floating
                         width={130}
                         height={150}
@@ -295,7 +295,7 @@ const RestaurantPage = memo(
                     </YStack>
                   </XStack>
 
-                  <Spacer size="md" />
+                  <Spacer size="$4" />
 
                   <XStack pointerEvents="auto" flex={1} alignItems="center" minWidth={280}>
                     {spacer}
@@ -311,13 +311,13 @@ const RestaurantPage = memo(
                                 />
                               </XStack>
 
-                              <Spacer size="sm" />
+                              <Spacer size="$2" />
 
                               <YStack>
                                 <RestaurantAddress size="xs" address={restaurant?.address ?? ''} />
                               </YStack>
 
-                              <Spacer size="sm" />
+                              <Spacer size="$2" />
 
                               <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
                                 <SmallButton
@@ -335,7 +335,7 @@ const RestaurantPage = memo(
                                 </SmallButton>
                               </Link>
 
-                              <Spacer size="md" />
+                              <Spacer size="$4" />
 
                               <RestaurantDeliveryButtons
                                 showLabels
@@ -345,7 +345,7 @@ const RestaurantPage = memo(
                           </>
                         </XStack>
 
-                        <Spacer size="sm" />
+                        <Spacer size="$2" />
                       </YStack>
                     </YStack>
                   </XStack>
@@ -367,7 +367,7 @@ const RestaurantPage = memo(
                     <RestaurantTagsList
                       exclude={['dish']}
                       restaurant={restaurant}
-                      spacing={0}
+                      space={0}
                       maxItems={5}
                       tagButtonProps={{
                         // borderWidth: 0,
@@ -450,7 +450,7 @@ const RestaurantPage = memo(
                     <RestaurantLists restaurantSlug={restaurantSlug} />
                   </Suspense>
 
-                  <Spacer size="xl" />
+                  <Spacer size="$8" />
 
                   {/* END head color AREA */}
                 </YStack>
@@ -468,7 +468,7 @@ const RestaurantPage = memo(
                 </Suspense>
               </YStack>
 
-              <Spacer size="xl" />
+              <Spacer size="$8" />
 
               <YStack flex={1} marginBottom={20} width="100%" alignSelf="center">
                 <Suspense fallback={null}>

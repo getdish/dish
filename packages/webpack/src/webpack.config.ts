@@ -97,8 +97,6 @@ export function createWebpackConfig({
       ),
     }
 
-    console.log('defines', defines)
-
     // i had to manually create the webpack cache folder or else it didnt work!
     const rootNodeModules = join(require.resolve('webpack'), '..', '..', '..')
     const cacheDir = join(rootNodeModules, '.cache', 'webpack')

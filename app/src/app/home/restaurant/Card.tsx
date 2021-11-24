@@ -92,14 +92,13 @@ export function Card(props: CardProps) {
     dimImage,
     afterTitle,
     onHoverIn,
-    onHoverMove,
     items,
     onHoverOut,
     children,
     size = 'md',
     ...cardFrameProps
   } = props
-  const hoverable = !!(onHoverIn || onHoverMove || onHoverOut)
+  const hoverable = !!(onHoverIn || onHoverOut)
   const isSm = size === 'sm'
   const strTitle = typeof title === 'string' ? title : 'hello world'
   const len = strTitle.length
@@ -112,7 +111,7 @@ export function Card(props: CardProps) {
 
   const content = (
     <CardFrame size={size} {...cardFrameProps}>
-      {!!backgroundColor && (
+      {/* {!!backgroundColor && (
         <AbsoluteYStack
           fullscreen
           className={
@@ -127,7 +126,7 @@ export function Card(props: CardProps) {
             opacity: 0.6,
           })}
         />
-      )}
+      )} */}
 
       {/* behind shadow */}
       {/* on native this causes laggy scrolls */}
@@ -204,7 +203,7 @@ export function Card(props: CardProps) {
                     {title} {!!afterTitle ? <Text fontWeight="300">{afterTitle}</Text> : null}
                   </TitleStyled>
                 </YStack>
-                <Spacer size="xs" />
+                <Spacer size="$1" />
                 {!!subTitle && !size.endsWith('xs') && (
                   <Paragraph
                     textAlign="right"
@@ -228,7 +227,7 @@ export function Card(props: CardProps) {
 
   if (hoverable) {
     return (
-      <Hoverable onHoverIn={onHoverIn} onHoverOut={onHoverOut} onHoverMove={onHoverMove}>
+      <Hoverable onHoverIn={onHoverIn} onHoverOut={onHoverOut}>
         {content}
       </Hoverable>
     )

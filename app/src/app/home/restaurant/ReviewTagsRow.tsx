@@ -236,7 +236,7 @@ export const ReviewTagsRow = memo(
         <XStack flex={1} alignItems="center" pointerEvents="auto" zIndex={1000} {...props}>
           <XStack
             alignItems="center"
-            spacing="sm"
+            space="$2"
             paddingRight={10}
             {...(wrapTagsRow && {
               flexWrap: 'wrap',

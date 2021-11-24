@@ -18,7 +18,7 @@ export const AdminSearchableColumn = ({
     <YStack flex={1} maxHeight="100%">
       <ColumnHeader
         after={
-          <XStack flex={1} spacing={10} alignItems="center" justifyContent="space-between">
+          <XStack flex={1} space={10} alignItems="center" justifyContent="space-between">
             <TextInput
               placeholder="Search..."
               style={[styles.textInput, { flex: 1 }]}

@@ -6,7 +6,7 @@ import { useHomeCurrentHomeType } from '../homeStore'
 import { Link } from './Link'
 import { LogoCircle, LogoColor } from './Logo'
 
-export const DishLogoButton = memo(({ color }: { color?: string }) => {
+export const DishLogoButton = memo(() => {
   const media = useMedia()
   const type = useHomeCurrentHomeType()
   const currentType = useDebounceValue(type, 40)
@@ -35,33 +35,40 @@ export const DishLogoButton = memo(({ color }: { color?: string }) => {
   return (
     <YStack
       className="ease-in-out-faster"
-      width={media.xs ? logoXsWidth : logoSmWidth}
+      width={logoSmWidth}
       height={logoHeight}
       position="relative"
+      $xs={{
+        width: logoXsWidth,
+      }}
     >
       <YStack
         opacity={1}
         pointerEvents={media.xs ? 'none' : 'auto'}
-        y={media.xs ? -3 : -4}
-        {...(media.xs && {
+        y={-4}
+        $xs={{
           opacity: 0,
-        })}
+        }}
       >
         {wrapWithHomeLink(
           // marginVertical={-7} native only? web wroks
           <YStack marginVertical="auto">
-            <LogoColor color={color} />
+            <LogoColor />
           </YStack>
         )}
       </YStack>
       <AbsoluteYStack
-        pointerEvents={media.xs ? 'auto' : 'none'}
-        opacity={media.xs ? 1 : 0}
+        pointerEvents="none"
+        opacity={0}
         alignSelf="center"
         width={logoXsWidth}
         height={logoXsHeight}
         scale={0.75}
         y={7}
+        $xs={{
+          opacity: 1,
+          pointerEvents: 'auto',
+        }}
       >
         {wrapWithHomeLink(<LogoCircle />)}
       </AbsoluteYStack>

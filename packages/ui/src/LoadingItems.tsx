@@ -2,7 +2,7 @@ import React from 'react'
 import { Spacer, XStack, YStack } from 'tamagui'
 
 export const LoadingItems = () => (
-  <YStack spacing="sm" width="100%">
+  <YStack space="$2" width="100%">
     <LoadingItem />
     <LoadingItem />
     <LoadingItem />
@@ -10,7 +10,7 @@ export const LoadingItems = () => (
 )
 
 export const LoadingItemsSmall = () => (
-  <YStack spacing="xs" width="100%">
+  <YStack space="$1" width="100%">
     <LoadingItem size="sm" />
     <LoadingItem size="sm" />
     <LoadingItem size="sm" />

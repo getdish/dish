@@ -344,7 +344,7 @@ const RestaurantListItemContent = memo(
               </XStack>
             </Link>
 
-            <Spacer size="md" />
+            <Spacer size="$4" />
           </YStack>
 
           {/* ROW: CENTER CONTENT AREA */}
@@ -416,12 +416,12 @@ const RestaurantListItemContent = memo(
             paddingBottom={20}
             marginLeft={-30}
             alignItems="center"
-            spacing="lg"
+            space="$6"
           >
             <XStack
               paddingLeft={20}
               alignItems="center"
-              spacing="lg"
+              space="$6"
               {...(shouldShowOneLine && {
                 paddingLeft: 0,
                 minWidth: 460,
@@ -556,7 +556,7 @@ const RestaurantListItemContent = memo(
                     excludeOverall
                     size="sm"
                     restaurant={restaurant}
-                    spacing={0}
+                    space={0}
                     spacingHorizontal={0}
                     maxItems={4}
                     tagButtonProps={{

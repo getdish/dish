@@ -85,8 +85,8 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
     <StackDrawer closable title="Roadmap">
       <ContentScrollView id="roadmap">
         <PageContentWithFooter>
-          <YStack spacing="xl">
-            <YStack paddingHorizontal="5%" spacing="xxl">
+          <YStack space="$8">
+            <YStack paddingHorizontal="5%" space="$8">
               <YStack />
 
               <Paragraph fontWeight="800" size="$6">
@@ -125,7 +125,7 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
                     return <Button onPress={() => setPage((x) => x + 1)}>Load more</Button>
                   }
                   return (
-                    <XStack spacing="lg" alignItems="center">
+                    <XStack space="$6" alignItems="center">
                       <InteractiveContainer scale={0.7} marginVertical={-5} flexDirection="column">
                         <Button
                           onPress={() => vote(1)}

@@ -61,7 +61,7 @@ const HomeSearchInfoBoxCountry = memo(
         marginBottom={10}
       >
         <ContentScrollViewHorizontal>
-          <XStack paddingHorizontal={20} paddingVertical={5} spacing="xs" alignItems="center">
+          <XStack paddingHorizontal={20} paddingVertical={5} space="$1" alignItems="center">
             <Paragraph
               width={media.sm ? 0 : 'auto'}
               overflow="hidden"
@@ -102,7 +102,7 @@ const HomeSearchInfoBoxDish = memo(({ state }: { state: HomeStateItemSearch }) =
       paddingHorizontal={20}
       paddingRight={0}
       marginVertical={10}
-      spacing={20}
+      space={20}
       borderRadius={20}
       borderWidth={1}
       borderColor="#f2f2f2"

@@ -30,7 +30,7 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
 const HomePageFilterBarLarge = ({ activeTags }: FilterBarProps) => {
   const filterButtons = useSearchFilterButtons({ activeTags })
   return (
-    <XStack alignItems="center" spacing={4} justifyContent="center">
+    <XStack alignItems="center" space={4} justifyContent="center">
       {filterButtons}
     </XStack>
   )
@@ -76,7 +76,7 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
               </PaneControlButtons>
 
               <SlantedTitle alignSelf="center">Filters</SlantedTitle>
-              <YStack alignItems="center" justifyContent="center" flex={1} spacing="sm">
+              <YStack alignItems="center" justifyContent="center" flex={1} space="$2">
                 {filterButtons}
               </YStack>
             </SafeAreaView>

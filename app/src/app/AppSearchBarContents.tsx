@@ -33,13 +33,16 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      paddingHorizontal={media.sm ? 5 : 14}
+      paddingHorizontal={14}
       minHeight={searchBarHeight}
+      $sm={{
+        paddingHorizontal: 5,
+      }}
     >
       {!media.sm && <SearchBarActionButton />}
 
       <YStack paddingHorizontal={media.sm ? 2 : 12} maxHeight={searchBarHeight} overflow="hidden">
-        <DishLogoButton color={isColored ? '#fff' : undefined} />
+        <DishLogoButton />
       </YStack>
 
       <YStack
@@ -100,13 +103,15 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
           <YStack
             className="ease-in-out"
             overflow="hidden"
-            minWidth={media.sm ? 220 : 260}
+            minWidth={260}
             width="19%"
             maxWidth="50%"
-            {...(media.sm && {
+            flex={10}
+            $sm={{
+              flex: 1,
               maxWidth: focus === 'search' ? 120 : focus === 'location' ? '100%' : '25%',
-            })}
-            flex={media.sm ? 1 : 10}
+              minWidth: 220,
+            }}
           >
             {searchLocationEl}
           </YStack>

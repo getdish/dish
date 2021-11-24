@@ -1,12 +1,6 @@
-import { AbsoluteYStack, StackProps, XStack, YStack, useTheme } from '@dish/ui'
+import { StackProps, XStack, YStack } from '@dish/ui'
 import React from 'react'
 
-import {
-  cardFrameBorderRadius,
-  cardFrameWidth,
-  cardFrameWidthSm,
-  isWeb,
-} from '../../constants/constants'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 
 type CarouselSize = 'md' | 'sm'
@@ -18,14 +12,13 @@ export type SimpleCardProps = StackProps & {
 }
 
 export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: SimpleCardProps) => {
-  const theme = useTheme()
   return (
     <YStack
-      backgroundColor={theme.bg2}
+      backgroundColor="$bg2"
       marginRight={size === 'sm' ? -3 : -8}
       className="disable-hover-touch ease-in-out-fast"
-      borderRadius={cardFrameBorderRadius}
-      shadowColor={theme.shadowColor}
+      borderRadius="$3"
+      shadowColor="$shadowColor"
       shadowRadius={2}
       shadowOffset={{ height: 3, width: 3 }}
       position="relative"
@@ -55,27 +48,6 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
       })}
       {...props}
     >
-      {/* was broke on larger size too */}
-      {/* on native this causes laggy scrolls */}
-      {/* didnt scale properly */}
-      {/* {isWeb && isBehind && (
-        <AbsoluteYStack
-          className="ease-in-out"
-          zIndex={1002}
-          borderRadius={cardFrameBorderRadius}
-          top={-10}
-          left={0}
-          bottom={-10}
-          width={40}
-          x={-20}
-          // this makes react native work...
-          backgroundColor="rgba(0,0,0,0.001)"
-          shadowColor="#000"
-          shadowOpacity={0.15}
-          shadowRadius={20}
-          shadowOffset={{ width: 10, height: 0 }}
-        />
-      )} */}
       {children}
     </YStack>
   )

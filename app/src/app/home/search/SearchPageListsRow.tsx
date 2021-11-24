@@ -43,7 +43,7 @@ export const SearchPageListsRow = memo(
           height="100%"
           alignItems="center"
           justifyContent="center"
-          spacing="md"
+          space="$4"
           paddingHorizontal={20}
         >
           {lists.map((list, i) => {

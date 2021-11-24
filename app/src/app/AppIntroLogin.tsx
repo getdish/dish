@@ -14,7 +14,7 @@ export const AppIntroLogin = memo(() => {
 
   return (
     <>
-      <YStack overflow="hidden" borderRadius={20} padding={30} alignItems="center" spacing="md">
+      <YStack overflow="hidden" borderRadius={20} padding={30} alignItems="center" space="$4">
         <LogoColor scale={1.4} />
         <TagLine />
         {!userStore.isLoggedIn && (

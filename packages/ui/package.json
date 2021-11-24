@@ -8,10 +8,11 @@
   "source": "src/index.ts",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
-  "typings": "types.d.ts",
+  "module:jsx": "_jsx",
+  "typings": "types",
   "scripts": {
-    "build": "tamagui-build",
-    "watch": "tamagui-build --watch"
+    "build": "dish-build legacy --jsx",
+    "watch": "dish-build legacy --jsx --watch"
   },
   "dependencies": {
     "@tamagui/use-debounce": "1.0.0-alpha.5",
@@ -20,6 +21,6 @@
     "tamagui": "^1.0.0-alpha.5"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-alpha.2"
+    "@dish/build": "^1.0.0-alpha.2"
   }
 }

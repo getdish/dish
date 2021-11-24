@@ -435,7 +435,7 @@ const ListPageContent = memo(
                       {/* listColors.color */}
                       <X color={'red'} size={24} />
                     </YStack>
-                    <Spacer size="lg" />
+                    <Spacer size="$6" />
                   </>
                 )}
               </PaneControlButtonsLeft>
@@ -524,7 +524,7 @@ const ListPageContent = memo(
                           after={
                             <>
                               {!!tagButtons.length && (
-                                <XStack spacing="sm" justifyContent="center">
+                                <XStack space="$2" justifyContent="center">
                                   {tagButtons}
                                 </XStack>
                               )}
@@ -607,9 +607,9 @@ const ListPageContent = memo(
                         alignItems="center"
                         justifyContent="center"
                         flexWrap="wrap"
-                        spacing="xxl"
+                        space="$8"
                       >
-                        <XStack alignItems="center" spacing="xs">
+                        <XStack alignItems="center" space="$1">
                           <Paragraph>Color:</Paragraph>
                           <ColorPicker
                             // allListColors
@@ -675,7 +675,7 @@ const ListPageContent = memo(
                             Minimal
                           </Paragraph>
                         </InteractiveContainer>
-                        <XStack alignItems="center" spacing="xs">
+                        <XStack alignItems="center" space="$1">
                           <Paragraph>Public:&nbsp;</Paragraph>
                           <Switch value={isPublic} onValueChange={setPublic} />
                         </XStack>
@@ -736,7 +736,7 @@ const ListPageContent = memo(
 
                 {isMyList && (
                   <>
-                    <Spacer size="lg" />
+                    <Spacer size="$6" />
                     <XStack paddingHorizontal={20}>
                       <Button
                         onPress={() => {
@@ -752,7 +752,7 @@ const ListPageContent = memo(
                         Add
                       </Button>
                     </XStack>
-                    <Spacer size="xl" />
+                    <Spacer size="$8" />
                   </>
                 )}
               </YStack>

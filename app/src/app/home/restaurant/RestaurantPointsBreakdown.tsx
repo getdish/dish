@@ -72,7 +72,7 @@ export const RestaurantPointsBreakdown = memo(
             ) : null}
 
             {photosBreakdown.score != null && reviewsBreakdown.score != null ? (
-              <Spacer size="xs" />
+              <Spacer size="$1" />
             ) : null}
 
             {photosBreakdown.score != null ? (
@@ -84,9 +84,9 @@ export const RestaurantPointsBreakdown = memo(
               </Paragraph>
             ) : null}
 
-            <Spacer size="lg" />
+            <Spacer size="$6" />
             <Separator />
-            <Spacer size="lg" />
+            <Spacer size="$6" />
 
             <Paragraph textAlign="center" size={0.9} color="rgba(0,0,0,0.6)">
               <TextHighlight fontWeight="700" backgroundColor={green200}>
@@ -108,13 +108,13 @@ export const RestaurantPointsBreakdown = memo(
               }, {})}
             /> */}
 
-            <Spacer size="lg" />
+            <Spacer size="$6" />
 
             {showTable && <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} />}
 
             {!showTable && (
               <>
-                <Spacer size="lg" />
+                <Spacer size="$6" />
 
                 <SmallButton alignSelf="center" onPress={() => setShowTable((x) => !x)}>
                   {showTable ? 'Hide breakdown' : 'Points breakdown'}

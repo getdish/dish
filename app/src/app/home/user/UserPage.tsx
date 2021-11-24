@@ -273,7 +273,7 @@ const UserPageContent = memo(
 
             <Spacer />
 
-            <XStack spacing="sm" justifyContent="center">
+            <XStack space="$2" justifyContent="center">
               <SmallButton
                 textProps={{
                   fontWeight: '800',
@@ -320,7 +320,7 @@ const UserPageContent = memo(
               </SmallButton>
             </XStack>
 
-            <Spacer size="lg" />
+            <Spacer size="$6" />
 
             {/* <YStack>
               <Separator />
@@ -345,9 +345,9 @@ const UserPageContent = memo(
               <Separator />
             </YStack> */}
 
-            {/* <Spacer size="lg" /> */}
+            {/* <Spacer size="$6" /> */}
 
-            <YStack spacing="lg" paddingVertical={20}>
+            <YStack space="$6" paddingVertical={20}>
               {/* PHOTOS FEED */}
               <XStack spacing>
                 {user
@@ -511,7 +511,7 @@ const UserHeader = memo(
                 <TitleStyled size="xxxxl" paddingRight={30}>
                   {user.name || user.username}
                 </TitleStyled>
-                <Spacer size="xl" />
+                <Spacer size="$8" />
                 <XStack flexWrap="wrap">
                   <Paragraph opacity={0.5}>{user.username}</Paragraph>
 

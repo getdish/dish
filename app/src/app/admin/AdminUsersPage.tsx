@@ -119,7 +119,7 @@ const UserDisplay = graphql(() => {
       {!user && <Text>No User Selected</Text>}
       {!!user && (
         <ScrollView>
-          <YStack spacing={10}>
+          <YStack space={10}>
             <Text>username: {user.username}</Text>
             <Text>username: {user.email}</Text>
             <Text>has_onboarded: {user.has_onboarded}</Text>

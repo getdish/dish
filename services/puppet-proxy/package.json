@@ -7,14 +7,14 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "scripts": {
-    "build": "tamagui-build skip-types",
-    "build:skip-types": "tamagui-build skip-types",
-    "watch": "tamagui-build --watch skip-types",
+    "build": "dish-build skip-types",
+    "build:skip-types": "dish-build skip-types",
+    "watch": "dish-build --watch skip-types",
     "start": "node dist/index.js",
     "dev": "nodemon dist/index.js"
   },
   "dependencies": {
-    "@tamagui/build": "^1.0.0-alpha.2",
+    "@dish/build": "^1.0.0-alpha.2",
     "express": "^4.17.1",
     "playwright": "^1.15.2"
   },

@@ -10,8 +10,8 @@
   "module": "dist/index.js",
   "typings": "types",
   "scripts": {
-    "build": "tamagui-build legacy",
-    "watch": "tamagui-build --watch legacy"
+    "build": "dish-build legacy",
+    "watch": "dish-build --watch legacy"
   },
   "dependencies": {
     "@testing-library/react": "13.0.0-alpha.4",
@@ -24,7 +24,7 @@
     "react-test-renderer": "18.0.0-beta-149b420f6-20211119"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-alpha.2",
+    "@dish/build": "^1.0.0-alpha.2",
     "@types/react": "*",
     "@types/react-dom": "*",
     "@types/react-native": "*",

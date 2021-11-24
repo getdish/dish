@@ -58,14 +58,14 @@ export const UserOnboard = graphql(
     return (
       <>
         <YStack
-          spacing
+          space
           alignItems="center"
           justifyContent="center"
           paddingBottom={60}
           paddingHorizontal={20}
         >
           {!hideLogo && (
-            <YStack marginTop={20} spacing alignItems="center">
+            <YStack marginTop={20} space alignItems="center">
               <LogoColor scale={2} />
 
               <Paragraph zIndex={10} color="#fff">

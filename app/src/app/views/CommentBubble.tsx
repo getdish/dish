@@ -67,13 +67,15 @@ export const CommentBubble = (props: CommentBubbleProps) => {
     ...rest
   } = props
 
+  return null
+
   return (
     <YStack
       borderRadius={10}
       padding={4}
       alignItems="flex-start"
       justifyContent="flex-start"
-      spacing="sm"
+      space="$2"
       overflow="hidden"
       {...rest}
     >
@@ -201,7 +203,7 @@ function CommentBubbleContents(
         <YStack flex={1} />
       ) : (
         <>
-          <XStack spacing="sm" alignItems="center">
+          <XStack space="$2" alignItems="center">
             <YStack
               width={circleSize}
               height={circleSize}
@@ -213,7 +215,7 @@ function CommentBubbleContents(
             >
               {wrapLink(
                 <>
-                  {!avatar && <User color={theme.color} size={charSize} />}
+                  {!avatar && <User color={theme.color.toString()} size={charSize} />}
                   {!!avatar && (
                     <UserAvatar
                       charIndex={avatarProp?.charIndex || 0}
@@ -244,7 +246,7 @@ function CommentBubbleContents(
             )}
           </XStack>
 
-          <Spacer size="lg" />
+          <Spacer size="$4" />
 
           <XStack flex={1} pointerEvents="auto" alignItems="center" spacing>
             {!!name && (
@@ -294,7 +296,7 @@ function CommentBubbleContents(
           paddingHorizontal={15}
           paddingVertical={15}
           marginLeft={20}
-          backgroundColor={theme.bgCard}
+          backgroundColor="$bgCard"
           borderColor={theme.borderColor}
           borderWidth={0.5}
           borderRadius={20}
@@ -324,8 +326,8 @@ function CommentBubbleContents(
               width={20}
               height={20}
               borderRadius={100}
-              backgroundColor={theme.bgCard}
-              shadowColor={theme.shadowColor2}
+              backgroundColor="$bgCard"
+              shadowColor="$shadowColor2"
               shadowRadius={4}
               shadowOffset={{ height: 3, width: 0 }}
             />

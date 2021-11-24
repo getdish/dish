@@ -2,7 +2,6 @@ import {
   AbsoluteXStack,
   AbsoluteYStack,
   Theme,
-  Tooltip,
   YStack,
   useMedia,
   useSafeAreaInsets,
@@ -109,7 +108,7 @@ export const AppMapControls = memo(() => {
 //   }
 //   return (
 //     <OverlayLinkButton onPress={toggleSearchRegion}>
-//       <XStack pointerEvents="none" alignItems="center" spacing="sm">
+//       <XStack pointerEvents="none" alignItems="center" space="$2">
 //         <Text userSelect="none" fontSize={12}>
 //           Area
 //         </Text>

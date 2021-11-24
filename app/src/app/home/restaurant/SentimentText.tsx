@@ -33,7 +33,7 @@ export const SentimentText = ({
           >
             {children}
           </Text>
-          <Spacer size="xs" />
+          <Spacer size="$1" />
         </>
       )}
       <Icon size={12 * scale} color={color} />

@@ -21,7 +21,7 @@ export function TagsText({ tags }: { tags: any[] }) {
               {tag.icon.trim()}{' '}
             </Text>
           ) : null}
-          {!!tag.icon && <Spacer size="sm" />}
+          {!!tag.icon && <Spacer size="$2" />}
           <Text color={theme.color} fontSize={13} fontWeight="500">
             {tagDisplayName(tag)}
           </Text>

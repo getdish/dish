@@ -11,8 +11,8 @@
     "isolate": true
   },
   "scripts": {
-    "build": "tamagui-build legacy",
-    "watch": "tamagui-build --watch legacy",
+    "build": "dish-build legacy",
+    "watch": "dish-build --watch legacy",
     "generate": "DISH_ENV=development ../../dsh run 'node ./dist/generate.js'",
     "test": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
     "test:only": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
@@ -34,10 +34,10 @@
     "react": "*"
   },
   "devDependencies": {
+    "@dish/build": "^1.0.0-alpha.2",
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
     "@gqty/cli": "^2.0.1",
-    "@tamagui/build": "^1.0.0-alpha.2",
     "@types/node": "^16.11.8",
     "ava": "^3.14.0"
   }

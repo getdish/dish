@@ -28,8 +28,6 @@ import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 
 const isWebTouch = isWeb && supportsTouchWeb
 
-const placeHolder = `Search`
-
 // avoid first one on iniital focus
 let avoidNextFocus = true
 export function setAvoidNextAutocompleteShowOnFocus() {
@@ -127,9 +125,9 @@ export const AppSearchInput = memo(() => {
   return (
     <InputFrame>
       {/* Loading / Search Icon */}
-      <SearchInputIcon color={color} />
+      <SearchInputIcon color={color.toString()} />
 
-      <Spacer size="xs" />
+      <Spacer size="$2" />
 
       <YStack
         // @ts-ignore
@@ -209,12 +207,12 @@ export const AppSearchInput = memo(() => {
                     ? 'Add restaurant to list...'
                     : isSearchingCuisine
                     ? '...'
-                    : `${placeHolder}...`
+                    : `Search...`
                 }
                 style={[
                   inputTextStyles.textInput,
                   {
-                    color,
+                    color: color.toString(),
                     flex: 1,
                     fontSize: media.sm ? 18 : 18,
                     fontWeight: '500',
@@ -253,7 +251,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
           </YStack>
         ) : (
           <Search
-            color={color.toString()}
+            color={color}
             size={media.xs ? 18 : 20}
             style={{
               opacity: 0.7,

@@ -166,8 +166,8 @@ const RatingWithVotes = memo(
           {subtle ? (
             getUpvote({})
           ) : (
-            <Tooltip placement="right" trigger={getUpvote} {...isOpenProp}>
-              Upvote
+            <Tooltip placement="right" contents="Upvote" {...isOpenProp}>
+              {getUpvote({})}
             </Tooltip>
           )}
         </YStack>
@@ -192,8 +192,8 @@ const RatingWithVotes = memo(
           {subtle ? (
             getDownvote({})
           ) : (
-            <Tooltip placement="right" trigger={getDownvote} {...isOpenProp}>
-              Downvote
+            <Tooltip placement="right" contents="Downvote" {...isOpenProp}>
+              {getDownvote({})}
             </Tooltip>
           )}
         </YStack>

@@ -25,7 +25,8 @@ const lenseColors = {
 
 export const useCurrentLenseColor = () => {
   const themeName = useThemeName()
-  const result = useHomeStoreSelector((home) => {
+
+  const res = useHomeStoreSelector((home) => {
     if (home.currentState.type === 'list') {
       if (home.currentState.color) {
         return {
@@ -52,8 +53,10 @@ export const useCurrentLenseColor = () => {
     }
     return null
   })
-  if (result) {
-    return result
+
+  if (res) {
+    return res
   }
+
   return themeName.startsWith('dark') ? defaultLenseColorDark : defaultLenseColor
 }

@@ -43,7 +43,7 @@ export const AppMenuLinkButton = memo(
           {(isActive) => {
             const IconElement = isActive ? ActiveIcon ?? Icon : Icon
             return (
-              <XStack spacing alignItems="center" justifyContent="center">
+              <XStack space alignItems="center" justifyContent="center">
                 <IconElement color={color} size={22} />
                 {!!text && (
                   <Text color={color} fontSize={13} fontWeight="500">

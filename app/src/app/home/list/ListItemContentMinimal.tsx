@@ -45,7 +45,6 @@ export const ListItemContentMinimal = (props: ListItemContentProps) => {
 const Header = memo(
   graphql((props: ListItemContentProps) => {
     const {
-      listColors,
       rank,
       restaurant,
       editable,
@@ -87,8 +86,8 @@ const Header = memo(
     }
 
     const colors = {
-      color: isDark ? listColors.lightColor : listColors.darkColor,
-      backgroundColor: `${isDark ? listColors.lightColor : listColors.darkColor}11`,
+      color: 'white', //isDark ? listColors.lightColor : listColors.darkColor,
+      backgroundColor: 'red', //`${isDark ? listColors.lightColor : listColors.darkColor}11`,
     }
 
     return (
@@ -96,7 +95,7 @@ const Header = memo(
         <YStack
           // hoverStyle={{ backgroundColor: `${listColors.backgroundColor}11` }}
           hoverStyle={{
-            backgroundColor: theme.backgroundColorTransluscent,
+            backgroundColor: '$bgTransparent',
           }}
           paddingVertical={20}
           paddingHorizontal={24}
@@ -151,7 +150,7 @@ const Header = memo(
               </XStack>
 
               {!minimal && (
-                <XStack spacing="xs" alignItems="center" marginVertical={-7} marginLeft={-10}>
+                <XStack space="$1" alignItems="center" marginVertical={-7} marginLeft={-10}>
                   {!isFocused && !!editable && (
                     <SmallButton
                       backgroundColor="transparent"

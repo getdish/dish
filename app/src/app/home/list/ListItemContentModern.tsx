@@ -135,7 +135,7 @@ export const ListItemContentModern = memo(
 
           <XStack
             alignItems="center"
-            spacing="lg"
+            space="$6"
             // below the add comment button
             zIndex={0}
             position="relative"

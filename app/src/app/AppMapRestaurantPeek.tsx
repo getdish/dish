@@ -87,7 +87,7 @@ export const AppMapRestaurantPeek = memo(
 
     //       {!!restaurant.image && (
     //         <>
-    //           <Spacer size="sm" />
+    //           <Spacer size="$2" />
     //           <Image
     //             resizeMode="cover"
     //             source={{ uri: restaurant.image }}

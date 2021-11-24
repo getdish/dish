@@ -76,7 +76,7 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
               }
             }}
           />
-          <Spacer size="sm" />
+          <Spacer size="$2" />
           <SmallButton
             theme="active"
             accessible

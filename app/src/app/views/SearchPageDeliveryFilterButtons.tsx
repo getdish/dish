@@ -19,7 +19,7 @@ export const SearchPageDeliveryFilterButtons = memo(() => {
   const noneActive = sources.every((x) => !activeTags[x])
   return (
     <Box pointerEvents="auto" width={200}>
-      <YStack spacing={4} padding={10} alignItems="stretch">
+      <YStack space={4} padding={10} alignItems="stretch">
         {sources.map((key) => {
           const item = thirdPartyCrawlSources[key]
           const isActive = noneActive ? true : activeTags[key]

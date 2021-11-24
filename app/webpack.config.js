@@ -21,6 +21,7 @@ module.exports = (opts) => {
         react: path.join(require.resolve('react'), '..'),
         'react-dom': path.join(require.resolve('react-dom'), '..'),
         'react-native': 'react-native-web',
+        'react-native-safe-area-context': require.resolve('react-native-safe-area-context'),
         '@tamagui/feather-icons': 'react-feather',
         gqty: path.join(require.resolve('gqty'), '..'),
         recyclerlistview: 'recyclerlistview/web',
@@ -32,7 +33,7 @@ module.exports = (opts) => {
     pollyFillPath: path.join(__dirname, 'src', 'web', 'polyfill.legacy.js'),
     tamaguiOptions: {
       config: 'src/tamagui.config.ts',
-      components: ['tamagui'],
+      components: ['tamagui', '@dish/ui'],
       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
       themesFile: require.resolve('./src/constants/themes.ts'),
       logTimings: true,

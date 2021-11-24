@@ -23,12 +23,18 @@ import './globals'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import { AbsoluteYStack, Paragraph, Theme, Toast, useSafeAreaInsets } from '@dish/ui'
+import {
+  AbsoluteYStack,
+  Paragraph,
+  SafeAreaProvider,
+  Theme,
+  Toast,
+  useSafeAreaInsets,
+} from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 import { App } from './app/App'
 // import { App } from './app/App'
@@ -98,17 +104,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const cacheSnapshot = global.__CACHE_SNAPSHOT
-
-// can be used by ssr in the future to load app
-export function RootSuspenseLoad(props: any) {
-  if (!isStarted && !startPromise) {
-    startPromise = start()
-  }
-  if (startPromise) {
-    throw startPromise
-  }
-  return <Suspense fallback={null}>{props.children}</Suspense>
-}
 
 const DebugHUD = () => {
   const safeArea = useSafeAreaInsets()
@@ -190,4 +185,15 @@ function Radar() {
   }
 
   return null
+}
+
+// can be used by ssr in the future to load app
+export function RootSuspenseLoad(props: any) {
+  if (!isStarted && !startPromise) {
+    startPromise = start()
+  }
+  if (startPromise) {
+    throw startPromise
+  }
+  return <Suspense fallback={null}>{props.children}</Suspense>
 }

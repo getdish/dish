@@ -149,7 +149,7 @@ const TagList = memo(
       <YStack flex={1} maxHeight="100%">
         <ColumnHeader
           after={
-            <XStack flex={1} spacing={10} alignItems="center" justifyContent="space-between">
+            <XStack flex={1} space={10} alignItems="center" justifyContent="space-between">
               <TextInput
                 placeholder="Search..."
                 style={[styles.textInput, { flex: 1, maxWidth: '70%' }]}
@@ -358,7 +358,7 @@ const TagEditColumn = memo(() => {
   const refetch = useRefetch()
 
   return (
-    <YStack spacing="lg">
+    <YStack space="$6">
       <>
         <Text>Create</Text>
         <SmallButton onPress={() => tagStore.setShowCreate(!tagStore.showCreate)}>
@@ -532,7 +532,7 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
       borderWidth={1}
       borderRadius={10}
       backgroundColor="#fff"
-      spacing={10}
+      space={10}
     >
       <TableRow label="ID">
         <Text opacity={0.5}>{tag.id}</Text>

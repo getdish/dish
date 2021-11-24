@@ -13,7 +13,7 @@ import { SmallTitle } from '../views/SmallTitle'
 export default memo(function AdminPage() {
   return (
     <YStack pointerEvents="auto" flex={1} alignItems="center" backgroundColor="#fff">
-      <XStack backgroundColor="#eee" width="100%" spacing={20} padding={5}>
+      <XStack backgroundColor="#eee" width="100%" space={20} padding={5}>
         <Link name="admin">
           <Text fontWeight="700">Admin</Text>
         </Link>
@@ -34,11 +34,11 @@ export default memo(function AdminPage() {
         <Route name="adminPlaces">{() => <AdminPlacesPage />}</Route>
         <Route name="admin">
           <ScrollView style={{ width: '100%', height: '100%' }}>
-            <YStack alignItems="center" paddingVertical={20} spacing="xxl">
+            <YStack alignItems="center" paddingVertical={20} space="$8">
               <Title>Welcome to dish</Title>
 
               <SmallTitle>Manage</SmallTitle>
-              <XStack justifyContent="center" flexWrap="wrap" spacing="lg">
+              <XStack justifyContent="center" flexWrap="wrap" space="$6">
                 <AdminLinkButton icon="🏷" name="adminTags">
                   Tags
                 </AdminLinkButton>
@@ -51,7 +51,7 @@ export default memo(function AdminPage() {
               </XStack>
 
               <SmallTitle>Services</SmallTitle>
-              <XStack justifyContent="center" flexWrap="wrap" spacing="lg">
+              <XStack justifyContent="center" flexWrap="wrap" space="$6">
                 <AdminLinkButton icon="💽" href={GRAPH_DOMAIN}>
                   Hasura
                 </AdminLinkButton>
@@ -79,7 +79,7 @@ export default memo(function AdminPage() {
               </XStack>
 
               <SmallTitle>Intranet</SmallTitle>
-              <XStack justifyContent="center" flexWrap="wrap" spacing="lg">
+              <XStack justifyContent="center" flexWrap="wrap" space="$6">
                 <AdminLinkButton icon="💬" href="http://dish-headquarters.slack.com/">
                   Slack
                 </AdminLinkButton>
@@ -110,7 +110,7 @@ const AdminLinkButton = ({
       }}
       {...props}
     >
-      <YStack spacing alignItems="center">
+      <YStack space alignItems="center">
         <Text height={80 + 20} fontSize={80}>
           {icon}
         </Text>

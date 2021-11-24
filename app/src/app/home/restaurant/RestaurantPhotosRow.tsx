@@ -139,7 +139,7 @@ export const RestaurantPhotosRowContent = memo(
 
       return (
         // an attempt to get native to scroll but not working
-        <XStack spacing={spacing} minWidth={fullWidth}>
+        <XStack space={spacing} minWidth={fullWidth}>
           {slanted ? <SkewedCardCarousel>{contents}</SkewedCardCarousel> : contents}
         </XStack>
       )

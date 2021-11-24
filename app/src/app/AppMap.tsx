@@ -50,6 +50,8 @@ export default memo(function AppMap() {
       })()
     : 0
 
+  console.log('y0', y0)
+
   const y = useDebounceValue(y0, 150)
   const [translateY] = useState(() => new Animated.Value(y))
   // const offset = useSharedValue(y)
@@ -70,19 +72,21 @@ export default memo(function AppMap() {
     return null
   }
 
-  const style = [
-    StyleSheet.absoluteFill,
-    {
-      transform: [{ translateY }],
-    },
-  ]
-
   return (
     <>
       {media.sm && <AppMapControls />}
-      <Animated.View style={style}>
-        <AppMapContents />
-      </Animated.View>
+      {/* this is breaking suddenly but not anything to do with tamagui */}
+      {/* the position relative from .css-view is overriding the atomic position absolute */}
+      {/* <Animated.View
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            transform: [{ translateY }],
+          },
+        ]}
+      > */}
+      <AppMapContents />
+      {/* </Animated.View> */}
     </>
   )
 })

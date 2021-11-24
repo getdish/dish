@@ -74,7 +74,7 @@ export const SearchHeader = memo(() => {
                   </Text>
                 </YStack>
               </YStack>
-              <Spacer size="xs" />
+              <Spacer size="$1" />
               <SearchPageScoring />
             </YStack>
             <XStack marginLeft={-10} marginBottom={8} position="relative">
@@ -97,7 +97,7 @@ export const SearchHeader = memo(() => {
       <Suspense fallback={null}>
         {/* <SearchPageResultsInfoBox state={curProps.item} /> */}
       </Suspense>
-      <Spacer size="sm" />
+      <Spacer size="$2" />
     </>
   )
 })

@@ -7,7 +7,6 @@
   },
   "references": [
     { "path": "app" },
-    { "path": "packages/server" },
     { "path": "packages/worker" },
     { "path": "services/crawlers" },
     { "path": "services/worker" }

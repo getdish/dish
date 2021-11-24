@@ -123,11 +123,11 @@ const Content = memo(
 
       if (size === 'sm') {
         return (
-          <XStack paddingHorizontal={10} marginVertical="auto" spacing="lg">
+          <XStack paddingHorizontal={10} marginVertical="auto" space="$6">
             {items.map((props) => {
               const { name, image, rating } = props
               return (
-                <XStack alignItems="center" spacing="sm" key={name}>
+                <XStack alignItems="center" space="$2" key={name}>
                   <Image
                     source={{ uri: image }}
                     style={{
@@ -171,7 +171,7 @@ const Content = memo(
             paddingVertical={20}
             alignItems="center"
             justifyContent="center"
-            spacing={10}
+            space={10}
           >
             <ContentScrollViewHorizontal height={scrollHeight}>
               <XStack>
@@ -207,7 +207,7 @@ const Content = memo(
                           >
                             {name}
                           </SlantedTitle>
-                          <Spacer size="xs" />
+                          <Spacer size="$1" />
                         </YStack>
 
                         <XStack paddingHorizontal={20} flex={1} maxHeight="100%">
@@ -232,7 +232,7 @@ const Content = memo(
                               {rating}
                             </Text>
 
-                            {/* <XStack spacing="xs">
+                            {/* <XStack space="$1">
                             <SentimentText sentiment={1}>
                               {numberFormat(positive || 0, 'sm')}
                             </SentimentText>
@@ -244,7 +244,7 @@ const Content = memo(
 
                           {!hideDescription && (
                             <>
-                              <Spacer size="md" />
+                              <Spacer size="$4" />
 
                               <YStack
                                 overflow="hidden"

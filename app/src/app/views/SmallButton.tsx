@@ -10,10 +10,9 @@ export const SmallButton = themeable(
     ({ children, tooltip, theme: themeProp, textProps, ...rest }: SmallButtonProps, ref) => {
       const theme = useTheme()
 
-      const getContents = (props) => (
+      const contents = (
         <Button
-          {...props}
-          ref={combineRefs(props.ref, ref)}
+          ref={ref}
           borderRadius={200}
           borderWidth={0.5}
           borderColor={theme.borderColor}
@@ -41,10 +40,10 @@ export const SmallButton = themeable(
       )
 
       if (tooltip) {
-        return <Tooltip trigger={getContents}>{tooltip}</Tooltip>
+        return <Tooltip tooltip={tooltip}>{contents}</Tooltip>
       }
 
-      return getContents({})
+      return contents
     }
   )
 )

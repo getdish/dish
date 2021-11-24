@@ -82,7 +82,7 @@ const PlaceDisplay = graphql(() => {
       {!place && <Text>No Place Selected</Text>}
       {!!place && (
         <ScrollView>
-          <YStack spacing={10}>
+          <YStack space={10}>
             <Text>rating: {place.rating}</Text>
             <Text>username: {place.city}</Text>
             <Text>text: {place.address}</Text>
@@ -129,7 +129,7 @@ const Restaurantentiment = (props: { text: string }) => {
   }, [aspectSlow])
 
   return (
-    <YStack spacing="lg">
+    <YStack space="$6">
       <SmallTitle>Sentiment</SmallTitle>
 
       <TextInput style={{ borderWidth: 1, padding: 5 }} onChangeText={(text) => setAspect(text)} />

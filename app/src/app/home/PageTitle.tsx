@@ -52,7 +52,7 @@ export const PageTitle = memo(
         position="relative"
       >
         {before}
-        <XStack spacing="xxl" flex={1} alignItems="center" justifyContent="center">
+        <XStack space="$8" flex={1} alignItems="center" justifyContent="center">
           {!noDivider && <YStack backgroundColor={theme.borderColor} height={1} flex={1} />}
           {isStringChild(contents) ? (
             <Text

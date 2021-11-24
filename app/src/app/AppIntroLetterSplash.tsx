@@ -141,7 +141,7 @@ export const AppIntroLetter = memo(() => {
           maxWidth={940}
           alignItems="center"
           minHeight="100%"
-          spacing="xl"
+          space="$8"
         >
           <LogoColor scale={media.sm ? 1.5 : 1.8} />
 
@@ -192,7 +192,7 @@ export const AppIntroLetter = memo(() => {
             finding great things.
           </Text>
 
-          <Spacer size="md" />
+          <Spacer size="$4" />
           {/* 
           <XStack marginBottom={-20} flexWrap="wrap" alignItems="center" justifyContent="center">
             <GridItem
@@ -296,7 +296,7 @@ const GridItem = (props: {
         {props.title}
       </Text>
 
-      <Spacer size="lg" />
+      <Spacer size="$6" />
 
       <YStack
         marginVertical="auto"
@@ -311,7 +311,7 @@ const GridItem = (props: {
           paddingRight: 0,
         })}
       >
-        <Paragraph flexShrink={1} size="md">
+        <Paragraph flexShrink={1} size="$4">
           {props.content}
         </Paragraph>
       </YStack>

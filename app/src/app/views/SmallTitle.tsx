@@ -51,14 +51,14 @@ export const SmallTitle = memo(
 
         {after && (
           <>
-            <Spacer size="xs" />
+            <Spacer size="$1" />
             {after}
           </>
         )}
 
         {divider === 'bottom' && (
           <>
-            <Spacer size="sm" />
+            <Spacer size="$2" />
             {dividerElement}
           </>
         )}

@@ -80,7 +80,7 @@ const ReviewDisplay = graphql(() => {
       {!review && <Text>No Review Selected</Text>}
       {!!review && (
         <ScrollView>
-          <YStack spacing={10}>
+          <YStack space={10}>
             <Text>rating: {review.rating}</Text>
             <Text>username: {review.username}</Text>
             <Text>text: {review.text}</Text>
@@ -129,7 +129,7 @@ const ReviewSentiment = (props: { text: string }) => {
   }, [aspectSlow])
 
   return (
-    <YStack spacing="lg">
+    <YStack space="$6">
       <SmallTitle>Sentiment</SmallTitle>
 
       <TextInput style={{ borderWidth: 1, padding: 5 }} onChangeText={(text) => setAspect(text)} />

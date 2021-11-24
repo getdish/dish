@@ -7,11 +7,12 @@
   "module": "dist/index.js",
   "typings": "types",
   "scripts": {
-    "build": "tamagui-build legacy",
-    "watch": "tamagui-build legacy --watch"
+    "build": "dish-build legacy",
+    "watch": "dish-build legacy --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@dish/build": "^1.0.0-alpha.2",
     "@dish/helpers": "*",
     "@dish/proxy-worm": "*",
     "@dish/server": "*",
@@ -19,7 +20,6 @@
     "@mdx-js/loader": "^1.6.22",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.2",
     "@tamagui/babel-plugin": "^1.0.0-alpha.5",
-    "@tamagui/build": "^1.0.0-alpha.2",
     "@tamagui/static": "^1.0.0-alpha.5",
     "@types/node": "*",
     "@vue/preload-webpack-plugin": "^2.0.0",

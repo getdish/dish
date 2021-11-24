@@ -71,7 +71,7 @@ export const AuthForm = memo(
     }
 
     return (
-      <YStack alignItems="center" spacing="sm">
+      <YStack alignItems="center" space="$2">
         {isWeb && (
           <>
             <YStack>
