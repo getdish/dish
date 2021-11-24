@@ -1,5 +1,5 @@
 import { useMedia, useTheme } from '@dish/ui'
-import { ExternalLink, MapPin } from '@tamagui/feather-icons'
+import { MapPin } from '@tamagui/feather-icons'
 import React from 'react'
 
 import { GeocodePlace } from '../../../types/homeTypes'
@@ -31,7 +31,11 @@ export const RestaurantAddress = ({
         backgroundColor="transparent"
         icon={
           size.endsWith('xs') ? null : (
-            <MapPin color={theme.color} size={size === 'xxs' ? 16 : 10} style={{ opacity: 0.5 }} />
+            <MapPin
+              color={theme.color.toString()}
+              size={size === 'xxs' ? 16 : 10}
+              style={{ opacity: 0.5 }}
+            />
           )
         }
         // iconAfter={<ExternalLink style={{ opacity: 0.5 }} color={theme.color} size={10} />}

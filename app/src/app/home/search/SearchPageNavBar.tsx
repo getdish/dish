@@ -61,8 +61,8 @@ export const SearchPageNavBar = memo(() => {
         left={0}
         right={0}
         maxWidth={drawerWidthMax}
-        backgroundColor={theme.backgroundColor}
-        shadowColor={theme.shadowColorLighter}
+        backgroundColor={theme.bg}
+        shadowColor={theme.shadowColor2}
         shadowRadius={6}
         borderTopLeftRadius={media.sm ? 0 : 20}
         borderTopRightRadius={media.sm ? 0 : 20}

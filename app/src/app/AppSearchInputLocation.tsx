@@ -95,7 +95,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
             justifyContent="center"
             pointerEvents="none"
           >
-            <MapPin color={color} size={18} opacity={0.35} />
+            <MapPin color={color.toString()} size={18} opacity={0.35} />
           </AbsoluteYStack>
 
           {isTouchDevice && <SearchInputNativeDragFix name="location" />}
@@ -153,7 +153,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
           hoverStyle={{
             opacity: 1,
           }}
-          icon={<Navigation size={20} color={color} />}
+          icon={<Navigation size={20} color={color.toString()} />}
           borderRadius={1000}
           onPress={appMapStore.moveToUserLocation}
           noTextWrap

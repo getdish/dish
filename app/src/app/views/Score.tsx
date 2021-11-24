@@ -131,7 +131,7 @@ export const Score = memo(
         {typeof rating === 'number' && (
           <YStack
             borderRadius={1000}
-            backgroundColor={theme.cardBackgroundColor}
+            backgroundColor={theme.bgCard}
             height={sizePx}
             position="relative"
             {...(shadowed && {

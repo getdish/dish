@@ -50,7 +50,7 @@ export const LenseButton = ({
           height={scaledSize}
           backgroundColor={bg}
           hoverStyle={{
-            backgroundColor: theme.backgroundColorSecondary,
+            backgroundColor: theme.bg2,
           }}
           borderRadius={100}
           marginRight={10}
@@ -66,7 +66,7 @@ export const LenseButton = ({
           padding={0}
           marginTop={-10}
           pressStyle={{
-            backgroundColor: theme.backgroundColorDarker,
+            backgroundColor: theme.bgDark,
           }}
         >
           <Text fontSize={iconSize} lineHeight={scaledSize} textAlign="center">

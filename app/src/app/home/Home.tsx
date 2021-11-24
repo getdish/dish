@@ -161,7 +161,7 @@ const HomeContainerLarge = (props) => {
         bottom={0}
         zIndex={10}
         flex={1}
-        backgroundColor={theme.backgroundColor}
+        backgroundColor={theme.bg}
         shadowColor={theme.shadowColor}
         shadowRadius={25}
         shadowOffset={{ width: 10, height: 0 }}

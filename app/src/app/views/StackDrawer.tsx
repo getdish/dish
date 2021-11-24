@@ -87,7 +87,7 @@ export const StackDrawer = ({
           flexShrink={1}
           borderRadius={drawerBorderRadius}
           maxWidth={media.sm ? '100%' : drawerWidthMax}
-          backgroundColor={theme.backgroundColor}
+          backgroundColor={theme.bg}
           overflow="hidden"
           {...props}
         >

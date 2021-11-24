@@ -1,4 +1,4 @@
-import { Divider, YStack, useTheme } from '@dish/ui'
+import { Separator, YStack, useTheme } from '@dish/ui'
 import React from 'react'
 
 import { HomeStateItemAccount } from '../../../types/homeTypes'
@@ -17,7 +17,7 @@ export default function AccountPage(props: HomeStackViewProps<HomeStateItemAccou
         <PageContentWithFooter>
           <UserOnboard />
 
-          <Divider />
+          <Separator />
 
           <YStack
             margin={20}

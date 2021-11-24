@@ -151,7 +151,7 @@ export const ListAddRestuarant = graphql(
         </SlantedTitle>
         <YStack width="100%" flexShrink={0}>
           <Input
-            backgroundColor={theme.backgroundColorSecondary}
+            backgroundColor={theme.bg2}
             marginHorizontal={20}
             placeholder="Add restaurants..."
             autoFocus

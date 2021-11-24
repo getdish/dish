@@ -17,15 +17,15 @@ export const SmallButton = themeable(
           borderRadius={200}
           borderWidth={0.5}
           borderColor={theme.borderColor}
-          backgroundColor={theme.backgroundColor}
+          backgroundColor={theme.bg}
           hoverStyle={{
-            backgroundColor: theme.backgroundColorSecondary,
+            backgroundColor: theme.bg2,
           }}
           pressStyle={{
-            backgroundColor: theme.backgroundColorTertiary,
+            backgroundColor: theme.bg3,
           }}
           {...(themeProp == 'active' && {
-            backgroundColor: theme.backgroundColor,
+            backgroundColor: theme.bg,
           })}
           height={44}
           maxHeight={44}

@@ -2,7 +2,7 @@
 
 import { graphql, order_by, query } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
-import { Divider, Text, XStack, YStack, useDebounceValue } from '@dish/ui'
+import { Separator, Text, XStack, YStack, useDebounceValue } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
 import React, { useEffect, useState } from 'react'
 import { ScrollView, TextInput } from 'react-native'
@@ -87,7 +87,7 @@ const PlaceDisplay = graphql(() => {
             <Text>username: {place.city}</Text>
             <Text>text: {place.address}</Text>
 
-            <Divider />
+            <Separator />
           </YStack>
         </ScrollView>
       )}
@@ -134,7 +134,7 @@ const Restaurantentiment = (props: { text: string }) => {
 
       <TextInput style={{ borderWidth: 1, padding: 5 }} onChangeText={(text) => setAspect(text)} />
 
-      <Divider />
+      <Separator />
 
       {sentiments.map(({ sentiment, sentence }) => {
         return (

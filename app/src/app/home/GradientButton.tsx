@@ -17,10 +17,10 @@ export function GradientButton({ children }: { children?: any }) {
       shadowColor={theme.shadowColor}
       position="relative"
       overflow="hidden"
-      backgroundColor={theme.backgroundColor}
+      backgroundColor={theme.bg}
       // flexShrink={1}
       hoverStyle={{
-        backgroundColor: theme.backgroundColorSecondary,
+        backgroundColor: theme.bg2,
       }}
       pressStyle={{
         transform: [{ scale: 0.98 }],

@@ -122,7 +122,7 @@ export const ValidatedInput = ({
               //   // }
               // }}
               {...(!isWeb && {
-                placeholderTextColor: theme.colorTertiary,
+                placeholderTextColor: theme.color3,
               })}
               {...rest}
               autoCompleteType={name}

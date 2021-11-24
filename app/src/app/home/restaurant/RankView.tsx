@@ -27,18 +27,18 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       <AbsoluteYStack
         borderRadius={1000}
         fullscreen
-        // backgroundColor={theme.backgroundColorSecondary}
+        // backgroundColor={theme.bg2}
         zIndex={-1}
       />
       <Text textAlign="center" lineHeight={38}>
-        <Text opacity={0.5} color={theme.colorQuartenary} y={-5} x={10} fontSize={11}>
+        <Text opacity={0.5} color={theme.color4} y={-5} x={10} fontSize={11}>
           #
         </Text>
         <Text
           letterSpacing={-1}
           fontSize={+rank > 9 ? 18 : 22}
           fontWeight="500"
-          color={theme.colorTertiary}
+          color={theme.color3}
         >
           {rank}
         </Text>

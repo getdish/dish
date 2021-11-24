@@ -31,12 +31,12 @@ export const VoteButton = forwardRef(
         justifyContent="center"
         onHoverIn={() => setHovered(true)}
         onHoverOut={() => setHovered(false)}
-        onPressIn={prevent}
-        backgroundColor={theme.backgroundColor}
+        onPress={prevent}
+        backgroundColor={theme.bg}
         borderRadius={100}
-        borderColor={theme.backgroundColorSecondary}
+        borderColor={theme.bg2}
         pressStyle={{
-          backgroundColor: theme.backgroundColor,
+          backgroundColor: theme.bg,
         }}
         {...props}
       >
@@ -48,7 +48,7 @@ export const VoteButton = forwardRef(
         >
           <Icon
             size={size * (voted ? 1.2 : 1)}
-            color={!voted && hovered ? hoverColor ?? theme.colorSecondary : color ?? '#ccc'}
+            color={!voted && hovered ? hoverColor ?? theme.color2 : color ?? '#ccc'}
           />
         </YStack>
         <AbsoluteYStack

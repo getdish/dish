@@ -32,7 +32,7 @@ const Alt = spaceVertical((props) => (
   <Text marginTop={-16} marginBottom={16} fontSize="75%" opacity={0.5} {...props} />
 ))
 
-const ParagraphSpaced = spaceVertical((props) => <Paragraph sizeLineHeight={1.1} {...props} />)
+const ParagraphSpaced = spaceVertical((props) => <Paragraph {...props} />)
 
 const components = {
   IntroText: spaceVertical(IntroText),

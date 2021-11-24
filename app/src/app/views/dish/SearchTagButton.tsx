@@ -23,7 +23,7 @@ export const SearchTagButton = ({ tag, color }: { tag: NavigableTag; color: stri
           transform: [{ scale: 1.1 }],
         }}
       >
-        <Search size={16} color={color} />
+        <Search size={16} color={color.toString()} />
       </YStack>
     </Link>
   )

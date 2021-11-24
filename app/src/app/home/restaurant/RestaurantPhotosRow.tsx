@@ -154,7 +154,7 @@ const PhotoCard = (props: SimpleCardProps & { floating?: boolean }) => {
       {...(props.floating && {
         borderRadius: 12,
         overflow: 'hidden',
-        // shadowColor: theme.shadowColorLighter,
+        // shadowColor: theme.shadowColor2,
       })}
       {...props}
     />

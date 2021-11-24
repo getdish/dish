@@ -29,7 +29,7 @@ export const AppMapControls = memo(() => {
     (x) => x.hovered?.via === 'list' && x.zoomOnHover
   )
   return (
-    <Theme name="darkTranslucent">
+    <Theme name="translucent">
       <AbsoluteYStack
         zIndex={media.sm ? zIndexDrawer - 1 : zIndexDrawer + 1}
         marginLeft="auto"

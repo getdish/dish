@@ -1,5 +1,5 @@
 import { graphql } from '@dish/graph'
-import { Divider, Paragraph, Spacer, Text, TextProps, XStack, YStack } from '@dish/ui'
+import { Paragraph, Separator, Spacer, Text, TextProps, XStack, YStack } from '@dish/ui'
 import React, { memo, useState } from 'react'
 import { View } from 'react-native'
 
@@ -85,7 +85,7 @@ export const RestaurantPointsBreakdown = memo(
             ) : null}
 
             <Spacer size="lg" />
-            <Divider />
+            <Separator />
             <Spacer size="lg" />
 
             <Paragraph textAlign="center" size={0.9} color="rgba(0,0,0,0.6)">

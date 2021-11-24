@@ -1,24 +1,13 @@
-import {
-  AbsoluteYStack,
-  Divider,
-  Paragraph,
-  Spacer,
-  Theme,
-  UnorderedList,
-  UnorderedListItem,
-  YStack,
-} from '@dish/ui'
+import { AbsoluteYStack, Paragraph, Spacer, YStack } from '@dish/ui'
 import React from 'react'
 import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg'
 
 import dontPanic from '../../../assets/dont-panic.svg'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
-import { TagLine } from '../../TagLine'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { LogoColor } from '../../views/Logo'
-import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
@@ -62,7 +51,7 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
           </YStack>
 
           <YStack paddingHorizontal="5%" spacing="xxl">
-            <Paragraph fontWeight="800" size={5} sizeLineHeight={0.66}>
+            <Paragraph fontWeight="800" size="$7">
               Hitchikers' guides to our galaxy.
             </Paragraph>
 

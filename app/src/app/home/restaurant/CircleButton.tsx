@@ -6,7 +6,7 @@ export const CircleButton = (props: StackProps & { floating?: boolean }) => {
   return (
     <YStack
       borderRadius={1000}
-      backgroundColor={theme.backgroundColorSecondary}
+      backgroundColor={theme.bg2}
       width={44}
       height={44}
       alignItems="center"
@@ -15,7 +15,7 @@ export const CircleButton = (props: StackProps & { floating?: boolean }) => {
       borderColor={theme.borderColor}
       hoverStyle={{
         borderColor: theme.borderColorHover,
-        backgroundColor: theme.backgroundColorTertiary,
+        backgroundColor: theme.bg3,
       }}
       {...(props.floating && {
         shadowColor: 'rgba(0,0,0,0.1)',

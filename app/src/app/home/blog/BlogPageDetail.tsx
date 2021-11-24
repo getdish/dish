@@ -1,4 +1,4 @@
-import { Divider, Spacer, Title, YStack } from '@dish/ui'
+import { Separator, Spacer, Title, YStack } from '@dish/ui'
 import React from 'react'
 
 import { Link } from '../../views/Link'
@@ -25,7 +25,7 @@ export function BlogPageDetail({ post }: { post: PostEntry }) {
       <Spacer size="sm" />
       <BlogPostMeta post={post} />
       <Spacer size="lg" />
-      <Divider />
+      <Separator />
       <Spacer size="lg" />
       <View />
     </YStack>

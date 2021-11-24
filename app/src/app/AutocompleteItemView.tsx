@@ -45,7 +45,7 @@ export const AutocompleteItemView = memo(
         <YStack padding={3} flexShrink={0}>
           <Theme name={isAdded ? 'active' : null}>
             <CircleButton onPress={onAdd}>
-              <Plus color={isAdded ? '#fff' : theme.colorQuartenary} size={16} />
+              <Plus color={isAdded ? '#fff' : theme.color4} size={16} />
             </CircleButton>
           </Theme>
         </YStack>
@@ -74,7 +74,7 @@ export const AutocompleteItemView = memo(
         backgroundColor={isActive ? '#000' : 'transparent'}
         borderRadius={0}
         hoverStyle={{
-          backgroundColor: isActive ? '#000' : theme.backgroundColorDarker,
+          backgroundColor: isActive ? '#000' : theme.bgDark,
         }}
         {...(hideBackground && {
           backgroundColor: 'transparent',
@@ -107,7 +107,7 @@ export const AutocompleteItemView = memo(
             {!!result.description && (
               <>
                 <Spacer size="xs" />
-                <Text ellipse color={theme.colorSecondary} fontSize={15}>
+                <Text ellipse color={theme.color2} fontSize={15}>
                   {result.description}
                 </Text>
               </>

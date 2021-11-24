@@ -60,7 +60,7 @@ export const CardFrame = ({
       borderRadius={cardFrameBorderRadius}
       width={cardFrameWidth}
       height={square ? cardFrameWidth : cardFrameHeight}
-      backgroundColor={theme.cardBackgroundColor}
+      backgroundColor={theme.bgCard}
       borderColor={borderColor as any}
       shadowColor={theme.shadowColor}
       shadowRadius={4}
@@ -135,21 +135,21 @@ export const CardFrame = ({
         backgroundColor: 'transparent',
       })}
       {...(!borderless && {
-        borderColor: theme.backgroundColorTertiary,
+        borderColor: theme.bg3,
         borderWidth: 1,
         hoverStyle: {
-          borderColor: theme.backgroundColorAlt,
+          borderColor: theme.bg3,
         },
       })}
       {...(floating && {
-        shadowColor: theme.backgroundColor,
+        shadowColor: theme.bg,
         shadowOpacity: 0.033,
         shadowRadius: 0,
         shadowOffset: { height: 3, width: 3 },
       })}
       {...(pressable && {
         pressStyle: {
-          backgroundColor: theme.backgroundColorDarker,
+          backgroundColor: theme.bgDark,
         },
       })}
       {...(flexible && {

@@ -52,7 +52,7 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
         {num ? (
           <>
             {' '}
-            <Text color={theme.colorQuartenary} fontSize={13}>
+            <Text color={theme.color4} fontSize={13}>
               ({num})
             </Text>
           </>

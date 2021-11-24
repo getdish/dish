@@ -1,4 +1,4 @@
-import { Divider, Spacer, Title, YStack } from '@dish/ui'
+import { Separator, Spacer, Title, YStack } from '@dish/ui'
 import React from 'react'
 
 import { HomeStateItemBlog } from '../../../types/homeTypes'
@@ -50,7 +50,7 @@ function BlogPageIndex() {
         <YStack paddingHorizontal={25} paddingVertical={40}>
           <Title size="xl">Dish Blog</Title>
         </YStack>
-        <Divider />
+        <Separator />
         <YStack spacing="lg" paddingHorizontal={25} paddingVertical={40}>
           {allPosts.map((post, index) => (
             <YStack key={index} borderRadius={10} padding={10}>

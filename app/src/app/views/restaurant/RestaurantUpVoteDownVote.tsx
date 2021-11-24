@@ -67,7 +67,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           right={-30}
           zIndex={2}
           borderRadius={1000}
-          backgroundColor={theme.cardBackgroundColor}
+          backgroundColor={theme.bgCard}
           shadowColor="#000"
           shadowOpacity={0.1}
           shadowRadius={3}
@@ -158,7 +158,7 @@ const RatingWithVotes = memo(
         justifyContent="center"
         width={sizePx}
         height={sizePx}
-        backgroundColor={theme.cardBackgroundColor}
+        backgroundColor={theme.bgCard}
         elevation={1}
         borderRadius={100}
       >
@@ -176,7 +176,7 @@ const RatingWithVotes = memo(
             fontSize={fontSize}
             fontWeight="600"
             letterSpacing={-0.5}
-            color={theme.colorTertiary}
+            color={theme.color3}
             cursor="default"
             onPress={onClickPoints}
           >

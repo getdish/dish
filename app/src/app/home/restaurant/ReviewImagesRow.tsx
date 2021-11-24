@@ -137,5 +137,5 @@ export const ReviewImagesRow = ({
 
 const ImageFrame = (props: StackProps) => {
   const theme = useTheme()
-  return <YStack backgroundColor={theme.backgroundColorSecondary} {...props} />
+  return <YStack backgroundColor={theme.bg2} {...props} />
 }

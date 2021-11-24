@@ -246,14 +246,14 @@ const TagButtonInner = (props: TagButtonProps) => {
       position="relative"
       spacing={fontSize * 0.5}
       borderRadius={8}
-      backgroundColor={theme.backgroundColor}
+      backgroundColor={theme.bg}
       borderWidth={bordered ? 0.5 : 0}
       borderColor={theme.borderColor}
       hoverStyle={{
-        backgroundColor: theme.backgroundColorSecondary,
+        backgroundColor: theme.bg2,
       }}
       pressStyle={{
-        backgroundColor: theme.backgroundColorTertiary,
+        backgroundColor: theme.bg3,
       }}
       {...(transparent && {
         borderColor: 'transparent',
@@ -266,9 +266,9 @@ const TagButtonInner = (props: TagButtonProps) => {
         },
       })}
       {...(isActive && {
-        backgroundColor: theme.cardBackgroundColor,
+        backgroundColor: theme.bgCard,
         hoverStyle: {
-          backgroundColor: theme.cardBackgroundColor,
+          backgroundColor: theme.bgCard,
         },
       })}
       alignItems="center"
@@ -297,13 +297,13 @@ const TagButtonInner = (props: TagButtonProps) => {
               ) : ( */}
               <YStack
                 position="relative"
-                backgroundColor={theme.backgroundColorQuartenary}
+                backgroundColor={theme.bg4}
                 borderRadius={100}
                 width={pieSize}
                 height={pieSize}
                 transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
                 // borderWidth={1}
-                borderColor={theme.backgroundColorAlt}
+                borderColor={theme.bg3}
                 opacity={floating ? 1 : 0.7}
               >
                 <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
@@ -331,12 +331,12 @@ const TagButtonInner = (props: TagButtonProps) => {
           paddingLeft={3}
           color={color || theme.color}
           pointerEvents="none"
-          // borderBottomColor={theme.backgroundColor}
+          // borderBottomColor={theme.bg}
           // borderBottomWidth={floating ? 0 : 1}
           opacity={0.8}
           {...(floating && {
             color: '#fff',
-            textShadowColor: theme.shadowColorLighter,
+            textShadowColor: theme.shadowColor2,
             textShadowOffset: { height: 3, width: 0 },
             textShadowRadius: 3,
           })}
@@ -370,7 +370,6 @@ const TagButtonInner = (props: TagButtonProps) => {
       {!!closable && (
         <YStack
           onPress={prevent}
-          onPressIn={prevent}
           onPressOut={onClose as any}
           backgroundColor="transparent"
           borderRadius={10}
@@ -383,7 +382,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           justifyContent="center"
           alignSelf="center"
         >
-          <X size={13} color={theme.color} />
+          <X size={13} color={theme.color.toString()} />
         </YStack>
       )}
 

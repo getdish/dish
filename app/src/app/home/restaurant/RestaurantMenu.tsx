@@ -25,7 +25,7 @@ export const RestaurantMenu = memo(
             <SlantedTitle fontWeight="700" alignSelf="center">
               Menu
             </SlantedTitle>
-            <Spacer size="xl" />
+            <Spacer size="$8" />
             <HiddenSection onChangeOpen={setShowingMenu} cutoff={600}>
               <Grid itemMinWidth={320}>
                 {items.map((item, i) => (
@@ -60,16 +60,14 @@ export const RestaurantMenu = memo(
                           maxWidth={50}
                           maxHeight={50}
                           borderRadius={100}
-                          backgroundColor={theme.cardBackgroundColor}
+                          backgroundColor={theme.bgCard}
                         />
                       )}
                       <Spacer />
                       <YStack flex={1} paddingVertical={2}>
-                        <Paragraph sizeLineHeight={0.9} fontWeight="600">
-                          {item.name}
-                        </Paragraph>
-                        <Spacer size="xs" />
-                        <Paragraph maxHeight={104} sizeLineHeight={0.8} opacity={0.5}>
+                        <Paragraph fontWeight="600">{item.name}</Paragraph>
+                        <Spacer size="$1" />
+                        <Paragraph maxHeight={104} opacity={0.5}>
                           {item.description}
                         </Paragraph>
                       </YStack>

@@ -152,7 +152,7 @@ function CommentBubbleContents(
           className="preserve-whitespace break-word"
           maxWidth="100%"
           overflow="hidden"
-          color={color ? color : theme.colorSecondary}
+          color={color ? color : theme.color2}
           fontSize={size === 'lg' ? 18 : 14}
           lineHeight={size === 'lg' ? 32 : 18}
         >
@@ -294,13 +294,13 @@ function CommentBubbleContents(
           paddingHorizontal={15}
           paddingVertical={15}
           marginLeft={20}
-          backgroundColor={theme.cardBackgroundColor}
+          backgroundColor={theme.bgCard}
           borderColor={theme.borderColor}
           borderWidth={0.5}
           borderRadius={20}
           position="relative"
           zIndex={10}
-          shadowColor={theme.shadowColorLighter}
+          shadowColor={theme.shadowColor2}
           shadowRadius={8}
           shadowOffset={{ height: 3, width: 0 }}
           height={bubbleHeight}
@@ -324,8 +324,8 @@ function CommentBubbleContents(
               width={20}
               height={20}
               borderRadius={100}
-              backgroundColor={theme.cardBackgroundColor}
-              shadowColor={theme.shadowColorLighter}
+              backgroundColor={theme.bgCard}
+              shadowColor={theme.shadowColor2}
               shadowRadius={4}
               shadowOffset={{ height: 3, width: 0 }}
             />

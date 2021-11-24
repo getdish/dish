@@ -19,6 +19,8 @@ const light = {
   bg2: tokens.color.gray3,
   bg3: tokens.color.gray4,
   bg4: tokens.color.gray5,
+  bgDark: '#eee',
+  bgCard: '#ffffff',
   bgTransparent: tokens.color.grayA1,
   borderColor: tokens.color.gray4,
   borderColor2: tokens.color.gray6,
@@ -29,6 +31,7 @@ const light = {
   color4: tokens.color.gray6,
   shadowColor: tokens.color.grayA5,
   shadowColor2: tokens.color.grayA6,
+  mapBackground: '#ffffff',
   ...lightColors,
 }
 
@@ -37,6 +40,7 @@ const dark = {
   bg2: tokens.color.gray3Dark,
   bg3: tokens.color.gray4Dark,
   bg4: tokens.color.gray5Dark,
+  bgDark: '#111',
   bgTransparent: tokens.color.grayA1Dark,
   borderColor: tokens.color.gray3Dark,
   borderColor2: tokens.color.gray4Dark,
@@ -47,6 +51,8 @@ const dark = {
   color4: tokens.color.gray6Dark,
   shadowColor: tokens.color.grayA6,
   shadowColor2: tokens.color.grayA7,
+  mapBackground: '#151515',
+  bgCard: '#333333',
   ...darkColors,
 }
 
@@ -97,5 +103,19 @@ export const themes = {
     bg4: tokens.color.blue10,
     color: tokens.color.blue1,
     color2: tokens.color.blue2,
+  },
+  'dark-translucent': {
+    ...dark,
+    bg: 'rgba(0,0,0,0.7)',
+    bg2: 'rgba(0,0,0,0.5)',
+    bg3: 'rgba(0,0,0,0.25)',
+    bg4: 'rgba(0,0,0,0.1)',
+  },
+  'light-translucent': {
+    ...light,
+    bg: 'rgba(255,255,255,0.85)',
+    bg2: 'rgba(250,250,250,0.85)',
+    bg3: 'rgba(240,240,240,0.85)',
+    bg4: 'rgba(240,240,240,0.7)',
   },
 } as const

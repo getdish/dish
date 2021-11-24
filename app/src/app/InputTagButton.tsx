@@ -17,9 +17,9 @@ export const InputTagButton = (props: TagButtonProps & { isActive?: boolean }) =
       hideRating
       hideRank
       {...(props.isActive && {
-        backgroundColor: theme.backgroundColor,
+        backgroundColor: theme.bg,
         hoverStyle: {
-          backgroundColor: theme.backgroundColor,
+          backgroundColor: theme.bg,
         },
       })}
       {...props}

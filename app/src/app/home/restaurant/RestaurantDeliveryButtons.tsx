@@ -31,7 +31,7 @@ export const RestaurantDeliveryButtons = memo(
     return (
       <XStack flexWrap="wrap" alignItems="center" spacing="xxs" {...props}>
         {!!label && (
-          <Text fontSize={14} color={theme.colorQuartenary} marginRight={8} y={-1}>
+          <Text fontSize={14} color={theme.color4} marginRight={8} y={-1}>
             {label}
           </Text>
         )}
@@ -49,7 +49,7 @@ export const RestaurantDeliveryButtons = memo(
           )
         })}
         {!sources.length && label !== false && (
-          <Text textAlign="center" fontSize={11} color={theme.colorQuartenary}>
+          <Text textAlign="center" fontSize={11} color={theme.color4}>
             No delivery
           </Text>
         )}

@@ -2,9 +2,9 @@ import { graphql, restaurant_tag } from '@dish/graph'
 import {
   Button,
   Circle,
-  Divider,
   Input,
   Modal,
+  Separator,
   Spacer,
   Theme,
   Title,
@@ -128,11 +128,7 @@ const EditTagsModal = memo(
         <Spacer />
 
         <YStack width="100%" flexShrink={0}>
-          <Input
-            backgroundColor={theme.backgroundColorSecondary}
-            marginHorizontal={20}
-            placeholder="Search dishes..."
-          />
+          <Input backgroundColor={theme.bg2} marginHorizontal={20} placeholder="Search dishes..." />
         </YStack>
 
         <ScrollView style={{ width: '100%' }}>
@@ -174,7 +170,7 @@ const EditTagsModal = memo(
             })}
 
             <Spacer />
-            <Divider />
+            <Separator />
             <Spacer />
 
             {restDishes.map((dish) => {

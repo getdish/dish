@@ -1,5 +1,5 @@
 import { slugify } from '@dish/graph'
-import { Box, BoxProps, Divider, Spacer, Toast, YStack, useDebounceEffect } from '@dish/ui'
+import { Box, BoxProps, Separator, Spacer, Toast, YStack, useDebounceEffect } from '@dish/ui'
 import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@tamagui/feather-icons'
 import { capitalize } from 'lodash'
 import React, { forwardRef, memo, useState } from 'react'
@@ -57,7 +57,7 @@ export const AppMenuContents = memo(
                   <YStack padding={20}>
                     <AuthForm autoFocus onDidLogin={hideUserMenu} />
                   </YStack>
-                  <Divider />
+                  <Separator />
                 </>
               )}
 
@@ -93,7 +93,7 @@ export const AppMenuContents = memo(
 
               {isLoggedIn && (
                 <>
-                  <Divider />
+                  <Separator />
                 </>
               )}
 
@@ -130,7 +130,7 @@ export const AppMenuContents = memo(
 
               {isLoggedIn && (
                 <>
-                  <Divider />
+                  <Separator />
                   <MenuLinkButton
                     icon={<LogOut size={14} color="#999" />}
                     onPress={() => {
@@ -160,7 +160,7 @@ export const AppMenuContents = memo(
               })}
 
               <>
-                <Divider />
+                <Separator />
                 {/* {isWeb && <MenuLinkButton name="blog">Blog</MenuLinkButton>} */}
                 <MenuLinkButton name="about" icon={<HelpCircle color="#999" size={14} />}>
                   About

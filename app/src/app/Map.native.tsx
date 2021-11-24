@@ -56,7 +56,7 @@ export default function Map({
     return series([() => sleep(2000), () => setIsLoaded(1)])
   }, [])
 
-  const pointColor = theme.name === 'dark' ? '#000' : 'rgba(20,30,240,0.5)'
+  // const pointColor = theme.name === 'dark' ? '#000' : 'rgba(20,30,240,0.5)'
 
   return (
     <MapboxGL.MapView
@@ -238,7 +238,7 @@ export default function Map({
                       //   ['==', ['feature-state', 'hover'], true],
                       //   green,
                       //   ['==', ['feature-state', 'active'], null],
-                      //   theme.colorSecondary,
+                      //   theme.color2,
                       //   'green',
                       // ],
                       textHaloColor: 'rgba(255,255,255,1)',

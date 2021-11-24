@@ -6,12 +6,11 @@ export const HighlightedText = (props: ParagraphProps) => {
     <Theme name="orange">
       <Paragraph
         borderWidth={1}
-        backgroundColor={theme.backgroundColor}
+        backgroundColor={theme.bg}
         borderColor={theme.borderColor}
         borderRadius={10}
         paddingVertical="2%"
         paddingHorizontal="3%"
-        sizeLineHeight={0.95}
         {...props}
       />
     </Theme>

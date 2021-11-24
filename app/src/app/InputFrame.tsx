@@ -26,13 +26,13 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       {...(media.sm && {
         maxHeight: 44,
         // borderWidth: 0,
-        backgroundColor: theme.backgroundColorSecondary,
+        backgroundColor: theme.bg2,
         borderRadius: 10,
         hoverStyle: {
-          backgroundColor: theme.backgroundColorSecondary,
+          backgroundColor: theme.bg2,
         },
         focusStyle: {
-          backgroundColor: theme.backgroundColorSecondary,
+          backgroundColor: theme.bg2,
         },
       })}
     >

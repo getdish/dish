@@ -182,7 +182,7 @@ const Content = memo(
                         margin={spacing / 2}
                         shadowColor="#000"
                         shadowOpacity={0.05}
-                        backgroundColor={theme.cardBackgroundColor}
+                        backgroundColor={theme.bgCard}
                         width={290}
                         {...(hideDescription && {
                           width: 80,
@@ -252,12 +252,7 @@ const Content = memo(
                                 flex={1}
                                 maxWidth="100%"
                               >
-                                <Paragraph
-                                  sizeLineHeight={0.9}
-                                  size="sm"
-                                  maxHeight="100%"
-                                  overflow="hidden"
-                                >
+                                <Paragraph size="$2" maxHeight="100%" overflow="hidden">
                                   {!!tagName && isWeb && sentence ? (
                                     <div
                                       className="block"
@@ -285,10 +280,7 @@ const Content = memo(
                                   right={0}
                                 >
                                   <LinearGradient
-                                    colors={[
-                                      `${theme.cardBackgroundColor}00`,
-                                      theme.cardBackgroundColor,
-                                    ]}
+                                    colors={[`${theme.bgCard}00`, theme.bgCard]}
                                     style={StyleSheet.absoluteFill}
                                   />
                                 </AbsoluteYStack>

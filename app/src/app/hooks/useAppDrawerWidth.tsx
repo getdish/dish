@@ -1,11 +1,12 @@
-import { defaultMediaQueries, useWindowSize } from '@dish/ui'
+import { useWindowSize } from '@dish/ui'
 
 import { drawerWidthMax } from '../../constants/constants'
+import { media } from '../../constants/media'
 import { getWindowWidth } from '../../helpers/getWindow'
 
 export const getAppDrawerWidth = (max = drawerWidthMax): number => {
   const width = getWindowWidth()
-  if (width <= defaultMediaQueries.sm.maxWidth) {
+  if (width <= media.sm.maxWidth) {
     return width
   }
   let scaleFactor = 0

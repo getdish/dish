@@ -253,7 +253,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
           </YStack>
         ) : (
           <Search
-            color={color}
+            color={color.toString()}
             size={media.xs ? 18 : 20}
             style={{
               opacity: 0.7,

@@ -1,8 +1,7 @@
 import { RoutesTable } from '@dish/router'
-import { ParagraphContext, Text, useTheme } from '@dish/ui'
+import { Text, TextAncestorContext, useTheme } from '@dish/ui'
 import React, { forwardRef, useContext } from 'react'
 
-import { red400 } from '../../constants/colors'
 import { isStringChild } from '../../helpers/isStringChild'
 import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
@@ -36,21 +35,21 @@ export const Link = forwardRef(function Link<Name extends DRouteName = DRouteNam
   } = allProps
   const { wrapWithLinkElement } = useLink(allProps, styleProps)
   const theme = useTheme()
-  const isInParagraph = useContext(ParagraphContext)
+  const isInParagraph = useContext(TextAncestorContext)
   return wrapWithLinkElement(
     isStringChild(children) ? (
       <Text
         textDecorationLine={
           underline === false ? 'none' : isInParagraph || underline ? 'underline' : 'none'
         }
-        color={theme.colorAlt}
+        color={theme.color2}
         display={display as any}
-        {...(isInParagraph && {
-          color: red400,
-          hoverStyle: {
-            color: `${red400}99`,
-          },
-        })}
+        // {...(isInParagraph && {
+        //   color: red400,
+        //   hoverStyle: {
+        //     color: `${red400}99`,
+        //   },
+        // })}
       >
         {children}
       </Text>

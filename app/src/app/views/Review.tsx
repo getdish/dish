@@ -1,5 +1,5 @@
 import { getUserName, graphql, review, useRefetch } from '@dish/graph'
-import { Divider, Paragraph, Text, XStack, useLazyEffect } from '@dish/ui'
+import { Paragraph, Separator, Text, XStack, useLazyEffect } from '@dish/ui'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
@@ -124,7 +124,7 @@ export const Review = memo(
                   : []}
               </ScrollView>
 
-              <Divider flex />
+              <Separator flex />
             </XStack>
           ) : null
         }

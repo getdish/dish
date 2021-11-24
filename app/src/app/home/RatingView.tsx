@@ -75,7 +75,7 @@ export const RatingView = forwardRef(
 //         width={size}
 //         height={size}
 //         {...(floating && {
-//           backgroundColor: theme.backgroundColor,
+//           backgroundColor: theme.bg,
 //           shadowColor: theme.shadowColor,
 //           shadowRadius: 5,
 //         })}
@@ -95,7 +95,7 @@ export const RatingView = forwardRef(
 //             borderRadius={100}
 //             justifyContent="center"
 //             alignItems="center"
-//             backgroundColor={theme.backgroundColor}
+//             backgroundColor={theme.bg}
 //             shadowColor={theme.shadowColor}
 //             shadowRadius={5}
 //             shadowOffset={{ height: 2, width: 0 }}

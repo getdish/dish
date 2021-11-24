@@ -89,7 +89,7 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
             <YStack paddingHorizontal="5%" spacing="xxl">
               <YStack />
 
-              <Paragraph fontWeight="800" size={4} sizeLineHeight={0.66}>
+              <Paragraph fontWeight="800" size="$6">
                 Roadmap
               </Paragraph>
 

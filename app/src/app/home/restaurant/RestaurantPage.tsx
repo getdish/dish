@@ -266,7 +266,7 @@ const RestaurantPage = memo(
                         >
                           <Text
                             className="font-title"
-                            fontFamily="WhyteHeavy"
+                            fontFamily="$title"
                             color="$color"
                             maxWidth={500}
                             alignSelf="flex-start"

@@ -4,11 +4,11 @@ import { isPresent } from '@dish/helpers'
 import { useRouterSelector } from '@dish/router'
 import {
   AbsoluteYStack,
-  Divider,
   LoadingItem,
   LoadingItems,
   Paragraph,
   ParagraphProps,
+  Separator,
   Spacer,
   XStack,
   YStack,
@@ -323,7 +323,7 @@ const UserPageContent = memo(
             <Spacer size="lg" />
 
             {/* <YStack>
-              <Divider />
+              <Separator />
               <Spacer />
               <XStack spacing alignItems="center" justifyContent="center">
                 <Paragraph size="sm" fontWeight="700">
@@ -342,7 +342,7 @@ const UserPageContent = memo(
                 </Paragraph>
               </XStack>
               <Spacer />
-              <Divider />
+              <Separator />
             </YStack> */}
 
             {/* <Spacer size="lg" /> */}
@@ -464,12 +464,7 @@ const ParagraphSkeleton = (props: ParagraphProps) => {
   const theme = useTheme()
   if (props.children === undefined) {
     return (
-      <Paragraph
-        {...props}
-        color="transparent"
-        backgroundColor={theme.backgroundColorSecondary}
-        borderRadius={10}
-      >
+      <Paragraph {...props} color="transparent" backgroundColor={theme.bg2} borderRadius={10}>
         lorem ipsum
       </Paragraph>
     )
@@ -544,7 +539,7 @@ const UserHeader = memo(
 
             <Spacer />
 
-            <Divider />
+            <Separator />
           </YStack>
         </YStack>
       )

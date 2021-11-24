@@ -19,7 +19,7 @@ export const SentimentText = ({
       paddingHorizontal={6 * scale}
       borderRadius={6 * scale}
       alignItems="center"
-      backgroundColor={theme.backgroundColorSecondary}
+      backgroundColor={theme.bg2}
     >
       {!!children && (
         <>

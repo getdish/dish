@@ -204,14 +204,14 @@ const RestaurantListItemContent = memo(
             alignItems: 'center',
             paddingVertical: 5,
             hoverStyle: {
-              backgroundColor: theme.backgroundColorTransluscentHover,
+              backgroundColor: '$bg3',
             },
           })}
         >
           {/* expanded content */}
           {meta && isExpanded && (
             <AbsoluteYStack
-              backgroundColor={theme.backgroundColorDarker}
+              backgroundColor={theme.bgDark}
               width={300 - 40}
               x={-320}
               height="100%"
@@ -260,7 +260,7 @@ const RestaurantListItemContent = memo(
           {/* ROW: TITLE */}
 
           <YStack
-            hoverStyle={{ backgroundColor: theme.backgroundColorTransluscentHover }}
+            hoverStyle={{ backgroundColor: '$bg3' }}
             width={950}
             {...(shouldShowOneLine && {
               width: 'auto',
@@ -285,7 +285,7 @@ const RestaurantListItemContent = memo(
                 alignItems="center"
               >
                 <YStack
-                  backgroundColor={theme.backgroundColorSecondary}
+                  backgroundColor={theme.bg2}
                   borderRadius={1000}
                   width={imgSize}
                   height={imgSize}
@@ -317,10 +317,10 @@ const RestaurantListItemContent = memo(
                     marginVertical={-5}
                     maxWidth={contentSideProps.maxWidth}
                     hoverStyle={{
-                      backgroundColor: theme.backgroundColorSecondary,
+                      backgroundColor: theme.bg2,
                     }}
                     pressStyle={{
-                      backgroundColor: theme.backgroundColorTertiary,
+                      backgroundColor: theme.bg3,
                     }}
                     {...(shouldShowOneLine && {
                       width: 200,
@@ -451,7 +451,7 @@ const RestaurantListItemContent = memo(
                             marginLeft: -8,
                           }}
                           size={14}
-                          color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                          color={isWeb ? 'var(--color3)' : 'rgba(150,150,150,0.3)'}
                         />
                       }
                     >
@@ -489,7 +489,7 @@ const RestaurantListItemContent = memo(
                   textAlign="center"
                   fontSize={14}
                   fontWeight="500"
-                  color={theme.colorTertiary}
+                  color={theme.color3}
                 >
                   {price_range ?? '-'}
                 </Text>

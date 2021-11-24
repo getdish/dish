@@ -18,7 +18,7 @@ export const BottomSheetContainer = (props: { children: any }) => {
       borderTopRightRadius={drawerBorderRadius}
       borderTopLeftRadius={drawerBorderRadius}
       pointerEvents="auto"
-      backgroundColor={theme.cardBackgroundColor}
+      backgroundColor={theme.bgCard}
       overflow="hidden"
       position="relative"
     >

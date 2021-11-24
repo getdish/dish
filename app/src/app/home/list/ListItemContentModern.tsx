@@ -78,7 +78,7 @@ export const ListItemContentModern = memo(
           paddingLeft={30}
         >
           {/* <AbsoluteYStack
-            backgroundColor={theme.backgroundColorSecondary}
+            backgroundColor={theme.bg2}
             width={imgSize}
             height={imgSize}
             borderRadius={1000}
@@ -108,10 +108,10 @@ export const ListItemContentModern = memo(
                   borderRadius={8}
                   alignItems="center"
                   hoverStyle={{
-                    backgroundColor: theme.backgroundColorSecondary,
+                    backgroundColor: theme.bg2,
                   }}
                   pressStyle={{
-                    backgroundColor: theme.backgroundColorTertiary,
+                    backgroundColor: theme.bg3,
                   }}
                   overflow="hidden"
                 >
@@ -204,7 +204,7 @@ export const ListItemContentModern = memo(
                             marginLeft: -4,
                           }}
                           size={12}
-                          color={isWeb ? 'var(--colorTertiary)' : 'rgba(150,150,150,0.3)'}
+                          color={isWeb ? 'var(--color3)' : 'rgba(150,150,150,0.3)'}
                         />
                       }
                     >
@@ -229,14 +229,14 @@ export const ListItemContentModern = memo(
             </Column>
 
             <Column width={60}>
-              <Text fontSize={14} color={theme.colorTertiary}>
+              <Text fontSize={14} color={theme.color3}>
                 {price_range ?? '?'}
               </Text>
             </Column>
 
             <Column width={100}>
               <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
-                <Text fontSize={12} color={theme.colorTertiary}>
+                <Text fontSize={12} color={theme.color3}>
                   {open.nextTime || '~~'}
                 </Text>
               </Link>

@@ -65,7 +65,6 @@ export function App() {
 }
 
 function AppHomeContent(props: { children?: any }) {
-  const theme = useTheme()
   const isMobileWeb = useIsMobilePhone()
 
   if (isMobileWeb) {
@@ -79,11 +78,12 @@ function AppHomeContent(props: { children?: any }) {
   return (
     <>
       {/* background */}
-      <AbsoluteYStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
+      <AbsoluteYStack fullscreen zIndex={0} backgroundColor="$mapBackground" />
 
       <RootPortalProvider />
 
       <Suspense fallback={null}>
+        {/* THIS IS THE DRAWER AND ITS CONTENTS */}
         <Home />
       </Suspense>
 

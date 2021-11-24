@@ -564,8 +564,7 @@ const ListPageContent = memo(
                                       <Paragraph
                                         paddingBottom={i < items.length - 1 ? 26 : 0}
                                         key={i}
-                                        sizeLineHeight={1.1}
-                                        size={i == 0 ? 'lg' : 'md'}
+                                        size={i == 0 ? '$6' : '$4'}
                                       >
                                         {x}
                                       </Paragraph>
@@ -599,7 +598,7 @@ const ListPageContent = memo(
                       justifyContent="center"
                     >
                       <XStack
-                        backgroundColor={theme.backgroundColor}
+                        backgroundColor={theme.bg}
                         padding={5}
                         paddingHorizontal={20}
                         borderRadius={100}

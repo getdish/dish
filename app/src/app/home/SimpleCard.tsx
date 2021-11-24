@@ -21,7 +21,7 @@ export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: Simp
   const theme = useTheme()
   return (
     <YStack
-      backgroundColor={theme.backgroundColorSecondary}
+      backgroundColor={theme.bg2}
       marginRight={size === 'sm' ? -3 : -8}
       className="disable-hover-touch ease-in-out-fast"
       borderRadius={cardFrameBorderRadius}

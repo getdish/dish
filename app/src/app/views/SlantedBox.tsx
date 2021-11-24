@@ -19,7 +19,7 @@ export const slantedBoxStyle: BoxProps = {
 
 export const SlantedBox = (props: BoxProps) => {
   const theme = useTheme()
-  return <YStack {...slantedBoxStyle} backgroundColor={theme.cardBackgroundColor} {...props} />
+  return <YStack {...slantedBoxStyle} backgroundColor={theme.bgCard} {...props} />
 }
 
 export const SlantedLinkButton = (props: LinkButtonProps) => {

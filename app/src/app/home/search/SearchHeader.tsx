@@ -43,7 +43,7 @@ export const SearchHeader = memo(() => {
                 <YStack paddingTop={isWeb ? 0 : 5} paddingLeft={media.sm ? 15 : 20}>
                   <Text
                     className="font-title"
-                    fontFamily="WhyteHeavy"
+                    fontFamily="$title"
                     color={theme.color}
                     marginTop={-4}
                     marginBottom={0}

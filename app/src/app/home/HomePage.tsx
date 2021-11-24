@@ -166,7 +166,7 @@ const HomePageContent = (props: Props) => {
           bottom={10}
           left={0}
           right={0}
-          shadowColor={theme.backgroundColor}
+          shadowColor={theme.bg}
           shadowOpacity={1}
           shadowRadius={10}
           height={searchBarHeight + 10}
@@ -221,7 +221,7 @@ const Inner = () => {
     >
       <AnimatedYStack>
         <YStack
-          backgroundColor={theme.backgroundColor}
+          backgroundColor={theme.bg}
           borderColor={theme.borderColor}
           borderWidth={1}
           borderRadius={15}
@@ -236,7 +236,7 @@ const Inner = () => {
             <CloseButton onPress={() => setShow(false)} />
           </PaneControlButtons>
           <YStack paddingVertical={20} paddingHorizontal={20}>
-            <Paragraph size="md" sizeLineHeight={0.9}>
+            <Paragraph size="md">
               <Text fontWeight="800">A better pocket guide to the world.</Text> Find and make
               playlists of the real world and earn money.{' '}
               <Link name="about" fontWeight="600">

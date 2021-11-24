@@ -20,7 +20,7 @@ export const UserAvatar = memo(
     return (
       <YStack
         borderRadius={1000}
-        backgroundColor={theme.backgroundColorSecondary}
+        backgroundColor={theme.bg2}
         width={size}
         height={size}
         position="relative"
@@ -38,7 +38,7 @@ export const UserAvatar = memo(
         {!avatar && (
           <YStack
             borderRadius={1000}
-            backgroundColor={theme.backgroundColor}
+            backgroundColor={theme.bg}
             borderWidth={2}
             borderColor={theme.borderColor}
             width={size}

@@ -23,10 +23,10 @@ import './globals'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import { AbsoluteYStack, Paragraph, Toast, useSafeAreaInsets } from '@dish/ui'
+import { AbsoluteYStack, Paragraph, Theme, Toast, useSafeAreaInsets } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
@@ -150,18 +150,29 @@ export function Root() {
     })
   }, [])
 
+  useLayoutEffect(() => {
+    const css = Tamagui.getCSS()
+
+    const style = document.createElement('style')
+    style.setAttribute('type', 'text/css')
+    style.innerHTML = css
+    document.querySelector('head')?.appendChild(style)
+  }, [])
+
   const defaultTheme =
     (userStore.theme === 'auto' ? colorScheme : userStore.theme) ?? colorScheme ?? 'dark'
 
   return (
     <SafeAreaProvider>
       <Tamagui.Provider defaultTheme={defaultTheme}>
-        <ProvideRouter routes={routes}>
-          <Suspense fallback={null}>
-            {isLoaded ? <App /> : null}
-            {process.env.NODE_ENV === 'development' && <DebugHUD />}
-          </Suspense>
-        </ProvideRouter>
+        <Theme name={defaultTheme}>
+          <ProvideRouter routes={routes}>
+            <Suspense fallback={null}>
+              {isLoaded ? <App /> : null}
+              {process.env.NODE_ENV === 'development' && <DebugHUD />}
+            </Suspense>
+          </ProvideRouter>
+        </Theme>
       </Tamagui.Provider>
       {showRadar && <Radar />}
     </SafeAreaProvider>
