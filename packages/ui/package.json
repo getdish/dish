@@ -15,9 +15,9 @@
     "watch": "dish-build legacy --jsx --watch"
   },
   "dependencies": {
-    "@tamagui/use-debounce": "1.0.0-alpha.5",
-    "@tamagui/use-force-update": "1.0.0-alpha.5",
-    "@tamagui/use-window-size": "1.0.0-alpha.5",
+    "@tamagui/use-debounce": "1.0.0-alpha.8",
+    "@tamagui/use-force-update": "1.0.0-alpha.8",
+    "@tamagui/use-window-size": "1.0.0-alpha.8",
     "tamagui": "^1.0.0-alpha.5"
   },
   "devDependencies": {

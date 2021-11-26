@@ -1,8 +1,19 @@
-export const grey = `#999999`
-
 import * as Colors from '@tamagui/colors'
 
 // nice and flat
+
+export const colorNames = [
+  'blue',
+  'gray',
+  'green',
+  'indigo',
+  'orange',
+  'pink',
+  'purple',
+  'red',
+  'violet',
+  'yellow',
+] as const
 
 export const light = {
   ...Colors.blue,
@@ -45,17 +56,5 @@ export type ColorNamesDark = keyof typeof dark
 export const colorNamesLight = Object.keys(light) as ColorNamesLight[]
 export const colorNamesDark = Object.keys(dark) as ColorNamesDark[]
 
-export const colorNames = [
-  'blue',
-  'gray',
-  'green',
-  'indigo',
-  'orange',
-  'pink',
-  'purple',
-  'red',
-  'violet',
-  'yellow',
-]
-
 export const brandColor = `#FF276F`
+export const grey = `#999999`

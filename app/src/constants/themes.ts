@@ -1,5 +1,6 @@
 import * as RadixColors from '@tamagui/colors'
 
+import { colorNames } from './colors'
 import { tokens } from './tokens'
 
 export type MyTheme = typeof light
@@ -56,33 +57,30 @@ const dark = {
   ...darkColors,
 }
 
-const colorThemes: Record<string, typeof light> = {}
-const colorKeys = Object.keys(RadixColors)
-for (const key of colorKeys) {
-  if (key.endsWith('A')) continue
-  const colorName = key.replace('Dark', '')
-  const colorValues = RadixColors[key]
-  const isDark = key.endsWith('Dark')
-  const nameKey = isDark ? key.replace('Dark', '-dark') : `${key}-light`
-  const offset = isDark ? -1 : 0
-  // @ts-ignore
-  colorThemes[nameKey] = {
-    // @ts-ignore
-    color: isDark ? '#ddd' : colorValues[`${colorName}12`],
-    color2: isDark ? dark.color2 : light.color2,
-    color3: colorValues[`${colorName}11`],
-    color4: colorValues[`${colorName}10`],
-    bg: colorValues[`${colorName}${2 + offset}`],
-    bg2: colorValues[`${colorName}${3 + offset}`],
-    bg3: colorValues[`${colorName}${4 + offset}`],
-    bg4: colorValues[`${colorName}${5 + offset}`],
-    bgDark: colorValues[`${colorName}${1 + offset}`],
-    bgTransparent: colorValues[`${colorName}${1 + offset}`],
-    borderColor: colorValues[`${colorName}${4 + offset}`],
-    borderColor2: colorValues[`${colorName}${5 + offset}`],
-    shadowColor: colorValues[`${colorName}${2 + offset}`],
-    shadowColor2: colorValues[`${colorName}${3 + offset}`],
-    bgCard: colorValues[`${colorName}${3 + offset}`],
+const colorThemes: Record<typeof colorNames[number], typeof light> = {} as any
+for (const key of colorNames) {
+  for (const scheme of ['light', 'dark']) {
+    const isDark = scheme === 'dark'
+    const colorKey = isDark ? `${key}Dark` : key
+    const colorValues = RadixColors[colorKey]
+    const offset = isDark ? -1 : 0
+    colorThemes[`${key}-${scheme}`] = {
+      color: isDark ? '#ddd' : colorValues[`${key}12`],
+      color2: isDark ? dark.color2 : light.color2,
+      color3: colorValues[`${key}11`],
+      color4: colorValues[`${key}10`],
+      bg: colorValues[`${key}${2 + offset}`],
+      bg2: colorValues[`${key}${3 + offset}`],
+      bg3: colorValues[`${key}${4 + offset}`],
+      bg4: colorValues[`${key}${5 + offset}`],
+      bgTransparent: colorValues[`${key}${1 + offset}`],
+      borderColor: colorValues[`${key}${4 + offset}`],
+      borderColor2: colorValues[`${key}${5 + offset}`],
+      bgDark: colorValues[`${key}${1 + offset}`],
+      shadowColor: colorValues[`${key}${2 + offset}`],
+      shadowColor2: colorValues[`${key}${3 + offset}`],
+      bgCard: colorValues[`${key}${3 + offset}`],
+    }
   }
 }
 
