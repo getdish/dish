@@ -222,7 +222,7 @@ export const AppSearchInput = memo(() => {
                   {
                     color: theme.color.toString() as any,
                     flex: 1,
-                    fontSize: media.sm ? 18 : 18,
+                    fontSize: media.sm ? 18 : 22,
                     fontWeight: '500',
                     height,
                     lineHeight: height * 0.45,

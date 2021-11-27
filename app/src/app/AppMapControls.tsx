@@ -27,13 +27,15 @@ export const AppMapControls = memo(() => {
     appMapStore,
     (x) => x.hovered?.via === 'list' && x.zoomOnHover
   )
+
   return (
-    <Theme name="translucent">
+    <>
       <AbsoluteYStack
-        zIndex={media.sm ? zIndexDrawer - 1 : zIndexDrawer + 1}
-        marginLeft="auto"
+        zi={zIndexDrawer - 1}
+        ml="auto"
         fullscreen
-        pointerEvents="none"
+        pe="none"
+        $gtSm={{ zi: zIndexDrawer + 1 }}
       >
         <AbsoluteYStack
           fullscreen
@@ -96,7 +98,7 @@ export const AppMapControls = memo(() => {
           </AbsoluteXStack>
         </AbsoluteYStack>
       </AbsoluteYStack>
-    </Theme>
+    </>
   )
 })
 

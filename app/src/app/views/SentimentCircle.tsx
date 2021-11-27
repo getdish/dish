@@ -1,7 +1,7 @@
 import { Text, XStack } from '@dish/ui'
 import React, { memo } from 'react'
 
-import { blue, green, orange, red } from '../../constants/colors'
+import { light } from '../../constants/colors'
 import { CircularProgress } from './CircularProgress'
 
 const sentiments = {
@@ -13,11 +13,11 @@ const sentiments = {
 }
 
 const colors = {
-  0: red,
-  1: orange,
-  2: green,
-  3: green,
-  4: blue,
+  0: light.red8,
+  1: light.orange8,
+  2: light.green8,
+  3: light.green8,
+  4: light.blue8,
 }
 
 export const SentimentCircle = memo(({ ratio, scale = 1 }: { ratio: number; scale?: number }) => {

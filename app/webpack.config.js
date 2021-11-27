@@ -36,7 +36,6 @@ module.exports = (opts) => {
       components: ['tamagui', '@dish/ui'],
       evaluateImportsWhitelist: ['constants.js', 'colors.js'],
       themesFile: require.resolve('./src/constants/themes.ts'),
-      logTimings: true,
       disableExtraction: process.env.NODE_ENV === 'development',
     },
     htmlOptions: {

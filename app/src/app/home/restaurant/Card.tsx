@@ -1,5 +1,6 @@
 import {
   AbsoluteYStack,
+  H3,
   Hoverable,
   HoverableProps,
   LinearGradient,
@@ -24,7 +25,6 @@ import {
 import { ColorShades } from '../../../helpers/getColorsForName'
 import { CardFrame, CardFrameProps } from '../../views/CardFrame'
 import { Image } from '../../views/Image'
-import { TitleStyled } from '../../views/TitleStyled'
 
 export type CardProps = CardFrameProps &
   HoverableProps & {
@@ -199,9 +199,9 @@ export function Card(props: CardProps) {
               <YStack minWidth={10} flex={1} />
               <YStack flexShrink={1} flex={10} alignItems="flex-end">
                 <YStack position="relative">
-                  <TitleStyled textAlign="right" fontSize={fontSize} lineHeight={fontSize * 1.1}>
+                  <H3 textAlign="right" fontSize={fontSize} lineHeight={fontSize * 1.1}>
                     {title} {!!afterTitle ? <Text fontWeight="300">{afterTitle}</Text> : null}
-                  </TitleStyled>
+                  </H3>
                 </YStack>
                 <Spacer size="$1" />
                 {!!subTitle && !size.endsWith('xs') && (

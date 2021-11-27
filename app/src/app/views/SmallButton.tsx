@@ -40,7 +40,7 @@ export const SmallButton = themeable(
       )
 
       if (tooltip) {
-        return <Tooltip tooltip={tooltip}>{contents}</Tooltip>
+        return <Tooltip contents={tooltip}>{contents}</Tooltip>
       }
 
       return contents

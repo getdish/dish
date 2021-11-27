@@ -20,7 +20,7 @@ import { MessageSquare } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
-import { brandColor, green, red } from '../../../constants/colors'
+import { brandColor, light } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getWindowWidth } from '../../../helpers/getWindow'
@@ -497,7 +497,7 @@ const RestaurantListItemContent = memo(
                 <Circle
                   size={6}
                   marginHorizontal={4}
-                  backgroundColor={open.isOpen ? green : `${red}55`}
+                  backgroundColor={open.isOpen ? light.green8 : light.red8}
                 />
 
                 {!!restaurant.address && (

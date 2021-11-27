@@ -3,8 +3,15 @@ import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import { Keyboard } from 'react-native'
 
-import { drawerWidthMax, isWeb, pageWidthMax, zIndexDrawer } from '../../constants/constants'
+import {
+  drawerWidthMax,
+  isWeb,
+  pageWidthMax,
+  searchBarHeight,
+  zIndexDrawer,
+} from '../../constants/constants'
 import { router } from '../../router'
+import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
 import { AppSearchBarInline } from '../AppSearchBarInline'
@@ -164,7 +171,10 @@ const HomeContainerLarge = (props) => {
           <AppSearchBarInline />
         </XStack>
 
-        <AppAutocompleteSearch />
+        <XStack pos="absolute" fullscreen top={searchBarHeight}>
+          <AppAutocompleteSearch />
+          <AppAutocompleteLocation />
+        </XStack>
 
         {props.children}
 

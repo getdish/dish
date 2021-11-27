@@ -5,7 +5,7 @@ import { Store, useStore } from '@dish/use-store'
 import React, { Suspense, useEffect, useState } from 'react'
 import { ScrollView, TextInput } from 'react-native'
 
-import { green100, red100 } from '../../constants/colors'
+import { light } from '../../constants/colors'
 import { defaultLocationAutocompleteResults } from '../../constants/defaultLocationAutocompleteResults'
 import { AutocompleteItem } from '../../helpers/createAutocomplete'
 import { locationToAutocomplete, searchLocations } from '../../helpers/searchLocations'
@@ -138,7 +138,10 @@ const ReviewSentiment = (props: { text: string }) => {
 
       {sentiments.map(({ sentiment, sentence }) => {
         return (
-          <Text backgroundColor={sentiment === 'Negative' ? red100 : green100} key={sentence}>
+          <Text
+            backgroundColor={sentiment === 'Negative' ? light.red8 : light.green8}
+            key={sentence}
+          >
             {sentence} <strong>({sentiment})</strong>.
           </Text>
         )

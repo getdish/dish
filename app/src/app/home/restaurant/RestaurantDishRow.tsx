@@ -1,6 +1,5 @@
 import { graphql } from '@dish/graph'
 import { LoadingItem, Spacer, XStack, YStack } from '@dish/ui'
-import { partition } from 'lodash'
 import React, { Suspense, memo, useMemo, useState } from 'react'
 import { Pressable } from 'react-native'
 

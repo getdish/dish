@@ -2,8 +2,6 @@ import { XStack, useMedia, useTheme } from '@dish/ui'
 import React, { forwardRef } from 'react'
 
 export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
-  const theme = useTheme()
-  const media = useMedia()
   return (
     <XStack
       alignItems="center"
@@ -16,25 +14,25 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       maxHeight={44}
       // borderWidth={0.5}
       // borderColor="rgba(0,0,0,0.2)"
-      backgroundColor="rgba(150,150,150,0.1)"
+      backgroundColor="rgba(150,150,150,0.04)"
       hoverStyle={{
-        backgroundColor: 'rgba(150,150,150,0.15)',
+        backgroundColor: 'rgba(150,150,150,0.1)',
       }}
       focusStyle={{
-        backgroundColor: 'rgba(150,150,150,0.15)',
+        backgroundColor: 'rgba(150,150,150,0.1)',
       }}
-      {...(media.sm && {
+      $sm={{
         maxHeight: 44,
         // borderWidth: 0,
-        backgroundColor: theme.bg2,
+        backgroundColor: '$bg2',
         borderRadius: 10,
         hoverStyle: {
-          backgroundColor: theme.bg2,
+          backgroundColor: '$bg2',
         },
         focusStyle: {
-          backgroundColor: theme.bg2,
+          backgroundColor: '$bg2',
         },
-      })}
+      }}
     >
       {children}
     </XStack>

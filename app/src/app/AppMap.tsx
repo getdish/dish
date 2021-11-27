@@ -280,7 +280,7 @@ export const AppMapContents = memo(function AppMapContents() {
 
   return (
     <XStack
-      position="absolute"
+      pos="absolute"
       fullscreen
       maxHeight="100%"
       alignItems="flex-end"
@@ -290,16 +290,14 @@ export const AppMapContents = memo(function AppMapContents() {
     >
       {/* <MapFlexItem /> */}
       <YStack
-        position="relative"
-        pointerEvents="auto"
+        pos="relative"
+        pe="auto"
         contain="strict"
         zIndex={zIndexMap}
         maxHeight="100%"
         height="100%"
         width="100%"
         maxWidth="100%"
-        // borderTopRightRadius={12}
-        // borderBottomRightRadius={12}
         overflow="hidden"
         {...(isTouchDevice && {
           onTouchMove: () => {
@@ -312,20 +310,14 @@ export const AppMapContents = memo(function AppMapContents() {
         })}
       >
         {!media.sm && (
-          <XStack pos="absolute" width={width} top={0} right={0} bottom={0}>
-            <AppAutocompleteLocation />
-            <AppMapControls />
-
-            <AbsoluteYStack
-              pointerEvents="none"
-              top={searchBarHeight}
-              left={0}
-              right={0}
-              zIndex={1000}
-            >
+          <>
+            <XStack height={80} x="$4" width={width} top={0} right={0} zi={100000} pos="absolute">
               <AppFloatingTagMenuBar />
-            </AbsoluteYStack>
-          </XStack>
+            </XStack>
+            <XStack zi="$2" pos="absolute" height={90} width={width} right={0} bottom={0}>
+              <AppMapControls />
+            </XStack>
+          </>
         )}
         {media.sm && <AppMapBottomFade />}
         {!media.sm && <AppMapRightFade />}

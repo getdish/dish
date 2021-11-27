@@ -19,15 +19,6 @@ import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
 
 export function App() {
-  // useEffect(() => {
-  //   geoSearch({
-  //     query: 'boba',
-  //     ...homeStore.lastHomeOrSearchState.center!,
-  //   }).then((res) => {
-  //     console.log('got', res)
-  //   })
-  // }, [])
-
   // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {
     useEffect(() => {

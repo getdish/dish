@@ -3,8 +3,8 @@ import {
   AbsoluteYStack,
   Box,
   HoverablePopover,
+  HoverablePopoverHandle,
   HoverablePopoverProps,
-  HoverablePopoverRef,
   StackProps,
   Text,
   TextProps,
@@ -15,12 +15,11 @@ import {
   YStack,
   prevent,
   useTheme,
-  useThemeName,
 } from '@dish/ui'
-import { Plus, X } from '@tamagui/feather-icons'
+import { X } from '@tamagui/feather-icons'
 import React, { memo, useRef } from 'react'
 
-import { blue } from '../../constants/colors'
+import { light } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
 import { tagDisplayName } from '../../constants/tagDisplayName'
 import { getTagSlug } from '../../helpers/getTagSlug'
@@ -124,11 +123,9 @@ const typeColors = {
 }
 
 export const TagButton = memo((props: TagButtonProps) => {
-  const themeName = useThemeName()
   const color = (props.type && typeColors[props.type]) || 'green'
-  const next = themeName.includes('dark') ? `${color}-dark` : `${color}-light`
   return (
-    <Theme name={next}>
+    <Theme name={color as any}>
       <TagButtonInner {...props} />
     </Theme>
   )
@@ -215,8 +212,8 @@ const TagButtonInner = (props: TagButtonProps) => {
       <Image
         source={{ uri: icon }}
         style={{
-          width: fontSize,
-          height: fontSize,
+          width: fontSize.toString(),
+          height: fontSize.toString(),
           borderRadius: 1000,
           display: isWeb ? ('inline-flex' as any) : 'flex',
           marginVertical: -2,
@@ -244,7 +241,7 @@ const TagButtonInner = (props: TagButtonProps) => {
     <XStack
       className="hover-parent"
       position="relative"
-      space={fontSize * 0.5}
+      space="$2"
       borderRadius={8}
       backgroundColor={theme.bg}
       borderWidth={bordered ? 0.5 : 0}
@@ -266,9 +263,9 @@ const TagButtonInner = (props: TagButtonProps) => {
         },
       })}
       {...(isActive && {
-        backgroundColor: theme.bgCard,
+        backgroundColor: theme.bg2,
         hoverStyle: {
-          backgroundColor: theme.bgCard,
+          backgroundColor: theme.bg2,
         },
       })}
       alignItems="center"
@@ -306,7 +303,11 @@ const TagButtonInner = (props: TagButtonProps) => {
                 borderColor={theme.bg3}
                 opacity={floating ? 1 : 0.7}
               >
-                <Pie size={pieSize} percent={rating * 10} color={floating ? `#fff` : theme.color} />
+                <Pie
+                  size={pieSize}
+                  percent={rating * 10}
+                  color={floating ? `#fff` : theme.color.toString()}
+                />
               </YStack>
               {/* )} */}
             </YStack>
@@ -395,7 +396,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           scale={0.7}
           hoverStyle={{ scale: 0.75 }}
         >
-          <SearchTagButton tag={{ type: 'dish', slug }} backgroundColor="#fff" color="#000" />
+          <SearchTagButton tag={{ type: 'dish', slug }} color="#000" />
         </AbsoluteYStack>
       )}
     </XStack>
@@ -410,6 +411,7 @@ const TagButtonInner = (props: TagButtonProps) => {
 
   if (!noLink) {
     contents = (
+      // @ts-ignore
       <Link
         {...(restaurant
           ? {
@@ -445,7 +447,7 @@ export const TagVotePopover = graphql(
     children,
     ...popoverProps
   }: Omit<Partial<HoverablePopoverProps>, 'placement' | 'style'> & TagButtonProps) => {
-    const hovPopRef = useRef<HoverablePopoverRef>()
+    const hovPopRef = useRef<HoverablePopoverHandle>()
     const tagSlug = getTagSlug(slug)
     const { vote, setVote } = useUserTagVotes({
       restaurant,
@@ -456,7 +458,7 @@ export const TagVotePopover = graphql(
       <HoverablePopover
         ref={hovPopRef as any}
         allowHoverOnContent
-        fallbackToPress
+        // fallbackToPress
         placement="top"
         {...popoverProps}
         trigger={(props) => React.cloneElement(children, props)}
@@ -487,7 +489,7 @@ export const TagVotePopover = graphql(
                   key={rating}
                   {...(vote === rating
                     ? {
-                        backgroundColor: blue,
+                        backgroundColor: light.blue3,
                       }
                     : {
                         backgroundColor: 'transparent',

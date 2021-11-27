@@ -4,7 +4,7 @@ import { Circle, Spacer, Text, XStack, YStack, useMedia, useTheme } from '@dish/
 import { MessageSquare } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useEffect } from 'react'
 
-import { green, red } from '../../../constants/colors'
+import { light } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
@@ -225,7 +225,7 @@ export const ListItemContentModern = memo(
             </Column>
 
             <Column width={20}>
-              <Circle size={8} backgroundColor={open.isOpen ? green : `${red}55`} />
+              <Circle size={8} backgroundColor={open.isOpen ? light.green8 : light.red8} />
             </Column>
 
             <Column width={60}>

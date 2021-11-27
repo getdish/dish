@@ -116,7 +116,7 @@ const DebugHUD = () => {
       backgroundColor="#fff"
       color="#000"
       opacity={0.2}
-      size="xxs"
+      size="$1"
     >
       {isHermes ? 'hermes' : 'jsc'}
     </Paragraph>

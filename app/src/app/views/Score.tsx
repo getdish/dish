@@ -1,13 +1,19 @@
 import { supportsTouchWeb } from '@dish/helpers'
-import { InteractiveContainer, Paragraph, XStack } from '@dish/ui'
-import { AbsoluteYStack, StackProps, Text, Tooltip, YStack, useTheme } from '@dish/ui'
+import {
+  AbsoluteYStack,
+  InteractiveContainer,
+  Paragraph,
+  StackProps,
+  Tooltip,
+  XStack,
+  YStack,
+  useTheme,
+} from '@dish/ui'
 import { ArrowDown, ArrowUp } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 
-import { green, grey, red } from '../../constants/colors'
 import { isWeb } from '../../constants/constants'
 import { isTouchDevice } from '../../constants/platforms'
-import { getColorsForColor } from '../../helpers/getColorsForName'
 import { numberFormat } from '../../helpers/numberFormat'
 import { ProgressRing } from '../home/ProgressRing'
 import { useUserStore } from '../userStore'
@@ -97,15 +103,15 @@ export const Score = memo(
             {subtle ? (
               getUpvote({})
             ) : (
-              <Tooltip placement="right" trigger={getUpvote} {...isOpenProp}>
-                {upTooltip ?? 'Upvote'}
+              <Tooltip placement="right" contents={upTooltip ?? 'Upvote'} {...isOpenProp}>
+                {getUpvote({})}
               </Tooltip>
             )}
             {subtle ? (
               getDownvote({})
             ) : (
-              <Tooltip placement="right" trigger={getDownvote} {...isOpenProp}>
-                {downTooltip ?? 'Downvote'}
+              <Tooltip placement="right" contents={downTooltip ?? 'Downvote'} {...isOpenProp}>
+                {getDownvote({})}
               </Tooltip>
             )}
           </InteractiveContainer>

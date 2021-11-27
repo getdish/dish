@@ -4,6 +4,7 @@ import { isPresent } from '@dish/helpers'
 import { useRouterSelector } from '@dish/router'
 import {
   AbsoluteYStack,
+  H1,
   LoadingItem,
   LoadingItems,
   Paragraph,
@@ -40,7 +41,6 @@ import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
-import { TitleStyled } from '../../views/TitleStyled'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
@@ -508,9 +508,7 @@ const UserHeader = memo(
                 <UserAvatar size={170} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
               </YStack>
               <YStack paddingTop={20} flex={1}>
-                <TitleStyled size="xxxxl" paddingRight={30}>
-                  {user.name || user.username}
-                </TitleStyled>
+                <H1 paddingRight={30}>{user.name || user.username}</H1>
                 <Spacer size="$8" />
                 <XStack flexWrap="wrap">
                   <Paragraph opacity={0.5}>{user.username}</Paragraph>

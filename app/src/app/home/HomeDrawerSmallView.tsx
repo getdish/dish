@@ -100,7 +100,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
           <YStack flex={1} maxHeight="100%" position="relative">
             {/* overlay over entire content to make dragging it up easy */}
             {(isWebIOS || drawerStore.snapIndex === 2) && (
-              <AbsoluteYStack pointerEvents="auto" fullscreen zIndex={1000000}>
+              <AbsoluteYStack pe="auto" fullscreen zi={1000000}>
                 <View style={{ width: '100%', height: '100%' }} {...panResponder.panHandlers} />
               </AbsoluteYStack>
             )}

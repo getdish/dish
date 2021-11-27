@@ -4,7 +4,7 @@ import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 
-import { green400, red400, yellow400 } from '../../constants/colors'
+import { light } from '../../constants/colors'
 import { SentimentText } from '../home/restaurant/SentimentText'
 import { CommentBubble } from './CommentBubble'
 import { Link } from './Link'
@@ -68,7 +68,9 @@ export const Review = memo(
     const meta = !!review.rating && (
       <Text
         borderRadius={100}
-        backgroundColor={review.rating >= 4 ? green400 : review.rating >= 3 ? yellow400 : red400}
+        backgroundColor={
+          review.rating >= 4 ? light.green8 : review.rating >= 3 ? light.yellow8 : light.red8
+        }
         lineHeight={20}
         paddingHorizontal={12}
         // @ts-ignore

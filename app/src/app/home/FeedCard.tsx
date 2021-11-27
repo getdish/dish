@@ -1,14 +1,4 @@
-import {
-  AbsoluteXStack,
-  AbsoluteYStack,
-  H1,
-  LinearGradient,
-  Paragraph,
-  XStack,
-  YStack,
-  prevent,
-  useTheme,
-} from '@dish/ui'
+import { AbsoluteXStack, H1, Paragraph, XStack, YStack, prevent, useTheme } from '@dish/ui'
 import { ChevronRight } from '@tamagui/feather-icons'
 import React, { RefObject, useRef, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
@@ -17,10 +7,9 @@ import { isWeb } from '../../constants/constants'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { getWindowWidth } from '../../helpers/getWindow'
 import { pluralize } from '../../helpers/pluralize'
-import { GalleryRef, SwipeGallery } from '../../SwipeGallery'
-import { Image } from '../views/Image'
+import { GalleryRef } from '../../SwipeGallery'
 import { TagButton } from '../views/TagButton'
-import { FontTheme, TitleStyled } from '../views/TitleStyled'
+import { FontTheme } from '../views/TitleStyled'
 import { Card, CardProps } from './restaurant/Card'
 
 export type FeedCardProps = CardProps & {

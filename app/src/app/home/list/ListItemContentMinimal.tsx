@@ -1,5 +1,5 @@
 import { graphql, useRefetch } from '@dish/graph'
-import { LoadingItem, Text, XStack, YStack, useMedia, useTheme, useThemeName } from '@dish/ui'
+import { H3, LoadingItem, Text, XStack, YStack, useMedia, useTheme, useThemeName } from '@dish/ui'
 import { PenTool, X } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useState } from 'react'
 
@@ -9,7 +9,7 @@ import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
-import { TitleStyled, getListFontTheme } from '../../views/TitleStyled'
+import { getListFontTheme } from '../../views/TitleStyled'
 import { ensureFlexText } from '../restaurant/ensureFlexText'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
 import { RankView } from '../restaurant/RankView'
@@ -131,7 +131,7 @@ const Header = memo(
                     // ⚠️ note block necessary
                     display={isWeb ? 'block' : 'flex'}
                   >
-                    <TitleStyled
+                    <H3
                       fontSize={titleFontSize}
                       fontTheme={getListFontTheme(list?.font)}
                       lineHeight={titleFontSize * 1.35}
@@ -144,7 +144,7 @@ const Header = memo(
                       maxWidth="100%"
                     >
                       {restaurantName}
-                    </TitleStyled>
+                    </H3>
                   </XStack>
                 </Link>
               </XStack>
