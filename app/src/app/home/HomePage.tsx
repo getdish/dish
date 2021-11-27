@@ -151,28 +151,6 @@ const HomePageContent = (props: Props) => {
 
       <HomePageWelcomeBubble />
 
-      {/* TOP FADE */}
-      <AbsoluteYStack
-        top={-searchBarHeight + 4}
-        right={0}
-        left={0}
-        overflow="hidden"
-        height={searchBarHeight}
-        zIndex={10}
-        opacity={isActive ? 1 : 0}
-        pointerEvents="none"
-      >
-        <AbsoluteYStack
-          bottom={10}
-          left={0}
-          right={0}
-          shadowColor={theme.bg}
-          shadowOpacity={1}
-          shadowRadius={10}
-          height={searchBarHeight + 10}
-        />
-      </AbsoluteYStack>
-
       <YStack
         flex={1}
         width="100%"

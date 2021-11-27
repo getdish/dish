@@ -1,6 +1,7 @@
 import {
   AbsoluteXStack,
   AbsoluteYStack,
+  H1,
   LinearGradient,
   Paragraph,
   XStack,
@@ -150,41 +151,23 @@ const FeedCardContent = ({
   const isSmallDevice = Math.min(getWindowWidth(), getWindowWidth()) < 420
   const deviceScale = isSmallDevice ? 0.75 : 1
   const fontSize = Math.round(24 * lenScale * tagScale * sizeScale * deviceScale)
-  const imgSize = 80
   const theme = useTheme()
   return (
     <XStack
       className="safari-fix-overflow"
-      borderRadius="$3"
+      br="$3"
       overflow="hidden"
       height="100%"
-      padding={10}
-      alignItems="center"
-      bc="$bg2"
+      p="$2"
+      ai="center"
+      bw={1}
+      pointerEvents="auto"
+      borderColor="$bg2"
+      hoverStyle={{
+        borderColor: '$bg4',
+      }}
     >
-      <YStack marginTop="auto" maxWidth="85%">
-        {/* {typeof photo === 'string' && (
-          <AbsoluteYStack
-            pointerEvents="none"
-            borderRadius={100}
-            width={imgSize}
-            height={imgSize}
-            top={-20}
-            right={-20}
-            overflow="hidden"
-          >
-            <Image
-              source={{ uri: getImageUrl(photo, imgSize, imgSize) }}
-              style={{ width: imgSize, height: imgSize }}
-            />
-          </AbsoluteYStack>
-        )} */}
-        {/* <LinearGradient
-          style={StyleSheet.absoluteFill}
-          start={[0, 0]}
-          end={[1, 1]}
-          colors={[`${listColors?.backgroundForTheme}00`, `${listColors?.backgroundForTheme}33`]}
-        /> */}
+      <YStack mt="auto" maxWidth="85%">
         <AbsoluteXStack
           top={0}
           right={0}
@@ -211,22 +194,16 @@ const FeedCardContent = ({
 
         <YStack flex={1} />
 
-        <YStack padding={10} borderRadius={10} position="relative" overflow="hidden" space="$1">
+        <YStack p="$2" br="$2" position="relative" overflow="hidden" space="$1">
           <YStack position="relative" display={isWeb ? 'block' : 'flex'}>
-            <TitleStyled
-              fontTheme={fontTheme}
-              letterSpacing={-1}
-              fontWeight="300"
-              fontSize={fontSize}
-              lineHeight={fontSize * 1.2}
-            >
+            <H1 color="$color3" fontSize={fontSize} lineHeight={fontSize * 1.2}>
               {title}
-            </TitleStyled>
+            </H1>
           </YStack>
 
           {!!(author || typeof numItems !== 'undefined') && (
             <Paragraph
-              size={size === 'xxs' || size === 'xs' || size === 'sm' ? 'xs' : 'sm'}
+              size={size === 'xxs' || size === 'xs' || size === 'sm' ? '$2' : '$3'}
               fontWeight="300"
               opacity={0.6}
             >

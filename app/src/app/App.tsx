@@ -1,4 +1,4 @@
-import { AbsoluteYStack, LoadingItems, ToastRoot, useTheme } from '@dish/ui'
+import { AbsoluteYStack, LoadingItems, ToastRoot } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
 
@@ -9,7 +9,6 @@ import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
-import { AppSearchBarFloating } from './AppSearchBarFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
 import { Home } from './home/Home'
 import { RootPortalProvider } from './Portal'
@@ -107,10 +106,6 @@ function AppHomeContent(props: { children?: any }) {
 
       <Suspense fallback={null}>
         <AppMenuButtonFloating />
-      </Suspense>
-
-      <Suspense fallback={null}>
-        <AppSearchBarFloating />
       </Suspense>
 
       {/* Modals outside the above YStack to stay above */}

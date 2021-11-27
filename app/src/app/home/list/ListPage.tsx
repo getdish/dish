@@ -4,19 +4,20 @@ import { assertPresent } from '@dish/helpers'
 import {
   AbsoluteYStack,
   Button,
+  H1,
   Input,
   InteractiveContainer,
   Modal,
   Paragraph,
   Spacer,
   Text,
+  Theme,
   Toast,
   XStack,
   YStack,
   useForceUpdate,
   useMedia,
   useTheme,
-  useThemeName,
 } from '@dish/ui'
 import { List as ListIcon, Move, Plus, Trash, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
@@ -33,6 +34,7 @@ import { router } from '../../../router'
 import { HomeStateItemList } from '../../../types/homeTypes'
 import { useSetAppMap } from '../../appMapStore'
 import { homeStore, useHomeStateById } from '../../homeStore'
+import { useListColor } from '../../hooks/useListColor'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
@@ -59,6 +61,8 @@ type Props = StackItemProps<HomeStateItemList>
 export default function ListPage(props: Props) {
   const item = useHomeStateById<HomeStateItemList>(props.item.id)
   const isCreating = item.slug === 'create'
+  const [list] = queryList(props.item.slug)
+  const listColor = useListColor(list?.color)
 
   useEffect(() => {
     if (!isCreating) return
@@ -112,9 +116,11 @@ export default function ListPage(props: Props) {
       )}
 
       {!isCreating && (
-        <StackDrawer closable>
-          <ListPageContent {...props} item={item} />
-        </StackDrawer>
+        <Theme name={listColor}>
+          <StackDrawer closable>
+            <ListPageContent {...props} item={item} />
+          </StackDrawer>
+        </Theme>
       )}
     </>
   )
@@ -134,8 +140,6 @@ const ListPageContent = memo(
         list: listQuery[0],
       })
       const [isEditing, setIsEditing] = useState(false)
-      // list?.color
-      // const listColorInitial = useListColors(list?.color)
       const [listColors, setListColors] = useStateSynced(0)
       const [isPublic, setPublic] = useStateSynced(list?.public ?? true)
       const listItems = useListItems(list)
@@ -143,7 +147,6 @@ const ListPageContent = memo(
       const forceUpdate = useForceUpdate()
       const isMinimal = !!list?.theme
       const listSlug = props.item.slug
-      const themeName = useThemeName()
       const listFont = list?.font || 0
 
       useEffect(() => {
@@ -297,11 +300,6 @@ const ListPageContent = memo(
       )
 
       const ListViewElement = isSorting ? DraggableFlatList : FlatList
-
-      const titleColors = {
-        color: 'red', //listColors.colorForTheme,
-        // backgroundColor: listColors.backgroundForTheme,
-      }
 
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (
@@ -475,12 +473,9 @@ const ListPageContent = memo(
                     >
                       <YStack minHeight={75} flex={1} />
                       <YStack display={isWeb ? 'block' : 'flex'}>
-                        <TitleStyled
-                          {...titleColors}
-                          fontTheme={listFont === 0 ? 'slab' : 'sans'}
-                          lineHeight={fontSize * 1.2}
-                          fontWeight="800"
-                          fontSize={fontSize}
+                        <H1
+                          color="$color3"
+                          size="$11"
                           {...(isEditing && {
                             width: '100%',
                           })}
@@ -488,7 +483,6 @@ const ListPageContent = memo(
                           {isEditing ? (
                             <Input
                               fontSize={fontSize}
-                              {...titleColors}
                               fontWeight="700"
                               fontFamily={getListFontFamily(list.font)}
                               width="100%"
@@ -504,7 +498,7 @@ const ListPageContent = memo(
                           ) : (
                             list.name?.trim() || ''
                           )}
-                        </TitleStyled>
+                        </H1>
                       </YStack>
                       <YStack
                         maxWidth={800}

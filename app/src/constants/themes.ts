@@ -62,8 +62,8 @@ for (const key of colorNames) {
     const colorValues = Colors[colorKey]
     const offset = isDark ? -1 : 0
     colorThemes[`${key}-${scheme}`] = {
-      color: isDark ? '#ddd' : colorValues[`${key}12`],
-      color2: isDark ? dark.color2 : light.color2,
+      color: isDark ? '#fff' : '#000',
+      color2: colorValues[`${key}12`],
       color3: colorValues[`${key}11`],
       color4: colorValues[`${key}10`],
       bg: colorValues[`${key}${2 + offset}`],

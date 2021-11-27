@@ -14,7 +14,7 @@ export const showRadar =
 
 export const drawerPad = 8
 export const drawerBorderRadius = 15
-export const drawerWidthMax = 940
+export const drawerWidthMax = 880
 export const drawerExtraLeftScrollSpace = 500
 
 export const listItemMaxSideWidth = Math.round(drawerWidthMax / 2.5 - 40)
@@ -26,7 +26,7 @@ export const logoSmHeight = Math.round(894 * 0.069)
 export const logoXsWidth = Math.round(1024 * 0.044)
 export const logoXsHeight = Math.round(1024 * 0.044)
 
-export const pageWidthMax = 1800
+export const pageWidthMax = 1600
 
 export const searchBarBorderRadius = 7
 export const searchBarTopOffset = 3

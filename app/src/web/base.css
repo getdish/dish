@@ -301,7 +301,7 @@ div,
   /* flex-grow: inherit; */
 }
 
-.backdrop-filter {
+.blur {
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
 }

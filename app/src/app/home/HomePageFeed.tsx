@@ -4,8 +4,10 @@ import {
   AbsoluteYStack,
   Button,
   Grid,
+  H2,
+  Paragraph,
   Spacer,
-  Title,
+  Theme,
   XStack,
   YStack,
   useDebounce,
@@ -262,23 +264,21 @@ const HomeTrendingSpots = memo(({ region }: { region: string }) => {
 const HomeTagLenses = memo(() => {
   return (
     <ContentScrollViewHorizontal>
-      <XStack alignItems="center" space="$8" paddingHorizontal={16}>
+      <XStack ai="center" space="$5" px="$4">
         {tagLenses.map((lense, i) => {
           return (
             <Link key={i} tag={lense}>
-              <TitleStyled
-                color={rgbString(lense.rgb as any)}
-                hoverStyle={{
-                  color: rgbString(lense.rgb as any, 0.6),
-                }}
-                fontSize={26}
-                lineHeight={40}
-                paddingVertical={5}
-              >
-                {lense.icon}
-                &nbsp;&nbsp;
-                {lense.name}
-              </TitleStyled>
+              <Theme name={lense.color}>
+                <H2
+                  color="$color3"
+                  hoverStyle={{
+                    color: '$color2',
+                  }}
+                  fontWeight="300"
+                >
+                  {lense.name}
+                </H2>
+              </Theme>
             </Link>
           )
         })}
@@ -321,7 +321,9 @@ const HomeNearbyRegions = memo(
               const region = r.slug || ''
               return (
                 <Button
+                  key={i}
                   chromeless
+                  noTextWrap
                   {...(center && {
                     onPress: () =>
                       setLocation({
@@ -334,11 +336,10 @@ const HomeNearbyRegions = memo(
                         span: appMapStore.nextPosition.span,
                       }),
                   })}
-                  key={i}
                 >
-                  <Title size="$4" key={i} paddingVertical={5}>
+                  <Paragraph ellipse size="$5" color="$color3">
                     {regionName}
-                  </Title>
+                  </Paragraph>
                 </Button>
               )
             })}

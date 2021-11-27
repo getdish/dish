@@ -29,7 +29,6 @@ const InverseRoundedEdge = () => {
 
 export const SearchPageNavBar = memo(() => {
   const media = useMedia()
-  const theme = useTheme()
   const safeArea = useSafeAreaInsets()
 
   let content: any
@@ -57,15 +56,13 @@ export const SearchPageNavBar = memo(() => {
     content = (
       <YStack
         position="absolute"
-        top={0}
+        bottom={0}
         left={0}
         right={0}
         maxWidth={drawerWidthMax}
-        backgroundColor={theme.bg}
-        shadowColor={theme.shadowColor2}
+        backgroundColor="$bg2"
+        shadowColor="$shadowColor2"
         shadowRadius={6}
-        borderTopLeftRadius={media.sm ? 0 : 20}
-        borderTopRightRadius={media.sm ? 0 : 20}
         shadowOffset={{ height: 3, width: 0 }}
         zIndex={10000}
       >

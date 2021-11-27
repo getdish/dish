@@ -26,6 +26,7 @@ import { ProvideRouter } from '@dish/router'
 import {
   AbsoluteYStack,
   Paragraph,
+  PopoverProvider,
   SafeAreaProvider,
   Theme,
   Toast,
@@ -163,7 +164,7 @@ export function Root() {
         <Theme name={defaultTheme}>
           <ProvideRouter routes={routes}>
             <Suspense fallback={null}>
-              {isLoaded ? <App /> : null}
+              <PopoverProvider>{isLoaded ? <App /> : null}</PopoverProvider>
               {process.env.NODE_ENV === 'development' && <DebugHUD />}
             </Suspense>
           </ProvideRouter>

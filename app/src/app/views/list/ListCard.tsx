@@ -156,7 +156,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
           {...feedCardProps}
         >
           {!props.size?.endsWith('xs') && (
-            <YStack x={-5}>
+            <YStack pos="absolute" top="$1" right="$1" als="flex-start" x={-5}>
               <Suspense fallback={null}>
                 <ListFavoriteButton list={props.list} query={props.query} />
               </Suspense>

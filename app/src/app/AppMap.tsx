@@ -288,7 +288,7 @@ export const AppMapContents = memo(function AppMapContents() {
       maxWidth={pageWidthMax}
       margin="auto"
     >
-      <MapFlexItem />
+      {/* <MapFlexItem /> */}
       <YStack
         position="relative"
         pointerEvents="auto"
@@ -296,7 +296,7 @@ export const AppMapContents = memo(function AppMapContents() {
         zIndex={zIndexMap}
         maxHeight="100%"
         height="100%"
-        width={width}
+        width="100%"
         maxWidth="100%"
         // borderTopRightRadius={12}
         // borderBottomRightRadius={12}
@@ -312,7 +312,7 @@ export const AppMapContents = memo(function AppMapContents() {
         })}
       >
         {!media.sm && (
-          <>
+          <XStack pos="absolute" width={width} top={0} right={0} bottom={0}>
             <AppAutocompleteLocation />
             <AppMapControls />
 
@@ -325,7 +325,7 @@ export const AppMapContents = memo(function AppMapContents() {
             >
               <AppFloatingTagMenuBar />
             </AbsoluteYStack>
-          </>
+          </XStack>
         )}
         {media.sm && <AppMapBottomFade />}
         {!media.sm && <AppMapRightFade />}

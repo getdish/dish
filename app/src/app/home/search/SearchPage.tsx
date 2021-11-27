@@ -9,6 +9,7 @@ import {
   Spacer,
   StackProps,
   Text,
+  Theme,
   XStack,
   YStack,
   combineRefs,
@@ -32,7 +33,9 @@ import { LayoutRectangle, ScrollView, ScrollViewProps, StyleSheet, View } from '
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 
 import { isWeb } from '../../../constants/constants'
+import { tagLenses } from '../../../constants/localTags'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
+import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
 import { getTitleForState } from '../../../helpers/getTitleForState'
 import { getWindow } from '../../../helpers/getWindow'
 import { getFullTagsFromRoute } from '../../../helpers/syncStateFromRoute'
@@ -76,6 +79,9 @@ export default memo(function SearchPage(props: SearchProps) {
     router.curPage.name !== 'search'
   )
 
+  const lenseTag = getActiveTagSlugs(state).find((x) => x.type === 'lense') ?? tagLenses[0]
+  console.log('lenseTag', lenseTag, state)
+
   useLayoutEffect(() => {
     if (!props.isActive) return
     setStore(searchPageStore)
@@ -112,19 +118,21 @@ export default memo(function SearchPage(props: SearchProps) {
   return (
     <>
       <PageHead isActive={props.isActive}>{title}</PageHead>
-      <StackDrawer closable>
-        <HomeSuspense>
-          <SearchNavBarContainer isActive={props.isActive} />
-        </HomeSuspense>
-        <HomeSuspense fallback={<SearchLoading />}>
-          <SearchPageContent
-            key={state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])}
-            {...props}
-            route={route}
-            item={state}
-          />
-        </HomeSuspense>
-      </StackDrawer>
+      <Theme name={lenseTag['color']}>
+        <StackDrawer closable>
+          <HomeSuspense>
+            <SearchNavBarContainer isActive={props.isActive} />
+          </HomeSuspense>
+          <HomeSuspense fallback={<SearchLoading />}>
+            <SearchPageContent
+              key={state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])}
+              {...props}
+              route={route}
+              item={state}
+            />
+          </HomeSuspense>
+        </StackDrawer>
+      </Theme>
     </>
   )
 })

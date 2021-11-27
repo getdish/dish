@@ -1,4 +1,4 @@
-import { Title as SnackTitle, TitleProps } from '@dish/ui'
+import { Title, TitleProps } from '@dish/ui'
 
 export type FontTheme = 'slab' | 'sans'
 
@@ -16,9 +16,10 @@ export const TitleStyled = ({
   fontTheme?: FontTheme
 }) => {
   return (
-    <SnackTitle
+    <Title
       {...props}
       fontFamily={getFontFamily(props.fontTheme)}
+      fontWeight="700"
       className={`font-title ${props.className || ''}`}
     />
   )

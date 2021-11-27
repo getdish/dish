@@ -120,6 +120,7 @@ export const tagLenses = [
     icon: '💎',
     slug: 'lenses__gems',
     rgb: ['199', ' 58', ' 107'],
+    color: 'pink',
   },
   {
     id: 'b1580bd8-4f60-45e3-a5a9-c31effe8e7a3',
@@ -128,6 +129,7 @@ export const tagLenses = [
     icon: '🍷',
     slug: 'lenses__drinks',
     rgb: ['153', ' 75', ' 75'],
+    color: 'red',
   },
   {
     id: '5da93fbe-5715-43b4-8b15-6521e3897bd9',
@@ -136,6 +138,7 @@ export const tagLenses = [
     icon: '🌃',
     slug: 'lenses__vibe',
     rgb: ['50', ' 93', ' 161'],
+    color: 'purple',
   },
   {
     id: '4768116c-bca3-4936-970b-5f2570a9e8f8',
@@ -144,6 +147,7 @@ export const tagLenses = [
     icon: '🌱',
     slug: 'lenses__veg',
     rgb: ['51', ' 153', ' 51'],
+    color: 'green',
   },
 ] as const
 

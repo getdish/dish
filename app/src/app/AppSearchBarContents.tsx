@@ -33,15 +33,10 @@ export const AppSearchBarContents = memo(() => {
       alignItems="center"
       justifyContent="center"
       userSelect="none"
-      paddingHorizontal={14}
+      paddingHorizontal="$1"
       minHeight={searchBarHeight}
-      $sm={{
-        paddingHorizontal: 5,
-      }}
     >
-      {!media.sm && <SearchBarActionButton />}
-
-      <YStack paddingHorizontal={media.sm ? 2 : 12} maxHeight={searchBarHeight} overflow="hidden">
+      <YStack px="$1" maxHeight={searchBarHeight} overflow="hidden">
         <DishLogoButton />
       </YStack>
 

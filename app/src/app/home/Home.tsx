@@ -1,27 +1,13 @@
-// import { createReparentableSpace } from 'react-reparenting'
-import {
-  AbsoluteYStack,
-  LinearGradient,
-  XStack,
-  YStack,
-  supportsTouchWeb,
-  useMedia,
-  useTheme,
-} from '@dish/ui'
+import { XStack, YStack, supportsTouchWeb, useMedia } from '@dish/ui'
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
-import { Keyboard, StyleSheet } from 'react-native'
+import { Keyboard } from 'react-native'
 
-import {
-  drawerWidthMax,
-  isWeb,
-  pageWidthMax,
-  searchBarHeight,
-  zIndexDrawer,
-} from '../../constants/constants'
+import { drawerWidthMax, isWeb, pageWidthMax, zIndexDrawer } from '../../constants/constants'
 import { router } from '../../router'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
+import { AppSearchBarInline } from '../AppSearchBarInline'
 import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore } from '../drawerStore'
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
@@ -137,7 +123,6 @@ const HomeContainerLarge = (props) => {
   const media = useMedia()
   const drawerWidth = useAppDrawerWidth(Infinity)
   const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
-  const theme = useTheme()
 
   return (
     <YStack
@@ -146,23 +131,24 @@ const HomeContainerLarge = (props) => {
       margin="auto"
       maxWidth={pageWidthMax}
       // TODO ui-static this fails if i remove conditional above!
-      flex={1}
-      position="absolute"
+      f={1}
+      p="absolute"
       top={0}
-      pointerEvents="none"
-      alignItems="flex-start"
-      zIndex={zIndexDrawer}
+      pe="none"
+      ai="flex-start"
+      zi={zIndexDrawer}
     >
-      <XStack
+      <YStack
+        className="blur"
         pointerEvents="auto"
         position="absolute"
-        top={0}
+        top="$3"
+        left="$3"
+        bottom="$3"
         width={lastWidth}
-        bottom={0}
         zIndex={10}
         flex={1}
-        backgroundColor={theme.bg}
-        shadowColor={theme.shadowColor}
+        shadowColor="$shadowColor"
         shadowRadius={25}
         shadowOffset={{ width: 10, height: 0 }}
         justifyContent="flex-end"
@@ -172,12 +158,18 @@ const HomeContainerLarge = (props) => {
           maxWidth: drawerWidthMax,
         })}
       >
+        <XStack opacity={0.5} zi={-1} fullscreen br="$4" backgroundColor="$bg" />
+
+        <XStack zi={100} pos="absolute" top={0} left={0} right={0}>
+          <AppSearchBarInline />
+        </XStack>
+
         <AppAutocompleteSearch />
 
         {props.children}
 
         <DrawerPortalProvider />
-      </XStack>
+      </YStack>
     </YStack>
   )
 }
