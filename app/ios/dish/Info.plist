@@ -1,94 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
-	<key>CFBundleDisplayName</key>
-	<string>dish</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>$(PRODUCT_NAME)</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.dishapp</string>
-			</array>
-		</dict>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>51</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>dishapp.com</key>
-			<dict>
-				<key>NSIncludesSubdomains</key>
-				<true/>
-				<key>NSExceptionMinimumTLSVersion</key>
-				<string>TLSv1.0</string>
-			</dict>
-		</dict>
-	</dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>
-		 Users can submit photos as part of their review for a restaurant. This data is always
-		 public and indicated as such.
-	</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>
-		 Users can enable their location see and search nearby food.
-		 Dish is a world guide on a map, with search and discovery. It focuses on finding restaurants
-		and delivery nearby.
-	</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>
-		Users can enable their location to always show on the map to see and search nearby food.
-		Dish is a world guide on a map, with search and discovery. It focuses on finding restaurants
-		and delivery nearby.
-	</string>
-	<key>UILaunchStoryboardName</key>
-	<string>SplashScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UIRequiresFullScreen</key>
-	<true/>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>WhyteHeavy.otf</string>
-		<string>WhyteHeavy.woff</string>
-		<string>WhyteHeavy.woff2</string>
-		<string>Magnat.otf</string>
-		<string>Magnat.woff</string>
-	</array>
-</dict>
+  <dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>CFBundleDisplayName</key>
+    <string>dish</string>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundlePackageType</key>
+    <string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.0.0</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.dish.app</string>
+        </array>
+      </dict>
+    </array>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+      <key>NSAllowsArbitraryLoads</key>
+      <true/>
+      <key>NSExceptionDomains</key>
+      <dict>
+        <key>localhost</key>
+        <dict>
+          <key>NSExceptionAllowsInsecureHTTPLoads</key>
+          <true/>
+        </dict>
+      </dict>
+    </dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your camera</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your microphone</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Allow $(PRODUCT_NAME) to access your photos</string>
+    <key>UILaunchStoryboardName</key>
+    <string>SplashScreen</string>
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+      <string>armv7</string>
+    </array>
+    <key>UIRequiresFullScreen</key>
+    <true/>
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleDefault</string>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+      <string>UIInterfaceOrientationPortraitUpsideDown</string>
+      <string>UIInterfaceOrientationLandscapeLeft</string>
+      <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UIUserInterfaceStyle</key>
+    <string>Light</string>
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
+  </dict>
 </plist>

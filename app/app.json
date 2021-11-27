@@ -4,6 +4,12 @@
   "expo": {
     "name": "dish",
     "slug": "dish",
-    "sdkVersion": "42.0.0"
+    "sdkVersion": "42.0.0",
+    "android": {
+      "package": "com.dish.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.dish.app"
+    }
   }
 }

@@ -2,8 +2,7 @@
 
 set -eo pipefail
 
-yarn patch-package
-DEBUG=workspaces expo-yarn-workspaces postinstall &> /dev/null
+yarn patch-package || true
 
 if [ -n "$EAS_BUILD" ]; then
   echo $NETRC | base64 -d > ~/.netrc
