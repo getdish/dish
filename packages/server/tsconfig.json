@@ -1,11 +1,35 @@
+// copied this otherwise its a bit brittle as this package builds with tsc
 {
-  "extends": "../../tsconfig.base",
+  "include": ["src"],
   "compilerOptions": {
+    "importHelpers": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "preserveSymlinks": true,
+    "jsx": "react",
+    "moduleResolution": "node",
+    "noEmitOnError": false,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "experimentalDecorators": true,
+    "useUnknownInCatchVariables": false,
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "sourceMap": false,
+    // "strict": true,
+    "strictNullChecks": true,
+    "types": ["node", "jest"],
+    "lib": ["es2021", "dom", "esnext"],
+    "baseUrl": ".",
+    "incremental": false,
     "esModuleInterop": true,
     "target": "ES2018",
     "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
-  },
-  "include": ["src"]
+  }
 }

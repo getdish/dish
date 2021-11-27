@@ -8,7 +8,7 @@ import {
   useTheme,
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
-import Svg, { G, Path } from 'react-native-svg'
+import { G, Path, Svg } from 'react-native-svg'
 
 import { drawerWidthMax } from '../../../constants/constants'
 import { titleHeight } from '../../../constants/titleHeight'

@@ -2,7 +2,7 @@ import { Spacer, Text, TextProps, XStack, useTheme } from '@dish/ui'
 import { ThumbsDown, ThumbsUp } from '@tamagui/feather-icons'
 import React from 'react'
 
-import { green200, grey, red200 } from '../../../constants/colors'
+import { light } from '../../../constants/colors'
 
 export const SentimentText = ({
   sentiment,
@@ -13,7 +13,7 @@ export const SentimentText = ({
   // have to wrap with XStack to get border radius on native
   const Icon = sentiment > 0 ? ThumbsUp : ThumbsDown
   const theme = useTheme()
-  const color = sentiment > 0 ? green200 : sentiment < 0 ? red200 : grey
+  const color = sentiment > 0 ? light.green9 : sentiment < 0 ? light.red9 : light.gray6
   return (
     <XStack
       paddingHorizontal={6 * scale}

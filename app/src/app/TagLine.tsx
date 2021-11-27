@@ -6,7 +6,7 @@ export const TagLine = (props: { scale?: number }) => {
     <Paragraph
       fontWeight="300"
       minWidth={280}
-      size="xl"
+      size="$8"
       textAlign="center"
       position="relative"
       zIndex={1000}

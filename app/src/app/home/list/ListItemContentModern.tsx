@@ -215,7 +215,7 @@ export const ListItemContentModern = memo(
                 </>
               )}
 
-              <RestaurantFavoriteButton size="md" restaurantSlug={restaurant.slug || ''} />
+              <RestaurantFavoriteButton size="$4" restaurantSlug={restaurant.slug || ''} />
             </Column>
 
             <Column width={160} alignItems="flex-start">

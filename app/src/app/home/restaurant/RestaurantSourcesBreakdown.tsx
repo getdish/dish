@@ -4,7 +4,7 @@ import {
   Table,
   TableCell,
   TableCellProps,
-  TableHeadRow,
+  TableHead,
   TableHeadText,
   TableRow,
   Text,
@@ -54,7 +54,7 @@ export const RestaurantSourcesBreakdown = memo(
         <Spacer size="$6" />
 
         <Table>
-          <TableHeadRow>
+          <TableHead>
             <TableCell {...col0Props}></TableCell>
 
             <TableCell>
@@ -73,7 +73,7 @@ export const RestaurantSourcesBreakdown = memo(
             <TableCell {...col3Props}>
               <TableHeadText>Points</TableHeadText>
             </TableCell>
-          </TableHeadRow>
+          </TableHead>
 
           {Object.keys(sources).map((source, i) => {
             const item = breakdowns[source]

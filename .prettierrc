@@ -3,6 +3,7 @@
   "semi": false,
   "singleQuote": true,
   "arrowParens": "always",
-  "plugins": ["./node_modules/prettier-plugin-import-sort"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
   "printWidth": 100
 }

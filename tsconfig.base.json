@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": ".",
     "importHelpers": true,
     "allowJs": false,
     "allowSyntheticDefaultImports": true,

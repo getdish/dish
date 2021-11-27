@@ -55,7 +55,7 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
               Hitchikers' guides to our galaxy.
             </Paragraph>
 
-            <Paragraph size="xxl">Dish is building a community around curation.</Paragraph>
+            <Paragraph size="$8">Dish is building a community around curation.</Paragraph>
 
             <Link href="https://discord.gg/f4u9hgmf">
               <Svg width="71" height="55" viewBox="0 0 71 55" fill="none">

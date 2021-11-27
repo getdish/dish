@@ -6,7 +6,7 @@ import { Image } from '../../views/Image'
 
 export const IntroText = (props: ParagraphProps) => {
   return (
-    <Paragraph size="xxl" width="100%">
+    <Paragraph size="$8" width="100%">
       {wordsWithBrandMark(props.children)}
     </Paragraph>
   )

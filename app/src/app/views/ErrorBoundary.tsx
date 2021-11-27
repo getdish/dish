@@ -40,7 +40,7 @@ export function ErrorBoundary({ children, name }: { children: any; name: string 
             padding={15}
             overflow="hidden"
           >
-            {process.env.NODE_ENV === 'production' && <Paragraph size="xxxl">😭😭😭 err</Paragraph>}
+            {process.env.NODE_ENV === 'production' && <Paragraph size="$8">😭😭😭 err</Paragraph>}
 
             {process.env.NODE_ENV === 'development' && (
               <YStack maxWidth="100%" flex={1} overflow="hidden">

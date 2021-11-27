@@ -2,14 +2,13 @@ import { Button, ButtonProps } from '@dish/ui'
 import { CornerLeftUp, X } from '@tamagui/feather-icons'
 import React, { forwardRef, memo } from 'react'
 
-type CircleButtonProps = ButtonProps & {
+type CircleButtonProps = Omit<ButtonProps, 'size'> & {
   size?: number
-  shadowed?: boolean
 }
 
 export const CloseButton = (props: CircleButtonProps) => {
   return (
-    <SmallCircleButton shadowed {...props}>
+    <SmallCircleButton {...props}>
       <X size={18} color="#999" />
     </SmallCircleButton>
   )
@@ -24,7 +23,7 @@ export const BackButton = memo((props: CircleButtonProps) => {
 })
 
 export const SmallCircleButton = forwardRef(
-  ({ shadowed, children, width, height, size = 44, ...props }: CircleButtonProps, ref) => {
+  ({ children, width, height, size = 44, ...props }: CircleButtonProps, ref) => {
     return (
       <Button
         ref={ref as any}
@@ -33,9 +32,6 @@ export const SmallCircleButton = forwardRef(
         justifyContent="center"
         paddingHorizontal={0}
         paddingVertical={0}
-        {...(shadowed && {
-          elevation: 1,
-        })}
         noTextWrap
         minWidth={width ?? size}
         minHeight={height ?? size}

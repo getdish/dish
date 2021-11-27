@@ -26,7 +26,7 @@ export const RestaurantLists = memo(
 
     return (
       <YStack marginBottom={15}>
-        <SlantedTitle size="xs" marginBottom={-26} alignSelf="center" fontWeight="700">
+        <SlantedTitle size="$4" marginBottom={-26} alignSelf="center" fontWeight="700">
           Lists
         </SlantedTitle>
         <CardCarousel>

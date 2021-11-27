@@ -1,9 +1,8 @@
 import { isSafari } from '@dish/helpers'
-import { AnimatedYStack, YStack, isTouchDevice, useDebounceValue, useMedia } from '@dish/ui'
+import { isTouchDevice, useDebounceValue, useMedia, YStack } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import React, { Suspense, memo, useEffect, useMemo } from 'react'
-
-import { isWeb, searchBarHeight, searchBarTopOffset } from '../../constants/constants'
+import React, { memo, Suspense, useEffect, useMemo } from 'react'
+import { searchBarHeight, searchBarTopOffset } from '../../constants/constants'
 import { HomeStateItem } from '../../types/homeTypes'
 import { useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
@@ -117,13 +116,13 @@ const AppStackViewItem = memo(
       </YStack>
     )
 
-    if (!isWeb) {
-      return (
-        <AnimatedYStack position="absolute" fullscreen animateState={!isRemoving ? 'in' : 'out'}>
-          {contents}
-        </AnimatedYStack>
-      )
-    }
+    // if (!isWeb) {
+    //   return (
+    //     <AnimatedYStack position="absolute" fullscreen animateState={!isRemoving ? 'in' : 'out'}>
+    //       {contents}
+    //     </AnimatedYStack>
+    //   )
+    // }
 
     return contents
   }

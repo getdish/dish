@@ -1,12 +1,11 @@
-import { Button, Modal, Paragraph, Spacer, XStack, YStack } from '@dish/ui'
-import React, { useState } from 'react'
-import { FlatList } from 'react-native'
-
 import { tagLenses } from '../../../constants/localTags'
 import { CloseButton, SmallCircleButton } from '../../views/CloseButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { ListItemXStack } from './ListItemXStack'
+import { Button, Modal, Paragraph, Spacer, XStack, YStack } from '@dish/ui'
+import React, { useState } from 'react'
+import { FlatList } from 'react-native'
 
 // const meta = (
 //   <>
@@ -49,7 +48,7 @@ export const RateRestaurantTagsModal = ({ onDismiss }: { onDismiss: any }) => {
 
         <Spacer />
 
-        <SlantedTitle size="xs" alignSelf="center">
+        <SlantedTitle size="$4" alignSelf="center">
           Rate tags
         </SlantedTitle>
 
@@ -92,7 +91,7 @@ const RateRestaurantTagModal = ({ onDismiss }: { onDismiss: any }) => {
 
       <Spacer />
 
-      <SlantedTitle size="xs" alignSelf="center">
+      <SlantedTitle size="$4" alignSelf="center">
         Rate tag
       </SlantedTitle>
 

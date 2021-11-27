@@ -1,11 +1,10 @@
-import { Separator, Spacer, Title, YStack } from '@dish/ui'
-import React from 'react'
-
 import { Link } from '../../views/Link'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { SmallButton } from '../../views/SmallButton'
 import { BlogPostMeta } from './BlogPostMeta'
 import { PostEntry } from './posts'
+import { Separator, Spacer, Title, YStack } from '@dish/ui'
+import React from 'react'
 
 export function BlogPageDetail({ post }: { post: PostEntry }) {
   if (!post) {
@@ -19,7 +18,7 @@ export function BlogPageDetail({ post }: { post: PostEntry }) {
           Back to blog
         </SmallButton>
       </Link>
-      <Title size="xxl" fontWeight="800">
+      <Title size="$8" fontWeight="800">
         {title}
       </Title>
       <Spacer size="$2" />

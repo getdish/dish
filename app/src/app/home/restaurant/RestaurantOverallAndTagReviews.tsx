@@ -200,7 +200,7 @@ const Content = memo(
                         <YStack position="relative" alignSelf="center">
                           <SlantedTitle
                             marginTop={-20}
-                            size="xs"
+                            size="$4"
                             fontWeight="800"
                             paddingVertical={4}
                             paddingHorizontal={8}

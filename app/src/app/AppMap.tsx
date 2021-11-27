@@ -4,19 +4,18 @@ import { resolved } from '@dish/graph'
 import {
   AbsoluteYStack,
   LinearGradient,
-  XStack,
-  YStack,
   useDebounceValue,
   useGet,
   useMedia,
   useTheme,
   useThemeName,
+  XStack,
+  YStack,
 } from '@dish/ui'
 import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import loadable from '@loadable/component'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Animated, StyleSheet } from 'react-native'
-
 import { isWeb, pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
@@ -24,7 +23,6 @@ import { coordsToLngLat, getMinLngLat } from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { MapRegionEvent } from '../types/homeTypes'
-import { AppAutocompleteLocation } from './AppAutocompleteLocation'
 import { AppMapControls } from './AppMapControls'
 import { cancelUpdateRegion, updateRegion, updateRegionFaster, useAppMapStore } from './appMapStore'
 import { drawerStore } from './drawerStore'
@@ -49,8 +47,6 @@ export default memo(function AppMap() {
         return Math.round(Math.min(0, -drawerHeight / 1.8 + distanceFromCenter / 4))
       })()
     : 0
-
-  console.log('y0', y0)
 
   const y = useDebounceValue(y0, 150)
   const [translateY] = useState(() => new Animated.Value(y))

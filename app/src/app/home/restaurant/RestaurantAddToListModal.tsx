@@ -1,3 +1,10 @@
+import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { queryUser } from '../../../queries/queryUser'
+import { userStore } from '../../userStore'
+import { CloseButton } from '../../views/CloseButton'
+import { Link } from '../../views/Link'
+import { PaneControlButtons } from '../../views/PaneControlButtons'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { graphql, order_by, query, useMutation } from '@dish/graph'
 import {
   AbsoluteYStack,
@@ -15,14 +22,6 @@ import {
 import { Plus, X } from '@tamagui/feather-icons'
 import React from 'react'
 import { ScrollView } from 'react-native'
-
-import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { queryUser } from '../../../queries/queryUser'
-import { userStore } from '../../userStore'
-import { CloseButton } from '../../views/CloseButton'
-import { Link } from '../../views/Link'
-import { PaneControlButtons } from '../../views/PaneControlButtons'
-import { SlantedTitle } from '../../views/SlantedTitle'
 
 export const RestaurantAddToListModal = graphql(
   ({ slug, onDismiss }: { slug: string; onDismiss: () => any }) => {
@@ -75,7 +74,7 @@ export const RestaurantAddToListModal = graphql(
         </PaneControlButtons>
 
         <AbsoluteYStack alignItems="center" top={-15}>
-          <SlantedTitle size="xs">Add to list</SlantedTitle>
+          <SlantedTitle size="$4">Add to list</SlantedTitle>
         </AbsoluteYStack>
 
         <ScrollView style={{ width: '100%', flex: 1, paddingVertical: 30 }}>

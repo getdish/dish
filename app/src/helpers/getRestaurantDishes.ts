@@ -54,7 +54,7 @@ export const getRestaurantDishes = ({
     .filter(isPresent)
     .filter((x) => x && !!x.slug)
 
-  const sorted = sortBy(unsorted, (x) => -x.rating)
+  const sorted = sortBy(unsorted, (x) => -(x?.rating ?? 0))
 
   return sorted
 }

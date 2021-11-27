@@ -391,7 +391,7 @@ const UserPageContent = memo(
               {!pane && !!lists.length && (
                 <YStack position="relative">
                   <AbsoluteYStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="xs">Playlists</SlantedTitle>
+                    <SlantedTitle size="$4">Playlists</SlantedTitle>
                   </AbsoluteYStack>
                   <CardCarousel>
                     {lists.map((list, i) => {
@@ -414,7 +414,7 @@ const UserPageContent = memo(
               {!pane && !!favoriteLists.length && (
                 <YStack position="relative">
                   <AbsoluteYStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="xs">Liked lists</SlantedTitle>
+                    <SlantedTitle size="$4">Liked lists</SlantedTitle>
                   </AbsoluteYStack>
                   <CardCarousel>
                     {favoriteLists.map((list, i) => {
@@ -434,7 +434,7 @@ const UserPageContent = memo(
 
               <YStack position="relative" paddingHorizontal={20}>
                 <AbsoluteYStack zIndex={100} top={-15} left={10}>
-                  <SlantedTitle size="xs">
+                  <SlantedTitle size="$4">
                     {pane === 'review' ? 'Reviews' : pane === 'vote' ? 'Votes' : 'Recently'}
                   </SlantedTitle>
                 </AbsoluteYStack>

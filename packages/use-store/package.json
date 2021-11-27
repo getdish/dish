@@ -3,13 +3,18 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "source": "src/index.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "typings": "types.d.ts",
+  "typings": "types",
+  "main": "dist/cjs",
+  "module": "dist/esm",
+  "module:jsx": "dist/jsx",
+  "files": [
+    "types",
+    "src",
+    "dist"
+  ],
   "scripts": {
-    "build": "dish-build",
-    "watch": "dish-build --watch",
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch",
     "test": "NODE_ENV=test jest test"
   },
   "tests": {
@@ -22,7 +27,7 @@
     "use-sync-external-store": "0.0.0-experimental-5b57bc6e3-20210921"
   },
   "devDependencies": {
-    "@dish/build": "^1.0.0-alpha.2",
+    "@tamagui/build": "^1.0.0-alpha.17",
     "@types/jest": "*",
     "jest": "*"
   }

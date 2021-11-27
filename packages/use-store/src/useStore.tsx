@@ -1,4 +1,3 @@
-// @ts-ignore
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 
 import { isEqualSubsetShallow } from './comparators'

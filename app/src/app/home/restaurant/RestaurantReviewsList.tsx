@@ -67,7 +67,7 @@ export const RestaurantReviewsList = memo(
             alignItems="center"
             justifyContent="center"
           >
-            <SlantedTitle size="xs" marginTop={-32} fontWeight="700">
+            <SlantedTitle size="$4" marginTop={-32} fontWeight="700">
               Reviews
             </SlantedTitle>
 

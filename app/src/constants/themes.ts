@@ -1,3 +1,4 @@
+import { createTheme } from '@dish/ui'
 import * as Colors from '@tamagui/colors'
 
 import { colorNames } from './colors'
@@ -12,7 +13,7 @@ const darkColors = Object.fromEntries(
     .map(([k, v]) => [k.replace('Dark', ''), v])
 )
 
-const light = {
+const baseTheme = createTheme({
   bg: '#fff',
   bg2: tokens.color.gray3,
   bg3: tokens.color.gray4,
@@ -30,10 +31,16 @@ const light = {
   shadowColor: tokens.color.grayA5,
   shadowColor2: tokens.color.grayA6,
   mapBackground: '#ffffff',
+})
+
+type BaseTheme = typeof baseTheme
+
+const light: BaseTheme = {
+  ...baseTheme,
   ...lightColors,
 }
 
-const dark = {
+const dark: BaseTheme = {
   bg: '#000',
   bg2: tokens.color.gray2Dark,
   bg3: tokens.color.gray3Dark,
@@ -54,7 +61,7 @@ const dark = {
   ...darkColors,
 }
 
-const colorThemes: Record<typeof colorNames[number], typeof light> = {} as any
+const colorThemes: Record<typeof colorNames[number], BaseTheme> = {} as any
 for (const key of colorNames) {
   for (const scheme of ['light', 'dark']) {
     const isDark = scheme === 'dark'
@@ -81,40 +88,48 @@ for (const key of colorNames) {
   }
 }
 
+const activeLight: BaseTheme = {
+  ...colorThemes['blue-dark'],
+  bg: tokens.color.blue1,
+  bg2: tokens.color.blue3,
+  bg3: tokens.color.blue3,
+  bg4: tokens.color.blue5,
+  color: tokens.color.blue10,
+  color2: tokens.color.blue11,
+}
+
+const activeDark: BaseTheme = {
+  ...colorThemes['blue-light'],
+  bg: tokens.color.blue12,
+  bg2: tokens.color.blue12,
+  bg3: tokens.color.blue12,
+  bg4: tokens.color.blue10,
+  color: tokens.color.blue1,
+  color2: tokens.color.blue2,
+}
+
+const darkTranslucent: BaseTheme = createTheme({
+  ...dark,
+  bg: 'rgba(0,0,0,0.7)',
+  bg2: 'rgba(0,0,0,0.5)',
+  bg3: 'rgba(0,0,0,0.25)',
+  bg4: 'rgba(0,0,0,0.1)',
+})
+
+const lightTranslucent: BaseTheme = createTheme({
+  ...light,
+  bg: 'rgba(255,255,255,0.85)',
+  bg2: 'rgba(250,250,250,0.85)',
+  bg3: 'rgba(240,240,240,0.85)',
+  bg4: 'rgba(240,240,240,0.7)',
+})
+
 export const themes = {
   dark,
   light,
+  'active-light': activeLight,
+  'active-dark': activeDark,
+  'translucent-dark': darkTranslucent,
+  'translucent-light': lightTranslucent,
   ...colorThemes,
-  'active-light': {
-    ...colorThemes['blue-dark'],
-    bg: tokens.color.blue1,
-    bg2: tokens.color.blue3,
-    bg3: tokens.color.blue3,
-    bg4: tokens.color.blue5,
-    color: tokens.color.blue10,
-    color2: tokens.color.blue11,
-  },
-  'active-dark': {
-    ...colorThemes['blue-light'],
-    bg: tokens.color.blue12,
-    bg2: tokens.color.blue12,
-    bg3: tokens.color.blue12,
-    bg4: tokens.color.blue10,
-    color: tokens.color.blue1,
-    color2: tokens.color.blue2,
-  },
-  'dark-translucent': {
-    ...dark,
-    bg: 'rgba(0,0,0,0.7)',
-    bg2: 'rgba(0,0,0,0.5)',
-    bg3: 'rgba(0,0,0,0.25)',
-    bg4: 'rgba(0,0,0,0.1)',
-  },
-  'light-translucent': {
-    ...light,
-    bg: 'rgba(255,255,255,0.85)',
-    bg2: 'rgba(250,250,250,0.85)',
-    bg3: 'rgba(240,240,240,0.85)',
-    bg4: 'rgba(240,240,240,0.7)',
-  },
 } as const

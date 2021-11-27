@@ -29,7 +29,7 @@ export const RestaurantDeliveryButtons = memo(
     const sources = getRestaurantDeliverySources(restaurant.sources)
 
     return (
-      <XStack flexWrap="wrap" alignItems="center" spacing="xxs" {...props}>
+      <XStack flexWrap="wrap" alignItems="center" spacing="$1" {...props}>
         {!!label && (
           <Text fontSize={14} color={theme.color4} marginRight={8} y={-1}>
             {label}

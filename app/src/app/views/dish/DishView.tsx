@@ -140,7 +140,7 @@ const DishViewContent = (props: DishViewProps) => {
           bottom="-10%"
           right="-10%"
         >
-          <SearchTagButton tag={{ slug, type: 'dish' }} />
+          <SearchTagButton tag={{ slug: slug || '', type: 'dish' }} />
         </AbsoluteYStack>
 
         <YStack

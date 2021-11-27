@@ -47,7 +47,7 @@ export const RestaurantTagPhotosContent = memo(
     return (
       <ContentScrollViewHorizontal height={220}>
         <Suspense fallback={<LoadingItems />}>
-          <XStack spacing paddingHorizontal={20} paddingVertical={5}>
+          <XStack space paddingHorizontal={20} paddingVertical={5}>
             {[...tagPhotos, 0, 0, 0, 0, 0, 0].slice(0, Math.max(numTags, 5)).map((photo, index) => {
               return (
                 <Link

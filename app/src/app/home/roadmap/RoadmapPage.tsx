@@ -93,8 +93,8 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
                 Roadmap
               </Paragraph>
 
-              <Paragraph size="xl">Vote on things you want to see done.</Paragraph>
-              <Paragraph size="xl">
+              <Paragraph size="$6">Vote on things you want to see done.</Paragraph>
+              <Paragraph size="$6">
                 {icons.map((icon, i) => `${icon} ${descriptions[i]}      `)}
               </Paragraph>
 

@@ -2,7 +2,6 @@ import { graphql } from '@dish/graph'
 import { Box, HoverablePopover, Text, XStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 
-import { bgLight } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Link } from '../../views/Link'

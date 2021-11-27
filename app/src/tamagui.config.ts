@@ -14,10 +14,6 @@ const config = createTamagui({
   media,
 })
 
-type Conf = typeof config
-
-declare module 'tamagui' {
-  interface TamaguiCustomConfig extends Conf {}
-}
+export type Conf = typeof config
 
 export default config

@@ -1,11 +1,10 @@
+import { NavigableTag } from '../../../types/tagTypes'
+import { Link } from '../Link'
 import { YStack } from '@dish/ui'
 import { Search } from '@tamagui/feather-icons'
 import React from 'react'
 
-import { NavigableTag } from '../../../types/tagTypes'
-import { Link } from '../Link'
-
-export const SearchTagButton = ({ tag, color }: { tag: NavigableTag; color: string }) => {
+export const SearchTagButton = ({ tag, color }: { tag: NavigableTag; color?: string }) => {
   return (
     <Link tag={tag}>
       <YStack
@@ -23,7 +22,7 @@ export const SearchTagButton = ({ tag, color }: { tag: NavigableTag; color: stri
           transform: [{ scale: 1.1 }],
         }}
       >
-        <Search size={16} color={color.toString()} />
+        <Search size={16} color={color?.toString() || '#777'} />
       </YStack>
     </Link>
   )

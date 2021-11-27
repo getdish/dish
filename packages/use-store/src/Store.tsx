@@ -1,6 +1,3 @@
-// @ts-ignore
-// import { startTransition } from 'react'
-
 import { UNWRAP_PROXY } from './constants'
 import { shouldDebug } from './useStoreDebug'
 

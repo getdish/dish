@@ -1,6 +1,7 @@
 import { createFont, createTokens } from 'tamagui'
 
 import { darkColorsPostfixed, light } from './colors'
+import { isWeb } from './constants'
 
 const size = {
   0: 0,
@@ -33,8 +34,9 @@ const space = {
 }
 
 const interFont = createFont({
-  family:
-    'Inter, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+  family: isWeb
+    ? 'Inter, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+    : 'Inter',
   size: {
     1: 10,
     2: 12,

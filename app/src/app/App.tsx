@@ -1,4 +1,4 @@
-import { AbsoluteYStack, LoadingItems, ToastRoot } from '@dish/ui'
+import { AbsoluteYStack, LoadingItems, ToastRoot, YStack } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
 

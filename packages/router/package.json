@@ -3,13 +3,18 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "source": "src/index.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
   "typings": "types",
+  "main": "dist/cjs",
+  "module": "dist/esm",
+  "module:jsx": "dist/jsx",
+  "files": [
+    "types",
+    "src",
+    "dist"
+  ],
   "scripts": {
-    "build": "dish-build legacy",
-    "watch": "dish-build --watch legacy",
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch",
     "test": "TARGET=node DISH_ENV=test jest --runInBand --forceExit"
   },
   "tests": {
@@ -22,7 +27,7 @@
     "tiny-request-router": "^1.2.2"
   },
   "devDependencies": {
-    "@dish/build": "^1.0.0-alpha.2",
+    "@tamagui/build": "^1.0.0-alpha.17",
     "jest": "*"
   }
 }

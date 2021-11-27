@@ -1,4 +1,6 @@
-const useOurBabel = process.env.TARGET === 'web' || process.env.TARGET === 'node'
+const useOurBabel = process.env.TAMAGUI_TARGET === 'web' || process.env.TAMAGUI_TARGET === 'node'
+
+console.log('env is', useOurBabel, process.env.BABEL_ENV, process.env.NODE_ENV)
 
 module.exports = function (api) {
   api.cache(true)
@@ -24,7 +26,7 @@ module.exports = function (api) {
   }
 
   // really helpful to log this in case you accidently use wrong config
-  console.log('⚙️ using metro babel config', process.env.TARGET)
+  console.log('⚙️ using metro babel config', process.env.TAMAGUI_TARGET)
 
   return {
     presets: ['module:metro-react-native-babel-preset'],
@@ -37,6 +39,8 @@ module.exports = function (api) {
         '@tamagui/babel-plugin',
         {
           exclude: /node_modules/,
+          components: ['@dish/ui'],
+          config: './src/tamagui.config.ts',
         },
       ],
       '@dish/babel-plugin-inline-env',

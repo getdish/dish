@@ -78,7 +78,7 @@ export const ReviewImagesRow = ({
       height={55}
       alignItems="center"
       justifyContent="center"
-      elevation={3}
+      elevation="$3"
       noTextWrap
       onPress={pickImage.pick}
     >

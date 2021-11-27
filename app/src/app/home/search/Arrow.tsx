@@ -1,5 +1,5 @@
 import React from 'react'
-import Svg, { Polygon } from 'react-native-svg'
+import { Polygon, Svg } from 'react-native-svg'
 
 export const Arrow = () => {
   return (

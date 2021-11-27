@@ -1,8 +1,7 @@
-import { YStack, useTheme } from '@dish/ui'
-import React from 'react'
-
 import { drawerBorderRadius } from '../../constants/constants'
 import { DrawerPortalProvider } from '../Portal'
+import { YStack, useTheme } from '@dish/ui'
+import React from 'react'
 
 // only renders on small views
 

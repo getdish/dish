@@ -100,7 +100,7 @@ export const FeedCard = (props: FeedCardProps) => {
                           end={[0, 0]}
                           colors={[`#000000`, `#00000000`]}
                         />
-                        <TitleStyled zIndex={10} size="xxl" color="#fff">
+                        <TitleStyled zIndex={10} size="$8" color="#fff">
                           {item.title}
                         </TitleStyled>
                       </AbsoluteYStack>

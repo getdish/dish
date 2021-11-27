@@ -1,5 +1,5 @@
 import { AbsoluteYStack, ToastRoot, YStack, useTheme } from '@dish/ui'
-import { reaction } from '@dish/use-store/dist'
+import { reaction } from '@dish/use-store'
 import React, { Suspense, useEffect, useLayoutEffect } from 'react'
 
 import { router } from '../router'
@@ -66,23 +66,12 @@ export const AppHomeMobileWeb = () => {
         <ToastRoot />
         <AutocompleteEffects />
       </Suspense>
-      <AbsoluteYStack
-        // @ts-ignore
-        position="fixed"
-        fullscreen
-        pointerEvents="none"
-        top={0}
-        left={0}
-        right={0}
-        height="100vh"
-        maxHeight="100vh"
-        zIndex={1000000}
-      >
+      <YStack pos="fixed" fullscreen pe="none" t={0} l={0} r={0} h="100vh" mh="100vh" zi={1000000}>
         <RootPortalProvider />
-      </AbsoluteYStack>
-      <YStack marginBottom={-40} height={mapHeight} position="relative" zIndex={0}>
+      </YStack>
+      <YStack mb={-40} height={mapHeight} p="relative" zi={0}>
         <Suspense fallback={null}>
-          <AbsoluteYStack zIndex={10000} pointerEvents="none" bottom={40}>
+          <AbsoluteYStack zi={10000} pe="none" b={40}>
             <AppFloatingTagMenuBar />
           </AbsoluteYStack>
           <AppMenuButtonFloating />
@@ -90,16 +79,8 @@ export const AppHomeMobileWeb = () => {
           <AppMapContents />
         </Suspense>
       </YStack>
-      <YStack
-        shadowColor="#000"
-        shadowRadius={25}
-        shadowOpacity={0.1}
-        zIndex={100}
-        borderRadius={10}
-        overflow="hidden"
-        position="relative"
-      >
-        <AbsoluteYStack fullscreen zIndex={0} backgroundColor={theme.mapBackground} />
+      <YStack sc="#000" sr={25} sop={0.1} zi={100} br={10} ov="hidden" pos="relative">
+        <AbsoluteYStack fullscreen zi={0} backgroundColor="$mapBackground" />
         <AppSearchBarInline />
         <YStack position="relative" minHeight={600}>
           <AppAutocompleteSearch />

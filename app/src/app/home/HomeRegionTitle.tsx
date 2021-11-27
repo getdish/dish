@@ -1,8 +1,6 @@
 import { ThemeInverse } from '@dish/ui'
 import React, { memo } from 'react'
-
 import { useRegionQuery } from '../../helpers/fetchRegion'
-import { getColorsForName } from '../../helpers/getColorsForName'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { autocompletesStore } from '../AutocompletesStore'
 import { useLastHomeState } from '../homeStore'
@@ -10,7 +8,6 @@ import { Link } from '../views/Link'
 import { SlantedTitle } from '../views/SlantedTitle'
 
 export const HomeRegionTitle = memo(() => {
-  // const media = useMedia()
   const state = useLastHomeState('home', 'homeRegion') as HomeStateItemHome
   const enabled = !!state.region
   const regionResponse = useRegionQuery(state.region, {
@@ -30,14 +27,14 @@ export const HomeRegionTitle = memo(() => {
           fontWeight="900"
           size={
             regionName.length > 24
-              ? 'xxxs'
+              ? '$2'
               : regionName.length > 17
-              ? 'xxs'
+              ? '$3'
               : regionName.length > 14
-              ? 'xs'
+              ? '$4'
               : regionName.length > 8
-              ? 'sm'
-              : 'md'
+              ? '$5'
+              : '$6'
           }
         >
           {regionName}

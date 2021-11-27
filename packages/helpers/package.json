@@ -5,13 +5,18 @@
   "publishConfig": {
     "access": "public"
   },
-  "source": "src/index.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "typings": "types.d.ts",
+  "typings": "types",
+  "main": "dist/cjs",
+  "module": "dist/esm",
+  "module:jsx": "dist/jsx",
+  "files": [
+    "types",
+    "src",
+    "dist"
+  ],
   "scripts": {
-    "build": "dish-build",
-    "watch": "dish-build --watch"
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch"
   },
   "dependencies": {
     "@dish/fast-compare": "*",
@@ -20,7 +25,7 @@
     "react": "*"
   },
   "devDependencies": {
-    "@dish/build": "^1.0.0-alpha.2",
+    "@tamagui/build": "^1.0.0-alpha.17",
     "react-native-sync-localstorage": "^0.0.3"
   }
 }

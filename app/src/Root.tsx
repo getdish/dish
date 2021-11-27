@@ -10,7 +10,7 @@
 // export function Root({ floating, size }) {
 //   return (
 //     <ThemeProvider themes={themes} defaultTheme="light">
-//       <Paragraph color="red" size="xxl">
+//       <Paragraph color="red" size="$8">
 //         test should be a snap. Know how you have your favorite nights out, places to walk, . Search
 //         delivery apps have sketchy reviews and fake popups to boot.
 //       </Paragraph>
@@ -18,34 +18,32 @@
 //   )
 // }
 
+// ⚠️ NOTE TURNED OFF PRETTIER BECAUSE IT WAS ADDING `value` before all destructred imports
+// due to the import sort plugin :/ couldn't figure out why even just a single import in the
+// entire file caused it....
+
 import './globals'
 
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import {
-  AbsoluteYStack,
-  Paragraph,
-  PopoverProvider,
-  SafeAreaProvider,
-  Theme,
-  Toast,
-  useSafeAreaInsets,
-} from '@dish/ui'
+import { PopoverProvider, SafeAreaProvider, Theme, Toast } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
+import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { useColorScheme } from 'react-native'
+import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
 
 import { App } from './app/App'
 // import { App } from './app/App'
 import { homeStore } from './app/homeStore'
 import { useUserStore, userStore } from './app/userStore'
-import { showRadar } from './constants/constants'
+import { isWeb, showRadar } from './constants/constants'
 import { initialHomeState } from './constants/initialHomeState'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
-import { isHermes } from './constants/platforms'
+import { DebugHUD } from './DebugHUD'
 import { addTagsToCache } from './helpers/allTags'
+import { Radar } from './Radar'
 import { DRoutesTable, router, routes } from './router'
 import Tamagui from './tamagui.config'
 
@@ -54,11 +52,17 @@ declare module '@dish/router' {
 }
 
 let isStarted = false
-let startPromise
+// let startPromise
 
 async function start() {
   if (isStarted) {
     return
+  }
+
+  if (!isWeb) {
+    await Font.loadAsync({
+      Inter: require('./assets/fonts/Inter-Thin.otf'),
+    })
   }
 
   await new Promise<void>((res) => {
@@ -78,7 +82,7 @@ async function start() {
 
     router.onRouteChange((item) => {
       homeStore.handleRouteChange(item)
-      startPromise = null
+      // startPromise = null
       res()
     })
   })
@@ -106,23 +110,6 @@ if (process.env.NODE_ENV === 'development') {
 
 const cacheSnapshot = global.__CACHE_SNAPSHOT
 
-const DebugHUD = () => {
-  const safeArea = useSafeAreaInsets()
-  return (
-    <Paragraph
-      position="absolute"
-      bottom={safeArea.bottom + 5}
-      right={safeArea.right + 5}
-      backgroundColor="#fff"
-      color="#000"
-      opacity={0.2}
-      size="$1"
-    >
-      {isHermes ? 'hermes' : 'jsc'}
-    </Paragraph>
-  )
-}
-
 export function Root() {
   const [isLoaded, setIsLoaded] = useState(false)
   const userStore = useUserStore()
@@ -146,17 +133,21 @@ export function Root() {
     })
   }, [])
 
-  useLayoutEffect(() => {
-    const css = Tamagui.getCSS()
+  if (isWeb) {
+    useLayoutEffect(() => {
+      const css = Tamagui.getCSS()
 
-    const style = document.createElement('style')
-    style.setAttribute('type', 'text/css')
-    style.innerHTML = css
-    document.querySelector('head')?.appendChild(style)
-  }, [])
+      const style = document.createElement('style')
+      style.setAttribute('type', 'text/css')
+      style.innerHTML = css
+      document.querySelector('head')?.appendChild(style)
+    }, [])
+  }
 
   const defaultTheme =
     (userStore.theme === 'auto' ? colorScheme : userStore.theme) ?? colorScheme ?? 'dark'
+
+  console.log('isLoaded', { isLoaded, defaultTheme })
 
   return (
     <SafeAreaProvider>
@@ -164,8 +155,14 @@ export function Root() {
         <Theme name={defaultTheme}>
           <ProvideRouter routes={routes}>
             <Suspense fallback={null}>
-              <PopoverProvider>{isLoaded ? <App /> : null}</PopoverProvider>
-              {process.env.NODE_ENV === 'development' && <DebugHUD />}
+              <PopoverProvider>
+                {isLoaded ? (
+                  <>
+                    <App />
+                    {process.env.NODE_ENV === 'development' && <DebugHUD />}
+                  </>
+                ) : null}
+              </PopoverProvider>
             </Suspense>
           </ProvideRouter>
         </Theme>
@@ -175,26 +172,13 @@ export function Root() {
   )
 }
 
-function Radar() {
-  if (process.env.NODE_ENV === 'development') {
-    const LagRadar = require('react-lag-radar').default
-    return (
-      <AbsoluteYStack bottom={20} right={20} zIndex={10000} pointerEvents="none">
-        <LagRadar frames={20} speed={0.0017} size={100} inset={3} />
-      </AbsoluteYStack>
-    )
-  }
-
-  return null
-}
-
 // can be used by ssr in the future to load app
-export function RootSuspenseLoad(props: any) {
-  if (!isStarted && !startPromise) {
-    startPromise = start()
-  }
-  if (startPromise) {
-    throw startPromise
-  }
-  return <Suspense fallback={null}>{props.children}</Suspense>
-}
+// export function RootSuspenseLoad(props: any) {
+//   if (!isStarted && !startPromise) {
+//     startPromise = start()
+//   }
+//   if (startPromise) {
+//     throw startPromise
+//   }
+//   return <Suspense fallback={null}>{props.children}</Suspense>
+// }

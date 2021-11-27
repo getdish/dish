@@ -220,7 +220,7 @@ export const HomePageFeed = memo(
               )}
             </Grid>
 
-            <Spacer size="xxxl" />
+            <Spacer size="$8" />
 
             {/* <HomeTrendingSpots region={region} /> */}
           </YStack>

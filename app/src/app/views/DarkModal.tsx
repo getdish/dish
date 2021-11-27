@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import { AbsoluteYStack, AnimatedYStack, Theme, YStack, prevent, useMedia } from '@dish/ui'
+import { AbsoluteYStack, Theme, YStack, prevent, useMedia } from '@dish/ui'
 import React, { useLayoutEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 

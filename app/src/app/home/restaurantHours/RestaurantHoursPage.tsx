@@ -5,7 +5,7 @@ import {
   Table,
   TableCell,
   TableCellProps,
-  TableHeadRow,
+  TableHead,
   TableHeadText,
   TableRow,
   Text,
@@ -14,7 +14,6 @@ import {
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 
-import { bgLight } from '../../../constants/colors'
 import { dateTimeFormat } from '../../../helpers/dateTimeFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { router } from '../../../router'
@@ -57,7 +56,7 @@ export default memo(
                 <SmallTitle fontWeight="600">{title}</SmallTitle>
 
                 <Table className="hide-when-small">
-                  <TableHeadRow>
+                  <TableHead>
                     <TableCell {...col0Props}>
                       <TableHeadText>Day</TableHeadText>
                     </TableCell>
@@ -65,7 +64,7 @@ export default memo(
                     <TableCell {...col1Props}>
                       <TableHeadText>Hours</TableHeadText>
                     </TableCell>
-                  </TableHeadRow>
+                  </TableHead>
 
                   {hours.map((hour, i) => {
                     if (!hour.hoursInfo) {

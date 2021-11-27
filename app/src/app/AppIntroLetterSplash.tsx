@@ -7,21 +7,16 @@ import {
   Spacer,
   Text,
   Theme,
-  XStack,
-  YStack,
   useMedia,
   useTheme,
+  YStack,
 } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import loadable from '@loadable/component'
 import { Home } from '@tamagui/feather-icons'
 import React, { memo, useLayoutEffect, useMemo, useState } from 'react'
 import { StyleSheet } from 'react-native'
-
-// import iphoneScreen from '../assets/iphone-home-screen.jpg'
-import { blue, green, pink } from '../constants/colors'
 import { useQueryLoud } from '../helpers/useQueryLoud'
-import { useRouterCurPage } from '../router'
 import { useFormAction } from './hooks/useFormAction'
 import { useLocalStorageState } from './hooks/useLocalStorageState'
 import { IntroModalStore } from './IntroModalStore'
@@ -128,7 +123,6 @@ export const AppIntroLetter = memo(() => {
 
       <DarkModal fullscreen hide={store.hidden} onDismiss={store.setHidden}>
         <AbsoluteYStack top={90} pointerEvents="none" zIndex={-1}>
-          {!!features.length && <AppGlobe features={features} />}
           <LinearGradient
             style={StyleSheet.absoluteFill}
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
@@ -365,7 +359,7 @@ const SignupBetaForm = () => {
         onSubmit={onSubmit}
         submitText="Signup"
       >
-        <Paragraph fontWeight="800" size="sm">
+        <Paragraph fontWeight="800" size="$2">
           Email:
         </Paragraph>
         <ValidatedInput

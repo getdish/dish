@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated, View } from 'react-native'
+import { View } from 'react-native'
 import { G, Linecap, Path, Svg } from 'react-native-svg'
 
 type CircularProgressProps = {

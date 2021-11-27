@@ -1,6 +1,3 @@
-import { Separator, Spacer, Title, YStack } from '@dish/ui'
-import React from 'react'
-
 import { HomeStateItemBlog } from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
@@ -11,6 +8,8 @@ import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnM
 import { BlogPageDetail } from './BlogPageDetail'
 import { BlogPostMeta } from './BlogPostMeta'
 import { MDX } from './MDX'
+import { Separator, Spacer, Title, YStack } from '@dish/ui'
+import React from 'react'
 
 // import { posts } from './posts'
 const posts = []
@@ -55,7 +54,7 @@ function BlogPageIndex() {
           {allPosts.map((post, index) => (
             <YStack key={index} borderRadius={10} padding={10}>
               <Link name="blog" params={{ slug: post.id }}>
-                <Title selectable={false} textAlign="left" size="xs">
+                <Title selectable={false} textAlign="left" size="$4">
                   {post.title}
                 </Title>
               </Link>

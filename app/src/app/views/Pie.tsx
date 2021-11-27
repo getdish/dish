@@ -1,5 +1,5 @@
 import React from 'react'
-import Svg, { Circle, Path } from 'react-native-svg'
+import { Circle, Path, Svg } from 'react-native-svg'
 
 export const Pie = ({
   size = 200,

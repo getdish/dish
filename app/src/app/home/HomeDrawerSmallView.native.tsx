@@ -10,14 +10,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-
-import {
-  isNative,
-  isWeb,
-  pageWidthMax,
-  searchBarHeight,
-  zIndexDrawer,
-} from '../../constants/constants'
+import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
@@ -29,9 +22,9 @@ import { isTouchingSearchBar } from '../SearchInputNativeDragFix'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
 import {
   ContentParentStore,
-  ScrollStore,
   isScrollAtTop,
   scrollLastY,
+  ScrollStore,
   scrollViews,
 } from '../views/ContentScrollView'
 import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
