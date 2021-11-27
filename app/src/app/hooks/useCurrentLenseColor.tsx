@@ -1,8 +1,7 @@
-import { useDebounceValue } from '@dish/ui'
 import { useThemeName } from '@dish/ui'
 
 import { getColorsForName } from '../../helpers/getColorsForName'
-import { RGB, hexToRGB } from '../../helpers/rgb'
+import { RGB } from '../../helpers/rgb'
 import { HomeStateItemRestaurant } from '../../types/homeTypes'
 import { useHomeStoreSelector } from '../homeStore'
 
@@ -26,37 +25,27 @@ const lenseColors = {
 export const useCurrentLenseColor = () => {
   const themeName = useThemeName()
 
-  const res = useHomeStoreSelector((home) => {
+  const name = useHomeStoreSelector((home) => {
     if (home.currentState.type === 'list') {
       if (home.currentState.color) {
-        return {
-          name: home.currentState.color,
-          rgb: hexToRGB(home.currentState.color).rgb,
-        }
+        return home.currentState.color
       }
     }
     if (home.currentStateType === 'search') {
       if (home.currentStateLense) {
-        return {
-          name: lenseColors[home.currentStateLense.name?.toLowerCase() || 'gems'] ?? 'pink',
-          rgb: home.currentStateLense.rgb as RGB,
-        }
+        return lenseColors[home.currentStateLense.name?.toLowerCase() || 'gems'] ?? 'pink'
       }
     }
     if (home.currentStateType === 'restaurant') {
       const state = home.currentState as HomeStateItemRestaurant
       const colors = getColorsForName(state.restaurantSlug)
-      return {
-        name: `${colors}-dark`,
-        rgb: hexToRGB(colors).rgb,
-      }
+      return `${colors}-dark`
     }
-    return null
+
+    return themeName
   })
 
-  if (res) {
-    return res
+  return {
+    name,
   }
-
-  return themeName.startsWith('dark') ? defaultLenseColorDark : defaultLenseColor
 }

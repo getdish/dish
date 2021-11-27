@@ -8,7 +8,7 @@ import {
   zIndexSearchBarFloating,
 } from '../constants/constants'
 import { AppSearchBarContents } from './AppSearchBarContents'
-import { useSearchBarTheme } from './hooks/useSearchBarTheme'
+import { useCurrentLenseColor } from './hooks/useCurrentLenseColor'
 
 // export const parentIds = {
 //   small: 'searchbar-small',
@@ -17,7 +17,7 @@ import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 
 export const AppSearchBarFloating = () => {
   const media = useMedia()
-  const { themeName, background, isColored } = useSearchBarTheme()
+  const { name } = useCurrentLenseColor()
   const height = searchBarHeight + 9
 
   if (media.sm) {
@@ -33,60 +33,54 @@ export const AppSearchBarFloating = () => {
   //   const newParent = parentIds[media.sm ? 'small' : 'large']
   //   sendReparentableChild(parent, newParent, 0, 0)
   // }, [media.sm])
-  const barThemeName = media.sm ? null : themeName
+  const barThemeName = media.sm ? null : name
 
   return (
     <Theme name={barThemeName}>
       <AbsoluteYStack
         className="searchbar-container ease-in-out"
         zIndex={zIndexSearchBarFloating}
-        position="absolute"
-        alignItems="center"
-        pointerEvents="none"
+        pos="absolute"
+        ai="center"
+        pe="none"
         left={0}
         right={0}
         top={0}
       >
         {/* container */}
-        <AbsoluteYStack top={0} left={-20} right={-20} alignItems="center">
+        <AbsoluteYStack top={0} left={-20} right={-20} ai="center">
           {/* bg/shadows */}
-          <YStack
-            position="relative"
-            alignItems="center"
-            justifyContent="center"
-            width="100%"
-            height={height}
-          >
+          <YStack pos="relative" ai="center" jc="center" w="100%" h={height}>
             {/* SHADOW AND BACKGROUND */}
             <AbsoluteYStack
-              borderRadius={searchBarBorderRadius}
+              br={searchBarBorderRadius}
               className="searchbar-shadow"
               overflow="hidden"
               zIndex={102}
               opacity={1}
               fullscreen
-              height={height}
-              justifyContent="center"
-              alignItems="center"
-              backgroundColor={background}
+              h={height}
+              jc="center"
+              ai="center"
+              bc="$bg"
               shadowColor="#000"
               shadowOpacity={0.25}
               shadowOffset={{ height: 0, width: 0 }}
               shadowRadius={5}
             />
             <YStack
-              width="100%"
-              position="relative"
-              zIndex={104}
-              flex={1}
-              height={height}
-              paddingRight={10}
-              justifyContent="center"
-              maxWidth={searchBarMaxWidth}
-              alignItems="center"
+              w="100%"
+              pos="relative"
+              zi={104}
+              f={1}
+              h={height}
+              pr={10}
+              jc="center"
+              mw={searchBarMaxWidth}
+              ai="center"
             >
               <Suspense fallback={null}>
-                <AppSearchBarContents isColored={isColored} />
+                <AppSearchBarContents />
               </Suspense>
             </YStack>
           </YStack>

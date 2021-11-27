@@ -1,7 +1,16 @@
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
-import { Spacer, XStack, YStack, getMedia, useDebounce, useMedia, useOnMount } from '@dish/ui'
-import { getStore, reaction, selector } from '@dish/use-store'
+import {
+  Spacer,
+  XStack,
+  YStack,
+  getMedia,
+  useDebounce,
+  useMedia,
+  useOnMount,
+  useTheme,
+} from '@dish/ui'
+import { getStore, selector } from '@dish/use-store'
 import { Loader, Search, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
@@ -18,9 +27,8 @@ import {
   autocompletesStore,
 } from './AutocompletesStore'
 import { drawerStore } from './drawerStore'
-import { getSearchPageStore, runSearch } from './home/search/SearchPageStore'
+import { runSearch } from './home/search/SearchPageStore'
 import { homeStore, useHomeStoreSelector } from './homeStore'
-import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
 import { InputStore, setNodeOnInputStore, useInputStoreSearch } from './inputStore'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
@@ -63,7 +71,7 @@ export const getSearchInput = () => {
 export const AppSearchInput = memo(() => {
   const inputStore = useInputStoreSearch()
   const isSearchingCuisine = useHomeStoreSelector((x) => !!x.searchBarTags.length)
-  const { color } = useSearchBarTheme()
+  const theme = useTheme()
   const media = useMedia()
   const isEditingList = false // useRouterSelector((x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit')
   const textInput$ = useRef<TextInput | null>(null)
@@ -125,7 +133,7 @@ export const AppSearchInput = memo(() => {
   return (
     <InputFrame>
       {/* Loading / Search Icon */}
-      <SearchInputIcon color={color.toString()} />
+      <SearchInputIcon color={theme.color.toString()} />
 
       <Spacer size="$2" />
 
@@ -177,7 +185,7 @@ export const AppSearchInput = memo(() => {
                   // }
                 }}
                 onKeyPress={handleKeyPressInner}
-                placeholderTextColor={color}
+                placeholderTextColor={theme.color.toString()}
                 onFocus={(e) => {
                   inputStore.setIsFocused(true)
                   if (isDesktop) {
@@ -212,7 +220,7 @@ export const AppSearchInput = memo(() => {
                 style={[
                   inputTextStyles.textInput,
                   {
-                    color: color.toString(),
+                    color: theme.color.toString() as any,
                     flex: 1,
                     fontSize: media.sm ? 18 : 18,
                     fontWeight: '500',

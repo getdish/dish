@@ -68,6 +68,5 @@ export const queryRestaurantTags = ({
         order_by: [{ rating: order_by.desc_nulls_last }, { votes_ratio: order_by.desc_nulls_last }],
       })
   const sorted = sortBy([...dishTags, ...lenseTags, ...countryTags, ...catTags], (x) => x.rank)
-  console.log(JSON.stringify(sorted, null, 2))
   return sorted
 }

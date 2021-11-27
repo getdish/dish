@@ -13,7 +13,6 @@ import React, { RefObject, useRef, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import { isWeb } from '../../constants/constants'
-import { getImageUrl } from '../../helpers/getImageUrl'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { getWindowWidth } from '../../helpers/getWindow'
 import { pluralize } from '../../helpers/pluralize'
@@ -70,7 +69,10 @@ export const FeedCard = (props: FeedCardProps) => {
           setDimensions(e.nativeEvent.layout)
         }}
       />
-      {!!dimensions.width && (
+
+      <FeedCardContent galleryRef={galleryRef} {...props} />
+
+      {/* {!!dimensions.width && (
         <SwipeGallery
           ref={galleryRef}
           disableVerticalSwipe
@@ -121,7 +123,7 @@ export const FeedCard = (props: FeedCardProps) => {
           containerDimensions={dimensions}
           data={[{ id: -1, image: '' }, ...(items || [])]}
         />
-      )}
+      )} */}
     </Card>
   )
 }

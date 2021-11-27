@@ -1,9 +1,7 @@
-import { YStack, useTheme, useThemeName } from '@dish/ui'
 import { Clock, ShoppingBag } from '@tamagui/feather-icons'
 import React, { useEffect, useState } from 'react'
 
 import { tagDisplayNames } from '../../constants/tagMeta'
-import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
 import { resetResults } from '../home/search/SearchPageStore'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
@@ -16,52 +14,46 @@ type FilterButtonProps = SmallButtonProps & {
 
 export const FilterButton = ({
   tag,
-  color,
   index = 0,
   isActive: isActiveParent,
   ...rest
 }: FilterButtonProps & {
   index?: number
-  color?: string
   isActive?: boolean
 }) => {
-  const { name, rgb } = useCurrentLenseColor()
-  const theme = useTheme()
+  const { name } = useCurrentLenseColor()
   const [isActive, setIsActive] = useState(isActiveParent)
-  const curThemeName = useThemeName()
-  const themeName = isActive ? (curThemeName === 'dark' ? `${name}-dark` : name) : null
-  color = color ?? rgbString(rgb)
 
   useEffect(() => {
     setIsActive(isActiveParent)
   }, [isActiveParent])
 
-  const iconElement = (() => {
+  const IconComponent = (() => {
     switch (tag.slug) {
       case 'filters__open':
-        return <Clock size={18} color={isActive ? '#fff' : color} />
+        return Clock
       case 'filters__delivery':
-        return <ShoppingBag size={18} color={isActive ? '#fff' : color} />
+        return ShoppingBag
       default:
-        return null
+        return undefined
     }
   })()
 
   return (
     <Link tag={tag} replace asyncClick>
       <SmallButton
-        icon={iconElement ? <YStack opacity={0.45}>{iconElement}</YStack> : null}
+        theme={name}
+        icon={IconComponent}
         {...rest}
         zIndex={100 - index + (isActive ? 1 : 0)}
         // borderWidth={0}
-        backgroundColor={isActive ? color : theme.bg2}
+        bc="$bg2"
         hoverStyle={{
-          backgroundColor: isActive ? color : theme.bg3,
+          bc: '$bg3',
         }}
-        theme={themeName}
         textProps={{
           fontWeight: '700',
-          color: isActive ? '#fff' : theme.color,
+          color: isActive ? '#fff' : undefined,
           ...rest.textProps,
         }}
         onPress={() => {

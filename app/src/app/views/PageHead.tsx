@@ -2,12 +2,11 @@ import { useMedia, useThemeName } from '@dish/ui'
 import React from 'react'
 
 import { isWeb } from '../../constants/constants'
-import { rgbString } from '../../helpers/rgb'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 
 export const PageHead = (props: { children: any; isActive: boolean; color?: any }) => {
   const media = useMedia()
-  const lenseColor = useCurrentLenseColor()
+  const { name } = useCurrentLenseColor()
   const themeName = useThemeName()
 
   if (!isWeb) {
@@ -19,7 +18,7 @@ export const PageHead = (props: { children: any; isActive: boolean; color?: any 
   }
 
   const themeColor =
-    props.color || media.sm ? (themeName === 'dark' ? '#000' : '#fff') : rgbString(lenseColor.rgb)
+    props.color || media.sm ? (themeName === 'dark' ? '#000' : '#fff') : `var(--${name})`
 
   const { Helmet } = require('react-helmet')
   return (

@@ -1,10 +1,7 @@
-import * as RadixColors from '@tamagui/colors'
+import * as Colors from '@tamagui/colors'
 
 import { colorNames } from './colors'
 import { tokens } from './tokens'
-
-export type MyTheme = typeof light
-export type MyThemes = typeof themes
 
 const lightColors = Object.fromEntries(
   Object.entries(tokens.color).filter(([k]) => !k.endsWith('Dark'))
@@ -37,11 +34,11 @@ const light = {
 }
 
 const dark = {
-  bg: '#171717',
-  bg2: tokens.color.gray3Dark,
-  bg3: tokens.color.gray4Dark,
-  bg4: tokens.color.gray5Dark,
-  bgDark: '#111',
+  bg: '#000',
+  bg2: tokens.color.gray2Dark,
+  bg3: tokens.color.gray3Dark,
+  bg4: tokens.color.gray4Dark,
+  bgDark: '#000',
   bgTransparent: tokens.color.grayA1Dark,
   borderColor: tokens.color.gray3Dark,
   borderColor2: tokens.color.gray4Dark,
@@ -62,7 +59,7 @@ for (const key of colorNames) {
   for (const scheme of ['light', 'dark']) {
     const isDark = scheme === 'dark'
     const colorKey = isDark ? `${key}Dark` : key
-    const colorValues = RadixColors[colorKey]
+    const colorValues = Colors[colorKey]
     const offset = isDark ? -1 : 0
     colorThemes[`${key}-${scheme}`] = {
       color: isDark ? '#ddd' : colorValues[`${key}12`],

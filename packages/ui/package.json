@@ -5,14 +5,18 @@
     "*.css"
   ],
   "private": true,
-  "source": "src/index.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "module:jsx": "_jsx",
   "typings": "types",
+  "main": "dist/cjs",
+  "module": "dist/esm",
+  "module:jsx": "dist/_jsx",
+  "files": [
+    "types",
+    "src",
+    "dist"
+  ],
   "scripts": {
-    "build": "dish-build legacy --jsx",
-    "watch": "dish-build legacy --jsx --watch"
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch"
   },
   "dependencies": {
     "@tamagui/use-debounce": "1.0.0-alpha.8",
@@ -21,6 +25,6 @@
     "tamagui": "^1.0.0-alpha.5"
   },
   "devDependencies": {
-    "@dish/build": "^1.0.0-alpha.2"
+    "@tamagui/build": "1.0.0-alpha.8"
   }
 }

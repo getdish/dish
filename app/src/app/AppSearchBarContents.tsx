@@ -15,7 +15,7 @@ import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
 import { DishLogoButton } from './views/DishLogoButton'
 
-export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean }) => {
+export const AppSearchBarContents = memo(() => {
   const autocompletes = useStoreInstance(autocompletesStore)
   const focus = autocompletes.visible ? autocompletes.target : false
   const media = useMedia()
@@ -123,16 +123,11 @@ export const AppSearchBarContents = memo(({ isColored }: { isColored: boolean })
           <TouchableOpacity>
             <Button
               chromeless
+              icon={showLocation ? Search : MapPin}
               onPressOut={() => {
                 autocompletes.setTarget(showLocation ? 'search' : 'location')
               }}
-            >
-              {showLocation ? (
-                <Search color={'#999'} size={20} opacity={0.5} />
-              ) : (
-                <MapPin color={'#999'} size={20} opacity={0.5} />
-              )}
-            </Button>
+            />
           </TouchableOpacity>
         </>
       )}

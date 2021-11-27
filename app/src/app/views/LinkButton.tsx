@@ -23,7 +23,6 @@ export const LinkButton = forwardRef(function LinkButtonContent<
     params,
     onPress,
     isActive,
-    activeStyle,
     stopPropagation,
     activeTextStyle,
     textProps,
@@ -36,7 +35,7 @@ export const LinkButton = forwardRef(function LinkButtonContent<
       <Button
         {...restProps}
         ref={ref}
-        {...(isActive && activeStyle)}
+        theme={isActive ? 'active' : null}
         textProps={isActive ? props.activeTextStyle : textProps}
       >
         {getChildren(props, isActive)}

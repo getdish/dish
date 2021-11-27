@@ -9,8 +9,14 @@ import { LinkButtonProps } from './LinkProps'
 
 export const LinkButtonAutoActive = forwardRef(function LinkButtonAutoActive<
   Name extends DRouteName = DRouteName
->(props: LinkButtonProps<Name, RoutesTable[Name]['params']>, ref) {
+>(
+  props: LinkButtonProps<Name, RoutesTable[Name]['params']> & {
+    iconActive?: any
+  },
+  ref
+) {
   const [isActive, setIsActive] = useState(false)
+
   useEffect(() => {
     if (props.name) {
       let last = false
@@ -26,5 +32,13 @@ export const LinkButtonAutoActive = forwardRef(function LinkButtonAutoActive<
       })
     }
   }, [props.name])
-  return <LinkButton ref={ref} isActive={isActive} {...props} />
+
+  return (
+    <LinkButton
+      ref={ref}
+      isActive={isActive}
+      {...props}
+      icon={isActive ? props.iconActive : props.icon}
+    />
+  )
 })

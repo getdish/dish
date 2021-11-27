@@ -1,4 +1,4 @@
-import { AbsoluteXStack, AbsoluteYStack, Button, XStack, YStack } from '@dish/ui'
+import { AbsoluteXStack, AbsoluteYStack, Button, XStack, YStack, useTheme } from '@dish/ui'
 import { MapPin, Navigation } from '@tamagui/feather-icons'
 import React, { memo, useCallback } from 'react'
 import { TextInput } from 'react-native'
@@ -10,7 +10,6 @@ import { inputTextStyles } from './AppSearchInput'
 import { autocompleteLocationStore, autocompletesStore } from './AutocompletesStore'
 import { useHomeStoreSelector } from './homeStore'
 import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
-import { useSearchBarTheme } from './hooks/useSearchBarTheme'
 import { InputFrame } from './InputFrame'
 import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { InputTagButton } from './InputTagButton'
@@ -23,7 +22,7 @@ const isWebTouch = supportsTouchWeb
 export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
   const inputStore = useInputStoreLocation()
   const curLocName = useHomeStoreSelector((x) => x.currentState.curLocName)
-  const { color } = useSearchBarTheme()
+  const { color } = useTheme()
 
   // focus on visible
   useAutocompleteInputFocus(inputStore)

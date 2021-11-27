@@ -2,7 +2,9 @@
   "extends": "../../tsconfig.json",
   "include": ["src"],
   "compilerOptions": {
-    "baseUrl": "../..",
+    "baseUrl": ".",
+    "rootDir": "src",
+    "outDir": "types",
     "esModuleInterop": true,
     "jsx": "preserve",
   }

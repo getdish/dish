@@ -13,4 +13,4 @@ export const media = {
   tall: { minHeight: 820 },
   hoverNone: { hover: 'none' },
   pointerCoarse: { pointer: 'coarse' },
-}
+} as const

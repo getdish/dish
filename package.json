@@ -123,7 +123,22 @@
     "expo-linear-gradient": "9.2.0",
     "react-native-unimodules": "0.14.8",
     "react-native-web": "0.17.5",
-    "expo-constants": "11.0.1"
+    "expo-constants": "11.0.1",
+    "@tamagui/babel-plugin": "portal:/Users/n8/tamagui/packages/babel-plugin",
+    "@tamagui/build": "portal:/Users/n8/tamagui/packages/build",
+    "@tamagui/colors": "portal:/Users/n8/tamagui/packages/colors",
+    "@tamagui/core": "portal:/Users/n8/tamagui/packages/core",
+    "@tamagui/core-node": "portal:/Users/n8/tamagui/packages/core-node",
+    "@tamagui/fake-react-native": "portal:/Users/n8/tamagui/packages/fake-react-native",
+    "@tamagui/feather-icons": "portal:/Users/n8/tamagui/packages/feather-icons",
+    "@tamagui/helpers": "portal:/Users/n8/tamagui/packages/helpers",
+    "tamagui-loader": "portal:/Users/n8/tamagui/packages/loader",
+    "@tamagui/next-plugin": "portal:/Users/n8/tamagui/packages/next-plugin",
+    "@tamagui/static": "portal:/Users/n8/tamagui/packages/static",
+    "tamagui": "portal:/Users/n8/tamagui/packages/tamagui",
+    "@tamagui/use-debounce": "portal:/Users/n8/tamagui/packages/use-debounce",
+    "@tamagui/use-force-update": "portal:/Users/n8/tamagui/packages/use-force-update",
+    "@tamagui/use-window-size": "portal:/Users/n8/tamagui/packages/use-window-size"
   },
   "dependencies": {
     "@dish/app": "*",

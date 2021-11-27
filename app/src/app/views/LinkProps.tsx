@@ -48,6 +48,5 @@ export type LinkButtonProps<Name extends DRouteName = any, Params = any> = Stack
   LinkSharedProps & {
     tooltip?: string
     isActive?: boolean
-    activeStyle?: ViewStyle
     activeTextStyle?: TextStyle
   } & LinkButtonNamedProps<Name, Params>
