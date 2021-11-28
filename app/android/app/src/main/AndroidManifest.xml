@@ -37,6 +37,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.dishapp"/>
         <data android:scheme="com.dish.app"/>
+        <data android:scheme="exp+dish"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity"/>

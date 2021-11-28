@@ -1,7 +1,7 @@
-import { AbsoluteYStack, useTheme } from '@dish/ui'
+import { AbsoluteYStack, useTheme, useThemeName } from '@dish/ui'
 // import { StatusBar } from 'expo-status-bar'
 import React, { Suspense } from 'react'
-import { LogBox } from 'react-native'
+import { LogBox, StatusBar } from 'react-native'
 
 import AppMap from './AppMap'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
@@ -19,9 +19,9 @@ export function App() {
   console.warn('todo re-enable')
   return (
     <>
-      <RootPortalProvider />
-      {/* <StatusBar style="dark" /> */}
-      <AutocompleteEffects />
+      {/* <RootPortalProvider />
+      <AppStatusBar />
+      <AutocompleteEffects /> */}
       <AbsoluteYStack fullscreen backgroundColor="$mapBackground">
         <Suspense fallback={null}>
           {/* keep indent  */}
@@ -30,16 +30,21 @@ export function App() {
 
         <Home />
 
-        {/* <AppMenuButtonFloating /> */}
+        <AppMenuButtonFloating />
 
-        {/* <Suspense fallback={null}>
+        <Suspense fallback={null}>
           <GalleryPage />
           <RestaurantReviewPage />
           <Route name="restaurantHours">
             <RestaurantHoursPage />
           </Route>
-        </Suspense> */}
+        </Suspense>
       </AbsoluteYStack>
     </>
   )
+}
+
+const AppStatusBar = () => {
+  const themeName = useThemeName()
+  return <StatusBar barStyle={themeName === 'light' ? 'light-content' : 'dark-content'} />
 }

@@ -12,7 +12,7 @@ flipperkit_version = '0.111.0'
 $RNMBGL_Use_SPM = true
 $RNMGL_USE_MAPLIBRE = true
 
-target 'dish' do
+target 'dish' do  
   use_expo_modules!
   
   config = use_native_modules!

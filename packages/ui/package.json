@@ -22,7 +22,7 @@
     "@tamagui/use-debounce": "1.0.0-alpha.18",
     "@tamagui/use-force-update": "1.0.0-alpha.18",
     "@tamagui/use-window-size": "1.0.0-alpha.18",
-    "tamagui": "^1.0.0-alpha.19"
+    "tamagui": "^1.0.0-alpha.20"
   },
   "devDependencies": {
     "@tamagui/build": "1.0.0-alpha.17"

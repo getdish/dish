@@ -1,7 +1,16 @@
-import { AbsoluteYStack, Modal, XStack, YStack, useMedia, useSafeAreaInsets } from '@dish/ui'
+import {
+  Button,
+  AbsoluteYStack,
+  Modal,
+  XStack,
+  YStack,
+  useMedia,
+  useSafeAreaInsets,
+} from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
+import { Pressable, View } from 'react-native'
 
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
@@ -37,7 +46,15 @@ export const AppMenuButtonFloating = memo(() => {
           // https://github.com/facebook/react-native/issues/26892
           onPressOut={appMenu.hide}
         > */}
-        {appMenu.isVisible && <AppMenuContents flex={1} hideUserMenu={appMenu.hide} />}
+        {appMenu.isVisible && (
+          <AppMenuContents
+            width="100%"
+            minHeight="100%"
+            py="$6"
+            flex={1}
+            hideUserMenu={appMenu.hide}
+          />
+        )}
         {/* </TouchableWithoutFeedback> */}
         <PaneControlButtons>
           <CloseButton onPress={appMenu.hide} />
@@ -47,9 +64,10 @@ export const AppMenuButtonFloating = memo(() => {
         top={safeArea.top ? safeArea.top : 10}
         right={10}
         zIndex={zIndexDrawer - 1}
-        pointerEvents="none"
+        // pointerEvents="none"
       >
-        <YStack
+        <Button elevation="$3" br="$8" w="$8" h="$8" size="$6" icon={Menu} onPress={appMenu.show} />
+        {/* <YStack
           // className="ease-in-out-faster"
           shadowColor="rgba(0,0,0,0.25)"
           shadowRadius={6}
@@ -79,7 +97,7 @@ export const AppMenuButtonFloating = memo(() => {
               <Menu color="#fff" size={24} />
             )}
           </XStack>
-        </YStack>
+        </YStack> */}
       </AbsoluteYStack>
     </>
   )

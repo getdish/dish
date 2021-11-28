@@ -1,3 +1,5 @@
+// import 'expo-dev-client';
+
 // only imported by native app!
 // for web just skip to src/index
 
