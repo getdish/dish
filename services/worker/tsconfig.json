@@ -4,5 +4,21 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../crawlers"
+    },
+    {
+      "path": "../../packages/helpers"
+    },
+    {
+      "path": "../../packages/worker"
+    }
+  ]
 }

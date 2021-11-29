@@ -40,6 +40,7 @@ export function SubmittableForm({
   return (
     <Form
       onSubmit={onSubmit}
+      // @ts-ignore
       onKeyPress={(e) => {
         if (e.key === 'Enter') {
           onSubmit()
@@ -64,7 +65,7 @@ export function SubmittableForm({
               onPress={onSubmit}
               theme="active"
               borderRadius={100}
-              elevation={1}
+              elevation="$1"
               disabled={isSubmitting}
             >
               {submitText}

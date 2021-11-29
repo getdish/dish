@@ -1,11 +1,12 @@
 {
   "extends": "../../tsconfig.base",
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "compilerOptions": {
-    "baseUrl": ".",
-    "rootDir": "src",
-    "outDir": "types",
+    "composite": true,
     "esModuleInterop": true,
-    "jsx": "preserve",
-  }
+    "jsx": "preserve"
+  },
+  "references": []
 }

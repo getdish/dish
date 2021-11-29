@@ -3,7 +3,20 @@
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": ".",
-    "rootDir": "src",
+    "rootDir": "src"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "../async"
+    },
+    {
+      "path": "../common"
+    },
+    {
+      "path": "../helpers"
+    }
+  ]
 }

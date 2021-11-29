@@ -1,7 +1,10 @@
 // copied this otherwise its a bit brittle as this package builds with tsc
 {
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "compilerOptions": {
+    "composite": true,
     "importHelpers": true,
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
@@ -22,8 +25,15 @@
     "sourceMap": false,
     // "strict": true,
     "strictNullChecks": true,
-    "types": ["node", "jest"],
-    "lib": ["es2021", "dom", "esnext"],
+    "types": [
+      "node",
+      "jest"
+    ],
+    "lib": [
+      "es2021",
+      "dom",
+      "esnext"
+    ],
     "baseUrl": ".",
     "incremental": false,
     "esModuleInterop": true,
@@ -31,5 +41,13 @@
     "module": "CommonJS",
     "outDir": "_",
     "rootDir": "src"
-  }
+  },
+  "references": [
+    {
+      "path": "../graph"
+    },
+    {
+      "path": "../helpers"
+    }
+  ]
 }

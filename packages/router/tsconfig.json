@@ -1,8 +1,14 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "outDir": ".",
-    "rootDir": "src"
+    "composite": true,
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "../use-store"
+    }
+  ]
 }

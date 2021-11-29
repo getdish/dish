@@ -2,8 +2,14 @@
   "extends": "../../tsconfig.base",
   "compilerOptions": {
     "incremental": true,
-    "outDir": "_",
-    "rootDir": "src"
+    "composite": true
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "../fast-compare"
+    }
+  ]
 }

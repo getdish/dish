@@ -27,7 +27,7 @@
     "tiny-request-router": "^1.2.2"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-alpha.17",
+    "@tamagui/build": "^1.0.0-alpha.22",
     "jest": "*"
   }
 }

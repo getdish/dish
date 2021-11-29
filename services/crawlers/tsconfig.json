@@ -4,5 +4,27 @@
     "outDir": "_",
     "rootDir": "src"
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "../../packages/async"
+    },
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../../packages/graph"
+    },
+    {
+      "path": "../../packages/helpers"
+    },
+    {
+      "path": "../../packages/helpers-node"
+    },
+    {
+      "path": "../../packages/worker"
+    }
+  ]
 }

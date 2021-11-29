@@ -1,18 +1,20 @@
 {
   "extends": "../tsconfig.base",
-
   "compilerOptions": {
+    "baseUrl": "..",
     "paths": {
-      "@dish/*": ["../packages/*/src"],
+      "@dish/*": ["packages/*"]
     },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "jsx": "react-native",
-    "lib": ["dom", "esnext"],
+    "lib": [
+      "dom",
+      "esnext"
+    ],
     "noFallthroughCasesInSwitch": true,
-    "outDir": "_",
     "emitDeclarationOnly": false,
     "noEmit": true,
     "noEmitHelpers": true,
@@ -25,13 +27,48 @@
       "node_modules/@types",
       "./types",
       "../../node_modules/@types"
-    ],
+    ]
   },
-
   "include": [
     "src",
     "declaration.d.ts"
   ],
-
-  "exclude": ["_"]
+  "exclude": [
+    "_"
+  ],
+  "references": [
+    {
+      "path": "../packages/api"
+    },
+    {
+      "path": "../packages/async"
+    },
+    {
+      "path": "../packages/fast-compare"
+    },
+    {
+      "path": "../packages/graph"
+    },
+    {
+      "path": "../packages/helpers"
+    },
+    {
+      "path": "../packages/helpers-node"
+    },
+    {
+      "path": "../packages/router"
+    },
+    {
+      "path": "../packages/server"
+    },
+    {
+      "path": "../packages/use-store"
+    },
+    {
+      "path": "../packages/ui"
+    },
+    {
+      "path": "../packages/webpack"
+    }
+  ]
 }

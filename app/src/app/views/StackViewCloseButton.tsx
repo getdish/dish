@@ -7,7 +7,7 @@ export const StackViewCloseButton = memo(() => {
   return (
     <CloseButton
       size={40}
-      shadowed
+      elevation="$1"
       pointerEvents="auto"
       onPressOut={async () => {
         await sleep(16)

@@ -1,8 +1,14 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
-    "outDir": "_",
-    "rootDir": "./src"
+    "composite": true,
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "../graph"
+    }
+  ]
 }

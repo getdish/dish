@@ -2,6 +2,7 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
+    "composite": true,
     "esModuleInterop": true,
     "outDir": "_",
     "rootDir": "src"
