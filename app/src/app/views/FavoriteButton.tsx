@@ -2,7 +2,7 @@ import { Button, ButtonProps, Text, Tooltip, prevent } from '@dish/ui'
 import { Heart } from '@tamagui/feather-icons'
 import React from 'react'
 
-import { red } from '../../constants/colors'
+import { light } from '../../constants/colors'
 import { SmallButton } from './SmallButton'
 
 export type FavoriteButtonProps = ButtonProps & {
@@ -30,7 +30,7 @@ export const FavoriteButton = ({
             {isFavorite && (
               <Text
                 cursor="default"
-                color={red}
+                color={light.red9}
                 fontSize={sizePx * 0.65}
                 width={sizePx * 0.5}
                 height={sizePx * 0.5}
