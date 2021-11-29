@@ -30,7 +30,7 @@
     "@dish/use-store": "*",
     "@gqty/logger": "^2.0.0",
     "@gqty/react": "^2.0.0",
-    "esbuild-register": "*",
+    "esbuild-register": "^2.6.0",
     "gqty": "2.0.2",
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
@@ -43,7 +43,7 @@
     "@dish/react-test-env": "*",
     "@gqty/cli": "^2.0.1",
     "@tamagui/build": "^1.0.0-alpha.17",
-    "@types/node": "^16.11.8",
+    "@types/node": "^16.11.10",
     "ava": "^3.15.0"
   }
 }

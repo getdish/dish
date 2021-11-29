@@ -19,6 +19,6 @@
     "playwright": "^1.15.2"
   },
   "devDependencies": {
-    "typescript": "^4.5.2"
+    "typescript": "*"
   }
 }

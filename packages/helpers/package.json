@@ -21,7 +21,7 @@
   "dependencies": {
     "@dish/fast-compare": "*",
     "lodash": "*",
-    "node-localstorage": "^2.1.6",
+    "node-localstorage": "^2.2.1",
     "react": "*"
   },
   "devDependencies": {

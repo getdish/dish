@@ -6,7 +6,7 @@
     "isolate": true
   },
   "devDependencies": {
-    "ava": "*"
+    "ava": "^3.15.0"
   },
   "dependencies": {
     "@dish/graph": "*",

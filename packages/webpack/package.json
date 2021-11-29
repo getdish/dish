@@ -11,7 +11,7 @@
     "watch": "dish-build legacy --watch"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
+    "@babel/core": "^7.15.5",
     "@dish/build": "^1.0.0-alpha.2",
     "@dish/helpers": "*",
     "@dish/proxy-worm": "*",
@@ -19,9 +19,9 @@
     "@loadable/webpack-plugin": "^5.14.2",
     "@mdx-js/loader": "^1.6.22",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.2",
-    "@tamagui/babel-plugin": "^1.0.0-alpha.20",
-    "@tamagui/static": "^1.0.0-alpha.20",
-    "@types/node": "*",
+    "@tamagui/babel-plugin": "^1.0.0-alpha.21",
+    "@tamagui/static": "^1.0.0-alpha.21",
+    "@types/node": "^16.11.10",
     "@vue/preload-webpack-plugin": "^2.0.0",
     "circular-dependency-plugin": "^5.2.2",
     "css-loader": "^5.2.4",
@@ -45,7 +45,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "optionalDependencies": {
-    "@welldone-software/why-did-you-render": "^6.0.3",
+    "@welldone-software/why-did-you-render": "^6.1.1",
     "webpack-bundle-analyzer": "^4.4.0"
   }
 }
