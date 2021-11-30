@@ -26,6 +26,7 @@ export const SmallTitle = memo(
       <Separator />
     )
     return (
+      // @ts-ignore
       <YStack width="100%" alignItems="center" {...rest}>
         <XStack width="100%" alignItems="center">
           {divider === 'center' && dividerElement}
@@ -70,7 +71,7 @@ export const SmallTitle = memo(
 export const SmallerTitle = memo(
   ({ children, hideDivider, ...rest }: StackProps & { hideDivider?: boolean }) => {
     return (
-      <XStack alignItems="center" justifyContent="center" spacing {...rest}>
+      <XStack alignItems="center" justifyContent="center" space {...rest}>
         {!hideDivider && <Separator flex />}
         <Text opacity={0.5} fontSize={14} fontWeight="500">
           {children}

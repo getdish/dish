@@ -5,7 +5,7 @@ import {
   Table,
   TableCell,
   TableCellProps,
-  TableHeadRow,
+  TableHead,
   TableHeadText,
   TableRow,
   Text,
@@ -53,7 +53,7 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
       <Spacer />
       <XStack flex={1}>
         <Table flex={1} maxWidth="100%">
-          <TableHeadRow>
+          <TableHead>
             <TableCell {...col0Props}></TableCell>
             <TableCell {...col1Props}>
               <TableHeadText>Down</TableHeadText>
@@ -64,7 +64,7 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
             <TableCell {...col1Props}>
               <TableHeadText>Total</TableHeadText>
             </TableCell>
-          </TableHeadRow>
+          </TableHead>
           {[
             {
               name: restaurant.name,

@@ -65,7 +65,7 @@ export const SearchPageScoring = memo(() => {
         position="relative"
       >
         <AbsoluteYStack left={-62}>
-          <SlantedTitle size="xxs" fontWeight="500">
+          <SlantedTitle size="$3" fontWeight="500">
             Scoring
           </SlantedTitle>
         </AbsoluteYStack>
@@ -80,7 +80,7 @@ export const SearchPageScoring = memo(() => {
                 key={tag.slug ?? index}
                 size="sm"
                 {...getTagButtonProps(tag)}
-                after={<Paragraph size="xxs">{`${pct}%`}</Paragraph>}
+                after={<Paragraph size="$3">{`${pct}%`}</Paragraph>}
               />
             )
           })}

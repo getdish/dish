@@ -9,7 +9,7 @@ export const PaneControlButtons = (props: { children: any }) => {
       zIndex={10000000000}
       top={media.sm ? -8 : -12}
       right={media.sm ? -8 : -14}
-      spacing
+      space
     >
       {props.children}
     </AbsoluteXStack>

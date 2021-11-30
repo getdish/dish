@@ -1,10 +1,10 @@
-#/bin/bash
+#!/bin/bash
 
 # for local dev with metro
 
 PROJECT_ROOT="$(dirname "$0")/.."
 
-pushd $PROJECT_ROOT
+pushd "$PROJECT_ROOT" || exit
 
 echo "removing"
 
@@ -28,4 +28,4 @@ cp -r ~/tamagui/packages/use-debounce ./node_modules/@tamagui
 cp -r ~/tamagui/packages/use-window-size ./node_modules/@tamagui
 cp -r ~/tamagui/packages/use-force-update ./node_modules/@tamagui
 
-popd
+popd || exit

@@ -35,16 +35,17 @@ We're currently using Yarn v2, which you can enable from standard `yarn` with:
 
 ### Using environment in commands
 
-Generally you'll want to run almost everything via either `dsh` or `./dsh run`. It can be nice
-to add `./dsh` to your local `$PATH` or make an `alias`, so that you can call `dsh` from anywhere
-in the repo.
+Generally you'll want to run almost everything via either `dsh` or `./dsh run`. It can be nice to add `./dsh` to your local `$PATH` or make an `alias`, so that you can call `dsh` from anywhere in the repo.
 
 To switch envs set DISH_ENV.
 
+### Running more easily
+
+You can just hit the live endpoints (if dishapp.com is up): see the "Endpoints" section. Just run `yarn web` and then hit http://d1live.com and it should let you skip running docker locally.
+
 ## Core Stack
 
-The core stack contains the minimum services needed to run the web app locally. This stack
-can be easily run with Docker Compose: https://docs.docker.com/compose/install/
+The core stack contains the minimum services needed to run the web app locally. This stack can be easily run with Docker Compose: https://docs.docker.com/compose/install/
 
 When working with Dish's Docker images you'll often need to be logged into our Docker
 

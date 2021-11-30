@@ -1,6 +1,7 @@
 import { Paragraph, ParagraphProps } from '@dish/ui'
 import React from 'react'
 
+// @ts-ignore
 import markSolid from '../../../assets/d.svg'
 import { Image } from '../../views/Image'
 

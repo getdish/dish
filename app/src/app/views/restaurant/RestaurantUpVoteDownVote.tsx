@@ -159,7 +159,7 @@ const RatingWithVotes = memo(
         width={sizePx}
         height={sizePx}
         backgroundColor={theme.bgCard}
-        elevation={1}
+        elevation="$1"
         borderRadius={100}
       >
         <YStack position="absolute" top={-34}>

@@ -349,7 +349,7 @@ const UserPageContent = memo(
 
             <YStack space="$6" paddingVertical={20}>
               {/* PHOTOS FEED */}
-              <XStack spacing>
+              <XStack space>
                 {user
                   .reviews({
                     order_by: [{ authored_at: order_by.desc }],

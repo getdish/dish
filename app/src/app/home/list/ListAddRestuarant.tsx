@@ -95,6 +95,7 @@ export const ListAddRestuarant = graphql(
             searchRestaurantsNearby(searchQuery),
           ]),
         async ([appleSearch = [], boxRes = [], nearbyRes = []]) => {
+          // @ts-ignore
           const appleNormalized = (appleSearch.places || []).map((place) => {
             return {
               is: 'autocomplete',

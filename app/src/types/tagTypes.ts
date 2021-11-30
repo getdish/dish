@@ -10,6 +10,4 @@ export type TagWithNameAndType =
       slug?: string
     }
 
-// TODO remove name | type option
-export type NavigableTag = Partial<Tag> &
-  (Required<Pick<Tag, 'name' | 'type'>> | Required<Pick<Tag, 'slug'>>)
+export type NavigableTag = Partial<Tag>

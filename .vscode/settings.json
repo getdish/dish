@@ -1,8 +1,7 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  // "workbench.colorTheme": "Solarized Light"
   "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "#ff658b",
+    "titleBar.activeBackground": "#892530",
     "titleBar.activeForeground": "#fff",
     "titleBar.inactiveBackground": "#ff658b",
   }

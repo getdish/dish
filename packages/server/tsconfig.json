@@ -35,7 +35,6 @@
       "esnext"
     ],
     "baseUrl": ".",
-    "incremental": false,
     "esModuleInterop": true,
     "target": "ES2018",
     "module": "CommonJS",

@@ -85,7 +85,7 @@
     "metro-resolver": "0.66.2",
     "metro-source-map": "0.66.2",
     "metro-symbolicate": "0.66.2",
-    "@types/react-native": "0.65.5",
+    "@types/react-native": "0.66.6",
     "@types/react": "17.0.19",
     "react-refresh": "0.11.0",
     "react": "18.0.0-beta-0cc724c77-20211125",

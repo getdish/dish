@@ -1,8 +1,7 @@
+import { light } from '../../../constants/colors'
 import { Spacer, Text, TextProps, XStack, useTheme } from '@dish/ui'
 import { ThumbsDown, ThumbsUp } from '@tamagui/feather-icons'
 import React from 'react'
-
-import { light } from '../../../constants/colors'
 
 export const SentimentText = ({
   sentiment,

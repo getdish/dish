@@ -93,7 +93,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
                 <AbsoluteYStack zIndex={1000} pointerEvents="auto" top={-5} right={-5}>
                   <CloseButton
                     size={40}
-                    shadowed
+                    elevation="$2"
                     pointerEvents="auto"
                     onPress={async (e) => {
                       if (!confirm('Are you sure you want to delete?')) {
