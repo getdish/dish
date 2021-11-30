@@ -6,19 +6,17 @@ import {
   Text,
   Theme,
   ThemeInverse,
-  XStack,
-  YStack,
   useTheme,
   useThemeName,
+  XStack,
+  YStack,
 } from '@dish/ui'
 import { Clock } from '@tamagui/feather-icons'
-import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
+import React, { memo, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
-
 import { drawerBorderRadius, isWeb, searchBarHeight } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
-import { UseColors, useColorsFor } from '../../../helpers/useColorsFor'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { queryRestaurantTags } from '../../../queries/queryRestaurantTags'
 import { router } from '../../../router'
@@ -85,7 +83,7 @@ export default function RestaurantPageContainer(props: Props) {
 
 const RestaurantPage = memo(
   graphql(
-    (props: Props & { colors: UseColors }) => {
+    (props: Props & { colors: any }) => {
       const { item } = props
       const { restaurantSlug, section, sectionSlug } = item
       const [restaurant] = queryRestaurant(restaurantSlug)
@@ -367,7 +365,7 @@ const RestaurantPage = memo(
                     <RestaurantTagsList
                       exclude={['dish']}
                       restaurant={restaurant}
-                      space={0}
+                      spacing={0}
                       maxItems={5}
                       tagButtonProps={{
                         // borderWidth: 0,
@@ -419,9 +417,9 @@ const RestaurantPage = memo(
             <PageContentWithFooter>
               {/* HEADER */}
               {/* -1 margin bottom to overlap bottom border */}
-              <Theme name={headerThemeName}>
+              <Theme name={headerThemeName as any}>
                 <YStack
-                  backgroundColor={colors.themeColor}
+                  backgroundColor={colors}
                   // borderBottomColor={theme.borderColor}
                   // borderBottomWidth={1}
                 >

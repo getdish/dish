@@ -45,7 +45,7 @@ export const AutocompleteItemView = memo(
         <YStack padding={3} flexShrink={0}>
           <Theme name={isAdded ? 'active' : null}>
             <CircleButton onPress={onAdd}>
-              <Plus color={isAdded ? '#fff' : theme.color4} size={16} />
+              <Plus color={isAdded ? '#fff' : theme.color4.toString()} size={16} />
             </CircleButton>
           </Theme>
         </YStack>

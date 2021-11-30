@@ -2,7 +2,6 @@ import { tagLenses } from '../../../constants/localTags'
 import { CloseButton, SmallCircleButton } from '../../views/CloseButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { ListItemXStack } from './ListItemXStack'
 import { Button, Modal, Paragraph, Spacer, XStack, YStack } from '@dish/ui'
 import React, { useState } from 'react'
 import { FlatList } from 'react-native'
@@ -62,13 +61,13 @@ export const RateRestaurantTagsModal = ({ onDismiss }: { onDismiss: any }) => {
           data={[...tagLenses]}
           renderItem={(props) => {
             return (
-              <ListItemXStack>
+              <XStack>
                 <Paragraph>{props.item.name}</Paragraph>
                 <YStack flex={1} />
                 <Button theme="active" onPress={() => setShowRateModal(true)}>
                   Rate
                 </Button>
-              </ListItemXStack>
+              </XStack>
             )
           }}
         />

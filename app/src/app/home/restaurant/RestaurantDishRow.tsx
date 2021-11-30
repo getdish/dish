@@ -104,37 +104,37 @@ export const RestaurantDishRowContent = memo(
 
       return <>{getDishRow(dishes)}</>
 
-      return (
-        <ContentScrollViewHorizontal
-          onScroll={handleScroll}
-          style={{
-            zIndex: 10,
-            position: 'relative',
-            marginHorizontal: -20,
-          }}
-        >
-          {hasDishes ? (
-            <YStack paddingHorizontal={40} paddingVertical={10}>
-              <XStack space="$2">
-                <ScalingPressable
-                  onPress={() => {
-                    onSelect?.('')
-                  }}
-                >
-                  <TagButton noLink name="Dishes" isActive={selected === ''} />
-                </ScalingPressable>
-                {getDishRow(dishGroups[0])}
-              </XStack>
-              <Spacer size="$6" />
-              <XStack marginLeft={24} space="$2">
-                {getDishRow(dishGroups[1])}
-              </XStack>
-            </YStack>
-          ) : (
-            <Spacer size="$8" />
-          )}
-        </ContentScrollViewHorizontal>
-      )
+      // return (
+      //   <ContentScrollViewHorizontal
+      //     onScroll={handleScroll}
+      //     style={{
+      //       zIndex: 10,
+      //       position: 'relative',
+      //       marginHorizontal: -20,
+      //     }}
+      //   >
+      //     {hasDishes ? (
+      //       <YStack paddingHorizontal={40} paddingVertical={10}>
+      //         <XStack space="$2">
+      //           <ScalingPressable
+      //             onPress={() => {
+      //               onSelect?.('')
+      //             }}
+      //           >
+      //             <TagButton noLink name="Dishes" isActive={selected === ''} />
+      //           </ScalingPressable>
+      //           {getDishRow(dishGroups[0])}
+      //         </XStack>
+      //         <Spacer size="$6" />
+      //         <XStack marginLeft={24} space="$2">
+      //           {getDishRow(dishGroups[1])}
+      //         </XStack>
+      //       </YStack>
+      //     ) : (
+      //       <Spacer size="$8" />
+      //     )}
+      //   </ContentScrollViewHorizontal>
+      // )
     }
   )
 )

@@ -1,4 +1,3 @@
-import { green, purple } from '../constants/colors'
 import { hexToRGB } from '../helpers/rgb'
 
 export type Tile = {
@@ -50,8 +49,8 @@ export const tiles: Tile[] = [
     // lineColorHover: '#330033',
     promoteId: 'ogc_fid',
     activeColor: `rgba(255, 255, 255, 0)`,
-    hoverColor: hexToRGB(purple, 0.2).string,
-    color: hexToRGB(purple, 0.25).string,
+    hoverColor: `rgba(250,200,150, 0.2)`,
+    color: `rgba(250,200,150, 0.3)`,
     label: 'hrr_city',
     name: 'public.hrr',
   },

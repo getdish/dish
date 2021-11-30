@@ -6,25 +6,20 @@ import {
   Paragraph,
   Spacer,
   Text,
+  useTheme,
   XStack,
   YStack,
-  useTheme,
 } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
-import React, { Suspense, memo } from 'react'
+import React, { memo, Suspense } from 'react'
 import { StyleSheet } from 'react-native'
-
-import { green, grey } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
-import { numberFormat } from '../../../helpers/numberFormat'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { CloseButton } from '../../views/CloseButton'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { SlantedTitle } from '../../views/SlantedTitle'
-import { SentimentText } from './SentimentText'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
   showComments = false

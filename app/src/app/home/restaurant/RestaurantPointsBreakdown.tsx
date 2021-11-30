@@ -1,15 +1,14 @@
-import { graphql } from '@dish/graph'
-import { Paragraph, Separator, Spacer, Text, TextProps, XStack, YStack } from '@dish/ui'
-import React, { memo, useState } from 'react'
-import { View } from 'react-native'
-
-import { green200, yellow200 } from '../../../constants/colors'
+import { light } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 import { useTotalExternalReviews, useTotalNativeReviews, useTotalReviews } from './useTotalReviews'
+import { graphql } from '@dish/graph'
+import { Paragraph, Separator, Spacer, Text, TextProps, XStack, YStack } from '@dish/ui'
+import React, { memo, useState } from 'react'
+import { View } from 'react-native'
 
 const TextHighlight = (props: TextProps) => (
   <Text paddingHorizontal={4} borderRadius={8} {...props} />
@@ -64,7 +63,7 @@ export const RestaurantPointsBreakdown = memo(
             <Spacer />
             {reviewsBreakdown.score != null ? (
               <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
-                <TextHighlight backgroundColor={green200}>
+                <TextHighlight backgroundColor={light.green10}>
                   {numberFormat(Math.round(reviewsBreakdown['score']))}
                 </TextHighlight>{' '}
                 from {numberFormat(totalReviews)} reviews
@@ -77,7 +76,7 @@ export const RestaurantPointsBreakdown = memo(
 
             {photosBreakdown.score != null ? (
               <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
-                <TextHighlight backgroundColor={green200}>
+                <TextHighlight backgroundColor={light.green10}>
                   {numberFormat(Math.round(photosBreakdown['score']))}
                 </TextHighlight>{' '}
                 from {photosBreakdown['meeting_criteria_count']} good photos
@@ -89,11 +88,11 @@ export const RestaurantPointsBreakdown = memo(
             <Spacer size="$6" />
 
             <Paragraph textAlign="center" size={0.9} color="rgba(0,0,0,0.6)">
-              <TextHighlight fontWeight="700" backgroundColor={green200}>
+              <TextHighlight fontWeight="700" backgroundColor={light.green10}>
                 {numberFormat(Math.round(nativeReviewPoints))}
               </TextHighlight>{' '}
               points from {numberFormat(totalNativeReviews)} Dish reviews and <View />
-              <TextHighlight fontWeight="700" backgroundColor={yellow200}>
+              <TextHighlight fontWeight="700" backgroundColor={light.yellow10}>
                 {numberFormat(Math.round(externalReviewPoints))}
               </TextHighlight>{' '}
               from {numberFormat(totalExternalReviews)} {sourceNames(sources)} reviews.

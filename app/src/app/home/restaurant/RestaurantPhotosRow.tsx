@@ -1,6 +1,6 @@
 import { graphql, restaurant } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Spacing, XStack, YStack, useConstant, useTheme } from '@dish/ui'
+import { XStack, YStack, useConstant } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 
 import { getImageUrl } from '../../../helpers/getImageUrl'
@@ -16,7 +16,7 @@ type Props = {
   restaurant?: restaurant
   width: number
   height: number
-  spacing?: Spacing
+  space?: any
   floating?: boolean
   max?: number
   slanted?: boolean
@@ -45,7 +45,7 @@ export const RestaurantPhotosRowContent = memo(
       restaurant,
       width,
       height,
-      spacing,
+      space,
       floating,
       max,
     }: Props) => {
@@ -139,7 +139,7 @@ export const RestaurantPhotosRowContent = memo(
 
       return (
         // an attempt to get native to scroll but not working
-        <XStack space={spacing} minWidth={fullWidth}>
+        <XStack space={space} minWidth={fullWidth}>
           {slanted ? <SkewedCardCarousel>{contents}</SkewedCardCarousel> : contents}
         </XStack>
       )

@@ -215,7 +215,7 @@ const Header = memo(
                     <RestaurantFavoriteButton
                       backgroundColor="transparent"
                       borderWidth={0}
-                      size="sm"
+                      size="$4"
                       opacity={0.5}
                       restaurantSlug={restaurant.slug || ''}
                     />

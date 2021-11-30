@@ -145,7 +145,7 @@ export const ListAddRestuarant = graphql(
 
     return (
       <YStack width="100%" height="100%" flex={1}>
-        <SlantedTitle size="sm" alignSelf="center" marginTop={-15}>
+        <SlantedTitle size="$4" alignSelf="center" marginTop={-15}>
           Add
         </SlantedTitle>
         <YStack width="100%" flexShrink={0}>

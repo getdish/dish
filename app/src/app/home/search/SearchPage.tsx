@@ -79,8 +79,9 @@ export default memo(function SearchPage(props: SearchProps) {
     router.curPage.name !== 'search'
   )
 
-  const lenseTag = getActiveTagSlugs(state).find((x) => x.type === 'lense') ?? tagLenses[0]
-  console.log('lenseTag', lenseTag, state)
+  const activeSlugs = getActiveTagSlugs(state.activeTags)
+  const lenseSlug = activeSlugs.filter((x) => tagLenses[x])[0]
+  const lenseTag = lenseSlug ? tagLenses.find((x) => x.slug === lenseSlug)! : tagLenses[0]
 
   useLayoutEffect(() => {
     if (!props.isActive) return
@@ -399,7 +400,7 @@ const SearchEmptyResults = () => {
   return (
     <>
       <SearchHeader />
-      <YStack paddingVertical={100} alignItems="center" spacing>
+      <YStack paddingVertical={100} alignItems="center" space>
         <Paragraph fontSize={22}>No results</Paragraph>
         <Text fontSize={32}>😞</Text>
       </YStack>

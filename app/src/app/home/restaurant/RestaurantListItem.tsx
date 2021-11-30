@@ -556,7 +556,7 @@ const RestaurantListItemContent = memo(
                     excludeOverall
                     size="sm"
                     restaurant={restaurant}
-                    space={0}
+                    spacing={0}
                     spacingHorizontal={0}
                     maxItems={4}
                     tagButtonProps={{

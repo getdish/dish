@@ -133,7 +133,3 @@ export const themes = {
   'translucent-light': lightTranslucent,
   ...colorThemes,
 } as const
-
-for (const name in themes) {
-  console.log('wut', name, themes[name])
-}

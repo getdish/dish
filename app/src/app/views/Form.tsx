@@ -2,6 +2,7 @@ import {
   Button,
   Form,
   Input,
+  // @ts-ignore
   InputProps,
   Paragraph,
   Text,
