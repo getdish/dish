@@ -69,19 +69,19 @@ export const AppMapControls = memo(() => {
               <>
                 <OverlayLinkButton
                   disabled={appMap.currentZoomLevel === 'far'}
-                  Icon={Minus}
+                  icon={Minus}
                   onPress={appMap.zoomOut}
                 />
                 <OverlayLinkButton
                   disabled={appMap.currentZoomLevel === 'close'}
-                  Icon={Plus}
+                  icon={Plus}
                   onPress={appMap.zoomIn}
                 />
               </>
             )}
 
             {showSearchHere && (
-              <OverlayLinkButton Icon={RefreshCcw} onPress={pagesStore.refresh}>
+              <OverlayLinkButton icon={RefreshCcw} onPress={pagesStore.refresh}>
                 {media.notSm ? 'Search' : null}
               </OverlayLinkButton>
             )}
@@ -89,7 +89,7 @@ export const AppMapControls = memo(() => {
             {/* <ToggleRegionButton /> */}
 
             {isHoverZoomed && (
-              <OverlayLinkButton Icon={X} onPress={appMap.clearHover}>
+              <OverlayLinkButton icon={X} onPress={appMap.clearHover}>
                 Clear hover
               </OverlayLinkButton>
             )}

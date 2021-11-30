@@ -49,6 +49,7 @@ if (process.env.TAMAGUI_TARGET === 'native') {
        */
       alias: {
         'react-native': reactNativePath,
+        'react-native-web': require.resolve('react-native-web'),
         '@unimodules/core': require.resolve('@unimodules/core'),
         '@unimodules/react-native-adapter': require.resolve('@unimodules/react-native-adapter'),
         'react-native-svg': require.resolve('react-native-svg'),

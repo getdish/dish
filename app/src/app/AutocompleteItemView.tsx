@@ -76,7 +76,7 @@ export const AutocompleteItemView = memo(
         backgroundColor={isActive ? '#000' : 'transparent'}
         borderRadius={0}
         hoverStyle={{
-          backgroundColor: isActive ? '#000' : theme.bgDark,
+          backgroundColor: isActive ? '#000' : theme.bgTransparent,
         }}
         {...(hideBackground && {
           backgroundColor: 'transparent',

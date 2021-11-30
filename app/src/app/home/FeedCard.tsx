@@ -171,7 +171,7 @@ const FeedCardContent = ({
               key={tag.slug}
               onlyIcon={tags.length > 1 && tag.type === 'lense'}
               transparent
-              size={emphasizeTag ? 'lg' : 'md'}
+              size={emphasizeTag ? '$5' : '$4'}
               fontWeight={emphasizeTag ? '600' : '700'}
               color={theme.color}
               {...tag}

@@ -266,7 +266,7 @@ export const ReviewTagsRow = memo(
               <SmallButton
                 borderWidth={0}
                 onPress={() => setIsFocused(true)}
-                icon={<Search opacity={0.5} size={16} color="#888" />}
+                icon={Search}
                 marginRight={15}
                 backgroundColor="transparent"
               />
@@ -294,7 +294,6 @@ export const ReviewTagsRow = memo(
                   hideRating
                   fadeLowlyVoted
                   noLink
-                  size={props.size ?? 'sm'}
                   restaurant={restaurant}
                   hideRank
                   key={tbp.slug || 0}

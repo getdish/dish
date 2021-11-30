@@ -554,7 +554,6 @@ const RestaurantListItemContent = memo(
                   <RestaurantTagsList
                     exclude={excludeTags}
                     excludeOverall
-                    size="sm"
                     restaurant={restaurant}
                     spacing={0}
                     spacingHorizontal={0}

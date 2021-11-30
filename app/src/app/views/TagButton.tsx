@@ -15,6 +15,10 @@ import {
   YStack,
   prevent,
   useTheme,
+  ButtonProps,
+  getIconSize,
+  Button,
+  Paragraph,
 } from '@dish/ui'
 import { X } from '@tamagui/feather-icons'
 import React, { memo, useRef } from 'react'
@@ -79,7 +83,7 @@ export const getTagButtonProps = (review_or_tag?: TagLike | review | null): TagB
   return getTagProps(review_or_tag as any)
 }
 
-export type TagButtonProps = StackProps &
+export type TagButtonProps = Omit<ButtonProps, 'icon'> &
   Omit<TagButtonTagProps, 'rgb'> & {
     after?: any
     bordered?: boolean
@@ -103,9 +107,7 @@ export type TagButtonProps = StackProps &
     replace?: boolean
     replaceSearch?: boolean
     restaurant?: restaurant | null
-    rgb?: RGB | null
     showSearchButton?: boolean
-    size?: 'lg' | 'md' | 'sm'
     slug?: string
     subtleIcon?: boolean
     theme?: ThemeName
@@ -159,10 +161,9 @@ const TagButtonInner = (props: TagButtonProps) => {
     replace,
     replaceSearch,
     restaurant,
-    rgb,
     score,
     showSearchButton,
-    size,
+    size = '$4',
     slug,
     subtleIcon,
     tooltip,
@@ -173,12 +174,10 @@ const TagButtonInner = (props: TagButtonProps) => {
   } = props
 
   const theme = useTheme()
-  const isSmall = size === 'sm'
-  const scale = isSmall ? 0.9 : size == 'lg' ? 1.1 : 1
-  const fontSize = fontSizeProp ? fontSizeProp : Math.round(15 * scale)
-  const smallerFontSize: any = typeof fontSize === 'number' ? Math.round(fontSize * 0.85) : fontSize
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
-  const pieSize = size === 'sm' ? 16 : 20
+  const pieSize = getIconSize(size)
+  console.log('what the fuc', size, pieSize)
+  const smallerFontSize = getIconSize(size, -1)
   const showRank = !hideRank
 
   const rankElement = !onlyIcon && showRank && (
@@ -212,15 +211,15 @@ const TagButtonInner = (props: TagButtonProps) => {
       <Image
         source={{ uri: icon }}
         style={{
-          width: fontSize.toString(),
-          height: fontSize.toString(),
+          width: pieSize.toString(),
+          height: pieSize.toString(),
           borderRadius: 1000,
           display: isWeb ? ('inline-flex' as any) : 'flex',
           marginVertical: -2,
         }}
       />
     ) : (
-      <Text pointerEvents="none" fontSize={16} marginRight={-2} marginLeft={isSmall ? 2 : 5}>
+      <Text pointerEvents="none" fontSize={pieSize}>
         {icon}
       </Text>
     )
@@ -238,41 +237,13 @@ const TagButtonInner = (props: TagButtonProps) => {
       : props.vote
 
   let contents = (
-    <XStack
+    <Button
+      size={size}
       className="hover-parent"
       position="relative"
-      space="$2"
-      borderRadius={8}
+      noTextWrap
       backgroundColor={theme.bg}
-      borderWidth={bordered ? 0.5 : 0}
-      borderColor={theme.borderColor}
-      hoverStyle={{
-        backgroundColor: theme.bg2,
-      }}
-      pressStyle={{
-        backgroundColor: theme.bg3,
-      }}
-      {...(transparent && {
-        borderColor: 'transparent',
-        backgroundColor: 'transparent',
-        hoverStyle: {
-          backgroundColor: 'transparent',
-        },
-        pressStyle: {
-          backgroundColor: 'transparent',
-        },
-      })}
-      {...(isActive && {
-        backgroundColor: theme.bg2,
-        hoverStyle: {
-          backgroundColor: theme.bg2,
-        },
-      })}
-      alignItems="center"
-      // justifyContent="center"
-      paddingHorizontal={isSmall ? 5 : 10}
-      paddingVertical={isSmall ? 3 : 5}
-      height={isSmall ? 36 : 38}
+      icon={iconElement}
       {...(fadeLowlyVoted &&
         typeof vote === 'number' &&
         vote <= 2 && {
@@ -281,7 +252,6 @@ const TagButtonInner = (props: TagButtonProps) => {
       {...rest}
     >
       {rankElement}
-      {iconElement}
 
       {!hideRating && typeof rating !== 'undefined' && (
         <>
@@ -324,17 +294,13 @@ const TagButtonInner = (props: TagButtonProps) => {
       )}
 
       {!onlyIcon && !circular && (
-        <Text
+        <Paragraph
           ellipse
-          fontSize={fontSize}
+          size={size}
           fontWeight={fontWeight || '400'}
-          lineHeight={isSmall ? 15 : 22}
           paddingLeft={3}
           color={color || theme.color}
           pointerEvents="none"
-          // borderBottomColor={theme.bg}
-          // borderBottomWidth={floating ? 0 : 1}
-          opacity={0.8}
           {...(floating && {
             color: '#fff',
             textShadowColor: theme.shadowColor2,
@@ -346,7 +312,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           }}
         >
           {tagDisplayName(name)}
-        </Text>
+        </Paragraph>
       )}
 
       {children}
@@ -357,7 +323,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           vote={vote}
           key={`${slug}${props.restaurant?.slug}${userTagVotes.vote}`}
           color={theme.color}
-          scale={scale}
+          scale={Math.round(+pieSize / 16)}
           disablePopover={noLink}
         />
       )}
@@ -399,7 +365,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           <SearchTagButton tag={{ type: 'dish', slug }} color="#000" />
         </AbsoluteYStack>
       )}
-    </XStack>
+    </Button>
   )
 
   // make entire button votable in this case

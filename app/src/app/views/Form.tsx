@@ -6,18 +6,15 @@ import {
   InputProps,
   Paragraph,
   Text,
+  useTheme,
   XStack,
   YStack,
-  useTheme,
 } from '@dish/ui'
-import { getStore } from '@dish/use-store'
 import { capitalize } from 'lodash'
 import React, { Suspense, useContext } from 'react'
 import { Controller, FieldError, RegisterOptions } from 'react-hook-form'
-
 import { isWeb } from '../../constants/constants'
-import { drawerStore } from '../drawerStore'
-import { ContentScrollContext, ScrollStore } from '../views/ContentScrollView'
+import { ContentScrollContext } from '../views/ContentScrollView'
 
 export function SubmittableForm({
   onSubmit,

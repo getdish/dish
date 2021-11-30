@@ -8,13 +8,7 @@ export const ListFavoriteButton = graphql(
   ({ list, query, ...rest }: Partial<FavoriteButtonProps> & ListQueryProps) => {
     const { isFavorited, toggleFavorite, reviewsCount } = useListFavorite({ list, query })
     return (
-      <FavoriteButton
-        backgroundColor="transparent"
-        borderWidth={0}
-        {...rest}
-        isFavorite={isFavorited}
-        onToggle={toggleFavorite}
-      >
+      <FavoriteButton chromeless {...rest} isFavorite={isFavorited} onToggle={toggleFavorite}>
         {`${reviewsCount}`}
       </FavoriteButton>
     )

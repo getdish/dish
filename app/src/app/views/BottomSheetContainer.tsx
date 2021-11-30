@@ -1,6 +1,6 @@
 import { drawerBorderRadius } from '../../constants/constants'
 import { DrawerPortalProvider } from '../Portal'
-import { YStack, useTheme } from '@dish/ui'
+import { YStack, isWeb, useTheme } from '@dish/ui'
 import React from 'react'
 
 // only renders on small views
@@ -18,9 +18,10 @@ export const BottomSheetContainer = (props: { children: any }) => {
       pointerEvents="auto"
       overflow="hidden"
       position="relative"
+      zIndex={10}
       className="blur"
     >
-      <YStack fullscreen backgroundColor="$bg" opacity={0.65} />
+      <YStack fullscreen backgroundColor="$bg" opacity={isWeb ? 0.65 : 1} />
       <DrawerPortalProvider />
       {props.children}
     </YStack>

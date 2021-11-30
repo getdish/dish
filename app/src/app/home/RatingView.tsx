@@ -20,7 +20,7 @@ export const RatingView = forwardRef(
         ref={ref as any}
         ellipse
         // @ts-expect-error
-        size={size * (floating ? 0.027 : 0.03)}
+        size={size * (floating ? 0.4 : 0.5)}
         fontWeight="800"
         letterSpacing={-0.75}
       >
@@ -31,18 +31,16 @@ export const RatingView = forwardRef(
       return content
     }
     return (
-      <ThemeInverse>
-        <Box
-          width={size}
-          height={size}
-          elevation="$1"
-          borderRadius={1000}
-          alignItems="center"
-          justifyContent="center"
-        >
-          {content}
-        </Box>
-      </ThemeInverse>
+      <Box
+        width={size}
+        height={size}
+        elevation="$1"
+        borderRadius={1000}
+        alignItems="center"
+        justifyContent="center"
+      >
+        {content}
+      </Box>
     )
   }
 )

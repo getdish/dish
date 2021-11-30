@@ -5,45 +5,41 @@ export type SmallButtonProps = ButtonProps & {
   tooltip?: string | null
 }
 
+// todo can make extractable move to dish/ui
+
 export const SmallButton = themeable(
-  forwardRef(
-    ({ children, tooltip, theme: themeProp, textProps, ...rest }: SmallButtonProps, ref) => {
-      const theme = useTheme()
+  forwardRef(({ children, tooltip, theme: themeProp, ...rest }: SmallButtonProps, ref) => {
+    const theme = useTheme()
 
-      const contents = (
-        <Button
-          ref={ref}
-          borderRadius={200}
-          borderWidth={0.5}
-          borderColor={theme.borderColor}
-          backgroundColor={theme.bg}
-          hoverStyle={{
-            backgroundColor: theme.bg2,
-          }}
-          pressStyle={{
-            backgroundColor: theme.bg3,
-          }}
-          {...(themeProp == 'active' && {
-            backgroundColor: theme.bg,
-          })}
-          height={44}
-          maxHeight={44}
-          minWidth={44}
-          textProps={{
-            fontSize: 13,
-            ...textProps,
-          }}
-          {...rest}
-        >
-          {children}
-        </Button>
-      )
+    const contents = (
+      <Button
+        ref={ref}
+        borderRadius={200}
+        borderColor={theme.borderColor}
+        backgroundColor={theme.bg}
+        hoverStyle={{
+          backgroundColor: theme.bg2,
+        }}
+        pressStyle={{
+          backgroundColor: theme.bg3,
+        }}
+        {...(themeProp == 'active' && {
+          backgroundColor: theme.bg,
+        })}
+        {...rest}
+      >
+        {children}
+      </Button>
+    )
 
-      if (tooltip) {
-        return <Tooltip contents={tooltip}>{contents}</Tooltip>
-      }
-
-      return contents
+    if (tooltip) {
+      return <Tooltip contents={tooltip}>{contents}</Tooltip>
     }
-  )
+
+    return contents
+  })
 )
+
+SmallButton.defaultProps = {
+  size: '$3',
+}

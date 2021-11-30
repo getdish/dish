@@ -425,18 +425,23 @@ class HomeStore extends Store {
       }
 
       if (!nextState) {
-        console.warn('warning! no state found in history, perhaps from old refresh')
-        Toast.show('page not found')
-        debugger
-        // allow it then to continue to push
-        // probably should just move the index +1/-1 to if possible to fallback to something
-      } else {
+        console.warn(
+          'warning! no state found in history, perhaps from old refresh?',
+          item,
+          this.states
+        )
+        nextState = this.states[this.stateIndex - 1]
+      }
+
+      if (nextState) {
         this.stateIndex = Math.max(
           0,
           this.statesIncludingFuture.indexOf(nextState) ?? this.stateIndex
         )
-        return
       }
+
+      // end pop
+      return
     } else {
       if (item.type !== 'replace') {
         // remove future states no longer accessible

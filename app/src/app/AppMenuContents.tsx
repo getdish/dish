@@ -42,7 +42,7 @@ export const AppMenuContents = memo(
         {...props}
       >
         {/* safari y={} fix overflow */}
-        <YStack overflow="hidden" borderRadius={12} y={0.01}>
+        <YStack flex={1} overflow="hidden" borderRadius={12} y={0.01}>
           {showContents && (
             <ScrollView>
               {!isWeb && (

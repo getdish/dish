@@ -12,12 +12,12 @@ export type SimpleCardProps = StackProps & {
 }
 
 export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: SimpleCardProps) => {
-  console.log('props', props)
   return (
     <YStack
       bc="$bg2"
       mr={size === 'sm' ? -3 : -8}
       className="disable-hover-touch ease-in-out-fast"
+      overflow="hidden"
       borderRadius="$3"
       shadowColor="$shadowColor"
       shadowRadius={2}

@@ -109,7 +109,7 @@ export const RestaurantPeekDishes = memo(
                         width="100%"
                         noLink
                         votable
-                        size="lg"
+                        size="$6"
                         {...dish}
                       />
                     </Link>

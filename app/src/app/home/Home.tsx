@@ -147,6 +147,7 @@ const HomeContainerLarge = (props) => {
     >
       <YStack
         className="blur"
+        br="$4"
         pointerEvents="auto"
         position="absolute"
         top="$3"

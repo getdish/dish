@@ -1,7 +1,6 @@
-import { createFont, createTokens } from 'tamagui'
-
 import { darkColorsPostfixed, light } from './colors'
 import { isWeb } from './constants'
+import { createFont, createTokens } from 'tamagui'
 
 const size = {
   0: 0,
@@ -44,8 +43,8 @@ const interFont = createFont({
     4: 15,
     5: 17,
     6: 18,
-    7: 20,
-    8: 21,
+    7: 22,
+    8: 28,
     9: 38,
     10: 44,
     11: 68,
@@ -58,9 +57,9 @@ const interFont = createFont({
     4: 25,
     5: 30,
     6: 31,
-    7: 35,
+    7: 32,
     8: 42,
-    9: 48,
+    9: 50,
     10: 56,
     11: 75,
     12: 88,

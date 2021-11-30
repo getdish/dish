@@ -6,17 +6,6 @@ PROJECT_ROOT="$(dirname "$0")/.."
 
 pushd "$PROJECT_ROOT" || exit
 
-echo "removing"
-
-rm -r ./node_modules/tamagui || true
-rm -r ./node_modules/@tamagui/core || true
-rm -r ./node_modules/@tamagui/helpers || true
-rm -r ./node_modules/@tamagui/colors || true
-rm -r ./node_modules/@tamagui/feather-icons || true
-rm -r ./node_modules/@tamagui/use-debounce || true
-rm -r ./node_modules/@tamagui/use-window-size || true
-rm -r ./node_modules/@tamagui/use-force-update || true
-
 echo "copying"
 
 cp -r ~/tamagui/packages/tamagui ./node_modules

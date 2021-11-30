@@ -10,10 +10,9 @@ export const InputTagButton = (props: TagButtonProps & { isActive?: boolean }) =
   return (
     // makes x visible in dark mode
     <TagButton
-      size="sm"
+      size="$4"
       closable
       subtleIcon
-      // @ts-expect-error
       elevation="$1"
       hideRating
       hideRank

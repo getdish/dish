@@ -231,7 +231,7 @@ const ListPageContent = memo(
           return (
             <TagButton
               key={tag?.slug || i}
-              size="sm"
+              size="$4"
               {...getTagButtonProps(tag)}
               votable={isMyList}
             />
@@ -353,12 +353,6 @@ const ListPageContent = memo(
           )}
 
           <ContentScrollView id="list">
-            <AbsoluteYStack
-              fullscreen
-              zIndex={-1}
-              // backgroundColor={listColors.backgroundForTheme}
-              opacity={0.5}
-            />
             {/* <AbsoluteYStack opacity={0.5} fullscreen maxHeight={300} zIndex={0}>
               <LinearGradient
                 start={[0, 1]}
@@ -441,13 +435,6 @@ const ListPageContent = memo(
               <YStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
                 {/* START HEADER */}
                 <YStack paddingBottom={5} position="relative">
-                  {/* BACKGROUND */}
-                  {/* <AbsoluteYStack
-                    fullscreen
-                    zIndex={-1}
-                    backgroundColor={listColors.backgroundForTheme}
-                    // opacity={0.05}
-                  /> */}
                   <XStack paddingHorizontal={20}>
                     {/* <AbsoluteYStack
                       overflow="hidden"

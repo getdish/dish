@@ -1,6 +1,6 @@
 import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
-import { Input, Text, XStack, YStack, useDebounce, useTheme } from '@dish/ui'
+import { Input, Text, XStack, YStack, useDebounce, useTheme, Paragraph } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { memo } from 'react'
 
@@ -88,7 +88,7 @@ export const RestaurantOverview = memo(
                 />
               </YStack>
             ) : (
-              <Text
+              <Paragraph
                 className="break-word"
                 display="flex"
                 fontSize={fontSize}
@@ -112,7 +112,7 @@ export const RestaurantOverview = memo(
                         maxLength: 380,
                       }
                     )}
-              </Text>
+              </Paragraph>
             )}
           </XStack>
           {ensureFlexText}

@@ -43,9 +43,6 @@ export const LogoCircle = memo(() => {
   const maskID = `mask-${id}`
   const pathID = `path-${id}`
 
-  // native err
-  return null
-
   return (
     <Svg width={logoXsWidth} height={logoXsHeight} viewBox="0 0 1024 1024">
       <Defs>

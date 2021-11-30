@@ -78,7 +78,6 @@ export const SearchPageScoring = memo(() => {
                 hideRating
                 hideIcon
                 key={tag.slug ?? index}
-                size="sm"
                 {...getTagButtonProps(tag)}
                 after={<Paragraph size="$3">{`${pct}%`}</Paragraph>}
               />

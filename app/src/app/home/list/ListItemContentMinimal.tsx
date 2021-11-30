@@ -61,33 +61,16 @@ const Header = memo(
     const open = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
     const nameLen = restaurantName.length
-    const titleFontScale =
-      nameLen > 30
-        ? 0.65
-        : nameLen > 25
-        ? 0.75
-        : nameLen > 20
-        ? 0.8
-        : nameLen > 15
-        ? 0.85
-        : nameLen > 10
-        ? 0.9
-        : 1
 
-    const titleFontSize = Math.round((media.sm ? 32 : 36) * titleFontScale)
     const theme = useTheme()
     const [isFocused, setIsFocused] = useState(false)
     const drawerWidth = useAppDrawerWidth()
     const themeName = useThemeName()
     const isDark = themeName === 'dark'
+    const titleSize = `$${Math.max(4, Math.min(10, Math.round(nameLen / 10) + 5))}`
 
     if (!restaurant) {
       return null
-    }
-
-    const colors = {
-      color: 'white', //isDark ? listColors.lightColor : listColors.darkColor,
-      backgroundColor: 'red', //`${isDark ? listColors.lightColor : listColors.darkColor}11`,
     }
 
     return (
@@ -132,15 +115,12 @@ const Header = memo(
                     display={isWeb ? 'block' : 'flex'}
                   >
                     <H3
-                      fontSize={titleFontSize}
-                      fontTheme={getListFontTheme(list?.font)}
-                      lineHeight={titleFontSize * 1.35}
-                      color={colors.color}
+                      // size={titleSize}
+                      size="$8"
                       hoverStyle={{
-                        backgroundColor: colors.backgroundColor,
+                        bc: '$bg4',
                       }}
                       fontWeight="200"
-                      paddingHorizontal={3} // prevents clipping due to letter-spacing
                       maxWidth="100%"
                     >
                       {restaurantName}

@@ -1,6 +1,7 @@
 import { fullyIdle, series, sleep } from '@dish/async'
 import { graphql } from '@dish/graph'
 import {
+  H1,
   LoadingItems,
   Spacer,
   Text,
@@ -57,27 +58,27 @@ import { useSelectedDish } from './useSelectedDish'
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
 
 export default function RestaurantPageContainer(props: Props) {
-  const theme = useTheme()
   const colors = getColorsForName(props.item.restaurantSlug)
-  console.log('TODO theme', colors)
   return (
-    <StackDrawer
-      closable
-      fallback={
-        <YStack
-          // backgroundColor={colors.themeColor}
-          // borderBottomColor={theme.borderColor}
-          borderBottomWidth={1}
-          minHeight={450}
-        >
-          <PageContentWithFooter>
-            <LoadingItems />
-          </PageContentWithFooter>
-        </YStack>
-      }
-    >
-      <RestaurantPage {...props} colors={colors} />
-    </StackDrawer>
+    <Theme name={colors}>
+      <StackDrawer
+        closable
+        fallback={
+          <YStack
+            // backgroundColor={colors.themeColor}
+            // borderBottomColor={theme.borderColor}
+            borderBottomWidth={1}
+            minHeight={450}
+          >
+            <PageContentWithFooter>
+              <LoadingItems />
+            </PageContentWithFooter>
+          </YStack>
+        }
+      >
+        <RestaurantPage {...props} colors={colors} />
+      </StackDrawer>
+    </Theme>
   )
 }
 
@@ -188,11 +189,12 @@ const RestaurantPage = memo(
       }).map((x) => x.tag.name)
 
       const themeName = useThemeName()
-      const headerThemeName = colors
 
       if (!restaurant) {
         return <NotFoundPage />
       }
+
+      const restaurantName = (restaurant.name || '').trim()
 
       const headerEl = (
         <>
@@ -209,8 +211,6 @@ const RestaurantPage = memo(
           </PaneControlButtonsLeft>
           <YStack
             paddingTop={0}
-            // minWidth={minWidth}
-            // maxWidth={width}
             borderTopRightRadius={drawerBorderRadius - 1}
             borderTopLeftRadius={drawerBorderRadius - 1}
             width="100%"
@@ -225,9 +225,7 @@ const RestaurantPage = memo(
                   {/* title row */}
                   <XStack paddingLeft={20} alignItems="flex-end" position="relative">
                     <YStack width={66} height={66} marginRight={-15} marginBottom={0} zIndex={200}>
-                      <Theme name={themeName as any}>
-                        <RestaurantRatingView floating size={66} restaurant={restaurant} />
-                      </Theme>
+                      <RestaurantRatingView floating size={66} restaurant={restaurant} />
                     </YStack>
 
                     <XStack
@@ -241,43 +239,23 @@ const RestaurantPage = memo(
                       zIndex={199}
                       justifyContent="center"
                       minWidth={100}
-                      // skewX="-12deg"
                     >
-                      {/* <AbsoluteYStack
-                    fullscreen
-                    backgroundColor={colors.themeColorAlt}
-                    zIndex={-1}
-                    opacity={0.96}
-                    borderRadius={6}
-                    shadowColor="#000"
-                    shadowOpacity={0.1}
-                    shadowRadius={5}
-                    skewX="-12deg"
-                    shadowOffset={{ height: 3, width: 0 }}
-                  /> */}
-                      <ThemeInverse>
-                        <XStack
-                          display={isWeb ? 'block' : 'flex'}
-                          maxWidth={280}
-                          marginRight={30}
-                          paddingTop={50}
+                      <XStack
+                        display={isWeb ? 'block' : 'flex'}
+                        maxWidth={280}
+                        marginRight={30}
+                        paddingTop={50}
+                      >
+                        <H1
+                          className="font-title"
+                          fontFamily="$title"
+                          color="$color4"
+                          maxWidth={500}
+                          alignSelf="flex-start"
                         >
-                          <Text
-                            className="font-title"
-                            fontFamily="$title"
-                            color="$color"
-                            maxWidth={500}
-                            alignSelf="flex-start"
-                            selectable
-                            letterSpacing={-1}
-                            fontSize={fontSize}
-                            lineHeight={fontSize}
-                            fontWeight="900"
-                          >
-                            {(restaurant.name || '').trim()}
-                          </Text>
-                        </XStack>
-                      </ThemeInverse>
+                          {restaurantName}
+                        </H1>
+                      </XStack>
                     </XStack>
 
                     <YStack paddingTop={10}>
@@ -351,29 +329,38 @@ const RestaurantPage = memo(
               </ContentScrollViewHorizontal>
 
               <ContentScrollViewHorizontal>
+                <XStack flexShrink={0} px="$3">
+                  <RestaurantTagsList
+                    exclude={['dish']}
+                    restaurant={restaurant}
+                    spacing={10}
+                    maxItems={5}
+                    size="$7"
+                    tagButtonProps={{
+                      hideRank: false,
+                      hideRating: false,
+                      backgroundColor: 'transparent',
+                      borderWidth: 0,
+                      votable: true,
+                    }}
+                  />
+                </XStack>
+              </ContentScrollViewHorizontal>
+
+              <ContentScrollViewHorizontal>
                 <XStack flexShrink={0} marginBottom={20}>
-                  <YStack flex={1} maxWidth={340} marginBottom={10} pointerEvents="auto">
+                  <YStack
+                    flex={1}
+                    maxWidth={440}
+                    marginBottom={10}
+                    pointerEvents="auto"
+                    $sm={{ maxWidth: 340 }}
+                  >
                     <RestaurantOverview
                       isDishBot
-                      maxLines={3}
+                      maxLines={5}
                       size="lg"
                       restaurantSlug={restaurantSlug}
-                    />
-                  </YStack>
-
-                  <YStack maxHeight={195} flexWrap="wrap" overflow="hidden" flex={1} maxWidth={200}>
-                    <RestaurantTagsList
-                      exclude={['dish']}
-                      restaurant={restaurant}
-                      spacing={0}
-                      maxItems={5}
-                      tagButtonProps={{
-                        // borderWidth: 0,
-                        hideRank: false,
-                        hideRating: false,
-                        borderWidth: 0,
-                        votable: true,
-                      }}
                     />
                   </YStack>
 
@@ -402,11 +389,11 @@ const RestaurantPage = memo(
         </>
       )
 
+      const pageTitle = `${restaurant.name} has the best ${topTags.join(', ')}`
+
       return (
         <>
-          <PageHead isActive={props.isActive}>{`${restaurant.name} has the best ${topTags.join(
-            ', '
-          )}`}</PageHead>
+          <PageHead isActive={props.isActive}>{pageTitle}</PageHead>
           <ContentScrollView
             ref={setScrollView}
             onScrollYThrottled={(y) => {
@@ -417,42 +404,36 @@ const RestaurantPage = memo(
             <PageContentWithFooter>
               {/* HEADER */}
               {/* -1 margin bottom to overlap bottom border */}
-              <Theme name={headerThemeName as any}>
-                <YStack
-                  backgroundColor={colors}
-                  // borderBottomColor={theme.borderColor}
-                  // borderBottomWidth={1}
-                >
-                  {headerEl}
-                  {/* <RestaurantHeader
+              <YStack backgroundColor="$bg4" borderBottomColor="$bg3" borderBottomWidth={1}>
+                {headerEl}
+                {/* <RestaurantHeader
                     themeName={themeName}
                     minHeight={450}
                     restaurantSlug={restaurantSlug}
                   /> */}
 
-                  <YStack marginHorizontal={-15} zIndex={0}>
-                    <RestaurantOverallAndTagReviews
-                      tagSlug={selectedDish}
-                      borderless
-                      showScoreTable
-                      key={restaurantSlug}
-                      restaurant={restaurant}
-                    />
-                  </YStack>
-
-                  <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
-
-                  <Spacer />
-
-                  <Suspense fallback={null}>
-                    <RestaurantLists restaurantSlug={restaurantSlug} />
-                  </Suspense>
-
-                  <Spacer size="$8" />
-
-                  {/* END head color AREA */}
+                <YStack marginHorizontal={-15} zIndex={0}>
+                  <RestaurantOverallAndTagReviews
+                    tagSlug={selectedDish}
+                    borderless
+                    showScoreTable
+                    key={restaurantSlug}
+                    restaurant={restaurant}
+                  />
                 </YStack>
-              </Theme>
+
+                <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
+
+                <Spacer />
+
+                <Suspense fallback={null}>
+                  <RestaurantLists restaurantSlug={restaurantSlug} />
+                </Suspense>
+
+                <Spacer size="$8" />
+
+                {/* END head color AREA */}
+              </YStack>
 
               <Spacer />
 

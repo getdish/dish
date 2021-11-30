@@ -23,7 +23,7 @@ type TagRowProps = {
 }
 
 export const RestaurantTagsList = (props: TagRowProps) => {
-  const rowHeight = 50 * (props.size === 'lg' ? 1.1 : props.size === 'sm' ? 0.65 : 0.92)
+  const rowHeight = 50 * (props.size === '$5' ? 1.1 : props.size === '$3' ? 0.65 : 0.92)
   return (
     <>
       {/* may jump up a bit on load */}
@@ -36,7 +36,7 @@ export const RestaurantTagsList = (props: TagRowProps) => {
 
 const Content = memo(
   graphql(function RestaurantTagsRow(props: TagRowProps) {
-    const { size = 'sm', restaurant, showMore, excludeOverall } = props
+    const { size, restaurant, showMore, excludeOverall } = props
     if (!restaurant) {
       return null
     }
@@ -90,5 +90,5 @@ const Content = memo(
 )
 
 RestaurantTagsList['defaultProps'] = {
-  size: 'md',
+  size: '$4',
 }

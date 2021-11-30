@@ -57,11 +57,12 @@ export const AppMenuButtonFloating = memo(() => {
         // pointerEvents="none"
       >
         <Button
+          pointerEvents="auto"
           elevation="$3"
           borderRadius="$8"
           w="$8"
           h="$8"
-          size="$6"
+          size="$5"
           icon={Menu}
           onPress={appMenu.show}
         />

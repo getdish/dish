@@ -1,7 +1,7 @@
 import { AbsoluteYStack, LinearGradient, XStack, useMedia, useThemeName } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
 import { autocompletesStore } from '../AutocompletesStore'
@@ -29,7 +29,7 @@ export const AppFloatingTagMenuBar = memo(() => {
       <AbsoluteYStack left={0} right={0} bottom={-20} top={-10} zIndex={-1}>
         <LinearGradient
           pointerEvents="none"
-          style={StyleSheet.absoluteFill}
+          style={[StyleSheet.absoluteFill]}
           colors={
             media.sm
               ? [`#22222200`, themeName === 'dark' ? '#222222' : `#22222233`]

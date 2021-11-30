@@ -14,4 +14,6 @@ config.resolver.nodeModulesPath = [
   path.resolve(workspaceRoot, 'node_modules'),
 ]
 
+config.resolver.resolverMainFields = ['module:jsx', 'react-native', 'browser', 'main']
+
 module.exports = config
