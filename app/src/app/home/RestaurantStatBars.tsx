@@ -1,12 +1,11 @@
-import { graphql, order_by, query } from '@dish/graph'
-import { AbsoluteYStack, Text, Theme, XStack, YStack, useTheme } from '@dish/ui'
-import { uniqBy } from 'lodash'
-import React from 'react'
-
 import { ColorShades } from '../../helpers/getColorsForName'
 import { selectRishDishViewSimple } from '../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { TagButton } from '../views/TagButton'
+import { graphql, order_by, query } from '@dish/graph'
+import { AbsoluteYStack, Text, Theme, XStack, YStack, useTheme } from '@dish/ui'
+import { uniqBy } from 'lodash'
+import React from 'react'
 
 export const RestaurantStatBars = graphql(
   ({
@@ -53,6 +52,7 @@ export const RestaurantStatBars = graphql(
     const rtags = uniqBy([...givenTags, ...restTags], (x) => x.tag.slug).slice(0, showTags)
 
     return (
+      // @ts-expect-error
       <Theme name="translucent">
         <YStack alignItems="flex-end" justifyContent="flex-end">
           {rtags.map((rtag, index) => {

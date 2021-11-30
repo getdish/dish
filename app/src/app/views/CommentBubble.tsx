@@ -1,19 +1,17 @@
 import {
   AbsoluteYStack,
-  Circle,
   Modal,
   Paragraph,
   Spacer,
   StackProps,
   Text,
+  useTheme,
   XStack,
   YStack,
-  useTheme,
 } from '@dish/ui'
 import { User } from '@tamagui/feather-icons'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
-
 import { grey } from '../../constants/colors'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { getTimeFormat } from '../../helpers/getTimeFormat'
@@ -248,7 +246,7 @@ function CommentBubbleContents(
 
           <Spacer size="$4" />
 
-          <XStack flex={1} pointerEvents="auto" alignItems="center" spacing>
+          <XStack flex={1} pointerEvents="auto" alignItems="center" space>
             {!!name && (
               <YStack>
                 {wrapLink(
@@ -263,7 +261,7 @@ function CommentBubbleContents(
 
             {!!date && (
               <>
-                <Paragraph flexShrink={0} size="sm" opacity={0.5}>
+                <Paragraph flexShrink={0} size="$3" opacity={0.5}>
                   {getTimeFormat(new Date(date))}
                 </Paragraph>
               </>

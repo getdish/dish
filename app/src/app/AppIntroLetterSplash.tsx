@@ -153,7 +153,7 @@ export const AppIntroLetter = memo(() => {
             theme="active"
             paddingVertical={12}
             paddingHorizontal={20}
-            elevation={3}
+            elevation="$3"
             borderRadius={100}
             textProps={{ fontSize: 16, fontWeight: '800' }}
             onPress={() => setShowSignup(true)}
@@ -383,8 +383,3 @@ const SignupBetaForm = () => {
     </YStack>
   )
 }
-
-const AppGlobe =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
-    ? require('./AppGlobe').default
-    : loadable(() => import('./AppGlobe'))

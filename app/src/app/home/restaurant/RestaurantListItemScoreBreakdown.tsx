@@ -22,7 +22,7 @@ export const RestaurantListItemScoreBreakdown = memo(
         tagSlugs: activeTagSlugs ?? [],
       })
       return (
-        <YStack spacing>
+        <YStack space>
           {restaurantTags.map((rtag) => {
             return (
               <TagButton

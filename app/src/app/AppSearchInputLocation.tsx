@@ -129,7 +129,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
               inputTextStyles.textInput,
               {
                 flex: 1,
-                color,
+                color: color.toString(),
                 paddingLeft: 16 + 10,
                 paddingRight: 16,
                 fontSize: 16,

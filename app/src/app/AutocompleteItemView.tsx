@@ -43,6 +43,7 @@ export const AutocompleteItemView = memo(
       <>
         <YStack flex={1} />
         <YStack padding={3} flexShrink={0}>
+          {/* @ts-expect-error */}
           <Theme name={isAdded ? 'active' : null}>
             <CircleButton onPress={onAdd}>
               <Plus color={isAdded ? '#fff' : theme.color4.toString()} size={16} />
@@ -67,6 +68,7 @@ export const AutocompleteItemView = memo(
       ) : null
 
     return (
+      // @ts-expect-error
       <LinkButton
         alignSelf="stretch"
         justifyContent="flex-start"

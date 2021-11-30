@@ -318,7 +318,7 @@ const ListPageContent = memo(
                 height={55}
                 alignItems="center"
                 justifyContent="center"
-                elevation={3}
+                elevation="$3"
                 noTextWrap
                 onPress={() => {
                   setShowAddModal(true)
@@ -374,7 +374,7 @@ const ListPageContent = memo(
                 </FavoriteButton>
 
                 {isMyList && !isEditing && (
-                  <SmallButton elevation={1} onPress={() => setIsEditing(true)}>
+                  <SmallButton elevation="$1" onPress={() => setIsEditing(true)}>
                     Edit
                   </SmallButton>
                 )}
@@ -382,7 +382,7 @@ const ListPageContent = memo(
                 {isMyList && (
                   <SmallButton
                     icon={isSorting ? null : <ListIcon size={16} color="#888" />}
-                    elevation={1}
+                    elevation="$1"
                     themeInverse
                     onPress={() => setIsSorting((x) => !x)}
                   >
@@ -394,7 +394,7 @@ const ListPageContent = memo(
                   <>
                     <SmallButton
                       themeInverse
-                      elevation={1}
+                      elevation="$1"
                       onPress={async () => {
                         router.setRouteAlert(null)
                         setIsEditing(false)
@@ -571,10 +571,10 @@ const ListPageContent = memo(
                         </CommentBubble>
 
                         {isMyList && isSorting && (
-                          <XStack spacing alignSelf="center">
+                          <XStack space alignSelf="center">
                             {/* listColors.color */}
                             <Move size={16} color={'red'} />
-                            <Paragraph opacity={0.6} size="sm">
+                            <Paragraph opacity={0.6} size="$3">
                               press and hold on any item to sort
                             </Paragraph>
                           </XStack>
@@ -596,7 +596,7 @@ const ListPageContent = memo(
                         padding={5}
                         paddingHorizontal={20}
                         borderRadius={100}
-                        elevation={1}
+                        elevation="$1"
                         flex={1}
                         alignItems="center"
                         justifyContent="center"
@@ -641,7 +641,7 @@ const ListPageContent = memo(
 
                         <InteractiveContainer alignItems="center">
                           <Paragraph
-                            size="sm"
+                            size="$3"
                             opacity={0.5}
                             onPress={() => {
                               setTheme(0)
@@ -658,7 +658,7 @@ const ListPageContent = memo(
                             }}
                           />
                           <Paragraph
-                            size="sm"
+                            size="$3"
                             opacity={0.5}
                             onPress={() => {
                               setTheme(1)

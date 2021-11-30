@@ -47,7 +47,7 @@ function BlogPageIndex() {
     <>
       <YStack>
         <YStack paddingHorizontal={25} paddingVertical={40}>
-          <Title size="xl">Dish Blog</Title>
+          <Title size="$8">Dish Blog</Title>
         </YStack>
         <Separator />
         <YStack space="$6" paddingHorizontal={25} paddingVertical={40}>

@@ -1,9 +1,3 @@
-import { OneUUID, ZeroUUID, order_by, review, useQuery, useRefetch } from '@dish/graph'
-import { Button, Input, InteractiveContainer, Paragraph, Spacer, XStack, YStack } from '@dish/ui'
-import { ChevronDown, ChevronUp } from '@tamagui/feather-icons'
-import React, { useCallback, useState } from 'react'
-import { FlatList } from 'react-native'
-
 import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { upsertUserReview } from '../../hooks/useUserReview'
@@ -13,6 +7,11 @@ import { LinkButton } from '../../views/LinkButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
+import { OneUUID, ZeroUUID, order_by, review, useQuery, useRefetch } from '@dish/graph'
+import { Button, Input, InteractiveContainer, Paragraph, Spacer, XStack, YStack } from '@dish/ui'
+import { ChevronDown, ChevronUp } from '@tamagui/feather-icons'
+import React, { useCallback, useState } from 'react'
+import { FlatList } from 'react-native'
 
 const ROADMAP_ID = ZeroUUID
 const ROADMAP_REVIEW_ID = OneUUID
@@ -138,7 +137,7 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
                           icon={<ChevronDown color="#777" size={16} />}
                         />
                       </InteractiveContainer>
-                      <Paragraph size="xl">{`${item.votes}`}</Paragraph>
+                      <Paragraph size="$8">{`${item.votes}`}</Paragraph>
                       <Paragraph>{item.icon}</Paragraph>
                       <Paragraph>{removeEmojis(item.text || '')}</Paragraph>
                     </XStack>
@@ -167,7 +166,7 @@ const Add = ({ items }: { items: review[] }) => {
   const [text, setText] = useState('')
   const [curIcon, setIcon] = useState(icons[0])
   return (
-    <XStack spacing alignItems="center">
+    <XStack space alignItems="center">
       <InteractiveContainer>
         {icons.map((icon) => (
           <Button

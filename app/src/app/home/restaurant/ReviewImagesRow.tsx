@@ -97,7 +97,7 @@ export const ReviewImagesRow = ({
   }
 
   return (
-    <XStack position="relative" alignItems="center" spacing {...stackProps}>
+    <XStack position="relative" alignItems="center" space {...stackProps}>
       <AbsoluteYStack top={5} left={0} zIndex={100}>
         {isEditing ? addButton : null}
       </AbsoluteYStack>

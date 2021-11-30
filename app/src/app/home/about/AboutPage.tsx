@@ -2,6 +2,7 @@ import { AbsoluteYStack, Paragraph, Spacer, YStack } from '@dish/ui'
 import React from 'react'
 import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg'
 
+// @ts-expect-error
 import dontPanic from '../../../assets/dont-panic.svg'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
@@ -73,7 +74,7 @@ export default function AboutPage({ item, isActive }: StackItemProps<HomeStateIt
               </Svg>
             </Link>
 
-            <Paragraph size="xl">
+            <Paragraph size="$8">
               <AbsoluteYStack
                 zIndex={1}
                 bottom={0}

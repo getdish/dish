@@ -206,7 +206,7 @@ const Content = memo(
                         </YStack>
 
                         <XStack paddingHorizontal={20} flex={1} maxHeight="100%">
-                          <YStack spacing alignItems="center">
+                          <YStack space alignItems="center">
                             <Link href={url}>
                               <Image
                                 source={{ uri: image }}
@@ -275,7 +275,7 @@ const Content = memo(
                                   right={0}
                                 >
                                   <LinearGradient
-                                    colors={[`${theme.bgCard}00`, theme.bgCard]}
+                                    colors={[`${theme.bgCard}00`, theme.bgCard.toString()]}
                                     style={StyleSheet.absoluteFill}
                                   />
                                 </AbsoluteYStack>

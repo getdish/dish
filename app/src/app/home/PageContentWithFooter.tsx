@@ -1,4 +1,5 @@
 import { LoadingItems, StackProps, YStack } from '@dish/ui'
+// @ts-ignore
 import React, { Suspense, SuspenseList, SuspenseListProps, SuspenseProps } from 'react'
 
 import { searchBarHeight } from '../../constants/constants'

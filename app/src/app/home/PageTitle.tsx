@@ -1,4 +1,5 @@
-import { Text, XStack, YStack, isStringChild, useMedia, useTheme } from '@dish/ui'
+import { isStringChild } from '../../helpers/isStringChild'
+import { Text, XStack, YStack, useTheme } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const PageTitle = memo(

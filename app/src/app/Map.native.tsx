@@ -229,7 +229,7 @@ export default function Map({
                       // },
                       textJustify: 'center',
                       symbolPlacement: 'point',
-                      textColor: theme.color,
+                      textColor: theme.color.toString(),
                       // getting typescript err here
                       // [
                       //   'case',

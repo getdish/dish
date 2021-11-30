@@ -1,3 +1,7 @@
+import { drawerWidthMax, searchBarHeight, zIndexAutocomplete } from '../constants/constants'
+import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
+import { CloseButton } from './views/CloseButton'
+import { ContentParentStore, ContentScrollView } from './views/ContentScrollView'
 import { isSafari } from '@dish/helpers'
 import {
   AbsoluteYStack,
@@ -11,11 +15,6 @@ import {
 } from '@dish/ui'
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useEffect } from 'react'
-
-import { drawerWidthMax, searchBarHeight, zIndexAutocomplete } from '../constants/constants'
-import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
-import { CloseButton } from './views/CloseButton'
-import { ContentParentStore, ContentScrollView } from './views/ContentScrollView'
 
 export const AutocompleteFrame = memo(
   ({ children, target }: { children: any; target: AutocompleteTarget }) => {
@@ -78,7 +77,7 @@ export const AutocompleteFrame = memo(
                 blurRadius={200}
                 blurType="dark"
                 position="absolute"
-                fullscreen
+                // fullscreen
               />
             )}
           </AbsoluteYStack>
@@ -88,7 +87,12 @@ export const AutocompleteFrame = memo(
             right={10}
             pointerEvents="auto"
           >
-            <CloseButton shadowed onPressOut={prevent} zIndex={1000} onPress={hideAutocompletes} />
+            <CloseButton
+              elevation="$1"
+              onPressOut={prevent}
+              zIndex={1000}
+              onPress={hideAutocompletes}
+            />
           </AbsoluteYStack>
           <YStack
             className="ease-in-out"

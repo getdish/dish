@@ -36,6 +36,7 @@ export const AutocompleteResults = memo(
           const isActive = !isWeb ? index === 0 : activeIndex === index
           return (
             <React.Fragment key={`${result.id}${index}`}>
+              {/* @ts-expect-error */}
               <Theme name={isActive ? 'active' : 'dark'}>
                 <AutocompleteItemView
                   target={target}

@@ -13,7 +13,8 @@ export const InputTagButton = (props: TagButtonProps & { isActive?: boolean }) =
       size="sm"
       closable
       subtleIcon
-      elevation={1}
+      // @ts-expect-error
+      elevation="$1"
       hideRating
       hideRank
       {...(props.isActive && {

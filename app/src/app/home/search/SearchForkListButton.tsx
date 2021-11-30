@@ -117,7 +117,7 @@ export const SearchForkListButton = memo(
           }}
         >
           {size === 'sm' ? (
-            <SmallCircleButton shadowed>
+            <SmallCircleButton elevation="$1">
               <Edit2 color="#999" size={14} />
             </SmallCircleButton>
           ) : (

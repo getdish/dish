@@ -1,7 +1,6 @@
 import { ButtonProps, StackProps, TextProps } from '@dish/ui'
 import React from 'react'
-import { TextStyle, ViewStyle } from 'react-native'
-
+import { TextStyle } from 'react-native'
 import { DRouteName } from '../../router'
 import { NavigableTag } from '../../types/tagTypes'
 

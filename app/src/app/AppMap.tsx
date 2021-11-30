@@ -364,7 +364,7 @@ const AppMapBottomFade = memo(() => {
       <LinearGradient
         pointerEvents="none"
         style={StyleSheet.absoluteFill}
-        colors={[`${theme.mapBackground}00`, theme.mapBackground]}
+        colors={[`${theme.mapBackground}00`, theme.mapBackground.toString()]}
       />
     </AbsoluteYStack>
   )
@@ -385,7 +385,7 @@ const AppMapRightFade = memo(() => {
         style={StyleSheet.absoluteFill}
         start={[0, 0]}
         end={[1, 0]}
-        colors={[`${theme.mapBackground}00`, theme.mapBackground]}
+        colors={[`${theme.mapBackground}00`, theme.mapBackground.toString()]}
       />
     </AbsoluteYStack>
   )

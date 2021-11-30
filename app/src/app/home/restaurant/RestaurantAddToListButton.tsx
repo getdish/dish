@@ -1,10 +1,8 @@
-import { Button, Tooltip, useTheme } from '@dish/ui'
-import { Plus } from '@tamagui/feather-icons'
-import React, { Suspense, useState } from 'react'
-
 import { userStore } from '../../userStore'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 import { RestaurantAddToListModal } from './RestaurantAddToListModal'
+import { Plus } from '@tamagui/feather-icons'
+import React, { Suspense, useState } from 'react'
 
 export const RestaurantAddToListButton = ({
   restaurantSlug,
@@ -17,7 +15,6 @@ export const RestaurantAddToListButton = ({
   floating?: boolean
 }) => {
   const [showModal, setShowModal] = useState(false)
-  const theme = useTheme()
   return (
     <>
       {!!(showModal && restaurantSlug) && (
@@ -27,9 +24,9 @@ export const RestaurantAddToListButton = ({
       )}
       <SmallButton
         tooltip="Add to list"
-        elevation={floating ? 1 : 0}
+        elevation={floating ? '$1' : '$0'}
         borderRadius={100}
-        icon={<Plus color={theme.color} size={16} />}
+        icon={Plus}
         onPress={() => {
           if (!userStore.promptLogin()) {
             setShowModal(true)

@@ -31,7 +31,7 @@ export const HiddenSection = (props: {
         style={[StyleSheet.absoluteFill, { top: '50%', opacity: open ? 0 : 1 }]}
         start={[0, 0]}
         end={[0, 1]}
-        colors={[theme.bgTransparent, theme.bg]}
+        colors={[theme.bgTransparent.toString(), theme.bg.toString()]}
       />
     </YStack>
   )

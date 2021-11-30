@@ -5,7 +5,7 @@ import React from 'react'
 import { light } from '../../constants/colors'
 import { SmallButton } from './SmallButton'
 
-export type FavoriteButtonProps = ButtonProps & {
+export type FavoriteButtonProps = Omit<ButtonProps, 'size'> & {
   floating?: boolean
   isFavorite: boolean
   onToggle: () => void
@@ -55,7 +55,7 @@ export const FavoriteButton = ({
         textProps={{
           opacity: 0.6,
         }}
-        elevation={floating ? 1 : 0}
+        elevation={floating ? '$1' : '$0'}
         {...rest}
       >
         {typeof children === 'number' ? `${children}` : children}

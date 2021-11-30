@@ -62,7 +62,7 @@ export const RestaurantPointsBreakdown = memo(
             </Text>
             <Spacer />
             {reviewsBreakdown.score != null ? (
-              <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
+              <Paragraph size="$3" color="rgba(0,0,0,0.7)">
                 <TextHighlight backgroundColor={light.green10}>
                   {numberFormat(Math.round(reviewsBreakdown['score']))}
                 </TextHighlight>{' '}
@@ -75,7 +75,7 @@ export const RestaurantPointsBreakdown = memo(
             ) : null}
 
             {photosBreakdown.score != null ? (
-              <Paragraph size={0.9} color="rgba(0,0,0,0.7)">
+              <Paragraph size="$3" color="rgba(0,0,0,0.7)">
                 <TextHighlight backgroundColor={light.green10}>
                   {numberFormat(Math.round(photosBreakdown['score']))}
                 </TextHighlight>{' '}
@@ -87,7 +87,7 @@ export const RestaurantPointsBreakdown = memo(
             <Separator />
             <Spacer size="$6" />
 
-            <Paragraph textAlign="center" size={0.9} color="rgba(0,0,0,0.6)">
+            <Paragraph textAlign="center" size="$3" color="rgba(0,0,0,0.6)">
               <TextHighlight fontWeight="700" backgroundColor={light.green10}>
                 {numberFormat(Math.round(nativeReviewPoints))}
               </TextHighlight>{' '}

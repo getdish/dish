@@ -7,13 +7,12 @@ import {
   Paragraph,
   Spacer,
   Text,
+  useTheme,
   XStack,
   YStack,
-  useTheme,
 } from '@dish/ui'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-
 import {
   cardFrameBorderRadius,
   cardFrameHeight,
@@ -22,14 +21,13 @@ import {
   cardFrameWidthSm,
   isWeb,
 } from '../../../constants/constants'
-import { ColorShades } from '../../../helpers/getColorsForName'
 import { CardFrame, CardFrameProps } from '../../views/CardFrame'
 import { Image } from '../../views/Image'
 
 export type CardProps = CardFrameProps &
   HoverableProps & {
-    below?: ((colors: ColorShades) => any) | JSX.Element | string | null
-    outside?: ((colors: ColorShades) => any) | JSX.Element | string | null
+    below?: (() => any) | JSX.Element | string | null
+    outside?: (() => any) | JSX.Element | string | null
     photo?: string | JSX.Element | null
     title?: string | JSX.Element | null
     subTitle?: string | null
@@ -143,7 +141,7 @@ export function Card(props: CardProps) {
         />
       )}
 
-      {typeof outside === 'function' ? outside({}) : outside}
+      {typeof outside === 'function' ? outside() : outside}
 
       <YStack
         className="safari-fix-overflow"
@@ -216,7 +214,7 @@ export function Card(props: CardProps) {
                   </Paragraph>
                 )}
 
-                {typeof below === 'function' ? below({}) : below}
+                {typeof below === 'function' ? below() : below}
               </YStack>
             </XStack>
           </YStack>

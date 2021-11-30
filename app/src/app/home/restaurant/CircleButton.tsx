@@ -14,7 +14,7 @@ export const CircleButton = (props: StackProps & { floating?: boolean }) => {
       borderWidth={1}
       borderColor={theme.borderColor}
       hoverStyle={{
-        borderColor: theme.borderColorHover,
+        borderColor: theme.borderColor2,
         backgroundColor: theme.bg3,
       }}
       {...(props.floating && {

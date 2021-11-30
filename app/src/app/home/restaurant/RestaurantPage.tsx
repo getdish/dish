@@ -225,7 +225,7 @@ const RestaurantPage = memo(
                   {/* title row */}
                   <XStack paddingLeft={20} alignItems="flex-end" position="relative">
                     <YStack width={66} height={66} marginRight={-15} marginBottom={0} zIndex={200}>
-                      <Theme name={themeName}>
+                      <Theme name={themeName as any}>
                         <RestaurantRatingView floating size={66} restaurant={restaurant} />
                       </Theme>
                     </YStack>

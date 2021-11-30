@@ -2,8 +2,6 @@ import { graphql } from '@dish/graph'
 import { Theme } from '@dish/ui'
 import { Edit } from '@tamagui/feather-icons'
 import React from 'react'
-
-import { isWeb } from '../../../constants/constants'
 import { useUserReviewQuery } from '../../hooks/useUserReview'
 import { Link } from '../../views/Link'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
@@ -21,6 +19,7 @@ export const RestaurantAddCommentButton = graphql(
   }) => {
     const [review] = useUserReviewQuery(restaurantSlug)
     return (
+      // @ts-expect-error
       <Theme name="active">
         <Link name="restaurantReview" params={{ slug: restaurantSlug || '' }}>
           <SmallButton
@@ -28,11 +27,11 @@ export const RestaurantAddCommentButton = graphql(
             pressStyle={{
               opacity: 0.6,
             }}
-            elevation={1}
+            elevation="$1"
             textProps={{
               fontWeight: '800',
             }}
-            icon={<Edit color={isWeb ? 'var(--color)' : '#000'} size={size ?? 16} />}
+            icon={Edit}
             {...props}
           >
             {hideLabel ? null : !!review?.text ? 'Edit' : 'Review'}

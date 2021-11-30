@@ -1,4 +1,4 @@
-import { XStack, useMedia, useTheme } from '@dish/ui'
+import { XStack } from '@dish/ui'
 import React, { forwardRef } from 'react'
 
 export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
@@ -18,6 +18,7 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       hoverStyle={{
         backgroundColor: 'rgba(150,150,150,0.1)',
       }}
+      // @ts-ignore
       focusStyle={{
         backgroundColor: 'rgba(150,150,150,0.1)',
       }}
@@ -29,6 +30,7 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
         hoverStyle: {
           backgroundColor: '$bg2',
         },
+        // @ts-ignore
         focusStyle: {
           backgroundColor: '$bg2',
         },

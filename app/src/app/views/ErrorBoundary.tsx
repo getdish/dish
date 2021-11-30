@@ -45,7 +45,7 @@ export function ErrorBoundary({ children, name }: { children: any; name: string 
             {process.env.NODE_ENV === 'development' && (
               <YStack maxWidth="100%" flex={1} overflow="hidden">
                 <ScrollView style={{ width: '100%' }}>
-                  <YStack spacing>
+                  <YStack space>
                     {tryButton}
                     <Text fontWeight="400" className="white-space-pre font-mono" color="#fff">
                       {error?.message}

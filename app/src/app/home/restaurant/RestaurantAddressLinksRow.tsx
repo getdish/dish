@@ -25,8 +25,6 @@ export const RestaurantAddressLinksRow = memo(
       showAddress?: AddressSize
     }) => {
       const [restaurant] = queryRestaurant(restaurantSlug)
-      // const fontSize = size == 'lg' ? 16 : 14
-      const iconSize = size === 'lg' ? 18 : 16
       const theme = useTheme()
       const iconColor = theme.color
 
@@ -38,20 +36,12 @@ export const RestaurantAddressLinksRow = memo(
         <XStack alignItems="center" space="$1">
           {!!restaurant.telephone && (
             <Link href={`tel:${restaurant.telephone}`}>
-              <SmallButton
-                borderWidth={0}
-                tooltip="Call"
-                icon={<PhoneCall color={iconColor} size={iconSize} />}
-              />
+              <SmallButton borderWidth={0} tooltip="Call" icon={PhoneCall} />
             </Link>
           )}
           {!!restaurant.website && (
             <Link href={restaurant.website ?? ''}>
-              <SmallButton
-                borderWidth={0}
-                tooltip="Website"
-                icon={<Link2 color={iconColor} size={iconSize} />}
-              />
+              <SmallButton borderWidth={0} tooltip="Website" icon={Link2} />
             </Link>
           )}
         </XStack>
@@ -74,11 +64,7 @@ export const RestaurantAddressLinksRow = memo(
               <HoverablePopover
                 placement="right"
                 allowHoverOnContent
-                trigger={(props) => (
-                  <SmallCircleButton {...props}>
-                    <ExternalLink size={size === 'xs' ? 14 : 10} color={iconColor} />
-                  </SmallCircleButton>
-                )}
+                trigger={(props) => <SmallCircleButton icon={ExternalLink} {...props} />}
               >
                 <Box padding={10}>{linkElements}</Box>
               </HoverablePopover>

@@ -1,21 +1,11 @@
-import {
-  Button,
-  AbsoluteYStack,
-  Modal,
-  XStack,
-  YStack,
-  useMedia,
-  useSafeAreaInsets,
-} from '@dish/ui'
+// @ts-nocheck
+import { AbsoluteYStack, Button, Modal, useMedia, useSafeAreaInsets } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
-import { Pressable, View } from 'react-native'
-
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
-import { UserAvatar } from './home/user/UserAvatar'
 import { useUserStore } from './userStore'
 import { CloseButton } from './views/CloseButton'
 import { PaneControlButtons } from './views/PaneControlButtons'
@@ -66,7 +56,15 @@ export const AppMenuButtonFloating = memo(() => {
         zIndex={zIndexDrawer - 1}
         // pointerEvents="none"
       >
-        <Button elevation="$3" br="$8" w="$8" h="$8" size="$6" icon={Menu} onPress={appMenu.show} />
+        <Button
+          elevation="$3"
+          borderRadius="$8"
+          w="$8"
+          h="$8"
+          size="$6"
+          icon={Menu}
+          onPress={appMenu.show}
+        />
         {/* <YStack
           // className="ease-in-out-faster"
           shadowColor="rgba(0,0,0,0.25)"

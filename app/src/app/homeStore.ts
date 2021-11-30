@@ -342,6 +342,7 @@ class HomeStore extends Store {
           center: routeState.center,
           span: routeState.span,
           region,
+          // @ts-expect-error
           activeTags,
           searchQuery,
           ...(isChangingRegion && {

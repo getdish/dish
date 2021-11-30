@@ -1,9 +1,8 @@
 import { Theme, XStack } from '@dish/ui'
 import React, { memo } from 'react'
-
 import { tagLenses } from '../../constants/localTags'
 import { NavigableTag } from '../../types/tagTypes'
-import { useHomeStore, useHomeStoreSelector } from '../homeStore'
+import { useHomeStoreSelector } from '../homeStore'
 import { Link } from '../views/Link'
 import { GradientButton } from './GradientButton'
 import { TagsText } from './TagsText'
@@ -35,6 +34,7 @@ export const HomeTopSearches = memo(() => {
         )
         if (activeTags[search.tags[0]?.slug || '']) {
           return (
+            // @ts-expect-error
             <Theme key={index} name="active">
               {contents}
             </Theme>

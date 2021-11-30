@@ -91,11 +91,11 @@ export const RestaurantCardContent = graphql(
           colorsKey={restaurant.slug || ''}
           dimImage={dimImage}
           backgroundColor={backgroundColor}
-          outside={(colors) => (
+          outside={() => (
             <>
               {!!below && (
                 <XStack zIndex={10000} pointerEvents="none" position="absolute" fullscreen>
-                  {typeof below === 'function' ? below(colors) : below}
+                  {typeof below === 'function' ? below() : below}
                 </XStack>
               )}
               <AbsoluteYStack scale={size === 'xs' ? 0.9 : 1} top={-6} right={-6} zIndex={100}>

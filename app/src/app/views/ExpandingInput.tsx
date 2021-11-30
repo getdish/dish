@@ -1,8 +1,8 @@
-import { Input, InputProps } from '@dish/ui'
+import { Input } from '@dish/ui'
 import React, { useState } from 'react'
 
 // only works for mulitline
-export function ExpandingInput(props: InputProps) {
+export function ExpandingInput(props: any) {
   const [size, setSize] = useState({
     width: 'auto' as any,
     height: 'auto' as any,

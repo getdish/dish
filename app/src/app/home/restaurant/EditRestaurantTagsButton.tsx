@@ -1,3 +1,8 @@
+import { promote } from '../../../helpers/listHelpers'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { CloseButton } from '../../views/CloseButton'
+import { PaneControlButtons } from '../../views/PaneControlButtons'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { graphql, restaurant_tag } from '@dish/graph'
 import {
   Button,
@@ -16,12 +21,6 @@ import { ChevronDown, ChevronUp, Edit, Plus, X } from '@tamagui/feather-icons'
 import { sortBy } from 'lodash'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { Image, ScrollView } from 'react-native'
-
-import { promote } from '../../../helpers/listHelpers'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { CloseButton } from '../../views/CloseButton'
-import { PaneControlButtons } from '../../views/PaneControlButtons'
-import { SlantedTitle } from '../../views/SlantedTitle'
 
 export type EditTagsProps = {
   restaurantSlug: string
@@ -98,7 +97,7 @@ const EditTagsModal = memo(
     function getDishItem(dish?: restaurant_tag, before: any = null, after: any = null) {
       if (!dish) return null
       return (
-        <XStack key={dish.tag?.slug} spacing padding={5} alignItems="center">
+        <XStack key={dish.tag?.slug} space padding={5} alignItems="center">
           {before}
           {!!dish.photos ? (
             <Image
@@ -106,7 +105,7 @@ const EditTagsModal = memo(
               style={{ width: 40, height: 40, borderRadius: 100 }}
             />
           ) : (
-            <Circle backgroundColor="rgba(150,150,150,0.29)" size={40} />
+            <Circle backgroundColor="rgba(150,150,150,0.29)" size="$10" />
           )}
           <Title>{dish.tag?.name}</Title>
           <YStack flex={1} />
@@ -195,6 +194,7 @@ const EditTagsModal = memo(
         </ScrollView>
 
         <XStack flexShrink={0}>
+          {/* @ts-expect-error */}
           <Theme name="active">
             <Button onPress={() => onChange?.(slugs)}>Save</Button>
           </Theme>

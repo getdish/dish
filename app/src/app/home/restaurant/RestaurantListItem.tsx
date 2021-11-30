@@ -465,7 +465,7 @@ const RestaurantListItemContent = memo(
                         opacity={0.5}
                         borderRadius={0}
                         borderWidth={0}
-                        size="$4"
+                        size="sm"
                         restaurantSlug={restaurantSlug}
                       />
                     </YStack>
@@ -495,7 +495,7 @@ const RestaurantListItemContent = memo(
                 </Text>
 
                 <Circle
-                  size={6}
+                  size="$6"
                   marginHorizontal={4}
                   backgroundColor={open.isOpen ? light.green8 : light.red8}
                 />

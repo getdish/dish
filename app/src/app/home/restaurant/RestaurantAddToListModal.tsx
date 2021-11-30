@@ -105,7 +105,7 @@ export const RestaurantAddToListModal = graphql(
               >
                 <XStack paddingHorizontal={20} paddingVertical={3}>
                   <YStack flex={1}>
-                    <Title size="sm">{list?.name}</Title>
+                    <Title size="$5">{list?.name}</Title>
                   </YStack>
 
                   {!isAdded && (

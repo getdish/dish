@@ -39,7 +39,7 @@
 //         })
 
 //     return (
-//       <XStack position="relative" alignItems="center" spacing>
+//       <XStack position="relative" alignItems="center" space>
 //         {props.editable && (
 //           <EditRestaurantTagsButton
 //             restaurantSlug={props.restaurantSlug}

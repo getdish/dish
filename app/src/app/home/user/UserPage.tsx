@@ -325,7 +325,7 @@ const UserPageContent = memo(
             {/* <YStack>
               <Separator />
               <Spacer />
-              <XStack spacing alignItems="center" justifyContent="center">
+              <XStack space alignItems="center" justifyContent="center">
                 <Paragraph size="sm" fontWeight="700">
                   {characters[user.charIndex ?? 0] || '👻'}
                 </Paragraph>
@@ -383,7 +383,7 @@ const UserPageContent = memo(
               {!pane && !!user.about && (
                 <YStack>
                   <SmallTitle>About</SmallTitle>
-                  <Paragraph size="lg">{user.about}</Paragraph>
+                  <Paragraph size="$6">{user.about}</Paragraph>
                 </YStack>
               )}
 
@@ -496,10 +496,10 @@ const UserHeader = memo(
           <PaneControlButtonsLeft>
             {isOwnProfile && (
               <Link name="userEdit">
-                <SmallButton elevation={1}>Edit profile</SmallButton>
+                <SmallButton elevation="$1">Edit profile</SmallButton>
               </Link>
             )}
-            <UserSubscribeButton elevation={1} username={username} />
+            <UserSubscribeButton elevation="$1" username={username} />
           </PaneControlButtonsLeft>
 
           <YStack flex={1} paddingHorizontal={20} paddingTop={55}>
@@ -553,13 +553,7 @@ const UserSubscribeButton = ({ username, ...rest }: SmallButtonProps & { usernam
   const theme = useTheme()
 
   return (
-    <SmallButton
-      tooltip="Follow user"
-      borderRadius={100}
-      icon={<Plus color={theme.color} size={16} />}
-      onPress={() => {}}
-      {...rest}
-    >
+    <SmallButton tooltip="Follow user" borderRadius={100} icon={Plus} onPress={() => {}} {...rest}>
       Subscribe
     </SmallButton>
   )

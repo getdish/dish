@@ -1,9 +1,3 @@
-import { Modal, Text, Theme, XStack, YStack, useMedia, useTheme } from '@dish/ui'
-import { Filter } from '@tamagui/feather-icons'
-import { groupBy, sortBy } from 'lodash'
-import React, { memo, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-
 import { isWeb } from '../../../constants/constants'
 import { tagFilters } from '../../../constants/localTags'
 import { tagGroup, tagSort } from '../../../constants/tagMeta'
@@ -15,6 +9,11 @@ import { FilterButton } from '../../views/FilterButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
+import { Modal, Text, Theme, XStack, YStack, useMedia, useTheme } from '@dish/ui'
+import { Filter } from '@tamagui/feather-icons'
+import { groupBy, sortBy } from 'lodash'
+import React, { memo, useState } from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 type FilterBarProps = { activeTags: HomeActiveTagsRecord }
 
@@ -102,7 +101,7 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
           return (
             <FilterButton
               key={tag.id + isActive}
-              tag={tag}
+              tag={tag as any}
               index={index - groupIndex}
               isActive={isActive}
               position="relative"

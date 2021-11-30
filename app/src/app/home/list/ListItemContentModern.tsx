@@ -71,7 +71,7 @@ export const ListItemContentModern = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <YStack
-          hoverStyle={{ backgroundColor: theme.backgroundColorTransluscent }}
+          hoverStyle={{ backgroundColor: theme.bgTransparent }}
           maxWidth="100%"
           width="100%"
           paddingVertical={16}
@@ -172,7 +172,7 @@ export const ListItemContentModern = memo(
               )}
 
               {!!editable && isEditing && (
-                <SmallButton elevation={1} onPress={() => setIsEditing(false)}>
+                <SmallButton elevation="$1" onPress={() => setIsEditing(false)}>
                   Cancel
                 </SmallButton>
               )}
@@ -215,7 +215,7 @@ export const ListItemContentModern = memo(
                 </>
               )}
 
-              <RestaurantFavoriteButton size="$4" restaurantSlug={restaurant.slug || ''} />
+              <RestaurantFavoriteButton size="sm" restaurantSlug={restaurant.slug || ''} />
             </Column>
 
             <Column width={160} alignItems="flex-start">
@@ -225,6 +225,7 @@ export const ListItemContentModern = memo(
             </Column>
 
             <Column width={20}>
+              {/* @ts-expect-error */}
               <Circle size={8} backgroundColor={open.isOpen ? light.green8 : light.red8} />
             </Column>
 
