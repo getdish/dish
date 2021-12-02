@@ -1,9 +1,7 @@
 import './lib/serverEnv'
-
-import { join } from 'path'
-
 import { run as oclifRun } from '@oclif/command'
 import { existsSync, moveSync } from 'fs-extra'
+import { join } from 'path'
 
 const tsConfFile = join(require.resolve(__dirname), '..', '..', 'tsconfig.json')
 const tmpFile = `${tsConfFile}.bak`
@@ -16,12 +14,12 @@ const moveBack = () => {
 }
 
 export async function run() {
-  try {
-    moveSync(tsConfFile, tmpFile)
-  } catch (err) {
-    console.log('error moving', tsConfFile, err)
-    moveBack()
-  }
+  // try {
+  //   moveSync(tsConfFile, tmpFile)
+  // } catch (err) {
+  //   console.log('error moving', tsConfFile, err)
+  //   moveBack()
+  // }
 
   setTimeout(() => {
     moveBack()

@@ -1,8 +1,16 @@
-import { AbsoluteXStack, H1, Paragraph, XStack, YStack, prevent, useTheme } from '@dish/ui'
+import {
+  AbsoluteXStack,
+  getFontSizeToken,
+  H2,
+  Paragraph,
+  prevent,
+  useTheme,
+  XStack,
+  YStack,
+} from '@dish/ui'
 import { ChevronRight } from '@tamagui/feather-icons'
 import React, { RefObject, useRef, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-
 import { isWeb } from '../../constants/constants'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { getWindowWidth } from '../../helpers/getWindow'
@@ -32,7 +40,7 @@ export const FeedCard = (props: FeedCardProps) => {
     tags = [],
     color,
     // listColors,
-    size = 'sm',
+    size = '$4',
     fontTheme,
     children,
     numItems,
@@ -122,7 +130,7 @@ const FeedCardContent = ({
   title,
   author,
   tags = [],
-  size = 'sm',
+  size = '$4',
   fontTheme,
   children,
   numItems,
@@ -133,13 +141,10 @@ const FeedCardContent = ({
   theme: cardTheme = 'modern',
 }: FeedCardProps & { galleryRef: RefObject<GalleryRef> }) => {
   const titleLen = typeof title === 'string' ? title.length : 20
-  const lenScale =
-    titleLen > 55 ? 0.6 : titleLen > 40 ? 0.75 : titleLen > 30 ? 0.9 : titleLen > 20 ? 1.05 : 1.5
-  const tagScale = emphasizeTag ? 0.8 : 1
-  const sizeScale = size === 'xs' ? 0.7 : size === 'sm' ? 0.8 : size === 'lg' ? 1.1 : 1
-  const isSmallDevice = Math.min(getWindowWidth(), getWindowWidth()) < 420
-  const deviceScale = isSmallDevice ? 0.75 : 1
-  const fontSize = Math.round(24 * lenScale * tagScale * sizeScale * deviceScale)
+  const titleSize = getFontSizeToken(size, {
+    relativeSize: Math.max(7, Math.min(10, Math.round(150 / titleLen))),
+  })
+  console.log('titleSize', titleSize)
   const theme = useTheme()
   return (
     <XStack
@@ -185,17 +190,13 @@ const FeedCardContent = ({
 
         <YStack p="$2" br="$2" position="relative" overflow="hidden" space="$1">
           <YStack position="relative" display={isWeb ? 'block' : 'flex'}>
-            <H1 color="$color3" fontSize={fontSize} lineHeight={fontSize * 1.2}>
+            <H2 color="$color3" size={titleSize}>
               {title}
-            </H1>
+            </H2>
           </YStack>
 
           {!!(author || typeof numItems !== 'undefined') && (
-            <Paragraph
-              size={size === 'xxs' || size === 'xs' || size === 'sm' ? '$2' : '$3'}
-              fontWeight="300"
-              opacity={0.6}
-            >
+            <Paragraph size={size} fontWeight="300" opacity={0.6}>
               {typeof numItems !== 'undefined' ? (
                 <>{`${pluralize(numItems, 'item')}`} &middot; </>
               ) : (

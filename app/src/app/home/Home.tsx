@@ -1,7 +1,15 @@
-import { XStack, YStack, supportsTouchWeb, useMedia } from '@dish/ui'
+import {
+  XStack,
+  YStack,
+  supportsTouchWeb,
+  useMedia,
+  LinearGradient,
+  useTheme,
+  Circle,
+} from '@dish/ui'
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
-import { Keyboard } from 'react-native'
+import { StyleSheet, Keyboard } from 'react-native'
 
 import {
   drawerWidthMax,
@@ -168,8 +176,20 @@ const HomeContainerLarge = (props) => {
       >
         <XStack opacity={0.5} zi={-1} fullscreen br="$4" backgroundColor="$bg" />
 
-        <XStack zi={100} pos="absolute" top={0} left={0} right={0}>
+        <XStack
+          pe="none"
+          br="$4"
+          overflow="hidden"
+          zi={100}
+          pos="absolute"
+          top={0}
+          left={0}
+          right={0}
+          height={100}
+          ai="flex-start"
+        >
           <AppSearchBarInline />
+          <AppSearchBarFade />
         </XStack>
 
         <XStack pos="absolute" fullscreen top={searchBarHeight}>
@@ -182,5 +202,19 @@ const HomeContainerLarge = (props) => {
         <DrawerPortalProvider />
       </YStack>
     </YStack>
+  )
+}
+
+const AppSearchBarFade = () => {
+  const theme = useTheme()
+
+  return (
+    <LinearGradient
+      // TODO need to dedupe react-native when linked in or else absolutefill breaks
+      style={[{ top: 0, right: 0, bottom: 0, left: 0, position: 'absolute', zIndex: -1 }]}
+      // start={[0, 0]}
+      // end={[0, 1]}
+      colors={[theme.bg.toString(), theme.bgTransparent.toString()]}
+    />
   )
 }

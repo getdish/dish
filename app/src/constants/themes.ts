@@ -20,7 +20,8 @@ const lightBase = createTheme({
   bg4: tokens.color.gray5,
   bgDark: '#eee',
   bgCard: '#ffffff',
-  bgTransparent: tokens.color.grayA1,
+  bgTransparent: '#ffffff00',
+  bgSemiTransparent: tokens.color.grayA1,
   borderColor: tokens.color.gray4,
   borderColor2: tokens.color.gray6,
   colorBright: '#000',
@@ -46,7 +47,8 @@ const darkBase: BaseTheme = {
   bg3: tokens.color.gray3Dark,
   bg4: tokens.color.gray4Dark,
   bgDark: '#000',
-  bgTransparent: tokens.color.grayA1Dark,
+  bgTransparent: '#00000000',
+  bgSemiTransparent: tokens.color.grayA1Dark,
   borderColor: tokens.color.gray3Dark,
   borderColor2: tokens.color.gray4Dark,
   color: '#ddd',
@@ -72,9 +74,6 @@ for (const key of colorNames) {
     const colorKey = isDark ? `${key}Dark` : key
     const colorValues = Colors[colorKey]
     const offset = isDark ? -1 : 0
-    if (!colorValues[`${key}${1 + offset}`]) {
-      console.log('huh', colorValues, key, offset)
-    }
     const bgTransparent = colorValues[`${key}${2 + offset}`]
       .replace('hsl', 'hsla')
       .replace(')', ',0.2)')

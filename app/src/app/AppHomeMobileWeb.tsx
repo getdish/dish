@@ -42,7 +42,6 @@ export const AppHomeMobileWeb = () => {
     return reaction(
       autocompletesStore,
       (x) => {
-        console.log('huh?', x)
         return x?.visible
       },
       (visible) => {

@@ -16,7 +16,7 @@ import {
   prevent,
   useTheme,
   ButtonProps,
-  getIconSize,
+  getFontSize,
   Button,
   Paragraph,
 } from '@dish/ui'
@@ -175,9 +175,8 @@ const TagButtonInner = (props: TagButtonProps) => {
 
   const theme = useTheme()
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
-  const pieSize = getIconSize(size)
-  console.log('what the fuc', size, pieSize)
-  const smallerFontSize = getIconSize(size, -1)
+  const fontSize = getFontSize(size)
+  const smallerFontSize = getFontSize(size, { relativeSize: -1 })
   const showRank = !hideRank
 
   const rankElement = !onlyIcon && showRank && (
@@ -211,15 +210,15 @@ const TagButtonInner = (props: TagButtonProps) => {
       <Image
         source={{ uri: icon }}
         style={{
-          width: pieSize.toString(),
-          height: pieSize.toString(),
+          width: fontSize.toString(),
+          height: fontSize.toString(),
           borderRadius: 1000,
           display: isWeb ? ('inline-flex' as any) : 'flex',
           marginVertical: -2,
         }}
       />
     ) : (
-      <Text pointerEvents="none" fontSize={pieSize}>
+      <Text pointerEvents="none" fontSize={fontSize}>
         {icon}
       </Text>
     )
@@ -266,15 +265,15 @@ const TagButtonInner = (props: TagButtonProps) => {
                 position="relative"
                 backgroundColor={theme.bg4}
                 borderRadius={100}
-                width={pieSize}
-                height={pieSize}
+                width={fontSize}
+                height={fontSize}
                 transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
                 // borderWidth={1}
                 borderColor={theme.bg3}
                 opacity={floating ? 1 : 0.7}
               >
                 <Pie
-                  size={pieSize}
+                  size={fontSize}
                   percent={rating * 10}
                   color={floating ? `#fff` : theme.color.toString()}
                 />
@@ -323,7 +322,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           vote={vote}
           key={`${slug}${props.restaurant?.slug}${userTagVotes.vote}`}
           color={theme.color}
-          scale={Math.round(+pieSize / 16)}
+          scale={Math.round(+fontSize / 16)}
           disablePopover={noLink}
         />
       )}

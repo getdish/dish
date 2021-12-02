@@ -28,7 +28,9 @@ export const AppMenuButton = memo(() => {
               {...props}
               onPress={() => appMenu.setIsVisible(!showUserMenu)}
             >
-              <Text display={!userStore.isLoggedIn || media.sm ? 'none' : 'flex'}>Signup</Text>
+              <Text display={userStore.isLoggedIn ? 'none' : 'flex'} $sm={{ display: 'none' }}>
+                Signup
+              </Text>
             </AppMenuLinkButton>
           )
         }}

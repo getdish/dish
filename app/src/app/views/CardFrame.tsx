@@ -1,4 +1,4 @@
-import { YStack, useTheme } from '@dish/ui'
+import { YStack, useTheme, SizeTokens } from '@dish/ui'
 // TODO variant for width/height
 import React from 'react'
 
@@ -13,6 +13,7 @@ import {
 } from '../../constants/constants'
 
 export type CardFrameProps = {
+  size?: SizeTokens
   aspectFixed?: boolean
   backgroundColor?: string | null
   borderColor?: string | null
@@ -27,7 +28,6 @@ export type CardFrameProps = {
   overflowHidden?: boolean
   hoverEffect?: 'scale' | 'background' | null
   pressable?: boolean
-  size?: 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
   skew?: boolean
   square?: boolean
   transparent?: boolean
@@ -79,41 +79,41 @@ export const CardFrame = ({
       {...(aspectFixed && {
         width: cardFrameWidth,
       })}
-      {...(size === 'sm' && {
-        width: cardFrameWidthSm,
-        minWidth: cardFrameWidthSm,
-        height: cardFrameHeightSm,
-      })}
-      {...(size === 'lg' && {
-        width: cardFrameWidthLg,
-        minWidth: cardFrameWidthLg,
-        height: cardFrameHeightLg,
-        maxHeight: cardFrameHeightLg,
-      })}
-      {...(size === 'sm' &&
-        square && {
-          height: 100,
-        })}
-      {...(size === 'md' &&
-        square && {
-          height: cardFrameWidth,
-        })}
-      {...(size === 'lg' &&
-        square && {
-          height: cardFrameWidthLg,
-        })}
-      {...(size === 'xs' && {
-        minWidth: 140,
-        width: 'auto',
-        maxWidth: 250,
-        height: 88,
-      })}
-      {...(size === 'xxs' && {
-        minWidth: 140,
-        width: 'auto',
-        maxWidth: 250,
-        height: 48,
-      })}
+      // {...(size === 'sm' && {
+      //   width: cardFrameWidthSm,
+      //   minWidth: cardFrameWidthSm,
+      //   height: cardFrameHeightSm,
+      // })}
+      // {...(size === 'lg' && {
+      //   width: cardFrameWidthLg,
+      //   minWidth: cardFrameWidthLg,
+      //   height: cardFrameHeightLg,
+      //   maxHeight: cardFrameHeightLg,
+      // })}
+      // {...(size === 'sm' &&
+      //   square && {
+      //     height: 100,
+      //   })}
+      // {...(size === 'md' &&
+      //   square && {
+      //     height: cardFrameWidth,
+      //   })}
+      // {...(size === 'lg' &&
+      //   square && {
+      //     height: cardFrameWidthLg,
+      //   })}
+      // {...(size === 'xs' && {
+      //   minWidth: 140,
+      //   width: 'auto',
+      //   maxWidth: 250,
+      //   height: 88,
+      // })}
+      // {...(size === 'xxs' && {
+      //   minWidth: 140,
+      //   width: 'auto',
+      //   maxWidth: 250,
+      //   height: 48,
+      // })}
       {...(skew && {
         transform: [{ skewX: '-12deg' }],
       })}

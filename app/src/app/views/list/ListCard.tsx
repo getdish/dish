@@ -41,7 +41,7 @@ const ListCardContent = graphql((props: ListCardProps) => {
       numItems={numItems}
       {...props}
       tags={
-        props.size === 'xs'
+        props.size === '$3'
           ? []
           : list
               ?.tags({ limit: 2 })
@@ -156,7 +156,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
           {...feedCardProps}
         >
           {!props.size?.endsWith('xs') && (
-            <YStack pos="absolute" top="$1" right="$1" als="flex-start" x={-5}>
+            <YStack pos="absolute" top="$2" right="$1" als="flex-start" x={-2}>
               <Suspense fallback={null}>
                 <ListFavoriteButton list={props.list} query={props.query} />
               </Suspense>

@@ -97,7 +97,6 @@ export function Card(props: CardProps) {
     ...cardFrameProps
   } = props
   const hoverable = !!(onHoverIn || onHoverOut)
-  const isSm = size === 'sm'
   const strTitle = typeof title === 'string' ? title : 'hello world'
   const len = strTitle.length
   const lenScale = len > 50 ? 0.7 : len > 40 ? 0.8 : len > 30 ? 0.9 : 1
