@@ -2,14 +2,14 @@
   "name": "@dish/worker-app",
   "version": "0.0.1",
   "source": "src/index.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
+  "main": "dist/cjs",
+  "module": "dist/esm",
   "typings": "types.d.ts",
   "sideEffects": false,
   "license": "none",
   "scripts": {
-    "build": "dish-build",
-    "watch": "dish-build --watch",
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch",
     "start": "node dist/index.js",
     "start:clear": "CLEAR_JOBS=1 node dist/index.js",
     "repl": "npx bull-repl connect",
@@ -18,11 +18,11 @@
   "dependencies": {
     "@bull-board/api": "^3.2.8",
     "@bull-board/express": "^3.2.8",
-    "@dish/build": "^1.0.0-alpha.2",
     "@dish/common": "*",
     "@dish/crawlers": "*",
     "@dish/helpers": "*",
     "@dish/worker": "*",
+    "@tamagui/build": "^1.0.0-alpha.32",
     "@types/bull": "^3.15.1",
     "bull": "^3.22.8",
     "bull-board": "^2.1.2",
@@ -31,6 +31,7 @@
     "react": "*"
   },
   "devDependencies": {
+    "@tamagui/build": "^1.0.0-alpha.32",
     "typescript": "*"
   }
 }

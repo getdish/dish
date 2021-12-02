@@ -44,9 +44,6 @@ COPY app app
 COPY dsh dsh
 COPY etc/dsh_ctl_sh_deps etc/dsh_ctl_sh_deps
 
-# link dish-build bugfix
-# RUN ln -s /app/packages/dish-build/dish-build.js /app/node_modules/.bin/dish-build
-
 RUN yarn build:js
 
 # remove anything here to preserve cache: package.json scripts, ...

@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "sideEffects": false,
   "source": "src/index.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
+  "main": "dist/cjs",
+  "module": "dist/esm",
   "typings": "types",
   "scripts": {
-    "build": "dish-build legacy",
-    "watch": "dish-build --watch legacy"
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch"
   },
   "dependencies": {
     "@dish/async": "*",
@@ -21,7 +21,7 @@
     "pg": "^8.7.1"
   },
   "devDependencies": {
-    "@dish/build": "^1.0.0-alpha.2"
+    "@tamagui/build": "^1.0.0-alpha.32"
   },
   "publishConfig": {
     "access": "public"

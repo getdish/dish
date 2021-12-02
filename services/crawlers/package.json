@@ -2,8 +2,8 @@
   "name": "@dish/crawlers",
   "version": "0.0.1",
   "source": "src/index.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
+  "main": "dist/cjs",
+  "module": "dist/esm",
   "sideEffects": false,
   "testConfig": {
     "isolate": [
@@ -13,8 +13,8 @@
   },
   "scripts": {
     "start": "node dist/index.js",
-    "build": "dish-build skip-types",
-    "watch": "dish-build --watch skip-types",
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch",
     "crawl:one": "SLUG=$SLUG node -r esbuild-register ./scripts/crawl_one.ts",
     "test": "DISH_DEBUG=1 ./scripts/run_tests.sh",
     "test:idempotent": "ava test/idempotent/* --verbose --serial",
@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@dish/async": "*",
-    "@dish/build": "^1.0.0-alpha.2",
     "@dish/common": "*",
     "@dish/graph": "*",
     "@dish/helpers": "*",
@@ -58,6 +57,7 @@
     "transliteration": "^2.1.8"
   },
   "devDependencies": {
+    "@tamagui/build": "^1.0.0-alpha.32",
     "@types/cheerio": "^0.22.24",
     "@types/pg": "^7.14.10",
     "@types/puppeteer": "^5.4.3",

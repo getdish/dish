@@ -3,16 +3,15 @@
   "version": "0.0.1",
   "sideEffects": false,
   "source": "src/index.ts",
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
+  "main": "dist/cjs",
+  "module": "dist/esm",
   "typings": "types",
   "scripts": {
-    "build": "dish-build legacy",
-    "watch": "dish-build legacy --watch"
+    "build": "tamagui-build",
+    "watch": "tamagui-build --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
-    "@dish/build": "^1.0.0-alpha.2",
     "@dish/helpers": "*",
     "@dish/proxy-worm": "*",
     "@dish/server": "*",
@@ -20,6 +19,7 @@
     "@mdx-js/loader": "^1.6.22",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.2",
     "@tamagui/babel-plugin": "^1.0.0-alpha.32",
+    "@tamagui/build": "^1.0.0-alpha.32",
     "@tamagui/static": "^1.0.0-alpha.32",
     "@types/node": "^16.11.10",
     "@vue/preload-webpack-plugin": "^2.0.0",
