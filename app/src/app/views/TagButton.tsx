@@ -175,8 +175,8 @@ const TagButtonInner = (props: TagButtonProps) => {
 
   const theme = useTheme()
   const ratingPts = typeof rating === 'number' ? rating * 10 - 50 : 0
-  const fontSize = getFontSize(size)
-  const smallerFontSize = getFontSize(size, { relativeSize: -1 })
+  const fontSize = getFontSize(size as any)
+  const smallerFontSize = getFontSize(size as any, { relativeSize: -1 })
   const showRank = !hideRank
 
   const rankElement = !onlyIcon && showRank && (

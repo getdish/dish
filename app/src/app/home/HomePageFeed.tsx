@@ -1,3 +1,14 @@
+import { tagLenses } from '../../constants/localTags'
+import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
+import { UseSetAppMapProps, appMapStore, useSetAppMap } from '../appMapStore'
+import { setLocation } from '../setLocation'
+import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
+import { Link } from '../views/Link'
+import { SlantedTitle } from '../views/SlantedTitle'
+import { ListCard } from '../views/list/ListCard'
+import { FeedCard } from './FeedCard'
+import { homePageStore } from './homePageStore'
+import { RestaurantCard } from './restaurant/RestaurantCard'
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import {
@@ -17,18 +28,6 @@ import { Plus } from '@tamagui/feather-icons'
 import getCenter from '@turf/center'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
-
-import { tagLenses } from '../../constants/localTags'
-import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
-import { UseSetAppMapProps, appMapStore, useSetAppMap } from '../appMapStore'
-import { setLocation } from '../setLocation'
-import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
-import { Link } from '../views/Link'
-import { ListCard } from '../views/list/ListCard'
-import { SlantedTitle } from '../views/SlantedTitle'
-import { FeedCard } from './FeedCard'
-import { homePageStore } from './homePageStore'
-import { RestaurantCard } from './restaurant/RestaurantCard'
 
 const getListPlaces = async (listSlug: string) => {
   return await resolved(() =>
@@ -170,7 +169,7 @@ export const HomePageFeed = memo(
                       onDelete={refetch}
                       query={trendingLists}
                       list={list}
-                      size="lg"
+                      size="$6"
                       colored
                       flexible
                       {...(!!listSlug && {
@@ -203,7 +202,7 @@ export const HomePageFeed = memo(
                         slug: 'create',
                       }}
                     >
-                      <FeedCard flexible chromeless size="lg" flat>
+                      <FeedCard flexible chromeless size="$6" flat>
                         <AbsoluteYStack
                           opacity={0.26}
                           hoverStyle={{ opacity: 1 }}
@@ -250,7 +249,7 @@ const HomeTrendingSpots = memo(({ region }: { region: string }) => {
         <ContentScrollViewHorizontal>
           <XStack alignItems="center" space="$4" paddingVertical={10}>
             {trendingSpots.map((spot, index) => {
-              return <RestaurantCard key={spot.id || index} size="sm" restaurant={spot} />
+              return <RestaurantCard key={spot.id || index} size="$4" restaurant={spot} />
             })}
           </XStack>
         </ContentScrollViewHorizontal>
@@ -268,6 +267,7 @@ const HomeTagLenses = memo(() => {
             <Link key={i} tag={lense}>
               <Theme name={lense.color}>
                 <H2
+                  py="$1"
                   color="$color3"
                   hoverStyle={{
                     color: '$color2',

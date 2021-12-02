@@ -64,7 +64,7 @@ export const RestaurantStatBars = graphql(
                 alignItems="flex-end"
               >
                 <TagButton
-                  size="lg"
+                  size="$6"
                   floating
                   {...selectRishDishViewSimple(rtag)}
                   backgroundColor="transparent"

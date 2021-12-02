@@ -32,7 +32,7 @@ export const RestaurantLists = memo(
         <CardCarousel>
           {lists.map(({ list }, i) => {
             return (
-              <ListCard size="lg" flat borderless key={list.id || i} query={lists} list={list} />
+              <ListCard size="$6" flat borderless key={list.id || i} query={lists} list={list} />
             )
           })}
         </CardCarousel>

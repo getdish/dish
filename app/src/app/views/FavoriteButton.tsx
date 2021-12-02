@@ -25,7 +25,7 @@ export const FavoriteButton = ({
       icon={
         isFavorite ? (
           <Paragraph
-            size={getFontSizeToken(size, { relativeSize: -2 })}
+            size={getFontSizeToken(size as any, { relativeSize: -2 })}
             cursor="default"
             color={light.red9}
             // marginTop={1}

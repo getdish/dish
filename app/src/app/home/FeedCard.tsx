@@ -1,24 +1,13 @@
-import {
-  AbsoluteXStack,
-  getFontSizeToken,
-  H2,
-  Paragraph,
-  prevent,
-  useTheme,
-  XStack,
-  YStack,
-} from '@dish/ui'
-import { ChevronRight } from '@tamagui/feather-icons'
-import React, { RefObject, useRef, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { GalleryRef } from '../../SwipeGallery'
 import { isWeb } from '../../constants/constants'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
-import { getWindowWidth } from '../../helpers/getWindow'
 import { pluralize } from '../../helpers/pluralize'
-import { GalleryRef } from '../../SwipeGallery'
 import { TagButton } from '../views/TagButton'
 import { FontTheme } from '../views/TitleStyled'
 import { Card, CardProps } from './restaurant/Card'
+import { AbsoluteXStack, H2, Paragraph, XStack, YStack, getFontSizeToken, useTheme } from '@dish/ui'
+import React, { RefObject, useRef, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 
 export type FeedCardProps = CardProps & {
   fontTheme?: FontTheme
@@ -49,7 +38,7 @@ export const FeedCard = (props: FeedCardProps) => {
     theme: cardTheme = 'modern',
     ...cardProps
   } = props
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+  // const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
   const galleryRef = useRef<GalleryRef>(null)
   return (
     <Card
@@ -63,9 +52,9 @@ export const FeedCard = (props: FeedCardProps) => {
     >
       <View
         style={[StyleSheet.absoluteFill]}
-        onLayout={(e) => {
-          setDimensions(e.nativeEvent.layout)
-        }}
+        // onLayout={(e) => {
+        //   setDimensions(e.nativeEvent.layout)
+        // }}
       />
 
       <FeedCardContent galleryRef={galleryRef} {...props} />
@@ -141,10 +130,10 @@ const FeedCardContent = ({
   theme: cardTheme = 'modern',
 }: FeedCardProps & { galleryRef: RefObject<GalleryRef> }) => {
   const titleLen = typeof title === 'string' ? title.length : 20
+  const relativeSize = Math.max(1, Math.min(4, Math.round(60 / titleLen)))
   const titleSize = getFontSizeToken(size, {
-    relativeSize: Math.max(7, Math.min(10, Math.round(150 / titleLen))),
+    relativeSize,
   })
-  console.log('titleSize', titleSize)
   const theme = useTheme()
   return (
     <XStack
@@ -156,6 +145,7 @@ const FeedCardContent = ({
       ai="center"
       bw={1}
       pointerEvents="auto"
+      bc="$bg"
       borderColor="$bg2"
       hoverStyle={{
         borderColor: '$bg4',
@@ -188,9 +178,9 @@ const FeedCardContent = ({
 
         <YStack flex={1} />
 
-        <YStack p="$2" br="$2" position="relative" overflow="hidden" space="$1">
+        <YStack p="$2" br="$2" pos="relative" ov="hidden" space="$1">
           <YStack position="relative" display={isWeb ? 'block' : 'flex'}>
-            <H2 color="$color3" size={titleSize}>
+            <H2 color="$color4" fontWeight="300" size={titleSize}>
               {title}
             </H2>
           </YStack>
@@ -208,9 +198,8 @@ const FeedCardContent = ({
         </YStack>
       </YStack>
 
-      <YStack flex={1} />
-
-      <YStack
+      {/* <YStack flex={1} /> */}
+      {/* <YStack
         onPress={(e) => {
           prevent(e)
           galleryRef.current?.setIndex(1)
@@ -221,7 +210,7 @@ const FeedCardContent = ({
         position="relative"
       >
         <ChevronRight color="#fff" size={20} />
-      </YStack>
+      </YStack> */}
     </XStack>
   )
 }

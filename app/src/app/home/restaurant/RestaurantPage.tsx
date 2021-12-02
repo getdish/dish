@@ -206,7 +206,7 @@ const RestaurantPage = memo(
               <RestaurantAddToListButton floating restaurantSlug={restaurantSlug} />
             </Suspense>
             <Suspense fallback={null}>
-              <RestaurantFavoriteButton floating size="lg" restaurantSlug={restaurantSlug} />
+              <RestaurantFavoriteButton floating size="$6" restaurantSlug={restaurantSlug} />
             </Suspense>
           </PaneControlButtonsLeft>
           <YStack

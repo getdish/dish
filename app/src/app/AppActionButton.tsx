@@ -1,14 +1,13 @@
-import { slugify } from '@dish/graph'
-import { Box, Popover, Theme, YStack } from '@dish/ui'
-import { Plus } from '@tamagui/feather-icons'
-import React, { useState } from 'react'
-import { GestureResponderEvent } from 'react-native'
-
 import { searchBarHeight } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { MenuLinkButton } from './MenuLinkButton'
 import { useUserStore } from './userStore'
+import { slugify } from '@dish/graph'
+import { Box, Popover, Theme, YStack } from '@dish/ui'
+import { Plus } from '@tamagui/feather-icons'
+import React, { useState } from 'react'
+import { GestureResponderEvent } from 'react-native'
 
 export const AppActionButton = () => {
   const [visible, setVisible] = useState(false)
@@ -29,9 +28,7 @@ export const AppActionButton = () => {
       {({ open }) =>
         open ? (
           <Popover.Content>
-            <Theme name="dark">
-              <AppActionButtonContents hide={() => setVisible(false)} />
-            </Theme>
+            <AppActionButtonContents hide={() => setVisible(false)} />
           </Popover.Content>
         ) : null
       }

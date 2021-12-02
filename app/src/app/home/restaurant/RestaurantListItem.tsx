@@ -465,7 +465,7 @@ const RestaurantListItemContent = memo(
                         opacity={0.5}
                         borderRadius={0}
                         borderWidth={0}
-                        size="sm"
+                        size="$4"
                         restaurantSlug={restaurantSlug}
                       />
                     </YStack>

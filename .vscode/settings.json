@@ -1,5 +1,6 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
+  "prettier.prettierPath": "node_modules/prettier/index.js",
   "workbench.colorCustomizations": {
     "titleBar.activeBackground": "#892530",
     "titleBar.activeForeground": "#fff",

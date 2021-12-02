@@ -398,7 +398,7 @@ const UserPageContent = memo(
                       return (
                         <ListCard
                           colored
-                          size="lg"
+                          size="$6"
                           floating
                           key={list.slug || i}
                           list={list}

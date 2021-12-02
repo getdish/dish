@@ -1,7 +1,7 @@
-import { pathExists, remove } from 'fs-extra'
-import { Configuration, Stats } from 'webpack'
-
 import { CreateWebpackConfig, ServerConfig } from '../types'
+import { pathExists, remove } from 'fs-extra'
+import { writeFile } from 'fs/promises'
+import { Configuration, Stats } from 'webpack'
 
 export async function buildApp({
   webpackConfig,
@@ -87,20 +87,29 @@ async function buildWebpack(config: Configuration) {
   const env = process.env.NODE_ENV
   const stats = await new Promise<Stats | null>((res, rej) => {
     console.log(` [web] building ${config.output?.path ?? ''} with NODE_ENV ${env}...`)
+
     const webpack = require('webpack')
-    webpack(config, (err, stats) => {
+
+    webpack(config, async (err, stats) => {
       if (err || stats?.hasErrors()) {
         return rej(err ?? `has errors, ${stats?.toString({ colors: true })}`)
       }
+
       res(stats ?? null)
     })
   })
+
   if (stats) {
     console.log(
       stats.toString({
         colors: true,
       })
     )
+
+    if (process.env.ANALYZE_BUNDLE) {
+      console.log('writing stats to /tmp/webpack-stats.json')
+      await writeFile('/tmp/webpack-stats.json', JSON.stringify(stats.toJson(), null, 2))
+    }
   }
 }
 

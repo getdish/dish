@@ -56,7 +56,7 @@ export const RestaurantCard = (props: RestaurantCardProps) => {
 
 export const RestaurantCardContent = graphql(
   ({
-    size = 'md',
+    size = '$4',
     restaurant,
     isBehind,
     hideScore,
@@ -98,7 +98,7 @@ export const RestaurantCardContent = graphql(
                   {typeof below === 'function' ? below() : below}
                 </XStack>
               )}
-              <AbsoluteYStack scale={size === 'xs' ? 0.9 : 1} top={-6} right={-6} zIndex={100}>
+              <AbsoluteYStack top={-6} right={-6} zIndex={100}>
                 <RestaurantRatingView restaurant={restaurant} floating size={32} />
               </AbsoluteYStack>
             </>

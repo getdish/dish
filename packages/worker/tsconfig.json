@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "_",
     "baseUrl": ".",
+    "composite": true,
     "rootDir": "src"
   },
   "include": [

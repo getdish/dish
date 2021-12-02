@@ -1,13 +1,12 @@
+import { light } from '../../constants/colors'
+import { SentimentText } from '../home/restaurant/SentimentText'
+import { CommentBubble } from './CommentBubble'
+import { Link } from './Link'
 import { getUserName, graphql, review, useRefetch } from '@dish/graph'
 import { Paragraph, Separator, Text, XStack, useLazyEffect } from '@dish/ui'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
-
-import { light } from '../../constants/colors'
-import { SentimentText } from '../home/restaurant/SentimentText'
-import { CommentBubble } from './CommentBubble'
-import { Link } from './Link'
 
 const getQueryFullReview = (review?: review) => {
   if (!review) return null

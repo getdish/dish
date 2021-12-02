@@ -40,6 +40,7 @@ export const SmallButton = themeable(
   })
 )
 
+// @ts-expect-error
 SmallButton.defaultProps = {
   size: '$3',
 }

@@ -93,7 +93,7 @@ export function Card(props: CardProps) {
     items,
     onHoverOut,
     children,
-    size = 'md',
+    size = '$4',
     ...cardFrameProps
   } = props
   const hoverable = !!(onHoverIn || onHoverOut)

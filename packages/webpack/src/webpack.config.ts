@@ -1,5 +1,3 @@
-import path, { join } from 'path'
-
 import { isPresent } from '@dish/helpers'
 import { CreateWebpackConfig } from '@dish/server'
 import LoadablePlugin from '@loadable/webpack-plugin'
@@ -13,9 +11,11 @@ import { DuplicatesPlugin } from 'inspectpack/plugin'
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
 // import PnpWebpackPlugin from 'pnp-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import path, { join } from 'path'
 // import nodeExternals from 'webpack-node-externals'
 import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 import Webpack from 'webpack'
+import { WebpackDeduplicationPlugin } from 'webpack-deduplication-plugin'
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin')
@@ -339,6 +339,11 @@ export function createWebpackConfig({
         ],
       },
       plugins: [
+        new WebpackDeduplicationPlugin({
+          cacheDir,
+          rootPath: path.join(rootNodeModules, '..'),
+        }),
+
         new LodashModuleReplacementPlugin(),
 
         new MiniCssExtractPlugin({

@@ -1,4 +1,7 @@
 if (process.env.TAMAGUI_TARGET === 'native') {
+  //
+  // NOTE this is for webpack + native, skip below to webpack = WEB
+  //
   const path = require('path')
   const webpack = require('webpack')
   const TerserPlugin = require('terser-webpack-plugin')
@@ -49,7 +52,6 @@ if (process.env.TAMAGUI_TARGET === 'native') {
        */
       alias: {
         'react-native': reactNativePath,
-        'react-native-web': require.resolve('react-native-web'),
         '@unimodules/core': require.resolve('@unimodules/core'),
         '@unimodules/react-native-adapter': require.resolve('@unimodules/react-native-adapter'),
         'react-native-svg': require.resolve('react-native-svg'),
@@ -248,8 +250,8 @@ if (process.env.TAMAGUI_TARGET === 'native') {
           react: path.join(require.resolve('react'), '..'),
           'react-dom': path.join(require.resolve('react-dom'), '..'),
           'react-native': 'react-native-web',
+          'react-native-web$': require.resolve('react-native-web'),
           'react-native-safe-area-context': require.resolve('react-native-safe-area-context'),
-          '@tamagui/feather-icons': 'react-feather',
           gqty: path.join(require.resolve('gqty'), '..'),
           recyclerlistview: 'recyclerlistview/web',
           // bugfix until merged

@@ -2,11 +2,8 @@
 // // for testing quickly
 // import React from 'react'
 // import { Paragraph, ThemeProvider, configureThemes } from '@dish/ui'
-
 // import themes from './constants/themes'
-
 // configureThemes(themes)
-
 // export function Root({ floating, size }) {
 //   return (
 //     <ThemeProvider themes={themes} defaultTheme="light">
@@ -17,23 +14,11 @@
 //     </ThemeProvider>
 //   )
 // }
-
 // ⚠️ NOTE TURNED OFF PRETTIER BECAUSE IT WAS ADDING `value` before all destructred imports
 // due to the import sort plugin :/ couldn't figure out why even just a single import in the
 // entire file caused it....
-
-import './globals'
-
-import { useHydrateCache } from '@dish/graph'
-import { configureAssertHelpers } from '@dish/helpers'
-import { ProvideRouter } from '@dish/router'
-import { PopoverProvider, SafeAreaProvider, Theme, Toast } from '@dish/ui'
-import { configureUseStore } from '@dish/use-store'
-import * as Font from 'expo-font'
-import * as SplashScreen from 'expo-splash-screen'
-import { useColorScheme } from 'react-native'
-import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
-
+import { DebugHUD } from './DebugHUD'
+import { Radar } from './Radar'
 import { App } from './app/App'
 // import { App } from './app/App'
 import { homeStore } from './app/homeStore'
@@ -41,11 +26,19 @@ import { useUserStore, userStore } from './app/userStore'
 import { isWeb, showRadar } from './constants/constants'
 import { initialHomeState } from './constants/initialHomeState'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
-import { DebugHUD } from './DebugHUD'
+import './globals'
 import { addTagsToCache } from './helpers/allTags'
-import { Radar } from './Radar'
 import { DRoutesTable, router, routes } from './router'
 import Tamagui from './tamagui.config'
+import { useHydrateCache } from '@dish/graph'
+import { configureAssertHelpers } from '@dish/helpers'
+import { ProvideRouter } from '@dish/router'
+import { PopoverProvider, SafeAreaProvider, Theme, Toast } from '@dish/ui'
+import { configureUseStore } from '@dish/use-store'
+import * as Font from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen'
+import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
+import { useColorScheme } from 'react-native'
 
 declare module '@dish/router' {
   interface RoutesTable extends DRoutesTable {}
@@ -147,28 +140,26 @@ export function Root() {
   const defaultTheme =
     (userStore.theme === 'auto' ? colorScheme : userStore.theme) ?? colorScheme ?? 'dark'
 
-  console.log('isLoaded', { isLoaded, defaultTheme })
-
   return (
-    <SafeAreaProvider>
-      <Tamagui.Provider defaultTheme={defaultTheme}>
-        <Theme name={defaultTheme}>
-          <ProvideRouter routes={routes}>
-            <Suspense fallback={null}>
-              <PopoverProvider>
+    <Tamagui.Provider defaultTheme={defaultTheme}>
+      <Theme name={defaultTheme}>
+        <PopoverProvider>
+          <SafeAreaProvider>
+            <ProvideRouter routes={routes}>
+              <Suspense fallback={null}>
                 {isLoaded ? (
                   <>
                     <App />
                     {process.env.NODE_ENV === 'development' && <DebugHUD />}
                   </>
                 ) : null}
-              </PopoverProvider>
-            </Suspense>
-          </ProvideRouter>
-        </Theme>
-      </Tamagui.Provider>
-      {showRadar && <Radar />}
-    </SafeAreaProvider>
+              </Suspense>
+            </ProvideRouter>
+            {showRadar && <Radar />}
+          </SafeAreaProvider>
+        </PopoverProvider>
+      </Theme>
+    </Tamagui.Provider>
   )
 }
 

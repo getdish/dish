@@ -104,7 +104,7 @@
     "tslib": "2.3.0",
     "esbuild-register": "2.6.0",
     "@types/puppeteer": "3.0.1",
-    "esbuild": "0.13.14",
+    "esbuild": "0.14.1",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-decorators": "^7.15.4",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.14.5",
@@ -143,6 +143,7 @@
     "@dish/app": "*",
     "@manypkg/cli": "^0.19.1",
     "@monorepo-utils/workspaces-to-typescript-project-references": "^2.7.4",
+    "@trivago/prettier-plugin-sort-imports": "^3.1.1",
     "@types/apple-mapkit-js": "^5.50.0",
     "@types/express-http-proxy": "^1.6.1",
     "@types/fs-extra": "^9.0.11",
@@ -152,7 +153,7 @@
     "@typescript-eslint/parser": "^4.29.2",
     "@yarnpkg/plugin-patch": "^2.1.2",
     "ava": "^3.15.0",
-    "esbuild": "^0.13.14",
+    "esbuild": "^0.14.1",
     "esbuild-register": "^2.6.0",
     "eslint": "^7.32.0",
     "eslint-import-resolver-typescript": "^2.4.0",
@@ -164,16 +165,13 @@
     "import-sort-style-module": "^6.0.0",
     "npm-run-all": "^4.1.5",
     "patch-package": "^6.4.7",
+    "prettier": "^2.5.0",
     "react": "*",
     "react-native-web": "^0.17.5",
     "react-test-renderer": "18.0.0-beta-149b420f6-20211119",
     "typescript": "*",
     "ultra-runner": "^3.10.5",
     "zx": "^1.14.1"
-  },
-  "optionalDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^3.1.1",
-    "prettier": "^2.5.0"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

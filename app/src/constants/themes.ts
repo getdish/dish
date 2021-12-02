@@ -1,8 +1,7 @@
-import { createTheme } from '@dish/ui'
-import * as Colors from '@tamagui/colors'
-
 import { colorNames } from './colors'
 import { tokens } from './tokens'
+import { createTheme } from '@dish/ui'
+import * as Colors from '@tamagui/colors'
 
 const lightColors = Object.fromEntries(
   Object.entries(tokens.color).filter(([k]) => !k.endsWith('Dark'))
@@ -22,8 +21,8 @@ const lightBase = createTheme({
   bgCard: '#ffffff',
   bgTransparent: '#ffffff00',
   bgSemiTransparent: tokens.color.grayA1,
-  borderColor: tokens.color.gray4,
-  borderColor2: tokens.color.gray6,
+  borderColor: tokens.color.gray2,
+  borderColor2: tokens.color.gray5,
   colorBright: '#000',
   color: tokens.color.gray12,
   color2: tokens.color.gray11,
@@ -49,8 +48,8 @@ const darkBase: BaseTheme = {
   bgDark: '#000',
   bgTransparent: '#00000000',
   bgSemiTransparent: tokens.color.grayA1Dark,
-  borderColor: tokens.color.gray3Dark,
-  borderColor2: tokens.color.gray4Dark,
+  borderColor: tokens.color.gray1Dark,
+  borderColor2: tokens.color.gray3Dark,
   color: '#ddd',
   colorBright: '#fff',
   color2: tokens.color.gray11Dark,

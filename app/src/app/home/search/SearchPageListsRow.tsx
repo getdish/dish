@@ -47,7 +47,7 @@ export const SearchPageListsRow = memo(
           paddingHorizontal={20}
         >
           {lists.map((list, i) => {
-            return <ListCard size="xs" key={i} list={list} query={lists} flat colored />
+            return <ListCard size="$3" key={i} list={list} query={lists} flat colored />
           })}
           <SearchForkListButton>{!lists.length ? 'Create' : 'Create list'}</SearchForkListButton>
         </XStack>

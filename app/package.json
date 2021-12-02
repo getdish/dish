@@ -45,7 +45,7 @@
     "build:output": "tsc -p tsconfig.build.json",
     "build:splash": "expo-splash-screen --image-resize-mode contain -b '#000000' -i src/assets/splash.png",
     "build:icon": "npx react-native-svg-app-icon",
-    "watch": "tsc --watch --preserveWatchOutput",
+    "watch": "tsc --watch --preserveWatchOutput --noEmit",
     "tags:generate": "../dsh dish_app_generate_tags",
     "start": "expo start --dev-client"
   },
@@ -119,7 +119,6 @@
     "react": "*",
     "react-dom": "*",
     "react-error-boundary": "^3.1.0",
-    "react-feather": "^2.0.9",
     "react-globe.gl": "2.18.10",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^6.13.0",

@@ -1,8 +1,3 @@
-import { graphql, useRefetch } from '@dish/graph'
-import { H3, LoadingItem, Text, XStack, YStack, useMedia, useTheme, useThemeName } from '@dish/ui'
-import { PenTool, X } from '@tamagui/feather-icons'
-import React, { Suspense, memo, useState } from 'react'
-
 import { isWeb } from '../../../constants/constants'
 import { getWindowWidth } from '../../../helpers/getWindow'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
@@ -10,7 +5,6 @@ import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollView
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { getListFontTheme } from '../../views/TitleStyled'
-import { ensureFlexText } from '../restaurant/ensureFlexText'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
 import { RankView } from '../restaurant/RankView'
 import { RestaurantAddress } from '../restaurant/RestaurantAddress'
@@ -20,8 +14,13 @@ import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { ReviewImagesRow } from '../restaurant/ReviewImagesRow'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
+import { ensureFlexText } from '../restaurant/ensureFlexText'
 import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
+import { graphql, useRefetch } from '@dish/graph'
+import { H3, LoadingItem, Text, XStack, YStack, useMedia, useTheme, useThemeName } from '@dish/ui'
+import { PenTool, X } from '@tamagui/feather-icons'
+import React, { Suspense, memo, useState } from 'react'
 
 export const ListItemContentMinimal = (props: ListItemContentProps) => {
   const [width, setWidth] = useState(getWindowWidth())
@@ -100,23 +99,11 @@ const Header = memo(
                 </YStack>
 
                 <Link name="restaurant" params={{ slug: restaurant.slug || '' }}>
-                  <XStack
-                    marginVertical={-4}
-                    alignItems="center"
-                    maxWidth="100%"
-                    // hoverStyle={{
-                    //   backgroundColor: theme.bg2,
-                    // }}
-                    // pressStyle={{
-                    //   backgroundColor: theme.bg3,
-                    // }}
-                    overflow="hidden"
-                    // ⚠️ note block necessary
-                    display={isWeb ? 'block' : 'flex'}
-                  >
+                  <XStack alignItems="center" maxWidth="100%" overflow="hidden">
                     <H3
-                      // size={titleSize}
                       size="$8"
+                      py="$1"
+                      px="$1"
                       hoverStyle={{
                         bc: '$bg4',
                       }}
@@ -130,7 +117,7 @@ const Header = memo(
               </XStack>
 
               {!minimal && (
-                <XStack space="$1" alignItems="center" marginVertical={-7} marginLeft={-10}>
+                <XStack space="$1" alignItems="center" marginVertical={-2} marginLeft={-10}>
                   {!isFocused && !!editable && (
                     <SmallButton
                       backgroundColor="transparent"
@@ -195,7 +182,7 @@ const Header = memo(
                     <RestaurantFavoriteButton
                       backgroundColor="transparent"
                       borderWidth={0}
-                      size="sm"
+                      size="$4"
                       opacity={0.5}
                       restaurantSlug={restaurant.slug || ''}
                     />
