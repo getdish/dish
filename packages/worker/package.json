@@ -6,6 +6,7 @@
   "source": "src/index.ts",
   "main": "dist/cjs",
   "module": "dist/esm",
+  "typings": "types",
   "scripts": {
     "build": "tamagui-build",
     "watch": "tamagui-build --watch",

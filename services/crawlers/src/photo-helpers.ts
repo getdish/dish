@@ -1,10 +1,6 @@
-import '@dish/helpers/polyfill-node'
-import '@dish/common'
-
-import * as crypto from 'crypto'
-import { basename } from 'path'
-
+import { DISH_DEBUG } from './constants'
 import { sleep } from '@dish/async'
+import '@dish/common'
 import { sentryException, sentryMessage } from '@dish/common'
 import {
   DISH_API_ENDPOINT,
@@ -25,11 +21,12 @@ import {
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Database } from '@dish/helpers-node'
+import '@dish/helpers/polyfill-node'
+import * as crypto from 'crypto'
 import FormData from 'form-data'
 import { selectFields } from 'gqty'
 import { chunk, clone, difference, uniqBy } from 'lodash'
-
-import { DISH_DEBUG } from './constants'
+import { basename } from 'path'
 
 type ImageQualityResponse = { mean_score_prediction: number; image_id: string }[]
 
@@ -523,6 +520,7 @@ async function getImageCategory(
       formdata.append('image', data, filename)
       const response: any = await fetch(IMAGE_CATEGORY_API, {
         method: 'POST',
+        // @ts-expect-error
         body: formdata,
       }).then((res) => res.json())
       return {

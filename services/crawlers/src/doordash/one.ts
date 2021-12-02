@@ -1,6 +1,5 @@
-import { restaurantFindOne } from '@dish/graph'
-
 import { DoorDash } from './DoorDash'
+import { restaurantFindOne } from '@dish/graph'
 
 // async function main() {
 //   const dd = new DoorDash()
@@ -9,6 +8,7 @@ import { DoorDash } from './DoorDash'
 
 export async function one(slug: string) {
   const restaurant = await restaurantFindOne({ slug })
+  if (!restaurant) throw new Error('no rest')
   const doordash = new DoorDash()
   const coords = restaurant.location.coordinates as number[]
   const stores = await doordash.search(coords[1], coords[0], restaurant.name)

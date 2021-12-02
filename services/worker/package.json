@@ -22,7 +22,6 @@
     "@dish/crawlers": "*",
     "@dish/helpers": "*",
     "@dish/worker": "*",
-    "@tamagui/build": "^1.0.0-alpha.32",
     "@types/bull": "^3.15.1",
     "bull": "^3.22.8",
     "bull-board": "^2.1.2",

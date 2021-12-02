@@ -1,9 +1,9 @@
-import { restaurantFindOne } from '@dish/graph'
-
 import { GrubHub } from '../grubhub/GrubHub'
+import { restaurantFindOne } from '@dish/graph'
 
 export async function one(slug: string) {
   const restaurant = await restaurantFindOne({ slug })
+  if (!restaurant) throw new Error('no rest')
   const grubhub = new GrubHub()
   const coords = restaurant.location.coordinates as number[]
   const stores = await grubhub.search(coords[1], coords[0])

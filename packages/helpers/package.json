@@ -10,7 +10,6 @@
   "module": "dist/esm",
   "files": [
     "types",
-    "src",
     "dist"
   ],
   "scripts": {
