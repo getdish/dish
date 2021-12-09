@@ -27,6 +27,8 @@
 		5CD2384AA43243AF8175F7BC /* WhyteHeavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */; };
 		386827B84940451C80678FE3 /* WhyteHeavy.woff in Resources */ = {isa = PBXBuildFile; fileRef = 7421338D482348DDB181C573 /* WhyteHeavy.woff */; };
 		89548292F4C14FE88F60F57D /* WhyteHeavy.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */; };
+		E6BBC65F013A4DFE877086B2 /* Inter-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03DF4B97337748C8912FB680 /* Inter-Black.otf */; };
+		C20C0074AAA5490C95B4762F /* Inter-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = B74AA2360D5348BEB937BCCA /* Inter-BlackItalic.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +60,8 @@
 		5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */ = {isa = PBXFileReference; name = "WhyteHeavy.otf"; path = "../src/assets/fonts/WhyteHeavy.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		7421338D482348DDB181C573 /* WhyteHeavy.woff */ = {isa = PBXFileReference; name = "WhyteHeavy.woff"; path = "../src/assets/fonts/WhyteHeavy.woff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */ = {isa = PBXFileReference; name = "WhyteHeavy.woff2"; path = "../src/assets/fonts/WhyteHeavy.woff2"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		03DF4B97337748C8912FB680 /* Inter-Black.otf */ = {isa = PBXFileReference; name = "Inter-Black.otf"; path = "../src/assets/fonts/Inter-Black.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B74AA2360D5348BEB937BCCA /* Inter-BlackItalic.otf */ = {isa = PBXFileReference; name = "Inter-BlackItalic.otf"; path = "../src/assets/fonts/Inter-BlackItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +183,8 @@
 				5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */,
 				7421338D482348DDB181C573 /* WhyteHeavy.woff */,
 				F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */,
+				03DF4B97337748C8912FB680 /* Inter-Black.otf */,
+				B74AA2360D5348BEB937BCCA /* Inter-BlackItalic.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -264,6 +270,8 @@
 				5CD2384AA43243AF8175F7BC /* WhyteHeavy.otf in Resources */,
 				386827B84940451C80678FE3 /* WhyteHeavy.woff in Resources */,
 				89548292F4C14FE88F60F57D /* WhyteHeavy.woff2 in Resources */,
+				E6BBC65F013A4DFE877086B2 /* Inter-Black.otf in Resources */,
+				C20C0074AAA5490C95B4762F /* Inter-BlackItalic.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

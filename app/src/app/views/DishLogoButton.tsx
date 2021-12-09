@@ -1,10 +1,9 @@
-import { AbsoluteYStack, XStack, YStack, useDebounceValue, useMedia } from '@dish/ui'
-import React, { memo } from 'react'
-
-import { logoHeight, logoSmWidth, logoXsHeight, logoXsWidth } from '../../constants/constants'
+import { logoXsWidth } from '../../constants/constants'
 import { useHomeCurrentHomeType } from '../homeStore'
 import { Link } from './Link'
-import { LogoCircle, LogoColor } from './Logo'
+import { LogoCircle } from './Logo'
+import { XStack, YStack, useDebounceValue } from '@dish/ui'
+import React, { memo } from 'react'
 
 export const DishLogoButton = memo(() => {
   const type = useHomeCurrentHomeType()

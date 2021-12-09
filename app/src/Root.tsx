@@ -59,6 +59,8 @@ async function start() {
       'Inter-LightItalic': require('./assets/fonts/Inter-LightItalic.otf'),
       'Inter-Bold': require('./assets/fonts/Inter-Bold.otf'),
       'Inter-BoldItalic': require('./assets/fonts/Inter-BoldItalic.otf'),
+      'Inter-Black': require('./assets/fonts/Inter-Black.otf'),
+      'Inter-BlackItalic': require('./assets/fonts/Inter-BlackItalic.otf'),
     })
   }
 
