@@ -4,9 +4,9 @@ import React from 'react'
 export const TagLine = (props: { scale?: number }) => {
   return (
     <Paragraph
-      fontWeight="300"
+      fontWeight="400"
       minWidth={280}
-      size="$8"
+      size="$5"
       textAlign="center"
       position="relative"
       zIndex={1000}

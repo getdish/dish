@@ -8,6 +8,10 @@ body {
   inset: 0;
 }
 
+input, textarea, select, button {
+  margin: 0;
+}
+
 @media (prefers-color-scheme: dark) {
   html, body {
     background-color: #000;

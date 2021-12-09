@@ -1,4 +1,4 @@
-import { Separator, Spacer, StackProps, Text, TextProps, XStack, YStack } from '@dish/ui'
+import { Separator, Spacer, StackProps, Text, TextProps, Title, XStack, YStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const SmallTitle = memo(
@@ -21,32 +21,28 @@ export const SmallTitle = memo(
       divider?: 'center' | 'bottom' | 'off'
     }) => {
     const dividerElement = color ? (
-      <Separator backgroundColor={color} opacity={0.1} />
+      <Separator flex={1} backgroundColor={color} opacity={0.1} />
     ) : (
-      <Separator />
+      <Separator flex={1} />
     )
+
     return (
-      // @ts-ignore
       <YStack width="100%" alignItems="center" {...rest}>
         <XStack width="100%" alignItems="center">
           {divider === 'center' && dividerElement}
-          <Text
+          <Title
             paddingHorizontal={20}
-            flexShrink={0}
             {...{
-              color: color ?? (isActive ? '#000' : '#888'),
+              color,
               letterSpacing,
               fontSize,
               fontWeight,
               lineHeight,
               textAlign,
             }}
-            {...(divider === 'center' && {
-              flexGrow: 10,
-            })}
           >
             {children}
-          </Text>
+          </Title>
           {divider === 'center' && dividerElement}
         </XStack>
 

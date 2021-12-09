@@ -57,7 +57,7 @@
     "transliteration": "^2.1.8"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-alpha.32",
+    "@tamagui/build": "^1.0.0-alpha.44",
     "@types/cheerio": "^0.22.24",
     "@types/pg": "^7.14.10",
     "@types/puppeteer": "^5.4.3",

@@ -1,3 +1,11 @@
+import { isWeb } from '../constants/constants'
+import { router, useRouterCurPage } from '../router'
+import { useFormAction } from './hooks/useFormAction'
+import { useUserStore, userStore } from './userStore'
+import { ErrorParagraph, SubmittableForm, ValidatedInput } from './views/Form'
+import { Link } from './views/Link'
+import { SignInAppleButton } from './views/SignInAppleButton'
+import { SmallTitle } from './views/SmallTitle'
 import { Auth } from '@dish/graph'
 import {
   Button,
@@ -10,15 +18,6 @@ import {
   YStack,
 } from '@dish/ui'
 import React, { memo, useEffect, useState } from 'react'
-
-import { isWeb } from '../constants/constants'
-import { router, useRouterCurPage } from '../router'
-import { useFormAction } from './hooks/useFormAction'
-import { useUserStore, userStore } from './userStore'
-import { ErrorParagraph, SubmittableForm, ValidatedInput } from './views/Form'
-import { Link } from './views/Link'
-import { SignInAppleButton } from './views/SignInAppleButton'
-import { SmallTitle } from './views/SmallTitle'
 
 type AuthFormPageProps = {
   autoFocus?: boolean
@@ -235,6 +234,7 @@ export const LoginForm = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
       },
       submit: userStore.login,
     })
+
   return (
     <SubmittableForm
       isSubmitting={isSubmitting}

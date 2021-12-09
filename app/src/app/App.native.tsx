@@ -23,7 +23,7 @@ export function App() {
       <AbsoluteYStack fullscreen backgroundColor="$mapBackground">
         <Suspense fallback={null}>
           {/* keep indent  */}
-          <AppMap />
+          {/* <AppMap /> */}
         </Suspense>
 
         <Home />

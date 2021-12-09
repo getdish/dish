@@ -1,13 +1,11 @@
-import { basename, join, relative, resolve } from 'path'
-
+import { File, ServerConfigNormal } from '../types'
 import chokidar from 'chokidar'
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import expressWinston from 'express-winston'
 import { pathExists, readdir } from 'fs-extra'
 import { debounce } from 'lodash'
+import { basename, join, relative, resolve } from 'path'
 import winston from 'winston'
-
-import { File, ServerConfigNormal } from '../types'
 
 export async function createApiServer(app: any, config: ServerConfigNormal) {
   const { apiDir, url, watch, rootDir } = config
@@ -39,6 +37,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
     connection: true,
     referer: true,
     'content-length': true,
+    cookie: true,
   }
 
   app.use(

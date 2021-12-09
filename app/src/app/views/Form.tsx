@@ -1,20 +1,19 @@
+import { isWeb } from '../../constants/constants'
+import { ContentScrollContext } from '../views/ContentScrollView'
 import {
   Button,
   Form,
-  Input,
-  // @ts-ignore
+  Input, // @ts-ignore
   InputProps,
   Paragraph,
   Text,
-  useTheme,
   XStack,
   YStack,
+  useTheme,
 } from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { Suspense, useContext } from 'react'
 import { Controller, FieldError, RegisterOptions } from 'react-hook-form'
-import { isWeb } from '../../constants/constants'
-import { ContentScrollContext } from '../views/ContentScrollView'
 
 export function SubmittableForm({
   onSubmit,
