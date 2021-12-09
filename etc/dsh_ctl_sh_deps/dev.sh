@@ -43,12 +43,3 @@ function clean() {
   find $PROJECT_ROOT -name "node_modules" -type d -prune -exec rm -rf '{}' \;
   find $PROJECT_ROOT -name "yarn-error.log" -prune -exec rm -rf '{}' \;
 }
-
-function run_hasura() {
-  docker run -p 8091:8080 \
-    -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:postgres@host.docker.internal:5432/dish \
-    -e HASURA_GRAPHQL_ENABLE_CONSOLE=true \
-    -e HASURA_GRAPHQL_JWT_SECRET='{"type":"HS256", "key":"12345678901234567890123456789012"}' \
-    -e HASURA_GRAPHQL_ADMIN_SECRET=password \
-    fedormelexin/graphql-engine-arm64:v2.1.0-beta.1.cli-migrations-v2
-}

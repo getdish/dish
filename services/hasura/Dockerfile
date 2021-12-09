@@ -1,6 +1,3 @@
-FROM hasura/graphql-engine:v1.3.3
-# :v1.3.3.cli-migrations-v2
-# docker pull hasura/graphql-engine:v2.0.9.cli-migrations-v2
-# put mirgrations ourself here
+FROM hasura/graphql-engine:v2.1.0-beta.3
 
 RUN echo hi
