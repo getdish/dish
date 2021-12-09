@@ -7,6 +7,7 @@
   "workspaces": {
     "packages": [
       "app",
+      "apps/*",
       "packages/*",
       "services/*"
     ]
@@ -21,6 +22,7 @@
     "start:test": "COMPOSE_EXCLUDE_EXTRA=\"|app\" DISH_ENV=test ./dsh compose_up",
     "site": "yarn workspace @dish/site start",
     "app": "yarn workspace @dish/app app",
+    "app:live": "yarn workspace @dish/app app:live",
     "web": "yarn workspace @dish/app web",
     "puppet-proxy": "./dsh run 'yarn workspace @dish/puppet-proxy start'",
     "etc:colorize": "yarn workspace @dish/app etc:colorize",

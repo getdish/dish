@@ -1,20 +1,18 @@
 // @ts-nocheck
+import { zIndexDrawer } from '../constants/constants'
+import { AppMenuContents } from './AppMenuContents'
+import { appMenuStore } from './AppMenuStore'
+import { CloseButton } from './views/CloseButton'
+import { PaneControlButtons } from './views/PaneControlButtons'
 import { AbsoluteYStack, Button, Modal, useMedia, useSafeAreaInsets } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
-import { zIndexDrawer } from '../constants/constants'
-import { AppMenuContents } from './AppMenuContents'
-import { appMenuStore } from './AppMenuStore'
-import { useUserStore } from './userStore'
-import { CloseButton } from './views/CloseButton'
-import { PaneControlButtons } from './views/PaneControlButtons'
 
 export const AppMenuButtonFloating = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
   const safeArea = useSafeAreaInsets()
-  const user = useUserStore()
 
   if (!(media.sm || media.xs)) {
     return null

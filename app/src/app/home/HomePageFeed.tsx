@@ -28,6 +28,7 @@ import { Plus } from '@tamagui/feather-icons'
 import getCenter from '@turf/center'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
+import { Text } from 'react-native'
 
 const getListPlaces = async (listSlug: string) => {
   return await resolved(() =>

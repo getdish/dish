@@ -54,7 +54,11 @@ async function start() {
 
   if (!isWeb) {
     await Font.loadAsync({
-      Inter: require('./assets/fonts/Inter-Thin.otf'),
+      'Inter-Thin': require('./assets/fonts/Inter-Thin.otf'),
+      'Inter-Light': require('./assets/fonts/Inter-Light.otf'),
+      'Inter-LightItalic': require('./assets/fonts/Inter-LightItalic.otf'),
+      'Inter-Bold': require('./assets/fonts/Inter-Bold.otf'),
+      'Inter-BoldItalic': require('./assets/fonts/Inter-BoldItalic.otf'),
     })
   }
 

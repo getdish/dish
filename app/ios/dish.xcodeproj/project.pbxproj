@@ -17,12 +17,22 @@
 		AE9E86162752CA3000B698A9 /* Mapbox in Frameworks */ = {isa = PBXBuildFile; productRef = D1ED2FCA68F04201AC2320F7 /* Mapbox */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F37DA4FC23874A0780707C42 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C89C9D50C3C45CC8E917586 /* noop-file.swift */; };
+		95AE501A070F4209AB4D9563 /* Inter-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 37EB51AF5AA6436AAD1A8E82 /* Inter-Bold.otf */; };
+		63EEFD9B0CEF4529AE7721A8 /* Inter-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = FB9042C119C443C9921EBC76 /* Inter-BoldItalic.otf */; };
+		223A4AA59F734003B08351C7 /* Inter-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1D30CBD8FDE94A23A4B58149 /* Inter-Light.otf */; };
+		F73D38B6661F47628491BCFD /* Inter-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 271D2490AF8349CB98FBD339 /* Inter-LightItalic.otf */; };
+		3BF5E6A3D877408C823B6701 /* Inter-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5E264F83C9084DE1B20F25C7 /* Inter-Thin.otf */; };
+		5678478E986B4951B935866C /* Magnat.otf in Resources */ = {isa = PBXBuildFile; fileRef = 38AC99A9CBD74174B5C456AC /* Magnat.otf */; };
+		60676EAFC29F45BFB2F3D108 /* Magnat.woff in Resources */ = {isa = PBXBuildFile; fileRef = 5D4A66CAC7CE4D298DD1D4AF /* Magnat.woff */; };
+		5CD2384AA43243AF8175F7BC /* WhyteHeavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */; };
+		386827B84940451C80678FE3 /* WhyteHeavy.woff in Resources */ = {isa = PBXBuildFile; fileRef = 7421338D482348DDB181C573 /* WhyteHeavy.woff */; };
+		89548292F4C14FE88F60F57D /* WhyteHeavy.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		0C89C9D50C3C45CC8E917586 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "dish/noop-file.swift"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* dish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = dish.app; path = app.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = dish/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = dish/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -38,6 +48,16 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		37EB51AF5AA6436AAD1A8E82 /* Inter-Bold.otf */ = {isa = PBXFileReference; name = "Inter-Bold.otf"; path = "../src/assets/fonts/Inter-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FB9042C119C443C9921EBC76 /* Inter-BoldItalic.otf */ = {isa = PBXFileReference; name = "Inter-BoldItalic.otf"; path = "../src/assets/fonts/Inter-BoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1D30CBD8FDE94A23A4B58149 /* Inter-Light.otf */ = {isa = PBXFileReference; name = "Inter-Light.otf"; path = "../src/assets/fonts/Inter-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		271D2490AF8349CB98FBD339 /* Inter-LightItalic.otf */ = {isa = PBXFileReference; name = "Inter-LightItalic.otf"; path = "../src/assets/fonts/Inter-LightItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5E264F83C9084DE1B20F25C7 /* Inter-Thin.otf */ = {isa = PBXFileReference; name = "Inter-Thin.otf"; path = "../src/assets/fonts/Inter-Thin.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		38AC99A9CBD74174B5C456AC /* Magnat.otf */ = {isa = PBXFileReference; name = "Magnat.otf"; path = "../src/assets/fonts/Magnat.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5D4A66CAC7CE4D298DD1D4AF /* Magnat.woff */ = {isa = PBXFileReference; name = "Magnat.woff"; path = "../src/assets/fonts/Magnat.woff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */ = {isa = PBXFileReference; name = "WhyteHeavy.otf"; path = "../src/assets/fonts/WhyteHeavy.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7421338D482348DDB181C573 /* WhyteHeavy.woff */ = {isa = PBXFileReference; name = "WhyteHeavy.woff"; path = "../src/assets/fonts/WhyteHeavy.woff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */ = {isa = PBXFileReference; name = "WhyteHeavy.woff2"; path = "../src/assets/fonts/WhyteHeavy.woff2"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +133,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
 				20C73491C1F7646DCCCADAEF /* ExpoModulesProviders */,
+				EB8D12F75900481CA0440752 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -122,7 +143,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* dish.app */,
+				13B07F961A680F5B00A75B9A /* app.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -144,6 +165,24 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		EB8D12F75900481CA0440752 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				37EB51AF5AA6436AAD1A8E82 /* Inter-Bold.otf */,
+				FB9042C119C443C9921EBC76 /* Inter-BoldItalic.otf */,
+				1D30CBD8FDE94A23A4B58149 /* Inter-Light.otf */,
+				271D2490AF8349CB98FBD339 /* Inter-LightItalic.otf */,
+				5E264F83C9084DE1B20F25C7 /* Inter-Thin.otf */,
+				38AC99A9CBD74174B5C456AC /* Magnat.otf */,
+				5D4A66CAC7CE4D298DD1D4AF /* Magnat.woff */,
+				5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */,
+				7421338D482348DDB181C573 /* WhyteHeavy.woff */,
+				F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -169,7 +208,7 @@
 				D1ED2FCA68F04201AC2320F7 /* Mapbox */,
 			);
 			productName = dish;
-			productReference = 13B07F961A680F5B00A75B9A /* dish.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* app.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -215,6 +254,16 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
+				95AE501A070F4209AB4D9563 /* Inter-Bold.otf in Resources */,
+				63EEFD9B0CEF4529AE7721A8 /* Inter-BoldItalic.otf in Resources */,
+				223A4AA59F734003B08351C7 /* Inter-Light.otf in Resources */,
+				F73D38B6661F47628491BCFD /* Inter-LightItalic.otf in Resources */,
+				3BF5E6A3D877408C823B6701 /* Inter-Thin.otf in Resources */,
+				5678478E986B4951B935866C /* Magnat.otf in Resources */,
+				60676EAFC29F45BFB2F3D108 /* Magnat.woff in Resources */,
+				5CD2384AA43243AF8175F7BC /* WhyteHeavy.otf in Resources */,
+				386827B84940451C80678FE3 /* WhyteHeavy.woff in Resources */,
+				89548292F4C14FE88F60F57D /* WhyteHeavy.woff2 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,7 +282,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../../node_modules/react-native/scripts/react-native-xcode.sh\n../../node_modules/expo-constants/scripts/get-app-config-ios.sh\n# ../node_modules/expo-updates/scripts/create-manifest-ios.sh\n";
+			shellScript = "export NODE_BINARY=node\n# ../../node_modules/react-native/scripts/react-native-xcode.sh\n# ../../node_modules/expo-constants/scripts/get-app-config-ios.sh\n# ../node_modules/expo-updates/scripts/create-manifest-ios.sh\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\n`node --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n\n";
 		};
 		08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -332,7 +381,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = dish/app.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 53;
+				DEVELOPMENT_TEAM = 399WY8X9HY;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -344,12 +394,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dish.app;
+				PRODUCT_BUNDLE_IDENTIFIER = dish.motion;
 				PRODUCT_NAME = app;
 				SWIFT_OBJC_BRIDGING_HEADER = "dish/dish-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -366,19 +417,21 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = dish/app.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 53;
+				DEVELOPMENT_TEAM = 399WY8X9HY;
 				INFOPLIST_FILE = dish/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.dish.app;
+				PRODUCT_BUNDLE_IDENTIFIER = dish.motion;
 				PRODUCT_NAME = app;
 				SWIFT_OBJC_BRIDGING_HEADER = "dish/dish-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
