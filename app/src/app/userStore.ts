@@ -1,3 +1,6 @@
+import { queryUserQuery } from '../queries/queryUser'
+import { router } from '../router'
+import { appMenuStore } from './AppMenuStore'
 import { sleep } from '@dish/async'
 import {
   Auth,
@@ -13,10 +16,6 @@ import {
 import { Toast } from '@dish/ui'
 import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 
-import { queryUserQuery } from '../queries/queryUser'
-import { router } from '../router'
-import { appMenuStore } from './AppMenuStore'
-
 type ThemeName = 'dark' | 'light' | 'auto'
 
 const hasLoggedInBefore = !!localStorage.getItem('has-logged-in')
@@ -29,7 +28,7 @@ class UserStore extends Store {
   loading = false
   messages: string[] = []
   allVotes: { [id: string]: Review } = {}
-  theme: ThemeName | null = currentTheme ?? null
+  theme: ThemeName = currentTheme ?? 'auto'
 
   get hasLoggedInBefore() {
     return hasLoggedInBefore
@@ -44,7 +43,7 @@ class UserStore extends Store {
     return this.user?.username === 'admin'
   }
 
-  setTheme(theme: ThemeName | null) {
+  setTheme(theme: ThemeName) {
     if (theme) {
       localStorage.setItem(THEME_KEY, theme)
     }

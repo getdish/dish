@@ -1,8 +1,6 @@
+import { isWeb } from '../../../constants/constants'
 import { AbsoluteYStack, Text, YStack, useTheme } from '@dish/ui'
 import React, { memo } from 'react'
-
-import { isWeb } from '../../../constants/constants'
-import { TextSuperScript } from '../../views/TextSuperScript'
 
 export const RankView = memo(({ rank }: { rank: number }) => {
   const theme = useTheme()
@@ -40,7 +38,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
           fontWeight="500"
           color={theme.color3}
         >
-          {rank}
+          {`${rank}`}
         </Text>
       </Text>
     </YStack>

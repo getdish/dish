@@ -1,16 +1,16 @@
+import { light } from '../constants/colors'
+import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
+import { hasMovedAtLeast } from '../helpers/mapHelpers'
+import { MapProps } from './MapProps'
+import { drawerStore } from './drawerStore'
+import { setMap } from './getMap'
+import { tiles } from './tiles'
 import { series, sleep } from '@dish/async'
 import { DISH_API_ENDPOINT } from '@dish/graph'
 import { useDebounce, useTheme } from '@dish/ui'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, useWindowDimensions } from 'react-native'
-
-import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
-import { hasMovedAtLeast } from '../helpers/mapHelpers'
-import { drawerStore } from './drawerStore'
-import { setMap } from './getMap'
-import { MapProps } from './MapProps'
-import { tiles } from './tiles'
 
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)
 MapboxGL.setTelemetryEnabled(false)
@@ -58,11 +58,129 @@ export default function Map({
 
   // const pointColor = theme.name === 'dark' ? '#000' : 'rgba(20,30,240,0.5)'
 
+  const vectors = (
+    <MapboxGL.VectorSource
+      id="regions"
+      url={`${DISH_API_ENDPOINT}/tile/public.zcta5,public.hrr,public.nhood_labels,public.zcta5_labels.json`}
+    >
+      {tiles.map(
+        ({
+          name,
+          minZoom,
+          maxZoom,
+          activeColor,
+          hoverColor,
+          color,
+          label,
+          promoteId,
+          labelSource,
+        }) => {
+          const id = `${name}`.replace('.', '')
+          const lineID = `${id}line`
+          const fillID = `${id}fill`
+          const labelID = `${id}label`
+          return (
+            <React.Fragment key={id}>
+              <MapboxGL.LineLayer
+                id={lineID}
+                sourceLayerID={name}
+                sourceID="regions"
+                minZoomLevel={minZoom}
+                maxZoomLevel={maxZoom}
+                style={{
+                  lineCap: 'round',
+                  lineColor: ['get', 'color'],
+                  // '#000000',
+                  // [
+                  //   'case',
+                  //   ['==', ['feature-state', 'active'], true],
+                  //   lineColorActive || '',
+                  //   ['==', ['feature-state', 'hover'], true],
+                  //   lineColorHover || '',
+                  //   ['==', ['feature-state', 'active'], null],
+                  //   lineColor,
+                  //   'green',
+                  // ],
+                  lineOpacity: 1,
+                  lineWidth: 3,
+                }}
+              />
+              <MapboxGL.FillLayer
+                id={fillID}
+                sourceLayerID={name}
+                sourceID="regions"
+                minZoomLevel={minZoom}
+                maxZoomLevel={maxZoom}
+                style={{
+                  fillColor: ['case', ['has', 'color'], ['get', 'color'], 'rgba(100,200,100,0.4)'],
+
+                  // [
+                  //   'case',
+                  //   ['==', ['feature-state', 'active'], true],
+                  //   activeColor,
+                  //   ['==', ['feature-state', 'hover'], true],
+                  //   hoverColor,
+                  //   ['==', ['feature-state', 'active'], false],
+                  //   color,
+                  //   'rgba(255,255,0,0.1)',
+                  // ],
+                  fillAntialias: true,
+                  fillOpacity: 0.25,
+                }}
+              />
+              {labelSource && (
+                <MapboxGL.SymbolLayer
+                  id={labelID}
+                  sourceLayerID={labelSource}
+                  sourceID="regions"
+                  minZoomLevel={minZoom}
+                  maxZoomLevel={maxZoom}
+                  style={{
+                    textField: `{${label}}`,
+                    textFont: ['PT Serif Bold', 'Arial Unicode MS Bold'],
+                    // textAllowOverlap: true,
+                    textVariableAnchor: ['center', 'center'],
+                    textRadialOffset: 10,
+                    // 'iconallowOverlap: true,
+                    textSize: 14,
+                    // , {
+                    //   base: 1,
+                    //   stops: [
+                    //     [10, 6],
+                    //     [16, 22],
+                    //   ],
+                    // },
+                    textJustify: 'center',
+                    symbolPlacement: 'point',
+                    textColor: theme.color.toString(),
+                    // getting typescript err here
+                    // [
+                    //   'case',
+                    //   ['==', ['feature-state', 'active'], true],
+                    //   theme.color,
+                    //   ['==', ['feature-state', 'hover'], true],
+                    //   green,
+                    //   ['==', ['feature-state', 'active'], null],
+                    //   theme.color2,
+                    //   'green',
+                    // ],
+                    textHaloColor: 'rgba(255,255,255,1)',
+                    textHaloWidth: 1,
+                  }}
+                />
+              )}
+            </React.Fragment>
+          )
+        }
+      )}
+    </MapboxGL.VectorSource>
+  )
+
   return (
     <MapboxGL.MapView
       style={[styles.map /* isDrawerAtTop ? { opacity: 0 } : null */]}
       ref={mapRef}
-      styleURL={style}
+      // styleURL={style}
       onDidFinishLoadingMap={() => {
         setIsLoaded(1)
       }}
@@ -131,128 +249,9 @@ export default function Map({
         }}
       />
 
-      <MapboxGL.VectorSource
-        id="regions"
-        url={`${DISH_API_ENDPOINT}/tile/public.zcta5,public.hrr,public.nhood_labels,public.zcta5_labels.json`}
-      >
-        {tiles.map(
-          ({
-            name,
-            minZoom,
-            maxZoom,
-            activeColor,
-            hoverColor,
-            color,
-            label,
-            promoteId,
-            labelSource,
-          }) => {
-            const id = `${name}`.replace('.', '')
-            const lineID = `${id}line`
-            const fillID = `${id}fill`
-            const labelID = `${id}label`
-            return (
-              <>
-                <MapboxGL.LineLayer
-                  id={lineID}
-                  sourceLayerID={name}
-                  sourceID="regions"
-                  minZoomLevel={minZoom}
-                  maxZoomLevel={maxZoom}
-                  style={{
-                    lineCap: 'round',
-                    lineColor: ['get', 'color'],
-                    // '#000000',
-                    // [
-                    //   'case',
-                    //   ['==', ['feature-state', 'active'], true],
-                    //   lineColorActive || '',
-                    //   ['==', ['feature-state', 'hover'], true],
-                    //   lineColorHover || '',
-                    //   ['==', ['feature-state', 'active'], null],
-                    //   lineColor,
-                    //   'green',
-                    // ],
-                    lineOpacity: 1,
-                    lineWidth: 3,
-                  }}
-                />
-                <MapboxGL.FillLayer
-                  id={fillID}
-                  sourceLayerID={name}
-                  sourceID="regions"
-                  minZoomLevel={minZoom}
-                  maxZoomLevel={maxZoom}
-                  style={{
-                    fillColor: [
-                      'case',
-                      ['has', 'color'],
-                      ['get', 'color'],
-                      'rgba(100,200,100,0.4)',
-                    ],
+      {vectors}
 
-                    // [
-                    //   'case',
-                    //   ['==', ['feature-state', 'active'], true],
-                    //   activeColor,
-                    //   ['==', ['feature-state', 'hover'], true],
-                    //   hoverColor,
-                    //   ['==', ['feature-state', 'active'], false],
-                    //   color,
-                    //   'rgba(255,255,0,0.1)',
-                    // ],
-                    fillAntialias: true,
-                    fillOpacity: 0.25,
-                  }}
-                />
-                {labelSource && (
-                  <MapboxGL.SymbolLayer
-                    id={labelID}
-                    sourceLayerID={labelSource}
-                    sourceID="regions"
-                    minZoomLevel={minZoom}
-                    maxZoomLevel={maxZoom}
-                    style={{
-                      textField: `{${label}}`,
-                      textFont: ['PT Serif Bold', 'Arial Unicode MS Bold'],
-                      // textAllowOverlap: true,
-                      textVariableAnchor: ['center', 'center'],
-                      textRadialOffset: 10,
-                      // 'iconallowOverlap: true,
-                      textSize: 14,
-                      // , {
-                      //   base: 1,
-                      //   stops: [
-                      //     [10, 6],
-                      //     [16, 22],
-                      //   ],
-                      // },
-                      textJustify: 'center',
-                      symbolPlacement: 'point',
-                      textColor: theme.color.toString(),
-                      // getting typescript err here
-                      // [
-                      //   'case',
-                      //   ['==', ['feature-state', 'active'], true],
-                      //   theme.color,
-                      //   ['==', ['feature-state', 'hover'], true],
-                      //   green,
-                      //   ['==', ['feature-state', 'active'], null],
-                      //   theme.color2,
-                      //   'green',
-                      // ],
-                      textHaloColor: 'rgba(255,255,255,1)',
-                      textHaloWidth: 1,
-                    }}
-                  />
-                )}
-              </>
-            )
-          }
-        )}
-      </MapboxGL.VectorSource>
-
-      {/* <MapboxGL.ShapeSource
+      <MapboxGL.ShapeSource
         id="trackClustersSource"
         shape={{
           type: 'FeatureCollection',
@@ -271,30 +270,30 @@ export default function Map({
             circleRadius: 15,
           }}
         />
-        <MapboxGL.SymbolLayer
+        {/* <MapboxGL.SymbolLayer
           id="pointCount"
           style={{
             textField: ['case', ['has', 'point_count'], '{point_count}', ['get', 'rank']],
             textSize: 12,
-            textColor: theme.color,
+            textColor: theme.color.toString(),
             textAllowOverlap: true,
             iconAllowOverlap: true,
           }}
-        />
-        <MapboxGL.SymbolLayer
+        /> */}
+        {/* <MapboxGL.SymbolLayer
           id="pointLabel"
           filter={['!', ['has', 'point_count']]}
           style={{
             textField: ['format', ['get', 'title']],
             textSize: 12,
             textFont: ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-            textColor: theme.color,
+            textColor: theme.color.toString(),
             // doesnt support interpolate for now
             textOffset: [0, 1.25],
             textAnchor: 'top',
             textAllowOverlap: false,
           }}
-        />
+        /> */}
         <MapboxGL.CircleLayer
           id="circlePointsLayer"
           filter={['!', ['has', 'point_count']]}
@@ -305,13 +304,13 @@ export default function Map({
               1,
               'rgba(255,255,255,1)',
               0,
-              pointColor,
-              pointColor,
+              light.purple10,
+              light.purple10,
             ],
             circleRadius: ['interpolate', ['exponential', 1.5], ['zoom'], 9, 4, 11, 8, 16, 22],
           }}
         />
-      </MapboxGL.ShapeSource> */}
+      </MapboxGL.ShapeSource>
     </MapboxGL.MapView>
   )
 }

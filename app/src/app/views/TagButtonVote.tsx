@@ -1,10 +1,9 @@
+import { VoteNumber } from '../hooks/useUserTagVotes'
+import { TagButtonProps, TagVotePopover } from './TagButton'
 import { graphql } from '@dish/graph'
 import { Text, YStack, useTheme } from '@dish/ui'
 import { Circle } from '@tamagui/feather-icons'
 import React from 'react'
-
-import { VoteNumber } from '../hooks/useUserTagVotes'
-import { TagButtonProps, TagVotePopover } from './TagButton'
 
 export const TagButtonVote = graphql(
   (
@@ -49,7 +48,7 @@ export const TagButtonVote = graphql(
             pointerEvents="none"
           >
             <Text color={theme.color} letterSpacing={-1} fontSize={20 * scale} fontWeight="400">
-              {vote < 0 ? vote : `${vote}`}
+              {`${vote}`}
             </Text>
           </YStack>
         )}

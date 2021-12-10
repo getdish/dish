@@ -1,10 +1,3 @@
-import { slugify } from '@dish/graph'
-import { Box, BoxProps, Separator, Spacer, Toast, YStack, useDebounceEffect } from '@dish/ui'
-import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@tamagui/feather-icons'
-import { capitalize } from 'lodash'
-import React, { forwardRef, memo, useState } from 'react'
-import { ScrollView, useColorScheme } from 'react-native'
-
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
 import { appStore } from './AppStore'
@@ -13,6 +6,12 @@ import { MenuLinkButton } from './MenuLinkButton'
 import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
+import { slugify } from '@dish/graph'
+import { Box, BoxProps, Separator, Spacer, Toast, YStack, useDebounceEffect } from '@dish/ui'
+import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@tamagui/feather-icons'
+import { capitalize } from 'lodash'
+import React, { forwardRef, memo, useState } from 'react'
+import { ScrollView, useColorScheme } from 'react-native'
 
 export const AppMenuContents = memo(
   forwardRef(({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps, ref) => {
@@ -20,6 +19,8 @@ export const AppMenuContents = memo(
     const { isLoggedIn, user, logout } = userStore
     const [showContents, setShowContents] = useState(false)
     const colorScheme = useColorScheme()
+
+    console.log('userStore.theme', userStore.theme)
 
     // dirty web autofocus fix
     useDebounceEffect(

@@ -1,20 +1,3 @@
-import { fullyIdle, series, sleep } from '@dish/async'
-import { graphql } from '@dish/graph'
-import {
-  H1,
-  LoadingItems,
-  Spacer,
-  Text,
-  Theme,
-  ThemeInverse,
-  useTheme,
-  useThemeName,
-  XStack,
-  YStack,
-} from '@dish/ui'
-import { Clock } from '@tamagui/feather-icons'
-import React, { memo, Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { ScrollView, View } from 'react-native'
 import { drawerBorderRadius, isWeb, searchBarHeight } from '../../../constants/constants'
 import { getColorsForName } from '../../../helpers/getColorsForName'
 import { getMinLngLat } from '../../../helpers/mapHelpers'
@@ -31,18 +14,18 @@ import { Link } from '../../views/Link'
 import { NotFoundPage } from '../../views/NotFoundPage'
 import { PageHead } from '../../views/PageHead'
 import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
-import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
-import { RestaurantTagsList } from '../../views/restaurant/RestaurantTagsList'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
+import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
+import { RestaurantTagsList } from '../../views/restaurant/RestaurantTagsList'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { getSearchPageStore } from '../search/SearchPageStore'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentReviewButton'
+import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantAddress } from './RestaurantAddress'
 import { RestaurantAddressLinksRow } from './RestaurantAddressLinksRow'
-import { RestaurantAddToListButton } from './RestaurantAddToListButton'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
 import { openingHours } from './RestaurantDetailRow'
 import { RestaurantDishRow } from './RestaurantDishRow'
@@ -54,6 +37,12 @@ import { RestaurantPhotosRow } from './RestaurantPhotosRow'
 import { RestaurantReviewsList } from './RestaurantReviewsList'
 import { RestaurantTagPhotos } from './RestaurantTagPhotos'
 import { useSelectedDish } from './useSelectedDish'
+import { fullyIdle, series, sleep } from '@dish/async'
+import { graphql } from '@dish/graph'
+import { H1, LoadingItems, Spacer, Theme, XStack, YStack, useThemeName } from '@dish/ui'
+import { Clock } from '@tamagui/feather-icons'
+import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
+import { ScrollView, View } from 'react-native'
 
 type Props = HomeStackViewProps<HomeStateItemRestaurant>
 

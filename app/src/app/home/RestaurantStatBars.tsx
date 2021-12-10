@@ -52,7 +52,6 @@ export const RestaurantStatBars = graphql(
     const rtags = uniqBy([...givenTags, ...restTags], (x) => x.tag.slug).slice(0, showTags)
 
     return (
-      // @ts-expect-error
       <Theme name="translucent">
         <YStack alignItems="flex-end" justifyContent="flex-end">
           {rtags.map((rtag, index) => {

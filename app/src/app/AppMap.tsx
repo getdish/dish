@@ -1,21 +1,3 @@
-import { series } from '@dish/async'
-import { resolved } from '@dish/graph'
-// import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-import {
-  AbsoluteYStack,
-  LinearGradient,
-  useDebounceValue,
-  useGet,
-  useMedia,
-  useTheme,
-  useThemeName,
-  XStack,
-  YStack,
-} from '@dish/ui'
-import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import loadable from '@loadable/component'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { Animated, StyleSheet } from 'react-native'
 import { isWeb, pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
@@ -35,6 +17,24 @@ import { useMapSize } from './hooks/useMapSize'
 import { mapStyles } from './mapStyles'
 import { useIsInteractive } from './useIsInteractive'
 import { useIsMobilePhone } from './useIsMobilePhone'
+import { series } from '@dish/async'
+import { resolved } from '@dish/graph'
+// import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import {
+  AbsoluteYStack,
+  LinearGradient,
+  XStack,
+  YStack,
+  useDebounceValue,
+  useGet,
+  useMedia,
+  useTheme,
+  useThemeName,
+} from '@dish/ui'
+import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import loadable from '@loadable/component'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { Animated, StyleSheet } from 'react-native'
 
 export default memo(function AppMap() {
   // lighthouse/slow browser optimization

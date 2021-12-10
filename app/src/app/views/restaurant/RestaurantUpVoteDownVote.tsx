@@ -1,9 +1,3 @@
-import { graphql, restaurant, tagSlug } from '@dish/graph'
-import { Text, Tooltip, XStack, YStack, useTheme } from '@dish/ui'
-import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@tamagui/feather-icons'
-import React, { Suspense, memo } from 'react'
-import { GestureResponderEvent } from 'react-native'
-
 import { tagLenses } from '../../../constants/localTags'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { restaurantRatio } from '../../../helpers/restaurantsRatio'
@@ -11,6 +5,11 @@ import { RestaurantRatingView } from '../../home/RestaurantRatingView'
 import { VoteNumber, useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { TextSuperScript } from '../TextSuperScript'
 import { VoteButton } from '../VoteButton'
+import { graphql, restaurant, tagSlug } from '@dish/graph'
+import { Text, Tooltip, XStack, YStack, useTheme } from '@dish/ui'
+import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@tamagui/feather-icons'
+import React, { Suspense, memo } from 'react'
+import { GestureResponderEvent } from 'react-native'
 
 type RatingDisplay = 'ratio' | 'points'
 

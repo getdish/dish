@@ -38,7 +38,9 @@ import { configureUseStore } from '@dish/use-store'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
-import { useColorScheme } from 'react-native'
+import { Appearance, useColorScheme } from 'react-native'
+
+console.log('Appearance', Appearance.getColorScheme())
 
 declare module '@dish/router' {
   interface RoutesTable extends DRoutesTable {}
@@ -144,7 +146,11 @@ export function Root() {
   }
 
   const defaultTheme =
-    (userStore.theme === 'auto' ? colorScheme : userStore.theme) ?? colorScheme ?? 'dark'
+    (!userStore.theme || userStore.theme === 'auto' ? colorScheme : userStore.theme) ??
+    colorScheme ??
+    'dark'
+
+  console.log('defaultTheme', colorScheme, defaultTheme)
 
   return (
     <Tamagui.Provider defaultTheme={defaultTheme}>
