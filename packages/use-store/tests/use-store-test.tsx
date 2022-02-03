@@ -1,9 +1,6 @@
-import '@dish/react-test-env'
-
-import { RenderResult, act, cleanup, fireEvent, render } from '@testing-library/react'
-import { last } from 'lodash'
-import React, { StrictMode } from 'react'
-
+/**
+ * @jest-environment jsdom
+ */
 import {
   Store,
   configureUseStore,
@@ -12,6 +9,10 @@ import {
   useStoreInstance,
   useStoreInstanceSelector,
 } from '../src'
+import '@dish/react-test-env'
+import { RenderResult, act, cleanup, fireEvent, render } from '@testing-library/react'
+import { last } from 'lodash'
+import React, { StrictMode } from 'react'
 
 Error.stackTraceLimit = Infinity
 
