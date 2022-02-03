@@ -8,7 +8,7 @@ ENV NODE_OPTIONS="--max_old_space_size=8192"
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # install yarn
-RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null \
+RUN wget -q -O - https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null \
   && echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list \
   && apt-get update >/dev/null \
   && apt-get -qqy --no-install-recommends install yarn \
