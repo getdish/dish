@@ -7,17 +7,19 @@ function compose() {
 function compose_build() {
   args1="--build-arg=GIT_COMMIT=$(git rev-parse --short HEAD)"
   args2="--build-arg=GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)"
-  echo "🐳 compose build... $args1 $args2 $@"
+  echo "--- 🐳 docker-compose build"
+  set -x
   if [ "$1" = "base" ] || [ "$1" = "run-tests" ]; then
     docker-compose -f docker-internal.yml build "$args1" "$args2" "$@"
   else
     docker-compose build "$args1" "$args2" "$@"
   fi
+  set +x
 }
 
 function compose_build_and_push() {
   compose_build "$@"
-  echo "🐳 docker push... $@"
+  echo "--- 🐳 docker push... $@"
   docker push "registry.dishapp.com/dish-$@" || echo "not our image, skip"
 }
 
@@ -61,7 +63,7 @@ function compose_up() {
       grep -E -v "$services_list" |
       tr '\r\n' ' '
   )
-  echo "compose_up exclude $services_list services $services"
+  echo "--- 🐳 compose_up exclude $services_list services $services"
   docker_login
   # cleans up misbehaving old containers
   if [ "$DISH_ENV" = "test" ]; then

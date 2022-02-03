@@ -30,7 +30,7 @@ COPY bin bin
 COPY app/etc app/etc
 
 # install
-RUN yarn install --immutable-cache \
+RUN yarn \
   && yarn postinstall \
   && yarn cache clean
 

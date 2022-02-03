@@ -2,6 +2,7 @@ env:
   BUILDKITE_TIMEOUT: "40"
   DISH_ENV: 'test'
   DOCKER_BUILDKIT: 1
+  BUILDKIT_PROGRESS: 'plain'
   LOG_ENV: 1
   COMPOSE_DOCKER_CLI_BUILD: 1
 
@@ -11,6 +12,9 @@ steps:
   - label: ":docker: build base"
     key: base
     command: DISH_ENV=production ./dsh compose_build base
+    retry:
+      automatic:
+        limit: 1
 
   # base can get slowed down, clogging the rest
   - wait

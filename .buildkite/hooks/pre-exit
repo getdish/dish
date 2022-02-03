@@ -72,6 +72,11 @@ if [ "$DOCKER_CLEAN" == "true" ] || { [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]
   CLEAN_BUILDKITE_BUILDS=true ./dsh clean_docker_if_disk_full
 fi
 
+if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ]; then
+  echo "pruning"
+  docker builder prune --all --force
+fi
+
 if [ "$BUILDKITE_COMMAND_EXIT_STATUS" = "1" ] && [ "$DATA_CLEAR_ON_FAIL" == "true" ]; then
   echo "cleaning data on failure..."
   ./dsh docker_network_dedupe
