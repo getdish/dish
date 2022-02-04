@@ -27,10 +27,10 @@
   "dependencies": {
     "@dish/helpers": "*",
     "@dish/use-store": "*",
-    "@gqty/logger": "^2.0.0",
-    "@gqty/react": "^2.0.0",
+    "@gqty/logger": "^2.0.2",
+    "@gqty/react": "^2.1.0",
     "esbuild-register": "^2.6.0",
-    "gqty": "2.0.2",
+    "gqty": "^2.1.0",
     "graphql": "^15.5.0",
     "isomorphic-unfetch": "^3.1.0",
     "lodash": "*",
@@ -40,7 +40,7 @@
   "devDependencies": {
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
-    "@gqty/cli": "^2.0.1",
+    "@gqty/cli": "^3.1.0",
     "@tamagui/build": "^1.0.0-alpha.44",
     "@types/node": "^16.11.10",
     "ava": "^3.15.0"

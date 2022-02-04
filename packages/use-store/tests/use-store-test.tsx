@@ -1,14 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import {
-  Store,
-  configureUseStore,
-  createStore,
-  useStore,
-  useStoreInstance,
-  useStoreInstanceSelector,
-} from '../src'
+import { Store, createStore, useStore, useStoreInstance, useStoreInstanceSelector } from '../src'
 import '@dish/react-test-env'
 import { RenderResult, act, cleanup, fireEvent, render } from '@testing-library/react'
 import { last } from 'lodash'

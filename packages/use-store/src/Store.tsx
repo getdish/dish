@@ -30,12 +30,12 @@ export class Store<Props extends Object | null = null> {
 
   constructor(public props: Props) {}
 
-  subscribe(onChanged: Function) {
+  subscribe = (onChanged: Function) => {
     this._listeners.add(onChanged)
     return () => {
       this._listeners.delete(onChanged)
     }
-  }
+  };
 
   [TRIGGER_UPDATE]() {
     this._version = (this._version + 1) % Number.MAX_SAFE_INTEGER

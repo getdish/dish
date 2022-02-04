@@ -29,8 +29,13 @@ COPY patches patches
 COPY bin bin
 COPY app/etc app/etc
 
+# leave in sanity check
+RUN ls -la
+RUN ls -la .yarn
+RUN ls -la .yarn/cache
+
 # install
-RUN yarn \
+RUN yarn install \
   && yarn postinstall \
   && yarn cache clean
 

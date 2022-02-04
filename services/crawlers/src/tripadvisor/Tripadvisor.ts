@@ -1,6 +1,10 @@
-import '@dish/common'
-
+import { restaurantSaveCanonical } from '../canonical-restaurant'
+import { DISH_DEBUG } from '../constants'
+import { GoogleGeocoder } from '../google/GoogleGeocoder'
+import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
+import { aroundCoords, curl_cli, decodeEntities, geocode } from '../utils'
 import { sleep } from '@dish/async'
+import '@dish/common'
 import { sentryException } from '@dish/common'
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
 import { ProxiedRequests, WorkerJob } from '@dish/worker'
@@ -9,12 +13,6 @@ import axios from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import * as cheerio from 'cheerio'
 import _ from 'lodash'
-
-import { restaurantSaveCanonical } from '../canonical-restaurant'
-import { DISH_DEBUG } from '../constants'
-import { GoogleGeocoder } from '../google/GoogleGeocoder'
-import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
-import { aroundCoords, curl_cli, decodeEntities, geocode } from '../utils'
 
 const TRIPADVISOR_OG_DOMAIN = 'https://www.tripadvisor.com'
 const TRIPADVISOR_AWS_DOMAIN = process.env.TRIPADVISOR_PROXY || ''
@@ -414,7 +412,7 @@ export class Tripadvisor extends WorkerJob {
 export async function tripadvisorGetFBC() {
   console.log('Getting Fresh Brew Coffee from Tripadvisor...')
   const tripadvisor_fbc =
-    'Restaurant_Review-g60713-d3652374-Reviews-Fresh_Brew_Coffee-San_Francisco_California.html'
+    '/Restaurant_Review-g60713-d3652374-Reviews-Fresh_Brew_Coffee-San_Francisco_California.html'
   const t = new Tripadvisor()
   await t.getRestaurant(tripadvisor_fbc)
   const restaurant = await restaurantFindOne({ name: 'Fresh Brew Coffee' })

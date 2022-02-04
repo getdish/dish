@@ -1,5 +1,7 @@
 FROM golang:alpine
 
+RUN apk add --update nodejs npm
+
 RUN apk --no-cache add git
 RUN go get -tags='avx2' github.com/zhenghaoz/gorse/...
 RUN mkdir /app

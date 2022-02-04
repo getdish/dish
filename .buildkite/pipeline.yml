@@ -75,7 +75,7 @@ steps:
       - search
       - hasura
       - timescale
-      - image-quality
+      # - image-quality
       - tileserver
       - run-tests
       - worker
@@ -110,8 +110,8 @@ steps:
     command: ./dsh pull_on io1
 
   - label: "setup services"
-    key: test-setup
     command: "./dsh setup_test_services"
+    key: test-setup
     timeout_in_minutes: 10
     depends_on:
       - test-images

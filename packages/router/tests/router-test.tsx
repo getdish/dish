@@ -1,11 +1,11 @@
-import '@dish/react-test-env/browser'
-
-import { TestRenderer, act } from '@dish/react-test-env'
-import { createStore } from '@dish/use-store'
-import React from 'react'
-
+/**
+ * @jest-environment jsdom
+ */
 import { Route, Router } from '../src'
 import * as Test from './spec/router-spec'
+import { TestRenderer, act } from '@dish/react-test-env'
+import { createStore } from '@dish/use-store'
+import * as React from 'react'
 
 test('creates a store and routes', () => {
   let r: TestRenderer.ReactTestRenderer

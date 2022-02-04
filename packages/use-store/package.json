@@ -21,8 +21,7 @@
   "dependencies": {
     "lodash": "*",
     "react": "*",
-    "react-dom": "*",
-    "use-sync-external-store": "0.0.0-experimental-5b57bc6e3-20210921"
+    "react-dom": "*"
   },
   "devDependencies": {
     "@tamagui/build": "^1.0.0-alpha.44",

@@ -1,6 +1,13 @@
 const useOurBabel = process.env.TAMAGUI_TARGET === 'web' || process.env.TAMAGUI_TARGET === 'node'
 
-console.log('env is', useOurBabel, process.env.BABEL_ENV, process.env.NODE_ENV)
+if (process.env.DEBUG) {
+  console.log('env is', {
+    useOurBabel,
+    TAMAGUI_TARGET: process.env.TAMAGUI_TARGET,
+    BABEL_ENV: process.env.BABEL_ENV,
+    NODE_ENV: process.env.NODE_ENV,
+  })
+}
 
 module.exports = function (api) {
   api.cache(true)

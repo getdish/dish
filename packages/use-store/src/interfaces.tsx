@@ -1,3 +1,5 @@
+import { Store } from './Store'
+
 export type Selector<A = unknown, B = unknown> = (x: A) => B
 
 export type UseStoreSelector<Store, Res> = (store: Store) => Res
@@ -7,7 +9,7 @@ export type UseStoreOptions<Store = any, SelectorRes = any> = {
   once?: boolean
 }
 
-export type StoreInfo<A = any> = {
+export type StoreInfo<A = Store> = {
   keyComparators?: {
     [key: string]: (a: any, b: any) => boolean
   }

@@ -38,13 +38,12 @@
     "csv-parse": "^4.9.0",
     "fast-levenshtein": "^3.0.0",
     "form-data": "^4.0.0",
-    "gqty": "2.0.2",
+    "gqty": "^2.1.0",
     "graphql": "^15.5.0",
     "imghash": "^0.0.9",
     "js-base64": "^2.5.2",
     "lodash": "*",
     "moment": "^2.29.1",
-    "node-fetch": "^3.0.0",
     "pg": "^8.7.1",
     "proxy-chain": "^0.4.4",
     "puppeteer-core": "^9.0.0",
@@ -54,7 +53,8 @@
     "sentiment": "^5.0.2",
     "sinon": "^9.0.3",
     "tabletojson": "^2.0.4",
-    "transliteration": "^2.1.8"
+    "transliteration": "^2.1.8",
+    "undici": "^4.13.0"
   },
   "devDependencies": {
     "@tamagui/build": "^1.0.0-alpha.44",

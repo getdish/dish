@@ -1,10 +1,3 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
-
-import { isEqualSubsetShallow } from './comparators'
-import { configureOpts } from './configureUseStore'
-import { UNWRAP_PROXY, defaultOptions } from './constants'
-import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr } from './helpers'
-import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
 import {
   ADD_TRACKER,
   SHOULD_DEBUG,
@@ -15,6 +8,11 @@ import {
   disableTracking,
   setDisableStoreTracking,
 } from './Store'
+import { isEqualSubsetShallow } from './comparators'
+import { configureOpts } from './configureUseStore'
+import { UNWRAP_PROXY, defaultOptions } from './constants'
+import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr } from './helpers'
+import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
 import {
   DebugStores,
   shouldDebug,
@@ -22,6 +20,7 @@ import {
   useDebugStoreComponent,
 } from './useStoreDebug'
 import { useSyncExternalStore } from './useSyncExternalStore'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 
 // sanity check types here
 // class StoreTest extends Store<{ id: number }> {}
@@ -334,7 +333,7 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
     return snap
   }, [])
 
-  const state = useSyncExternalStore(store, getSnapshot)
+  const state = useSyncExternalStore(store.subscribe, getSnapshot)
 
   // dispose tracker on unmount
   useEffect(() => {

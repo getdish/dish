@@ -1,2 +1,2 @@
-const fetch = require('node-fetch')
+const fetch = require('undici').fetch
 globalThis['fetch'] = globalThis['fetch'] || fetch
