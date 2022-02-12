@@ -1,11 +1,4 @@
-import { ZeroUUID, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
-import { isPresent } from '@dish/helpers'
-import { Input, XStack, useDebounce, useLazyEffect } from '@dish/ui'
-import { Search, Tag, X } from '@tamagui/feather-icons'
-import { sortBy, uniqBy } from 'lodash'
-import React, { memo, useState } from 'react'
-
-import { tagCategoriesPopular, tagFilters, tagLenses } from '../../../constants/localTags'
+import { tagFilters, tagLenses } from '../../../constants/localTags'
 import { fuzzySearch } from '../../../helpers/fuzzySearch'
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -14,6 +7,12 @@ import { useUserStore } from '../../userStore'
 import { SmallButton } from '../../views/SmallButton'
 import { TagButton, TagButtonProps, getTagButtonProps } from '../../views/TagButton'
 import { RestaurantReviewProps } from './RestaurantReview'
+import { ZeroUUID, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
+import { Input, XStack, useDebounce, useLazyEffect } from '@dish/ui'
+import { Search, X } from '@tamagui/feather-icons'
+import { sortBy, uniqBy } from 'lodash'
+import React, { memo, useState } from 'react'
 
 // add votable prop
 
@@ -200,24 +199,28 @@ export const ReviewTagsRow = memo(
       const tagsKey = tags.map((x) => x.slug).join('')
 
       useAsyncEffect(
-        async (mounted) => {
+        async (signal) => {
           if (!search) {
             setFiltered([])
             return
           }
-          const foundTagsWithNames = await resolved(() =>
-            query
-              .tag({
-                where: {
-                  name: {
-                    _ilike: `${search}%`,
+          const foundTagsWithNames = await resolved(
+            () =>
+              query
+                .tag({
+                  where: {
+                    name: {
+                      _ilike: `${search}%`,
+                    },
                   },
-                },
-                limit: 15,
-              })
-              .map(getTagButtonProps)
+                  limit: 15,
+                })
+                .map(getTagButtonProps),
+            {
+              signal,
+            }
           )
-          if (!mounted()) return
+          if (signal.aborted) return
           const filtered = await fuzzySearch({
             items: [...tags, ...foundTagsWithNames],
             query: search,

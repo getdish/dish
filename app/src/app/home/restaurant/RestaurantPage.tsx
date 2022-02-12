@@ -97,9 +97,9 @@ const RestaurantPage = memo(
       const [hasScrolled, setHasScrolled] = useState(false)
       const colors = getColorsForName(restaurantSlug)
 
-      useAsyncEffect(async (mounted) => {
+      useAsyncEffect(async (signal) => {
         await sleep(500)
-        if (!mounted()) return
+        if (signal.aborted) return
         setHasLoadedAboveFold(true)
       }, [])
 

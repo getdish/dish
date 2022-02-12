@@ -133,13 +133,13 @@ steps:
       LOG_DOCKER: true
       SHOW_DOCKER_IMAGES: true
 
-  - label: "run http-dependent tests"
-    key: tests-http-dependent
-    depends_on: tests
-    timeout_in_minutes: 10
-    command: "./dsh run_http_dependent_tests"
-    depends_on: tests
-    soft_fail: true
+  # - label: "run http-dependent tests"
+  #   key: tests-http-dependent
+  #   depends_on: tests
+  #   timeout_in_minutes: 10
+  #   command: "./dsh run_http_dependent_tests"
+  #   depends_on: tests
+  #   soft_fail: true
 
   # - label: "run integration test"
   #   command: "./dsh run_integration_tests"

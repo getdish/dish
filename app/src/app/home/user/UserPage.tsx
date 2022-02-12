@@ -1,3 +1,29 @@
+import { getTimeFormat } from '../../../helpers/getTimeFormat'
+import { queryUser } from '../../../queries/queryUser'
+import { router } from '../../../router'
+import { HomeStateItemUser } from '../../../types/homeTypes'
+import { useSetAppMap } from '../../appMapStore'
+import { useAsyncEffect } from '../../hooks/useAsync'
+import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
+import { useUserStore } from '../../userStore'
+import { ContentScrollView } from '../../views/ContentScrollView'
+import { Image } from '../../views/Image'
+import { Link } from '../../views/Link'
+import { Middot } from '../../views/Middot'
+import { NotFoundPage } from '../../views/NotFoundPage'
+import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
+import { Review } from '../../views/Review'
+import { SlantedTitle } from '../../views/SlantedTitle'
+import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
+import { SmallTitle } from '../../views/SmallTitle'
+import { StackDrawer } from '../../views/StackDrawer'
+import { SuspenseFallback } from '../../views/SuspenseFallback'
+import { ListCard } from '../../views/list/ListCard'
+import { StackItemProps } from '../HomeStackView'
+import { PageContentWithFooter } from '../PageContentWithFooter'
+import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
+import { CardCarousel } from './CardCarousel'
+import { UserAvatar } from './UserAvatar'
 import { sleep } from '@dish/async'
 import { ReviewQuery, graphql, order_by, query, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
@@ -19,33 +45,6 @@ import {
 } from '@dish/ui'
 import { Plus } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useState } from 'react'
-
-import { getTimeFormat } from '../../../helpers/getTimeFormat'
-import { queryUser } from '../../../queries/queryUser'
-import { router } from '../../../router'
-import { HomeStateItemUser } from '../../../types/homeTypes'
-import { useSetAppMap } from '../../appMapStore'
-import { useAsyncEffect } from '../../hooks/useAsync'
-import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
-import { useUserStore } from '../../userStore'
-import { ContentScrollView } from '../../views/ContentScrollView'
-import { Image } from '../../views/Image'
-import { Link } from '../../views/Link'
-import { ListCard } from '../../views/list/ListCard'
-import { Middot } from '../../views/Middot'
-import { NotFoundPage } from '../../views/NotFoundPage'
-import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
-import { Review } from '../../views/Review'
-import { SlantedTitle } from '../../views/SlantedTitle'
-import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
-import { SmallTitle } from '../../views/SmallTitle'
-import { StackDrawer } from '../../views/StackDrawer'
-import { SuspenseFallback } from '../../views/SuspenseFallback'
-import { StackItemProps } from '../HomeStackView'
-import { PageContentWithFooter } from '../PageContentWithFooter'
-import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
-import { CardCarousel } from './CardCarousel'
-import { UserAvatar } from './UserAvatar'
 
 type UserPane = 'vote' | 'review' | '' | 'favorite'
 
@@ -109,9 +108,9 @@ const UserPageContent = memo(
 
       const [hasLoadedAboveFold, setHasLoadedAboveFold] = useState(false)
 
-      useAsyncEffect(async (mounted) => {
+      useAsyncEffect(async (signal) => {
         await sleep(500)
-        if (!mounted()) return
+        if (signal.aborted) return
         setHasLoadedAboveFold(true)
       }, [])
 

@@ -174,7 +174,7 @@ function wait_until_app_ready() {
 
 function test_worker_crawler_integration() {
   echo "Testing crawler-worker integration..."
-  command="touch /app/.env && cd ../crawlers && ../../dsh run node dist/ci/run.js"
+  command="touch /app/.env && cd ../crawlers && ../../dsh run node dist/cjs/ci/run.js"
   docker-compose exec worker bash -c "$command" || true
   output=$(docker-compose logs worker)
 

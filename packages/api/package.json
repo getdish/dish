@@ -18,7 +18,7 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-alpha.44",
+    "@tamagui/build": "^1.0.0-alpha.64",
     "@types/express": "^4.17.13"
   }
 }
