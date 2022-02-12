@@ -68,6 +68,7 @@ function pull_on() {
     echo setup env
     source .env
     source .env.production
+    echo start pulling
     ./dsh pull_all
   "
 }

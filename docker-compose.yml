@@ -77,7 +77,7 @@ services:
         - traefik.http.routers.app-https.rule=Host(`${DOMAIN}`) || Host(`www.${DOMAIN}`)
         - traefik.http.routers.app-https.entrypoints=https
         - traefik.http.routers.app-https.tls=true
-        - traefik.http.routers.app-https.tls.certresolver=alt3
+        - traefik.http.routers.app-https.tls.certresolver=dishresolver
         - traefik.http.services.app.loadbalancer.server.port=4444
     build:
       context: ./
@@ -152,7 +152,7 @@ services:
         - traefik.http.routers.hasura-https.rule=Host(`hasura.${DOMAIN}`)
         - traefik.http.routers.hasura-https.entrypoints=https
         - traefik.http.routers.hasura-https.tls=true
-        - traefik.http.routers.hasura-https.tls.certresolver=le
+        - traefik.http.routers.hasura-https.tls.certresolver=dishresolver
         - traefik.http.services.hasura.loadbalancer.server.port=8080
     environment:
       - HASURA_GRAPHQL_NO_OF_RETRIES=50
@@ -200,7 +200,7 @@ services:
         - traefik.http.routers.search-https.rule=Host(`search.${DOMAIN}`)
         - traefik.http.routers.search-https.entrypoints=https
         - traefik.http.routers.search-https.tls=true
-        - traefik.http.routers.search-https.tls.certresolver=le
+        - traefik.http.routers.search-https.tls.certresolver=dishresolver
         - traefik.http.services.search.loadbalancer.server.port=9999
     environment:
       <<: *dish-env
@@ -235,7 +235,7 @@ services:
         # - traefik.http.routers.tileserver-https.rule=Host(`tileserver.${DOMAIN}`)
         # - traefik.http.routers.tileserver-https.entrypoints=https
         # - traefik.http.routers.tileserver-https.tls=true
-        # - traefik.http.routers.tileserver-https.tls.certresolver=le
+        # - traefik.http.routers.tileserver-https.tls.certresolver=dishresolver
         - traefik.http.services.tileserver.loadbalancer.server.port=3000
     build:
       context: ./services/tileserver
@@ -271,7 +271,7 @@ services:
   #       - traefik.http.routers.site-https.rule=Host(`site.${DOMAIN}`)
   #       - traefik.http.routers.site-https.entrypoints=https
   #       - traefik.http.routers.site-https.tls=true
-  #       - traefik.http.routers.site-https.tls.certresolver=le
+  #       - traefik.http.routers.site-https.tls.certresolver=dishresolver
   #       - traefik.http.services.site.loadbalancer.server.port=3999
 
   image-proxy:
@@ -300,7 +300,7 @@ services:
         - traefik.http.routers.image-proxy-https.rule=Host(`image-proxy.${DOMAIN}`)
         - traefik.http.routers.image-proxy-https.entrypoints=https
         - traefik.http.routers.image-proxy-https.tls=true
-        - traefik.http.routers.image-proxy-https.tls.certresolver=le
+        - traefik.http.routers.image-proxy-https.tls.certresolver=dishresolver
         - traefik.http.services.image-proxy.loadbalancer.server.port=8080
 
   worker:
@@ -328,7 +328,7 @@ services:
         - traefik.http.routers.worker-https.rule=Host(`worker.${DOMAIN}`)
         - traefik.http.routers.worker-https.entrypoints=https
         - traefik.http.routers.worker-https.tls=true
-        - traefik.http.routers.worker-https.tls.certresolver=le
+        - traefik.http.routers.worker-https.tls.certresolver=dishresolver
         - traefik.http.services.worker.loadbalancer.server.port=3434
     environment:
       <<: *dish-env
@@ -350,7 +350,7 @@ services:
         - traefik.http.routers.umami-https.rule=Host(`umami.${DOMAIN}`)
         - traefik.http.routers.umami-https.entrypoints=https
         - traefik.http.routers.umami-https.tls=true
-        - traefik.http.routers.umami-https.tls.certresolver=alt3
+        - traefik.http.routers.umami-https.tls.certresolver=dishresolver
         - traefik.http.services.umami.loadbalancer.server.port=3000
     ports:
       - "5555:3000"
@@ -379,7 +379,7 @@ services:
         - traefik.http.routers.pg-admin-https.rule=Host(`pg-admin.${DOMAIN}`)
         - traefik.http.routers.pg-admin-https.entrypoints=https
         - traefik.http.routers.pg-admin-https.tls=true
-        - traefik.http.routers.pg-admin-https.tls.certresolver=le
+        - traefik.http.routers.pg-admin-https.tls.certresolver=dishresolver
         - traefik.http.routers.pg-admin-https.middlewares=admin-auth
         - traefik.http.services.pg-admin.loadbalancer.server.port=80
 
