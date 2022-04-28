@@ -269,9 +269,9 @@ const HomeTagLenses = memo(() => {
               <Theme name={lense.color}>
                 <H2
                   py="$1"
-                  color="$color3"
+                  color="$colorPress"
                   hoverStyle={{
-                    color: '$color2',
+                    color: '$colorHover',
                   }}
                   fontWeight="300"
                 >
@@ -336,7 +336,7 @@ const HomeNearbyRegions = memo(
                       }),
                   })}
                 >
-                  <Paragraph ellipse size="$5" color="$color3">
+                  <Paragraph ellipse size="$5" color="$colorPress">
                     {regionName}
                   </Paragraph>
                 </Button>

@@ -173,7 +173,7 @@ const HomeContainerLarge = (props) => {
           maxWidth: drawerWidthMax,
         })}
       >
-        <XStack opacity={0.5} zi={-1} fullscreen br="$4" backgroundColor="$bg" />
+        <XStack opacity={0.5} zi={-1} fullscreen br="$4" backgroundColor="$background" />
 
         <XStack
           pe="none"

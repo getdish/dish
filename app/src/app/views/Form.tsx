@@ -1,9 +1,10 @@
+// debug-verbose
 import { isWeb } from '../../constants/constants'
 import { ContentScrollContext } from '../views/ContentScrollView'
 import {
   Button,
   Form,
-  Input, // @ts-ignore
+  Input,
   InputProps,
   Paragraph,
   Text,
@@ -56,8 +57,6 @@ export function SubmittableForm({
           <XStack>
             <YStack flex={1} />
             <Button
-              accessible
-              accessibilityRole="button"
               alignSelf="flex-end"
               marginLeft="auto"
               onPress={onSubmit}
@@ -67,7 +66,7 @@ export function SubmittableForm({
               disabled={isSubmitting}
             >
               {submitText}
-              {isSubmitting ? '...' : ''}
+              {/* {isSubmitting ? '...' : ''} */}
             </Button>
           </XStack>
         )}
@@ -111,7 +110,6 @@ export const ValidatedInput = ({
         render={({ onChange, onBlur, value }) => {
           return (
             <Input
-              color={isWeb ? 'var(--color)' : '#777'}
               // onFocus={() => {
               //   // if (drawerStore.snapIndexName !== 'top') {
               //   //   drawerStore.setSnapIndex(0)

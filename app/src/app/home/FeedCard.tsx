@@ -131,6 +131,7 @@ const FeedCardContent = ({
 }: FeedCardProps & { galleryRef: RefObject<GalleryRef> }) => {
   const titleLen = typeof title === 'string' ? title.length : 20
   const relativeSize = Math.max(1, Math.min(4, Math.round(60 / titleLen)))
+  // @ts-expect-error
   const titleSize = getFontSizeToken(size, {
     relativeSize,
   })
@@ -145,10 +146,10 @@ const FeedCardContent = ({
       ai="center"
       bw={1}
       pointerEvents="auto"
-      bc="$bg"
+      bc="$background"
       borderColor="$backgroundHover"
       hoverStyle={{
-        borderColor: '$bg4',
+        borderColor: '$backgroundFocus',
       }}
     >
       <YStack mt="auto" maxWidth="85%">
@@ -180,12 +181,13 @@ const FeedCardContent = ({
 
         <YStack p="$2" br="$2" pos="relative" ov="hidden" space="$1">
           <YStack position="relative" display={isWeb ? 'block' : 'flex'}>
-            <H2 color="$color4" fontWeight="300" size={titleSize || undefined}>
+            <H2 color="$colorFocus" fontWeight="300" size={titleSize || undefined}>
               {title}
             </H2>
           </YStack>
 
           {!!(author || typeof numItems !== 'undefined') && (
+            // @ts-expect-error
             <Paragraph size={size} fontWeight="300" opacity={0.6}>
               {typeof numItems !== 'undefined' ? (
                 <>{`${pluralize(numItems, 'item')}`} &middot; </>
@@ -197,20 +199,6 @@ const FeedCardContent = ({
           )}
         </YStack>
       </YStack>
-
-      {/* <YStack flex={1} /> */}
-      {/* <YStack
-        onPress={(e) => {
-          prevent(e)
-          galleryRef.current?.setIndex(1)
-        }}
-        opacity={0.4}
-        hoverStyle={{ opacity: 1 }}
-        zIndex={100000}
-        position="relative"
-      >
-        <ChevronRight color="#fff" size={20} />
-      </YStack> */}
     </XStack>
   )
 }

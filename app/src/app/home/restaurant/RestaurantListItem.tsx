@@ -200,7 +200,7 @@ const RestaurantListItemContent = memo(
             alignItems: 'center',
             paddingVertical: 5,
             hoverStyle: {
-              backgroundColor: '$bg3',
+              backgroundColor: '$backgroundPress',
             },
           })}
         >
@@ -256,7 +256,7 @@ const RestaurantListItemContent = memo(
           {/* ROW: TITLE */}
 
           <YStack
-            hoverStyle={{ backgroundColor: '$bg3' }}
+            hoverStyle={{ backgroundColor: '$backgroundPress' }}
             width={950}
             {...(shouldShowOneLine && {
               width: 'auto',

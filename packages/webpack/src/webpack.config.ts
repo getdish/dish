@@ -19,7 +19,6 @@ import { WebpackDeduplicationPlugin } from 'webpack-deduplication-plugin'
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin')
-// const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin').default
 
 // import WebpackPwaManifest from 'webpack-pwa-manifest'
 
@@ -102,7 +101,7 @@ export function createWebpackConfig({
     const cacheDir = join(rootNodeModules, '.cache', 'webpack')
     ensureDirSync(cacheDir)
 
-    const config: Webpack.Configuration = {
+    let config: Webpack.Configuration = {
       infrastructureLogging: {
         debug: process.env.DEBUG_CACHE ? /webpack\.cache/ : false,
       },
@@ -119,6 +118,7 @@ export function createWebpackConfig({
       stats: {
         assets: false,
         colors: true,
+        // logging: 'verbose',
       },
       externals: isSSR
         ? [
@@ -149,6 +149,7 @@ export function createWebpackConfig({
         filename: `static/js/app.${hashFileNamePart}.js`,
         publicPath: '/',
         pathinfo: !!(isDevelopment || process.env.DEBUG_PATHS),
+        assetModuleFilename: 'images/[hash][ext][query]',
         ...(isSSR && {
           libraryTarget: 'commonjs',
           filename: `static/js/app.ssr.${env}.js`,
@@ -174,11 +175,11 @@ export function createWebpackConfig({
         concatenateModules: process.env.ANALYZE_BUNDLE ? false : isProduction,
         usedExports: isProduction,
         removeEmptyChunks: isProduction,
-        innerGraph: isProduction,
-        sideEffects: isProduction,
-        mergeDuplicateChunks: isProduction,
-        providedExports: isProduction,
-        realContentHash: isProduction,
+        // innerGraph: isProduction,
+        // sideEffects: isProduction,
+        // mergeDuplicateChunks: isProduction,
+        // realContentHash: isProduction,
+        // providedExports: isProduction,
         mangleExports: isProduction,
         removeAvailableModules: isProduction,
         splitChunks:
@@ -210,7 +211,13 @@ export function createWebpackConfig({
                 },
               }
             : {
+                chunks: 'async',
                 cacheGroups: {
+                  defaultVendors: {
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10,
+                    reuseExistingChunk: true,
+                  },
                   styles: {
                     name: `styles`,
                     type: 'css/mini-extract',
@@ -219,9 +226,9 @@ export function createWebpackConfig({
                   },
                 },
               },
-        runtimeChunk: false,
+        runtimeChunk: !isProduction,
         minimizer: !isProduction
-          ? [new CssMinimizerPlugin()]
+          ? []
           : [
               new CssMinimizerPlugin(),
               new ESBuildMinifyPlugin({
@@ -237,26 +244,40 @@ export function createWebpackConfig({
           {
             oneOf: [
               {
-                test: /\.[jt]sx?$/,
-                include: babelInclude ?? defaultBabelInclude,
-                // @ts-ignore
+                test: /(bottom-sheet).*\.[tj]sx?$/,
                 use: [
-                  'thread-loader',
-
                   {
                     loader: 'babel-loader',
                     options: {
-                      plugins: ['react-native-reanimated/plugin'],
+                      plugins: [
+                        'react-native-reanimated/plugin',
+                        '@babel/plugin-transform-react-jsx',
+                      ],
                     },
                   },
+                ],
+              },
+
+              {
+                test: /\.[jt]sx?$/,
+                include: babelInclude ?? defaultBabelInclude,
+
+                use: [
+                  'thread-loader',
+
+                  // {
+                  //   loader: 'babel-loader',
+                  //   options: {
+                  //     plugins: ['react-native-reanimated/plugin'],
+                  //   },
+                  // },
 
                   {
                     loader: require.resolve('esbuild-loader'),
                     options: {
                       loader: 'tsx',
-                      target: 'es2019',
+                      target: 'es2020',
                       keepNames: true,
-                      // implementation: esbuild,
                     },
                   },
 
@@ -268,19 +289,22 @@ export function createWebpackConfig({
                     : null,
                 ].filter(isPresent),
               },
+
               {
                 test: /\.css$/i,
                 use: [MiniCssExtractPlugin.loader, require.resolve('css-loader')],
                 sideEffects: true,
               },
+
               {
                 test: /\.(png|svg|jpe?g|gif)$/,
+                type: 'javascript/auto',
                 use: [
                   {
-                    loader: require.resolve('url-loader'),
+                    loader: require.resolve('file-loader'),
                     options: {
-                      limit: 1000,
-                      name: `static/media/[name].[hash].[ext]`,
+                      limit: 8192,
+                      name: `[name].[ext]`,
                       // react-native-web compat
                       // https://github.com/necolas/react-native-web/commit/17d8b12299baf353968c1fed434336715a0e7bcc
                       esModule: false,
@@ -346,17 +370,18 @@ export function createWebpackConfig({
 
         new LodashModuleReplacementPlugin(),
 
-        new MiniCssExtractPlugin({
-          filename: isProduction ? '[name].[contenthash].css' : '[name].css',
-        }),
-
         isSSR && new LoadablePlugin(),
 
         // slim down unused react-native-web modules
-        // new Webpack.NormalModuleReplacementPlugin(
-        //   /react-native-web.*Virtualized(Section)?List.*/,
-        //   require.resolve('@dish/proxy-worm')
-        // ),
+        (() => {
+          const excludeExports = ['Switch', 'ProgressBar', 'Picker', 'Animated', 'AnimatedFlatList']
+          const regexStr = `\/react-native-web\/.*(${excludeExports.join('|')}).*\/`
+          const regex = new RegExp(regexStr)
+          return new Webpack.NormalModuleReplacementPlugin(
+            regex,
+            require.resolve('@tamagui/proxy-worm')
+          )
+        })(),
 
         new Webpack.DefinePlugin(defines),
 
@@ -413,10 +438,20 @@ export function createWebpackConfig({
     // for profiling plugin speed
     // ⚠️ this breaks HMR! Only use it for debugging
     if (process.env.PROFILE_WEBPACK) {
-      return smp.wrap(config)
+      config = smp.wrap(config)
     }
 
+    // https://github.com/stephencookdev/speed-measure-webpack-plugin/issues/167
+    config.plugins!.push(
+      new MiniCssExtractPlugin({
+        filename: isProduction ? '[name].[contenthash].css' : '[name].css',
+      })
+    )
+
     return config
+    // }
+
+    // return config
   }
 
   const conf = getConfig()
@@ -424,7 +459,7 @@ export function createWebpackConfig({
   if (process.env.VERBOSE) {
     console.log('Config:\n', cacheName, conf)
     if (!Array.isArray(conf)) {
-      console.log('rules', JSON.stringify(conf.module.rules, null, 2))
+      console.log('rules', JSON.stringify(conf.module!.rules, null, 2))
     }
   }
 

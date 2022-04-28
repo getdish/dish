@@ -77,7 +77,7 @@ const Header = memo(
         <YStack
           // hoverStyle={{ backgroundColor: `${listColors.backgroundColor}11` }}
           hoverStyle={{
-            backgroundColor: '$bgTransparent',
+            backgroundColor: '$backgroundTransparent',
           }}
           paddingVertical={20}
           paddingHorizontal={24}
@@ -105,7 +105,7 @@ const Header = memo(
                       py="$1"
                       px="$1"
                       hoverStyle={{
-                        bc: '$bg4',
+                        bc: '$backgroundFocus',
                       }}
                       fontWeight="200"
                       maxWidth="100%"

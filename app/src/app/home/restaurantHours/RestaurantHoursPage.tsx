@@ -1,3 +1,11 @@
+import { dateTimeFormat } from '../../../helpers/dateTimeFormat'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { router } from '../../../router'
+import { homeStore } from '../../homeStore'
+import { PaneControlButtons } from '../../views/PaneControlButtons'
+import { SmallTitle } from '../../views/SmallTitle'
+import { StackViewCloseButton } from '../../views/StackViewCloseButton'
+import { PageTitle } from '../PageTitle'
 import { graphql } from '@dish/graph'
 import {
   Modal,
@@ -13,15 +21,6 @@ import {
 } from '@dish/ui'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
-
-import { dateTimeFormat } from '../../../helpers/dateTimeFormat'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { router } from '../../../router'
-import { homeStore } from '../../homeStore'
-import { PaneControlButtons } from '../../views/PaneControlButtons'
-import { SmallTitle } from '../../views/SmallTitle'
-import { StackViewCloseButton } from '../../views/StackViewCloseButton'
-import { PageTitle } from '../PageTitle'
 
 export default memo(
   graphql(function RestaurantHoursPage(props: any) {
@@ -72,7 +71,10 @@ export default memo(
                     }
                     const isToday = (hour.hoursInfo.day ?? '').startsWith(dayOfWeek)
                     return (
-                      <TableRow backgroundColor={isToday ? '$bg2' : 'transparent'} key={i}>
+                      <TableRow
+                        backgroundColor={isToday ? '$backgroundHover' : 'transparent'}
+                        key={i}
+                      >
                         <TableCell fontWeight="600" {...col0Props}>
                           {hour.hoursInfo.day}
                         </TableCell>

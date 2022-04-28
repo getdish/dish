@@ -21,7 +21,7 @@ export const BottomSheetContainer = (props: { children: any }) => {
       zIndex={10}
       className="blur"
     >
-      <YStack fullscreen backgroundColor="$bg" opacity={isWeb ? 0.65 : 1} />
+      <YStack fullscreen backgroundColor="$background" opacity={isWeb ? 0.65 : 1} />
       <DrawerPortalProvider />
       {props.children}
     </YStack>

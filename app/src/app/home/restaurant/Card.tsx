@@ -203,7 +203,7 @@ export function Card(props: CardProps) {
                   </H3>
                 </YStack>
                 <Spacer size="$1" />
-                {!!subTitle && !size.endsWith('xs') && (
+                {!!subTitle && (typeof size === 'number' || !size.endsWith('xs')) && (
                   <Paragraph
                     textAlign="right"
                     fontWeight="800"

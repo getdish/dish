@@ -1,22 +1,21 @@
-import { AbsoluteYStack, LoadingItems, ToastRoot, YStack } from '@dish/ui'
-import loadable from '@loadable/component'
-import React, { Suspense, useEffect } from 'react'
-
 import { isSSR } from '../constants/constants'
-import AdminPage from './admin/AdminPage'
 import { AppHomeMobileWeb } from './AppHomeMobileWeb'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
-import { Home } from './home/Home'
 import { RootPortalProvider } from './Portal'
 import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
+import AdminPage from './admin/AdminPage'
+import { Home } from './home/Home'
 import { useIsMobilePhone } from './useIsMobilePhone'
 import { ErrorBoundary } from './views/ErrorBoundary'
 import { NotFoundPage } from './views/NotFoundPage'
+import { AbsoluteYStack, LoadingItems, ToastRoot, YStack } from '@dish/ui'
+import loadable from '@loadable/component'
+import React, { Suspense, useEffect } from 'react'
 
 export function App() {
   // helper that warns on root level unmounts (uncaught suspense)
@@ -121,21 +120,21 @@ function AppHomeContent(props: { children?: any }) {
 }
 
 const UserEditPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+  process.env.TARGET === 'ssr'
     ? require('./home/userEdit/UserEditPage').default
     : loadable(() => import('./home/userEdit/UserEditPage'))
 
 const GalleryPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+  process.env.TARGET === 'ssr'
     ? require('./home/gallery/GalleryPage').default
     : loadable(() => import('./home/gallery/GalleryPage'))
 
 const RestaurantReviewPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+  process.env.TARGET === 'ssr'
     ? require('./home/restaurantReview/RestaurantReviewPage').default
     : loadable(() => import('./home/restaurantReview/RestaurantReviewPage'))
 
 const RestaurantHoursPage =
-  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
+  process.env.TARGET === 'ssr'
     ? require('./home/restaurantHours/RestaurantHoursPage').default
     : loadable(() => import('./home/restaurantHours/RestaurantHoursPage'))

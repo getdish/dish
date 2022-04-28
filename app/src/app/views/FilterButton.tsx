@@ -50,7 +50,7 @@ export const FilterButton = ({
         // borderWidth={0}
         bc="$backgroundHover"
         hoverStyle={{
-          bc: '$bg3',
+          bc: '$backgroundPress',
         }}
         onPress={() => {
           resetResults()

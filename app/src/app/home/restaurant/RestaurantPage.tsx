@@ -238,7 +238,7 @@ const RestaurantPage = memo(
                         <H1
                           className="font-title"
                           fontFamily="$title"
-                          color="$color4"
+                          color="$colorFocus"
                           maxWidth={500}
                           alignSelf="flex-start"
                         >
@@ -393,7 +393,11 @@ const RestaurantPage = memo(
             <PageContentWithFooter>
               {/* HEADER */}
               {/* -1 margin bottom to overlap bottom border */}
-              <YStack backgroundColor="$bg4" borderBottomColor="$bg3" borderBottomWidth={1}>
+              <YStack
+                backgroundColor="$backgroundFocus"
+                borderBottomColor="$backgroundPress"
+                borderBottomWidth={1}
+              >
                 {headerEl}
                 {/* <RestaurantHeader
                     themeName={themeName}

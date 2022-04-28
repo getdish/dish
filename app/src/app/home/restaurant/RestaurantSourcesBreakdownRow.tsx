@@ -32,7 +32,7 @@ export const RestaurantSourcesBreakdownRow = memo(
             marginVertical={-6}
             borderRadius={100}
             hoverStyle={{
-              backgroundColor: '$bg2',
+              backgroundColor: '$backgroundHover',
             }}
             position="relative"
             alignItems="center"

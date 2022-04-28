@@ -60,7 +60,7 @@ export const SearchPageNavBar = memo(() => {
         right={0}
         maxWidth={drawerWidthMax}
         backgroundColor="$backgroundHover"
-        shadowColor="$shadowColor2"
+        shadowColor="$shadowColorHover"
         shadowRadius={6}
         shadowOffset={{ height: 3, width: 0 }}
         zIndex={10000}

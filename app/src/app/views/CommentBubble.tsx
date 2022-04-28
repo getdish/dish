@@ -293,7 +293,7 @@ function CommentBubbleContents(
           paddingHorizontal={15}
           paddingVertical={15}
           marginLeft={20}
-          backgroundColor="$bgCard"
+          backgroundColor="$backgroundCard"
           borderColor="$borderColor"
           borderWidth={0.5}
           borderRadius={20}
@@ -318,13 +318,14 @@ function CommentBubbleContents(
           {/* tiny bottom left bubble */}
           {!chromeless && (
             <AbsoluteYStack
+              theme="Card"
               bottom={-6}
               left={0}
               width={20}
               height={20}
               borderRadius={100}
-              backgroundColor="$bgCard"
-              shadowColor="$shadowColor2"
+              backgroundColor="$background"
+              shadowColor="$shadowColorHover"
               shadowRadius={4}
               shadowOffset={{ height: 3, width: 0 }}
             />
