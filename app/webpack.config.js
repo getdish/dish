@@ -264,7 +264,6 @@ if (process.env.TAMAGUI_TARGET === 'native') {
         config: 'src/tamagui.config.ts',
         components: ['tamagui', '@dish/ui'],
         evaluateImportsWhitelist: ['constants.js', 'colors.js'],
-        themesFile: require.resolve('./src/constants/themes.ts'),
         disableExtraction: process.env.NODE_ENV === 'development',
       },
       htmlOptions: {

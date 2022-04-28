@@ -4,7 +4,7 @@ import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { MenuLinkButton } from './MenuLinkButton'
 import { useUserStore } from './userStore'
 import { slugify } from '@dish/graph'
-import { Box, Popover, Theme, YStack } from '@dish/ui'
+import { Card, Popover, YStack } from '@dish/ui'
 import { Plus } from '@tamagui/feather-icons'
 import React, { useState } from 'react'
 import { GestureResponderEvent } from 'react-native'
@@ -39,7 +39,7 @@ export const AppActionButton = () => {
 const AppActionButtonContents = ({ hide }: { hide?: (e: GestureResponderEvent) => any }) => {
   const { user } = useUserStore()
   return (
-    <Box
+    <Card
       maxHeight={Math.max(350, getWindowHeight() - searchBarHeight - 30)}
       padding={0}
       alignItems="stretch"
@@ -61,6 +61,6 @@ const AppActionButtonContents = ({ hide }: { hide?: (e: GestureResponderEvent) =
           Create list
         </MenuLinkButton>
       </YStack>
-    </Box>
+    </Card>
   )
 }

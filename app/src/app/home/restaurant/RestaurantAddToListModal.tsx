@@ -8,13 +8,13 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { graphql, order_by, query, useMutation } from '@dish/graph'
 import {
   AbsoluteYStack,
-  Box,
   Button,
+  Card,
+  Heading,
   Modal,
   Spacer,
   Text,
   Theme,
-  Title,
   Toast,
   XStack,
   YStack,
@@ -81,11 +81,11 @@ export const RestaurantAddToListModal = graphql(
           <Spacer />
 
           <Theme name="yellow">
-            <Box marginHorizontal={12} paddingVertical={12} paddingHorizontal={12}>
+            <Card marginHorizontal={12} paddingVertical={12} paddingHorizontal={12}>
               <Text>
                 Add <Text fontWeight="700">{restaurant.name}</Text> to...
               </Text>
-            </Box>
+            </Card>
           </Theme>
 
           <Spacer />
@@ -105,7 +105,7 @@ export const RestaurantAddToListModal = graphql(
               >
                 <XStack paddingHorizontal={20} paddingVertical={3}>
                   <YStack flex={1}>
-                    <Title size="$5">{list?.name}</Title>
+                    <Heading size="$5">{list?.name}</Heading>
                   </YStack>
 
                   {!isAdded && (

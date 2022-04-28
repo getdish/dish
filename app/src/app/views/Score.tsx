@@ -1,25 +1,25 @@
-import { supportsTouchWeb } from '@dish/helpers'
-import {
-  AbsoluteYStack,
-  InteractiveContainer,
-  Paragraph,
-  StackProps,
-  Tooltip,
-  XStack,
-  YStack,
-  useTheme,
-} from '@dish/ui'
-import { ArrowDown, ArrowUp } from '@tamagui/feather-icons'
-import React, { memo } from 'react'
-
 import { isWeb } from '../../constants/constants'
 import { isTouchDevice } from '../../constants/platforms'
 import { numberFormat } from '../../helpers/numberFormat'
 import { ProgressRing } from '../home/ProgressRing'
 import { useUserStore } from '../userStore'
 import { VoteButton } from './VoteButton'
+import { supportsTouchWeb } from '@dish/helpers'
+import {
+  AbsoluteYStack,
+  Card,
+  InteractiveContainer,
+  Paragraph,
+  Tooltip,
+  XStack,
+  YStack,
+  YStackProps,
+  useTheme,
+} from '@dish/ui'
+import { ArrowDown, ArrowUp } from '@tamagui/feather-icons'
+import React, { memo } from 'react'
 
-export type ScoreProps = StackProps & {
+export type ScoreProps = YStackProps & {
   votable?: boolean
   score: number
   showVoteOnHover?: boolean
@@ -135,15 +135,12 @@ export const Score = memo(
         {...props}
       >
         {typeof rating === 'number' && (
-          <YStack
+          <Card
             borderRadius={1000}
-            backgroundColor={theme.bgCard}
             height={sizePx}
             position="relative"
             {...(shadowed && {
-              shadowColor: 'rgba(0,0,0,0.125)',
-              shadowRadius: 6,
-              shadowOffset: { height: 3, width: -1 },
+              elevation: '$2',
             })}
           >
             <AbsoluteYStack fullscreen alignItems="center" justifyContent="center">
@@ -157,7 +154,7 @@ export const Score = memo(
               percent={rating * 10}
               width={sizePx * 0.05}
             />
-          </YStack>
+          </Card>
         )}
         {voteContent}
       </XStack>

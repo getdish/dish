@@ -1,19 +1,17 @@
-import { Button, Spacer, XStack, YStack, useMedia } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
-import { MapPin, Search } from '@tamagui/feather-icons'
-import React, { Suspense, memo } from 'react'
-import { TouchableOpacity } from 'react-native'
-
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { AppActionButton } from './AppActionButton'
 import { AppMenuButton } from './AppMenuButton'
 import { AppSearchInput } from './AppSearchInput'
 import { AppSearchInputLocation } from './AppSearchInputLocation'
 import { autocompletesStore } from './AutocompletesStore'
-import { SearchBarActionButton } from './SearchBarActionButton'
 import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
 import { DishLogoButton } from './views/DishLogoButton'
+import { Button, Spacer, XStack, YStack, useMedia } from '@dish/ui'
+import { useStoreInstance } from '@dish/use-store'
+import { MapPin, Search } from '@tamagui/feather-icons'
+import React, { Suspense, memo } from 'react'
+import { TouchableOpacity } from 'react-native'
 
 export const AppSearchBarContents = memo(() => {
   const autocompletes = useStoreInstance(autocompletesStore)
@@ -32,7 +30,6 @@ export const AppSearchBarContents = memo(() => {
       pointerEvents="auto"
       alignItems="center"
       justifyContent="center"
-      userSelect="none"
       paddingHorizontal="$1"
       minHeight={searchBarHeight}
     >

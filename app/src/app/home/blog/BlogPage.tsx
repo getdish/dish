@@ -8,7 +8,7 @@ import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnM
 import { BlogPageDetail } from './BlogPageDetail'
 import { BlogPostMeta } from './BlogPostMeta'
 import { MDX } from './MDX'
-import { Separator, Spacer, Title, YStack } from '@dish/ui'
+import { Heading, Separator, Spacer, YStack } from '@dish/ui'
 import React from 'react'
 
 // import { posts } from './posts'
@@ -47,16 +47,16 @@ function BlogPageIndex() {
     <>
       <YStack>
         <YStack paddingHorizontal={25} paddingVertical={40}>
-          <Title size="$8">Dish Blog</Title>
+          <Heading size="$8">Dish Blog</Heading>
         </YStack>
         <Separator />
         <YStack space="$6" paddingHorizontal={25} paddingVertical={40}>
           {allPosts.map((post, index) => (
             <YStack key={index} borderRadius={10} padding={10}>
               <Link name="blog" params={{ slug: post.id }}>
-                <Title selectable={false} textAlign="left" size="$4">
+                <Heading selectable={false} textAlign="left" size="$4">
                   {post.title}
-                </Title>
+                </Heading>
               </Link>
               <Spacer size="$2" />
               <BlogPostMeta post={post} />

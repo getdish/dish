@@ -48,7 +48,6 @@ const RestaurantUpVoteDownVoteContents = graphql(
       activeTags,
       restaurant,
     })
-    const theme = useTheme()
 
     if (!restaurant) {
       return null
@@ -66,7 +65,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           right={-30}
           zIndex={2}
           borderRadius={1000}
-          backgroundColor={theme.bgCard}
+          backgroundColor="$background"
           shadowColor="#000"
           shadowOpacity={0.1}
           shadowRadius={3}
@@ -157,7 +156,7 @@ const RatingWithVotes = memo(
         justifyContent="center"
         width={sizePx}
         height={sizePx}
-        backgroundColor={theme.bgCard}
+        backgroundColor="$background"
         elevation="$1"
         borderRadius={100}
       >
@@ -172,10 +171,10 @@ const RatingWithVotes = memo(
         </YStack>
         <XStack position="relative" zIndex={10}>
           <Text
+            theme="alt2"
             fontSize={fontSize}
             fontWeight="600"
             letterSpacing={-0.5}
-            color={theme.color3}
             cursor="default"
             onPress={onClickPoints}
           >

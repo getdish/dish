@@ -1,9 +1,9 @@
-import { LoadingItems, StackProps, YStack } from '@dish/ui'
+import { ColumnHeader } from './ColumnHeader'
+import { LoadingItems, YStack, YStackProps } from '@dish/ui'
+import React from 'react'
 import { Suspense } from 'react'
 
-import { ColumnHeader } from './ColumnHeader'
-
-export const VerticalColumn = ({ children, title, ...props }: StackProps & { title?: any }) => {
+export const VerticalColumn = ({ children, title, ...props }: YStackProps & { title?: any }) => {
   return (
     <YStack
       minWidth={180}

@@ -1,13 +1,12 @@
-import { graphql } from '@dish/graph'
-import { Box, HoverablePopover, Paragraph, XStack, YStack, useTheme } from '@dish/ui'
-import { ExternalLink, Link2, PhoneCall } from '@tamagui/feather-icons'
-import React, { memo } from 'react'
-
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { GeocodePlace } from '../../../types/homeTypes'
 import { SmallCircleButton } from '../../views/CloseButton'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
+import { graphql } from '@dish/graph'
+import { Card, HoverablePopover, Paragraph, XStack, YStack, useTheme } from '@dish/ui'
+import { ExternalLink, Link2, PhoneCall } from '@tamagui/feather-icons'
+import React, { memo } from 'react'
 
 export type AddressSize = 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
 
@@ -66,7 +65,7 @@ export const RestaurantAddressLinksRow = memo(
                 allowHoverOnContent
                 trigger={(props) => <SmallCircleButton icon={ExternalLink} {...props} />}
               >
-                <Box padding={10}>{linkElements}</Box>
+                <Card padding={10}>{linkElements}</Card>
               </HoverablePopover>
             ))}
 

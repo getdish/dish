@@ -1,6 +1,13 @@
+import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
+import { HomeActiveTagsRecord } from '../../../types/homeTypes'
+import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
+import { PointsText } from '../PointsText'
+import { SmallTitle } from '../SmallTitle'
 import { graphql } from '@dish/graph'
 import {
-  Box,
+  Card,
   Spacer,
   Table,
   TableCell,
@@ -12,14 +19,6 @@ import {
   XStack,
 } from '@dish/ui'
 import React from 'react'
-
-import { getActiveTagSlugs } from '../../../helpers/getActiveTagSlugs'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { queryRestaurantTagScores } from '../../../queries/queryRestaurantTagScores'
-import { HomeActiveTagsRecord } from '../../../types/homeTypes'
-import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
-import { PointsText } from '../PointsText'
-import { SmallTitle } from '../SmallTitle'
 
 export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
   restaurantSlug,
@@ -42,7 +41,7 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
     tagSlugs: getActiveTagSlugs(activeTags),
   })
   return (
-    <Box
+    <Card
       maxWidth={320}
       overflow="hidden"
       minWidth={200}
@@ -98,7 +97,7 @@ export const RestaurantTagsScore = graphql(function RestaurantTagsScore({
           })}
         </Table>
       </XStack>
-    </Box>
+    </Card>
   )
 })
 

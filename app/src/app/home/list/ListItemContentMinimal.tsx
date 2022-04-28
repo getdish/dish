@@ -162,7 +162,7 @@ const Header = memo(
                     <RestaurantRatingView restaurant={restaurant} size={28} />
                   </YStack> */}
 
-                  <Text marginHorizontal={10} opacity={0.5} fontSize={14} color={theme.color3}>
+                  <Text marginHorizontal={10} opacity={0.5} fontSize={14} color={theme.colorPress}>
                     {price_range ?? '?'}
                   </Text>
 
@@ -172,7 +172,12 @@ const Header = memo(
                       name="restaurantHours"
                       params={{ slug: restaurant.slug || '' }}
                     >
-                      <Text paddingHorizontal={5} opacity={0.8} fontSize={13} color={theme.color3}>
+                      <Text
+                        paddingHorizontal={5}
+                        opacity={0.8}
+                        fontSize={13}
+                        color={theme.colorPress}
+                      >
                         {open.nextTime || ''}
                       </Text>
                     </Link>

@@ -1,16 +1,15 @@
-import { LoadingItems, StackProps, YStack } from '@dish/ui'
-// @ts-ignore
-import React, { Suspense, SuspenseList, SuspenseListProps, SuspenseProps } from 'react'
-
 import { searchBarHeight } from '../../constants/constants'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { PageFooter } from './PageFooter'
+import { LoadingItems, YStack, YStackProps } from '@dish/ui'
+// @ts-ignore
+import React, { Suspense, SuspenseList, SuspenseListProps } from 'react'
 
 export const PageContentWithFooter = ({
   children,
   suspenseOrder,
   ...props
-}: StackProps & {
+}: YStackProps & {
   suspenseOrder?: SuspenseListProps['revealOrder']
 }) => {
   return (

@@ -1,14 +1,13 @@
-import { graphql } from '@dish/graph'
-import { Button, Hoverable, Text, XStack, YStack, useTheme } from '@dish/ui'
-import { debounce } from 'lodash'
-import React, { useCallback } from 'react'
-
 import { getImageUrl } from '../../helpers/getImageUrl'
 import { queryRestaurant } from '../../queries/queryRestaurant'
 import { appMapStore } from '../appMapStore'
 import { Image } from '../views/Image'
 import { Link } from '../views/Link'
 import { RestaurantRatingView } from './RestaurantRatingView'
+import { graphql } from '@dish/graph'
+import { Button, Hoverable, Text, XStack, YStack, useTheme } from '@dish/ui'
+import { debounce } from 'lodash'
+import React, { useCallback } from 'react'
 
 const setHovered = debounce(appMapStore.setHovered, 300)
 
@@ -30,7 +29,7 @@ export const RestaurantButton = graphql(
 
     const content = (
       <Link name="restaurant" params={{ slug: slug }} asyncClick>
-        <Button backgroundColor={theme.bg3} noTextWrap>
+        <Button backgroundColor="$backgroundPress" noTextWrap>
           <XStack maxWidth={300}>
             {!!restaurant.image && (
               <Image
@@ -44,7 +43,7 @@ export const RestaurantButton = graphql(
                 }}
               />
             )}
-            <Text ellipse color={theme.color2} fontWeight="400">
+            <Text ellipse color={theme.colorHover} fontWeight="400">
               {restaurant.name}
             </Text>
             <YStack margin={-6} marginLeft={10}>

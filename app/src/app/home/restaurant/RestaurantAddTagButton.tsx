@@ -1,10 +1,9 @@
-import { Restaurant } from '@dish/graph'
-import { Box, Popover } from '@dish/ui'
-import { Plus } from '@tamagui/feather-icons'
-import React, { useState } from 'react'
-
 import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { LinkButton } from '../../views/LinkButton'
+import { Restaurant } from '@dish/graph'
+import { Card, Popover } from '@dish/ui'
+import { Plus } from '@tamagui/feather-icons'
+import React, { useState } from 'react'
 
 export const RestaurantAddTagButton = ({ restaurant }: { restaurant: Restaurant }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -18,9 +17,9 @@ export const RestaurantAddTagButton = ({ restaurant }: { restaurant: Restaurant 
         </LinkButton>
       )}
     >
-      <Box>
+      <Card>
         <LenseButtonBar />
-      </Box>
+      </Card>
     </Popover>
   )
 }

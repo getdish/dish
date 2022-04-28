@@ -1,26 +1,24 @@
-import { StackProps, YStack, useTheme } from '@dish/ui'
+import { YStack, YStackProps, useTheme } from '@dish/ui'
 import React from 'react'
 
-export const CircleButton = (props: StackProps & { floating?: boolean }) => {
+export const CircleButton = (props: YStackProps & { floating?: boolean }) => {
   const theme = useTheme()
   return (
     <YStack
       borderRadius={1000}
-      backgroundColor={theme.bg2}
+      backgroundColor="$backgroundHover"
       width={44}
       height={44}
       alignItems="center"
       justifyContent="center"
       borderWidth={1}
-      borderColor={theme.borderColor}
+      borderColor="$borderColor"
       hoverStyle={{
-        borderColor: theme.borderColor2,
-        backgroundColor: theme.bg3,
+        borderColor: '$borderColorHover',
+        backgroundColor: '$backgroundPress',
       }}
       {...(props.floating && {
-        shadowColor: 'rgba(0,0,0,0.1)',
-        shadowOffset: { height: 2, width: 0 },
-        shadowRadius: 8,
+        elevation: '$2',
       })}
       {...props}
     />

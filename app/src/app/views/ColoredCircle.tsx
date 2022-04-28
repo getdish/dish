@@ -1,11 +1,11 @@
-import { StackProps, YStack } from '@dish/ui'
+import { YStack, YStackProps } from '@dish/ui'
 import React from 'react'
 
 export const ColoredCircle = ({
   size,
   isSelected,
   ...rest
-}: StackProps & {
+}: YStackProps & {
   isSelected?: boolean
   size: number | string
 }) => {

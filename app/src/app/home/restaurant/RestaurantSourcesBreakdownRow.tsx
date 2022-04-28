@@ -1,12 +1,11 @@
-import { graphql } from '@dish/graph'
-import { Box, HoverablePopover, Text, XStack } from '@dish/ui'
-import React, { Suspense, memo } from 'react'
-
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Link } from '../../views/Link'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
+import { graphql } from '@dish/graph'
+import { Card, HoverablePopover, Text, XStack } from '@dish/ui'
+import React, { Suspense, memo } from 'react'
 
 export const RestaurantSourcesBreakdownRow = memo(
   graphql(function RestaurantSourcesBreakdownRow({
@@ -75,11 +74,11 @@ export const RestaurantSourcesBreakdownRow = memo(
       >
         {(isOpen) => {
           return (
-            <Box width={280} minHeight={200}>
+            <Card width={280} minHeight={200}>
               <Suspense fallback={null}>
                 {isOpen ? <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} /> : null}
               </Suspense>
-            </Box>
+            </Card>
           )
         }}
       </HoverablePopover>

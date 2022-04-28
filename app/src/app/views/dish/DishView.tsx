@@ -1,18 +1,3 @@
-import { restaurant } from '@dish/graph'
-import { supportsTouchWeb } from '@dish/helpers'
-import {
-  AbsoluteYStack,
-  Paragraph,
-  StackProps,
-  Text,
-  YStack,
-  prevent,
-  useTheme,
-  useThemeName,
-} from '@dish/ui'
-import { capitalize } from 'lodash'
-import React, { Suspense, memo, useState } from 'react'
-
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { DishTagItem } from '../../../helpers/getRestaurantDishes'
@@ -22,6 +7,11 @@ import { Image } from '../Image'
 import { Link } from '../Link'
 import { DishScore } from './DishScore'
 import { SearchTagButton } from './SearchTagButton'
+import { restaurant } from '@dish/graph'
+import { supportsTouchWeb } from '@dish/helpers'
+import { AbsoluteYStack, Paragraph, Text, YStack, YStackProps, prevent } from '@dish/ui'
+import { capitalize } from 'lodash'
+import React, { Suspense, memo, useState } from 'react'
 
 // avoid too many different image sizes
 const smallSize = [160 * 0.9, 160] as const
@@ -38,7 +28,7 @@ const getRoundedDishViewSize = (size: string | number) => {
 }
 
 export type DishViewProps = DishTagItem &
-  Omit<StackProps, 'size'> & {
+  Omit<YStackProps, 'size'> & {
     restaurant?: restaurant | null
     cuisine?: NavigableTag
     size?: number
@@ -97,8 +87,6 @@ const DishViewContent = (props: DishViewProps) => {
   const isLong = dishName.length > 17 || !!dishName.split(' ').find((x) => x.length >= 8)
   const isTiny = size < 115
   const fontSize = Math.max(13, (isLong ? 14 : 16) * (isTiny ? 0.75 : 1))
-  const themeName = useThemeName()
-  const theme = useTheme()
   const isActive = (isHovered || selected) ?? false
 
   const showVote = !hideVote && typeof score === 'number' && !!restaurant && !!name
@@ -148,7 +136,7 @@ const DishViewContent = (props: DishViewProps) => {
           bottom="8%"
           left="10%"
           className="ease-in-out-fast will-change-transform"
-          backgroundColor={theme.bg}
+          backgroundColor="$background"
           borderRadius={8}
           paddingVertical={3}
           paddingHorizontal={8}

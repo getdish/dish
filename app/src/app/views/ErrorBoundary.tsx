@@ -22,7 +22,7 @@ export function ErrorBoundary({ children, name }: { children: any; name: string 
       fallbackRender={({ error, resetErrorBoundary }) => {
         const tryButton = (
           <Button
-            theme="error"
+            theme="red"
             onPress={() => {
               resetErrorBoundary()
               setErrorState(null)

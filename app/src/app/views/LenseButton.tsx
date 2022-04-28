@@ -1,11 +1,10 @@
-import { Text, YStack, useMedia, useTheme } from '@dish/ui'
-import React, { useEffect, useState } from 'react'
-import { Pressable } from 'react-native'
-
 import { tagDisplayName } from '../../constants/tagDisplayName'
 import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
 import { Link } from './Link'
+import { Text, YStack, useMedia } from '@dish/ui'
+import React from 'react'
+import { Pressable } from 'react-native'
 
 export type LenseButtonSize = 'md' | 'lg' | 'xl'
 
@@ -37,7 +36,6 @@ export const LenseButton = ({
   const lineHeight = sizePx * scale * 0.39
   const name = tagDisplayName(lense)
   const isLong = name.length > 4
-  const theme = useTheme()
 
   return (
     <Pressable onPress={onPress}>
@@ -50,7 +48,7 @@ export const LenseButton = ({
           height={scaledSize}
           backgroundColor={bg}
           hoverStyle={{
-            backgroundColor: theme.bg2,
+            backgroundColor: '$backgroundHover',
           }}
           borderRadius={100}
           marginRight={10}
@@ -66,7 +64,7 @@ export const LenseButton = ({
           padding={0}
           marginTop={-10}
           pressStyle={{
-            backgroundColor: theme.bgDark,
+            backgroundColor: '$backgroundPress',
           }}
         >
           <Text fontSize={iconSize} lineHeight={scaledSize} textAlign="center">

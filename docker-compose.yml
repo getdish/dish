@@ -123,7 +123,7 @@ services:
     #   retries: 5
 
   hasura:
-    image: ${DOCKER_HASURA_IMAGE:-hasura/graphql-engine:v2.1.0-beta.3.cli-migrations-v2}
+    image: ${DOCKER_HASURA_IMAGE:-hasura/graphql-engine:v2.3.0}
     # build:
     #   context: ${DOCKER_HASURA_FOLDER:-./services/hasura}
     restart: on-failure:3

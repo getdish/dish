@@ -1,14 +1,13 @@
-import { graphql, restaurant } from '@dish/graph'
-import { isPresent } from '@dish/helpers'
-import { XStack, YStack, useConstant } from '@dish/ui'
-import React, { Suspense, memo } from 'react'
-
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 import { SimpleCard, SimpleCardProps, SkewedCardCarousel } from '../SimpleCard'
 import { useRestaurantPhotos } from './useRestaurantPhotos'
+import { graphql, restaurant } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
+import { XStack, YStack, useConstant } from '@dish/ui'
+import React, { Suspense, memo } from 'react'
 
 type Props = {
   escalating?: boolean
@@ -87,11 +86,9 @@ export const RestaurantPhotosRowContent = memo(
                   name="gallery"
                   alignSelf="center"
                   params={{ restaurantSlug }}
-                  textProps={{
-                    textAlign: 'center',
-                    fontSize: 28,
-                    fontWeight: '800',
-                  }}
+                  textAlign="center"
+                  fontSize={28}
+                  fontWeight="800"
                 >
                   Gallery 🖼
                 </LinkButton>

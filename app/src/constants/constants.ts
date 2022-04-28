@@ -59,4 +59,7 @@ export const cardFrameHeightSm = Math.round(cardFrameHeight * 0.9)
 export const MAPBOX_ACCESS_TOKEN =
   'pk.eyJ1IjoibndpZW5lcnQiLCJhIjoiY2lvbWlhYjRjMDA0NnVpbTIxMHM5ZW95eCJ9.DQyBjCEuPRVt1400yejGhA'
 
+export const brandColor = `#FF276F`
+export const grey = `#999999`
+
 // console.log('dishapp.constants', { isWeb, isNative })

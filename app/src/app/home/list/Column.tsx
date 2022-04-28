@@ -1,7 +1,7 @@
-import { StackProps, YStack } from '@dish/ui'
+import { YStack, YStackProps } from '@dish/ui'
 import React from 'react'
 
-export type ColumnProps = StackProps & { allowOverflow?: boolean }
+export type ColumnProps = YStackProps & { allowOverflow?: boolean }
 
 export const Column = (props: ColumnProps) => {
   // const theme = useTheme()

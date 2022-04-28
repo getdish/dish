@@ -1,9 +1,9 @@
-import { light } from '../../constants/colors'
 import { SentimentText } from '../home/restaurant/SentimentText'
 import { CommentBubble } from './CommentBubble'
 import { Link } from './Link'
 import { getUserName, graphql, review, useRefetch } from '@dish/graph'
 import { Paragraph, Separator, Text, XStack, useLazyEffect } from '@dish/ui'
+import { allLightColors } from '@tamagui/theme-base'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
@@ -68,7 +68,11 @@ export const Review = memo(
       <Text
         borderRadius={100}
         backgroundColor={
-          review.rating >= 4 ? light.green8 : review.rating >= 3 ? light.yellow8 : light.red8
+          review.rating >= 4
+            ? allLightColors.green8
+            : review.rating >= 3
+            ? allLightColors.yellow8
+            : allLightColors.red8
         }
         lineHeight={20}
         paddingHorizontal={12}
@@ -111,7 +115,7 @@ export const Review = memo(
         username={review.user?.username}
         after={
           !!review.text ? (
-            <XStack width="100%" overflow="hidden" alignItems="center" maxWidth="100%">
+            <XStack w="100%" ov="hidden" ai="center" maxWidth="100%">
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {!!review.sentiments?.length
                   ? uniqBy(review.sentiments, (x) => x.name).map((x, i) => {
@@ -125,7 +129,7 @@ export const Review = memo(
                   : []}
               </ScrollView>
 
-              <Separator flex />
+              <Separator />
             </XStack>
           ) : null
         }

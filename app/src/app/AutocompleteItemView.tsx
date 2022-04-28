@@ -1,14 +1,13 @@
-import { Spacer, Text, Theme, XStack, YStack, useDebounce, useTheme } from '@dish/ui'
-import { Plus } from '@tamagui/feather-icons'
-import React, { memo } from 'react'
-import { Keyboard } from 'react-native'
-
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteSelectCb } from './AutocompleteResults'
 import { ShowAutocomplete, autocompletesStore } from './AutocompletesStore'
 import { CircleButton } from './home/restaurant/CircleButton'
 import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'
+import { Spacer, Text, Theme, XStack, YStack, useDebounce, useTheme } from '@dish/ui'
+import { Plus } from '@tamagui/feather-icons'
+import React, { memo } from 'react'
+import { Keyboard } from 'react-native'
 
 export const AutocompleteItemView = memo(
   ({
@@ -43,10 +42,9 @@ export const AutocompleteItemView = memo(
       <>
         <YStack flex={1} />
         <YStack padding={3} flexShrink={0}>
-          {/* @ts-expect-error */}
           <Theme name={isAdded ? 'active' : null}>
             <CircleButton onPress={onAdd}>
-              <Plus color={isAdded ? '#fff' : theme.color4.toString()} size={16} />
+              <Plus color={isAdded ? '#fff' : theme.colorFocus.toString()} size={16} />
             </CircleButton>
           </Theme>
         </YStack>
@@ -76,7 +74,7 @@ export const AutocompleteItemView = memo(
         backgroundColor={isActive ? '#000' : 'transparent'}
         borderRadius={0}
         hoverStyle={{
-          backgroundColor: isActive ? '#000' : theme.bgTransparent,
+          backgroundColor: isActive ? '#000' : theme.backgroundTransparent,
         }}
         {...(hideBackground && {
           backgroundColor: 'transparent',
@@ -109,7 +107,7 @@ export const AutocompleteItemView = memo(
             {!!result.description && (
               <>
                 <Spacer size="$1" />
-                <Text ellipse color={theme.color2} fontSize={15}>
+                <Text ellipse color={theme.colorHover} fontSize={15}>
                   {result.description}
                 </Text>
               </>

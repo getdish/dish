@@ -1,27 +1,25 @@
-import 'mapbox-gl/dist/mapbox-gl.css'
-
-import { fullyIdle, series, sleep } from '@dish/async'
-import { TILES_HOST, slugify } from '@dish/graph'
-import { supportsTouchWeb } from '@dish/helpers'
-import { useGet, useThemeName } from '@dish/ui'
-import bbox from '@turf/bbox'
-import union from '@turf/union'
-import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
-import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl'
-import React, { useEffect, useRef, useState } from 'react'
-import { Dimensions } from 'react-native'
-
-import { light } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN, isM1Sim } from '../constants/constants'
 import * as mapHelpers from '../helpers/mapHelpers'
 import { hasMovedAtLeast, mapPositionToBBox } from '../helpers/mapHelpers'
 import { hexToRGB } from '../helpers/rgb'
 import { useIsMountedRef } from '../helpers/useIsMountedRef'
 import { MapRegionEvent } from '../types/homeTypes'
+import { MapProps } from './MapProps'
 import { setMap as setMapGlobal } from './getMap'
 import { getInitialRegionSlug } from './initialRegionSlug'
-import { MapProps } from './MapProps'
 import { tiles } from './tiles'
+import { fullyIdle, series, sleep } from '@dish/async'
+import { TILES_HOST, slugify } from '@dish/graph'
+import { supportsTouchWeb } from '@dish/helpers'
+import { useGet, useThemeName } from '@dish/ui'
+import { allLightColors } from '@tamagui/theme-base'
+import bbox from '@turf/bbox'
+import union from '@turf/union'
+import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
+import mapboxgl, { MapboxGeoJSONFeature } from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
+import React, { useEffect, useRef, useState } from 'react'
+import { Dimensions } from 'react-native'
 
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN
 
@@ -462,8 +460,8 @@ export default function Map(props: MapProps) {
 
           const pointColor =
             themeName === 'dark'
-              ? hexToRGB(light.pink3, 0.44).string
-              : hexToRGB(light.pink10, 0.44).string
+              ? hexToRGB(allLightColors.pink3, 0.44).string
+              : hexToRGB(allLightColors.pink10, 0.44).string
           map.addLayer({
             id: POINT_LAYER_ID,
             type: 'circle',
@@ -532,7 +530,7 @@ export default function Map(props: MapProps) {
               // 'text-anchor': 'bottom',
             },
             paint: {
-              'text-color': isDark ? light.pink4 : light.pink10,
+              'text-color': isDark ? allLightColors.pink4 : allLightColors.pink10,
               // 'text-halo-color': blue,
               // 'text-halo-width': 1,
             },

@@ -1,9 +1,8 @@
 import { isWeb } from '../../../constants/constants'
-import { AbsoluteYStack, Text, YStack, useTheme } from '@dish/ui'
+import { AbsoluteYStack, Text, YStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const RankView = memo(({ rank }: { rank: number }) => {
-  const theme = useTheme()
   return (
     <YStack
       width={44}
@@ -22,21 +21,16 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       alignItems="center"
       justifyContent="center"
     >
-      <AbsoluteYStack
-        borderRadius={1000}
-        fullscreen
-        // backgroundColor={theme.bg2}
-        zIndex={-1}
-      />
+      <AbsoluteYStack borderRadius={1000} fullscreen zIndex={-1} />
       <Text textAlign="center" lineHeight={38}>
-        <Text opacity={0.5} color={theme.color4} y={-5} x={10} fontSize={11}>
+        <Text opacity={0.5} color="$colorFocus" y={-5} x={10} fontSize={11}>
           #
         </Text>
         <Text
           letterSpacing={-1}
           fontSize={+rank > 9 ? 18 : 22}
           fontWeight="500"
-          color={theme.color3}
+          color="$colorPress"
         >
           {`${rank}`}
         </Text>

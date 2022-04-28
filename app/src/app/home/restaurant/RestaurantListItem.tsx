@@ -1,3 +1,29 @@
+import { brandColor, isWeb } from '../../../constants/constants'
+import { getImageUrl } from '../../../helpers/getImageUrl'
+import { getWindowWidth } from '../../../helpers/getWindow'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
+import { GeocodePlace } from '../../../types/homeTypes'
+import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
+import { Image } from '../../views/Image'
+import { Link } from '../../views/Link'
+import { SlantedTitle } from '../../views/SlantedTitle'
+import { SmallButton } from '../../views/SmallButton'
+import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
+import { RestaurantTagsList } from '../../views/restaurant/RestaurantTagsList'
+import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
+import { getSearchPageStore } from '../search/SearchPageStore'
+import { HoverToZoom } from './HoverToZoom'
+import { RankView } from './RankView'
+import { RestaurantAddToListButton } from './RestaurantAddToListButton'
+import { RestaurantAddress } from './RestaurantAddress'
+import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
+import { openingHours, priceRange } from './RestaurantDetailRow'
+import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
+import { RestaurantListItemScoreBreakdown } from './RestaurantListItemScoreBreakdown'
+import { RestaurantOverallAndTagReviews } from './RestaurantOverallAndTagReviews'
+import { RestaurantPeekDishes } from './RestaurantPeekDishes'
+import { useTotalReviews } from './useTotalReviews'
 import { RestaurantItemMeta, graphql } from '@dish/graph'
 import {
   AbsoluteYStack,
@@ -8,45 +34,16 @@ import {
   LoadingItemsSmall,
   Paragraph,
   Spacer,
-  StackProps,
   Text,
   XStack,
   YStack,
+  YStackProps,
   useMedia,
-  useTheme,
 } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import { MessageSquare } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
-
-import { brandColor, light } from '../../../constants/colors'
-import { isWeb } from '../../../constants/constants'
-import { getImageUrl } from '../../../helpers/getImageUrl'
-import { getWindowWidth } from '../../../helpers/getWindow'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
-import { GeocodePlace } from '../../../types/homeTypes'
-import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
-import { Image } from '../../views/Image'
-import { Link } from '../../views/Link'
-import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
-import { RestaurantTagsList } from '../../views/restaurant/RestaurantTagsList'
-import { RestaurantUpVoteDownVote } from '../../views/restaurant/RestaurantUpVoteDownVote'
-import { SlantedTitle } from '../../views/SlantedTitle'
-import { SmallButton } from '../../views/SmallButton'
-import { getSearchPageStore } from '../search/SearchPageStore'
-import { HoverToZoom } from './HoverToZoom'
-import { RankView } from './RankView'
-import { RestaurantAddress } from './RestaurantAddress'
-import { RestaurantAddToListButton } from './RestaurantAddToListButton'
-import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
-import { openingHours, priceRange } from './RestaurantDetailRow'
-import { RestaurantFavoriteButton } from './RestaurantFavoriteButton'
-import { RestaurantListItemScoreBreakdown } from './RestaurantListItemScoreBreakdown'
-import { RestaurantOverallAndTagReviews } from './RestaurantOverallAndTagReviews'
-import { RestaurantPeekDishes } from './RestaurantPeekDishes'
-import { useTotalReviews } from './useTotalReviews'
 
 export const ITEM_HEIGHT = 180
 
@@ -148,7 +145,7 @@ const RestaurantListItemContent = memo(
     }
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-    const contentSideProps: StackProps = {
+    const contentSideProps: YStackProps = {
       width: media.sm ? '70%' : '60%',
       minWidth: media.sm ? (isWeb ? '55vw' : Dimensions.get('window').width * 0.65) : 320,
       maxWidth: Math.min(
@@ -176,7 +173,6 @@ const RestaurantListItemContent = memo(
       Math.round((media.sm ? 20 : 24) * titleFontScale) * (shouldShowOneLine ? 0.8 : 1)
     const titleHeight = titleFontSize + 8 * 2
     const score = Math.round((meta?.effective_score ?? 0) / 20)
-    const theme = useTheme()
     const imgSize = shouldShowOneLine ? 44 : 58
 
     return (
@@ -211,7 +207,7 @@ const RestaurantListItemContent = memo(
           {/* expanded content */}
           {meta && isExpanded && (
             <AbsoluteYStack
-              backgroundColor={theme.bgDark}
+              backgroundColor="$backgroundDarker"
               width={300 - 40}
               x={-320}
               height="100%"
@@ -285,7 +281,7 @@ const RestaurantListItemContent = memo(
                 alignItems="center"
               >
                 <YStack
-                  backgroundColor={theme.bg2}
+                  backgroundColor="$backgroundHover"
                   borderRadius={1000}
                   width={imgSize}
                   height={imgSize}
@@ -317,10 +313,10 @@ const RestaurantListItemContent = memo(
                     marginVertical={-5}
                     maxWidth={contentSideProps.maxWidth}
                     hoverStyle={{
-                      backgroundColor: theme.bg2,
+                      backgroundColor: '$backgroundHover',
                     }}
                     pressStyle={{
-                      backgroundColor: theme.bg3,
+                      backgroundColor: '$backgroundPress',
                     }}
                     {...(shouldShowOneLine && {
                       width: 200,
@@ -331,7 +327,7 @@ const RestaurantListItemContent = memo(
                       fontSize={titleFontSize}
                       lineHeight={titleHeight}
                       height={titleHeight}
-                      color={theme.color}
+                      color="$color"
                       fontWeight="600"
                       letterSpacing={-0.5}
                       paddingHorizontal={1} // prevents clipping due to letter-spacing
@@ -489,7 +485,7 @@ const RestaurantListItemContent = memo(
                   textAlign="center"
                   fontSize={14}
                   fontWeight="500"
-                  color={theme.color3}
+                  color="$colorPress"
                 >
                   {price_range ?? '-'}
                 </Text>
@@ -497,7 +493,7 @@ const RestaurantListItemContent = memo(
                 <Circle
                   size="$6"
                   marginHorizontal={4}
-                  backgroundColor={open.isOpen ? light.green8 : light.red8}
+                  backgroundColor={open.isOpen ? '$green9' : '$red9'}
                 />
 
                 {!!restaurant.address && (

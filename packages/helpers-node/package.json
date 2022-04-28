@@ -21,7 +21,7 @@
     "pg": "^8.7.1"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-alpha.64"
+    "@tamagui/build": "1.0.0-beta.153+a49c2588"
   },
   "publishConfig": {
     "access": "public"

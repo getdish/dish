@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Tooltip, combineRefs, themeable, useTheme } from '@dish/ui'
+import { Button, ButtonProps, Tooltip, themeable } from '@dish/ui'
 import React, { forwardRef } from 'react'
 
 export type SmallButtonProps = ButtonProps & {
@@ -9,22 +9,18 @@ export type SmallButtonProps = ButtonProps & {
 
 export const SmallButton = themeable(
   forwardRef(({ children, tooltip, theme: themeProp, ...rest }: SmallButtonProps, ref) => {
-    const theme = useTheme()
-
     const contents = (
       <Button
-        ref={ref}
+        ref={ref as any}
         borderRadius={200}
-        borderColor={theme.borderColor}
-        backgroundColor={theme.bg}
         hoverStyle={{
-          backgroundColor: theme.bg2,
+          backgroundColor: '$backgroundHover',
         }}
         pressStyle={{
-          backgroundColor: theme.bg3,
+          backgroundColor: '$backgroundPress',
         }}
         {...(themeProp == 'active' && {
-          backgroundColor: theme.bg,
+          backgroundColor: '$background',
         })}
         {...rest}
       >

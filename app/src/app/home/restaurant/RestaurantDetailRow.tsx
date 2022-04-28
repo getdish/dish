@@ -1,11 +1,10 @@
-import { RestaurantQuery, graphql } from '@dish/graph'
-import { StackProps, Text, XStack, YStack } from '@dish/ui'
-import React, { memo } from 'react'
-
 import { isWeb } from '../../../constants/constants'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Link } from '../../views/Link'
 import { RestaurantDeliveryButtons } from './RestaurantDeliveryButtons'
+import { RestaurantQuery, graphql } from '@dish/graph'
+import { Text, XStack, YStack, YStackProps } from '@dish/ui'
+import React, { memo } from 'react'
 
 export const RestaurantDetailRow = memo(
   graphql(
@@ -15,7 +14,7 @@ export const RestaurantDetailRow = memo(
       centered,
       after,
       ...rest
-    }: StackProps & {
+    }: YStackProps & {
       size?: 'sm' | 'md'
       restaurantSlug: string
       centered?: boolean
@@ -65,7 +64,7 @@ export const RestaurantDetailRow = memo(
       const spaceSize = sizeSm ? 0 : '6%'
 
       return (
-        <XStack alignItems="center" space={spaceSize} overflow="visible" {...rest}>
+        <XStack alignItems="center" space={spaceSize as any} overflow="visible" {...rest}>
           {rows
             .filter((x) => !sizeSm || x.content !== '')
             .map((row, index) => (

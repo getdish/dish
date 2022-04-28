@@ -1,14 +1,13 @@
-import { series, sleep } from '@dish/async'
-import { AbsoluteYStack, LoadingItems, StackProps, YStack, useMedia, useTheme } from '@dish/ui'
-import { default as React, useEffect, useState } from 'react'
-
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
 import { STACK_ANIMATION_DURATION } from '../home/HomeStackView'
 import { HomeSuspense } from '../home/HomeSuspense'
 import { useIsMobilePhone } from '../useIsMobilePhone'
 import { StackCloseButton } from './StackCloseButton'
+import { series, sleep } from '@dish/async'
+import { AbsoluteYStack, LoadingItems, YStack, YStackProps, useMedia, useTheme } from '@dish/ui'
+import { default as React, useEffect, useState } from 'react'
 
-export type StackDrawerProps = StackProps & {
+export type StackDrawerProps = YStackProps & {
   title?: string
   closable?: boolean
   fallback?: any
@@ -24,7 +23,6 @@ export const StackDrawer = ({
   ...props
 }: StackDrawerProps) => {
   const media = useMedia()
-  const theme = useTheme()
   const [isLoaded, setIsLoaded] = useState(false)
   const isPhone = useIsMobilePhone()
 
@@ -76,7 +74,7 @@ export const StackDrawer = ({
         minWidth={media.sm ? '100%' : 200}
         justifyContent="flex-end"
         shadowRadius={9}
-        shadowColor={theme.shadowColor}
+        shadowColor="$shadowColor"
       >
         {controls}
         <YStack
@@ -87,7 +85,7 @@ export const StackDrawer = ({
           flexShrink={1}
           borderRadius={drawerBorderRadius}
           maxWidth={media.sm ? '100%' : drawerWidthMax}
-          backgroundColor={theme.bg}
+          backgroundColor="$background"
           overflow="hidden"
           {...props}
         >

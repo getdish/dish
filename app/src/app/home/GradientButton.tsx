@@ -1,8 +1,6 @@
 import { XStack, useTheme } from '@dish/ui'
 import React from 'react'
 
-import { RGB } from '../../helpers/rgb'
-
 export function GradientButton({ children }: { children?: any }) {
   const theme = useTheme()
   return (
@@ -17,10 +15,9 @@ export function GradientButton({ children }: { children?: any }) {
       shadowColor={theme.shadowColor}
       position="relative"
       overflow="hidden"
-      backgroundColor={theme.bg}
-      // flexShrink={1}
+      backgroundColor="$background"
       hoverStyle={{
-        backgroundColor: theme.bg2,
+        backgroundColor: '$backgroundHover',
       }}
       pressStyle={{
         transform: [{ scale: 0.98 }],

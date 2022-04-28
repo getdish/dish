@@ -1,16 +1,10 @@
 export const media = {
   xs: { maxWidth: 660 },
+  sm: { maxWidth: 800 },
+  md: { maxWidth: 1020 },
+  lg: { maxWidth: 1280 },
   gtXs: { minWidth: 660 + 1 },
-  sm: { maxWidth: 860 },
-  gtSm: { minWidth: 860 + 1 },
-  md: { minWidth: 980 },
-  gtMd: { minWidth: 980 + 1 },
-  lg: { minWidth: 1120 },
-  gtLg: { minWidth: 1120 + 1 },
-  xl: { minWidth: 1280 },
-  xxl: { minWidth: 1420 },
-  short: { maxHeight: 820 },
-  tall: { minHeight: 820 },
-  hoverNone: { hover: 'none' },
-  pointerCoarse: { pointer: 'coarse' },
-} as const
+  gtSm: { minWidth: 800 + 1 },
+  gtMd: { minWidth: 1020 + 1 },
+  gtLg: { minWidth: 1280 + 1 },
+}

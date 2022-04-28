@@ -1,11 +1,10 @@
-import { RoutesTable } from '@dish/router'
-import { Text, TextAncestorContext, useTheme } from '@dish/ui'
-import React, { forwardRef, useContext } from 'react'
-
 import { isStringChild } from '../../helpers/isStringChild'
 import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkProps } from './LinkProps'
+import { RoutesTable } from '@dish/router'
+import { Text, TextAncestorContext, useTheme } from '@dish/ui'
+import React, { forwardRef, useContext } from 'react'
 
 export const Link = forwardRef(function Link<Name extends DRouteName = DRouteName>(
   allProps: LinkProps<Name, RoutesTable[Name]['params']>,
@@ -34,7 +33,6 @@ export const Link = forwardRef(function Link<Name extends DRouteName = DRouteNam
     ...styleProps
   } = allProps
   const { wrapWithLinkElement } = useLink(allProps, styleProps)
-  const theme = useTheme()
   const isInParagraph = useContext(TextAncestorContext)
   return wrapWithLinkElement(
     isStringChild(children) ? (
@@ -42,7 +40,7 @@ export const Link = forwardRef(function Link<Name extends DRouteName = DRouteNam
         textDecorationLine={
           underline === false ? 'none' : isInParagraph || underline ? 'underline' : 'none'
         }
-        color={theme.color2}
+        color="$colorHover"
         display={display as any}
         // {...(isInParagraph && {
         //   color: red400,

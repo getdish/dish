@@ -1,10 +1,17 @@
-import { graphql, restaurant } from '@dish/graph'
-import { AbsoluteXStack, BlurView, Box, HoverablePopover, XStack, YStack, useTheme } from '@dish/ui'
-import React from 'react'
-
 import { suspense } from '../hoc/suspense'
-import { ratingCount } from './ratingCount'
 import { RatingView } from './RatingView'
+import { ratingCount } from './ratingCount'
+import { graphql, restaurant } from '@dish/graph'
+import {
+  AbsoluteXStack,
+  BlurView,
+  Card,
+  HoverablePopover,
+  XStack,
+  YStack,
+  useTheme,
+} from '@dish/ui'
+import React from 'react'
 
 export const RestaurantRatingView = suspense(
   graphql(
@@ -72,10 +79,10 @@ export const RestaurantRatingView = suspense(
                 shadowOffset={{ height: 3, width: 0 }}
                 paddingHorizontal={16}
                 paddingVertical={4}
-                shadowColor={theme.shadowColor}
+                shadowColor="$shadowColor"
                 overflow="hidden"
               >
-                <AbsoluteXStack backgroundColor={theme.bgDark} opacity={0.75} fullscreen />
+                <AbsoluteXStack backgroundColor="$backgroundDarker" opacity={0.75} fullscreen />
                 <BlurView>
                   <RatingView {...ratingViewProps} stacked size={size * 0.66} />
                 </BlurView>
@@ -95,14 +102,14 @@ export const RestaurantRatingView = suspense(
             {({ open }) => {
               if (open) {
                 return (
-                  <Box padding={15}>
+                  <Card padding={15}>
                     <RatingView
                       {...ratingViewProps}
                       stacked
                       size={size * 0.66}
                       count={ratingCount(restaurant)}
                     />
-                  </Box>
+                  </Card>
                 )
               }
               return null

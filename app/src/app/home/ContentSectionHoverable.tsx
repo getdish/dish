@@ -1,8 +1,7 @@
-import { StackProps, YStack } from '@dish/ui'
+import { YStack, YStackProps } from '@dish/ui'
 import React from 'react'
 
-export const ContentSectionHoverable = (props: StackProps) => {
-  // const theme = useTheme()
+export const ContentSectionHoverable = (props: YStackProps) => {
   return (
     <YStack
       position="relative"

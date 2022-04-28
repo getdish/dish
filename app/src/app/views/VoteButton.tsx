@@ -1,7 +1,7 @@
-import { AbsoluteYStack, StackProps, YStack, prevent, useMedia, useTheme } from '@dish/ui'
+import { AbsoluteYStack, YStack, YStackProps, prevent, useMedia, useTheme } from '@dish/ui'
 import React, { forwardRef, useState } from 'react'
 
-export type VoteButtonProps = StackProps & {
+export type VoteButtonProps = YStackProps & {
   hoverColor?: string
   voted?: boolean
   Icon: any
@@ -32,11 +32,11 @@ export const VoteButton = forwardRef(
         onHoverIn={() => setHovered(true)}
         onHoverOut={() => setHovered(false)}
         onPress={prevent}
-        backgroundColor={theme.bg}
+        backgroundColor="$background"
         borderRadius={100}
-        borderColor={theme.bg2}
+        borderColor="$borderColor"
         pressStyle={{
-          backgroundColor: theme.bg,
+          backgroundColor: '$background',
         }}
         {...props}
       >
@@ -48,7 +48,7 @@ export const VoteButton = forwardRef(
         >
           <Icon
             size={size * (voted ? 1.2 : 1)}
-            color={!voted && hovered ? hoverColor ?? theme.color2 : color ?? '#ccc'}
+            color={!voted && hovered ? hoverColor ?? theme.colorHover : color ?? '#ccc'}
           />
         </YStack>
         <AbsoluteYStack

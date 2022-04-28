@@ -1,11 +1,10 @@
-import { graphql } from '@dish/graph'
-import { ellipseText } from '@dish/helpers'
-import { Input, Text, XStack, YStack, useDebounce, useTheme, Paragraph } from '@dish/ui'
-import { capitalize } from 'lodash'
-import React, { memo } from 'react'
-
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
+import { graphql } from '@dish/graph'
+import { ellipseText } from '@dish/helpers'
+import { Input, Paragraph, XStack, YStack, useDebounce, useTheme } from '@dish/ui'
+import { capitalize } from 'lodash'
+import React, { memo } from 'react'
 
 const idFn = (_) => _
 
@@ -33,7 +32,6 @@ export const RestaurantOverview = memo(
     disableEllipse?: boolean
     maxLines?: number
   }) {
-    const theme = useTheme()
     const [restaurant] = queryRestaurant(restaurantSlug)
     const onChangeDescriptionDbc = useDebounce(onEditDescription ?? idFn, 150)
 
@@ -83,7 +81,7 @@ export const RestaurantOverview = memo(
                   numberOfLines={5}
                   fontSize={fontSize}
                   lineHeight={lineHeight}
-                  color={theme.color}
+                  color="$color"
                   onChangeText={onChangeDescriptionDbc}
                 />
               </YStack>
@@ -97,7 +95,7 @@ export const RestaurantOverview = memo(
                 // short descriptions look bad in minHieght
                 // minHeight={lineHeight * 2}
                 // fontWeight="500"
-                color={size === 'lg' ? theme.color : theme.color2}
+                color={size === 'lg' ? '$color' : '$colorHover'}
                 pointerEvents="auto"
               >
                 {disableEllipse

@@ -1,11 +1,10 @@
 import React from 'react'
-import { Paragraph, SizableTextProps, StackProps, Text, XStack, YStack } from 'tamagui'
+import { Paragraph, SizableTextProps, XStack, YStack, YStackProps } from 'tamagui'
 
-export const UnorderedList = (props: StackProps) => {
+export const UnorderedList = (props: YStackProps) => {
   return <YStack paddingLeft="$4" {...props} />
 }
 
-// @ts-ignore
 export const UnorderedListItem = ({ children, size, ...props }: SizableTextProps) => {
   return (
     <XStack marginVertical="$1">

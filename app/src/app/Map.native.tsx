@@ -1,4 +1,3 @@
-import { light } from '../constants/colors'
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { MapProps } from './MapProps'
@@ -9,6 +8,7 @@ import { series, sleep } from '@dish/async'
 import { DISH_API_ENDPOINT } from '@dish/graph'
 import { useDebounce, useTheme } from '@dish/ui'
 import MapboxGL from '@react-native-mapbox-gl/maps'
+import { allLightColors } from '@tamagui/theme-base'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, useWindowDimensions } from 'react-native'
 
@@ -161,7 +161,7 @@ export default function Map({
                     //   ['==', ['feature-state', 'hover'], true],
                     //   green,
                     //   ['==', ['feature-state', 'active'], null],
-                    //   theme.color2,
+                    //   theme.colorHover,
                     //   'green',
                     // ],
                     textHaloColor: 'rgba(255,255,255,1)',
@@ -304,8 +304,8 @@ export default function Map({
               1,
               'rgba(255,255,255,1)',
               0,
-              light.purple10,
-              light.purple10,
+              allLightColors.purple10,
+              allLightColors.purple10,
             ],
             circleRadius: ['interpolate', ['exponential', 1.5], ['zoom'], 9, 4, 11, 8, 16, 22],
           }}

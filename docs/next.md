@@ -1,3 +1,49 @@
+100% single stack dx
+  
+  - services/search => api/search
+  
+  BACKEND ACTIONS / JOBS / CRON / TEST + CRAWLERS
+    
+    - `dish action crawl_all` (@services/worker + @services/cron)
+    
+    - create:
+      - /worker/cron.ts
+      - /api/crawl.ts
+      - /api/backup/db.ts
+      - /api/crawl/yelp.ts
+        - /crawlers/Yelp.ts
+
+    - delete:
+      - services/cron
+      - services/worker
+      - services/crawers
+
+    - `dish action run_crawl`
+
+    - parse /actions/ => bull-queue actions and run in worker
+    - move crawlers service into app
+    - `dish test api/crawl/yelp`
+    - `dish POST /api/crawl/yelp`
+    - `dish test run_crawl` (finds run_crawl) || `dish run actions/hourly/run_crawl`
+
+- add tests inline with any file (see vitest)
+
+- move the mostly "monitoring" shit into /backoffice
+  - alertmanager, grafana, pg-admin, prometheus, swarmprom
+
+- remove gorse
+
+- use react-freeze for inactive panes
+  - https://github.com/software-mansion/react-native-screens
+  - https://github.com/software-mansion/react-freeze
+
+best test case of "does it work to launch?"- when getting mike (kyles friend) recs in kuilea, if i could have instead said:
+
+- "want to send it to me using my app" or some variant
+- and designing around having that interaction go well such that
+- download => make list => send is the easiest possible set of steps
+- and after that they see to customize profile, add friends, see realtime map stuff
+
 high level:
   - put money in business account, switch billing to business
   - fix crawlers and get running again

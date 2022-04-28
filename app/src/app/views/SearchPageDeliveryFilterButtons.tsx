@@ -1,10 +1,9 @@
-import { Box, Theme, YStack } from '@dish/ui'
-import React, { memo } from 'react'
-
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { useHomeStore } from '../homeStore'
 import { FilterButton } from './FilterButton'
 import { Image } from './Image'
+import { Card, YStack } from '@dish/ui'
+import React, { memo } from 'react'
 
 export const SearchPageDeliveryFilterButtons = memo(() => {
   const home = useHomeStore()
@@ -18,7 +17,7 @@ export const SearchPageDeliveryFilterButtons = memo(() => {
   )
   const noneActive = sources.every((x) => !activeTags[x])
   return (
-    <Box pointerEvents="auto" width={200}>
+    <Card pointerEvents="auto" width={200}>
       <YStack space={4} padding={10} alignItems="stretch">
         {sources.map((key) => {
           const item = thirdPartyCrawlSources[key]
@@ -51,6 +50,6 @@ export const SearchPageDeliveryFilterButtons = memo(() => {
           )
         })}
       </YStack>
-    </Box>
+    </Card>
   )
 })

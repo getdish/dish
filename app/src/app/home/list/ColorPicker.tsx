@@ -1,4 +1,4 @@
-import { Box, Popover, StackProps, YStack } from '@dish/ui'
+import { Card, Popover, YStack, YStackProps } from '@dish/ui'
 import React, { useState } from 'react'
 
 export function ColorPicker({
@@ -23,7 +23,7 @@ export function ColorPicker({
         )
       }}
     >
-      <Box
+      <Card
         flexDirection="row"
         padding={20}
         maxWidth={130}
@@ -43,12 +43,12 @@ export function ColorPicker({
             />
           )
         })}
-      </Box>
+      </Card>
     </Popover>
   )
 }
 
-function ColorBubble(props: StackProps) {
+function ColorBubble(props: YStackProps) {
   return (
     <YStack
       borderWidth={2}

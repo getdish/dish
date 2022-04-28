@@ -1,4 +1,3 @@
-import { light } from '../../constants/colors'
 import { defaultLocationAutocompleteResults } from '../../constants/defaultLocationAutocompleteResults'
 import { AutocompleteItem } from '../../helpers/createAutocomplete'
 import { locationToAutocomplete, searchLocations } from '../../helpers/searchLocations'
@@ -135,10 +134,7 @@ const Restaurantentiment = (props: { text: string }) => {
 
       {sentiments.map(({ sentiment, sentence }) => {
         return (
-          <Text
-            backgroundColor={sentiment === 'Negative' ? light.red10 : light.green10}
-            key={sentence}
-          >
+          <Text backgroundColor={sentiment === 'Negative' ? '$red10' : '$green10'} key={sentence}>
             {sentence} <strong>({sentiment})</strong>.
           </Text>
         )

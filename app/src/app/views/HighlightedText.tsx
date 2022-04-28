@@ -1,18 +1,17 @@
 import { Paragraph, ParagraphProps, Theme, useTheme } from '@dish/ui'
+import React from 'react'
 
 export const HighlightedText = (props: ParagraphProps) => {
-  const theme = useTheme()
   return (
-    <Theme name="orange">
-      <Paragraph
-        borderWidth={1}
-        backgroundColor={theme.bg}
-        borderColor={theme.borderColor}
-        borderRadius={10}
-        paddingVertical="2%"
-        paddingHorizontal="3%"
-        {...props}
-      />
-    </Theme>
+    <Paragraph
+      theme="orange"
+      borderWidth={1}
+      backgroundColor="$background"
+      borderColor="$borderColor"
+      borderRadius={10}
+      paddingVertical="2%"
+      paddingHorizontal="3%"
+      {...props}
+    />
   )
 }

@@ -1,7 +1,3 @@
-import { AbsoluteYStack, ToastRoot, YStack, useTheme } from '@dish/ui'
-import { reaction } from '@dish/use-store'
-import React, { Suspense, useEffect, useLayoutEffect } from 'react'
-
 import { router } from '../router'
 import { AppAutocompleteLocation } from './AppAutocompleteLocation'
 import { AppAutocompleteSearch } from './AppAutocompleteSearch'
@@ -10,14 +6,17 @@ import { AppMapControls } from './AppMapControls'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AppSearchBarInline } from './AppSearchBarInline'
 import { AutocompleteEffects, autocompletesStore } from './AutocompletesStore'
+import { RootPortalProvider } from './Portal'
+import { Route } from './Route'
 import { AppFloatingTagMenuBar } from './home/AppFloatingTagMenuBar'
-import GalleryPage from './home/gallery/GalleryPage'
 import { HomeStackViewPages } from './home/HomeStackViewPages'
+import GalleryPage from './home/gallery/GalleryPage'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
 import { useHomeStore } from './homeStore'
-import { RootPortalProvider } from './Portal'
-import { Route } from './Route'
+import { AbsoluteYStack, ToastRoot, YStack, useTheme } from '@dish/ui'
+import { reaction } from '@dish/use-store'
+import React, { Suspense, useEffect, useLayoutEffect } from 'react'
 
 // this would be the start of rendering mobile web flat style
 
@@ -65,6 +64,7 @@ export const AppHomeMobileWeb = () => {
         <ToastRoot />
         <AutocompleteEffects />
       </Suspense>
+      {/* @ts-ignore */}
       <YStack pos="fixed" fullscreen pe="none" t={0} l={0} r={0} h="100vh" mh="100vh" zi={1000000}>
         <RootPortalProvider />
       </YStack>
@@ -78,7 +78,7 @@ export const AppHomeMobileWeb = () => {
           <AppMapContents />
         </Suspense>
       </YStack>
-      <YStack sc="#000" sr={25} sop={0.1} zi={100} br={10} ov="hidden" pos="relative">
+      <YStack zi={100} br={10} ov="hidden" pos="relative">
         <AbsoluteYStack fullscreen zi={0} backgroundColor="$mapBackground" />
         <AppSearchBarInline />
         <YStack position="relative" minHeight={600}>

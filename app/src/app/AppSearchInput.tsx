@@ -1,3 +1,21 @@
+import { isWeb, searchBarHeight } from '../constants/constants'
+import { isTouchDevice } from '../constants/platforms'
+import { isWebIOS } from '../helpers/isIOS'
+import { filterToNavigable } from '../helpers/tagHelpers'
+import { router } from '../router'
+import { AppSearchInputTagsRow } from './AppSearchInputTagsRow'
+import {
+  AutocompleteStore,
+  autocompleteSearchStore,
+  autocompletesStore,
+} from './AutocompletesStore'
+import { InputFrame } from './InputFrame'
+import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
+import { drawerStore } from './drawerStore'
+import { runSearch } from './home/search/SearchPageStore'
+import { homeStore, useHomeStoreSelector } from './homeStore'
+import { InputStore, setNodeOnInputStore, useInputStoreSearch } from './inputStore'
+import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import {
@@ -14,25 +32,6 @@ import { getStore, selector } from '@dish/use-store'
 import { Loader, Search, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-
-import { isWeb, searchBarHeight } from '../constants/constants'
-import { isTouchDevice } from '../constants/platforms'
-import { isWebIOS } from '../helpers/isIOS'
-import { filterToNavigable } from '../helpers/tagHelpers'
-import { router } from '../router'
-import { AppSearchInputTagsRow } from './AppSearchInputTagsRow'
-import {
-  AutocompleteStore,
-  autocompleteSearchStore,
-  autocompletesStore,
-} from './AutocompletesStore'
-import { drawerStore } from './drawerStore'
-import { runSearch } from './home/search/SearchPageStore'
-import { homeStore, useHomeStoreSelector } from './homeStore'
-import { InputFrame } from './InputFrame'
-import { InputStore, setNodeOnInputStore, useInputStoreSearch } from './inputStore'
-import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
-import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 
 const isWebTouch = isWeb && supportsTouchWeb
 
@@ -89,7 +88,7 @@ export const AppSearchInput = memo(() => {
         value: homeStore.currentSearchQuery,
       })
     } else if (input) {
-      ;(input as any).value = value
+      input['value'] = value
     }
   }
 
@@ -287,7 +286,6 @@ const SearchCancelButton = memo(function SearchCancelButton() {
   return (
     <YStack
       opacity={isActive ? 0.6 : 0}
-      // @ts-expect-error
       disabled={!isActive}
       width={34}
       height={34}

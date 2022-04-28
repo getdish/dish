@@ -1,15 +1,9 @@
-import { fullyIdle, series } from '@dish/async'
-import { graphql } from '@dish/graph'
-import { Circle, Spacer, Text, XStack, YStack, useMedia, useTheme } from '@dish/ui'
-import { MessageSquare } from '@tamagui/feather-icons'
-import React, { Suspense, memo, useEffect } from 'react'
-
-import { light } from '../../../constants/colors'
 import { isWeb } from '../../../constants/constants'
 import { getWindowWidth } from '../../../helpers/getWindow'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
+import { RestaurantRatingView } from '../RestaurantRatingView'
 import { HoverToZoom } from '../restaurant/HoverToZoom'
 import { RankView } from '../restaurant/RankView'
 import { RestaurantAddress } from '../restaurant/RestaurantAddress'
@@ -19,10 +13,13 @@ import { RestaurantFavoriteButton } from '../restaurant/RestaurantFavoriteButton
 import { RestaurantReview } from '../restaurant/RestaurantReview'
 import { ReviewTagsRow } from '../restaurant/ReviewTagsRow'
 import { useTotalReviews } from '../restaurant/useTotalReviews'
-import { RestaurantRatingView } from '../RestaurantRatingView'
 import { Column } from './Column'
 import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
+import { graphql } from '@dish/graph'
+import { Circle, Spacer, Text, XStack, YStack, useMedia } from '@dish/ui'
+import { MessageSquare } from '@tamagui/feather-icons'
+import React, { Suspense, memo } from 'react'
 
 export const ListItemContentModern = memo(
   graphql((props: ListItemContentProps) => {
@@ -61,7 +58,6 @@ export const ListItemContentModern = memo(
         : 1
 
     const titleFontSize = Math.round((media.sm ? 26 : 28) * titleFontScale)
-    const theme = useTheme()
     // const imgSize = 120
 
     if (!restaurant) {
@@ -71,31 +67,12 @@ export const ListItemContentModern = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <YStack
-          hoverStyle={{ backgroundColor: theme.bgTransparent }}
+          hoverStyle={{ backgroundColor: '$backgroundTransparent' }}
           maxWidth="100%"
           width="100%"
           paddingVertical={16}
           paddingLeft={30}
         >
-          {/* <AbsoluteYStack
-            backgroundColor={theme.bg2}
-            width={imgSize}
-            height={imgSize}
-            borderRadius={1000}
-            x={-100}
-            zIndex={0}
-            overflow="hidden"
-          >
-            <Image
-              source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
-              style={{
-                width: imgSize,
-                height: imgSize,
-                // borderRadius: 1000,
-              }}
-            />
-          </AbsoluteYStack> */}
-
           <XStack flex={1} marginLeft={-15} alignItems="center" flexGrow={1} position="relative">
             <Column width={320} flexDirection="row" justifyContent="flex-start">
               <YStack y={3} marginRight={-12} marginLeft={-8}>
@@ -108,16 +85,16 @@ export const ListItemContentModern = memo(
                   borderRadius={8}
                   alignItems="center"
                   hoverStyle={{
-                    backgroundColor: theme.bg2,
+                    backgroundColor: '$backgroundHover',
                   }}
                   pressStyle={{
-                    backgroundColor: theme.bg3,
+                    backgroundColor: '$backgroundPress',
                   }}
                   overflow="hidden"
                 >
                   <Text
                     fontSize={titleFontSize}
-                    color={theme.color}
+                    color="$color"
                     fontWeight="600"
                     letterSpacing={-0.25}
                     paddingHorizontal={1} // prevents clipping due to letter-spacing
@@ -225,19 +202,18 @@ export const ListItemContentModern = memo(
             </Column>
 
             <Column width={20}>
-              {/* @ts-expect-error */}
-              <Circle size={8} backgroundColor={open.isOpen ? light.green8 : light.red8} />
+              <Circle size={8} backgroundColor={open.isOpen ? '$green8' : '$red8'} />
             </Column>
 
             <Column width={60}>
-              <Text fontSize={14} color={theme.color3}>
+              <Text fontSize={14} color="$colorPress">
                 {price_range ?? '?'}
               </Text>
             </Column>
 
             <Column width={100}>
               <Link name="restaurantHours" params={{ slug: restaurant.slug || '' }}>
-                <Text fontSize={12} color={theme.color3}>
+                <Text fontSize={12} color="$colorPress">
                   {open.nextTime || '~~'}
                 </Text>
               </Link>

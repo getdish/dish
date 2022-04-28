@@ -1,3 +1,10 @@
+import { isWeb } from '../../../constants/constants'
+import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
+import { CloseButton } from '../../views/CloseButton'
+import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
+import { Image } from '../../views/Image'
+import { Link } from '../../views/Link'
+import { SlantedTitle } from '../../views/SlantedTitle'
 import { graphql, restaurant } from '@dish/graph'
 import { ellipseText, isPresent } from '@dish/helpers'
 import {
@@ -6,20 +13,13 @@ import {
   Paragraph,
   Spacer,
   Text,
-  useTheme,
   XStack,
   YStack,
+  useTheme,
 } from '@dish/ui'
 import { Store, useStore } from '@dish/use-store'
-import React, { memo, Suspense } from 'react'
+import React, { Suspense, memo } from 'react'
 import { StyleSheet } from 'react-native'
-import { isWeb } from '../../../constants/constants'
-import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
-import { CloseButton } from '../../views/CloseButton'
-import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
-import { Image } from '../../views/Image'
-import { Link } from '../../views/Link'
-import { SlantedTitle } from '../../views/SlantedTitle'
 
 export class RestaurantReviewsDisplayStore extends Store<{ id: string }> {
   showComments = false
@@ -174,10 +174,11 @@ const Content = memo(
                   return (
                     <YStack key={name}>
                       <YStack
+                        theme="Card"
                         margin={spacing / 2}
                         shadowColor="#000"
                         shadowOpacity={0.05}
-                        backgroundColor={theme.bgCard}
+                        backgroundColor="$background"
                         width={290}
                         {...(hideDescription && {
                           width: 80,
@@ -267,7 +268,7 @@ const Content = memo(
                                   )}
                                 </Paragraph>
 
-                                <AbsoluteYStack
+                                {/* <AbsoluteYStack
                                   zIndex={10}
                                   bottom={0}
                                   left={0}
@@ -278,7 +279,7 @@ const Content = memo(
                                     colors={[`${theme.bgCard}00`, theme.bgCard.toString()]}
                                     style={StyleSheet.absoluteFill}
                                   />
-                                </AbsoluteYStack>
+                                </AbsoluteYStack> */}
                               </YStack>
                             </>
                           )}

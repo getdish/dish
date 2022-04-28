@@ -7,12 +7,11 @@ import { graphql, restaurant_tag } from '@dish/graph'
 import {
   Button,
   Circle,
+  Heading,
   Input,
   Modal,
   Separator,
   Spacer,
-  Theme,
-  Title,
   XStack,
   YStack,
   useTheme,
@@ -107,7 +106,7 @@ const EditTagsModal = memo(
           ) : (
             <Circle backgroundColor="rgba(150,150,150,0.29)" size="$10" />
           )}
-          <Title>{dish.tag?.name}</Title>
+          <Heading>{dish.tag?.name}</Heading>
           <YStack flex={1} />
           {after}
         </XStack>
@@ -127,7 +126,11 @@ const EditTagsModal = memo(
         <Spacer />
 
         <YStack width="100%" flexShrink={0}>
-          <Input backgroundColor={theme.bg2} marginHorizontal={20} placeholder="Search dishes..." />
+          <Input
+            backgroundColor="$backgroundHover"
+            marginHorizontal={20}
+            placeholder="Search dishes..."
+          />
         </YStack>
 
         <ScrollView style={{ width: '100%' }}>
@@ -194,10 +197,9 @@ const EditTagsModal = memo(
         </ScrollView>
 
         <XStack flexShrink={0}>
-          {/* @ts-expect-error */}
-          <Theme name="active">
-            <Button onPress={() => onChange?.(slugs)}>Save</Button>
-          </Theme>
+          <Button theme="active" onPress={() => onChange?.(slugs)}>
+            Save
+          </Button>
         </XStack>
 
         <Spacer />

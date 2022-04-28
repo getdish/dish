@@ -1,4 +1,4 @@
-import * as Colors from '../constants/colors'
+import * as Colors from '@tamagui/theme-base'
 
 export const getColorsForName = (name?: string | null) => {
   const charCode = name && name.length > 0 ? name.charCodeAt(0) : 0

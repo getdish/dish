@@ -1,15 +1,29 @@
+import { animations } from './constants/animations'
 import { media } from './constants/media'
-import { shorthands } from './constants/shorthands'
-import { themes } from './constants/themes'
-import { tokens } from './constants/tokens'
-import { createTamagui } from 'tamagui'
+import { createTamagui, createTokens } from '@dish/ui'
+import { createInterFont } from '@tamagui/font-inter'
+import { shorthands } from '@tamagui/shorthands'
+import { color, radius, size, space, themes, zIndex } from '@tamagui/theme-base'
+
+const interFont = createInterFont()
 
 const config = createTamagui({
+  animations,
   defaultTheme: 'light',
   disableRootThemeClass: true,
   shorthands,
   themes,
-  tokens,
+  tokens: createTokens({
+    font: {
+      title: interFont,
+      body: interFont,
+    },
+    size,
+    space,
+    zIndex,
+    color,
+    radius,
+  }),
   media,
 })
 

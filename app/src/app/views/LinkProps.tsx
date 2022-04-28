@@ -1,8 +1,8 @@
-import { ButtonProps, StackProps, TextProps } from '@dish/ui'
-import React from 'react'
-import { TextStyle } from 'react-native'
 import { DRouteName } from '../../router'
 import { NavigableTag } from '../../types/tagTypes'
+import { ButtonProps, TextProps, YStackProps } from '@dish/ui'
+import React from 'react'
+import { TextStyle } from 'react-native'
 
 type AProps = React.DetailedHTMLProps<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -42,7 +42,7 @@ export type LinkButtonNamedProps<A = any, B = any> = {
   onPress?: Function
 }
 
-export type LinkButtonProps<Name extends DRouteName = any, Params = any> = StackProps &
+export type LinkButtonProps<Name extends DRouteName = any, Params = any> = YStackProps &
   ButtonProps &
   LinkSharedProps & {
     tooltip?: string

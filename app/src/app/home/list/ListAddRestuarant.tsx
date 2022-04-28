@@ -1,11 +1,3 @@
-import { series, sleep } from '@dish/async'
-import { graphql, query, resolved, slugify, useRefetch } from '@dish/graph'
-import { Input, Spacer, Text, YStack, useTheme } from '@dish/ui'
-import { Loader } from '@tamagui/feather-icons'
-import { debounce, uniqBy } from 'lodash'
-import React, { useEffect, useState } from 'react'
-import { ScrollView } from 'react-native'
-
 import { AutocompleteItemFull } from '../../../helpers/createAutocomplete'
 import { createRestaurantAutocomplete } from '../../../helpers/createRestaurantAutocomplete'
 import { useRegionQuery } from '../../../helpers/fetchRegion'
@@ -15,9 +7,16 @@ import { roundCoord } from '../../../helpers/mapHelpers'
 import { searchRestaurants } from '../../../helpers/searchRestaurants'
 import { queryList } from '../../../queries/queryList'
 import { RegionApiResponse } from '../../../types/homeTypes'
-import { appMapStore } from '../../appMapStore'
 import { AutocompleteItemView } from '../../AutocompleteItemView'
+import { appMapStore } from '../../appMapStore'
 import { SlantedTitle } from '../../views/SlantedTitle'
+import { series, sleep } from '@dish/async'
+import { graphql, query, resolved, slugify, useRefetch } from '@dish/graph'
+import { Input, Spacer, Text, YStack } from '@dish/ui'
+import { Loader } from '@tamagui/feather-icons'
+import { debounce, uniqBy } from 'lodash'
+import React, { useEffect, useState } from 'react'
+import { ScrollView } from 'react-native'
 
 const searchRestaurantsInBBox = async (bbox: RegionApiResponse['bbox'], searchQuery: string) => {
   return await resolved(() => {
@@ -64,7 +63,6 @@ export const ListAddRestuarant = graphql(
     const listRegion = list.region
     const region = useRegionQuery(listRegion)
     const bbox = region.data?.bbox
-    const theme = useTheme()
     const [isSearching, setIsSearching] = useState(false)
     const [results, setResults] = useState<AutocompleteItemFull[]>([])
     const [searchQuery, setQuery] = useState('')
@@ -151,7 +149,7 @@ export const ListAddRestuarant = graphql(
         </SlantedTitle>
         <YStack width="100%" flexShrink={0}>
           <Input
-            backgroundColor={theme.bg2}
+            backgroundColor="$backgroundHover"
             marginHorizontal={20}
             placeholder="Add restaurants..."
             autoFocus

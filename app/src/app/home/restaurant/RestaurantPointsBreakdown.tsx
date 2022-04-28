@@ -1,4 +1,3 @@
-import { light } from '../../../constants/colors'
 import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
 import { numberFormat } from '../../../helpers/numberFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
@@ -63,7 +62,7 @@ export const RestaurantPointsBreakdown = memo(
             <Spacer />
             {reviewsBreakdown.score != null ? (
               <Paragraph size="$3" color="rgba(0,0,0,0.7)">
-                <TextHighlight backgroundColor={light.green10}>
+                <TextHighlight backgroundColor="$green10">
                   {numberFormat(Math.round(reviewsBreakdown['score']))}
                 </TextHighlight>{' '}
                 from {numberFormat(totalReviews)} reviews
@@ -76,7 +75,7 @@ export const RestaurantPointsBreakdown = memo(
 
             {photosBreakdown.score != null ? (
               <Paragraph size="$3" color="rgba(0,0,0,0.7)">
-                <TextHighlight backgroundColor={light.green10}>
+                <TextHighlight backgroundColor="$green10">
                   {numberFormat(Math.round(photosBreakdown['score']))}
                 </TextHighlight>{' '}
                 from {photosBreakdown['meeting_criteria_count']} good photos
@@ -88,11 +87,11 @@ export const RestaurantPointsBreakdown = memo(
             <Spacer size="$6" />
 
             <Paragraph textAlign="center" size="$3" color="rgba(0,0,0,0.6)">
-              <TextHighlight fontWeight="700" backgroundColor={light.green10}>
+              <TextHighlight fontWeight="700" backgroundColor="$green10">
                 {numberFormat(Math.round(nativeReviewPoints))}
               </TextHighlight>{' '}
               points from {numberFormat(totalNativeReviews)} Dish reviews and <View />
-              <TextHighlight fontWeight="700" backgroundColor={light.yellow10}>
+              <TextHighlight fontWeight="700" backgroundColor="$yellow10">
                 {numberFormat(Math.round(externalReviewPoints))}
               </TextHighlight>{' '}
               from {numberFormat(totalExternalReviews)} {sourceNames(sources)} reviews.

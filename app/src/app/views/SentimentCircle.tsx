@@ -1,8 +1,7 @@
-import { Text, XStack } from '@dish/ui'
-import React, { memo } from 'react'
-
-import { light } from '../../constants/colors'
 import { CircularProgress } from './CircularProgress'
+import { Text, XStack } from '@dish/ui'
+import { allLightColors } from '@tamagui/theme-base'
+import React, { memo } from 'react'
 
 const sentiments = {
   0: '😞',
@@ -13,11 +12,11 @@ const sentiments = {
 }
 
 const colors = {
-  0: light.red8,
-  1: light.orange8,
-  2: light.green8,
-  3: light.green8,
-  4: light.blue8,
+  0: allLightColors.red8,
+  1: allLightColors.orange8,
+  2: allLightColors.green8,
+  3: allLightColors.green8,
+  4: allLightColors.blue8,
 }
 
 export const SentimentCircle = memo(({ ratio, scale = 1 }: { ratio: number; scale?: number }) => {

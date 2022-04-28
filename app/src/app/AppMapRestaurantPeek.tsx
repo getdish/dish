@@ -1,13 +1,12 @@
-import { graphql } from '@dish/graph'
-import { Box, Spacer, Text, XStack, YStack } from '@dish/ui'
-import { useStoreInstanceSelector } from '@dish/use-store'
-import React, { memo, useEffect, useState } from 'react'
-
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { appMapStore } from './appMapStore'
 import { useHomeStore } from './homeStore'
 import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'
+import { graphql } from '@dish/graph'
+import { Card, Spacer, Text, XStack, YStack } from '@dish/ui'
+import { useStoreInstanceSelector } from '@dish/use-store'
+import React, { memo, useEffect, useState } from 'react'
 
 export const AppMapRestaurantPeek = memo(
   graphql((props: any) => {
@@ -39,7 +38,7 @@ export const AppMapRestaurantPeek = memo(
 
     // const containerWrap = (children: any) => {
     //   return (
-    //     <Box
+    //     <Card
     //       overflow="visible"
     //       minWidth={200}
     //       pointerEvents="auto"
@@ -53,7 +52,7 @@ export const AppMapRestaurantPeek = memo(
     //       shadowRadius={10}
     //     >
     //       {children}
-    //     </Box>
+    //     </Card>
     //   )
     // }
 

@@ -1,4 +1,4 @@
-import { Separator, Spacer, StackProps, Text, TextProps, Title, XStack, YStack } from '@dish/ui'
+import { Heading, Separator, Spacer, Text, TextProps, XStack, YStack, YStackProps } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const SmallTitle = memo(
@@ -14,7 +14,7 @@ export const SmallTitle = memo(
     letterSpacing = -0.25,
     textAlign,
     ...rest
-  }: StackProps &
+  }: YStackProps &
     TextProps & {
       after?: any
       isActive?: boolean
@@ -30,7 +30,7 @@ export const SmallTitle = memo(
       <YStack width="100%" alignItems="center" {...rest}>
         <XStack width="100%" alignItems="center">
           {divider === 'center' && dividerElement}
-          <Title
+          <Heading
             paddingHorizontal={20}
             {...{
               color,
@@ -42,7 +42,7 @@ export const SmallTitle = memo(
             }}
           >
             {children}
-          </Title>
+          </Heading>
           {divider === 'center' && dividerElement}
         </XStack>
 
@@ -65,14 +65,14 @@ export const SmallTitle = memo(
 )
 
 export const SmallerTitle = memo(
-  ({ children, hideDivider, ...rest }: StackProps & { hideDivider?: boolean }) => {
+  ({ children, hideDivider, ...rest }: YStackProps & { hideDivider?: boolean }) => {
     return (
       <XStack alignItems="center" justifyContent="center" space {...rest}>
-        {!hideDivider && <Separator flex />}
+        {!hideDivider && <Separator />}
         <Text opacity={0.5} fontSize={14} fontWeight="500">
           {children}
         </Text>
-        {!hideDivider && <Separator flex />}
+        {!hideDivider && <Separator />}
       </XStack>
     )
   }

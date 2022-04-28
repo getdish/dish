@@ -1,14 +1,13 @@
-import { GRAPH_DOMAIN } from '@dish/graph'
-import { Spacer, Text, Title, XStack, YStack } from '@dish/ui'
-import loadable from '@loadable/component'
-import React, { memo } from 'react'
-import { ScrollView } from 'react-native'
-
 import { Route, RouteSwitch } from '../Route'
 import { Link } from '../views/Link'
 import { LinkButton } from '../views/LinkButton'
 import { LinkButtonProps } from '../views/LinkProps'
 import { SmallTitle } from '../views/SmallTitle'
+import { GRAPH_DOMAIN } from '@dish/graph'
+import { Heading, Spacer, Text, XStack, YStack } from '@dish/ui'
+import loadable from '@loadable/component'
+import React, { memo } from 'react'
+import { ScrollView } from 'react-native'
 
 export default memo(function AdminPage() {
   return (
@@ -35,7 +34,7 @@ export default memo(function AdminPage() {
         <Route name="admin">
           <ScrollView style={{ width: '100%', height: '100%' }}>
             <YStack alignItems="center" paddingVertical={20} space="$8">
-              <Title>Welcome to dish</Title>
+              <Heading>Welcome to dish</Heading>
 
               <SmallTitle>Manage</SmallTitle>
               <XStack justifyContent="center" flexWrap="wrap" space="$6">

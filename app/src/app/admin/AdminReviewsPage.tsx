@@ -1,11 +1,3 @@
-import { graphql, order_by, query } from '@dish/graph'
-import { fetchBertSentiment } from '@dish/helpers'
-import { Separator, Text, XStack, YStack, useDebounceValue } from '@dish/ui'
-import { Store, useStore } from '@dish/use-store'
-import React, { Suspense, useEffect, useState } from 'react'
-import { ScrollView, TextInput } from 'react-native'
-
-import { light } from '../../constants/colors'
 import { defaultLocationAutocompleteResults } from '../../constants/defaultLocationAutocompleteResults'
 import { AutocompleteItem } from '../../helpers/createAutocomplete'
 import { locationToAutocomplete, searchLocations } from '../../helpers/searchLocations'
@@ -13,6 +5,12 @@ import { SmallTitle } from '../views/SmallTitle'
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
 import { VerticalColumn } from './VerticalColumn'
+import { graphql, order_by, query } from '@dish/graph'
+import { fetchBertSentiment } from '@dish/helpers'
+import { Separator, Text, XStack, YStack, useDebounceValue } from '@dish/ui'
+import { Store, useStore } from '@dish/use-store'
+import React, { Suspense, useEffect, useState } from 'react'
+import { ScrollView, TextInput } from 'react-native'
 
 export class AdminReviewsStore extends Store {
   selectedCity: AutocompleteItem | null = null
@@ -138,10 +136,7 @@ const ReviewSentiment = (props: { text: string }) => {
 
       {sentiments.map(({ sentiment, sentence }) => {
         return (
-          <Text
-            backgroundColor={sentiment === 'Negative' ? light.red8 : light.green8}
-            key={sentence}
-          >
+          <Text backgroundColor={sentiment === 'Negative' ? '$red8' : '$green8'} key={sentence}>
             {sentence} <strong>({sentiment})</strong>.
           </Text>
         )

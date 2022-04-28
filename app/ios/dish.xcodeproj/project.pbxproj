@@ -11,28 +11,29 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		223A4AA59F734003B08351C7 /* Inter-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1D30CBD8FDE94A23A4B58149 /* Inter-Light.otf */; };
 		2D5A5EE767273F91CF5C95EE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0FA4667F25CF9EECBFC91A /* ExpoModulesProvider.swift */; };
+		386827B84940451C80678FE3 /* WhyteHeavy.woff in Resources */ = {isa = PBXBuildFile; fileRef = 7421338D482348DDB181C573 /* WhyteHeavy.woff */; };
+		3BF5E6A3D877408C823B6701 /* Inter-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5E264F83C9084DE1B20F25C7 /* Inter-Thin.otf */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
+		5678478E986B4951B935866C /* Magnat.otf in Resources */ = {isa = PBXBuildFile; fileRef = 38AC99A9CBD74174B5C456AC /* Magnat.otf */; };
+		5CD2384AA43243AF8175F7BC /* WhyteHeavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */; };
+		60676EAFC29F45BFB2F3D108 /* Magnat.woff in Resources */ = {isa = PBXBuildFile; fileRef = 5D4A66CAC7CE4D298DD1D4AF /* Magnat.woff */; };
+		63EEFD9B0CEF4529AE7721A8 /* Inter-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = FB9042C119C443C9921EBC76 /* Inter-BoldItalic.otf */; };
+		89548292F4C14FE88F60F57D /* WhyteHeavy.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */; };
+		95AE501A070F4209AB4D9563 /* Inter-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 37EB51AF5AA6436AAD1A8E82 /* Inter-Bold.otf */; };
 		96905EF65AED1B983A6B3ABC /* libPods-dish.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-dish.a */; };
 		AE9E86162752CA3000B698A9 /* Mapbox in Frameworks */ = {isa = PBXBuildFile; productRef = D1ED2FCA68F04201AC2320F7 /* Mapbox */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		F37DA4FC23874A0780707C42 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C89C9D50C3C45CC8E917586 /* noop-file.swift */; };
-		95AE501A070F4209AB4D9563 /* Inter-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 37EB51AF5AA6436AAD1A8E82 /* Inter-Bold.otf */; };
-		63EEFD9B0CEF4529AE7721A8 /* Inter-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = FB9042C119C443C9921EBC76 /* Inter-BoldItalic.otf */; };
-		223A4AA59F734003B08351C7 /* Inter-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1D30CBD8FDE94A23A4B58149 /* Inter-Light.otf */; };
-		F73D38B6661F47628491BCFD /* Inter-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 271D2490AF8349CB98FBD339 /* Inter-LightItalic.otf */; };
-		3BF5E6A3D877408C823B6701 /* Inter-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5E264F83C9084DE1B20F25C7 /* Inter-Thin.otf */; };
-		5678478E986B4951B935866C /* Magnat.otf in Resources */ = {isa = PBXBuildFile; fileRef = 38AC99A9CBD74174B5C456AC /* Magnat.otf */; };
-		60676EAFC29F45BFB2F3D108 /* Magnat.woff in Resources */ = {isa = PBXBuildFile; fileRef = 5D4A66CAC7CE4D298DD1D4AF /* Magnat.woff */; };
-		5CD2384AA43243AF8175F7BC /* WhyteHeavy.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */; };
-		386827B84940451C80678FE3 /* WhyteHeavy.woff in Resources */ = {isa = PBXBuildFile; fileRef = 7421338D482348DDB181C573 /* WhyteHeavy.woff */; };
-		89548292F4C14FE88F60F57D /* WhyteHeavy.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */; };
-		E6BBC65F013A4DFE877086B2 /* Inter-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03DF4B97337748C8912FB680 /* Inter-Black.otf */; };
 		C20C0074AAA5490C95B4762F /* Inter-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = B74AA2360D5348BEB937BCCA /* Inter-BlackItalic.otf */; };
+		E6BBC65F013A4DFE877086B2 /* Inter-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03DF4B97337748C8912FB680 /* Inter-Black.otf */; };
+		F37DA4FC23874A0780707C42 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C89C9D50C3C45CC8E917586 /* noop-file.swift */; };
+		F73D38B6661F47628491BCFD /* Inter-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 271D2490AF8349CB98FBD339 /* Inter-LightItalic.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		03DF4B97337748C8912FB680 /* Inter-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Black.otf"; path = "../src/assets/fonts/Inter-Black.otf"; sourceTree = "<group>"; };
 		0C89C9D50C3C45CC8E917586 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "dish/noop-file.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = dish/AppDelegate.h; sourceTree = "<group>"; };
@@ -41,27 +42,26 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = dish/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = dish/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = dish/main.m; sourceTree = "<group>"; };
+		1D30CBD8FDE94A23A4B58149 /* Inter-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Light.otf"; path = "../src/assets/fonts/Inter-Light.otf"; sourceTree = "<group>"; };
+		271D2490AF8349CB98FBD339 /* Inter-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-LightItalic.otf"; path = "../src/assets/fonts/Inter-LightItalic.otf"; sourceTree = "<group>"; };
 		2AA69D4D1A9C4AE9ACDBAE26 /* dish-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "dish-Bridging-Header.h"; path = "dish/dish-Bridging-Header.h"; sourceTree = "<group>"; };
+		37EB51AF5AA6436AAD1A8E82 /* Inter-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Bold.otf"; path = "../src/assets/fonts/Inter-Bold.otf"; sourceTree = "<group>"; };
+		38AC99A9CBD74174B5C456AC /* Magnat.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Magnat.otf; path = ../src/assets/fonts/Magnat.otf; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-dish.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dish.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D4A66CAC7CE4D298DD1D4AF /* Magnat.woff */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = Magnat.woff; path = ../src/assets/fonts/Magnat.woff; sourceTree = "<group>"; };
+		5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = WhyteHeavy.otf; path = ../src/assets/fonts/WhyteHeavy.otf; sourceTree = "<group>"; };
+		5E264F83C9084DE1B20F25C7 /* Inter-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Thin.otf"; path = "../src/assets/fonts/Inter-Thin.otf"; sourceTree = "<group>"; };
 		6C2E3173556A471DD304B334 /* Pods-dish.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dish.debug.xcconfig"; path = "Target Support Files/Pods-dish/Pods-dish.debug.xcconfig"; sourceTree = "<group>"; };
+		7421338D482348DDB181C573 /* WhyteHeavy.woff */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = WhyteHeavy.woff; path = ../src/assets/fonts/WhyteHeavy.woff; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dish.release.xcconfig"; path = "Target Support Files/Pods-dish/Pods-dish.release.xcconfig"; sourceTree = "<group>"; };
 		8B0FA4667F25CF9EECBFC91A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-dish/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = dish/SplashScreen.storyboard; sourceTree = "<group>"; };
+		B74AA2360D5348BEB937BCCA /* Inter-BlackItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-BlackItalic.otf"; path = "../src/assets/fonts/Inter-BlackItalic.otf"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		37EB51AF5AA6436AAD1A8E82 /* Inter-Bold.otf */ = {isa = PBXFileReference; name = "Inter-Bold.otf"; path = "../src/assets/fonts/Inter-Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		FB9042C119C443C9921EBC76 /* Inter-BoldItalic.otf */ = {isa = PBXFileReference; name = "Inter-BoldItalic.otf"; path = "../src/assets/fonts/Inter-BoldItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		1D30CBD8FDE94A23A4B58149 /* Inter-Light.otf */ = {isa = PBXFileReference; name = "Inter-Light.otf"; path = "../src/assets/fonts/Inter-Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		271D2490AF8349CB98FBD339 /* Inter-LightItalic.otf */ = {isa = PBXFileReference; name = "Inter-LightItalic.otf"; path = "../src/assets/fonts/Inter-LightItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		5E264F83C9084DE1B20F25C7 /* Inter-Thin.otf */ = {isa = PBXFileReference; name = "Inter-Thin.otf"; path = "../src/assets/fonts/Inter-Thin.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		38AC99A9CBD74174B5C456AC /* Magnat.otf */ = {isa = PBXFileReference; name = "Magnat.otf"; path = "../src/assets/fonts/Magnat.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		5D4A66CAC7CE4D298DD1D4AF /* Magnat.woff */ = {isa = PBXFileReference; name = "Magnat.woff"; path = "../src/assets/fonts/Magnat.woff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		5DD8B1771B7C40659A6D334B /* WhyteHeavy.otf */ = {isa = PBXFileReference; name = "WhyteHeavy.otf"; path = "../src/assets/fonts/WhyteHeavy.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		7421338D482348DDB181C573 /* WhyteHeavy.woff */ = {isa = PBXFileReference; name = "WhyteHeavy.woff"; path = "../src/assets/fonts/WhyteHeavy.woff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */ = {isa = PBXFileReference; name = "WhyteHeavy.woff2"; path = "../src/assets/fonts/WhyteHeavy.woff2"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		03DF4B97337748C8912FB680 /* Inter-Black.otf */ = {isa = PBXFileReference; name = "Inter-Black.otf"; path = "../src/assets/fonts/Inter-Black.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		B74AA2360D5348BEB937BCCA /* Inter-BlackItalic.otf */ = {isa = PBXFileReference; name = "Inter-BlackItalic.otf"; path = "../src/assets/fonts/Inter-BlackItalic.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = WhyteHeavy.woff2; path = ../src/assets/fonts/WhyteHeavy.woff2; sourceTree = "<group>"; };
+		FB9042C119C443C9921EBC76 /* Inter-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-BoldItalic.otf"; path = "../src/assets/fonts/Inter-BoldItalic.otf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,7 +171,7 @@
 			sourceTree = "<group>";
 		};
 		EB8D12F75900481CA0440752 /* Resources */ = {
-			isa = "PBXGroup";
+			isa = PBXGroup;
 			children = (
 				37EB51AF5AA6436AAD1A8E82 /* Inter-Bold.otf */,
 				FB9042C119C443C9921EBC76 /* Inter-BoldItalic.otf */,
@@ -187,8 +187,8 @@
 				B74AA2360D5348BEB937BCCA /* Inter-BlackItalic.otf */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
 			path = "";
+			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 

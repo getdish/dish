@@ -274,9 +274,7 @@ const UserPageContent = memo(
 
             <XStack space="$2" justifyContent="center">
               <SmallButton
-                textProps={{
-                  fontWeight: '800',
-                }}
+                fontWeight="800"
                 theme={!pane ? 'active' : null}
                 onPress={() => {
                   setPane()
@@ -285,9 +283,7 @@ const UserPageContent = memo(
                 Profile
               </SmallButton>
               <SmallButton
-                textProps={{
-                  fontWeight: '800',
-                }}
+                fontWeight="800"
                 theme={pane === 'review' ? 'active' : null}
                 onPress={() => {
                   setPane('review')
@@ -296,9 +292,7 @@ const UserPageContent = memo(
                 Reviews
               </SmallButton>
               <SmallButton
-                textProps={{
-                  fontWeight: '800',
-                }}
+                fontWeight="800"
                 theme={pane === 'favorite' ? 'active' : null}
                 onPress={() => {
                   setPane('favorite')
@@ -307,9 +301,7 @@ const UserPageContent = memo(
                 Favorites
               </SmallButton>
               <SmallButton
-                textProps={{
-                  fontWeight: '800',
-                }}
+                fontWeight="800"
                 theme={pane === 'vote' ? 'active' : null}
                 onPress={() => {
                   setPane('vote')
@@ -460,10 +452,14 @@ const UserPageContent = memo(
 )
 
 const ParagraphSkeleton = (props: ParagraphProps) => {
-  const theme = useTheme()
   if (props.children === undefined) {
     return (
-      <Paragraph {...props} color="transparent" backgroundColor={theme.bg2} borderRadius={10}>
+      <Paragraph
+        {...props}
+        color="transparent"
+        backgroundColor="$backgroundHover"
+        borderRadius={10}
+      >
         lorem ipsum
       </Paragraph>
     )

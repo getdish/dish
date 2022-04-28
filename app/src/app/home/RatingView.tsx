@@ -1,4 +1,4 @@
-import { Box, Paragraph, Text, Theme, ThemeInverse } from '@dish/ui'
+import { Card, Paragraph, Text, Theme, ThemeInverse } from '@dish/ui'
 import React, { forwardRef } from 'react'
 
 export type RatingViewProps = {
@@ -19,7 +19,6 @@ export const RatingView = forwardRef(
       <Paragraph
         ref={ref as any}
         ellipse
-        // @ts-expect-error
         size={size * (floating ? 0.4 : 0.5)}
         fontWeight="800"
         letterSpacing={-0.75}
@@ -31,7 +30,7 @@ export const RatingView = forwardRef(
       return content
     }
     return (
-      <Box
+      <Card
         width={size}
         height={size}
         elevation="$1"
@@ -40,7 +39,7 @@ export const RatingView = forwardRef(
         justifyContent="center"
       >
         {content}
-      </Box>
+      </Card>
     )
   }
 )

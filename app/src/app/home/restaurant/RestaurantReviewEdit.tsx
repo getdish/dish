@@ -1,13 +1,12 @@
-import { graphql } from '@dish/graph'
-import { Input, Spacer } from '@dish/ui'
-import { Trash } from '@tamagui/feather-icons'
-import React, { useEffect, useState } from 'react'
-
 import { AuthForm } from '../../AuthForm'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useCurrentUserQuery } from '../../hooks/useUserReview'
 import { SmallButton } from '../../views/SmallButton'
 import { RestaurantReview, RestaurantReviewProps } from './RestaurantReview'
+import { graphql } from '@dish/graph'
+import { Input, Spacer } from '@dish/ui'
+import { Trash } from '@tamagui/feather-icons'
+import React, { useEffect, useState } from 'react'
 
 export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
   const { review, onEdit, onDelete } = props
@@ -65,7 +64,7 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
       after={
         <>
           <SmallButton
-            theme="error"
+            theme="red"
             accessible
             accessibilityRole="button"
             icon={<Trash color="red" size={16} />}

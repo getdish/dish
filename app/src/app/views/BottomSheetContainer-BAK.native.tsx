@@ -1,9 +1,8 @@
-import { BlurView, StackProps, YStack } from '@dish/ui'
+import { drawerBorderRadius } from '../../constants/constants'
+import { BlurView, YStack, YStackProps } from '@dish/ui'
 import React from 'react'
 
-import { drawerBorderRadius } from '../../constants/constants'
-
-export const BottomSheetContainer = ({ children, ...props }: StackProps) => {
+export const BottomSheetContainer = ({ children, ...props }: YStackProps) => {
   return (
     <YStack
       width="100%"

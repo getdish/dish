@@ -69,7 +69,11 @@ export const AutocompleteFrame = memo(
           overflow="hidden"
           // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
         >
-          <AbsoluteYStack backgroundColor={theme.bg} fullscreen opacity={isSafari ? 1 : 0.9} />
+          <AbsoluteYStack
+            backgroundColor="$backgroundColor"
+            fullscreen
+            opacity={isSafari ? 1 : 0.9}
+          />
           <AbsoluteYStack fullscreen display={media.sm ? 'none' : 'flex'}>
             {!isSafari && (
               <BlurView

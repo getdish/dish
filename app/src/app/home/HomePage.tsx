@@ -1,7 +1,27 @@
+import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
+import { getDefaultLocation, setDefaultLocation } from '../../constants/initialHomeState'
+import { useRegionQuery } from '../../helpers/fetchRegion'
+import { router } from '../../router'
+import { HomeStateItemHome } from '../../types/homeTypes'
+import { IntroModalStore } from '../IntroModalStore'
+import { PortalItem } from '../Portal'
+import { cancelUpdateRegion } from '../appMapStore'
+import { homeStore, useHomeStateById } from '../homeStore'
+import { useLastValueWhen } from '../hooks/useLastValueWhen'
+import { useLocalStorageState } from '../hooks/useLocalStorageState'
+import { setInitialRegionSlug } from '../initialRegionSlug'
+import { CloseButton } from '../views/CloseButton'
+import { ContentScrollView } from '../views/ContentScrollView'
+import { Link } from '../views/Link'
+import { PageHead } from '../views/PageHead'
+import { PaneControlButtons } from '../views/PaneControlButtons'
+import { HomePageFeed } from './HomePageFeed'
+import { HomeStackViewProps } from './HomeStackViewProps'
+import { PageContentWithFooter } from './PageContentWithFooter'
+import { homePageStore } from './homePageStore'
 import { slugify } from '@dish/graph'
 import {
   AbsoluteYStack,
-  // AnimatedYStack,
   LoadingItems,
   Paragraph,
   Text,
@@ -12,28 +32,6 @@ import {
 } from '@dish/ui'
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
-
-import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
-import { getDefaultLocation, setDefaultLocation } from '../../constants/initialHomeState'
-import { useRegionQuery } from '../../helpers/fetchRegion'
-import { router } from '../../router'
-import { HomeStateItemHome } from '../../types/homeTypes'
-import { cancelUpdateRegion } from '../appMapStore'
-import { homeStore, useHomeStateById } from '../homeStore'
-import { useLastValueWhen } from '../hooks/useLastValueWhen'
-import { useLocalStorageState } from '../hooks/useLocalStorageState'
-import { setInitialRegionSlug } from '../initialRegionSlug'
-import { IntroModalStore } from '../IntroModalStore'
-import { PortalItem } from '../Portal'
-import { CloseButton } from '../views/CloseButton'
-import { ContentScrollView } from '../views/ContentScrollView'
-import { Link } from '../views/Link'
-import { PageHead } from '../views/PageHead'
-import { PaneControlButtons } from '../views/PaneControlButtons'
-import { HomePageFeed } from './HomePageFeed'
-import { homePageStore } from './homePageStore'
-import { HomeStackViewProps } from './HomeStackViewProps'
-import { PageContentWithFooter } from './PageContentWithFooter'
 
 export type Props = HomeStackViewProps<HomeStateItemHome>
 
@@ -183,7 +181,6 @@ const HomePageWelcomeBubble = memo(() => {
 const Inner = () => {
   const introStore = useStore(IntroModalStore)
   const [show, setShow] = useLocalStorageState('home-intro-dialogue', true)
-  const theme = useTheme()
 
   if (!show || !introStore.hidden) {
     return null
@@ -199,8 +196,8 @@ const Inner = () => {
     >
       {/* <AnimatedYStack> */}
       <YStack
-        backgroundColor={theme.bg}
-        borderColor={theme.borderColor}
+        backgroundColor="$background"
+        borderColor="$borderColor"
         borderWidth={1}
         borderRadius={15}
         margin={10}

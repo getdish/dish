@@ -1,12 +1,11 @@
-import { Spacer, Theme, YStack, useMedia } from '@dish/ui'
-import { useStore } from '@dish/use-store'
-import React, { memo } from 'react'
-
 import { isWeb } from '../constants/constants'
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { AutocompleteItemView } from './AutocompleteItemView'
 import { AutocompleteStore, AutocompleteTarget } from './AutocompletesStore'
 import { usePageFinishedLoading } from './usePageFinishedLoading'
+import { Spacer, Theme, YStack, useMedia } from '@dish/ui'
+import { useStore } from '@dish/use-store'
+import React, { memo } from 'react'
 
 export const AutocompleteResults = memo(
   ({
@@ -36,7 +35,6 @@ export const AutocompleteResults = memo(
           const isActive = !isWeb ? index === 0 : activeIndex === index
           return (
             <React.Fragment key={`${result.id}${index}`}>
-              {/* @ts-expect-error */}
               <Theme name={isActive ? 'active' : 'dark'}>
                 <AutocompleteItemView
                   target={target}

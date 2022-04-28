@@ -25,14 +25,14 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       $sm={{
         maxHeight: 44,
         // borderWidth: 0,
-        backgroundColor: '$bg2',
+        backgroundColor: '$backgroundHover',
         borderRadius: 10,
+        // @ts-expect-error
         hoverStyle: {
-          backgroundColor: '$bg2',
+          backgroundColor: '$backgroundHover',
         },
-        // @ts-ignore
         focusStyle: {
-          backgroundColor: '$bg2',
+          backgroundColor: '$backgroundFocus',
         },
       }}
     >

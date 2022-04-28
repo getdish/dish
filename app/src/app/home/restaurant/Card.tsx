@@ -1,19 +1,4 @@
 import {
-  AbsoluteYStack,
-  H3,
-  Hoverable,
-  HoverableProps,
-  LinearGradient,
-  Paragraph,
-  Spacer,
-  Text,
-  useTheme,
-  XStack,
-  YStack,
-} from '@dish/ui'
-import React from 'react'
-import { StyleSheet } from 'react-native'
-import {
   cardFrameBorderRadius,
   cardFrameHeight,
   cardFrameHeightSm,
@@ -23,6 +8,21 @@ import {
 } from '../../../constants/constants'
 import { CardFrame, CardFrameProps } from '../../views/CardFrame'
 import { Image } from '../../views/Image'
+import {
+  AbsoluteYStack,
+  H3,
+  Hoverable,
+  HoverableProps,
+  LinearGradient,
+  Paragraph,
+  Spacer,
+  Text,
+  XStack,
+  YStack,
+  useTheme,
+} from '@dish/ui'
+import React from 'react'
+import { StyleSheet } from 'react-native'
 
 export type CardProps = CardFrameProps &
   HoverableProps & {
@@ -158,7 +158,9 @@ export function Card(props: CardProps) {
           <YStack
             className="ease-in-out"
             opacity={hideInfo ? 0 : 1}
+            // @ts-ignore
             paddingHorizontal={size.endsWith('xs') ? 30 : 20}
+            // @ts-ignore
             paddingVertical={size.endsWith('xs') ? 15 : 20}
             flex={1}
           >

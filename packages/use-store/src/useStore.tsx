@@ -76,7 +76,7 @@ export function createStore<A extends Store<B>, B>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B
 ): A {
-  return getOrCreateStoreInfo(StoreKlass, props).store
+  return getOrCreateStoreInfo(StoreKlass, props).store as any
 }
 // use singleton with react
 // TODO selector support with types...
@@ -168,7 +168,7 @@ export function getStore<A extends Store<B>, B>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B
 ): A {
-  return getOrCreateStoreInfo(StoreKlass, props).store
+  return getOrCreateStoreInfo(StoreKlass, props).store as any
 }
 
 function getOrCreateStoreInfo(

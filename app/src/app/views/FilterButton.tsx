@@ -43,17 +43,14 @@ export const FilterButton = ({
       <SmallButton
         theme={name}
         icon={IconComponent}
+        fontWeight="700"
+        color={isActive ? '#fff' : undefined}
         {...rest}
         zIndex={100 - index + (isActive ? 1 : 0)}
         // borderWidth={0}
-        bc="$bg2"
+        bc="$backgroundHover"
         hoverStyle={{
           bc: '$bg3',
-        }}
-        textProps={{
-          fontWeight: '700',
-          color: isActive ? '#fff' : undefined,
-          ...rest.textProps,
         }}
         onPress={() => {
           resetResults()

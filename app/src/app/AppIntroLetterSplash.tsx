@@ -1,26 +1,8 @@
-import {
-  AbsoluteYStack,
-  Button,
-  LinearGradient,
-  Modal,
-  Paragraph,
-  Spacer,
-  Text,
-  Theme,
-  useMedia,
-  useTheme,
-  YStack,
-} from '@dish/ui'
-import { useStore } from '@dish/use-store'
-import loadable from '@loadable/component'
-import { Home } from '@tamagui/feather-icons'
-import React, { memo, useLayoutEffect, useMemo, useState } from 'react'
-import { StyleSheet } from 'react-native'
 import { useQueryLoud } from '../helpers/useQueryLoud'
-import { useFormAction } from './hooks/useFormAction'
-import { useLocalStorageState } from './hooks/useLocalStorageState'
 import { IntroModalStore } from './IntroModalStore'
 import { UserOnboard } from './UserOnboard'
+import { useFormAction } from './hooks/useFormAction'
+import { useLocalStorageState } from './hooks/useLocalStorageState'
 import { useUserStore } from './userStore'
 import { CloseButton, SmallCircleButton } from './views/CloseButton'
 import { DarkModal } from './views/DarkModal'
@@ -30,6 +12,23 @@ import { LogoColor } from './views/Logo'
 import { PageHead } from './views/PageHead'
 import { PaneControlButtons } from './views/PaneControlButtons'
 import { SlantedTitle } from './views/SlantedTitle'
+import {
+  AbsoluteYStack,
+  Button,
+  LinearGradient,
+  Modal,
+  Paragraph,
+  Spacer,
+  Text,
+  Theme,
+  YStack,
+  useMedia,
+  useTheme,
+} from '@dish/ui'
+import { useStore } from '@dish/use-store'
+import { Home } from '@tamagui/feather-icons'
+import React, { memo, useLayoutEffect, useMemo, useState } from 'react'
+import { StyleSheet } from 'react-native'
 
 export const AppIntroLetter = memo(() => {
   const [showSignup, setShowSignup] = useState(false)
@@ -155,7 +154,8 @@ export const AppIntroLetter = memo(() => {
             paddingHorizontal={20}
             elevation="$3"
             borderRadius={100}
-            textProps={{ fontSize: 16, fontWeight: '800' }}
+            fontSize={16}
+            fontWeight="800"
             onPress={() => setShowSignup(true)}
           >
             Sign up &nbsp; ✨

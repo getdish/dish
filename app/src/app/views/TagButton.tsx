@@ -1,11 +1,24 @@
+import { isWeb } from '../../constants/constants'
+import { tagDisplayName } from '../../constants/tagDisplayName'
+import { getTagSlug } from '../../helpers/getTagSlug'
+import { NavigableTag } from '../../types/tagTypes'
+import { useUserTagVotes } from '../hooks/useUserTagVotes'
+import { Image } from './Image'
+import { Link } from './Link'
+import { LinkButton } from './LinkButton'
+import { Pie } from './Pie'
+import { TagButtonVote, tagRatings } from './TagButtonVote'
+import { SearchTagButton } from './dish/SearchTagButton'
 import { Tag, TagQuery, TagType, graphql, restaurant, review } from '@dish/graph'
 import {
   AbsoluteYStack,
-  Box,
+  Button,
+  ButtonProps,
+  Card,
   HoverablePopover,
   HoverablePopoverHandle,
   HoverablePopoverProps,
-  StackProps,
+  Paragraph,
   Text,
   TextProps,
   Theme,
@@ -13,29 +26,13 @@ import {
   Tooltip,
   XStack,
   YStack,
+  getFontSize,
   prevent,
   useTheme,
-  ButtonProps,
-  getFontSize,
-  Button,
-  Paragraph,
 } from '@dish/ui'
+import '@tamagui/colors'
 import { X } from '@tamagui/feather-icons'
 import React, { memo, useRef } from 'react'
-
-import { light } from '../../constants/colors'
-import { isWeb } from '../../constants/constants'
-import { tagDisplayName } from '../../constants/tagDisplayName'
-import { getTagSlug } from '../../helpers/getTagSlug'
-import { RGB } from '../../helpers/rgb'
-import { NavigableTag } from '../../types/tagTypes'
-import { useUserTagVotes } from '../hooks/useUserTagVotes'
-import { SearchTagButton } from './dish/SearchTagButton'
-import { Image } from './Image'
-import { Link } from './Link'
-import { LinkButton } from './LinkButton'
-import { Pie } from './Pie'
-import { TagButtonVote, tagRatings } from './TagButtonVote'
 
 export type TagButtonTagProps = {
   type?: string
@@ -186,7 +183,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       flexShrink={0}
       opacity={rank && rank < 100 ? 1 : 0}
     >
-      <Text pointerEvents="none" color={theme.color} fontSize={7} fontWeight="300" opacity={0.15}>
+      <Text pointerEvents="none" color="$color" fontSize={7} fontWeight="300" opacity={0.15}>
         #
       </Text>
       <Text
@@ -196,7 +193,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         justifyContent="center"
         alignItems="center"
         display="flex"
-        color={theme.color}
+        color="$color"
         letterSpacing={-1.5}
         opacity={0.2}
       >
@@ -241,7 +238,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       className="hover-parent"
       position="relative"
       noTextWrap
-      backgroundColor={theme.bg}
+      backgroundColor="$background"
       icon={iconElement}
       {...(fadeLowlyVoted &&
         typeof vote === 'number' &&
@@ -263,13 +260,13 @@ const TagButtonInner = (props: TagButtonProps) => {
               ) : ( */}
               <YStack
                 position="relative"
-                backgroundColor={theme.bg4}
+                backgroundColor="$backgroundFocus"
                 borderRadius={100}
                 width={fontSize}
                 height={fontSize}
                 transform={[{ rotate: `${(1 - rating / 10) * 180}deg` }]}
                 // borderWidth={1}
-                borderColor={theme.bg3}
+                borderColor="$backgroundPress"
                 opacity={floating ? 1 : 0.7}
               >
                 <Pie
@@ -284,7 +281,7 @@ const TagButtonInner = (props: TagButtonProps) => {
 
           {ratingStyle !== 'pie' && (
             <YStack position="relative" backgroundColor={floating ? `#fff` : theme.color}>
-              <Text color={theme.color} fontSize={13} fontWeight="900" letterSpacing={-0.5}>
+              <Text color="$color" fontSize={13} fontWeight="900" letterSpacing={-0.5}>
                 {ratingPts < 0 ? ratingPts : `+${ratingPts}`}
               </Text>
             </YStack>
@@ -295,6 +292,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       {!onlyIcon && !circular && (
         <Paragraph
           ellipse
+          // @ts-ignore
           size={size}
           fontWeight={fontWeight || '400'}
           paddingLeft={3}
@@ -302,7 +300,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           pointerEvents="none"
           {...(floating && {
             color: '#fff',
-            textShadowColor: theme.shadowColor2,
+            textShadowColor: '$shadowColorHover',
             textShadowOffset: { height: 3, width: 0 },
             textShadowRadius: 3,
           })}
@@ -321,14 +319,14 @@ const TagButtonInner = (props: TagButtonProps) => {
           {...props}
           vote={vote}
           key={`${slug}${props.restaurant?.slug}${userTagVotes.vote}`}
-          color={theme.color}
+          color="$color"
           scale={Math.round(+fontSize / 16)}
           disablePopover={noLink}
         />
       )}
 
       {!!after && (
-        <Text color={theme.color} fontWeight="300" fontSize={smallerFontSize}>
+        <Text color="$color" fontWeight="300" fontSize={smallerFontSize}>
           {after}
         </Text>
       )}
@@ -429,7 +427,7 @@ export const TagVotePopover = graphql(
         trigger={(props) => React.cloneElement(children, props)}
       >
         <Theme name="dark">
-          <Box paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
+          <Card paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
             <XStack>
               {tagRatings.map((rating) => (
                 <LinkButton
@@ -438,11 +436,8 @@ export const TagVotePopover = graphql(
                   width={38}
                   height={38}
                   paddingHorizontal={0}
-                  textProps={{
-                    letterSpacing: -1,
-                    fontWeight: '600',
-                    paddingHorizontal: 4,
-                  }}
+                  letterSpacing={-1}
+                  fontWeight="600"
                   onPress={(e) => {
                     e.stopPropagation()
                     setVote(rating)
@@ -454,7 +449,7 @@ export const TagVotePopover = graphql(
                   key={rating}
                   {...(vote === rating
                     ? {
-                        backgroundColor: light.blue3,
+                        backgroundColor: '$blue3',
                       }
                     : {
                         backgroundColor: 'transparent',
@@ -464,7 +459,7 @@ export const TagVotePopover = graphql(
                 </LinkButton>
               ))}
             </XStack>
-          </Box>
+          </Card>
         </Theme>
       </HoverablePopover>
     )

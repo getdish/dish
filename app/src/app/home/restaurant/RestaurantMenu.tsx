@@ -1,11 +1,10 @@
-import { graphql } from '@dish/graph'
-import { Grid, Paragraph, Spacer, XStack, YStack, useTheme } from '@dish/ui'
-import React, { memo, useState } from 'react'
-
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { HiddenSection } from './HiddenSection'
+import { graphql } from '@dish/graph'
+import { Grid, Paragraph, Spacer, XStack, YStack, useTheme } from '@dish/ui'
+import React, { memo, useState } from 'react'
 
 export const RestaurantMenu = memo(
   graphql(({ restaurantSlug }: { restaurantSlug: string }) => {
@@ -55,12 +54,13 @@ export const RestaurantMenu = memo(
                       )}
                       {!item.image && (
                         <YStack
+                          theme="Card"
                           minWidth={50}
                           minHeight={50}
                           maxWidth={50}
                           maxHeight={50}
                           borderRadius={100}
-                          backgroundColor={theme.bgCard}
+                          backgroundColor="$background"
                         />
                       )}
                       <Spacer />

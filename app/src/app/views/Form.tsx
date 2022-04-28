@@ -36,6 +36,7 @@ export function SubmittableForm({
 }) {
   return (
     <Form
+      // @ts-ignore
       onSubmit={onSubmit}
       // @ts-ignore
       onKeyPress={(e) => {
@@ -93,6 +94,7 @@ export const ValidatedInput = ({
   errors,
   ...rest
 }: InputProps & {
+  name?: string
   control: any
   rules?: RegisterOptions
   errors?: FieldError | null
@@ -120,11 +122,10 @@ export const ValidatedInput = ({
               //   // }
               // }}
               {...(!isWeb && {
-                placeholderTextColor: theme.color3,
+                placeholderTextColor: theme.colorPress,
               })}
               {...rest}
-              autoCompleteType={name}
-              name={name}
+              // name={name}
               onBlur={onBlur}
               value={value}
               onChangeText={(val) => {

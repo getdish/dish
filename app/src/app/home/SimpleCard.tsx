@@ -1,11 +1,10 @@
-import { StackProps, XStack, YStack } from '@dish/ui'
-import React from 'react'
-
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
+import { XStack, YStack, YStackProps } from '@dish/ui'
+import React from 'react'
 
 type CarouselSize = 'md' | 'sm'
 
-export type SimpleCardProps = StackProps & {
+export type SimpleCardProps = YStackProps & {
   size?: CarouselSize
   slanted?: boolean
   isBehind?: boolean
@@ -14,7 +13,7 @@ export type SimpleCardProps = StackProps & {
 export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: SimpleCardProps) => {
   return (
     <YStack
-      bc="$bg2"
+      bc="$backgroundHover"
       mr={size === 'sm' ? -3 : -8}
       className="disable-hover-touch ease-in-out-fast"
       overflow="hidden"

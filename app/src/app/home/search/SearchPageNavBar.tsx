@@ -1,3 +1,9 @@
+import { drawerWidthMax } from '../../../constants/constants'
+import { titleHeight } from '../../../constants/titleHeight'
+import { HomeStateItemSearch } from '../../../types/homeTypes'
+import { useLastHomeState } from '../../homeStore'
+import { LenseButtonBar } from '../../views/LenseButtonBar'
+import { SearchPageFilterBar } from './SearchPageFilterBar'
 import {
   AbsoluteYStack,
   Theme,
@@ -9,13 +15,6 @@ import {
 } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { G, Path, Svg } from 'react-native-svg'
-
-import { drawerWidthMax } from '../../../constants/constants'
-import { titleHeight } from '../../../constants/titleHeight'
-import { HomeStateItemSearch } from '../../../types/homeTypes'
-import { useLastHomeState } from '../../homeStore'
-import { LenseButtonBar } from '../../views/LenseButtonBar'
-import { SearchPageFilterBar } from './SearchPageFilterBar'
 
 const InverseRoundedEdge = () => {
   return (
@@ -60,7 +59,7 @@ export const SearchPageNavBar = memo(() => {
         left={0}
         right={0}
         maxWidth={drawerWidthMax}
-        backgroundColor="$bg2"
+        backgroundColor="$backgroundHover"
         shadowColor="$shadowColor2"
         shadowRadius={6}
         shadowOffset={{ height: 3, width: 0 }}

@@ -1,6 +1,6 @@
-import { StackProps, YStack } from '@dish/ui'
+import { YStack, YStackProps } from '@dish/ui'
 
-export function ScalingPressable(props: StackProps) {
+export function ScalingPressable(props: YStackProps) {
   return (
     <YStack
       className="ease-in-out-faster"

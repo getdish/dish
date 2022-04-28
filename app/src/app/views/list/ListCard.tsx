@@ -1,8 +1,3 @@
-import { getUserName, graphql, mutate, query, resolved, slugify } from '@dish/graph'
-import { isPresent } from '@dish/helpers'
-import { AbsoluteYStack, Hoverable, Theme, Toast, YStack, isTouchDevice } from '@dish/ui'
-import React, { Suspense, memo, useState } from 'react'
-
 import { selectTagDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { FeedCard, FeedCardProps } from '../../home/FeedCard'
 import { getListPhoto } from '../../home/getListPhoto'
@@ -13,6 +8,10 @@ import { CloseButton } from '../CloseButton'
 import { Link } from '../Link'
 import { SuspenseFallback } from '../SuspenseFallback'
 import { ListQueryProps, useList } from './useList'
+import { getUserName, graphql, mutate, query, resolved, slugify } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
+import { AbsoluteYStack, Hoverable, Theme, Toast, YStack, isTouchDevice } from '@dish/ui'
+import React, { Suspense, memo, useState } from 'react'
 
 export type ListCardProps = ListQueryProps &
   FeedCardProps & {
@@ -155,6 +154,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
           // floating
           {...feedCardProps}
         >
+          {/* @ts-ignore */}
           {!props.size?.endsWith('xs') && (
             <YStack pos="absolute" top="$2" right="$1" als="flex-start" x={-2}>
               <Suspense fallback={null}>

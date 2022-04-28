@@ -1,5 +1,4 @@
-import { light } from '../../../constants/colors'
-import { Spacer, Text, TextProps, XStack, useTheme } from '@dish/ui'
+import { Spacer, Text, TextProps, XStack } from '@dish/ui'
 import { ThumbsDown, ThumbsUp } from '@tamagui/feather-icons'
 import React from 'react'
 
@@ -11,14 +10,13 @@ export const SentimentText = ({
 }: TextProps & { sentiment: number; scale?: number }) => {
   // have to wrap with XStack to get border radius on native
   const Icon = sentiment > 0 ? ThumbsUp : ThumbsDown
-  const theme = useTheme()
-  const color = sentiment > 0 ? light.green9 : sentiment < 0 ? light.red9 : light.gray6
+  const color = sentiment > 0 ? '$green9' : sentiment < 0 ? '$red9' : '$gray9'
   return (
     <XStack
       paddingHorizontal={6 * scale}
       borderRadius={6 * scale}
       alignItems="center"
-      backgroundColor={theme.bg2}
+      backgroundColor="$backgroundHover"
     >
       {!!children && (
         <>

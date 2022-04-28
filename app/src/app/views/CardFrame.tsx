@@ -1,16 +1,7 @@
-import { YStack, useTheme, SizeTokens } from '@dish/ui'
+import { cardFrameBorderRadius, cardFrameHeight, cardFrameWidth } from '../../constants/constants'
+import { SizeTokens, YStack } from '@dish/ui'
 // TODO variant for width/height
 import React from 'react'
-
-import {
-  cardFrameBorderRadius,
-  cardFrameHeight,
-  cardFrameHeightLg,
-  cardFrameHeightSm,
-  cardFrameWidth,
-  cardFrameWidthLg,
-  cardFrameWidthSm,
-} from '../../constants/constants'
 
 export type CardFrameProps = {
   size?: SizeTokens
@@ -52,7 +43,6 @@ export const CardFrame = ({
   square,
   transparent,
 }: CardFrameProps) => {
-  const theme = useTheme()
   return (
     <YStack
       className={`hover-parent ease-in-out-fastest ${className || ''}`}
@@ -62,7 +52,7 @@ export const CardFrame = ({
       height={square ? cardFrameWidth : cardFrameHeight}
       bc="$bg"
       borderColor={borderColor as any}
-      shadowColor={theme.shadowColor}
+      shadowColor="$shadowColor"
       shadowRadius={4}
       shadowOffset={{ height: 1, width: 0 }}
       position="relative"
@@ -135,21 +125,21 @@ export const CardFrame = ({
         backgroundColor: 'transparent',
       })}
       {...(!borderless && {
-        borderColor: theme.bg3,
+        borderColor: '$backgroundPress',
         borderWidth: 1,
         hoverStyle: {
-          borderColor: theme.bg3,
+          borderColor: '$backgroundPress',
         },
       })}
       {...(floating && {
-        shadowColor: theme.bg,
+        shadowColor: '$background',
         shadowOpacity: 0.033,
         shadowRadius: 0,
         shadowOffset: { height: 3, width: 3 },
       })}
       {...(pressable && {
         pressStyle: {
-          backgroundColor: theme.bgDark,
+          backgroundColor: '$backgroundPress',
         },
       })}
       {...(flexible && {

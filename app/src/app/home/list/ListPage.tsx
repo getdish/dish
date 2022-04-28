@@ -32,7 +32,6 @@ import { series } from '@dish/async'
 import { List, getUserName, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import {
-  AbsoluteYStack,
   Button,
   H1,
   Input,
@@ -47,7 +46,6 @@ import {
   YStack,
   useForceUpdate,
   useMedia,
-  useTheme,
 } from '@dish/ui'
 import { List as ListIcon, Move, Plus, Trash, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
@@ -239,7 +237,6 @@ const ListPageContent = memo(
 
       const nameLen = (list.name || '').length
       const media = useMedia()
-      const theme = useTheme()
       let fontSize = 1.5 * (nameLen > 40 ? 26 : nameLen > 30 ? 32 : nameLen > 24 ? 42 : 52)
       if (media.sm) {
         fontSize = fontSize * 0.8
@@ -578,7 +575,7 @@ const ListPageContent = memo(
                       justifyContent="center"
                     >
                       <XStack
-                        backgroundColor={theme.bg}
+                        backgroundColor="$background"
                         padding={5}
                         paddingHorizontal={20}
                         borderRadius={100}

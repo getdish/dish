@@ -215,10 +215,11 @@ export const ReviewTagsRow = memo(
                   },
                   limit: 15,
                 })
-                .map(getTagButtonProps),
-            {
-              signal,
-            }
+                .map(getTagButtonProps)
+            // {
+            //   // @ts-ignore
+            //   signal,
+            // }
           )
           if (signal.aborted) return
           const filtered = await fuzzySearch({

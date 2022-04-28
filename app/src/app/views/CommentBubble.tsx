@@ -1,18 +1,3 @@
-import {
-  AbsoluteYStack,
-  Modal,
-  Paragraph,
-  Spacer,
-  StackProps,
-  Text,
-  useTheme,
-  XStack,
-  YStack,
-} from '@dish/ui'
-import { User } from '@tamagui/feather-icons'
-import React, { useState } from 'react'
-import { ScrollView } from 'react-native'
-import { grey } from '../../constants/colors'
 import { thirdPartyCrawlSources } from '../../constants/thirdPartyCrawlSources'
 import { getTimeFormat } from '../../helpers/getTimeFormat'
 import { getWindowHeight } from '../../helpers/getWindow'
@@ -23,8 +8,22 @@ import { Image } from './Image'
 import { Link } from './Link'
 import { Middot } from './Middot'
 import { PaneControlButtons } from './PaneControlButtons'
+import {
+  AbsoluteYStack,
+  Modal,
+  Paragraph,
+  Spacer,
+  Text,
+  XStack,
+  YStack,
+  YStackProps,
+  useTheme,
+} from '@dish/ui'
+import { User } from '@tamagui/feather-icons'
+import React, { useState } from 'react'
+import { ScrollView } from 'react-native'
 
-export type CommentBubbleProps = Omit<StackProps, 'children'> & {
+export type CommentBubbleProps = Omit<YStackProps, 'children'> & {
   name: string
   username: string | undefined | null
   title?: any
@@ -152,7 +151,7 @@ function CommentBubbleContents(
           className="preserve-whitespace break-word"
           maxWidth="100%"
           overflow="hidden"
-          color={color ? color : theme.color2}
+          color={color ? color : '$colorHover'}
           fontSize={size === 'lg' ? 18 : 14}
           lineHeight={size === 'lg' ? 32 : 18}
         >
@@ -183,7 +182,7 @@ function CommentBubbleContents(
   const charSize = 22
 
   const externalSource = source && source !== 'dish' ? thirdPartyCrawlSources[source] : null
-  const backgroundColor = avatarBackgroundColor || grey
+  const backgroundColor = avatarBackgroundColor || '$grey10'
   const avatar = avatarProp?.image || ''
   const isExternalUser = name === '_dish_external_user'
 
@@ -226,7 +225,7 @@ function CommentBubbleContents(
             </YStack>
             {!!externalSource?.image && (
               <YStack
-                shadowColor={theme.shadowColor}
+                shadowColor="$shadowColor"
                 shadowRadius={4}
                 shadowOffset={{ height: 2, width: 0 }}
                 borderRadius={1000}
@@ -250,7 +249,7 @@ function CommentBubbleContents(
             {!!name && (
               <YStack>
                 {wrapLink(
-                  <Text color={theme.color} fontSize={size === 'lg' ? 18 : 14} fontWeight="800">
+                  <Text color="$color" fontSize={size === 'lg' ? 18 : 14} fontWeight="800">
                     {isExternalUser ? `via ${externalSource?.name || '-'}` : name}
                   </Text>
                 )}
@@ -295,12 +294,12 @@ function CommentBubbleContents(
           paddingVertical={15}
           marginLeft={20}
           backgroundColor="$bgCard"
-          borderColor={theme.borderColor}
+          borderColor="$borderColor"
           borderWidth={0.5}
           borderRadius={20}
           position="relative"
           zIndex={10}
-          shadowColor={theme.shadowColor2}
+          shadowColor="$shadowColorHover"
           shadowRadius={8}
           shadowOffset={{ height: 3, width: 0 }}
           height={bubbleHeight}

@@ -146,7 +146,7 @@ const FeedCardContent = ({
       bw={1}
       pointerEvents="auto"
       bc="$bg"
-      borderColor="$bg2"
+      borderColor="$backgroundHover"
       hoverStyle={{
         borderColor: '$bg4',
       }}
@@ -180,7 +180,7 @@ const FeedCardContent = ({
 
         <YStack p="$2" br="$2" pos="relative" ov="hidden" space="$1">
           <YStack position="relative" display={isWeb ? 'block' : 'flex'}>
-            <H2 color="$color4" fontWeight="300" size={titleSize}>
+            <H2 color="$color4" fontWeight="300" size={titleSize || undefined}>
               {title}
             </H2>
           </YStack>

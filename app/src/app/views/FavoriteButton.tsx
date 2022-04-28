@@ -1,8 +1,7 @@
-import { ButtonProps, getFontSize, getFontSizeToken, Paragraph, prevent, Text } from '@dish/ui'
+import { SmallButton } from './SmallButton'
+import { ButtonProps, Paragraph, Text, getFontSize, getFontSizeToken, prevent } from '@dish/ui'
 import { Heart } from '@tamagui/feather-icons'
 import React from 'react'
-import { light } from '../../constants/colors'
-import { SmallButton } from './SmallButton'
 
 export type FavoriteButtonProps = ButtonProps & {
   floating?: boolean
@@ -25,9 +24,9 @@ export const FavoriteButton = ({
       icon={
         isFavorite ? (
           <Paragraph
-            size={getFontSizeToken(size as any, { relativeSize: -2 })}
+            size={getFontSizeToken(size as any, { relativeSize: -2 }) || undefined}
             cursor="default"
-            color={light.red9}
+            color="$red9"
             // marginTop={1}
             // x={-1.5}
             // y={2}

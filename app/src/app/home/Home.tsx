@@ -1,17 +1,4 @@
 import {
-  XStack,
-  YStack,
-  supportsTouchWeb,
-  useMedia,
-  LinearGradient,
-  useTheme,
-  Circle,
-} from '@dish/ui'
-import { reaction } from '@dish/use-store'
-import React, { Suspense, memo, useEffect } from 'react'
-import { StyleSheet, Keyboard } from 'react-native'
-
-import {
   drawerWidthMax,
   isWeb,
   pageWidthMax,
@@ -24,14 +11,26 @@ import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
 import { AppSearchBarInline } from '../AppSearchBarInline'
 import { autocompletesStore } from '../AutocompletesStore'
+import { DrawerPortalProvider } from '../Portal'
 import { drawerStore } from '../drawerStore'
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
-import { DrawerPortalProvider } from '../Portal'
 import { HomeDrawerSmallView } from './HomeDrawerSmallView'
 import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
+import {
+  Circle,
+  LinearGradient,
+  XStack,
+  YStack,
+  supportsTouchWeb,
+  useMedia,
+  useTheme,
+} from '@dish/ui'
+import { reaction } from '@dish/use-store'
+import React, { Suspense, memo, useEffect } from 'react'
+import { Keyboard, StyleSheet } from 'react-native'
 
 export const Home = memo(function Home() {
   // helper that warns on root level unmounts (uncaught suspense)
@@ -214,7 +213,7 @@ const AppSearchBarFade = () => {
       style={[{ top: 0, right: 0, bottom: 0, left: 0, position: 'absolute', zIndex: -1 }]}
       // start={[0, 0]}
       // end={[0, 1]}
-      colors={[theme.bg.toString(), theme.bgTransparent.toString()]}
+      colors={[theme.background.toString(), theme.backgroundTransparent.toString()]}
     />
   )
 }

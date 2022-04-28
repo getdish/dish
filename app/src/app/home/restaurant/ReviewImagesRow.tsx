@@ -1,8 +1,3 @@
-import { useRefetch } from '@dish/graph'
-import { AbsoluteYStack, Button, StackProps, Toast, XStack, YStack, useTheme } from '@dish/ui'
-import { Camera } from '@tamagui/feather-icons'
-import React, { useEffect } from 'react'
-
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
@@ -10,6 +5,10 @@ import { SmallButton } from '../../views/SmallButton'
 import { RestaurantReviewProps } from './RestaurantReview'
 import { usePickImage } from './usePickImage'
 import { useRestaurantPhotos } from './useRestaurantPhotos'
+import { useRefetch } from '@dish/graph'
+import { AbsoluteYStack, Button, Toast, XStack, YStack, YStackProps } from '@dish/ui'
+import { Camera } from '@tamagui/feather-icons'
+import React, { useEffect } from 'react'
 
 export const ReviewImagesRow = ({
   list,
@@ -135,7 +134,6 @@ export const ReviewImagesRow = ({
   )
 }
 
-const ImageFrame = (props: StackProps) => {
-  const theme = useTheme()
-  return <YStack backgroundColor={theme.bg2} {...props} />
+const ImageFrame = (props: YStackProps) => {
+  return <YStack backgroundColor="$backgroundHover" {...props} />
 }

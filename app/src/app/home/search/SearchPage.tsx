@@ -7,7 +7,7 @@ import {
   LoadingItem,
   Paragraph,
   Spacer,
-  StackProps,
+  YStackProps,
   Text,
   Theme,
   XStack,
@@ -576,7 +576,7 @@ const SearchFooter = memo(({ scrollToTop, id }: { scrollToTop: Function; id: str
   )
 })
 
-const SearchLoading = (props: StackProps) => {
+const SearchLoading = (props: YStackProps) => {
   return (
     <YStack flex={1} width="100%" minHeight={300} {...props}>
       <LoadingItem />

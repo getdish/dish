@@ -1,9 +1,8 @@
-import { Text, YStack, useTheme } from '@dish/ui'
-import React, { memo } from 'react'
-
 import { defaultUserImage } from '../../../constants/defaultUserImage'
 import { Image } from '../../views/Image'
 import { characters } from './characters'
+import { Text, YStack } from '@dish/ui'
+import React, { memo } from 'react'
 
 export const UserAvatar = memo(
   ({
@@ -16,11 +15,10 @@ export const UserAvatar = memo(
     charIndex?: number | null
   }) => {
     const char = characters[charIndex ?? 0]
-    const theme = useTheme()
     return (
       <YStack
         borderRadius={1000}
-        backgroundColor={theme.bg2}
+        backgroundColor="$backgroundHover"
         width={size}
         height={size}
         position="relative"
@@ -38,9 +36,9 @@ export const UserAvatar = memo(
         {!avatar && (
           <YStack
             borderRadius={1000}
-            backgroundColor={theme.bg}
+            backgroundColor="$background"
             borderWidth={2}
-            borderColor={theme.borderColor}
+            borderColor="$borderColor"
             width={size}
             height={size}
           />

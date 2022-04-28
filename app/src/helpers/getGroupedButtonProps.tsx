@@ -1,4 +1,4 @@
-import { StackProps } from '@dish/ui'
+import { YStackProps } from '@dish/ui'
 
 export function getGroupedButtonProps({
   index,
@@ -11,7 +11,7 @@ export function getGroupedButtonProps({
 }) {
   const hasPrev = !!items[index - 1]
   const hasNext = !!items[index + 1]
-  const extraProps: StackProps = {}
+  const extraProps: YStackProps = {}
   extraProps.borderTopLeftRadius = hasPrev ? 0 : borderRadius
   extraProps.borderBottomLeftRadius = hasPrev ? 0 : borderRadius
   extraProps.borderTopRightRadius = hasNext ? 0 : borderRadius

@@ -1,11 +1,10 @@
+import { DRouteName } from '../../router'
+import { LinkButton } from './LinkButton'
+import { LinkButtonProps } from './LinkProps'
 import { RoutesTable } from '@dish/router'
 import { Text, XStack } from '@dish/ui'
 import { ChevronDown, ChevronUp } from '@tamagui/feather-icons'
 import React from 'react'
-
-import { DRouteName } from '../../router'
-import { LinkButton } from './LinkButton'
-import { LinkButtonProps } from './LinkProps'
 
 export const TrendingButton = <
   Name extends DRouteName = DRouteName,
@@ -24,9 +23,6 @@ export const TrendingButton = <
         flexDirection="row"
         alignItems="center"
         overflow="hidden"
-        textProps={{
-          ellipse: true,
-        }}
         {...rest}
       >
         {rank ? <Text>`${rank}. `</Text> : null}

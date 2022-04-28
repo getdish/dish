@@ -1,8 +1,5 @@
-import React, { memo, useRef } from 'react'
-import { Defs, Ellipse, G, Mask, Path, Svg, Use } from 'react-native-svg'
-
-import { brandColor } from '../../constants/colors'
 import {
+  brandColor,
   logoHeight,
   logoSmHeight,
   logoSmWidth,
@@ -10,6 +7,8 @@ import {
   logoXsHeight,
   logoXsWidth,
 } from '../../constants/constants'
+import React, { memo, useRef } from 'react'
+import { Defs, Ellipse, G, Mask, Path, Svg, Use } from 'react-native-svg'
 
 export const LogoColor = ({ scale = 1, color }: { scale?: number; color?: string }) => {
   return (

@@ -9,11 +9,11 @@ import { SmallTitle } from './views/SmallTitle'
 import { Auth } from '@dish/graph'
 import {
   Button,
+  Heading,
   InteractiveContainer,
   Paragraph,
   Spacer,
   Text,
-  Title,
   XStack,
   YStack,
 } from '@dish/ui'
@@ -86,9 +86,9 @@ export const AuthForm = memo(
         <InteractiveContainer alignSelf="center">
           <Button
             borderRadius={0}
+            fontSize={12}
+            fontWeight={formPage == 'login' ? '800' : '500'}
             textProps={{
-              fontSize: 12,
-              fontWeight: formPage == 'login' ? '800' : '500',
               opacity: formPage === 'login' ? 1 : 0.5,
             }}
             active={formPage == 'login'}
@@ -146,7 +146,7 @@ export const PasswordReset = ({ autoFocus }: AuthFormPageProps) => {
       successText="Your password has been reset, you can now login"
       errorText={errorMessage}
     >
-      <Title>Reset Password</Title>
+      <Heading>Reset Password</Heading>
       <Paragraph opacity={0.5}>Enter your new password:</Paragraph>
       <ValidatedInput
         control={control}

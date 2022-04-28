@@ -7,14 +7,14 @@ import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
 import { slugify } from '@dish/graph'
-import { Box, BoxProps, Separator, Spacer, Toast, YStack, useDebounceEffect } from '@dish/ui'
+import { Card, Separator, Spacer, Toast, YStack, YStackProps, useDebounceEffect } from '@dish/ui'
 import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@tamagui/feather-icons'
 import { capitalize } from 'lodash'
 import React, { forwardRef, memo, useState } from 'react'
 import { ScrollView, useColorScheme } from 'react-native'
 
 export const AppMenuContents = memo(
-  forwardRef(({ hideUserMenu, ...props }: { hideUserMenu: Function } & BoxProps, ref) => {
+  forwardRef(({ hideUserMenu, ...props }: { hideUserMenu: Function } & YStackProps, ref) => {
     const userStore = useUserStore()
     const { isLoggedIn, user, logout } = userStore
     const [showContents, setShowContents] = useState(false)
@@ -32,7 +32,7 @@ export const AppMenuContents = memo(
     )
 
     return (
-      <Box
+      <Card
         maxHeight={Math.max(350, getWindowHeight() - searchBarHeight - 30)}
         minHeight={250}
         alignItems="stretch"
@@ -174,7 +174,7 @@ export const AppMenuContents = memo(
             </ScrollView>
           )}
         </YStack>
-      </Box>
+      </Card>
     )
   })
 )
