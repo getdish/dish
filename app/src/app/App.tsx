@@ -120,21 +120,21 @@ function AppHomeContent(props: { children?: any }) {
 }
 
 const UserEditPage =
-  process.env.TARGET === 'ssr'
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./home/userEdit/UserEditPage').default
     : loadable(() => import('./home/userEdit/UserEditPage'))
 
 const GalleryPage =
-  process.env.TARGET === 'ssr'
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./home/gallery/GalleryPage').default
     : loadable(() => import('./home/gallery/GalleryPage'))
 
 const RestaurantReviewPage =
-  process.env.TARGET === 'ssr'
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./home/restaurantReview/RestaurantReviewPage').default
     : loadable(() => import('./home/restaurantReview/RestaurantReviewPage'))
 
 const RestaurantHoursPage =
-  process.env.TARGET === 'ssr'
+  process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./home/restaurantHours/RestaurantHoursPage').default
     : loadable(() => import('./home/restaurantHours/RestaurantHoursPage'))

@@ -33,36 +33,50 @@ export const HomeStackViewPages = (props: HomeStackViewProps) => {
 }
 
 const RestaurantPage =
-  process.env.TARGET === 'native' || process.env.TARGET === 'ssr'
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
     ? require('./restaurant/RestaurantPage').default
     : loadable(() => import('./restaurant/RestaurantPage'))
 
 const SearchPage =
-  process.env.TARGET === 'native' || process.env.TARGET === 'ssr'
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
     ? require('./search/SearchPage').default
     : loadable(() => import('./search/SearchPage'))
 
 const UserPage =
-  process.env.TARGET === 'native' || process.env.TARGET === 'ssr'
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
     ? require('./user/UserPage').default
     : loadable(() => import('./user/UserPage'))
 
 const RoadmapPage =
-  process.env.TARGET === 'native' || process.env.TARGET === 'ssr'
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
     ? require('./roadmap/RoadmapPage').default
     : loadable(() => import('./roadmap/RoadmapPage'))
 
 const AboutPage =
-  process.env.TARGET === 'native' || process.env.TARGET === 'ssr'
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
     ? require('./about/AboutPage').default
     : loadable(() => import('./about/AboutPage'))
 
 const ListPage =
-  process.env.TARGET === 'native' || process.env.TARGET === 'ssr'
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
     ? require('./list/ListPage').default
     : loadable(() => import('./list/ListPage'))
 
 const AccountPage =
-  process.env.TARGET === 'native' || process.env.TARGET === 'ssr'
+  process.env.TARGET === 'native' ||
+  process.env.TARGET === 'ssr' ||
+  process.env.NODE_ENV === 'development'
     ? require('./account/AccountPage').default
     : loadable(() => import('./account/AccountPage'))

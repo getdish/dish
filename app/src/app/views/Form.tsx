@@ -1,4 +1,3 @@
-// debug-verbose
 import { isWeb } from '../../constants/constants'
 import { ContentScrollContext } from '../views/ContentScrollView'
 import {
@@ -60,7 +59,7 @@ export function SubmittableForm({
               alignSelf="flex-end"
               marginLeft="auto"
               onPress={onSubmit}
-              theme="active"
+              theme="blue"
               borderRadius={100}
               elevation="$1"
               disabled={isSubmitting}

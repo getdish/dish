@@ -119,6 +119,7 @@ export function createWebpackConfig({
         assets: false,
         colors: true,
         // logging: 'verbose',
+        // moduleAssets: true,
       },
       externals: isSSR
         ? [
