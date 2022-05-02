@@ -1,4 +1,4 @@
-import { GalleryRef } from '../../SwipeGallery'
+// import { GalleryRef } from '../../SwipeGallery'
 import { isWeb } from '../../constants/constants'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { pluralize } from '../../helpers/pluralize'
@@ -39,7 +39,7 @@ export const FeedCard = (props: FeedCardProps) => {
     ...cardProps
   } = props
   // const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-  const galleryRef = useRef<GalleryRef>(null)
+  // const galleryRef = useRef<GalleryRef>(null)
   return (
     <Card
       className="hover-parent"
@@ -57,7 +57,8 @@ export const FeedCard = (props: FeedCardProps) => {
         // }}
       />
 
-      <FeedCardContent galleryRef={galleryRef} {...props} />
+      <FeedCardContent {...props} />
+      {/* galleryRef={galleryRef} */}
 
       {/* {!!dimensions.width && (
         <SwipeGallery
@@ -126,9 +127,9 @@ const FeedCardContent = ({
   photo,
   items,
   emphasizeTag,
-  galleryRef,
   theme: cardTheme = 'modern',
-}: FeedCardProps & { galleryRef: RefObject<GalleryRef> }) => {
+}: // & { galleryRef: RefObject<GalleryRef> }
+FeedCardProps) => {
   const titleLen = typeof title === 'string' ? title.length : 20
   const relativeSize = Math.max(1, Math.min(4, Math.round(60 / titleLen)))
   // @ts-expect-error
@@ -181,14 +182,14 @@ const FeedCardContent = ({
 
         <YStack p="$2" br="$2" pos="relative" ov="hidden" space="$1">
           <YStack position="relative" display={isWeb ? 'block' : 'flex'}>
-            <H2 color="$colorFocus" fontWeight="300" size={titleSize || undefined}>
+            <H2 color="$colorFocus" size={titleSize || undefined}>
               {title}
             </H2>
           </YStack>
 
           {!!(author || typeof numItems !== 'undefined') && (
             // @ts-expect-error
-            <Paragraph size={size} fontWeight="300" opacity={0.6}>
+            <Paragraph size={size} opacity={0.6}>
               {typeof numItems !== 'undefined' ? (
                 <>{`${pluralize(numItems, 'item')}`} &middot; </>
               ) : (

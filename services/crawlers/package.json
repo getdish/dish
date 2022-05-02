@@ -57,7 +57,7 @@
     "undici": "^4.13.0"
   },
   "devDependencies": {
-    "@tamagui/build": "1.0.0-beta.153+a49c2588",
+    "@tamagui/build": "^1.0.0-beta.10",
     "@types/cheerio": "^0.22.24",
     "@types/pg": "^7.14.10",
     "@types/puppeteer": "^5.4.3",

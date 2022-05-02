@@ -34,22 +34,22 @@ import {
 import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import loadable from '@loadable/component'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { Animated, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 export default memo(function AppMap() {
   // lighthouse/slow browser optimization
   const isFullyIdle = useIsInteractive()
   const media = useMedia()
-  const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
-  const y0 = media.sm
-    ? (() => {
-        const distanceFromCenter = getWindowHeight() - drawerStore.snapHeights[1] - drawerHeight
-        return Math.round(Math.min(0, -drawerHeight / 1.8 + distanceFromCenter / 4))
-      })()
-    : 0
+  // const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
+  // const y0 = media.sm
+  //   ? (() => {
+  //       const distanceFromCenter = getWindowHeight() - drawerStore.snapHeights[1] - drawerHeight
+  //       return Math.round(Math.min(0, -drawerHeight / 1.8 + distanceFromCenter / 4))
+  //     })()
+  //   : 0
 
-  const y = useDebounceValue(y0, 150)
-  const [translateY] = useState(() => new Animated.Value(y))
+  // const y = useDebounceValue(y0, 150)
+  // const [translateY] = useState(() => new Animated.Value(y))
   // const offset = useSharedValue(y)
   // const animatedStyles = useAnimatedStyle(() => {
   //   return {
@@ -57,12 +57,12 @@ export default memo(function AppMap() {
   //   }
   // }, [])
 
-  useEffect(() => {
-    Animated.spring(translateY, {
-      useNativeDriver: !isWeb,
-      toValue: y,
-    }).start()
-  }, [y])
+  // useEffect(() => {
+  //   Animated.spring(translateY, {
+  //     useNativeDriver: !isWeb,
+  //     toValue: y,
+  //   }).start()
+  // }, [y])
 
   if (!isFullyIdle) {
     return null
@@ -340,16 +340,6 @@ export const AppMapContents = memo(function AppMapContents() {
     </XStack>
   )
 })
-
-const MapFlexItem = () => {
-  const drawerWidth = useAppDrawerWidth()
-  const media = useMedia()
-  return (
-    <YStack maxWidth={drawerWidth} display={media.sm ? 'none' : 'flex'} height="100%" flex={2}>
-      {ensureFlexText}
-    </YStack>
-  )
-}
 
 const AppMapBottomFade = memo(() => {
   const theme = useTheme()

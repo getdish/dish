@@ -1,42 +1,28 @@
-import { Popover, Text, Theme, XStack, useMedia } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
-import { Menu } from '@tamagui/feather-icons'
-import React, { memo } from 'react'
-
 import { AppMenuContents } from './AppMenuContents'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { appMenuStore } from './AppMenuStore'
 import { useUserStore } from './userStore'
+import { Popover, SizableText, XStack } from '@dish/ui'
+import { useStoreInstance } from '@dish/use-store'
+import { Menu } from '@tamagui/feather-icons'
+import React, { memo } from 'react'
 
 export const AppMenuButton = memo(() => {
   const userStore = useUserStore()
-  const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
   const showUserMenu = appMenu.isVisible
-  // const pageName = useRouterCurPage().name
 
   return (
     <XStack alignItems="center">
-      <Popover
-        placement="bottom"
-        isOpen={showUserMenu}
-        onChangeOpen={appMenu.setIsVisible}
-        trigger={(props) => {
-          return (
-            <AppMenuLinkButton
-              Icon={Menu}
-              {...props}
-              onPress={() => appMenu.setIsVisible(!showUserMenu)}
-            >
-              <Text display={userStore.isLoggedIn ? 'none' : 'flex'} $sm={{ display: 'none' }}>
-                Signup
-              </Text>
-            </AppMenuLinkButton>
-          )
-        }}
-      >
+      <Popover placement="bottom" open={showUserMenu} onOpenChange={appMenu.setIsVisible}>
+        <Popover.Trigger>
+          <AppMenuLinkButton Icon={Menu} onPress={() => appMenu.setIsVisible(!showUserMenu)}>
+            <SizableText display={userStore.isLoggedIn ? 'none' : 'flex'} $sm={{ display: 'none' }}>
+              Signup
+            </SizableText>
+          </AppMenuLinkButton>
+        </Popover.Trigger>
         <Popover.Content>
-          {/* CONTENTS HERE */}
           <AppMenuContents hideUserMenu={appMenu.hide} />
         </Popover.Content>
       </Popover>

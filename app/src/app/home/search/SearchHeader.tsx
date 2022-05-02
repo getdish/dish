@@ -1,5 +1,3 @@
-import { H1, Spacer, Text, Theme, useMedia, XStack, YStack } from '@dish/ui'
-import React, { memo, Suspense, useContext } from 'react'
 import { isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
 import { getActiveTags } from '../../../helpers/getActiveTags'
@@ -8,6 +6,8 @@ import { useContentScrollHorizontalFitter } from '../../views/ContentScrollViewH
 import { ContentScrollViewHorizontalFitted } from '../../views/ContentScrollViewHorizontalFitted'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { SearchPageScoring } from './SearchPageScoring'
+import { H1, Spacer, Text, Theme, XStack, YStack, useMedia } from '@dish/ui'
+import React, { Suspense, memo, useContext } from 'react'
 
 export const SearchHeader = memo(() => {
   const { width, setWidthDebounce } = useContentScrollHorizontalFitter()
@@ -39,7 +39,6 @@ export const SearchHeader = memo(() => {
                   <Theme name={lenseColor}>
                     <H1
                       className="font-title"
-                      fontWeight="300"
                       color="$color3"
                       // fontSize={title.length < 20 ? 40 : 34}
                       size="$11"
@@ -54,7 +53,6 @@ export const SearchHeader = memo(() => {
                           className="nobreak"
                           letterSpacing={0}
                           fontSize={title.length < 25 ? 24 : 20}
-                          fontWeight="300"
                         >
                           &nbsp; in {subTitle.trim()}
                         </Text>

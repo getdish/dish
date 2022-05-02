@@ -3,35 +3,24 @@ import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { HistoryItem } from '@dish/router'
 import {
   AbsoluteYStack,
-  Button,
-  LoadingItem,
+  Button, combineRefs, LoadingItem,
   Paragraph,
-  Spacer,
-  YStackProps,
-  Text,
-  Theme,
-  XStack,
-  YStack,
-  combineRefs,
-  useDebounceEffect,
-  useLayout,
-  useMedia,
+  Spacer, Text,
+  Theme, useDebounceEffect, useMedia, XStack,
+  YStack, YStackProps
 } from '@dish/ui'
-import { Store, compareStrict, reaction, useStore, useStoreInstanceSelector } from '@dish/use-store'
+import { compareStrict, reaction, Store, useStore, useStoreInstanceSelector } from '@dish/use-store'
 import { ArrowUp } from '@tamagui/feather-icons'
 import React, {
-  Suspense,
   forwardRef,
-  memo,
-  useCallback,
+  memo, Suspense, useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
-  useRef,
+  useRef
 } from 'react'
 import { LayoutRectangle, ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
-
 import { isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
@@ -65,6 +54,7 @@ import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { getSearchPageStore, setStore, useSearchPageStore } from './SearchPageStore'
 import { SearchProps } from './SearchProps'
 import { useLocationFromRoute } from './useLocationFromRoute'
+
 
 export default memo(function SearchPage(props: SearchProps) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
@@ -456,21 +446,11 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       )
     }, [])
 
-    const layoutProps = useLayout({
-      stateless: true,
-      onLayout: (x) => {
-        if (isMobilePhone) {
-          // @ts-ignore
-          return onSizeChanged(getWindow())
-        }
-        onSizeChanged?.(x.nativeEvent.layout)
-      },
-    })
-
     // replicating RecyclerListView useWindow support
+    const layoutRef = useRef<any>(null)
     if (isMobilePhone) {
       useEffect(() => {
-        const target = layoutProps!.ref!.current! as any
+        const target = layoutRef!.current! as any
         if (!target) return
         const onScroll = () => {
           if (!props.onScroll) return
@@ -526,7 +506,13 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
     }, [])
 
     return (
-      <View style={{ height: '100%', width: '100%', overflow: 'hidden' }} {...layoutProps}>
+      <View ref={layoutRef} style={{ height: '100%', width: '100%', overflow: 'hidden' }} onLayout={(x) => {
+        if (isMobilePhone) {
+          // @ts-ignore
+          return onSizeChanged(getWindow())
+        }
+        onSizeChanged?.(x.nativeEvent.layout)
+      }}>
         <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
           <PageContentWithFooter>
             <SearchHeader />

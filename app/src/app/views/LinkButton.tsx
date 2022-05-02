@@ -1,10 +1,9 @@
-import { RoutesTable } from '@dish/router'
-import { Button, Tooltip, combineRefs } from '@dish/ui'
-import React, { forwardRef } from 'react'
-
 import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkButtonProps } from './LinkProps'
+import { RoutesTable } from '@dish/router'
+import { Button, TooltipSimple, combineRefs } from '@dish/ui'
+import React, { forwardRef } from 'react'
 
 export const LinkButton = forwardRef(function LinkButtonContent<
   Name extends DRouteName = DRouteName
@@ -42,7 +41,7 @@ export const LinkButton = forwardRef(function LinkButtonContent<
       </Button>
     )
   if (!!tooltip) {
-    return <Tooltip contents={tooltip}>{getElement()}</Tooltip>
+    return <TooltipSimple label={tooltip}>{getElement()}</TooltipSimple>
   }
   return getElement()
 })

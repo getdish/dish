@@ -12,38 +12,34 @@ export function ColorPicker({
 }) {
   const [isOpen, setIsOpen] = useState(false)
   return (
-    <Popover
-      isOpen={isOpen}
-      onChangeOpen={setIsOpen}
-      trigger={(props) => {
-        return (
-          <YStack {...props} onPress={() => setIsOpen((x) => !x)}>
-            <ColorBubble backgroundColor={color} />
-          </YStack>
-        )
-      }}
-    >
-      <Card
-        flexDirection="row"
-        padding={20}
-        maxWidth={130}
-        flexWrap="wrap"
-        justifyContent="space-between"
-      >
-        {colors.map((color) => {
-          return (
-            <ColorBubble
-              key={color}
-              marginBottom={10}
-              backgroundColor={color}
-              onPress={() => {
-                onChange(color)
-                setIsOpen(false)
-              }}
-            />
-          )
-        })}
-      </Card>
+    <Popover open={isOpen}>
+      <Popover.Trigger onPress={() => setIsOpen((x) => !x)}>
+        <ColorBubble backgroundColor={color} />
+      </Popover.Trigger>
+      {/* TODO aschild test */}
+      <Popover.Content>
+        <Card
+          flexDirection="row"
+          padding={20}
+          maxWidth={130}
+          flexWrap="wrap"
+          justifyContent="space-between"
+        >
+          {colors.map((color) => {
+            return (
+              <ColorBubble
+                key={color}
+                marginBottom={10}
+                backgroundColor={color}
+                onPress={() => {
+                  onChange(color)
+                  setIsOpen(false)
+                }}
+              />
+            )
+          })}
+        </Card>
+      </Popover.Content>
     </Popover>
   )
 }

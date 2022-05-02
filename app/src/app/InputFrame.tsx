@@ -12,9 +12,9 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       paddingLeft={10}
       position="relative"
       maxHeight={44}
-      // borderWidth={0.5}
-      // borderColor="rgba(0,0,0,0.2)"
-      backgroundColor="rgba(150,150,150,0.04)"
+      borderWidth={0.5}
+      borderColor="$borderColorHover"
+      backgroundColor="$backgroundHover"
       hoverStyle={{
         backgroundColor: 'rgba(150,150,150,0.1)',
       }}

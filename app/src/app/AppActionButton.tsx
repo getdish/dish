@@ -6,32 +6,18 @@ import { useUserStore } from './userStore'
 import { slugify } from '@dish/graph'
 import { Card, Popover, YStack } from '@dish/ui'
 import { Plus } from '@tamagui/feather-icons'
-import React, { useState } from 'react'
+import React from 'react'
 import { GestureResponderEvent } from 'react-native'
 
 export const AppActionButton = () => {
-  const [visible, setVisible] = useState(false)
   return (
-    <Popover
-      placement="bottom"
-      isOpen={visible}
-      onChangeOpen={setVisible}
-      trigger={(props) => (
-        <AppMenuLinkButton
-          {...props}
-          onPress={() => setVisible((x) => !x)}
-          Icon={Plus}
-          tooltip="Create"
-        />
-      )}
-    >
-      {({ open }) =>
-        open ? (
-          <Popover.Content>
-            <AppActionButtonContents hide={() => setVisible(false)} />
-          </Popover.Content>
-        ) : null
-      }
+    <Popover placement="bottom">
+      <Popover.Trigger>
+        <AppMenuLinkButton Icon={Plus} tooltip="Create" />
+      </Popover.Trigger>
+      <Popover.Content>
+        <AppActionButtonContents />
+      </Popover.Content>
     </Popover>
   )
 }

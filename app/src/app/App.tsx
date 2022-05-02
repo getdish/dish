@@ -67,7 +67,7 @@ function AppHomeContent(props: { children?: any }) {
   return (
     <>
       {/* background */}
-      <AbsoluteYStack fullscreen zIndex={0} backgroundColor="$mapBackground" />
+      <AbsoluteYStack fullscreen zIndex={0} backgroundColor="$backgroundStronger" />
 
       <RootPortalProvider />
 

@@ -1,8 +1,7 @@
+import { isSSR } from './constants/constants'
 import { client, mutation, query, resolved } from '@dish/graph'
 import * as UseStore from '@dish/use-store'
 import React from 'react'
-
-import { isSSR } from './constants/constants'
 
 Error.stackTraceLimit = Infinity
 
@@ -30,8 +29,8 @@ if (isSSR) {
 }
 
 if (process.env.TARGET === 'native') {
-  global['matchMedia'] = require('@tamagui/core').matchMedia
-  window['matchMedia'] = global['matchMedia']
+  // global['matchMedia'] = require('tamagui').matchMedia
+  // window['matchMedia'] = global['matchMedia']
 
   if (process.env.NODE_ENV === 'development') {
     console.log('⬇️ ⬇️ ⬇️ set debugger here for repl on stuff')

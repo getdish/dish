@@ -1,15 +1,12 @@
-import { graphql } from '@dish/graph'
-import { XStack, YStack, getMedia } from '@dish/ui'
-import React, { memo } from 'react'
-
 import { getRestaurantDishes } from '../../../helpers/getRestaurantDishes'
 import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { DishView } from '../../views/dish/DishView'
 import { Link } from '../../views/Link'
 import { TagButton } from '../../views/TagButton'
-import { SkewedCardCarousel } from '../SimpleCard'
 import { EditRestaurantTagsButton } from './EditRestaurantTagsButton'
+import { graphql } from '@dish/graph'
+import { XStack, YStack, getMedia } from '@dish/ui'
+import React, { memo } from 'react'
 
 export const RestaurantPeekDishes = memo(
   graphql(function RestaurantPeekDishes(props: {
@@ -23,7 +20,7 @@ export const RestaurantPeekDishes = memo(
     onChangeTags?: (slugs: string[]) => void
   }) {
     const media = getMedia()
-    const showInitial = media.xs ? 1 : media.sm ? 2 : 3
+    const showInitial = media.$xs ? 1 : media.$sm ? 2 : 3
 
     const { isLoaded, size = 'md' } = props
     const restaurant = queryRestaurant(props.restaurantSlug)[0]

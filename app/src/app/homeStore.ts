@@ -1,9 +1,3 @@
-import { HistoryItem } from '@dish/router'
-import { Toast } from '@dish/ui'
-import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import _, { clamp, findLast } from 'lodash'
-import { Keyboard } from 'react-native'
-
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
 import { addTagsToCache, allTags } from '../helpers/allTags'
@@ -27,6 +21,10 @@ import {
 } from '../types/homeTypes'
 import { NavigableTag } from '../types/tagTypes'
 import { appMapStore } from './appMapStore'
+import { HistoryItem } from '@dish/router'
+import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import _, { clamp, findLast } from 'lodash'
+import { Keyboard } from 'react-native'
 
 class HomeStore extends Store {
   searchBarTagIndex = 0

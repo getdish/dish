@@ -6,7 +6,7 @@ import { VoteNumber, useUserTagVotes } from '../../hooks/useUserTagVotes'
 import { TextSuperScript } from '../TextSuperScript'
 import { VoteButton } from '../VoteButton'
 import { graphql, restaurant, tagSlug } from '@dish/graph'
-import { Text, Tooltip, XStack, YStack, useTheme } from '@dish/ui'
+import { Text, TooltipSimple, XStack, YStack, useTheme } from '@dish/ui'
 import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@tamagui/feather-icons'
 import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
@@ -164,9 +164,9 @@ const RatingWithVotes = memo(
           {subtle ? (
             getUpvote({})
           ) : (
-            <Tooltip placement="right" contents="Upvote" {...isOpenProp}>
+            <TooltipSimple placement="right" label="Upvote" {...isOpenProp}>
               {getUpvote({})}
-            </Tooltip>
+            </TooltipSimple>
           )}
         </YStack>
         <XStack position="relative" zIndex={10}>
@@ -190,9 +190,9 @@ const RatingWithVotes = memo(
           {subtle ? (
             getDownvote({})
           ) : (
-            <Tooltip placement="right" contents="Downvote" {...isOpenProp}>
+            <TooltipSimple placement="right" label="Downvote" {...isOpenProp}>
               {getDownvote({})}
-            </Tooltip>
+            </TooltipSimple>
           )}
         </YStack>
       </YStack>

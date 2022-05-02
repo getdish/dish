@@ -375,7 +375,8 @@ export function createWebpackConfig({
 
         // slim down unused react-native-web modules
         (() => {
-          const excludeExports = ['Switch', 'ProgressBar', 'Picker', 'Animated', 'AnimatedFlatList']
+          // can add this back once we move off Animated.View s 'Animated' , 'AnimatedFlatList'
+          const excludeExports = ['Switch', 'ProgressBar', 'Picker']
           const regexStr = `\/react-native-web\/.*(${excludeExports.join('|')}).*\/`
           const regex = new RegExp(regexStr)
           return new Webpack.NormalModuleReplacementPlugin(
@@ -490,9 +491,6 @@ function defaultBabelInclude(inputPath) {
     return true
   }
   if (inputPath.includes('react-native-animatable')) {
-    return true
-  }
-  if (inputPath.includes('expo-linear-gradient')) {
     return true
   }
   if (inputPath.includes('match-media')) {

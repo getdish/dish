@@ -79,7 +79,7 @@ export const AppHomeMobileWeb = () => {
         </Suspense>
       </YStack>
       <YStack zi={100} br={10} ov="hidden" pos="relative">
-        <AbsoluteYStack fullscreen zi={0} backgroundColor="$mapBackground" />
+        <AbsoluteYStack fullscreen zi={0} backgroundColor="$backgroundStronger" />
         <AppSearchBarInline />
         <YStack position="relative" minHeight={600}>
           <AppAutocompleteSearch />

@@ -19,6 +19,8 @@ import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import {
+  Input,
+  SearchInput,
   Spacer,
   XStack,
   YStack,
@@ -98,7 +100,7 @@ export const AppSearchInput = memo(() => {
     return series([
       () => fullyIdle({ checks: 3, max: 100 }),
       () => {
-        if (!getMedia().sm) {
+        if (!getMedia().$sm) {
           focusSearchInput()
         }
       },
@@ -171,8 +173,7 @@ export const AppSearchInput = memo(() => {
               alignItems="center"
             >
               {isTouchDevice && <SearchInputNativeDragFix name="search" />}
-              <TextInput
-                key={0}
+              <SearchInput
                 ref={(view) => {
                   textInput$.current = view
                   setInputNode(view)
@@ -221,18 +222,6 @@ export const AppSearchInput = memo(() => {
                     ? '...'
                     : `Search...`
                 }
-                style={[
-                  inputTextStyles.textInput,
-                  {
-                    color: theme.color.toString() as any,
-                    flex: 1,
-                    fontSize: media.sm ? 18 : 22,
-                    fontWeight: '500',
-                    height,
-                    lineHeight: height * 0.45,
-                    paddingHorizontal: 15,
-                  },
-                ]}
               />
             </XStack>
           </XStack>
@@ -430,19 +419,3 @@ const handleKeyPress = async (e: any, inputStore: InputStore) => {
     }
   }
 }
-
-export const inputTextStyles = StyleSheet.create({
-  textInput: {
-    color: '#fff',
-    height: searchBarHeight - 6,
-    paddingHorizontal: 12,
-    flex: 1,
-    fontSize: 18,
-    fontWeight: '500',
-    overflow: 'hidden',
-    ...(isWeb && {
-      textOverflow: 'ellipsis',
-      whiteSpace: 'nowrap',
-    }),
-  },
-})

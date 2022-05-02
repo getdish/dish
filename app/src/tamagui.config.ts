@@ -5,26 +5,31 @@ import { createInterFont } from '@tamagui/font-inter'
 import { shorthands } from '@tamagui/shorthands'
 import { color, radius, size, space, themes, zIndex } from '@tamagui/theme-base'
 
-const interFont = createInterFont()
+const interFont = createInterFont({
+  weight: {
+    1: '500',
+    7: '700',
+  },
+})
 
 const config = createTamagui({
+  fonts: {
+    heading: interFont,
+    body: interFont,
+  },
   animations,
   defaultTheme: 'light',
   disableRootThemeClass: true,
   shorthands,
   themes,
+  media,
   tokens: createTokens({
-    font: {
-      title: interFont,
-      body: interFont,
-    },
     size,
     space,
     zIndex,
     color,
     radius,
   }),
-  media,
 })
 
 export type Conf = typeof config

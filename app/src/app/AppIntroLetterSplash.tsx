@@ -178,7 +178,6 @@ export const AppIntroLetter = memo(() => {
             fontSize={media.sm ? 22 : 28}
             marginHorizontal="7%"
             lineHeight={media.sm ? 30 : 40}
-            fontWeight="300"
             selectable
             opacity={0.8}
           >

@@ -10,7 +10,7 @@ import {
   Card,
   InteractiveContainer,
   Paragraph,
-  Tooltip,
+  TooltipSimple,
   XStack,
   YStack,
   YStackProps,
@@ -103,16 +103,16 @@ export const Score = memo(
             {subtle ? (
               getUpvote({})
             ) : (
-              <Tooltip placement="right" contents={upTooltip ?? 'Upvote'} {...isOpenProp}>
+              <TooltipSimple placement="right" label={upTooltip ?? 'Upvote'} {...isOpenProp}>
                 {getUpvote({})}
-              </Tooltip>
+              </TooltipSimple>
             )}
             {subtle ? (
               getDownvote({})
             ) : (
-              <Tooltip placement="right" contents={downTooltip ?? 'Downvote'} {...isOpenProp}>
+              <TooltipSimple placement="right" label={downTooltip ?? 'Downvote'} {...isOpenProp}>
                 {getDownvote({})}
-              </Tooltip>
+              </TooltipSimple>
             )}
           </InteractiveContainer>
         </>

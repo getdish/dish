@@ -56,7 +56,6 @@ if (process.env.TAMAGUI_TARGET === 'native') {
         '@unimodules/react-native-adapter': require.resolve('@unimodules/react-native-adapter'),
         'react-native-svg': require.resolve('react-native-svg'),
         'react-native-safe-area-context': require.resolve('react-native-safe-area-context'),
-        'expo-linear-gradient': require.resolve('expo-linear-gradient'),
         react: require.resolve('react'),
       },
     },

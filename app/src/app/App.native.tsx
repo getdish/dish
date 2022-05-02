@@ -20,7 +20,7 @@ export function App() {
       <RootPortalProvider />
       <AppStatusBar />
       <AutocompleteEffects />
-      <AbsoluteYStack fullscreen backgroundColor="$mapBackground">
+      <AbsoluteYStack fullscreen backgroundColor="$backgroundStronger">
         <Suspense fallback={null}>
           {/* keep indent  */}
           {/* <AppMap /> */}

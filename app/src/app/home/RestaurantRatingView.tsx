@@ -2,15 +2,7 @@ import { suspense } from '../hoc/suspense'
 import { RatingView } from './RatingView'
 import { ratingCount } from './ratingCount'
 import { graphql, restaurant } from '@dish/graph'
-import {
-  AbsoluteXStack,
-  BlurView,
-  Card,
-  HoverablePopover,
-  XStack,
-  YStack,
-  useTheme,
-} from '@dish/ui'
+import { AbsoluteXStack, BlurView, Card, TooltipSimple, XStack, YStack } from '@dish/ui'
 import React from 'react'
 
 export const RestaurantRatingView = suspense(
@@ -61,15 +53,12 @@ export const RestaurantRatingView = suspense(
       //     })
       // )
 
-      const getRatingInnerEl = (props) => <RatingView {...props} {...ratingViewProps} />
-      let getRatingEl = getRatingInnerEl
-
-      const theme = useTheme()
+      let content = <RatingView {...ratingViewProps} />
 
       if (showBreakdown) {
-        getRatingEl = (props) => (
-          <XStack position="relative" {...props}>
-            {getRatingInnerEl({})}
+        content = (
+          <XStack position="relative">
+            {content}
             <AbsoluteXStack zIndex={-1} top="-24%" right="-24%">
               <AbsoluteXStack
                 // width={400}
@@ -93,28 +82,21 @@ export const RestaurantRatingView = suspense(
       }
 
       if (!hoverable) {
-        return getRatingEl({})
+        return content
       }
 
       return (
         <YStack pointerEvents="auto">
-          <HoverablePopover allowHoverOnContent placement="bottom right" trigger={getRatingEl}>
-            {({ open }) => {
-              if (open) {
-                return (
-                  <Card padding={15}>
-                    <RatingView
-                      {...ratingViewProps}
-                      stacked
-                      size={size * 0.66}
-                      count={ratingCount(restaurant)}
-                    />
-                  </Card>
-                )
-              }
-              return null
-            }}
-          </HoverablePopover>
+          <TooltipSimple placement="right-end" label={content}>
+            <Card padding={15}>
+              <RatingView
+                {...ratingViewProps}
+                stacked
+                size={size * 0.66}
+                count={ratingCount(restaurant)}
+              />
+            </Card>
+          </TooltipSimple>
         </YStack>
       )
     }

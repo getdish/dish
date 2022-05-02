@@ -57,6 +57,7 @@ function compose_up_subset() {
 }
 
 function compose_up() {
+  docker network create traefik-public || true
   services_list="$COMPOSE_EXCLUDE${COMPOSE_EXCLUDE_EXTRA:-}"
   services=$(
     docker-compose config --services 2>/dev/null |

@@ -1,21 +1,25 @@
-import { AbsoluteXStack, AbsoluteYStack, Button, XStack, YStack, useTheme } from '@dish/ui'
-import { MapPin, Navigation } from '@tamagui/feather-icons'
-import React, { memo, useCallback } from 'react'
-import { TextInput } from 'react-native'
-
 import { isWeb } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
-import { appMapStore } from './appMapStore'
-import { inputTextStyles } from './AppSearchInput'
 import { autocompleteLocationStore, autocompletesStore } from './AutocompletesStore'
-import { useHomeStoreSelector } from './homeStore'
-import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
 import { InputFrame } from './InputFrame'
-import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { InputTagButton } from './InputTagButton'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
+import { appMapStore } from './appMapStore'
+import { useHomeStoreSelector } from './homeStore'
+import { useAutocompleteInputFocus } from './hooks/useAutocompleteInputFocus'
+import { setNodeOnInputStore, useInputStoreLocation } from './inputStore'
 import { setLocationFromAutocomplete } from './setLocation'
 import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
+import {
+  AbsoluteXStack,
+  AbsoluteYStack,
+  Button,
+  SearchInput,
+  XStack,
+  YStack,
+  useTheme,
+} from '@dish/ui'
+import React, { memo, useCallback } from 'react'
 
 const isWebTouch = supportsTouchWeb
 
@@ -113,7 +117,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
             </AbsoluteXStack>
           )}
 
-          <TextInput
+          <SearchInput
             selectTextOnFocus
             ref={setInputNode}
             value={showLocationTag ? '' : inputStore.value ?? ''}
@@ -125,16 +129,6 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
               inputStore.setIsFocused(false)
               // no action here it will go away
             }}
-            style={[
-              inputTextStyles.textInput,
-              {
-                flex: 1,
-                color: color.toString(),
-                paddingLeft: 16 + 10,
-                paddingRight: 16,
-                fontSize: 16,
-              },
-            ]}
             onKeyPress={handleKeyPress}
             onChangeText={(text) => {
               inputStore.setValue(text)

@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Tooltip, themeable } from '@dish/ui'
+import { Button, ButtonProps, TooltipSimple, themeable } from '@dish/ui'
 import React, { forwardRef } from 'react'
 
 export type SmallButtonProps = ButtonProps & {
@@ -29,7 +29,7 @@ export const SmallButton = themeable(
     )
 
     if (tooltip) {
-      return <Tooltip contents={tooltip}>{contents}</Tooltip>
+      return <TooltipSimple label={tooltip}>{contents}</TooltipSimple>
     }
 
     return contents

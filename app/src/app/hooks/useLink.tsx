@@ -1,19 +1,18 @@
-import { series, sleep } from '@dish/async'
-import { useForceUpdate } from '@dish/ui'
-import { isEqual, omit } from 'lodash'
-import React, { useEffect, useRef } from 'react'
-import { Pressable } from 'react-native'
-
 import { isWeb } from '../../constants/constants'
 import { addTagsToCache, allTags, getFullTagFromNameAndType } from '../../helpers/allTags'
 import { getNavigateItemForState } from '../../helpers/getNavigateItemForState'
 import { getNextHomeState } from '../../helpers/getNextHomeState'
 import { filterToNavigable } from '../../helpers/tagHelpers'
 import { NavigateItem, router } from '../../router'
-import { getLastDrag } from '../../SwipeGallery/ResizableImage'
+// import { getLastDrag } from '../../SwipeGallery/ResizableImage'
 import { homeStore } from '../homeStore'
 import { userStore } from '../userStore'
 import { LinkButtonProps, LinkProps } from '../views/LinkProps'
+import { series, sleep } from '@dish/async'
+import { useForceUpdate } from '@dish/ui'
+import { isEqual, omit } from 'lodash'
+import React, { useEffect, useRef } from 'react'
+import { Pressable } from 'react-native'
 
 export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
   const forceUpdate = useForceUpdate()
@@ -32,7 +31,8 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
   }, [])
 
   const onPress = (e: any) => {
-    const justDragged = Date.now() - getLastDrag() < 100
+    const justDragged = false
+    // const justDragged = Date.now() - getLastDrag() < 100
     if (justDragged) {
       e.preventDefault()
       e.stopPropagation()

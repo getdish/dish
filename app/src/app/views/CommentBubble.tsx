@@ -293,7 +293,7 @@ function CommentBubbleContents(
           paddingHorizontal={15}
           paddingVertical={15}
           marginLeft={20}
-          backgroundColor="$backgroundCard"
+          backgroundColor="$background"
           borderColor="$borderColor"
           borderWidth={0.5}
           borderRadius={20}

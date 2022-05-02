@@ -1,11 +1,10 @@
-import { YStack, useLayout } from '@dish/ui'
-import React from 'react'
-import { StyleSheet } from 'react-native'
-
 import {
   ContentScrollViewHorizontal,
   ContentScrollViewHorizontalProps,
 } from './ContentScrollViewHorizontal'
+import { YStack } from '@dish/ui'
+import React, { useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 
 export const ContentScrollViewHorizontalFitted = (
   props: ContentScrollViewHorizontalProps & {
@@ -13,34 +12,27 @@ export const ContentScrollViewHorizontalFitted = (
     setWidth: Function
   }
 ) => {
-  const layoutProps = useLayout({
-    onLayout({ nativeEvent }) {
-      props.setWidth?.(nativeEvent.layout.width)
-    },
-  })
-
-  const width = layoutProps.layout?.width ?? '100%'
+  const [width, setWidth] = useState<string | number>('100%')
 
   return (
-    <YStack
-      {...layoutProps}
-      minWidth={width}
-      width="100%"
-      maxWidth="100%"
-      position="relative"
-      zIndex={100}
+    <View
+      onLayout={({ nativeEvent }) => {
+        setWidth(nativeEvent.layout.width)
+      }}
     >
-      <ContentScrollViewHorizontal
-        {...props}
-        style={[style.scrollView, props.contentContainerStyle]}
-        contentContainerStyle={[
-          {
-            minWidth: props.width,
-          },
-          props.contentContainerStyle,
-        ]}
-      />
-    </YStack>
+      <YStack minWidth={width} width="100%" maxWidth="100%" position="relative" zIndex={100}>
+        <ContentScrollViewHorizontal
+          {...props}
+          style={[style.scrollView, props.contentContainerStyle]}
+          contentContainerStyle={[
+            {
+              minWidth: props.width,
+            },
+            props.contentContainerStyle,
+          ]}
+        />
+      </YStack>
+    </View>
   )
 }
 

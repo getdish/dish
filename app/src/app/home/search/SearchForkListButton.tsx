@@ -1,10 +1,3 @@
-import { listFindOne, listInsert, mutate, slugify } from '@dish/graph'
-import { assertPresent } from '@dish/helpers'
-import { HistoryItem } from '@dish/router'
-import { Toast, Tooltip } from '@dish/ui'
-import { Edit2 } from '@tamagui/feather-icons'
-import React, { memo, useContext } from 'react'
-
 import { getActiveTags } from '../../../helpers/getActiveTags'
 import { getFullTags } from '../../../helpers/getFullTags'
 import { getTitleForState } from '../../../helpers/getTitleForState'
@@ -18,6 +11,12 @@ import { Link } from '../../views/Link'
 import { LinkButton } from '../../views/LinkButton'
 import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { getLocationFromRoute, useLocationFromRoute } from './useLocationFromRoute'
+import { listFindOne, listInsert, mutate, slugify } from '@dish/graph'
+import { assertPresent } from '@dish/helpers'
+import { HistoryItem } from '@dish/router'
+import { Toast, TooltipSimple } from '@dish/ui'
+import { Edit2 } from '@tamagui/feather-icons'
+import React, { memo, useContext } from 'react'
 
 export const SearchForkListButton = memo(
   ({ size, children }: { size?: 'sm' | 'md'; children?: any }) => {
@@ -35,7 +34,7 @@ export const SearchForkListButton = memo(
     const tooltip = `my ${title.replace('the ', '')} in ${regionName?.toLowerCase() ?? ''} list`
     const El = size === 'sm' ? Link : LinkButton
     return (
-      <Tooltip contents={tooltip}>
+      <TooltipSimple label={tooltip}>
         <El
           promptLogin
           onPress={async () => {
@@ -124,7 +123,7 @@ export const SearchForkListButton = memo(
             children || 'Create list'
           )}
         </El>
-      </Tooltip>
+      </TooltipSimple>
     )
   }
 )

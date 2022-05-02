@@ -57,11 +57,11 @@ export const AppMenuButtonFloating = memo(() => {
         <Button
           pointerEvents="auto"
           elevation="$3"
-          borderRadius="$8"
           w="$8"
           h="$8"
           size="$5"
           icon={Menu}
+          circular
           onPress={appMenu.show}
         />
         {/* <YStack

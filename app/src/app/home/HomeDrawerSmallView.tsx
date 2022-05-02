@@ -1,8 +1,3 @@
-import { AbsoluteYStack, YStack, useMedia } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
-import React, { memo, useEffect, useMemo } from 'react'
-import { Animated, PanResponder, StyleSheet, View } from 'react-native'
-
 import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { isWebIOS } from '../../helpers/isIOS'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
@@ -13,6 +8,10 @@ import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore as drawerStoreInstance } from '../drawerStore'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
 import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
+import { AbsoluteYStack, YStack, useMedia } from '@dish/ui'
+import { useStoreInstance } from '@dish/use-store'
+import React, { memo, useEffect, useMemo } from 'react'
+import { Animated, PanResponder, StyleSheet, View } from 'react-native'
 
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
   const drawerStore = useStoreInstance(drawerStoreInstance)
@@ -69,9 +68,11 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       zIndex={media.sm ? zIndexDrawer : -1}
       width="100%"
       height="100%"
+      maxWidth={pageWidthMax}
     >
       <Animated.View
         style={{
+          height: '100%',
           transform: [
             {
               // this is the current Y as determined by the snap
@@ -79,15 +80,6 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
               translateY: drawerStore.pan,
             },
           ],
-          maxWidth: pageWidthMax,
-          alignItems: 'center',
-          width: '100%',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: 100,
         }}
       >
         <AppFloatingTagMenuBar />

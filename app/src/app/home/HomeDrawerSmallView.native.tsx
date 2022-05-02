@@ -1,3 +1,21 @@
+import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { getWindowHeight } from '../../helpers/getWindow'
+import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
+import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
+import { AppSearchBarInline } from '../AppSearchBarInline'
+import { blurSearchInput } from '../AppSearchInput'
+import { autocompletesStore } from '../AutocompletesStore'
+import { isTouchingSearchBar } from '../SearchInputNativeDragFix'
+import { drawerStore } from '../drawerStore'
+import { BottomSheetContainer } from '../views/BottomSheetContainer'
+import {
+  ContentParentStore,
+  ScrollStore,
+  isScrollAtTop,
+  scrollLastY,
+  scrollViews,
+} from '../views/ContentScrollView'
+import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 import { AssertionError } from '@dish/helpers'
 import { YStack } from '@dish/ui'
 import { getStore } from '@dish/use-store'
@@ -10,24 +28,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
-import { getWindowHeight } from '../../helpers/getWindow'
-import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
-import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
-import { AppSearchBarInline } from '../AppSearchBarInline'
-import { blurSearchInput } from '../AppSearchInput'
-import { autocompletesStore } from '../AutocompletesStore'
-import { drawerStore } from '../drawerStore'
-import { isTouchingSearchBar } from '../SearchInputNativeDragFix'
-import { BottomSheetContainer } from '../views/BottomSheetContainer'
-import {
-  ContentParentStore,
-  isScrollAtTop,
-  scrollLastY,
-  ScrollStore,
-  scrollViews,
-} from '../views/ContentScrollView'
-import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 
 let isTouchingHandle = false
 let isPanActive = false
@@ -201,41 +201,43 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
   }, [])
 
   return (
-    <Animated.View
-      style={[
-        styles.animatedView,
-        {
-          transform: [
-            {
-              translateY: drawerStore.pan,
-            },
-          ],
-        },
-      ]}
-    >
+    <YStack>
       <AppFloatingTagMenuBar />
 
       {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
       {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
 
-      {useMemo(
-        () => (
-          <BottomSheetContainer>
-            <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
-              <YStack height={searchBarHeight} zIndex={1000}>
-                <AppSearchBarInline />
-              </YStack>
-              <YStack position="relative" flex={1}>
-                <AppAutocompleteLocation />
-                <AppAutocompleteSearch />
-                {props.children}
-              </YStack>
-            </View>
-          </BottomSheetContainer>
-        ),
-        [props.children]
-      )}
-    </Animated.View>
+      <Animated.View
+        style={[
+          styles.animatedView,
+          {
+            transform: [
+              {
+                translateY: drawerStore.pan,
+              },
+            ],
+          },
+        ]}
+      >
+        {useMemo(
+          () => (
+            <BottomSheetContainer>
+              <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
+                <YStack height={searchBarHeight} zIndex={1000}>
+                  <AppSearchBarInline />
+                </YStack>
+                <YStack position="relative" flex={1}>
+                  <AppAutocompleteLocation />
+                  <AppAutocompleteSearch />
+                  {props.children}
+                </YStack>
+              </View>
+            </BottomSheetContainer>
+          ),
+          [props.children]
+        )}
+      </Animated.View>
+    </YStack>
   )
 })
 

@@ -4,7 +4,7 @@ import { Link } from '../../views/Link'
 import { PointsText } from '../../views/PointsText'
 import { RestaurantSourcesBreakdown } from './RestaurantSourcesBreakdown'
 import { graphql } from '@dish/graph'
-import { Card, HoverablePopover, Text, XStack } from '@dish/ui'
+import { Card, Text, TooltipSimple, XStack } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 
 export const RestaurantSourcesBreakdownRow = memo(
@@ -22,31 +22,35 @@ export const RestaurantSourcesBreakdownRow = memo(
       ...(restaurant?.sources?.() ?? {}),
     }
     return (
-      <HoverablePopover
-        allowHoverOnContent
-        delay={800}
+      <TooltipSimple
         placement="right"
-        trigger={(props) => (
-          <XStack
-            padding={6}
-            marginVertical={-6}
-            borderRadius={100}
-            hoverStyle={{
-              backgroundColor: '$backgroundHover',
-            }}
-            position="relative"
-            alignItems="center"
-            {...props}
-          >
-            {Object.keys(sources)
-              .filter((source) => thirdPartyCrawlSources[source]?.delivery === false)
-              .map((source, i) => {
-                const item = sources[source]
-                const info = thirdPartyCrawlSources[source]
-                return (
-                  <Link key={source} href={item.url}>
-                    <XStack alignItems="center" paddingHorizontal={5} paddingVertical={3}>
-                      {/* {info?.image ? (
+        label={
+          <Card width={280} minHeight={200}>
+            <Suspense fallback={null}>
+              <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} />
+            </Suspense>
+          </Card>
+        }
+      >
+        <XStack
+          padding={6}
+          marginVertical={-6}
+          borderRadius={100}
+          hoverStyle={{
+            backgroundColor: '$backgroundHover',
+          }}
+          position="relative"
+          alignItems="center"
+        >
+          {Object.keys(sources)
+            .filter((source) => thirdPartyCrawlSources[source]?.delivery === false)
+            .map((source, i) => {
+              const item = sources[source]
+              const info = thirdPartyCrawlSources[source]
+              return (
+                <Link key={source} href={item.url}>
+                  <XStack alignItems="center" paddingHorizontal={5} paddingVertical={3}>
+                    {/* {info?.image ? (
                       <YStack className="faded-out">
                         <Image
                           source={info.image}
@@ -58,30 +62,19 @@ export const RestaurantSourcesBreakdownRow = memo(
                         />
                       </YStack>
                     ) : null} */}
-                      {/* <Spacer size={3} /> */}
-                      <Text fontSize={14} color="rgba(0,0,0,0.7)">
-                        {info?.name}
-                      </Text>
-                      {size !== 'sm' && (
-                        <PointsText marginLeft={4} points={+(item.rating ?? 0) * 10} color="#999" />
-                      )}
-                    </XStack>
-                  </Link>
-                )
-              })}
-          </XStack>
-        )}
-      >
-        {(isOpen) => {
-          return (
-            <Card width={280} minHeight={200}>
-              <Suspense fallback={null}>
-                {isOpen ? <RestaurantSourcesBreakdown restaurantSlug={restaurantSlug} /> : null}
-              </Suspense>
-            </Card>
-          )
-        }}
-      </HoverablePopover>
+                    {/* <Spacer size={3} /> */}
+                    <Text fontSize={14} color="rgba(0,0,0,0.7)">
+                      {info?.name}
+                    </Text>
+                    {size !== 'sm' && (
+                      <PointsText marginLeft={4} points={+(item.rating ?? 0) * 10} color="#999" />
+                    )}
+                  </XStack>
+                </Link>
+              )
+            })}
+        </XStack>
+      </TooltipSimple>
     )
   })
 )

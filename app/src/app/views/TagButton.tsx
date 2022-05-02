@@ -15,15 +15,13 @@ import {
   Button,
   ButtonProps,
   Card,
-  HoverablePopover,
-  HoverablePopoverHandle,
-  HoverablePopoverProps,
   Paragraph,
   Text,
   TextProps,
   Theme,
   ThemeName,
-  Tooltip,
+  TooltipSimple,
+  TooltipSimpleProps,
   XStack,
   YStack,
   getFontSize,
@@ -183,7 +181,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       flexShrink={0}
       opacity={rank && rank < 100 ? 1 : 0}
     >
-      <Text pointerEvents="none" color="$color" fontSize={7} fontWeight="300" opacity={0.15}>
+      <Text pointerEvents="none" color="$color" fontSize={7} opacity={0.15}>
         #
       </Text>
       <Text
@@ -326,7 +324,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       )}
 
       {!!after && (
-        <Text color="$color" fontWeight="300" fontSize={smallerFontSize}>
+        <Text color="$color" fontSize={smallerFontSize}>
           {after}
         </Text>
       )}
@@ -397,7 +395,7 @@ const TagButtonInner = (props: TagButtonProps) => {
   }
 
   if (tooltip) {
-    return <Tooltip contents={tooltip}>{contents}</Tooltip>
+    return <TooltipSimple label={tooltip}>{contents}</TooltipSimple>
   }
 
   return contents
@@ -409,8 +407,8 @@ export const TagVotePopover = graphql(
     restaurant,
     children,
     ...popoverProps
-  }: Omit<Partial<HoverablePopoverProps>, 'placement' | 'style'> & TagButtonProps) => {
-    const hovPopRef = useRef<HoverablePopoverHandle>()
+  }: Omit<Partial<TooltipSimpleProps>, 'placement' | 'style'> & TagButtonProps) => {
+    const hovPopRef = useRef<any>()
     const tagSlug = getTagSlug(slug)
     const { vote, setVote } = useUserTagVotes({
       restaurant,
@@ -418,50 +416,51 @@ export const TagVotePopover = graphql(
     })
 
     return (
-      <HoverablePopover
+      <TooltipSimple
+        // @ts-expect-error
         ref={hovPopRef as any}
-        allowHoverOnContent
-        // fallbackToPress
         placement="top"
         {...popoverProps}
-        trigger={(props) => React.cloneElement(children, props)}
+        label={
+          <Theme name="dark">
+            <Card paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
+              <XStack>
+                {tagRatings.map((rating) => (
+                  <LinkButton
+                    promptLogin
+                    borderRadius={1000}
+                    width={38}
+                    height={38}
+                    paddingHorizontal={0}
+                    letterSpacing={-1}
+                    fontWeight="600"
+                    onPress={(e) => {
+                      e.stopPropagation()
+                      setVote(rating)
+                      // give time to see it update
+                      setTimeout(() => {
+                        hovPopRef.current?.close()
+                      }, 200)
+                    }}
+                    key={rating}
+                    {...(vote === rating
+                      ? {
+                          backgroundColor: '$blue3',
+                        }
+                      : {
+                          backgroundColor: 'transparent',
+                        })}
+                  >
+                    {rating}
+                  </LinkButton>
+                ))}
+              </XStack>
+            </Card>
+          </Theme>
+        }
       >
-        <Theme name="dark">
-          <Card paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
-            <XStack>
-              {tagRatings.map((rating) => (
-                <LinkButton
-                  promptLogin
-                  borderRadius={1000}
-                  width={38}
-                  height={38}
-                  paddingHorizontal={0}
-                  letterSpacing={-1}
-                  fontWeight="600"
-                  onPress={(e) => {
-                    e.stopPropagation()
-                    setVote(rating)
-                    // give time to see it update
-                    setTimeout(() => {
-                      hovPopRef.current?.close()
-                    }, 200)
-                  }}
-                  key={rating}
-                  {...(vote === rating
-                    ? {
-                        backgroundColor: '$blue3',
-                      }
-                    : {
-                        backgroundColor: 'transparent',
-                      })}
-                >
-                  {rating}
-                </LinkButton>
-              ))}
-            </XStack>
-          </Card>
-        </Theme>
-      </HoverablePopover>
+        {children}
+      </TooltipSimple>
     )
   },
   {

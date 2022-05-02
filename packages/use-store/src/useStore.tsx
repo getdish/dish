@@ -19,8 +19,10 @@ import {
   useCurrentComponent,
   useDebugStoreComponent,
 } from './useStoreDebug'
-import { useSyncExternalStore } from './useSyncExternalStore'
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { useSyncExternalStore } from 'use-sync-external-store/shim'
+
+console.log('useSyncExternalStore', useSyncExternalStore)
 
 // sanity check types here
 // class StoreTest extends Store<{ id: number }> {}
@@ -502,23 +504,23 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
               }
 
               return res
-
-              // dev-mode colored output
-              function hashCode(str: string) {
-                let hash = 0
-                for (let i = 0; i < str.length; i++) {
-                  hash = str.charCodeAt(i) + ((hash << 5) - hash)
-                }
-                return hash
-              }
-              function strColor(str: string) {
-                return `hsl(${hashCode(str) % 360}, 90%, 40%)`
-              }
             }
           },
         })
       }
     }
+  }
+
+  function hashCode(str: string) {
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash)
+    }
+    return hash
+  }
+
+  function strColor(str: string) {
+    return `hsl(${hashCode(str) % 360}, 90%, 40%)`
   }
 
   const finishAction = () => {

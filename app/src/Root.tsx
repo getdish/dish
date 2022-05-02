@@ -33,7 +33,7 @@ import Tamagui from './tamagui.config'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import { PopoverProvider, SafeAreaProvider, Theme, Toast } from '@dish/ui'
+import { Theme, Toast } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
@@ -134,43 +134,26 @@ export function Root() {
     })
   }, [])
 
-  if (isWeb) {
-    useLayoutEffect(() => {
-      const css = Tamagui.getCSS()
-
-      const style = document.createElement('style')
-      style.setAttribute('type', 'text/css')
-      style.innerHTML = css
-      document.querySelector('head')?.appendChild(style)
-    }, [])
-  }
-
   const defaultTheme =
     (!userStore.theme || userStore.theme === 'auto' ? colorScheme : userStore.theme) ??
     colorScheme ??
     'dark'
 
-  console.log('defaultTheme', colorScheme, defaultTheme)
+  console.log('Root.render', { colorScheme, defaultTheme })
 
   return (
-    <Tamagui.Provider defaultTheme={defaultTheme}>
-      <Theme name={defaultTheme}>
-        <PopoverProvider>
-          <SafeAreaProvider>
-            <ProvideRouter routes={routes}>
-              <Suspense fallback={null}>
-                {isLoaded ? (
-                  <>
-                    <App />
-                    {process.env.NODE_ENV === 'development' && <DebugHUD />}
-                  </>
-                ) : null}
-              </Suspense>
-            </ProvideRouter>
-            {showRadar && <Radar />}
-          </SafeAreaProvider>
-        </PopoverProvider>
-      </Theme>
+    <Tamagui.Provider injectCSS defaultTheme={defaultTheme}>
+      <ProvideRouter routes={routes}>
+        <Suspense fallback={null}>
+          {isLoaded ? (
+            <>
+              <App />
+              {process.env.NODE_ENV === 'development' && <DebugHUD />}
+            </>
+          ) : null}
+        </Suspense>
+      </ProvideRouter>
+      {showRadar && <Radar />}
     </Tamagui.Provider>
   )
 }

@@ -1,6 +1,15 @@
 {
   "extends": "../tsconfig.base",
   "compilerOptions": {
+    "baseUrl": ".",
+    // "paths": {
+    //   "@tamagui/*": [
+    //     "packages/*"
+    //   ],
+    //   "react-native": [
+    //     "react-native-web"
+    //   ]
+    // },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

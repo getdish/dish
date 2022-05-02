@@ -16,4 +16,14 @@ config.resolver.nodeModulesPath = [
 
 config.resolver.resolverMainFields = ['module:jsx', 'react-native', 'browser', 'main']
 
-module.exports = config
+module.exports = {
+  ...config,
+  transformer: {
+    getTransformOptions: async () => ({
+      transform: {
+        experimentalImportSupport: true,
+        inlineRequires: true,
+      },
+    }),
+  },
+}

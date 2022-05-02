@@ -1,23 +1,20 @@
 // import 'expo-dev-client';
-
 // only imported by native app!
 // for web just skip to src/index
-
-import 'expo-asset'
 import '@dish/helpers/polyfill'
-
-import * as Sentry from '@sentry/react-native'
+import 'expo-asset'
+// import * as Sentry from '@sentry/react-native'
 import { AppRegistry } from 'react-native'
 
-if (process.env.NODE_ENV === 'production') {
-  Sentry.init({
-    dsn: process.env.SENTRY_URL || console.error('no sentry url'),
-    release: process.env.GIT_COMMIT || 'unreleased',
-    environment: process.env.NODE_ENV || 'development',
-  })
-} else {
-  console.log('NODE_ENV', process.env.NODE_ENV)
-}
+// if (process.env.NODE_ENV === 'production') {
+//   Sentry.init({
+//     dsn: process.env.SENTRY_URL || console.error('no sentry url'),
+//     release: process.env.GIT_COMMIT || 'unreleased',
+//     environment: process.env.NODE_ENV || 'development',
+//   })
+// } else {
+//   console.log('NODE_ENV', process.env.NODE_ENV)
+// }
 
 if (process.env.NODE_ENV === 'development') {
   require('@dish/graph').startLogging()

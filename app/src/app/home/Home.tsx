@@ -133,15 +133,14 @@ const HomeDrawerSmall = (props: { children: any }) => {
   )
 }
 
-const HomeContainerLarge = (props) => {
-  const media = useMedia()
+const HomeContainerLarge = memo((props) => {
   const drawerWidth = useAppDrawerWidth(Infinity)
-  const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
+  console.log('drawerWidth', drawerWidth)
+  // const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
 
   return (
     <YStack
       fullscreen
-      display={media.sm ? 'none' : 'flex'}
       margin="auto"
       maxWidth={pageWidthMax}
       // TODO ui-static this fails if i remove conditional above!
@@ -160,18 +159,17 @@ const HomeContainerLarge = (props) => {
         top="$3"
         left="$3"
         bottom="$3"
-        width={lastWidth}
+        width={drawerWidth}
         zIndex={10}
         flex={1}
         shadowColor="$shadowColor"
         shadowRadius={25}
         shadowOffset={{ width: 10, height: 0 }}
         justifyContent="flex-end"
-        {...(media.notSm && {
+        $gtSm={{
           marginLeft: 'auto',
-          width: '100%',
           maxWidth: drawerWidthMax,
-        })}
+        }}
       >
         <XStack opacity={0.5} zi={-1} fullscreen br="$4" backgroundColor="$background" />
 
@@ -202,7 +200,7 @@ const HomeContainerLarge = (props) => {
       </YStack>
     </YStack>
   )
-}
+})
 
 const AppSearchBarFade = () => {
   const theme = useTheme()

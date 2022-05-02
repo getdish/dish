@@ -4,7 +4,7 @@ import { SmallCircleButton } from '../../views/CloseButton'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { graphql } from '@dish/graph'
-import { Card, HoverablePopover, Paragraph, XStack, YStack, useTheme } from '@dish/ui'
+import { Card, Paragraph, TooltipSimple, XStack, YStack, useTheme } from '@dish/ui'
 import { ExternalLink, Link2, PhoneCall } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 
@@ -60,13 +60,9 @@ export const RestaurantAddressLinksRow = memo(
 
           {size === 'sm' ||
             (size === 'xs' && (
-              <HoverablePopover
-                placement="right"
-                allowHoverOnContent
-                trigger={(props) => <SmallCircleButton icon={ExternalLink} {...props} />}
-              >
-                <Card padding={10}>{linkElements}</Card>
-              </HoverablePopover>
+              <TooltipSimple placement="right" label={<Card padding={10}>{linkElements}</Card>}>
+                <SmallCircleButton icon={ExternalLink} />
+              </TooltipSimple>
             ))}
 
           {size !== 'sm' && linkElements}

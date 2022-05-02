@@ -33,11 +33,23 @@ module.exports = function (api) {
   }
 
   // really helpful to log this in case you accidently use wrong config
-  console.log('⚙️ using metro babel config', process.env.TAMAGUI_TARGET)
+  console.log('⚙️ metro/babel', process.env.TAMAGUI_TARGET)
 
   return {
     presets: ['module:metro-react-native-babel-preset'],
     plugins: [
+      // for aliases
+      // [
+      //   'module-resolver',
+      //   {
+      //     root: ['./src'],
+      //     extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
+      //     // alias: {
+      //     //   tests: ['./tests/'],
+      //     //   '@components': './src/components',
+      //     // },
+      //   },
+      // ],
       '@babel/plugin-transform-flow-strip-types',
       '@babel/plugin-transform-react-jsx',
       'react-native-reanimated/plugin',

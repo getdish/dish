@@ -1,15 +1,14 @@
-import './web/base.css'
-
 // import './whydidyourender'
-import { startLogging } from '@dish/graph'
-import { isSafari } from '@dish/helpers'
-import { loadableReady } from '@loadable/component'
-import React from 'react'
-// @ts-ignore
-import { createRoot, hydrate, render } from 'react-dom'
-import { AppRegistry } from 'react-native'
-
 import { Root } from './Root'
+import './web/base.css'
+import { startLogging } from '@dish/graph'
+import { loadableReady } from '@loadable/component'
+import '@tamagui/font-inter/css/500.css'
+import '@tamagui/font-inter/css/700.css'
+import React from 'react'
+import { hydrate, render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
+import { AppRegistry } from 'react-native'
 
 if (process.env.NODE_ENV === 'development') {
   startLogging()
@@ -20,12 +19,6 @@ const ROOT = document.getElementById('root')!
 
 // register root component
 AppRegistry.registerComponent('dish', () => Root)
-
-if (isSafari) {
-  import('smoothscroll-polyfill').then((smooth) => {
-    smooth.polyfill()
-  })
-}
 
 async function main() {
   if (FORCE_NOT_CONCURRENT) {

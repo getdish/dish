@@ -8,7 +8,6 @@ import { SlantedTitle } from '../views/SlantedTitle'
 import { ListCard } from '../views/list/ListCard'
 import { FeedCard } from './FeedCard'
 import { homePageStore } from './homePageStore'
-import { RestaurantCard } from './restaurant/RestaurantCard'
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import {
@@ -28,7 +27,6 @@ import { Plus } from '@tamagui/feather-icons'
 import getCenter from '@turf/center'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
-import { Text } from 'react-native'
 
 const getListPlaces = async (listSlug: string) => {
   return await resolved(() =>
@@ -152,7 +150,7 @@ export const HomePageFeed = memo(
 
           <YStack paddingHorizontal={10} position="relative">
             <AbsoluteYStack zIndex={100} top={-15} left={10}>
-              <SlantedTitle size="$1">Top Playlists</SlantedTitle>
+              <SlantedTitle size="$4">Top Playlists</SlantedTitle>
             </AbsoluteYStack>
 
             <Grid itemMinWidth={220}>
@@ -233,36 +231,36 @@ export const HomePageFeed = memo(
   )
 )
 
-const HomeTrendingSpots = memo(({ region }: { region: string }) => {
-  const trendingSpots = query.restaurant_trending({
-    args: {
-      region_slug: region,
-    },
-    limit: 8,
-  })
+// const HomeTrendingSpots = memo(({ region }: { region: string }) => {
+//   const trendingSpots = query.restaurant_trending({
+//     args: {
+//       region_slug: region,
+//     },
+//     limit: 8,
+//   })
 
-  return (
-    <>
-      <YStack position="relative">
-        <AbsoluteYStack zIndex={100} top={-15} left={0}>
-          <SlantedTitle size="$2">Trending Spots</SlantedTitle>
-        </AbsoluteYStack>
-        <ContentScrollViewHorizontal>
-          <XStack alignItems="center" space="$4" paddingVertical={10}>
-            {trendingSpots.map((spot, index) => {
-              return <RestaurantCard key={spot.id || index} size="$4" restaurant={spot} />
-            })}
-          </XStack>
-        </ContentScrollViewHorizontal>
-      </YStack>
-    </>
-  )
-})
+//   return (
+//     <>
+//       <YStack position="relative">
+//         <AbsoluteYStack zIndex={100} top={-15} left={0}>
+//           <SlantedTitle size="$2">Trending Spots</SlantedTitle>
+//         </AbsoluteYStack>
+//         <ContentScrollViewHorizontal>
+//           <XStack alignItems="center" space="$4" paddingVertical={10}>
+//             {trendingSpots.map((spot, index) => {
+//               return <RestaurantCard key={spot.id || index} size="$4" restaurant={spot} />
+//             })}
+//           </XStack>
+//         </ContentScrollViewHorizontal>
+//       </YStack>
+//     </>
+//   )
+// })
 
 const HomeTagLenses = memo(() => {
   return (
     <ContentScrollViewHorizontal>
-      <XStack ai="center" space="$5" px="$4">
+      <XStack pe="auto" ai="center" space="$5" px="$4">
         {tagLenses.map((lense, i) => {
           return (
             <Link key={i} tag={lense}>
@@ -273,7 +271,6 @@ const HomeTagLenses = memo(() => {
                   hoverStyle={{
                     color: '$colorHover',
                   }}
-                  fontWeight="300"
                 >
                   {lense.name}
                 </H2>

@@ -11,6 +11,8 @@ import React, { memo } from 'react'
 export const AppIntroLogin = memo(() => {
   const store = useStore(IntroModalStore)
 
+  console.log('login')
+
   return (
     <>
       <YStack overflow="hidden" borderRadius={20} padding={30} alignItems="center" space="$2">

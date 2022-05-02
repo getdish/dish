@@ -98,7 +98,7 @@ export const AutocompleteItemView = memo(
               <Text fontWeight="600" ellipse color={theme.color} fontSize={18} lineHeight={30}>
                 {!!result.namePrefix && (
                   <>
-                    <Text fontWeight="300">{result.namePrefix}</Text>{' '}
+                    <Text>{result.namePrefix}</Text>{' '}
                   </>
                 )}
                 {result.name}

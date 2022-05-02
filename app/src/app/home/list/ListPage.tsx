@@ -39,6 +39,7 @@ import {
   Modal,
   Paragraph,
   Spacer,
+  Switch,
   Text,
   Theme,
   Toast,
@@ -49,7 +50,7 @@ import {
 } from '@dish/ui'
 import { List as ListIcon, Move, Plus, Trash, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { Pressable, Switch } from 'react-native'
+import { Pressable } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
 import { FlatList } from 'react-native-gesture-handler'
 
@@ -635,8 +636,8 @@ const ListPageContent = memo(
                             Full
                           </Paragraph>
                           <Switch
-                            value={list.theme === 1}
-                            onValueChange={(isOn) => {
+                            checked={list.theme === 1}
+                            onCheckedChange={(isOn) => {
                               setTheme(isOn ? 1 : 0)
                             }}
                           />
@@ -654,7 +655,7 @@ const ListPageContent = memo(
                         </InteractiveContainer>
                         <XStack alignItems="center" space="$1">
                           <Paragraph>Public:&nbsp;</Paragraph>
-                          <Switch value={isPublic} onValueChange={setPublic} />
+                          <Switch checked={isPublic} onCheckedChange={setPublic} />
                         </XStack>
                         <SmallButton
                           tooltip="Delete"

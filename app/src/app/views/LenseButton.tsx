@@ -2,7 +2,7 @@ import { tagDisplayName } from '../../constants/tagDisplayName'
 import { rgbString } from '../../helpers/rgb'
 import { NavigableTag } from '../../types/tagTypes'
 import { Link } from './Link'
-import { Text, YStack, useMedia } from '@dish/ui'
+import { Paragraph, Text, YStack, useMedia } from '@dish/ui'
 import React from 'react'
 import { Pressable } from 'react-native'
 
@@ -82,7 +82,7 @@ export const LenseButton = ({
               backgroundColor: lenseColorDark,
             })}
           >
-            <Text
+            <Paragraph
               fontWeight="700"
               lineHeight={lineHeight}
               fontSize={isLong ? 12 : 14}
@@ -92,7 +92,7 @@ export const LenseButton = ({
               ellipse
             >
               {name}
-            </Text>
+            </Paragraph>
           </YStack>
         </YStack>
       </Link>

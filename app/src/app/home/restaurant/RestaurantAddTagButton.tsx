@@ -3,23 +3,22 @@ import { LinkButton } from '../../views/LinkButton'
 import { Restaurant } from '@dish/graph'
 import { Card, Popover } from '@dish/ui'
 import { Plus } from '@tamagui/feather-icons'
-import React, { useState } from 'react'
+import React from 'react'
 
 export const RestaurantAddTagButton = ({ restaurant }: { restaurant: Restaurant }) => {
-  const [isOpen, setIsOpen] = useState(false)
   return (
-    <Popover
-      isOpen={isOpen}
-      onChangeOpen={setIsOpen}
-      trigger={(props) => (
-        <LinkButton marginTop={4} {...props} onPress={() => setIsOpen((x) => !x)}>
+    <Popover>
+      <Popover.Trigger>
+        <LinkButton marginTop={4}>
           <Plus size={12} color="#555" />
         </LinkButton>
-      )}
-    >
-      <Card>
-        <LenseButtonBar />
-      </Card>
+      </Popover.Trigger>
+      {/* TODO asChild test */}
+      <Popover.Content>
+        <Card>
+          <LenseButtonBar />
+        </Card>
+      </Popover.Content>
     </Popover>
   )
 }
