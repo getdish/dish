@@ -7,7 +7,7 @@ export type SlantedTitleProps = YStackProps &
 
 export const SlantedTitle = ({ size, children, ...props }: SlantedTitleProps) => {
   return (
-    <SlantedYStack alignSelf="flex-start" {...props}>
+    <SlantedYStack debug alignSelf="flex-start" {...props}>
       {isStringChild(children) ? (
         <H2 fontWeight="700" size={size} textAlign="center">
           {children}

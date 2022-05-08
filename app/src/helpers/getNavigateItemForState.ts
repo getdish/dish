@@ -43,7 +43,7 @@ export const getNavigateItemForState = (
 
   const isGeo = isLngLatParam(state.region)
   // nullish region = replacing to geo-coordinates
-  const isChangingRegion = state.region && state.region !== curState['region']
+  const isChangingRegion = state.region && state.region !== currentState['region']
   const replace = isGeo ? true : isChangingType || isChangingRegion ? false : true
 
   return {

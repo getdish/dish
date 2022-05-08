@@ -1,7 +1,3 @@
-import { getUserName, graphql, list, review } from '@dish/graph'
-import { Input, Spacer, Text, XStack, YStack } from '@dish/ui'
-import { Trash } from '@tamagui/feather-icons'
-import { default as React, default as React, memo, useEffect, useState } from 'react'
 import { AuthForm } from '../../AuthForm'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useCurrentUserQuery } from '../../hooks/useUserReview'
@@ -10,7 +6,10 @@ import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { ReviewImagesRow } from './ReviewImagesRow'
 import { ReviewTagsRow } from './ReviewTagsRow'
-
+import { getUserName, graphql, list, review } from '@dish/graph'
+import { Input, Spacer, Text, XStack, YStack } from '@dish/ui'
+import { Trash } from '@tamagui/feather-icons'
+import { default as React, memo, useEffect, useState } from 'react'
 
 export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
   size?: 'lg' | 'md'
@@ -146,7 +145,6 @@ export const RestaurantReview = memo(
     }
   )
 )
-
 
 export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
   const { review, onEdit, onDelete } = props

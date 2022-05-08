@@ -36,7 +36,10 @@ module.exports = function (api) {
   console.log('⚙️ metro/babel', process.env.TAMAGUI_TARGET)
 
   return {
-    presets: [['@rnx-kit/babel-preset-metro-react-native', { disableImportExportTransform: true }]],
+    presets: [
+      ['module:metro-react-native-babel-preset'],
+      // ['@rnx-kit/babel-preset-metro-react-native', { disableImportExportTransform: true }]
+    ],
     plugins: [
       // for aliases
       // [

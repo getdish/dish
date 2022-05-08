@@ -2,7 +2,7 @@ import { getTagSlug } from '../../helpers/getTagSlug'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { LinkButton } from './LinkButton'
 import { TagButtonProps } from './TagButton'
-import { tagRatings } from './TagButtonVote'
+import { tagRatings } from './tagRatings'
 import { graphql } from '@dish/graph'
 import { Card, Theme, TooltipSimple, TooltipSimpleProps, XStack } from '@dish/ui'
 import React, { useRef } from 'react'
@@ -23,7 +23,7 @@ export const TagVotePopover = graphql(
 
     return (
       <TooltipSimple
-        // @ts-expect-error
+        // @ts-ignore
         ref={hovPopRef as any}
         placement="top"
         {...popoverProps}

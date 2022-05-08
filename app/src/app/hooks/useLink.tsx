@@ -167,7 +167,7 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
     nextState['debug'] = props['debug']
 
     return {
-      ...(nextState && getNavigateItemForState(nextState)),
+      ...(nextState && getNavigateItemForState(nextState, homeStore.currentState)),
       ...(!props.preventNavigate && {
         preventNavigate: true,
         onPress() {

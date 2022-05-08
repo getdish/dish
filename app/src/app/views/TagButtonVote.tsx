@@ -1,4 +1,3 @@
-import { VoteNumber } from '../hooks/useUserTagVotes'
 import { TagButtonProps } from './TagButton'
 import { TagVotePopover } from './TagVotePopover'
 import { graphql } from '@dish/graph'
@@ -64,4 +63,3 @@ export const TagButtonVote = graphql(
     suspense: false,
   }
 )
-export const tagRatings = [1, 2, 3, 4, 5] as VoteNumber[]
