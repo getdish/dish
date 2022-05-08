@@ -1843,7 +1843,7 @@ __metadata:
     "@mdx-js/react": ^1.6.22
     "@react-native-community/blur": ^3.6.0
     "@react-native-community/geolocation": ^2.0.2
-    "@react-native-mapbox-gl/maps": ^8.6.0-beta.0
+    "@react-native-mapbox-gl/maps": 8.6.0-beta.0
     "@rnx-kit/babel-preset-metro-react-native": ^1.1.0
     "@rnx-kit/cli": ^0.12.1
     "@rnx-kit/metro-config": ^1.2.31
@@ -4714,7 +4714,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-mapbox-gl/maps@npm:^8.6.0-beta.0":
+"@react-native-mapbox-gl/maps@npm:8.6.0-beta.0":
   version: 8.6.0-beta.0
   resolution: "@react-native-mapbox-gl/maps@npm:8.6.0-beta.0"
   dependencies:

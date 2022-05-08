@@ -100,7 +100,7 @@
     "@mdx-js/react": "^1.6.22",
     "@react-native-community/blur": "^3.6.0",
     "@react-native-community/geolocation": "^2.0.2",
-    "@react-native-mapbox-gl/maps": "^8.6.0-beta.0",
+    "@react-native-mapbox-gl/maps": "8.6.0-beta.0",
     "@sendgrid/mail": "7.4.0",
     "@sentry/browser": "^6.12.0",
     "@sentry/react-native": "^2.6.2",

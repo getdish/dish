@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -23,7 +22,8 @@
 		89548292F4C14FE88F60F57D /* WhyteHeavy.woff2 in Resources */ = {isa = PBXBuildFile; fileRef = F5362B3E6A544C508FEF311A /* WhyteHeavy.woff2 */; };
 		95AE501A070F4209AB4D9563 /* Inter-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 37EB51AF5AA6436AAD1A8E82 /* Inter-Bold.otf */; };
 		96905EF65AED1B983A6B3ABC /* libPods-dish.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-dish.a */; };
-		AE9E86162752CA3000B698A9 /* Mapbox in Frameworks */ = {isa = PBXBuildFile; productRef = D1ED2FCA68F04201AC2320F7 /* Mapbox */; };
+		AEFA3F7F2827C9AD00179791 /* Mapbox in Frameworks */ = {isa = PBXBuildFile; productRef = C7EEA285D7FB2FCA9FE5F3BD /* Mapbox */; };
+		AEFA3F822827CB3F00179791 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = AEFA3F802827CB3F00179791 /* AppDelegate.mm */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		C20C0074AAA5490C95B4762F /* Inter-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = B74AA2360D5348BEB937BCCA /* Inter-BlackItalic.otf */; };
 		E6BBC65F013A4DFE877086B2 /* Inter-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03DF4B97337748C8912FB680 /* Inter-Black.otf */; };
@@ -37,7 +37,6 @@
 		0C89C9D50C3C45CC8E917586 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "dish/noop-file.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = app.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = dish/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = dish/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = dish/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = dish/Info.plist; sourceTree = "<group>"; };
@@ -56,6 +55,8 @@
 		7A4D352CD337FB3A3BF06240 /* Pods-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dish.release.xcconfig"; path = "Target Support Files/Pods-dish/Pods-dish.release.xcconfig"; sourceTree = "<group>"; };
 		8B0FA4667F25CF9EECBFC91A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-dish/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = dish/SplashScreen.storyboard; sourceTree = "<group>"; };
+		AEFA3F802827CB3F00179791 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = dish/AppDelegate.mm; sourceTree = "<group>"; };
+		AEFA3F812827CB3F00179791 /* app.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = app.entitlements; path = dish/app.entitlements; sourceTree = "<group>"; };
 		B74AA2360D5348BEB937BCCA /* Inter-BlackItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-BlackItalic.otf"; path = "../src/assets/fonts/Inter-BlackItalic.otf"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -70,7 +71,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96905EF65AED1B983A6B3ABC /* libPods-dish.a in Frameworks */,
-				AE9E86162752CA3000B698A9 /* Mapbox in Frameworks */,
+				AEFA3F7F2827C9AD00179791 /* Mapbox in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,10 +81,11 @@
 		13B07FAE1A68108700A75B9A /* dish */ = {
 			isa = PBXGroup;
 			children = (
+				AEFA3F812827CB3F00179791 /* app.entitlements */,
+				AEFA3F802827CB3F00179791 /* AppDelegate.mm */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
@@ -210,7 +212,7 @@
 			);
 			name = dish;
 			packageProductDependencies = (
-				D1ED2FCA68F04201AC2320F7 /* Mapbox */,
+				C7EEA285D7FB2FCA9FE5F3BD /* Mapbox */,
 			);
 			productName = dish;
 			productReference = 13B07F961A680F5B00A75B9A /* app.app */;
@@ -225,6 +227,7 @@
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = 399WY8X9HY;
 						LastSwiftMigration = 1120;
 					};
 				};
@@ -239,7 +242,7 @@
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			packageReferences = (
-				B378B8EF20D161A009DCEB2A /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
+				2283BEE4CFC69863A09F3326 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
 			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
@@ -361,9 +364,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				F37DA4FC23874A0780707C42 /* noop-file.swift in Sources */,
+				AEFA3F822827CB3F00179791 /* AppDelegate.mm in Sources */,
 				2D5A5EE767273F91CF5C95EE /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -590,7 +593,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B378B8EF20D161A009DCEB2A /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
+		2283BEE4CFC69863A09F3326 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution";
 			requirement = {
@@ -601,9 +604,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D1ED2FCA68F04201AC2320F7 /* Mapbox */ = {
+		C7EEA285D7FB2FCA9FE5F3BD /* Mapbox */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B378B8EF20D161A009DCEB2A /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
+			package = 2283BEE4CFC69863A09F3326 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
 			productName = Mapbox;
 		};
 /* End XCSwiftPackageProductDependency section */
