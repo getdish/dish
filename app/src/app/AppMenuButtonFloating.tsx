@@ -4,7 +4,7 @@ import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
 import { CloseButton } from './views/CloseButton'
 import { PaneControlButtons } from './views/PaneControlButtons'
-import { AbsoluteYStack, Button, Modal, useMedia, useSafeAreaInsets } from '@dish/ui'
+import { AbsoluteYStack, Button, Modal, YStack, useMedia, useSafeAreaInsets } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
@@ -56,14 +56,15 @@ export const AppMenuButtonFloating = memo(() => {
       >
         <Button
           pointerEvents="auto"
-          elevation="$3"
-          w="$8"
-          h="$8"
+          elevation="$2"
+          shop={0.25}
           size="$5"
           icon={Menu}
           circular
+          overflow="visible"
           onPress={appMenu.show}
         />
+
         {/* <YStack
           // className="ease-in-out-faster"
           shadowColor="rgba(0,0,0,0.25)"

@@ -10,11 +10,10 @@ export function GradientButton({ children }: { children?: any }) {
       alignItems="center"
       justifyContent="center"
       borderRadius={1000}
-      shadowRadius={6}
+      shadowRadius={5}
       shadowOffset={{ height: 2, width: 0 }}
-      shadowColor={theme.shadowColor}
+      shadowColor={theme.shadowColorHover}
       position="relative"
-      overflow="hidden"
       backgroundColor="$background"
       hoverStyle={{
         backgroundColor: '$backgroundHover',

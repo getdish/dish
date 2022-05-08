@@ -9,7 +9,7 @@ if command -v git &> /dev/null; then
 fi
 
 if command -v ipconfig &> /dev/null; then
-  LOCAL_HOST=$(ipconfig getifaddr en0)
+  LOCAL_HOST=$(ipconfig getifaddr en0 || echo 'localhost')
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"

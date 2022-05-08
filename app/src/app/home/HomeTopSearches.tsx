@@ -46,18 +46,18 @@ export const HomeTopSearches = memo(() => {
 })
 
 const recentSearches: { tags: NavigableTag[] }[] = [
-  // {
-  //   tags: [tagLenses[0]],
-  // },
-  // {
-  //   tags: [tagLenses[1]],
-  // },
-  // {
-  //   tags: [tagLenses[2]],
-  // },
-  // {
-  //   tags: [tagLenses[3]],
-  // },
+  {
+    tags: [tagLenses[0]],
+  },
+  {
+    tags: [tagLenses[1]],
+  },
+  {
+    tags: [tagLenses[2]],
+  },
+  {
+    tags: [tagLenses[3]],
+  },
   {
     tags: [
       {
