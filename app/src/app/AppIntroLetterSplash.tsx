@@ -122,10 +122,10 @@ export const AppIntroLetter = memo(() => {
 
       <DarkModal fullscreen hide={store.hidden} onDismiss={store.setHidden}>
         <AbsoluteYStack top={90} pointerEvents="none" zIndex={-1}>
-          <LinearGradient
+          {/* <LinearGradient
             style={StyleSheet.absoluteFill}
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,1)']}
-          />
+          /> */}
         </AbsoluteYStack>
 
         <YStack

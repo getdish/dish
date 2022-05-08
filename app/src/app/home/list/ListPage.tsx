@@ -350,14 +350,6 @@ const ListPageContent = memo(
           )}
 
           <ContentScrollView id="list">
-            {/* <AbsoluteYStack opacity={0.5} fullscreen maxHeight={300} zIndex={0}>
-              <LinearGradient
-                start={[0, 1]}
-                end={[0, 0]}
-                style={StyleSheet.absoluteFill}
-                colors={[`${listColors.backgroundForTheme}00`, listColors.backgroundForTheme]}
-              />
-            </AbsoluteYStack> */}
             <>
               <PaneControlButtonsLeft>
                 <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>

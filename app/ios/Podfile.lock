@@ -361,7 +361,7 @@ PODS:
     - SDWebImageWebPCoder (~> 0.8.4)
   - RNGestureHandler (2.4.1):
     - React-Core
-  - RNReanimated (2.3.1):
+  - RNReanimated (2.4.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -406,7 +406,6 @@ PODS:
   - Sentry (7.1.4):
     - Sentry/Core (= 7.1.4)
   - Sentry/Core (7.1.4)
-  - UMCore (7.1.2)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -471,7 +470,6 @@ DEPENDENCIES:
   - RNScreens (from `../../node_modules/react-native-screens`)
   - "RNSentry (from `../../node_modules/@sentry/react-native`)"
   - RNSVG (from `../../node_modules/react-native-svg`)
-  - "UMCore (from `../../node_modules/@unimodules/core/ios`)"
   - Yoga (from `../../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -602,8 +600,6 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../../node_modules/react-native-svg"
-  UMCore:
-    :path: "../../node_modules/@unimodules/core/ios"
   Yoga:
     :path: "../../node_modules/react-native/ReactCommon/yoga"
 
@@ -666,14 +662,13 @@ SPEC CHECKSUMS:
   ReactCommon: bf2888a826ceedf54b99ad1b6182d1bc4a8a3984
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
   RNGestureHandler: 4f4986408310a43f1606c391f38f76e0d6e790d5
-  RNReanimated: e4c46bdaaffb3ace36cb876b2cedca1d2e4e72cb
+  RNReanimated: 6b115e2f5f6c971966351b9cadd3162fe2550010
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSentry: 68644ef607b780551cc555f084869764f2566652
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
   Sentry: 1d3eb1a25f8c5333c88dd5603904a6d461cd9fcf
-  UMCore: ce3a4faa010239063b8343895b29a6d97b01069d
   Yoga: 17cd9a50243093b547c1e539c749928dd68152da
 
 PODFILE CHECKSUM: ca6572d750be64963c4e27b59f9cc1158879165e

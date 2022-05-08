@@ -203,6 +203,7 @@ const HomeContainerLarge = memo((props) => {
 })
 
 const AppSearchBarFade = () => {
+  return null
   const theme = useTheme()
 
   return (

@@ -22,8 +22,6 @@ import {
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { useSyncExternalStore } from 'use-sync-external-store/shim'
 
-console.log('useSyncExternalStore', useSyncExternalStore)
-
 // sanity check types here
 // class StoreTest extends Store<{ id: number }> {}
 // const storeTest = createStore(StoreTest, { id: 3 })

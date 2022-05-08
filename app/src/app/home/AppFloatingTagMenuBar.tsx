@@ -1,12 +1,13 @@
+import { autocompletesStore } from '../AutocompletesStore'
+import { HomeRegionTitle } from './HomeRegionTitle'
+import { HomeTopSearches } from './HomeTopSearches'
 import { AbsoluteYStack, LinearGradient, XStack, useMedia, useThemeName } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 
-import { autocompletesStore } from '../AutocompletesStore'
-import { HomeRegionTitle } from './HomeRegionTitle'
-import { HomeTopSearches } from './HomeTopSearches'
+console.log('LinearGradient', LinearGradient)
 
 export const AppFloatingTagMenuBar = memo(() => {
   const media = useMedia()
@@ -27,7 +28,7 @@ export const AppFloatingTagMenuBar = memo(() => {
       maxWidth="100%"
     >
       <AbsoluteYStack left={0} right={0} bottom={-20} top={-10} zIndex={-1}>
-        <LinearGradient
+        {/* <LinearGradient
           pointerEvents="none"
           style={[StyleSheet.absoluteFill]}
           colors={
@@ -35,7 +36,7 @@ export const AppFloatingTagMenuBar = memo(() => {
               ? [`#22222200`, themeName === 'dark' ? '#222222' : `#22222233`]
               : [`#22222233`, `#22222200`]
           }
-        />
+        /> */}
       </AbsoluteYStack>
 
       <ScrollView

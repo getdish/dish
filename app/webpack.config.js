@@ -52,8 +52,6 @@ if (process.env.TAMAGUI_TARGET === 'native') {
        */
       alias: {
         'react-native': reactNativePath,
-        '@unimodules/core': require.resolve('@unimodules/core'),
-        '@unimodules/react-native-adapter': require.resolve('@unimodules/react-native-adapter'),
         'react-native-svg': require.resolve('react-native-svg'),
         'react-native-safe-area-context': require.resolve('react-native-safe-area-context'),
         react: require.resolve('react'),
@@ -246,8 +244,6 @@ if (process.env.TAMAGUI_TARGET === 'native') {
       },
       resolve: {
         alias: {
-          react: path.join(require.resolve('react'), '..'),
-          'react-dom': path.join(require.resolve('react-dom'), '..'),
           'react-native': 'react-native-web',
           'react-native-web$': require.resolve('react-native-web'),
           'react-native-safe-area-context': require.resolve('react-native-safe-area-context'),

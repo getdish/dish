@@ -25,7 +25,7 @@ navigator.geolocation = require('@react-native-community/geolocation')
 try {
   const { Root } = require('./src/Root')
   // prettier-ignore
-  console.log('🥾 boot', process.env.SENTRY_URL, process.env.NODE_ENV, process.env.DISH_ENV, Root)
+  console.log('🥾 boot', process.env.SENTRY_URL, process.env.NODE_ENV, process.env.DISH_ENV)
   // registerRootComponent calls AppRegistry.registerComponent('main', () => App);
   // It also ensures that whether you load the app in the Expo client or in a native build,
   // the environment is set up appropriately
