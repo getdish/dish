@@ -71,7 +71,7 @@ export const RestaurantRatingView = suspense(
                 shadowColor="$shadowColor"
                 overflow="hidden"
               >
-                <AbsoluteXStack backgroundColor="$backgroundDarker" opacity={0.75} fullscreen />
+                <AbsoluteXStack backgroundColor="$backgroundStronger" opacity={0.75} fullscreen />
                 <BlurView>
                   <RatingView {...ratingViewProps} stacked size={size * 0.66} />
                 </BlurView>

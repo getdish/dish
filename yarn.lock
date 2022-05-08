@@ -1924,7 +1924,7 @@ __metadata:
     react-native-dotenv: ^2.5.3
     react-native-draggable-flatlist: ^2.6.2
     react-native-fast-image: ^8.5.11
-    react-native-gesture-handler: ^2.4.1
+    react-native-gesture-handler: 2.1.0
     react-native-reanimated: ^2.3.1
     react-native-safe-area-context: ^3.3.2
     react-native-screens: ^3.13.1
@@ -22868,9 +22868,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:^2.4.1":
-  version: 2.4.1
-  resolution: "react-native-gesture-handler@npm:2.4.1"
+"react-native-gesture-handler@npm:2.4.2":
+  version: 2.4.2
+  resolution: "react-native-gesture-handler@npm:2.4.2"
   dependencies:
     "@egjs/hammerjs": ^2.0.17
     hoist-non-react-statics: ^3.3.0
@@ -22880,7 +22880,7 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: a0f854faf2664f48a41551e73db852a98f04ce7d8c372aa1fb25f95aa1a98edc1fcaffca2c68c006e8e0d6e8c3d28d8cd1b125aa6860952a2e0026a3f23fdafc
+  checksum: e8c915ea08ed522cc77e1192d133e7157fb667c15444f041ef3b35a8bdc96cc6b6543363ef1fa06b9f5da4e5920a3459d24febbdcb7200af0bb473ff8c4655f5
   languageName: node
   linkType: hard
 

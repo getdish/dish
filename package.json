@@ -107,6 +107,7 @@
     "expo-modules-autolinking": "0.8.0",
     "expo-screen-orientation": "4.2.0",
     "react-native-reanimated": "2.4.0",
+    "react-native-gesture-handler": "2.4.2",
     "metro": "0.66.2",
     "metro-babel-register": "0.66.2",
     "metro-cache": "0.66.2",

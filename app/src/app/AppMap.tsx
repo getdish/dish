@@ -351,11 +351,11 @@ const AppMapBottomFade = memo(() => {
 
   return (
     <AbsoluteYStack zIndex={100} pointerEvents="none" bottom={0} left={0} right={0}>
-      <LinearGradient
+      {/* <LinearGradient
         pointerEvents="none"
         style={StyleSheet.absoluteFill}
         colors={[`${theme.background}00`, theme.background.toString()]}
-      />
+      /> */}
     </AbsoluteYStack>
   )
 })

@@ -135,7 +135,6 @@ const HomeDrawerSmall = (props: { children: any }) => {
 
 const HomeContainerLarge = memo((props) => {
   const drawerWidth = useAppDrawerWidth(Infinity)
-  console.log('drawerWidth', drawerWidth)
   // const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
 
   return (

@@ -200,44 +200,40 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     return responder
   }, [])
 
+  // {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
+  // {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
   return (
-    <YStack>
+    <Animated.View
+      style={[
+        styles.animatedView,
+        {
+          transform: [
+            {
+              translateY: drawerStore.pan,
+            },
+          ],
+        },
+      ]}
+    >
       <AppFloatingTagMenuBar />
-
-      {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
-      {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
-
-      <Animated.View
-        style={[
-          styles.animatedView,
-          {
-            transform: [
-              {
-                translateY: drawerStore.pan,
-              },
-            ],
-          },
-        ]}
-      >
-        {useMemo(
-          () => (
-            <BottomSheetContainer>
-              <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
-                <YStack height={searchBarHeight} zIndex={1000}>
-                  <AppSearchBarInline />
-                </YStack>
-                <YStack position="relative" flex={1}>
-                  <AppAutocompleteLocation />
-                  <AppAutocompleteSearch />
-                  {props.children}
-                </YStack>
-              </View>
-            </BottomSheetContainer>
-          ),
-          [props.children]
-        )}
-      </Animated.View>
-    </YStack>
+      {useMemo(
+        () => (
+          <BottomSheetContainer>
+            <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
+              <YStack height={searchBarHeight} zIndex={1000}>
+                <AppSearchBarInline />
+              </YStack>
+              <YStack position="relative" flex={1}>
+                <AppAutocompleteLocation />
+                <AppAutocompleteSearch />
+                {props.children}
+              </YStack>
+            </View>
+          </BottomSheetContainer>
+        ),
+        [props.children]
+      )}
+    </Animated.View>
   )
 })
 

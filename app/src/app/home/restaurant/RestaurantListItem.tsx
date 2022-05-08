@@ -207,7 +207,7 @@ const RestaurantListItemContent = memo(
           {/* expanded content */}
           {meta && isExpanded && (
             <AbsoluteYStack
-              backgroundColor="$backgroundDarker"
+              backgroundColor="$backgroundStronger"
               width={300 - 40}
               x={-320}
               height="100%"

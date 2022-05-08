@@ -1,13 +1,10 @@
 import { autocompletesStore } from '../AutocompletesStore'
 import { HomeRegionTitle } from './HomeRegionTitle'
 import { HomeTopSearches } from './HomeTopSearches'
-import { AbsoluteYStack, LinearGradient, XStack, useMedia, useThemeName } from '@dish/ui'
+import { AbsoluteYStack, XStack, useMedia, useThemeName } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
-import { StyleSheet, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-
-console.log('LinearGradient', LinearGradient)
 
 export const AppFloatingTagMenuBar = memo(() => {
   const media = useMedia()
@@ -24,7 +21,8 @@ export const AppFloatingTagMenuBar = memo(() => {
       position="relative"
       pointerEvents={shouldHide ? 'none' : 'auto'}
       zIndex={-1}
-      y={shouldHide ? -80 : 0}
+      // y={shouldHide ? -80 : 0}
+      top={0}
       maxWidth="100%"
     >
       <AbsoluteYStack left={0} right={0} bottom={-20} top={-10} zIndex={-1}>
