@@ -1,11 +1,11 @@
+import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
+import { QueryRestaurantTagsProps, queryRestaurantTags } from '../../../queries/queryRestaurantTags'
+import { TagButton, TagButtonProps, getTagButtonProps } from '../TagButton'
+import { TagButtonTagProps } from '../TagButtonTagProps'
 import { graphql, restaurant } from '@dish/graph'
 import { Spacer, YStack } from '@dish/ui'
 import { sortBy, uniqBy } from 'lodash'
 import React, { Suspense, memo } from 'react'
-
-import { selectRishDishViewSimple } from '../../../helpers/selectDishViewSimple'
-import { QueryRestaurantTagsProps, queryRestaurantTags } from '../../../queries/queryRestaurantTags'
-import { TagButton, TagButtonProps, TagButtonTagProps, getTagButtonProps } from '../TagButton'
 
 type TagRowProps = {
   tagButtonProps?: TagButtonProps

@@ -1,20 +1,23 @@
 import { isLngLatParam, urlSerializers } from '../app/home/search/urlSerializers'
 import { homeStore } from '../app/homeStore'
+import { SPLIT_TAG } from '../constants/SPLIT_TAG'
 import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
-import { SPLIT_TAG } from '../constants/SPLIT_TAG'
 import { NavigateItem, SearchRouteParams, router } from '../router'
-import { HomeStateTagNavigable } from '../types/homeTypes'
+import { HomeStateItem, HomeStateTagNavigable } from '../types/homeTypes'
 import { getActiveTags } from './getActiveTags'
 import { isHomeState, isSearchState } from './homeStateHelpers'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
 
-export const getNavigateItemForState = (inState: HomeStateTagNavigable): NavigateItem => {
+export const getNavigateItemForState = (
+  inState: HomeStateTagNavigable,
+  currentState: HomeStateItem
+): NavigateItem => {
   if (!inState) {
     throw new Error(`provide currentState at least`)
   }
 
-  const curHomeStateType = homeStore.currentState.type
+  const curHomeStateType = currentState.type
 
   // only handle "special" states here (home/search)
   if (!isHomeState(inState) && !isSearchState(inState)) {
@@ -24,12 +27,11 @@ export const getNavigateItemForState = (inState: HomeStateTagNavigable): Navigat
     }
   }
 
-  const curState = homeStore.currentState
   const state = {
     ...inState,
     region:
       inState.region ??
-      curState['region'] ??
+      currentState['region'] ??
       homeStore.lastHomeOrSearchState.region ??
       initialHomeState.region,
   }

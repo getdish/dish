@@ -1,9 +1,3 @@
-import { graphql, query } from '@dish/graph'
-import { LoadingItems, Modal, Text, Toast, YStack } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
-import React, { Suspense, memo } from 'react'
-import { ScrollView } from 'react-native'
-
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { HomeStateItemReview } from '../../../types/homeTypes'
 import { homeStore, useIsHomeTypeActive } from '../../homeStore'
@@ -12,7 +6,12 @@ import { useUserStore } from '../../userStore'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SmallTitle } from '../../views/SmallTitle'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
-import { RestaurantReviewEdit } from '../restaurant/RestaurantReviewEdit'
+import { RestaurantReviewEdit } from '../restaurant/RestaurantReview'
+import { graphql } from '@dish/graph'
+import { LoadingItems, Modal, Text, Toast, YStack } from '@dish/ui'
+import { useStoreInstance } from '@dish/use-store'
+import React, { Suspense, memo } from 'react'
+import { ScrollView } from 'react-native'
 
 export default memo(function RestaurantReviewPage() {
   const isActive = useIsHomeTypeActive('restaurantReview')

@@ -522,7 +522,7 @@ class HomeStore extends Store {
   getShouldNavigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
     const nextState = getNextHomeState(navState)
-    const navItem = getNavigateItemForState(nextState)
+    const navItem = getNavigateItemForState(nextState, this.currentState)
     return getShouldNavigate(navItem)
   }
 
@@ -530,7 +530,7 @@ class HomeStore extends Store {
     const curState = this.currentState
     const navState = { state: state ?? curState, ...rest }
     const nextState = getNextHomeState(navState)
-    const navItem = getNavigateItemForState(nextState)
+    const navItem = getNavigateItemForState(nextState, curState)
     const shouldNav = getShouldNavigate(navItem)
     if (!shouldNav) {
       return false
@@ -538,7 +538,7 @@ class HomeStore extends Store {
     Keyboard.dismiss()
     this.lastNav = Date.now()
     const curNav = this.lastNav
-    const didNav = await syncStateToRoute(nextState)
+    const didNav = await syncStateToRoute(nextState, this.currentState)
     if (curNav !== this.lastNav) {
       return false
     }

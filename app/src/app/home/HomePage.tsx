@@ -5,7 +5,7 @@ import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { IntroModalStore } from '../IntroModalStore'
 import { PortalItem } from '../Portal'
-import { cancelUpdateRegion } from '../appMapStore'
+import { cancelUpdateRegion } from '../appMapStoreUpdateRegion'
 import { homeStore, useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
@@ -169,16 +169,6 @@ const HomePageContent = (props: Props) => {
 }
 
 const HomePageWelcomeBubble = memo(() => {
-  return (
-    <PortalItem id="root">
-      <Theme name="dark">
-        <Inner />
-      </Theme>
-    </PortalItem>
-  )
-})
-
-const Inner = () => {
   const introStore = useStore(IntroModalStore)
   const [show, setShow] = useLocalStorageState('home-intro-dialogue', true)
 
@@ -187,43 +177,45 @@ const Inner = () => {
   }
 
   return (
-    <AbsoluteYStack
-      pointerEvents="none"
-      zIndex={100000000}
-      fullscreen
-      alignItems="flex-end"
-      justifyContent="flex-end"
-    >
-      {/* <AnimatedYStack> */}
-      <YStack
-        backgroundColor="$background"
-        borderColor="$borderColor"
-        borderWidth={1}
-        borderRadius={15}
-        margin={10}
-        marginHorizontal={15}
-        position="relative"
-        maxWidth={600}
-        pointerEvents="auto"
-        elevation="$1"
-      >
-        <PaneControlButtons>
-          <CloseButton onPress={() => setShow(false)} />
-        </PaneControlButtons>
-        <YStack paddingVertical={20} paddingHorizontal={20}>
-          <Paragraph>
-            <Text fontWeight="800">A better pocket guide to the world.</Text> Find and make
-            playlists of the real world and earn money.{' '}
-            <Link name="about" fontWeight="600">
-              Learn more
-            </Link>
-          </Paragraph>
-        </YStack>
-      </YStack>
-      {/* </AnimatedYStack> */}
-    </AbsoluteYStack>
+    <PortalItem id="root">
+      <Theme name="dark">
+        <AbsoluteYStack
+          pointerEvents="none"
+          zIndex={100000000}
+          fullscreen
+          alignItems="flex-end"
+          justifyContent="flex-end"
+        >
+          <YStack
+            backgroundColor="$background"
+            borderColor="$borderColor"
+            borderWidth={1}
+            borderRadius={15}
+            margin={10}
+            marginHorizontal={15}
+            position="relative"
+            maxWidth={600}
+            pointerEvents="auto"
+            elevation="$1"
+          >
+            <PaneControlButtons>
+              <CloseButton onPress={() => setShow(false)} />
+            </PaneControlButtons>
+            <YStack paddingVertical={20} paddingHorizontal={20}>
+              <Paragraph>
+                <Text fontWeight="800">A better pocket guide to the world.</Text> Find and make
+                playlists of the real world and earn money.{' '}
+                <Link name="about" fontWeight="600">
+                  Learn more
+                </Link>
+              </Paragraph>
+            </YStack>
+          </YStack>
+        </AbsoluteYStack>
+      </Theme>
+    </PortalItem>
   )
-}
+})
 
 const HomeTopSpacer = () => {
   const media = useMedia()

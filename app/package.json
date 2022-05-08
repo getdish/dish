@@ -59,12 +59,7 @@
     "bundle": {
       "entryPath": "./index.js",
       "detectCyclicDependencies": true,
-      "detectDuplicateDependencies": {
-        "ignoredModules": [
-          "react-is"
-        ],
-        "throwOnError": true
-      },
+      "detectDuplicateDependencies": false,
       "bundlePrefix": "dish",
       "targets": [
         "ios"

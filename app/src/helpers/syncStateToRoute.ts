@@ -1,5 +1,5 @@
 import { router } from '../router'
-import { HomeStateTagNavigable } from '../types/homeTypes'
+import { HomeStateItem, HomeStateTagNavigable } from '../types/homeTypes'
 import { getNavigateItemForState } from './getNavigateItemForState'
 import { getShouldNavigate } from './getShouldNavigate'
 import { loopPreventer } from './loopPreventer'
@@ -9,12 +9,12 @@ const checkLoop = loopPreventer({
   per: 0.5,
 })
 
-export async function syncStateToRoute(state: HomeStateTagNavigable) {
-  const navItem = getNavigateItemForState(state)
+export async function syncStateToRoute(state: HomeStateTagNavigable, cur: HomeStateItem) {
+  const navItem = getNavigateItemForState(state, cur)
   const should = getShouldNavigate(navItem)
   if (should) {
     checkLoop()
-    const navItem = getNavigateItemForState(state)
+    const navItem = getNavigateItemForState(state, cur)
     router.navigate(navItem)
     return true
   }

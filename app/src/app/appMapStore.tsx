@@ -1,19 +1,3 @@
-import { series, sleep } from '@dish/async'
-import {
-  LngLat,
-  MapPosition,
-  RestaurantOnlyIds,
-  RestaurantOnlyIdsPartial,
-  resolved,
-} from '@dish/graph'
-import { isPresent } from '@dish/helpers'
-import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import bbox from '@turf/bbox'
-import getCenter from '@turf/center'
-import { featureCollection } from '@turf/helpers'
-import { findLast, uniqBy } from 'lodash'
-import { useEffect } from 'react'
-
 import {
   getDefaultLocation,
   initialLocation,
@@ -31,8 +15,23 @@ import { reverseGeocode } from '../helpers/reverseGeocode'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { MapRegionEvent } from '../types/homeTypes'
 import { AppMapPosition, MapResultItem } from '../types/mapTypes'
-import { homeStore } from './homeStore'
 import { MapOpts } from './MapOpts'
+import { homeStore } from './homeStore'
+import { series, sleep } from '@dish/async'
+import {
+  LngLat,
+  MapPosition,
+  RestaurantOnlyIds,
+  RestaurantOnlyIdsPartial,
+  resolved,
+} from '@dish/graph'
+import { isPresent } from '@dish/helpers'
+import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import bbox from '@turf/bbox'
+import getCenter from '@turf/center'
+import { featureCollection } from '@turf/helpers'
+import { findLast, uniqBy } from 'lodash'
+import { useEffect } from 'react'
 
 // TODO this wants to be a stack where you have states you push:
 // {
@@ -278,7 +277,7 @@ class AppMapStore extends Store {
 
   async getCurrentLocationInfo() {
     const { center, span } = this.currentPosition
-    const curLocInfo = await reverseGeocode(center, span)
+    const curLocInfo = await reverseGeocode(center, span ?? appMapStore.position.span)
     if (!curLocInfo) {
       return null
     }
@@ -438,7 +437,7 @@ export const useZoomLevel = () => {
   return getZoomLevel(position.span!)
 }
 
-export function updateRegionImmediate(region: MapRegionEvent) {
+export function appMapStoreUpdateRegion(region: MapRegionEvent) {
   cancelUpdateRegion()
   const { currentState } = homeStore
   if (currentState.type === 'home' || (currentState.type === 'search' && region.via === 'click')) {
@@ -458,9 +457,9 @@ export function updateRegionImmediate(region: MapRegionEvent) {
   }
 }
 
-export const updateRegion = updateRegionImmediate // debounce(updateRegionImmediate, 340)
+export const updateRegion = appMapStoreUpdateRegion // debounce(appMapStoreUpdateRegion, 340)
 
-export const updateRegionFaster = updateRegionImmediate // debounce(updateRegionImmediate, 300)
+export const updateRegionFaster = appMapStoreUpdateRegion // debounce(appMapStoreUpdateRegion, 300)
 
 export const cancelUpdateRegion = () => {
   // only for non-concurrent mode

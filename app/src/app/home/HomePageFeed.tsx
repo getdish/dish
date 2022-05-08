@@ -144,7 +144,7 @@ export const HomePageFeed = memo(
         <>
           <HomeTagLenses />
 
-          <HomeNearbyRegions lng={center?.lng} lat={center?.lat} />
+          {/* <HomeNearbyRegions lng={center?.lng} lat={center?.lat} /> */}
 
           <Spacer size="$6" />
 
@@ -267,7 +267,7 @@ const HomeTagLenses = memo(() => {
               <Theme name={lense.color}>
                 <H2
                   py="$1"
-                  color="$colorPress"
+                  color="$color"
                   hoverStyle={{
                     color: '$colorHover',
                   }}

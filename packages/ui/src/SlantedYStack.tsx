@@ -1,6 +1,8 @@
 import { YStack, styled } from 'tamagui'
 
 export const SlantedYStack = styled(YStack, {
+  name: 'SlantedYStack',
+  debug: true,
   backgroundColor: '$background',
   position: 'relative',
   zIndex: 10,

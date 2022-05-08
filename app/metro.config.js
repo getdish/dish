@@ -1,23 +1,19 @@
-// Learn more https://docs.expo.io/guides/customizing-metro
-const { getDefaultConfig } = require('expo/metro-config')
-const path = require('path')
+const { makeMetroConfig } = require('@rnx-kit/metro-config')
+const MetroSymlinksResolver = require('@rnx-kit/metro-resolver-symlinks')
 
-const config = getDefaultConfig(__dirname)
+// many errors :/
 
-// Monorepo
-const projectRoot = __dirname
-const workspaceRoot = path.resolve(__dirname, '..')
-
-config.watchFolders = [workspaceRoot]
-config.resolver.nodeModulesPath = [
-  path.resolve(projectRoot, 'node_modules'),
-  path.resolve(workspaceRoot, 'node_modules'),
-]
-
-config.resolver.resolverMainFields = ['module:jsx', 'react-native', 'browser', 'main']
-
-module.exports = {
-  ...config,
+const config = makeMetroConfig({
+  resolver: {
+    resolverMainFields: ['module:jsx', 'react-native', 'browser', 'main'],
+    resolveRequest: MetroSymlinksResolver({
+      remapModule: MetroSymlinksResolver.remapImportPath({
+        test: (moduleId) => moduleId.startsWith('@tamagui/'),
+        extensions: ['.ts', '.tsx'],
+        mainFields: ['module:jsx', 'module', 'main'],
+      }),
+    }),
+  },
   transformer: {
     getTransformOptions: async () => ({
       transform: {
@@ -26,4 +22,6 @@ module.exports = {
       },
     }),
   },
-}
+})
+
+module.exports = config

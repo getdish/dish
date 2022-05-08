@@ -1,13 +1,12 @@
+import { isWeb } from '../constants/constants'
+import { getTagSlug } from '../helpers/getTagSlug'
+import { InputTagButton } from './InputTagButton'
+import { useHomeStore } from './homeStore'
+import { focusSearchInput, setAvoidNextAutocompleteShowOnFocus } from './searchInputActions'
+import { getTagButtonProps } from './views/TagButton'
 import { fullyIdle } from '@dish/async'
 import { XStack } from '@dish/ui'
 import React, { memo } from 'react'
-
-import { isWeb } from '../constants/constants'
-import { getTagSlug } from '../helpers/getTagSlug'
-import { focusSearchInput, setAvoidNextAutocompleteShowOnFocus } from './AppSearchInput'
-import { useHomeStore } from './homeStore'
-import { InputTagButton } from './InputTagButton'
-import { getTagButtonProps } from './views/TagButton'
 
 export const AppSearchInputTagsRow = memo(() => {
   const home = useHomeStore()

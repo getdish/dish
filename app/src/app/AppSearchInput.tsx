@@ -1,6 +1,5 @@
 import { isWeb, searchBarHeight } from '../constants/constants'
 import { isTouchDevice } from '../constants/platforms'
-import { isWebIOS } from '../helpers/isIOS'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { router } from '../router'
 import { AppSearchInputTagsRow } from './AppSearchInputTagsRow'
@@ -15,11 +14,15 @@ import { drawerStore } from './drawerStore'
 import { runSearch } from './home/search/SearchPageStore'
 import { homeStore, useHomeStoreSelector } from './homeStore'
 import { InputStore, setNodeOnInputStore, useInputStoreSearch } from './inputStore'
+import {
+  focusSearchInput,
+  setAvoidNextAutocompleteShowOnFocus,
+  setSearchBar,
+} from './searchInputActions'
 import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import {
-  Input,
   SearchInput,
   Spacer,
   XStack,
@@ -33,47 +36,14 @@ import {
 import { getStore, selector } from '@dish/use-store'
 import { Loader, Search, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
-import { ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 
 const isWebTouch = isWeb && supportsTouchWeb
-
-// avoid first one on iniital focus
-let avoidNextFocus = true
-export function setAvoidNextAutocompleteShowOnFocus() {
-  avoidNextFocus = true
-}
-
-export const onFocusAnyInput = () => {
-  if (homeStore.searchbarFocusedTag) {
-    homeStore.setSearchBarFocusedTag(null)
-  }
-}
-
-let searchBar: HTMLInputElement | null = null
-export function focusSearchInput() {
-  if (isWebIOS) return
-  if (avoidNextFocus) {
-    avoidNextFocus = false
-    return
-  }
-  searchBar?.focus?.()
-}
-
-export function blurSearchInput() {
-  if (typeof document === 'undefined' || document.activeElement === searchBar) {
-    searchBar?.blur()
-  }
-}
-
-export const getSearchInput = () => {
-  return searchBar
-}
 
 export const AppSearchInput = memo(() => {
   const inputStore = useInputStoreSearch()
   const isSearchingCuisine = useHomeStoreSelector((x) => !!x.searchBarTags.length)
   const theme = useTheme()
-  const media = useMedia()
   const isEditingList = false // useRouterSelector((x) => x.curPage.name === 'list' && x.curPage.params.state === 'edit')
   const textInput$ = useRef<TextInput | null>(null)
   const setSearch = useDebounce(autocompleteSearchStore.setQuery, 100)
@@ -95,7 +65,7 @@ export const AppSearchInput = memo(() => {
   }
 
   useOnMount(() => {
-    searchBar = inputStore.node
+    setSearchBar(inputStore.node)
     setSearchInputValue(homeStore.currentSearchQuery)
     return series([
       () => fullyIdle({ checks: 3, max: 100 }),
@@ -180,7 +150,7 @@ export const AppSearchInput = memo(() => {
                 }}
                 onBlur={(e) => {
                   inputStore.setIsFocused(true)
-                  avoidNextFocus = false
+                  setAvoidNextAutocompleteShowOnFocus(false)
                   // dont because it hides during autocomplete click
                   // and event is before mousedown even
                   // if (isWeb && !getMedia().sm) {

@@ -8,7 +8,6 @@ import { ScrollView } from 'react-native-gesture-handler'
 
 export const AppFloatingTagMenuBar = memo(() => {
   const media = useMedia()
-  const themeName = useThemeName()
   const isShowingLocationAutocomplete = useStoreInstanceSelector(
     autocompletesStore,
     (x) => x.visible && x.target === 'location'

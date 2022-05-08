@@ -3,8 +3,8 @@ import { setDefaultLocation } from '../constants/initialHomeState'
 import { getNavigateItemForState } from '../helpers/getNavigateItemForState'
 import { router } from '../router'
 import { AppMapPosition } from '../types/mapTypes'
-import { appMapStore } from './appMapStore'
 import { autocompleteLocationStore } from './AutocompletesStore'
+import { appMapStore } from './appMapStore'
 import { setKnownLocationSlug } from './home/search/urlSerializers'
 import { homeStore } from './homeStore'
 import { inputStoreLocation } from './inputStore'
@@ -32,12 +32,15 @@ export async function setLocation(
     center,
     span,
   })
-  const navItem = getNavigateItemForState({
-    ...homeStore.lastHomeOrSearchState,
-    center,
-    span,
-    ...(region && { region }),
-  })
+  const navItem = getNavigateItemForState(
+    {
+      ...homeStore.lastHomeOrSearchState,
+      center,
+      span,
+      ...(region && { region }),
+    },
+    homeStore.currentState
+  )
   if (router.getShouldNavigate(navItem)) {
     router.navigate({
       ...navItem,

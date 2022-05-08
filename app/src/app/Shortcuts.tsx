@@ -1,8 +1,7 @@
-import { memo, useEffect } from 'react'
-
 import { router } from '../router'
-import { focusSearchInput, getSearchInput } from './AppSearchInput'
 import { homeStore } from './homeStore'
+import { focusSearchInput, getSearchInput } from './searchInputActions'
+import { memo, useEffect } from 'react'
 
 export const Shortcuts = memo(() => {
   useEffect(() => {

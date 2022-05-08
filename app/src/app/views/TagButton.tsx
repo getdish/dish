@@ -5,23 +5,22 @@ import { NavigableTag } from '../../types/tagTypes'
 import { useUserTagVotes } from '../hooks/useUserTagVotes'
 import { Image } from './Image'
 import { Link } from './Link'
-import { LinkButton } from './LinkButton'
 import { Pie } from './Pie'
-import { TagButtonVote, tagRatings } from './TagButtonVote'
+import { TagButtonTagProps } from './TagButtonTagProps'
+import { TagButtonVote } from './TagButtonVote'
+import { TagVotePopover } from './TagVotePopover'
 import { SearchTagButton } from './dish/SearchTagButton'
-import { Tag, TagQuery, TagType, graphql, restaurant, review } from '@dish/graph'
+import { TagQuery, TagType, restaurant, review } from '@dish/graph'
 import {
   AbsoluteYStack,
   Button,
   ButtonProps,
-  Card,
   Paragraph,
   Text,
   TextProps,
   Theme,
   ThemeName,
   TooltipSimple,
-  TooltipSimpleProps,
   XStack,
   YStack,
   getFontSize,
@@ -30,19 +29,7 @@ import {
 } from '@dish/ui'
 import '@tamagui/colors'
 import { X } from '@tamagui/feather-icons'
-import React, { memo, useRef } from 'react'
-
-export type TagButtonTagProps = {
-  type?: string
-  name?: string
-  slug?: string
-  icon?: Exclude<Tag['icon'], null>
-  rgb?: Exclude<Tag['rgb'], null>
-  score?: number
-  rank?: number
-  rating?: number
-  vote?: number
-}
+import React, { memo } from 'react'
 
 type TagLike = TagButtonTagProps | NavigableTag | TagQuery
 
@@ -400,70 +387,3 @@ const TagButtonInner = (props: TagButtonProps) => {
 
   return contents
 }
-
-export const TagVotePopover = graphql(
-  ({
-    slug,
-    restaurant,
-    children,
-    ...popoverProps
-  }: Omit<Partial<TooltipSimpleProps>, 'placement' | 'style'> & TagButtonProps) => {
-    const hovPopRef = useRef<any>()
-    const tagSlug = getTagSlug(slug)
-    const { vote, setVote } = useUserTagVotes({
-      restaurant,
-      activeTags: [tagSlug],
-    })
-
-    return (
-      <TooltipSimple
-        // @ts-expect-error
-        ref={hovPopRef as any}
-        placement="top"
-        {...popoverProps}
-        label={
-          <Theme name="dark">
-            <Card paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
-              <XStack>
-                {tagRatings.map((rating) => (
-                  <LinkButton
-                    promptLogin
-                    borderRadius={1000}
-                    width={38}
-                    height={38}
-                    paddingHorizontal={0}
-                    letterSpacing={-1}
-                    fontWeight="600"
-                    onPress={(e) => {
-                      e.stopPropagation()
-                      setVote(rating)
-                      // give time to see it update
-                      setTimeout(() => {
-                        hovPopRef.current?.close()
-                      }, 200)
-                    }}
-                    key={rating}
-                    {...(vote === rating
-                      ? {
-                          backgroundColor: '$blue3',
-                        }
-                      : {
-                          backgroundColor: 'transparent',
-                        })}
-                  >
-                    {rating}
-                  </LinkButton>
-                ))}
-              </XStack>
-            </Card>
-          </Theme>
-        }
-      >
-        {children}
-      </TooltipSimple>
-    )
-  },
-  {
-    suspense: false,
-  }
-)

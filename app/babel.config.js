@@ -36,7 +36,7 @@ module.exports = function (api) {
   console.log('⚙️ metro/babel', process.env.TAMAGUI_TARGET)
 
   return {
-    presets: ['module:metro-react-native-babel-preset'],
+    presets: [['@rnx-kit/babel-preset-metro-react-native', { disableImportExportTransform: true }]],
     plugins: [
       // for aliases
       // [
@@ -58,6 +58,7 @@ module.exports = function (api) {
         '@tamagui/babel-plugin',
         {
           exclude: /node_modules/,
+          disableExtraction: true,
           components: ['@dish/ui'],
           config: './src/tamagui.config.ts',
         },

@@ -9,12 +9,12 @@ import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
 import { AbsoluteYStack, useTheme, useThemeName } from '@dish/ui'
 // import { StatusBar } from 'expo-status-bar'
-import React, { Suspense } from 'react'
+import React, { Suspense, memo } from 'react'
 import { LogBox, StatusBar } from 'react-native'
 
 LogBox.ignoreAllLogs(true)
 
-export function App() {
+export const App = memo(() => {
   return (
     <>
       <RootPortalProvider />
@@ -40,7 +40,7 @@ export function App() {
       </AbsoluteYStack>
     </>
   )
-}
+})
 
 const AppStatusBar = () => {
   const themeName = useThemeName()

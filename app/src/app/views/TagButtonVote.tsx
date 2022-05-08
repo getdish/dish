@@ -1,5 +1,6 @@
 import { VoteNumber } from '../hooks/useUserTagVotes'
-import { TagButtonProps, TagVotePopover } from './TagButton'
+import { TagButtonProps } from './TagButton'
+import { TagVotePopover } from './TagVotePopover'
 import { graphql } from '@dish/graph'
 import { Text, YStack, useTheme } from '@dish/ui'
 import { Circle } from '@tamagui/feather-icons'

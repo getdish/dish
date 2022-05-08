@@ -3,10 +3,10 @@ import { getWindowHeight } from '../../helpers/getWindow'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { AppSearchBarInline } from '../AppSearchBarInline'
-import { blurSearchInput } from '../AppSearchInput'
 import { autocompletesStore } from '../AutocompletesStore'
 import { isTouchingSearchBar } from '../SearchInputNativeDragFix'
 import { drawerStore } from '../drawerStore'
+import { blurSearchInput } from '../searchInputActions'
 import { BottomSheetContainer } from '../views/BottomSheetContainer'
 import {
   ContentParentStore,
