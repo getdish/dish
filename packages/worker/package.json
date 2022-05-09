@@ -20,7 +20,7 @@
     "@dish/async": "*",
     "@dish/common": "*",
     "@dish/helpers": "*",
-    "@types/bull": "^3.15.1",
+    "@types/bull": "^3.15.8",
     "axios": "^0.19.2",
     "bull": "^3.22.8",
     "https-proxy-agent": "^5.0.0",

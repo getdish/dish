@@ -13,7 +13,7 @@
     "dev": "nodemon dist/index.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.1",
     "playwright": "^1.15.2"
   },
   "devDependencies": {

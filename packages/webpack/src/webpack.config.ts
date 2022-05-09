@@ -333,6 +333,7 @@ export function createWebpackConfig({
                   // },
                 ],
               },
+
               {
                 test: /\.mdx?$/,
                 use: [
@@ -348,6 +349,7 @@ export function createWebpackConfig({
                   },
                 ],
               },
+
               // fallback loader helps webpack-dev-server serve assets
               {
                 loader: require.resolve('file-loader'),

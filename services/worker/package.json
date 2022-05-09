@@ -16,17 +16,16 @@
     "worker": "node dist/worker.js"
   },
   "dependencies": {
-    "@bull-board/api": "^3.2.8",
-    "@bull-board/express": "^3.2.8",
+    "@bull-board/api": "^3.11.0",
+    "@bull-board/express": "^3.11.0",
     "@dish/common": "*",
     "@dish/crawlers": "*",
     "@dish/helpers": "*",
     "@dish/worker": "*",
-    "@types/bull": "^3.15.1",
+    "@types/bull": "^3.15.8",
     "bull": "^3.22.8",
-    "bull-board": "^2.1.2",
-    "express": "^4.17.1",
-    "nodemon": "^2.0.12",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.16",
     "react": "*"
   },
   "devDependencies": {

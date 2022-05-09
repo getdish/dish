@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
-    "express": "^4.17.1"
+    "express": "^4.18.1"
   },
   "devDependencies": {
     "@tamagui/build": "^1.0.0-beta.10",

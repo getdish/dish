@@ -140,7 +140,6 @@
     "webpack": "5.72.0",
     "lodash": "4.17.20",
     "resolve": "1.17.0",
-    "jsdom": "16.4.0",
     "tslib": "2.3.0",
     "esbuild-register": "3.3.2",
     "@types/puppeteer": "3.0.1",

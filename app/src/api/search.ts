@@ -34,14 +34,17 @@ export default route(async (req, res) => {
     : allTags.filter((x) => deliveryServices.includes(x)).join(',')
   const prices = allTags.filter((x) => x.startsWith('price-')).join(',')
 
-  const specialTags = ["delivery", 'open', 'price'] as const
-  const tagsWithoutSpecial = allTags.filter(at => !specialTags.some(st => at.startsWith(st))).join(',')
+  const specialTags = ['delivery', 'open', 'price'] as const
+  const tagsWithoutSpecial = allTags
+    .filter((at) => !specialTags.some((st) => at.startsWith(st)))
+    .join(',')
 
   const filterBy: FilterBy = Object.fromEntries(
-    specialTags.map(t => [t, sqlFilters.get(allTags.some(at => at.startsWith(t)))!] as const)
+    specialTags.map(
+      (t) => [t, sqlFilters.get(allTags.some((at) => at.startsWith(t)))!] as const
+    )
   ) as any
 
-  
   const query = getSearchQuery({
     deliveries,
     distance,
@@ -190,7 +193,7 @@ function getSearchQuery(p: {
       )
   
       AND (
-        ${p..filterBy.delivery} != 'true'
+        ${p.filterBy.delivery} != 'true'
         OR
         sources->>'ubereats' IS NOT NULL AND ${p.deliveries} LIKE '%ubereats%'
         OR
