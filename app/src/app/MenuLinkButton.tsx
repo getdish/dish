@@ -1,8 +1,7 @@
-import React from 'react'
-
 import { appMenuStore } from './AppMenuStore'
 import { LinkButton } from './views/LinkButton'
 import { LinkButtonProps } from './views/LinkProps'
+import React from 'react'
 
 export const MenuLinkButton = (props: LinkButtonProps) => {
   return (
@@ -12,7 +11,9 @@ export const MenuLinkButton = (props: LinkButtonProps) => {
       paddingHorizontal={16}
       borderRadius={0}
       backgroundColor="transparent"
-      justifyContent="flex-start"
+      textProps={{
+        textAlign: 'left',
+      }}
       onPressOut={appMenuStore.hide}
       {...props}
     />

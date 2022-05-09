@@ -5,7 +5,15 @@ import { pluralize } from '../../helpers/pluralize'
 import { TagButton } from '../views/TagButton'
 import { FontTheme } from '../views/TitleStyled'
 import { Card, CardProps } from './restaurant/Card'
-import { AbsoluteXStack, H2, Paragraph, XStack, YStack, getFontSizeToken, useTheme } from '@dish/ui'
+import {
+  AbsoluteXStack,
+  H2,
+  Paragraph,
+  XStack,
+  YStack,
+  getFontSizeToken,
+  useTheme,
+} from '@dish/ui'
 import React, { RefObject, useRef, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 

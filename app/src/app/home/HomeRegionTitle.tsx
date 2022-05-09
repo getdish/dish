@@ -1,11 +1,11 @@
-import { ThemeInverse } from '@dish/ui'
-import React, { memo } from 'react'
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { autocompletesStore } from '../AutocompletesStore'
 import { useLastHomeState } from '../homeStore'
 import { Link } from '../views/Link'
 import { SlantedTitle } from '../views/SlantedTitle'
+import { ThemeInverse } from '@dish/ui'
+import React, { memo } from 'react'
 
 export const HomeRegionTitle = memo(() => {
   const state = useLastHomeState('home', 'homeRegion') as HomeStateItemHome

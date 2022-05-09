@@ -7,7 +7,15 @@ import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
 import { slugify } from '@dish/graph'
-import { Card, Separator, Spacer, Toast, YStack, YStackProps, useDebounceEffect } from '@dish/ui'
+import {
+  Card,
+  Separator,
+  Spacer,
+  Toast,
+  YStack,
+  YStackProps,
+  useDebounceEffect,
+} from '@dish/ui'
 import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@tamagui/feather-icons'
 import { capitalize } from 'lodash'
 import React, { forwardRef, memo, useState } from 'react'
@@ -34,7 +42,7 @@ export const AppMenuContents = memo(
     )
 
     return (
-      <Card
+      <YStack
         maxHeight={Math.max(350, getWindowHeight() - searchBarHeight - 30)}
         minHeight={250}
         alignItems="stretch"
@@ -57,7 +65,7 @@ export const AppMenuContents = memo(
 
               {!isLoggedIn && (
                 <>
-                  <YStack padding={20}>
+                  <YStack py="$4">
                     <AuthForm autoFocus onDidLogin={hideUserMenu} />
                   </YStack>
                   <Separator />
@@ -176,7 +184,7 @@ export const AppMenuContents = memo(
             </ScrollView>
           )}
         </YStack>
-      </Card>
+      </YStack>
     )
   })
 )

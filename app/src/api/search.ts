@@ -339,7 +339,7 @@ function getSearchQuery(p: {
         WHERE name ILIKE '%' || regexp_replace(${p.tags}, '\W+', '%', 'g') || '%'
         AND
         (
-          (ST_DWithin(restaurant.location, ST_MakePoint(${p.lon}, ${p.at}), ${p.distance}) OR ${p.distance} = '0')
+          (ST_DWithin(restaurant.location, ST_MakePoint(${p.lon}, ${p.lat}), ${p.distance}) OR ${p.distance} = '0')
           AND
           (
             ST_Within(
@@ -364,7 +364,7 @@ function getSearchQuery(p: {
         SELECT restaurant_id FROM review
           WHERE
           (
-            (ST_DWithin(review.location, ST_MakePoint(${p.lon}, ${p.at}), ${p.distance}) OR ${p.distance} = '0')
+            (ST_DWithin(review.location, ST_MakePoint(${p.lon}, ${p.lat}), ${p.distance}) OR ${p.distance} = '0')
             AND
             (
               ST_Within(
@@ -384,7 +384,7 @@ function getSearchQuery(p: {
         SELECT restaurant_id FROM menu_item
           WHERE
           (
-            (ST_DWithin(menu_item.location, ST_MakePoint(${p.lon}, ${p.at}), ${p.distance}) OR ${p.distance} = '0')
+            (ST_DWithin(menu_item.location, ST_MakePoint(${p.lon}, ${p.lat}), ${p.distance}) OR ${p.distance} = '0')
             AND
             (
               ST_Within(

@@ -29,7 +29,15 @@ import { ListAddRestuarant } from './ListAddRestuarant'
 import { ListItem } from './ListItem'
 import { useListItems } from './useListItems'
 import { series } from '@dish/async'
-import { List, getUserName, graphql, listInsert, listUpdate, mutate, slugify } from '@dish/graph'
+import {
+  List,
+  getUserName,
+  graphql,
+  listInsert,
+  listUpdate,
+  mutate,
+  slugify,
+} from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import {
   Button,
@@ -128,7 +136,8 @@ const ListPageContent = memo(
   graphql(
     (props: Props) => {
       const user = useUserStore()
-      const isMyList = userStore.isAdmin || props.item.userSlug === slugify(user.user?.username)
+      const isMyList =
+        userStore.isAdmin || props.item.userSlug === slugify(user.user?.username)
       const [isSorting, setIsSorting] = useState(false)
       const [showAddModal, setShowAddModal] = useState(false)
       const draft = useRef<Partial<List>>({})
@@ -205,7 +214,9 @@ const ListPageContent = memo(
         id: props.item.id,
         hideRegions: true,
         isActive: props.isActive,
-        results: listItems.items.flatMap((x) => x?.restaurant || []).map(getRestaurantIdentifiers),
+        results: listItems.items
+          .flatMap((x) => x?.restaurant || [])
+          .map(getRestaurantIdentifiers),
         showRank: true,
         zoomOnHover: true,
         fitToResults: true,
@@ -450,7 +461,7 @@ const ListPageContent = memo(
                       <YStack minHeight={75} flex={1} />
                       <YStack display={isWeb ? 'block' : 'flex'}>
                         <H1
-                          color="$color3"
+                          color="$colorPress"
                           size="$11"
                           {...(isEditing && {
                             width: '100%',

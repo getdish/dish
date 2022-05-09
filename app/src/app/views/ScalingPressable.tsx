@@ -1,4 +1,5 @@
 import { YStack, YStackProps } from '@dish/ui'
+import React from 'react'
 
 export function ScalingPressable(props: YStackProps) {
   return (

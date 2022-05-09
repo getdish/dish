@@ -1,10 +1,3 @@
-import { series, sleep } from '@dish/async'
-import { order_by, query, resolved } from '@dish/graph'
-import { Theme, Toast, useDebounceValue, useGet } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
-import { groupBy } from 'lodash'
-import React, { Suspense, memo, useCallback, useEffect, useMemo } from 'react'
-
 import { tagDefaultAutocomplete } from '../constants/localTags'
 import { isTouchDevice } from '../constants/platforms'
 import { AutocompleteItemFull, createAutocomplete } from '../helpers/createAutocomplete'
@@ -12,12 +5,18 @@ import { getFuzzyMatchQuery } from '../helpers/getFuzzyMatchQuery'
 import { searchRestaurants } from '../helpers/searchRestaurants'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { LngLat } from '../types/homeTypes'
-import { appMapStore } from './appMapStore'
 import { AutocompleteFrame } from './AutocompleteFrame'
 import { AutocompleteResults } from './AutocompleteResults'
 import { AutocompleteStore, autocompleteSearchStore } from './AutocompletesStore'
+import { appMapStore } from './appMapStore'
 import { filterAutocompletes } from './filterAutocompletes'
 import { useHomeStore } from './homeStore'
+import { series, sleep } from '@dish/async'
+import { order_by, query, resolved } from '@dish/graph'
+import { Theme, Toast, useDebounceValue, useGet } from '@dish/ui'
+import { useStoreInstance } from '@dish/use-store'
+import { groupBy } from 'lodash'
+import React, { Suspense, memo, useCallback, useEffect, useMemo } from 'react'
 
 export const AppAutocompleteSearch = memo(() => {
   return (
@@ -74,7 +73,11 @@ const AutocompleteSearchInner = memo(() => {
 
   return (
     <>
-      <AutocompleteResults target="search" prefixResults={prefixResults} onSelect={handleSelect} />
+      <AutocompleteResults
+        target="search"
+        prefixResults={prefixResults}
+        onSelect={handleSelect}
+      />
     </>
   )
 })
@@ -163,7 +166,9 @@ function useSearchQueryEffect(
       const sqlower = query.toLowerCase()
       const partialCountryMatches = results
         .map((item, index) => {
-          return item.type === 'country' && item.name.toLowerCase().startsWith(sqlower) ? index : -1
+          return item.type === 'country' && item.name.toLowerCase().startsWith(sqlower)
+            ? index
+            : -1
         })
         .filter((x) => x > 0)
       for (const index of partialCountryMatches) {
