@@ -7,7 +7,6 @@ import '@tamagui/font-inter/css/500.css'
 import '@tamagui/font-inter/css/700.css'
 import React from 'react'
 import { hydrate, render } from 'react-dom'
-import { createRoot } from 'react-dom/client'
 import { AppRegistry } from 'react-native'
 
 if (process.env.NODE_ENV === 'development') {
@@ -32,8 +31,8 @@ async function main() {
     })
     return
   }
-  createRoot(ROOT).render(<Root />)
-  // render(<Root />, ROOT)
+  // createRoot(ROOT).render(<Root />)
+  render(<Root />, ROOT)
 }
 
 // SSR exports

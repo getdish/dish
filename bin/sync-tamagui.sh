@@ -8,13 +8,18 @@ TO="$HOME/dish/node_modules"
 
 function sync() {
   echo "syncing...."
-  # copy in *all* node modules to ensure sub-deps shared (but prefer not to overwrite)
-  rsync --ignore-existing -al "$FROM/node_modules/" "$TO"
+  
+  # copy in *all* non-tamagui node modules to ensure sub-deps shared (but prefer not to overwrite)
+  rsync --ignore-existing -aq --exclude="*tamagui*" "$FROM/node_modules/" "$TO"
 
   # then copy in all tamagui deps but overwrite
-  rsync -a --delete -l "$FROM/packages/tamagui/" "$TO/tamagui" &
-  rsync -a --delete -l "$FROM/packages/loader/" "$TO/tamagui-loader" &
-  rsync -al \
+
+  # special case (non @tamagui/*)
+  rsync --dry-run -a --delete "$FROM/packages/tamagui/" "$TO/tamagui" &
+  rsync -a --delete "$FROM/packages/loader/" "$TO/tamagui-loader" &
+
+  # all @tamagui/*
+  rsync -a \
     --exclude="$FROM/packages/loader/" \
     --exclude="$FROM/packages/tamagui/" \
      "$FROM/packages/" "$TO/@tamagui" &

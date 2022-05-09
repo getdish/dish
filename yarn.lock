@@ -1088,7 +1088,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-object-assign@npm:^7.0.0, @babel/plugin-transform-object-assign@npm:^7.10.4":
+"@babel/plugin-transform-object-assign@npm:^7.0.0, @babel/plugin-transform-object-assign@npm:^7.16.7":
   version: 7.16.7
   resolution: "@babel/plugin-transform-object-assign@npm:7.16.7"
   dependencies:
@@ -19272,13 +19272,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mockdate@npm:^3.0.2":
-  version: 3.0.5
-  resolution: "mockdate@npm:3.0.5"
-  checksum: 72b66786d9e072379693f80bf9fb82eb5153c9741030a4294184e3ccaf952d0713fae8966f77780580cf902f8ec7ccc95577b0ad47980d255e2ffb71fc7ca49c
-  languageName: node
-  linkType: hard
-
 "moment-duration-format-commonjs@npm:^1.0.0":
   version: 1.0.1
   resolution: "moment-duration-format-commonjs@npm:1.0.1"
@@ -22403,22 +22396,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:2.4.0":
-  version: 2.4.0
-  resolution: "react-native-reanimated@npm:2.4.0"
+"react-native-reanimated@npm:2.8.0":
+  version: 2.8.0
+  resolution: "react-native-reanimated@npm:2.8.0"
   dependencies:
-    "@babel/plugin-transform-object-assign": ^7.10.4
+    "@babel/plugin-transform-object-assign": ^7.16.7
+    "@babel/preset-typescript": ^7.16.7
     "@types/invariant": ^2.2.35
     invariant: ^2.2.4
     lodash.isequal: ^4.5.0
-    mockdate: ^3.0.2
-    react-native-screens: ^3.4.0
+    setimmediate: ^1.0.5
     string-hash-64: ^1.0.3
   peerDependencies:
+    "@babel/core": ^7.0.0-0
     react: "*"
     react-native: "*"
-    react-native-gesture-handler: "*"
-  checksum: 17769b5324e131177a4cec4306f16af68a954f7d4114f007b5fc54db0c14e229cebef10615228efc0e1cf181ac17c2eac7f1039b9b9a5b9e8905a6c7c669bf98
+  checksum: 6409a941a177d04d9091953a05f493d4924eb0d3e2a4b24cf83bb20460b985f89dd879f0ab7337655dba6a3183ca50cc2ad2b3ea1c505cdc1eed6c5ee1296b59
   languageName: node
   linkType: hard
 
@@ -22432,7 +22425,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^3.13.1, react-native-screens@npm:^3.4.0":
+"react-native-screens@npm:^3.13.1":
   version: 3.13.1
   resolution: "react-native-screens@npm:3.13.1"
   dependencies:

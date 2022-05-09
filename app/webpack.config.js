@@ -247,6 +247,7 @@ if (process.env.TAMAGUI_TARGET === 'native') {
           'react-native': 'react-native-web',
           'react-native-web$': require.resolve('react-native-web'),
           'react-native-safe-area-context': require.resolve('react-native-safe-area-context'),
+          'react-native-reanimated': require.resolve('react-native-reanimated'),
           gqty: path.join(require.resolve('gqty'), '..'),
           recyclerlistview: 'recyclerlistview/web',
           // bugfix until merged
