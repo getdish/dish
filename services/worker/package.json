@@ -29,7 +29,7 @@
     "react": "*"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-beta.10",
+    "@tamagui/build": "^1.0.0-beta.15",
     "typescript": "*"
   }
 }

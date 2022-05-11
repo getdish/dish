@@ -15,7 +15,7 @@ function sync() {
   # then copy in all tamagui deps but overwrite
 
   # special case (non @tamagui/*)
-  rsync --dry-run -a --delete "$FROM/packages/tamagui/" "$TO/tamagui" &
+  rsync -a --delete "$FROM/packages/tamagui/" "$TO/tamagui" &
   rsync -a --delete "$FROM/packages/loader/" "$TO/tamagui-loader" &
 
   # all @tamagui/*

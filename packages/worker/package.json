@@ -21,7 +21,7 @@
     "@dish/common": "*",
     "@dish/helpers": "*",
     "@types/bull": "^3.15.8",
-    "axios": "^0.19.2",
+    "axios": "^0.27.2",
     "bull": "^3.22.8",
     "https-proxy-agent": "^5.0.0",
     "lodash": "*",
@@ -30,7 +30,7 @@
     "redis": "^3.1.2"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.0-beta.10",
+    "@tamagui/build": "^1.0.0-beta.15",
     "ava": "^3.15.0"
   }
 }
