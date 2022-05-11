@@ -20,7 +20,7 @@ export default jsonRoute(async (req, res) => {
   const userQuery = body['query'] ?? ''
   const limit = parseFloat(body['limit'] ?? '10')
   const mainTag = body['main_tag'] ?? ''
-  const distance = parseFloat(body['distance'] ?? 0)
+  const distance = parseFloat(body['distance'] ?? 1)
   const lon = body['lon']
   const lat = body['lat']
   const bbParams = [lon, lat, body['span_lon'], body['span_lat']]
@@ -173,8 +173,14 @@ function getSearchQuery(p: {
       ) AS rishes_votes_ratio_rank
   
     FROM restaurant
+    
     LEFT JOIN opening_hours ON opening_hours.restaurant_id = restaurant.id
-    WHERE (
+    
+    WHERE 
+          
+    ST_GeometryType(location) = 'ST_Point'
+    
+    AND (
       (ST_DWithin(location, ST_MakePoint(${p.lon}, ${p.lat}), ${p.distance}) OR ${p.distance} = '0')
       AND
       (
@@ -185,6 +191,7 @@ function getSearchQuery(p: {
         OR ${p.ignoreBoundingBox} = 'true'
       )
     )
+    
     AND (
   
       (
