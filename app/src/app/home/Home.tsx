@@ -14,23 +14,14 @@ import { autocompletesStore } from '../AutocompletesStore'
 import { DrawerPortalProvider } from '../Portal'
 import { drawerStore } from '../drawerStore'
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
-import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { HomeDrawerSmallView } from './HomeDrawerSmallView'
 import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
-import {
-  Circle,
-  LinearGradient,
-  XStack,
-  YStack,
-  supportsTouchWeb,
-  useMedia,
-  useTheme,
-} from '@dish/ui'
+import { LinearGradient, XStack, YStack, supportsTouchWeb, useMedia, useTheme } from '@dish/ui'
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
-import { Keyboard, StyleSheet } from 'react-native'
+import { Keyboard } from 'react-native'
 
 export const Home = memo(function Home() {
   // helper that warns on root level unmounts (uncaught suspense)

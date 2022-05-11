@@ -57,3 +57,7 @@ export const redisDeletePattern = async (pattern: string) => {
   }
   await pipeline.exec()
 }
+
+export function dispose() {
+  redisClient.removeAllListeners()
+}

@@ -56,13 +56,13 @@ export function App() {
 function AppHomeContent(props: { children?: any }) {
   const isMobileWeb = useIsMobilePhone()
 
-  if (isMobileWeb) {
-    return (
-      <>
-        <AppHomeMobileWeb />
-      </>
-    )
-  }
+  // if (isMobileWeb) {
+  //   return (
+  //     <>
+  //       <AppHomeMobileWeb />
+  //     </>
+  //   )
+  // }
 
   return (
     <>

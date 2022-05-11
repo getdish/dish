@@ -63,7 +63,11 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
           }
           const reqstr = Object.keys(req.headers)
             .map((k) => {
-              const val = secret[k] ? `${k}:🔒 ` : filtered[k] ? '-' : `${k}:${req.headers[k]} `
+              const val = secret[k]
+                ? `${k}:🔒 `
+                : filtered[k]
+                ? '-'
+                : `${k}:${req.headers[k]} `
               return `${val}`
             })
             .filter(Boolean)
@@ -88,12 +92,13 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
   const run = async (path?: string) => {
     dispose?.()
     dispose = null
+
     const files: File[] = (await getFiles(apiDir))
       .map((fullPath) => {
         return relative(apiDir, fullPath)
       })
-      .filter((x) => {
-        return (basename(x)[0] !== '_' && x.endsWith('.ts')) || x.endsWith('.tsx')
+      .filter((file) => {
+        return file.endsWith('.ts') || file.endsWith('.tsx')
       })
       .map((file) => {
         const name = file.replace(/\.tsx?$/, '')
@@ -102,20 +107,10 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
           route: `/${name}`,
           file,
           fileIn: join(apiDir, file),
+          isPrivate: basename(file)[0] === '_',
         }
       })
-    if (path) {
-      const relativePath = files.find((x) => path === x.fileIn)?.fileIn
-      // if direct hit, fast delete, if not delete all
-      if (relativePath) {
-        // TODO import tree...
-        delete require.cache[relativePath]
-      } else {
-        for (const key in require.cache) {
-          delete require.cache[key]
-        }
-      }
-    }
+
     await restart(files)
   }
 
@@ -134,10 +129,22 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
       throw new Error(`Specificed API directory ${apiDir} doesn't exist`)
     }
 
-    console.log(' [api] loading', files.length, 'routes')
+    console.log(' [api] loading', files.filter((x) => !x.isPrivate).length, 'routes')
+
+    disposes.forEach((x) => x())
+    disposes.clear()
+
+    // clear cache
+    for (const key in require.cache) {
+      delete require.cache[key]
+    }
 
     // first, register the route so we can pause responses until ready
-    for (const { route, name } of files) {
+    for (const { route, name, isPrivate } of files) {
+      if (isPrivate) {
+        continue
+      }
+
       if (!handlerStatus[name]) {
         console.log(` [api]   · ${url}${route}`)
         handlerStatus[name] = 'loading'
@@ -193,13 +200,21 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
       }
     }
 
-    disposes.forEach((x) => x())
-    disposes.clear()
-
     // then, load the routes
-    for (const { name, file, fileIn } of files) {
+    for (const { name, file, fileIn, isPrivate } of files) {
       try {
-        const endpoint = require(fileIn).default
+        const fileExports = require(fileIn)
+
+        if (typeof fileExports.dispose === 'function') {
+          disposes.add(fileExports.dispose)
+        }
+
+        if (isPrivate) {
+          continue
+        }
+
+        const endpoint = fileExports.default
+
         if (!endpoint) {
           console.warn(` [api] ⚠️  no default export, ignoring ${file}`)
           continue
@@ -211,6 +226,7 @@ export async function createApiServer(app: any, config: ServerConfigNormal) {
         delete handlers[name]
         handlers[name] = endpoint
         handlerStatus[name] = 'ready'
+        // for each file
         disposes.add(() => {
           handlerStatus[name] = 'loading'
           delete handlers[name]

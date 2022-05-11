@@ -22,7 +22,12 @@ import {
 import { NavigableTag } from '../types/tagTypes'
 import { appMapStore } from './appMapStore'
 import { HistoryItem } from '@dish/router'
-import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import {
+  Store,
+  createStore,
+  useStoreInstance,
+  useStoreInstanceSelector,
+} from '@dish/use-store'
 import _, { clamp, findLast } from 'lodash'
 import { Keyboard } from 'react-native'
 
@@ -172,7 +177,9 @@ class HomeStore extends Store {
 
   get upRoute() {
     const cur = this.currentState
-    return this.getUpRouteForType(findLast(this.states, (x) => x.type !== cur.type)?.type ?? 'home')
+    return this.getUpRouteForType(
+      findLast(this.states, (x) => x.type !== cur.type)?.type ?? 'home'
+    )
   }
 
   getIsUpBack(type: HomeStateItem['type']) {
@@ -180,7 +187,9 @@ class HomeStore extends Store {
     const lastRouterName = router.prevHistory?.name
     const lastRouterType = normalizeItemName[lastRouterName] ?? lastRouterName
     return (
-      this.previousState?.type === type && lastRouterType === type && router.curPage?.type !== 'pop'
+      this.previousState?.type === type &&
+      lastRouterType === type &&
+      router.curPage?.type !== 'pop'
     )
   }
 
@@ -226,7 +235,7 @@ class HomeStore extends Store {
     if (!val.id) {
       throw new Error(`Must have id`)
     }
-    let state = this.allStates[val.id] ?? null
+    const state = this.allStates[val.id] ?? null
     // disable: should be explicit
     // default to replace the current state if type doesn't change
     // if (!state) {
@@ -419,7 +428,8 @@ class HomeStore extends Store {
         const forwardStates = this.statesIncludingFuture.slice(this.stateIndex + 1)
         console.log('forwardStates', forwardStates)
         // fallback to all states
-        nextState = forwardStates.find((x) => x.id === item.id) || this.allStates[item.id] || null
+        nextState =
+          forwardStates.find((x) => x.id === item.id) || this.allStates[item.id] || null
       }
 
       if (!nextState) {

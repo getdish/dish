@@ -1,4 +1,5 @@
 import Webpack, { Configuration } from 'webpack'
+
 // import WebpackPwaManifest from 'webpack-pwa-manifest'
 
 export type ServerConfig = {
@@ -56,4 +57,5 @@ export type File = {
   route: string
   file: string
   fileIn: string
+  isPrivate: boolean
 }

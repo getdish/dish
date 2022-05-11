@@ -1,7 +1,10 @@
 import { sleep } from '@dish/async'
 import { sentryException } from '@dish/common'
 import { DISH_DEBUG } from '@dish/graph'
+import createDebug from 'debug'
 import { Pool, PoolConfig, QueryResult } from 'pg'
+
+const debug = createDebug('Database')
 
 export class Database {
   pool: Pool | null = null
@@ -52,8 +55,8 @@ export class Database {
     if (!client) {
       throw new Error('no client')
     }
+    const timeout = sleep(process.env.NODE_ENV === 'test' ? 15000 : 80000)
     try {
-      const timeout = sleep(process.env.NODE_ENV === 'test' ? 15000 : 80000)
       const res = await Promise.race([
         client.query(query, values),
         timeout.then(() => {
@@ -67,8 +70,8 @@ export class Database {
       timeout.cancel()
       result = res as any
     } catch (e: any) {
-      console.error('Errored query: ' + query)
-      console.error(e.message)
+      timeout.cancel()
+      debug(`query error:\n${e.message} ${e.stack}\nquery: ${query}`)
       if (query.includes('BEGIN;') || query.includes('TRANSACTION;')) {
         await client.query('ROLLBACK')
       }

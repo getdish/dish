@@ -38,17 +38,22 @@ export async function search({
   limit = 50,
   main_tag = '',
 }: RestaurantSearchArgs): Promise<SearchResults> {
-  const params = [
-    'query=' + query,
-    'lon=' + lng,
-    'lat=' + lat,
-    'span_lon=' + span.lng * 2,
-    'span_lat=' + span.lat * 2,
-    `limit=${limit}`,
-    'tags=' + tags.join(','),
-    'main_tag=' + main_tag,
-  ]
-  const url = SEARCH_DOMAIN + '/search?' + params.join('&')
-  const result = await fetch(url).then((res) => res.json())
-  return result
+  const url = SEARCH_DOMAIN + '/search'
+  const result = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: query,
+      lon: lng,
+      lat,
+      span_lon: span.lng * 2,
+      span_lat: span.lat * 2,
+      limit,
+      tags: tags.join(','),
+      main_tag: main_tag,
+    }),
+  })
+  return await result.json()
 }

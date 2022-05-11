@@ -1,4 +1,4 @@
-import { route } from '@dish/api'
+import { jsonRoute, route } from '@dish/api'
 import { main_db } from '@dish/helpers-node'
 import sql from 'sql-template-tag'
 
@@ -14,19 +14,20 @@ const sqlFilters: Map<boolean, SQLFilterBool> = new Map()
 sqlFilters.set(true, 'true')
 sqlFilters.set(false, 'false')
 
-export default route(async (req, res) => {
+export default jsonRoute(async (req, res) => {
   const start = Date.now()
-  const params = req.params
-  const limit = parseFloat(params['limit'] ?? '10')
-  const mainTag = params['main_tag'] ?? ''
-  const distance = parseFloat(params['distance'] ?? 0)
-  const lon = params['lon']
-  const lat = params['lat']
-  const bbParams = [lon, lat, params['span_lon'], params['span_lat']]
+  const { body } = req
+  const userQuery = body['query'] ?? ''
+  const limit = parseFloat(body['limit'] ?? '10')
+  const mainTag = body['main_tag'] ?? ''
+  const distance = parseFloat(body['distance'] ?? 0)
+  const lon = body['lon']
+  const lat = body['lat']
+  const bbParams = [lon, lat, body['span_lon'], body['span_lat']]
   const ignoreBoundingBox = sqlFilters.get(bbParams.some((x) => !x))!
   const [x, y, xd, yd] = bbParams.map((x) => parseFloat(x))
   const [x1, y1, x2, y2] = [x - xd / 2, y - yd / 2, x + xd / 2, y + yd / 2]
-  const allTags = (params['tags'] ?? '').split(',').map((t) => t.trim().toLowerCase())
+  const allTags = (body['tags'] ?? '').split(',').map((t) => t.trim().toLowerCase())
 
   const deliveryServices = ['ubereats', 'grubhub', 'doordash']
   const deliveries = allTags.some((x) => x === 'delivery')
@@ -45,28 +46,36 @@ export default route(async (req, res) => {
     )
   ) as any
 
-  const query = getSearchQuery({
-    deliveries,
-    distance,
-    filterBy,
-    ignoreBoundingBox,
-    lon,
-    lat,
-    limit,
-    mainTag,
-    prices,
-    tags: tagsWithoutSpecial,
-    x1,
-    x2,
-    y1,
-    y2,
-  })
-  const { rows } = await main_db.query(query.text, query.values)
-  const data = rows[0]?.json_build_object
-  res.json(data)
+  try {
+    const query = getSearchQuery({
+      query: userQuery,
+      deliveries,
+      distance,
+      filterBy,
+      ignoreBoundingBox,
+      lon,
+      lat,
+      limit,
+      mainTag,
+      prices,
+      tags: tagsWithoutSpecial,
+      x1,
+      x2,
+      y1,
+      y2,
+    })
+
+    const { rows } = await main_db.query(query.text, query.values)
+    const data = rows[0]?.json_build_object
+    res.json(data)
+  } catch (err) {
+    console.log('err', err)
+    res.json({ error: err.message })
+  }
 })
 
 function getSearchQuery(p: {
+  query: string
   lon: string
   lat: string
   distance: number
@@ -336,7 +345,7 @@ function getSearchQuery(p: {
   title_matches AS (
     SELECT * FROM (
       SELECT id, slug FROM restaurant
-        WHERE name ILIKE '%' || regexp_replace(${p.tags}, '\W+', '%', 'g') || '%'
+        WHERE name ILIKE '%' || regexp_replace(${p.query}, '\W+', '%', 'g') || '%'
         AND
         (
           (ST_DWithin(restaurant.location, ST_MakePoint(${p.lon}, ${p.lat}), ${p.distance}) OR ${p.distance} = '0')
@@ -352,7 +361,7 @@ function getSearchQuery(p: {
       ORDER BY score DESC NULLS LAST
       LIMIT ${p.limit}
     ) stitlem
-    WHERE ${p.tags} != ''
+    WHERE ${p.query} != ''
   ),
   
   text_matches AS (
@@ -374,7 +383,7 @@ function getSearchQuery(p: {
               OR ${p.ignoreBoundingBox} = 'true'
             )
           )
-          AND review.text ILIKE '%' || ${p.tags} || '%'
+          AND review.text ILIKE '%' || ${p.query} || '%'
         GROUP BY review.restaurant_id
         ORDER BY count(review.restaurant_id)
       )
@@ -395,9 +404,9 @@ function getSearchQuery(p: {
             )
           )
           AND (
-            menu_item.description ILIKE '%' || ${p.tags} || '%'
+            menu_item.description ILIKE '%' || ${p.query} || '%'
             OR
-            menu_item.name ILIKE '%' || ${p.tags} || '%'
+            menu_item.name ILIKE '%' || ${p.query} || '%'
           )
         GROUP BY menu_item.restaurant_id
         ORDER BY count(menu_item.restaurant_id)
@@ -405,18 +414,18 @@ function getSearchQuery(p: {
   
       LIMIT ${p.limit}
     ) stextm
-    WHERE ${p.tags} != ''
+    WHERE ${p.query} != ''
   ),
   
   tag_matches AS (
     SELECT tag.id AS tag_id, tag.name AS name, parent.name AS cuisine FROM tag
       JOIN tag parent ON tag."parentId" = parent.id
-      WHERE ${p.tags} != ''
+      WHERE ${p.query} != ''
       AND
       (
-        LOWER(${p.tags}) = LOWER(tag.name)
+        LOWER(${p.query}) = LOWER(tag.name)
         OR
-        LOWER(${p.tags}) = ANY(
+        LOWER(${p.query}) = ANY(
           SELECT LOWER(
             jsonb_array_elements_text(
               tag.alternates
@@ -541,12 +550,6 @@ function getSearchQuery(p: {
     ),
     'meta', (
       SELECT json_build_object(
-        'query', ${p.tags},
-        'tags', ${p.tags},
-        'main_tag', ${p.mainTag},
-        'deliveries', ${p.deliveries},
-        'prices', ${p.prices},
-        'limit', ${p.limit},
         'scores',
           json_build_object(
             'highest_score', ( SELECT MAX(score) FROM main ),
