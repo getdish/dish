@@ -1775,7 +1775,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/api@workspace:packages/api"
   dependencies:
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     "@types/express": ^4.17.13
     body-parser: ^1.19.0
     express: ^4.18.1
@@ -1820,14 +1820,14 @@ __metadata:
     "@sentry/browser": ^6.12.0
     "@sentry/react-native": ^2.6.2
     "@sentry/tracing": ^6.12.0
-    "@tamagui/animations-reanimated": ^1.0.0-beta.15
-    "@tamagui/babel-plugin": ^1.0.0-beta.15
-    "@tamagui/colors": ^1.0.0-beta.15
-    "@tamagui/core": ^1.0.0-beta.15
-    "@tamagui/feather-icons": ^1.0.0-beta.15
-    "@tamagui/font-inter": ^1.0.0-beta.15
-    "@tamagui/shorthands": ^1.0.0-beta.15
-    "@tamagui/theme-base": ^1.0.0-beta.15
+    "@tamagui/animations-reanimated": ^1.0.1-beta.21
+    "@tamagui/babel-plugin": ^1.0.1-beta.21
+    "@tamagui/colors": ^1.0.1-beta.21
+    "@tamagui/core": ^1.0.1-beta.21
+    "@tamagui/feather-icons": ^1.0.1-beta.21
+    "@tamagui/font-inter": ^1.0.1-beta.21
+    "@tamagui/shorthands": ^1.0.1-beta.21
+    "@tamagui/theme-base": ^1.0.1-beta.21
     "@turf/bbox": ^6.3.0
     "@turf/center": ^6.3.0
     "@turf/helpers": 6.3.0
@@ -1916,7 +1916,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/async@workspace:packages/async"
   dependencies:
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     "@types/requestidlecallback": 0.3.1
   languageName: unknown
   linkType: soft
@@ -1965,7 +1965,7 @@ __metadata:
   dependencies:
     "@dish/graph": "*"
     "@sentry/node": ^6.12.0
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     find-up: ^4.1.0
   languageName: unknown
   linkType: soft
@@ -1980,7 +1980,7 @@ __metadata:
     "@dish/helpers": "*"
     "@dish/helpers-node": "*"
     "@dish/worker": "*"
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     "@types/cheerio": ^0.22.24
     "@types/pg": ^7.14.10
     "@types/puppeteer": ^5.4.3
@@ -2019,7 +2019,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/fast-compare@workspace:packages/fast-compare"
   dependencies:
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
   languageName: unknown
   linkType: soft
 
@@ -2045,7 +2045,7 @@ __metadata:
     "@gqty/cli": ^3.1.0
     "@gqty/logger": ^2.0.2
     "@gqty/react": ^2.1.0
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     "@types/node": ^16.11.10
     ava: ^3.15.0
     esbuild-register: ^2.6.0
@@ -2076,7 +2076,7 @@ __metadata:
     "@dish/async": "*"
     "@dish/common": "*"
     "@dish/graph": "*"
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     bcryptjs: ^2.4.3
     html-entities: ^2.1.1
     jsonwebtoken: ^8.5.1
@@ -2090,7 +2090,7 @@ __metadata:
   resolution: "@dish/helpers@workspace:packages/helpers"
   dependencies:
     "@dish/fast-compare": "*"
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     lodash: "*"
     node-localstorage: ^2.2.1
     react: "*"
@@ -2102,7 +2102,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/puppet-proxy@workspace:services/puppet-proxy"
   dependencies:
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     express: ^4.18.1
     playwright: ^1.15.2
     typescript: "*"
@@ -2113,7 +2113,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/react-test-env@workspace:packages/react-test-env"
   dependencies:
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     "@testing-library/react": 13.0.0-alpha.4
     "@types/react": "*"
     "@types/react-dom": "*"
@@ -2134,7 +2134,7 @@ __metadata:
   resolution: "@dish/router@workspace:packages/router"
   dependencies:
     "@dish/use-store": "*"
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     history: ^5.0.0
     jest: "*"
     react: "*"
@@ -2154,7 +2154,7 @@ __metadata:
     "@oclif/config": 1.17.0
     "@oclif/errors": ^1.3.4
     "@oclif/plugin-help": ^3.2.2
-    "@tamagui/static": ^1.0.0-beta.15
+    "@tamagui/static": ^1.0.1-beta.21
     "@types/express": ^4.17.13
     "@types/jsdom": ^16.2.14
     body-parser: ^1.19.0
@@ -2164,7 +2164,7 @@ __metadata:
     cors: ^2.8.5
     devcert: ^1.1.3
     enquirer: ^2.3.6
-    esbuild: ^0.14.1
+    esbuild: ^0.14.38
     esbuild-register: ^2.6.0
     express: ^4.18.1
     express-http-proxy: ^1.6.2
@@ -2192,11 +2192,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/ui@workspace:packages/ui"
   dependencies:
-    "@tamagui/build": ^1.0.0-beta.15
-    "@tamagui/use-debounce": ^1.0.0-beta.15
-    "@tamagui/use-force-update": ^1.0.0-beta.15
-    "@tamagui/use-window-size": ^1.0.0-beta.15
-    tamagui: ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
+    "@tamagui/use-debounce": ^1.0.1-beta.21
+    "@tamagui/use-force-update": ^1.0.1-beta.21
+    "@tamagui/use-window-size": ^1.0.1-beta.21
+    tamagui: ^1.0.1-beta.21
   languageName: unknown
   linkType: soft
 
@@ -2204,7 +2204,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dish/use-store@workspace:packages/use-store"
   dependencies:
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     "@types/jest": "*"
     jest: "*"
     lodash: "*"
@@ -2224,9 +2224,9 @@ __metadata:
     "@loadable/webpack-plugin": ^5.15.2
     "@mdx-js/loader": ^2.1.1
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.5
-    "@tamagui/babel-plugin": ^1.0.0-beta.15
-    "@tamagui/build": ^1.0.0-beta.15
-    "@tamagui/static": ^1.0.0-beta.15
+    "@tamagui/babel-plugin": ^1.0.1-beta.21
+    "@tamagui/build": ^1.0.1-beta.21
+    "@tamagui/static": ^1.0.1-beta.21
     "@types/node": ^16.11.10
     "@vue/preload-webpack-plugin": ^2.0.0
     "@welldone-software/why-did-you-render": ^7.0.1
@@ -2243,7 +2243,7 @@ __metadata:
     react: "*"
     react-refresh: ^0.13.0
     speed-measure-webpack-plugin: ^1.5.0
-    tamagui-loader: ^1.0.0-beta.15
+    tamagui-loader: ^1.0.1-beta.21
     url-loader: ^4.1.1
     webpack: "*"
     webpack-bundle-analyzer: ^4.5.0
@@ -2267,7 +2267,7 @@ __metadata:
     "@dish/crawlers": "*"
     "@dish/helpers": "*"
     "@dish/worker": "*"
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     "@types/bull": ^3.15.8
     bull: ^3.22.8
     express: ^4.18.1
@@ -2284,7 +2284,7 @@ __metadata:
     "@dish/async": "*"
     "@dish/common": "*"
     "@dish/helpers": "*"
-    "@tamagui/build": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
     "@types/bull": ^3.15.8
     ava: ^3.15.0
     axios: ^0.27.2
@@ -5413,42 +5413,39 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/animate-presence@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/animate-presence@npm:1.0.0-beta.15"
+"@tamagui/animate-presence@portal:/Users/n8/tamagui/packages/animate-presence::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/animate-presence@portal:/Users/n8/tamagui/packages/animate-presence::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/core": ^1.0.0-beta.15
-  checksum: 1f563dade4d7624628658c1a87d1384e58a77629bd48b6616ebca546428502f1295f7cf5ee35cba79a543d5174998a76c4e05967eef939c3626a121d1245abb0
+    "@tamagui/core": ^1.0.1-beta.21
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/animations-reanimated@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/animations-reanimated@npm:1.0.0-beta.15"
+"@tamagui/animations-reanimated@portal:/Users/n8/tamagui/packages/animations-reanimated::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/animations-reanimated@portal:/Users/n8/tamagui/packages/animations-reanimated::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/animate-presence": ^1.0.0-beta.15
-    "@tamagui/core": ^1.0.0-beta.15
+    "@tamagui/animate-presence": ^1.0.1-beta.21
+    "@tamagui/core": ^1.0.1-beta.21
     react-native-reanimated: ~2.8.0
-  checksum: 908296c7efcde1998891739a1e1148f59fd12a1f5a7865ad178b6e6838644ad6fd7ad7ea74ec3a9b5e2eb3d586116eeec85e543fdf2f57def589147cc746af46
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/babel-plugin@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/babel-plugin@npm:1.0.0-beta.15"
+"@tamagui/babel-plugin@portal:/Users/n8/tamagui/packages/babel-plugin::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/babel-plugin@portal:/Users/n8/tamagui/packages/babel-plugin::locator=dish-monorepo%40workspace%3A."
   dependencies:
     "@babel/generator": ^7.15.4
     "@babel/helper-plugin-utils": ^7.14.5
     "@babel/template": "*"
     "@babel/traverse": ^7.15.4
-    "@tamagui/static": ^1.0.0-beta.15
-  checksum: 380755c8bfb839ff5ec7f7ee92f9dacc1591b7245ba4e9367355354a34aa6e6cb9f4d64b41b0fe258ea3654d148e5b8481ee9a47c6888d3d27f319e36799b0f3
+    "@tamagui/static": ^1.0.1-beta.21
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/build@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/build@npm:1.0.0-beta.15"
+"@tamagui/build@portal:/Users/n8/tamagui/packages/build::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/build@portal:/Users/n8/tamagui/packages/build::locator=dish-monorepo%40workspace%3A."
   dependencies:
     chokidar: ^3.5.2
     esbuild: ^0.14.36
@@ -5459,61 +5456,55 @@ __metadata:
     typescript: ^4.5.2
   bin:
     tamagui-build: tamagui-build.js
-  checksum: 2eb3a68eb9950b3154d972e27a29a436b9428b632fec051a730841412825a03f90a151493a6026b3e1329c23a4e9543e9d88599555ff662f2d00249d49ac2edd
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/colors@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/colors@npm:1.0.0-beta.15"
-  checksum: 8ec2b367eee29661e915540c9fffa9c1c00f58dfd87e1dfcc2ebf25c2550b0c17ff53a0589411bd5492cbdab4f5ec1921e8a1b827ff1830271495c7ae94fc5f5
+"@tamagui/colors@portal:/Users/n8/tamagui/packages/colors::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/colors@portal:/Users/n8/tamagui/packages/colors::locator=dish-monorepo%40workspace%3A."
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/compose-refs@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/compose-refs@npm:1.0.0-beta.15"
+"@tamagui/compose-refs@portal:/Users/n8/tamagui/packages/compose-refs::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/compose-refs@portal:/Users/n8/tamagui/packages/compose-refs::locator=dish-monorepo%40workspace%3A."
   peerDependencies:
     react: "*"
-  checksum: 88bd79e5485169b6ff77523c08010bbee4a71b479bc2a6f215a3b163031cf3050ca79d2f7ad2ffdd9df341db34f40341007442365665a6fdb39bad53032abe22
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/core-node@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/core-node@npm:1.0.0-beta.15"
+"@tamagui/core-node@portal:/Users/n8/tamagui/packages/core-node::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/core-node@portal:/Users/n8/tamagui/packages/core-node::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/helpers": ^1.0.0-beta.15
-  checksum: 3fc79fee39bb4cac7c5576bc7bd2474d24e8a14d65cda85f923f7f072e9119e6d1ec89a66ed292b07b1763aaadcb10246d6e2a9da2f2abe44c14407a9fb8f7cb
+    "@tamagui/helpers": ^1.0.1-beta.21
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/core@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/core@npm:1.0.0-beta.15"
+"@tamagui/core@portal:/Users/n8/tamagui/packages/core::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/core@portal:/Users/n8/tamagui/packages/core::locator=dish-monorepo%40workspace%3A."
   dependencies:
     "@expo/match-media": ^0.3.0
-    "@tamagui/helpers": ^1.0.0-beta.15
+    "@tamagui/helpers": ^1.0.1-beta.21
     "@tamagui/ow": ^0.28.1
-    "@tamagui/use-debounce": ^1.0.0-beta.15
-    "@tamagui/use-force-update": ^1.0.0-beta.15
+    "@tamagui/use-debounce": ^1.0.1-beta.21
+    "@tamagui/use-force-update": ^1.0.1-beta.21
     expo-screen-orientation: ^4.2.0
     react: "*"
     react-dom: "*"
   peerDependencies:
     react-native-web: "*"
-  checksum: b6e108f26a55bb2e651bcbf48c6e61bd08d57db6a45a98ffcbcccd580cabd9921a2b33285e73d189152e82a8d7a3b2bed768bb749dd874721d81b1559eaca173
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/create-context@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/create-context@npm:1.0.0-beta.15"
+"@tamagui/create-context@portal:/Users/n8/tamagui/packages/create-context::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/create-context@portal:/Users/n8/tamagui/packages/create-context::locator=dish-monorepo%40workspace%3A."
   peerDependencies:
     react: "*"
-  checksum: 0ca2b6c1f03299fa890324d5f2e390a7eb678efa16e68556f1c4db3ed133442dc2ee5c0a42045f26ece7197050c45837222cae83109fdf10ae3f0b8254836673
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@tamagui/expo-linear-gradient@npm:^11.2.8":
   version: 11.2.8
@@ -5522,40 +5513,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/fake-react-native@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/fake-react-native@npm:1.0.0-beta.15"
-  checksum: 2a4784439bf9cc8e8e2e1f70338d95cfe9df8b50bba33277a0ba3def2347a24bd09e618dd2c57bcb2aa5de3ba019cd179cc6a4ae01d28d6861cc820e54f6dc61
+"@tamagui/fake-react-native@portal:/Users/n8/tamagui/packages/fake-react-native::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/fake-react-native@portal:/Users/n8/tamagui/packages/fake-react-native::locator=dish-monorepo%40workspace%3A."
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/feather-icons@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/feather-icons@npm:1.0.0-beta.15"
+"@tamagui/feather-icons@portal:/Users/n8/tamagui/packages/feather-icons::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/feather-icons@portal:/Users/n8/tamagui/packages/feather-icons::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/core": ^1.0.0-beta.15
+    "@tamagui/core": ^1.0.1-beta.21
     react: "*"
     react-dom: "*"
     react-native-svg: ^12.1.1
-  checksum: d324a0efb1ee7941166be4cb8134a4787fe33add33e096e89a2ea0193ed2ac22896c88ac937884d59957ffcec7477db6b02590495341c06045e0413253eb9508
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/font-inter@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/font-inter@npm:1.0.0-beta.15"
-  checksum: 01231a4b930afbcb99a44cba5b3fa549514799ace97cf43672f1a8e72d495f8dfedc92926c706aa706b7890afd6176a924a097ebdcdebeb959c9122edf9d00aa
+"@tamagui/font-inter@portal:/Users/n8/tamagui/packages/font-inter::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/font-inter@portal:/Users/n8/tamagui/packages/font-inter::locator=dish-monorepo%40workspace%3A."
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/helpers@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/helpers@npm:1.0.0-beta.15"
+"@tamagui/helpers@portal:/Users/n8/tamagui/packages/helpers::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/helpers@portal:/Users/n8/tamagui/packages/helpers::locator=dish-monorepo%40workspace%3A."
   peerDependencies:
     react-native: "*"
-  checksum: 748375f25152310c50165146c5244f91027cb1d785c805409db92867a4c53ce1f974d3151770dfa2bf45191c97dc4aa3ea119074959c27cb2f9b69566442546b
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@tamagui/ow@npm:^0.28.1":
   version: 0.28.1
@@ -5571,108 +5558,100 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/polyfill-dev@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/polyfill-dev@npm:1.0.0-beta.15"
-  checksum: 96c8a7346265bd27c1eb1f2c176ebbca0e90a863e95f9a28402386bdf788ab9d3950c0d6b8417f784ec07a9b8f8b87f992d692ac141474b8f5e96fa0d962d5d0
+"@tamagui/polyfill-dev@portal:/Users/n8/tamagui/packages/polyfill-dev::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/polyfill-dev@portal:/Users/n8/tamagui/packages/polyfill-dev::locator=dish-monorepo%40workspace%3A."
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/popover@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/popover@npm:1.0.0-beta.15"
+"@tamagui/popover@portal:/Users/n8/tamagui/packages/popover::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/popover@portal:/Users/n8/tamagui/packages/popover::locator=dish-monorepo%40workspace%3A."
   dependencies:
     "@floating-ui/react-dom-interactions": ^0.4.0
-    "@tamagui/animate-presence": ^1.0.0-beta.15
-    "@tamagui/compose-refs": ^1.0.0-beta.15
-    "@tamagui/core": ^1.0.0-beta.15
-    "@tamagui/create-context": ^1.0.0-beta.15
-    "@tamagui/polyfill-dev": ^1.0.0-beta.15
-    "@tamagui/popper": ^1.0.0-beta.15
-    "@tamagui/portal": ^1.0.0-beta.15
-    "@tamagui/stacks": ^1.0.0-beta.15
-    "@tamagui/use-controllable-state": ^1.0.0-beta.15
+    "@tamagui/animate-presence": ^1.0.1-beta.21
+    "@tamagui/compose-refs": ^1.0.1-beta.21
+    "@tamagui/core": ^1.0.1-beta.21
+    "@tamagui/create-context": ^1.0.1-beta.21
+    "@tamagui/polyfill-dev": ^1.0.1-beta.21
+    "@tamagui/popper": ^1.0.1-beta.21
+    "@tamagui/portal": ^1.0.1-beta.21
+    "@tamagui/stacks": ^1.0.1-beta.21
+    "@tamagui/use-controllable-state": ^1.0.1-beta.21
   peerDependencies:
     react: "*"
     react-dom: "*"
     react-native: "*"
-  checksum: 82b9dbeddf5f35f0984794b4f9292a61142f47cff03b683391610764dea14f2a033984f7992e9a9329d19a18daa974053def7eb2ce04187ffe32943955ee174a
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/popper@npm:^1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/popper@npm:1.0.0-beta.15"
+"@tamagui/popper@portal:/Users/n8/tamagui/packages/popper::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/popper@portal:/Users/n8/tamagui/packages/popper::locator=dish-monorepo%40workspace%3A."
   dependencies:
     "@floating-ui/react-dom": 0.7.0
     "@floating-ui/react-native": ^0.7.0
-    "@tamagui/compose-refs": ^1.0.0-beta.15
-    "@tamagui/core": ^1.0.0-beta.15
-    "@tamagui/create-context": ^1.0.0-beta.15
-    "@tamagui/stacks": ^1.0.0-beta.15
-    "@tamagui/use-controllable-state": ^1.0.0-beta.15
+    "@tamagui/compose-refs": ^1.0.1-beta.21
+    "@tamagui/core": ^1.0.1-beta.21
+    "@tamagui/create-context": ^1.0.1-beta.21
+    "@tamagui/stacks": ^1.0.1-beta.21
+    "@tamagui/use-controllable-state": ^1.0.1-beta.21
   peerDependencies:
     react: "*"
     react-dom: "*"
     react-native: "*"
-  checksum: 8e0f207fae230d44d5b172e24aa26f1320c1b2113d66dbc3ed2150cd0b3c37c135f48bebb8601d9e39e7f92fdce1eac46cb9208f4b342eea551fae5a6d7541c9
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/portal@npm:^1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/portal@npm:1.0.0-beta.15"
+"@tamagui/portal@portal:/Users/n8/tamagui/packages/portal::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/portal@portal:/Users/n8/tamagui/packages/portal::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/stacks": ^1.0.0-beta.15
+    "@tamagui/stacks": ^1.0.1-beta.21
   peerDependencies:
     react: "*"
     react-dom: "*"
     react-native: "*"
-  checksum: bbb96f4bdf2bad778077406239976dbc3ffbcb5bdf33bbc9bf5f8657a3ba17e53cd6a5b137de5f8d1cf4c7b5f9d29aa2a3da780da0a59d05a19b6af2140821a0
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/proxy-worm@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/proxy-worm@npm:1.0.0-beta.15"
-  checksum: 1e788ac7242e67e94bd5c629dad504078bd024fc8182a5c4459ec5c77e3abb1cc3f7fc443d0503be9178937318991eb77bc5413842126b4876cb758292ba6674
+"@tamagui/proxy-worm@portal:/Users/n8/tamagui/packages/proxy-worm::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/proxy-worm@portal:/Users/n8/tamagui/packages/proxy-worm::locator=dish-monorepo%40workspace%3A."
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/separator@npm:^1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/separator@npm:1.0.0-beta.15"
+"@tamagui/separator@portal:/Users/n8/tamagui/packages/separator::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/separator@portal:/Users/n8/tamagui/packages/separator::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/core": ^1.0.0-beta.15
+    "@tamagui/core": ^1.0.1-beta.21
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 1a5da6bbc04a7ddde7f450f91927b98986a5e0047a5145461ee45c998dd09cab534eb99c4c162ec35f581f7bcb5be58d49526b6e48113c80189daedd1830b51a
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/shorthands@npm:^1.0.0-beta.15":
-  version: 1.0.0-canary.204
-  resolution: "@tamagui/shorthands@npm:1.0.0-canary.204"
-  checksum: bf73e40c8c1f15e57af092774a6264d39ba1d0602453e55312f0a37a53312cd014aa11a060fc951644249e9e095af0bc5892248f91e11a30a80f68ba3210de2c
+"@tamagui/shorthands@portal:/Users/n8/tamagui/packages/shorthands::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/shorthands@portal:/Users/n8/tamagui/packages/shorthands::locator=dish-monorepo%40workspace%3A."
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/stacks@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/stacks@npm:1.0.0-beta.15"
+"@tamagui/stacks@portal:/Users/n8/tamagui/packages/stacks::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/stacks@portal:/Users/n8/tamagui/packages/stacks::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/core": ^1.0.0-beta.15
+    "@tamagui/core": ^1.0.1-beta.21
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: e9aeabbfe74b3a25a5351553a2f92a79845b5cf919611131e6be5909e80f572b487923adbc910e81c95ad7cea43d71df83b414e56a3369f3e7d80827ef708310
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/static@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/static@npm:1.0.0-beta.15"
+"@tamagui/static@portal:/Users/n8/tamagui/packages/static::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/static@portal:/Users/n8/tamagui/packages/static::locator=dish-monorepo%40workspace%3A."
   dependencies:
     "@babel/core": ^7.15.5
     "@babel/generator": ^7.15.4
@@ -5680,11 +5659,11 @@ __metadata:
     "@babel/parser": ^7.15.7
     "@babel/traverse": ^7.15.4
     "@expo/match-media": ^0.3.0
-    "@tamagui/build": ^1.0.0-beta.15
-    "@tamagui/core-node": ^1.0.0-beta.15
-    "@tamagui/fake-react-native": ^1.0.0-beta.15
-    "@tamagui/helpers": ^1.0.0-beta.15
-    "@tamagui/proxy-worm": ^1.0.0-beta.15
+    "@tamagui/build": ^1.0.1-beta.21
+    "@tamagui/core-node": ^1.0.1-beta.21
+    "@tamagui/fake-react-native": ^1.0.1-beta.21
+    "@tamagui/helpers": ^1.0.1-beta.21
+    "@tamagui/proxy-worm": ^1.0.1-beta.21
     babel-literal-to-ast: ^2.1.0
     esbuild: ^0.14.36
     esbuild-register: ^3.3.2
@@ -5692,96 +5671,91 @@ __metadata:
     fs-extra: ^9.1.0
     invariant: ^2.2.4
     lodash: ^4.17.21
-    tamagui: ^1.0.0-beta.15
+    tamagui: ^1.0.1-beta.21
   peerDependencies:
     react-native-web: "*"
-  checksum: 3806640cf9299850ab4d06e71794fef42a8f0629316f8712ac6db62bc88cce511c6df7b30ce9942dbfc0096ec9d5abded60b08a314e21132e51078631a7d0a28
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/text@npm:^1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/text@npm:1.0.0-beta.15"
+"@tamagui/text@portal:/Users/n8/tamagui/packages/text::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/text@portal:/Users/n8/tamagui/packages/text::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/core": ^1.0.0-beta.15
+    "@tamagui/core": ^1.0.1-beta.21
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 9a19bc6cff3f6eb86db10f5dd543aa86c57d9d9c41e8d0b4650c8ff8f400b22a7c6ac004151d3ce0919b3bb4e98eb0137b0be3d81d490a4f64a9d743e29b8efb
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/theme-base@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/theme-base@npm:1.0.0-beta.15"
-  checksum: bdc0e1dfd2fe80078b30428c3d2e4568db814aa08f206dc428a0c6ec4580c2255c4e11c5e01e43045acb071411a90f78c30c70d821830daf1d8e0cf3f6c7641e
+"@tamagui/theme-base@portal:/Users/n8/tamagui/packages/theme-base::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/theme-base@portal:/Users/n8/tamagui/packages/theme-base::locator=dish-monorepo%40workspace%3A."
+  dependencies:
+    "@tamagui/colors": ^1.0.1-beta.21
+    "@tamagui/core": ^1.0.1-beta.21
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/tooltip@npm:^1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/tooltip@npm:1.0.0-beta.15"
+"@tamagui/tooltip@portal:/Users/n8/tamagui/packages/tooltip::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/tooltip@portal:/Users/n8/tamagui/packages/tooltip::locator=dish-monorepo%40workspace%3A."
   dependencies:
     "@floating-ui/react-dom-interactions": ^0.4.0
-    "@tamagui/compose-refs": ^1.0.0-beta.15
-    "@tamagui/core": ^1.0.0-beta.15
-    "@tamagui/create-context": ^1.0.0-beta.15
-    "@tamagui/polyfill-dev": ^1.0.0-beta.15
-    "@tamagui/popover": ^1.0.0-beta.15
-    "@tamagui/popper": ^1.0.0-beta.15
-    "@tamagui/stacks": ^1.0.0-beta.15
-    "@tamagui/text": ^1.0.0-beta.15
-    "@tamagui/use-controllable-state": ^1.0.0-beta.15
+    "@tamagui/compose-refs": ^1.0.1-beta.21
+    "@tamagui/core": ^1.0.1-beta.21
+    "@tamagui/create-context": ^1.0.1-beta.21
+    "@tamagui/polyfill-dev": ^1.0.1-beta.21
+    "@tamagui/popover": ^1.0.1-beta.21
+    "@tamagui/popper": ^1.0.1-beta.21
+    "@tamagui/stacks": ^1.0.1-beta.21
+    "@tamagui/text": ^1.0.1-beta.21
+    "@tamagui/use-controllable-state": ^1.0.1-beta.21
   peerDependencies:
     react: "*"
     react-dom: "*"
     react-native: "*"
-  checksum: 75f08f9d7246c5105a3520133e915f7e4ef9fe4bb875660fa78a7f487e07d2174a1bceec7fa856186e5cbc9b7caf69ea8e0a47f088c730d9efdd44304a554100
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/use-controllable-state@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/use-controllable-state@npm:1.0.0-beta.15"
+"@tamagui/use-controllable-state@portal:/Users/n8/tamagui/packages/use-controllable-state::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/use-controllable-state@portal:/Users/n8/tamagui/packages/use-controllable-state::locator=dish-monorepo%40workspace%3A."
   dependencies:
     "@radix-ui/react-use-callback-ref": ^0.1.0
   peerDependencies:
     react: "*"
     react-dom: "*"
-  checksum: 4d3ad32d6c528971ad900decb0f14ac9b54d6f18750bd7408439876375a67253e4aab5ef514ee9647712266ba5bc05df729d149fc1e37052ae11c4c50c1ecab4
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/use-debounce@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/use-debounce@npm:1.0.0-beta.15"
+"@tamagui/use-debounce@portal:/Users/n8/tamagui/packages/use-debounce::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/use-debounce@portal:/Users/n8/tamagui/packages/use-debounce::locator=dish-monorepo%40workspace%3A."
   peerDependencies:
     react: "*"
-  checksum: 7fcc4ab27bd1bb475da585d0043a0c793f27e93778c10fea46dc9203a44d963b8b09fab3c1a9f56a6984e04b2a921df480853ad4c46b9ef74edbce9c5c3007a6
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/use-force-update@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/use-force-update@npm:1.0.0-beta.15"
+"@tamagui/use-force-update@portal:/Users/n8/tamagui/packages/use-force-update::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/use-force-update@portal:/Users/n8/tamagui/packages/use-force-update::locator=dish-monorepo%40workspace%3A."
   peerDependencies:
     react: "*"
-  checksum: b9e374ae157746a07e4f64559896a1b7743bac60a82a43328e777188206514a58236442141b44d5d59bb8cfd7f6b781d0880bfe2b9131f3f9e835ebd87b70060
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"@tamagui/use-window-size@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "@tamagui/use-window-size@npm:1.0.0-beta.15"
+"@tamagui/use-window-size@portal:/Users/n8/tamagui/packages/use-window-size::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "@tamagui/use-window-size@portal:/Users/n8/tamagui/packages/use-window-size::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/use-debounce": ^1.0.0-beta.15
-    "@tamagui/use-force-update": ^1.0.0-beta.15
+    "@tamagui/use-debounce": ^1.0.1-beta.21
+    "@tamagui/use-force-update": ^1.0.1-beta.21
     react: "*"
   peerDependencies:
     react-native: "*"
-  checksum: a025d3ecc928c9c3e99960c9225acf746d60411b5c99a8c32604214d3bcdbcba01addccee630d736e6689de1ad59c2a15012066b98b0a87da2777fb8dc5b982e
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "@testing-library/dom@npm:^8.5.0":
   version: 8.13.0
@@ -11155,7 +11129,7 @@ __metadata:
     ava: ^3.15.0
     esbuild: ^0.14.38
     esbuild-jest: ^0.5.0
-    esbuild-register: ^3.3.2
+    esbuild-register: ^2.6.0
     eslint: ^7.32.0
     eslint-import-resolver-typescript: ^2.4.0
     eslint-plugin-import: ^2.24.0
@@ -24922,42 +24896,41 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tamagui-loader@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "tamagui-loader@npm:1.0.0-beta.15"
+"tamagui-loader@portal:/Users/n8/tamagui/packages/loader::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "tamagui-loader@portal:/Users/n8/tamagui/packages/loader::locator=dish-monorepo%40workspace%3A."
   dependencies:
-    "@tamagui/static": ^1.0.0-beta.15
+    "@tamagui/static": ^1.0.1-beta.21
     fs-extra: ^9.1.0
     lodash: ^4.17.21
-  checksum: 4199131533f7eb822921e0c2c70bcc746684a652216ea2da7f20554aed99b6112347df77bfac200f83a73185162699620ffdaceadeb04b857038c10b170769da
   languageName: node
-  linkType: hard
+  linkType: soft
 
-"tamagui@npm:1.0.0-beta.15":
-  version: 1.0.0-beta.15
-  resolution: "tamagui@npm:1.0.0-beta.15"
+"tamagui@portal:/Users/n8/tamagui/packages/tamagui::locator=dish-monorepo%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "tamagui@portal:/Users/n8/tamagui/packages/tamagui::locator=dish-monorepo%40workspace%3A."
   dependencies:
     "@radix-ui/react-use-callback-ref": ^0.1.0
     "@radix-ui/react-use-previous": ^0.1.1
     "@react-native-aria/focus": ^0.2.5
     "@react-native-aria/overlays": ^0.3.2
     "@react-native-community/blur": ^3.6.0
-    "@tamagui/animate-presence": ^1.0.0-beta.15
-    "@tamagui/compose-refs": ^1.0.0-beta.15
-    "@tamagui/core": ^1.0.0-beta.15
-    "@tamagui/create-context": ^1.0.0-beta.15
+    "@tamagui/animate-presence": ^1.0.1-beta.21
+    "@tamagui/compose-refs": ^1.0.1-beta.21
+    "@tamagui/core": ^1.0.1-beta.21
+    "@tamagui/create-context": ^1.0.1-beta.21
     "@tamagui/expo-linear-gradient": ^11.2.8
-    "@tamagui/fake-react-native": ^1.0.0-beta.15
-    "@tamagui/helpers": ^1.0.0-beta.15
-    "@tamagui/popover": ^1.0.0-beta.15
-    "@tamagui/popper": ^1.0.0-beta.15
-    "@tamagui/separator": ^1.0.0-beta.15
-    "@tamagui/stacks": ^1.0.0-beta.15
-    "@tamagui/text": ^1.0.0-beta.15
-    "@tamagui/tooltip": ^1.0.0-beta.15
-    "@tamagui/use-controllable-state": ^1.0.0-beta.15
-    "@tamagui/use-debounce": ^1.0.0-beta.15
-    "@tamagui/use-force-update": ^1.0.0-beta.15
+    "@tamagui/fake-react-native": ^1.0.1-beta.21
+    "@tamagui/helpers": ^1.0.1-beta.21
+    "@tamagui/popover": ^1.0.1-beta.21
+    "@tamagui/popper": ^1.0.1-beta.21
+    "@tamagui/separator": ^1.0.1-beta.21
+    "@tamagui/stacks": ^1.0.1-beta.21
+    "@tamagui/text": ^1.0.1-beta.21
+    "@tamagui/tooltip": ^1.0.1-beta.21
+    "@tamagui/use-controllable-state": ^1.0.1-beta.21
+    "@tamagui/use-debounce": ^1.0.1-beta.21
+    "@tamagui/use-force-update": ^1.0.1-beta.21
     expo-linear-gradient: ~11.0.3
     expo-modules-core: ^0.9.1
     react: "*"
@@ -24965,9 +24938,8 @@ __metadata:
     react-native-safe-area-context: ^4.2.5
   peerDependencies:
     react-native-web: "*"
-  checksum: a0b0e1bb3c7a317b49cf89ab64a4bfb679feeb4800e077f619f9d30f99c8a7dea194f8878a5538459623b85652ae827a09a222c1b64f9fbfc0786941f86cffa6
   languageName: node
-  linkType: hard
+  linkType: soft
 
 "tapable@npm:^2.0.0, tapable@npm:^2.1.1, tapable@npm:^2.2.0":
   version: 2.2.1

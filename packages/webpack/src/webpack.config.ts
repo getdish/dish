@@ -5,7 +5,7 @@ import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
 // import esbuild from 'esbuild'
 import { ESBuildMinifyPlugin } from 'esbuild-loader'
-import { ensureDirSync } from 'fs-extra'
+import { ensureDirSync, readFileSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin'
@@ -44,22 +44,23 @@ try {
 // ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
 // ⚠️ DONT USE process.env.NODE_ENV it differs from env!!!!!!!!!!!
 
-export function createWebpackConfig({
-  entry,
-  env,
-  target,
-  cwd = process.cwd(),
-  babelInclude,
-  tamaguiOptions,
-  disableHot,
-  resolve,
-  polyFillPath,
-  htmlOptions,
-  resetCache,
-  defineOptions,
-  // pwaOptions,
-  noMinify,
-}: CreateWebpackConfig): Webpack.Configuration {
+export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Configuration {
+  const {
+    entry,
+    env,
+    target,
+    cwd = process.cwd(),
+    babelInclude,
+    tamaguiOptions,
+    disableHot,
+    resolve,
+    polyFillPath,
+    htmlOptions,
+    resetCache,
+    defineOptions,
+    // pwaOptions,
+    noMinify,
+  } = config
   const isProduction = env === 'production'
   const isDevelopment = env === 'development'
   const isSSR = target === 'node'
@@ -70,32 +71,37 @@ export function createWebpackConfig({
   const hashFileNamePart = '[contenthash]'
   const hotEntry = isHot ? 'webpack-hot-middleware/client' : null
   const smp = new SpeedMeasurePlugin()
-  // prettier-ignore
-  const cacheName = simpleHash(`1${process.env.TARGET}${env}${GIT_SHA}${noMinify}${isHot}${isSSR}${resetCache ? Math.random() : ''}`)
+  const defines = {
+    __DEV__: JSON.stringify(isDevelopment),
+    process: '({})',
+    'process.env': '({})',
+    'process.env.IS_SSR_RENDERING': isSSR,
+    // 'process.env.TAMAGUI_COMPILE_PROCESS': false,
+    'process.env.NODE_ENV': JSON.stringify(env),
+    'process.env.TARGET': JSON.stringify(target || null),
+    'process.env.IS_STATIC': false,
+    'process.env.DISABLE_CACHE': false,
+    'process.env.IS_LIVE': JSON.stringify(process.env.IS_LIVE ?? (isProduction ? '1' : '0')),
+    'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
+    'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 0),
+    'process.env.DEBUG_ASSERT': JSON.stringify(process.env.DEBUG_ASSERT || false),
+    'process.env.TAMAGUI_TARGET': '"web"',
+    ...Object.fromEntries(
+      Object.entries(defineOptions || {}).map(([key, value]) => [key, JSON.stringify(value)])
+    ),
+  }
+
+  const cacheName = simpleHash(`
+    ${readFileSync(join(__dirname, '..', '..', 'src', 'webpack.config.ts'), 'utf-8')}
+    ${JSON.stringify(config)}
+    ${JSON.stringify(defines)}
+    ${GIT_SHA}
+    ${resetCache ? Math.random() : ''}
+  `)
 
   console.log(' [webpack]', { cacheName, minimize })
 
   function getConfig() {
-    const defines = {
-      __DEV__: JSON.stringify(isDevelopment),
-      process: '({})',
-      'process.env': '({})',
-      'process.env.IS_SSR_RENDERING': isSSR,
-      // 'process.env.TAMAGUI_COMPILE_PROCESS': false,
-      'process.env.NODE_ENV': JSON.stringify(env),
-      'process.env.TARGET': JSON.stringify(target || null),
-      'process.env.IS_STATIC': false,
-      'process.env.DISABLE_CACHE': false,
-      'process.env.IS_LIVE': JSON.stringify(process.env.IS_LIVE ?? (isProduction ? '1' : '0')),
-      'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
-      'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 0),
-      'process.env.DEBUG_ASSERT': JSON.stringify(process.env.DEBUG_ASSERT || false),
-      'process.env.TAMAGUI_TARGET': '"web"',
-      ...Object.fromEntries(
-        Object.entries(defineOptions || {}).map(([key, value]) => [key, JSON.stringify(value)])
-      ),
-    }
-
     // i had to manually create the webpack cache folder or else it didnt work!
     const rootNodeModules = join(require.resolve('webpack'), '..', '..', '..')
     const cacheDir = join(rootNodeModules, '.cache', 'webpack')

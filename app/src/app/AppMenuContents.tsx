@@ -110,6 +110,7 @@ export const AppMenuContents = memo(
 
               <MenuLinkButton
                 icon={<Sun color="#999" size={14} />}
+                debug
                 onPress={(e) => {
                   e.stopPropagation()
                   e.preventDefault()

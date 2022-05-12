@@ -1,1 +1,1 @@
-FROM hasura/graphql-engine:v2.3.0.cli-migrations-v2
+FROM hasura/graphql-engine:v2.6.1.cli-migrations-v2

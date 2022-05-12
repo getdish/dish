@@ -244,6 +244,8 @@ if (process.env.TAMAGUI_TARGET === 'native') {
       },
       resolve: {
         alias: {
+          react$: require.resolve('react'),
+          'react-dom$': require.resolve('react-dom'),
           'react-native': 'react-native-web',
           'react-native-web$': require.resolve('react-native-web'),
           'react-native-safe-area-context': require.resolve('react-native-safe-area-context'),
