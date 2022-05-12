@@ -21,7 +21,7 @@ import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { mapStyles } from './mapStyles'
 import { useIsInteractive } from './useIsInteractive'
-import { useIsMobilePhone } from './useIsMobilePhone'
+import { useIsMobileDevice } from './useIsMobileDevice'
 import { series } from '@dish/async'
 import { resolved } from '@dish/graph'
 // import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
@@ -358,7 +358,7 @@ export const AppMapContents = memo(function AppMapContents() {
 
 const AppMapBottomFade = memo(() => {
   const theme = useTheme()
-  const isPhone = useIsMobilePhone()
+  const isPhone = useIsMobileDevice()
 
   if (isPhone) {
     return null
@@ -377,7 +377,7 @@ const AppMapBottomFade = memo(() => {
 
 const AppMapRightFade = memo(() => {
   const theme = useTheme()
-  const isPhone = useIsMobilePhone()
+  const isPhone = useIsMobileDevice()
 
   if (isPhone) {
     return null

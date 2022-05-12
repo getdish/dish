@@ -6,8 +6,7 @@ import React, { memo } from 'react'
 export const StackViewCloseButton = memo(() => {
   return (
     <CloseButton
-      size={40}
-      elevation="$1"
+      elevation="$3"
       pointerEvents="auto"
       onPressOut={async () => {
         await sleep(16)

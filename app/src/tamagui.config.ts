@@ -19,7 +19,6 @@ const config = createTamagui({
   },
   animations,
   defaultTheme: 'light',
-  disableRootThemeClass: true,
   shorthands,
   themes,
   media,

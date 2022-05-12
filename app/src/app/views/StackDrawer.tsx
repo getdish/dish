@@ -1,10 +1,17 @@
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
 import { STACK_ANIMATION_DURATION } from '../home/HomeStackView'
 import { HomeSuspense } from '../home/HomeSuspense'
-import { useIsMobilePhone } from '../useIsMobilePhone'
+import { useIsMobileDevice } from '../useIsMobileDevice'
 import { StackCloseButton } from './StackCloseButton'
 import { series, sleep } from '@dish/async'
-import { AbsoluteYStack, LoadingItems, YStack, YStackProps, useMedia, useTheme } from '@dish/ui'
+import {
+  AbsoluteYStack,
+  LoadingItems,
+  YStack,
+  YStackProps,
+  useMedia,
+  useTheme,
+} from '@dish/ui'
 import { default as React, useEffect, useState } from 'react'
 
 export type StackDrawerProps = YStackProps & {
@@ -24,7 +31,7 @@ export const StackDrawer = ({
 }: StackDrawerProps) => {
   const media = useMedia()
   const [isLoaded, setIsLoaded] = useState(false)
-  const isPhone = useIsMobilePhone()
+  const isPhone = useIsMobileDevice()
 
   const controls = (
     <>

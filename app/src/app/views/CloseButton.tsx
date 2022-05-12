@@ -5,7 +5,7 @@ import React, { forwardRef, memo } from 'react'
 type CircleButtonProps = ButtonProps
 
 export const CloseButton = (props: CircleButtonProps) => {
-  return <SmallCircleButton size="$5" icon={X} {...props} />
+  return <SmallCircleButton icon={X} {...props} />
 }
 
 export const BackButton = memo((props: CircleButtonProps) => {
@@ -13,7 +13,7 @@ export const BackButton = memo((props: CircleButtonProps) => {
 })
 
 export const SmallCircleButton = forwardRef(
-  ({ children, width, height, size = 44, ...props }: CircleButtonProps, ref) => {
+  ({ children, width, height, size = '$5', ...props }: CircleButtonProps, ref) => {
     return (
       <Button ref={ref as any} circular size={size} {...props}>
         {children}

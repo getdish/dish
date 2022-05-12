@@ -37,7 +37,8 @@ const getActiveParentId = () => {
 
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
   const panViewRef = useRef()
-  const pan = useMemo(() => {
+
+  const panResponder = useMemo(() => {
     let curSnapY = 0
     let curScrollerYMove = -1
 
@@ -219,7 +220,11 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       {useMemo(
         () => (
           <BottomSheetContainer>
-            <View ref={panViewRef as any} style={styles.container} {...pan.panHandlers}>
+            <View
+              ref={panViewRef as any}
+              style={styles.container}
+              {...panResponder.panHandlers}
+            >
               <YStack height={searchBarHeight} zIndex={1000}>
                 <AppSearchBarInline />
               </YStack>

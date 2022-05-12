@@ -13,7 +13,7 @@ export const showRadar =
   isWeb && typeof window !== 'undefined' ? window.location.search === '?radar' : false
 
 export const drawerPad = 8
-export const drawerBorderRadius = 15
+export const drawerBorderRadius = 10
 export const drawerWidthMax = 880
 export const drawerExtraLeftScrollSpace = 500
 

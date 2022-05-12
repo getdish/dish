@@ -123,7 +123,9 @@ export const HomePageFeed = memo(
 
       const allRestaurants = [
         ...[...tagLists, ...lenseLists.filter(isPresent), ...trendingLists].flatMap((list) => {
-          return list?.restaurants({ limit: 20 }).map((x) => getRestaurantIdentifiers(x.restaurant))
+          return list
+            ?.restaurants({ limit: 20 })
+            .map((x) => getRestaurantIdentifiers(x.restaurant))
         }),
       ]
 
@@ -264,17 +266,17 @@ const HomeTagLenses = memo(() => {
         {tagLenses.map((lense, i) => {
           return (
             <Link key={i} tag={lense}>
-              <Theme name={lense.color}>
-                <H2
-                  py="$1"
-                  color="$color"
-                  hoverStyle={{
-                    color: '$colorHover',
-                  }}
-                >
-                  {lense.name}
-                </H2>
-              </Theme>
+              <H2
+                theme={`${lense.color}_alt2`}
+                size="$8"
+                py="$1"
+                color="$color"
+                hoverStyle={{
+                  color: '$colorHover',
+                }}
+              >
+                {lense.name}
+              </H2>
             </Link>
           )
         })}

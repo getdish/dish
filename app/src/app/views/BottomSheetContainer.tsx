@@ -11,7 +11,9 @@ export const BottomSheetContainer = (props: { children: any }) => {
       width="100%"
       height="100%"
       flex={1}
-      shadowColor="$shadowColor"
+      shadowColor="$shadowColorFocus"
+      boc="$borderColor"
+      bw={1}
       shadowRadius={28}
       borderTopRightRadius={drawerBorderRadius}
       borderTopLeftRadius={drawerBorderRadius}

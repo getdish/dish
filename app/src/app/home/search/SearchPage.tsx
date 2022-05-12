@@ -40,7 +40,7 @@ import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { RootPortalItem } from '../../Portal'
-import { useIsMobilePhone } from '../../useIsMobilePhone'
+import { useIsMobileDevice } from '../../useIsMobileDevice'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { PageHead } from '../../views/PageHead'
@@ -361,7 +361,7 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
     [activeTagSlugs]
   )
 
-  const isMobilePhone = useIsMobilePhone()
+  const isMobilePhone = useIsMobileDevice()
 
   if (status !== 'loading' && results.length === 0) {
     return <SearchEmptyResults />
@@ -426,7 +426,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, id, ...props }, ref) => {
     const scrollRef = useRef<ScrollView>()
     const searchPageStore = getSearchPageStore()
-    const isMobilePhone = useIsMobilePhone()
+    const isMobilePhone = useIsMobileDevice()
     const searchPageChildrenStore = useStore(SearchPageChildrenStore, { id })
 
     // for now, scrollRef doesnt have scrollTo?

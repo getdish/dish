@@ -112,19 +112,19 @@ export const AppSearchBarContents = memo(() => {
 
       {media.xs && (
         <>
-          <TouchableOpacity>
-            <Button
-              chromeless
-              icon={showLocation ? Search : MapPin}
-              onPressOut={() => {
-                autocompletes.setTarget(showLocation ? 'search' : 'location')
-              }}
-            />
-          </TouchableOpacity>
+          <Spacer size="$1" />
+          <Button
+            chromeless
+            icon={showLocation ? Search : MapPin}
+            scaleIcon={1.25}
+            onPressOut={() => {
+              autocompletes.setTarget(showLocation ? 'search' : 'location')
+            }}
+          />
         </>
       )}
 
-      {!media.sm && !media.xs && (
+      {media.gtSm && (
         <>
           <Spacer />
 

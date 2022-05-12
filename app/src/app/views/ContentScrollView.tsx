@@ -1,3 +1,8 @@
+import { isWeb } from '../../constants/constants'
+import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
+import { getWindowHeight } from '../../helpers/getWindow'
+import { drawerStore } from '../drawerStore'
+import { useIsMobileDevice } from '../useIsMobileDevice'
 import { combineRefs, useGet } from '@dish/ui'
 import { Store, getStore, selector } from '@dish/use-store'
 import React, {
@@ -10,12 +15,6 @@ import React, {
   useState,
 } from 'react'
 import { ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
-
-import { isWeb } from '../../constants/constants'
-import { isTouchDevice, supportsTouchWeb } from '../../constants/platforms'
-import { getWindowHeight } from '../../helpers/getWindow'
-import { drawerStore } from '../drawerStore'
-import { useIsMobilePhone } from '../useIsMobilePhone'
 
 export type ScrollLock = 'horizontal' | 'vertical' | 'drawer' | 'none'
 
@@ -116,12 +115,6 @@ type ContentScrollViewProps = ScrollViewProps & {
 
 export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
   ({ children, onScrollYThrottled, style, id, bidirectional, ...props }, ref) => {
-    const isMobilePhone = useIsMobilePhone()
-
-    if (isMobilePhone) {
-      return children
-    }
-
     // this updates when drawer moves to top
     // this is already handled in useScrollActive i think
     // const isActive = useStoreSelector(ContentParentStore, x => x.activeId === id, { id })
@@ -129,6 +122,8 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     const getScrollActive = useScrollActive(id)
     const lastUpdate = useRef<any>(0)
     const finish = useRef<any>(0)
+
+    console.log('getScrollActive()', id, getScrollActive())
 
     // note, not using it, not reacting
     const scrollStore = getStore(ScrollStore, { id })
@@ -199,7 +194,12 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       }
     }, [id, scrollRef.current])
 
-    const state = useRef<{ at: number; start: number; active: boolean; lastYs: number[] | null }>()
+    const state = useRef<{
+      at: number
+      start: number
+      active: boolean
+      lastYs: number[] | null
+    }>()
     if (!state.current) {
       state.current = {
         at: 0,
@@ -213,18 +213,23 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       return scrollStore.lock === 'vertical' && scrollStore.isAtTop
     }
 
+    console.log('isScrollingVerticalFromTop', isScrollingVerticalFromTop(), props, style)
+
     return (
       <ContentScrollContext.Provider value={id}>
         <ScrollView
           removeClippedSubviews
           {...props}
+          // for native...
+          bounces={isWeb ? true : false}
           {...(bidirectional && {
             nestedScrollEnabled: true,
-            bouces: false,
+            bounces: false,
           })}
           ref={combineRefs(scrollRef, ref)}
           scrollEventThrottle={16}
           onScroll={(e) => {
+            console.log('?')
             // calls the recyclerview scroll
             props.onScroll?.(e)
             const y = e.nativeEvent.contentOffset.y
@@ -248,6 +253,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           }}
           {...(isTouchDevice && {
             onTouchStart() {
+              console.log('start')
               scrollStore.lastTouchStart = Date.now()
             },
             onTouchEnd: () => {
@@ -257,8 +263,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
               }
             },
           })}
-          // for native...
-          bounces={isWeb ? true : false}
           // DONT USE THIS ON WEB IT CAUSES REFLOWS see classname above
           // oh well we have to deal with reapints, just try and time them
           scrollEnabled={getScrollActive()}
