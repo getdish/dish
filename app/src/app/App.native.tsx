@@ -20,7 +20,7 @@ export const App = memo(() => {
       <RootPortalProvider />
       <AppStatusBar />
       <AutocompleteEffects />
-      <AbsoluteYStack fullscreen backgroundColor="$backgroundStronger">
+      <AbsoluteYStack fullscreen backgroundColor="$backgroundStrong">
         <Suspense fallback={null}>
           {/* keep indent  */}
           {/* <AppMap /> */}

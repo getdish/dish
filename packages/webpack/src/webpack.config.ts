@@ -172,6 +172,10 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
         extensions: ['.ts', '.tsx', '.web.js', '.js'],
         mainFields: ['module:jsx', 'browser', 'module', 'main'],
         ...resolve,
+        alias: {
+          'nanoid/non-secure': require.resolve('nanoid/non-secure').replace('.cjs', '.js'),
+          ...resolve?.alias,
+        },
       },
       resolveLoader: {
         modules: ['node_modules'],
@@ -482,7 +486,7 @@ const excludedRootPaths = [
   '(webpack)',
 ]
 
-function defaultBabelInclude(inputPath) {
+function defaultBabelInclude(inputPath: string) {
   if (inputPath.includes('react-native-awesome-gallery')) {
     return true
   }
@@ -507,7 +511,6 @@ function defaultBabelInclude(inputPath) {
   if (inputPath.includes('react-native-reanimated')) {
     return true
   }
-
   if (excludedRootPaths.some((excluded) => inputPath.includes(path.normalize(excluded)))) {
     return false
   }

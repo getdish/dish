@@ -23,7 +23,7 @@ import React, { Suspense, useEffect, useLayoutEffect } from 'react'
 const mapHeight = 310
 
 export const AppHomeMobileWeb = () => {
-  const theme = useTheme()
+  // const theme = useTheme()
   const { currentState } = useHomeStore()
 
   // TODO make this "remember" the last height so we can scroll smoothly
@@ -64,8 +64,18 @@ export const AppHomeMobileWeb = () => {
         <ToastRoot />
         <AutocompleteEffects />
       </Suspense>
-      {/* @ts-ignore */}
-      <YStack pos="fixed" fullscreen pe="none" t={0} l={0} r={0} h="100vh" mh="100vh" zi={1000000}>
+      <YStack
+        // @ts-ignore
+        pos="fixed"
+        fullscreen
+        pe="none"
+        t={0}
+        l={0}
+        r={0}
+        h="100vh"
+        mh="100vh"
+        zi={1000000}
+      >
         <RootPortalProvider />
       </YStack>
       <YStack mb={-40} height={mapHeight} p="relative" zi={0}>
@@ -79,7 +89,7 @@ export const AppHomeMobileWeb = () => {
         </Suspense>
       </YStack>
       <YStack zi={100} br={10} ov="hidden" pos="relative">
-        <AbsoluteYStack fullscreen zi={0} backgroundColor="$backgroundStronger" />
+        <AbsoluteYStack fullscreen zi={0} backgroundColor="$backgroundStrong" />
         <AppSearchBarInline />
         <YStack position="relative" minHeight={600}>
           <AppAutocompleteSearch />

@@ -35,6 +35,7 @@ import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { Theme, Toast } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
+import { Drawer } from '@tamagui/drawer'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
@@ -143,17 +144,20 @@ export function Root() {
 
   return (
     <Tamagui.Provider injectCSS defaultTheme={defaultTheme}>
-      <ProvideRouter routes={routes}>
-        <Suspense fallback={null}>
-          {isLoaded ? (
-            <>
-              <App />
-              {process.env.NODE_ENV === 'development' && <DebugHUD />}
-            </>
-          ) : null}
-        </Suspense>
-      </ProvideRouter>
-      {showRadar && <Radar />}
+      <Drawer.Provider>
+        <ProvideRouter routes={routes}>
+          <Suspense fallback={null}>
+            {isLoaded ? (
+              <>
+                <App />
+                {process.env.NODE_ENV === 'development' && <DebugHUD />}
+                <div id="before-bottom-sheet-temp" />
+              </>
+            ) : null}
+          </Suspense>
+        </ProvideRouter>
+        {showRadar && <Radar />}
+      </Drawer.Provider>
     </Tamagui.Provider>
   )
 }

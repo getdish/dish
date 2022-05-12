@@ -55,7 +55,7 @@ export const AppMenuContents = memo(
         {/* safari y={} fix overflow */}
         <YStack flex={1} overflow="hidden" borderRadius={12} y={0.01}>
           {showContents && (
-            <ScrollView>
+            <>
               {!isWeb && (
                 <YStack alignItems="center" justifyContent="center">
                   <LogoColor scale={1.5} />
@@ -182,7 +182,7 @@ export const AppMenuContents = memo(
               <MenuLinkButton name="roadmap" icon={<Truck color="#999" size={14} />}>
                 Roadmap
               </MenuLinkButton>
-            </ScrollView>
+            </>
           )}
         </YStack>
       </YStack>

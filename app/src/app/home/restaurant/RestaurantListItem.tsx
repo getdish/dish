@@ -126,7 +126,10 @@ const RestaurantListItemContent = memo(
       description: null as null | string,
     })
     const handleChangeDishes = useCallback(onChangeDishes as any, [])
-    const isActive = useStoreInstanceSelector(getSearchPageStore(), (x) => x.index === rank - 1)
+    const isActive = useStoreInstanceSelector(
+      getSearchPageStore(),
+      (x) => x.index === rank - 1
+    )
     const [isExpanded, setIsExpanded] = useState(false)
     const toggleSetExpanded = useCallback(() => {
       setIsExpanded((x) => !x)
@@ -207,7 +210,7 @@ const RestaurantListItemContent = memo(
           {/* expanded content */}
           {meta && isExpanded && (
             <AbsoluteYStack
-              backgroundColor="$backgroundStronger"
+              backgroundColor="$backgroundStrong"
               width={300 - 40}
               x={-320}
               height="100%"
@@ -541,7 +544,9 @@ const RestaurantListItemContent = memo(
 
               {!!open.nextTime && (
                 <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                  <SmallButton textProps={{ opacity: 0.6 }}>{open.nextTime || '~~'}</SmallButton>
+                  <SmallButton textProps={{ opacity: 0.6 }}>
+                    {open.nextTime || '~~'}
+                  </SmallButton>
                 </Link>
               )}
 

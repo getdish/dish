@@ -703,3 +703,8 @@ mark {
 .hover-linear-gradient-up {
   background: linear-gradient(var(--backgroundColorTransparent) 0%, var(--backgroundColor) 50%);
 }
+
+/* https://github.com/gorhom/react-native-bottom-sheet/pull/940 */
+#before-bottom-sheet-temp + div {
+  z-index: 100000000;
+}

@@ -6,48 +6,49 @@ import { CloseButton } from './views/CloseButton'
 import { PaneControlButtons } from './views/PaneControlButtons'
 import { AbsoluteYStack, Button, Modal, YStack, useMedia, useSafeAreaInsets } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
+import { Drawer } from '@tamagui/drawer'
 import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
+import { useWindowDimensions } from 'react-native'
 
 export const AppMenuButtonFloating = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
   const safeArea = useSafeAreaInsets()
+  const { height } = useWindowDimensions()
+  const drawerHeight = height * 0.8
 
   if (!(media.sm || media.xs)) {
     return null
   }
 
+  console.log('rendered', appMenu.isVisible)
+
   return (
     <>
-      <Modal
-        visible={appMenu.isVisible}
-        animationType="slide"
-        hardwareAccelerated
-        presentationStyle="pageSheet"
+      <Drawer
+        open={appMenu.isVisible}
+        onChangeOpen={(open) => {
+          console.log('changed open', open)
+          appMenu.setIsVisible(open)
+        }}
         onDismiss={appMenu.hide}
-        onRequestClose={appMenu.hide}
+        snapPoints={[drawerHeight]}
       >
-        {/* this causes every tap to close on web */}
-        {/* <TouchableWithoutFeedback
-          // for bug which prevents dismiss from firing on swipe close
-          // https://github.com/facebook/react-native/issues/26892
-          onPressOut={appMenu.hide}
-        > */}
-        {appMenu.isVisible && (
+        <Drawer.Frame maxHeight={drawerHeight} height={drawerHeight} p={0}>
+          {/* this causes every tap to close on web */}
           <AppMenuContents
             width="100%"
             minHeight="100%"
-            py="$6"
             flex={1}
             hideUserMenu={appMenu.hide}
           />
-        )}
-        {/* </TouchableWithoutFeedback> */}
-        <PaneControlButtons>
-          <CloseButton onPress={appMenu.hide} />
-        </PaneControlButtons>
-      </Modal>
+          {/* <PaneControlButtons>
+            <CloseButton onPress={appMenu.hide} />
+          </PaneControlButtons> */}
+        </Drawer.Frame>
+      </Drawer>
+
       <AbsoluteYStack
         top={safeArea.top ? safeArea.top : 10}
         right={10}
@@ -62,40 +63,8 @@ export const AppMenuButtonFloating = memo(() => {
           icon={Menu}
           circular
           overflow="visible"
-          onPress={appMenu.show}
+          onPress={appMenu.toggle}
         />
-
-        {/* <YStack
-          // className="ease-in-out-faster"
-          shadowColor="rgba(0,0,0,0.25)"
-          shadowRadius={6}
-          shadowOffset={{ height: 3, width: 0 }}
-          pointerEvents="auto"
-          borderRadius={100}
-          backgroundColor="rgba(0,0,0,0.5)"
-          scale={1.0001}
-          hoverStyle={{
-            scale: 1.05,
-          }}
-          pressStyle={{
-            scale: 0.95,
-          }}
-          onPress={appMenu.show}
-        >
-          <XStack
-            width={50}
-            height={50}
-            alignItems="center"
-            justifyContent="center"
-            borderRadius={100}
-          >
-            {user.user ? (
-              <UserAvatar size={40} avatar={user.user?.avatar} charIndex={user.user?.charIndex} />
-            ) : (
-              <Menu color="#fff" size={24} />
-            )}
-          </XStack>
-        </YStack> */}
       </AbsoluteYStack>
     </>
   )

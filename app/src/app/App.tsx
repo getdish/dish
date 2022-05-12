@@ -54,8 +54,7 @@ export function App() {
 }
 
 function AppHomeContent(props: { children?: any }) {
-  const isMobileWeb = useIsMobilePhone()
-
+  // const isMobileWeb = useIsMobilePhone()
   // if (isMobileWeb) {
   //   return (
   //     <>
@@ -67,7 +66,7 @@ function AppHomeContent(props: { children?: any }) {
   return (
     <>
       {/* background */}
-      <AbsoluteYStack fullscreen zIndex={0} backgroundColor="$backgroundStronger" />
+      <AbsoluteYStack fullscreen zIndex={0} backgroundColor="$backgroundStrong" />
 
       <RootPortalProvider />
 

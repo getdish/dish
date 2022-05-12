@@ -14,6 +14,10 @@ class AppMenuStore extends Store {
   show() {
     this.isVisible = true
   }
+
+  toggle() {
+    this.isVisible = !this.isVisible
+  }
 }
 
 export const appMenuStore = createStore(AppMenuStore)
