@@ -1,6 +1,14 @@
+import { isWeb, zIndexDrawer } from '../constants/constants'
+import { hasMovedAtLeast } from '../helpers/mapHelpers'
+import { appMapStore } from './appMapStore'
+import { getSearchPageStore } from './home/search/SearchPageStore'
+import { homeStore } from './homeStore'
+import { pagesStore } from './pagesStore'
+import { OverlayLinkButton } from './views/OverlayLinkButton'
 import {
   AbsoluteXStack,
   AbsoluteYStack,
+  Spacer,
   Theme,
   YStack,
   useMedia,
@@ -9,14 +17,6 @@ import {
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import { Minus, Plus, RefreshCcw, X } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
-
-import { isWeb, zIndexDrawer } from '../constants/constants'
-import { hasMovedAtLeast } from '../helpers/mapHelpers'
-import { appMapStore } from './appMapStore'
-import { getSearchPageStore } from './home/search/SearchPageStore'
-import { homeStore } from './homeStore'
-import { pagesStore } from './pagesStore'
-import { OverlayLinkButton } from './views/OverlayLinkButton'
 
 export const AppMapControls = memo(() => {
   const media = useMedia()
@@ -68,11 +68,14 @@ export const AppMapControls = memo(() => {
             {!appMap.hideRegions && (
               <>
                 <OverlayLinkButton
+                  circular
                   disabled={appMap.currentZoomLevel === 'far'}
                   icon={Minus}
                   onPress={appMap.zoomOut}
                 />
+                <Spacer size="$2" />
                 <OverlayLinkButton
+                  circular
                   disabled={appMap.currentZoomLevel === 'close'}
                   icon={Plus}
                   onPress={appMap.zoomIn}

@@ -2,11 +2,10 @@
 import { Root } from './Root'
 import './web/base.css'
 import { startLogging } from '@dish/graph'
-import { loadableReady } from '@loadable/component'
 import '@tamagui/font-inter/css/500.css'
 import '@tamagui/font-inter/css/700.css'
 import React from 'react'
-import { hydrate, render } from 'react-dom'
+import { render } from 'react-dom'
 import { AppRegistry } from 'react-native'
 
 if (process.env.NODE_ENV === 'development') {
@@ -25,12 +24,12 @@ async function main() {
     return
   }
   // disable as we're not doing SSR for now
-  if (false && process.env.NODE_ENV === 'production') {
-    loadableReady(() => {
-      hydrate(<Root />, ROOT)
-    })
-    return
-  }
+  // if (false && process.env.NODE_ENV === 'production') {
+  //   loadableReady(() => {
+  //     hydrate(<Root />, ROOT)
+  //   })
+  //   return
+  // }
   // createRoot(ROOT).render(<Root />)
   render(<Root />, ROOT)
 }

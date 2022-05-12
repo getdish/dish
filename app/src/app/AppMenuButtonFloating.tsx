@@ -56,9 +56,9 @@ export const AppMenuButtonFloating = memo(() => {
       >
         <Button
           pointerEvents="auto"
-          elevation="$2"
+          elevation="$3"
           shop={0.2}
-          size="$5"
+          size="$6"
           icon={Menu}
           circular
           overflow="visible"

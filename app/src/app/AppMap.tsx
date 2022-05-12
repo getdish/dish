@@ -7,7 +7,11 @@ import { router } from '../router'
 import { MapRegionEvent } from '../types/homeTypes'
 import { AppMapControls } from './AppMapControls'
 import { useAppMapStore } from './appMapStore'
-import { cancelUpdateRegion, updateRegion, updateRegionFaster } from './appMapStoreUpdateRegion'
+import {
+  cancelUpdateRegion,
+  updateRegion,
+  updateRegionFaster,
+} from './appMapStoreUpdateRegion'
 import { drawerStore } from './drawerStore'
 import { AppFloatingTagMenuBar } from './home/AppFloatingTagMenuBar'
 import { ensureFlexText } from './home/restaurant/ensureFlexText'
@@ -123,7 +127,9 @@ export const AppMapContents = memo(function AppMapContents() {
   const isLoading = !results.length
   const key = useLastValueWhen(
     () =>
-      `${position.id ?? ''}${JSON.stringify(results.map((x) => x.location?.coordinates ?? '-'))}`,
+      `${position.id ?? ''}${JSON.stringify(
+        results.map((x) => x.location?.coordinates ?? '-')
+      )}`,
     isLoading
   )
 
@@ -308,7 +314,15 @@ export const AppMapContents = memo(function AppMapContents() {
       >
         {!media.sm && (
           <>
-            <XStack height={80} x="$4" width={width} top={0} right={0} zi={100000} pos="absolute">
+            <XStack
+              height={80}
+              x="$4"
+              width={width}
+              top={0}
+              right={0}
+              zi={100000}
+              pos="absolute"
+            >
               <AppFloatingTagMenuBar />
             </XStack>
             <XStack zi="$2" pos="absolute" height={90} width={width} right={0} bottom={0}>
