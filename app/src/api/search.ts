@@ -1,4 +1,4 @@
-import { jsonRoute, route } from '@dish/api'
+import { jsonRoute } from '@dish/api'
 import { main_db } from '@dish/helpers-node'
 import sql from 'sql-template-tag'
 
@@ -15,7 +15,6 @@ sqlFilters.set(true, 'true')
 sqlFilters.set(false, 'false')
 
 export default jsonRoute(async (req, res) => {
-  const start = Date.now()
   const { body } = req
   const userQuery = body['query'] ?? ''
   const limit = parseFloat(body['limit'] ?? '10')

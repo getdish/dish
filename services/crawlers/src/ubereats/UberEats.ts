@@ -1,14 +1,12 @@
-import '@dish/common'
-
-import { WorkerJob } from '@dish/worker'
-import axios_base, { AxiosResponse } from 'axios'
-import { JobOptions, QueueOptions } from 'bull'
-import _ from 'lodash'
-
 import { restaurantSaveCanonical } from '../canonical-restaurant'
 import { ScrapeData, scrapeInsert, scrapeMergeData } from '../scrape-helpers'
 import { aroundCoords, geocode } from '../utils'
 import categories from './categories'
+import '@dish/common'
+import { WorkerJob } from '@dish/worker'
+import axios_base, { AxiosResponse } from 'axios'
+import { JobOptions, QueueOptions } from 'bull'
+import _ from 'lodash'
 
 const UBEREATS_DOMAIN = process.env.UBEREATS_PROXY || 'https://www.ubereats.com/'
 const LOCALE = '?localeCode=en-US'
@@ -20,9 +18,7 @@ const PER_PAGE = 80
 const axios = axios_base.create({
   baseURL: UBEREATS_DOMAIN + 'api/',
   headers: {
-    common: {
-      'x-csrf-token': 'x',
-    },
+    'x-csrf-token': 'x',
   },
 })
 
@@ -48,12 +44,12 @@ export class UberEats extends WorkerJob {
     this.log('Starting crawler. Using domain: ' + UBEREATS_DOMAIN)
     const response = await axios.post(CITIES, {})
     const countries = _.shuffle(response.data.data.countryLinks.links)
-    for (let country of countries) {
+    for (const country of countries) {
       const country_name = country.href.split('/')[1]
       const locale = '?localeCode=' + country_name
       const response = await axios.post(CITIES + locale, {})
       const cities = _.shuffle(response.data.data.cityLinks.links)
-      for (let city of cities) {
+      for (const city of cities) {
         await this.runOnWorker('getCity', [`${city.title}, ${country.title}`])
       }
     }
@@ -67,14 +63,21 @@ export class UberEats extends WorkerJob {
 
   async aroundCoords(lat: number, lon: number) {
     const delivery_radius_multiplier = 2
-    const coords_set = aroundCoords(lat, lon, UberEats.DELIVERY_RADIUS, delivery_radius_multiplier)
-    for (let coords of coords_set) {
+    const coords_set = aroundCoords(
+      lat,
+      lon,
+      UberEats.DELIVERY_RADIUS,
+      delivery_radius_multiplier
+    )
+    for (const coords of coords_set) {
       await this.runOnWorker('getFeedPage', [0, '', coords[0], coords[1]])
     }
   }
 
   async getFeedPage(offset: number, category: string, lat: number, lon: number) {
-    this.log(`Getting feed for coords: ${lat}, ${lon}, category: '${category}', offset: ${offset}`)
+    this.log(
+      `Getting feed for coords: ${lat}, ${lon}, category: '${category}', offset: ${offset}`
+    )
     const response = await axios.post(
       FEED + LOCALE,
       {
@@ -94,17 +97,27 @@ export class UberEats extends WorkerJob {
     await this.extractRestaurantsFromFeed(response, offset, category)
 
     if (response.data.data.meta.hasMore) {
-      await this.runOnWorker('getFeedPage', [response.data.data.meta.offset, category, lat, lon])
+      await this.runOnWorker('getFeedPage', [
+        response.data.data.meta.offset,
+        category,
+        lat,
+        lon,
+      ])
     }
   }
 
   async extractRestaurantsFromFeed(response: AxiosResponse, offset: number, category: string) {
     const items = response.data.data.feedItems
     this.log(
-      items.length + ' restaurants on page: ' + offset / 80 + ', for category: "' + category + '"'
+      items.length +
+        ' restaurants on page: ' +
+        offset / 80 +
+        ', for category: "' +
+        category +
+        '"'
     )
 
-    for (let item of items) {
+    for (const item of items) {
       if (item.type == 'STORE') {
         await this.runOnWorker('getRestaurant', [item.uuid])
       }
@@ -166,7 +179,7 @@ export class UberEats extends WorkerJob {
   }
 
   private async getDishes(data: any, scrape_id: string) {
-    let dishes = [{}]
+    const dishes = [{}]
     for (const sid in data.sectionEntitiesMap) {
       for (const did in data.sectionEntitiesMap[sid]) {
         dishes.push(data.sectionEntitiesMap[sid][did])

@@ -1,22 +1,18 @@
+import { restaurantSaveCanonical } from '../canonical-restaurant'
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
+import { aroundCoords, geocode } from '../utils'
 import '@dish/common'
-
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import { shuffle } from 'lodash'
-
-import { restaurantSaveCanonical } from '../canonical-restaurant'
-import { ScrapeData, scrapeInsert } from '../scrape-helpers'
-import { aroundCoords, geocode } from '../utils'
 
 const GRUBHUB_DOMAIN = process.env.GRUBHUB_AWS_PROXY || 'https://api-gtm.grubhub.com/'
 
 const axios = axios_base.create({
   baseURL: GRUBHUB_DOMAIN,
   headers: {
-    common: {
-      'Content-Type': 'application/json',
-    },
+    'Content-Type': 'application/json',
   },
 })
 
@@ -79,11 +75,11 @@ export class GrubHub extends WorkerJob {
 
   async search(lat: number, lng: number) {
     let page = 1
-    let results: any[] = []
+    const results: any[] = []
     let all: any[] = []
     while (page == 1 || results.length > 0) {
       console.log(`DOORDASH: searching at ${lng}, ${lat}`)
-      let path = this._getSearchPath(lat, lng, page)
+      const path = this._getSearchPath(lat, lng, page)
       const response = await this.apiRequest(path)
       const results = response.search_result.results
       all = [...all, ...results]
@@ -132,7 +128,7 @@ export class GrubHub extends WorkerJob {
 
   async getReviews(id: string) {
     let page = 1
-    let reviews: any[] = []
+    const reviews: any[] = []
     let all: any[] = []
     while (page == 1 || reviews.length > 0) {
       const path = this._getReviewsPath(id)

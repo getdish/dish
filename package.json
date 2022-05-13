@@ -22,6 +22,7 @@
     "bootstrap": "docker-compose build base",
     "upgrade:tamagui": "manypkg upgrade tamagui canary && manypkg upgrade @tamagui canary && manypkg upgrade tamagui-loader canary",
     "link:tamagui": "yarn link ~/tamagui --all",
+    "dev": "dsh dev",
     "start": "DISH_ENV=${DISH_ENV:-development} ./dsh compose_up",
     "start:test": "COMPOSE_EXCLUDE_EXTRA=\"|app\" DISH_ENV=test ./dsh compose_up",
     "site": "yarn workspace @dish/site start",

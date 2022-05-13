@@ -1,13 +1,12 @@
+import { restaurantSaveCanonical } from '../canonical-restaurant'
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
+import { aroundCoords, geocode } from '../utils'
 import '@dish/common'
-
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import * as _ from 'lodash'
-
-import { restaurantSaveCanonical } from '../canonical-restaurant'
-import { ScrapeData, scrapeInsert } from '../scrape-helpers'
-import { aroundCoords, geocode } from '../utils'
+import { shuffle } from 'lodash'
 
 type BasicStore = {
   id: string
@@ -20,9 +19,7 @@ const DOORDASH_DOMAIN = process.env.DOORDASH_GRAPHQL_AWS_PROXY || 'https://www.d
 const axios = axios_base.create({
   baseURL: DOORDASH_DOMAIN + 'graphql',
   headers: {
-    common: {
-      'Content-Type': 'application/json',
-    },
+    'Content-Type': 'application/json',
   },
 })
 
@@ -45,10 +42,10 @@ export class DoorDash extends WorkerJob {
   }
 
   async allForCity(city_name: string) {
-    let stores: { [id: string]: BasicStore } = {}
+    const stores: { [id: string]: BasicStore } = {}
     console.log('Starting DoorDash crawler. Using domain: ' + DOORDASH_DOMAIN)
     const coords = await geocode(city_name)
-    const region_coords = _.shuffle(
+    const region_coords = shuffle(
       aroundCoords(coords[0], coords[1], this.MAPVIEW_SIZE, this.SEARCH_RADIUS_MULTIPLIER)
     )
     for (const coords of region_coords) {
@@ -72,7 +69,15 @@ export class DoorDash extends WorkerJob {
       variables: {},
       query: 'query viewstate {viewstate {id experiments __typename}}',
     })
-    const dd_guest_id = response.headers['set-cookie'].find((c) => c.includes('dd_guest_id'))
+    const cookieHeaders = response.headers['set-cookie']
+    if (!Array.isArray(cookieHeaders)) {
+      throw new Error(`Not array`)
+    }
+    const dd_guest_id = cookieHeaders.find((c) => c.includes('dd_guest_id'))
+    if (!dd_guest_id) {
+      console.warn('no guest')
+      return
+    }
     this.cookie = dd_guest_id.split(';')[0].split('=')[1]
   }
 
@@ -90,8 +95,8 @@ export class DoorDash extends WorkerJob {
   }
 
   async search(lat: number, lng: number, name?: string) {
+    const stores: { [id: string]: BasicStore } = {}
     let is_more = true
-    let stores: { [id: string]: BasicStore } = {}
     let page = 0
     console.log(`DoorDash searching at: ${lat}, ${lng}`)
     while (is_more) {

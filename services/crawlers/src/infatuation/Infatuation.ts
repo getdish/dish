@@ -1,22 +1,18 @@
+import { restaurantSaveCanonical } from '../canonical-restaurant'
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
+import { aroundCoords, geocode } from '../utils'
 import '@dish/common'
-
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import _ from 'lodash'
-
-import { restaurantSaveCanonical } from '../canonical-restaurant'
-import { ScrapeData, scrapeInsert } from '../scrape-helpers'
-import { aroundCoords, geocode } from '../utils'
 
 const INFATUATION_DOMAIN = process.env.INFATUATION_PROXY || 'https://www.theinfatuation.com'
 
 const axios = axios_base.create({
   baseURL: INFATUATION_DOMAIN,
   headers: {
-    common: {
-      'X-My-X-Forwarded-For': 'www.theinfatuation.com',
-    },
+    'X-My-X-Forwarded-For': 'www.theinfatuation.com',
   },
 })
 

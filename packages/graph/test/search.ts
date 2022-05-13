@@ -1,9 +1,3 @@
-import '@dish/react-test-env'
-
-import anyTest, { TestInterface } from 'ava'
-import { clone } from 'lodash'
-
-import { restaurant_fixture } from './etc/fixtures'
 import {
   Auth,
   SEARCH_DOMAIN,
@@ -17,6 +11,10 @@ import {
   tagFindOne,
   tagInsert,
 } from '..'
+import { restaurant_fixture } from './etc/fixtures'
+import '@dish/react-test-env'
+import anyTest, { TestInterface } from 'ava'
+import { clone } from 'lodash'
 
 interface Context {
   user: User
@@ -187,23 +185,23 @@ test.skip('Supports main_tag priority ordering', async (t) => {
   t.is(results?.restaurants?.[2].meta.restaurant_rank, 3)
 })
 
-test.skip('Home page feed', async (t) => {
-  restaurant_fixture.location = {
-    type: 'Point',
-    coordinates: [-122, 36],
-  }
-  let [restaurant] = await restaurantUpsert([restaurant_fixture])
-  await reviewUpsert([
-    {
-      user_id: t.context.user.id,
-      restaurant_id: restaurant.id,
-      text: 'test',
-    },
-  ])
-  const response = await fetch(SEARCH_DOMAIN + '/feed')
-  const json = await response.json()
-  t.deepEqual(Object.keys(json), ['trending', 'newest', 'total_restaurants_in_region'])
-})
+// test.skip('Home page feed', async (t) => {
+//   restaurant_fixture.location = {
+//     type: 'Point',
+//     coordinates: [-122, 36],
+//   }
+//   let [restaurant] = await restaurantUpsert([restaurant_fixture])
+//   await reviewUpsert([
+//     {
+//       user_id: t.context.user.id,
+//       restaurant_id: restaurant.id,
+//       text: 'test',
+//     },
+//   ])
+//   const response = await fetch(SEARCH_DOMAIN + '/feed')
+//   const json = await response.json()
+//   t.deepEqual(Object.keys(json), ['trending', 'newest', 'total_restaurants_in_region'])
+// })
 
 // test.skip('Regions', async (t) => {
 //   const response = await fetch(SEARCH_DOMAIN + '/regions?slug=xxx')

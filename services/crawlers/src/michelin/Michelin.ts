@@ -1,21 +1,17 @@
+import { restaurantSaveCanonical } from '../canonical-restaurant'
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 import '@dish/common'
-
 import { sentryException } from '@dish/common'
 import { WorkerJob } from '@dish/worker'
 import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
-
-import { restaurantSaveCanonical } from '../canonical-restaurant'
-import { ScrapeData, scrapeInsert } from '../scrape-helpers'
 
 const MICHELIN_DOMAIN = process.env.MICHELIN_PROXY || 'https://8nvhrd7onv-dsn.algolia.net'
 
 const axios = axios_base.create({
   baseURL: MICHELIN_DOMAIN,
   headers: {
-    common: {
-      'X-My-X-Forwarded-For': '8nvhrd7onv-dsn.algolia.net',
-    },
+    'X-My-X-Forwarded-For': '8nvhrd7onv-dsn.algolia.net',
   },
 })
 

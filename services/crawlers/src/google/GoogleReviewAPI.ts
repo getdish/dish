@@ -1,5 +1,6 @@
+import { ScrapeData, scrapeInsert } from '../scrape-helpers'
+import { restaurantFindIDBatchForCity } from '../utils'
 import '@dish/common'
-
 import { sentryMessage } from '@dish/common'
 import { Restaurant, globalTagId, restaurantFindOne } from '@dish/graph'
 import { WorkerJob } from '@dish/worker'
@@ -7,18 +8,13 @@ import axios_base from 'axios'
 import { JobOptions, QueueOptions } from 'bull'
 import * as cheerio from 'cheerio'
 
-import { ScrapeData, scrapeInsert } from '../scrape-helpers'
-import { restaurantFindIDBatchForCity } from '../utils'
-
 const GOOGLE_DOMAIN = process.env.GOOGLE_AWS_PROXY || 'https://www.google.com'
 
 const axios = axios_base.create({
   baseURL: GOOGLE_DOMAIN,
   headers: {
-    common: {
-      'X-My-X-Forwarded-For': 'www.google.com',
-      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0',
-    },
+    'X-My-X-Forwarded-For': 'www.google.com',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0',
   },
 })
 
@@ -119,7 +115,9 @@ export class GoogleReviewAPI extends WorkerJob {
 
   parseReviewPage(html: string) {
     const $ = cheerio.load(html)
-    const nextPageToken = $('.gws-localreviews__general-reviews-block').attr('data-next-page-token')
+    const nextPageToken = $('.gws-localreviews__general-reviews-block').attr(
+      'data-next-page-token'
+    )
     const reviews = $('.gws-localreviews__google-review')
     let data: any[] = []
     for (let i = 0; i < reviews.length; i++) {
@@ -179,7 +177,7 @@ export class GoogleReviewAPI extends WorkerJob {
   }
 
   parsePhotos(review: any, $: any) {
-    let urls: string[] = []
+    const urls: string[] = []
     const anchors = review.find('g-scrolling-carousel div div div a')
     for (let i = 0; i < anchors.length; i++) {
       const style = $(anchors[i]).find('div').attr('style')

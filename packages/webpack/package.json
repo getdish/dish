@@ -16,7 +16,7 @@
     "@dish/server": "*",
     "@loadable/webpack-plugin": "^5.15.2",
     "@mdx-js/loader": "^2.1.1",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.5",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.6",
     "@tamagui/babel-plugin": "^1.0.1-beta.21",
     "@tamagui/build": "^1.0.1-beta.21",
     "@tamagui/static": "^1.0.1-beta.21",

@@ -1,9 +1,8 @@
-import { LngLat, SEARCH_DOMAIN, TopCuisine } from '@dish/graph'
-import { sortBy, uniqBy } from 'lodash'
-
 import { getDistanceForZoom, snapCoordsToTileCentre } from '../../helpers/mapHelpers'
 import { useQueryLoud } from '../../helpers/useQueryLoud'
 import { getMapZoom } from '../getMap'
+import { DISH_API_ENDPOINT, LngLat, TopCuisine } from '@dish/graph'
+import { sortBy, uniqBy } from 'lodash'
 
 export const useTopCuisines = (center: LngLat) => {
   return useQueryLoud(`topcuisine-${JSON.stringify(center)}`, () => getHomeCuisines(center), {
@@ -14,7 +13,7 @@ export const useTopCuisines = (center: LngLat) => {
 const getHomeCuisines = async (center: LngLat) => {
   const zoom = (await getMapZoom()) ?? 11
   const cuisineItems = await getHomeDishes(center.lng, center.lat, zoom)
-  let all: TopCuisine[] = []
+  const all: TopCuisine[] = []
   for (const item of cuisineItems) {
     const existing = all.find((x) => x.country === item.country)
     if (existing) {
@@ -32,13 +31,17 @@ async function getHomeDishes(lng: number, lat: number, zoom: number): Promise<To
   const snapped = snapCoordsToTileCentre(lng, lat, zoom)
   lng = snapped[0]
   lat = snapped[1]
-  const params = [
-    'lon=' + lng,
-    'lat=' + lat,
-    // + 1 zoom because its a bit off
-    'distance=' + getDistanceForZoom(zoom + 1),
-  ]
-  const url = SEARCH_DOMAIN + '/top_cuisines?' + params.join('&')
-  const response = await fetch(url).then((res) => res.json())
-  return response
+  const distance = getDistanceForZoom(zoom + 1)
+  const response = await fetch(`${DISH_API_ENDPOINT}/top`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      lon: lng,
+      lat,
+      distance,
+    }),
+  })
+  return await response.json()
 }
