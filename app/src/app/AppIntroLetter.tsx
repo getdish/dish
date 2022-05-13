@@ -1,16 +1,15 @@
+import { useRouterCurPage } from '../router'
+import { AppIntroLogin } from './AppIntroLogin'
+import { IntroModalStore } from './IntroModalStore'
+import { UserOnboard } from './UserOnboard'
+import { useLocalStorageState } from './hooks/useLocalStorageState'
+import { useUserStore } from './userStore'
+import { SmallCircleButton } from './views/CloseButton'
+import { DarkModal } from './views/DarkModal'
 import { AbsoluteYStack, Text } from '@dish/ui'
 import { useStore } from '@dish/use-store'
 import { Home } from '@tamagui/feather-icons'
 import React, { memo, useLayoutEffect } from 'react'
-
-import { useRouterCurPage } from '../router'
-import { AppIntroLogin } from './AppIntroLogin'
-import { useLocalStorageState } from './hooks/useLocalStorageState'
-import { IntroModalStore } from './IntroModalStore'
-import { UserOnboard } from './UserOnboard'
-import { useUserStore } from './userStore'
-import { SmallCircleButton } from './views/CloseButton'
-import { DarkModal } from './views/DarkModal'
 
 export const AppIntroLetter = memo(() => {
   const userStore = useUserStore()
@@ -44,31 +43,16 @@ export const AppIntroLetter = memo(() => {
         <>
           <SmallCircleButton
             position="absolute"
-            icon={<Home size={24} color="rgba(255,255,255,0.5)" />}
+            icon={Home}
             zIndex={1000}
             top={15}
             right={15}
-            size={48}
-            hoverStyle={{
-              backgroundColor: 'rgba(255,255,255,0.3)',
-            }}
+            size="$6"
             onPress={() => {
               setCloses(closes + 1)
               store.setHidden(true)
             }}
           />
-          <AbsoluteYStack
-            pointerEvents="none"
-            bottom={-10}
-            zIndex={1000}
-            right={-40}
-            rotate="-10deg"
-          >
-            <Text fontSize={62}>🌮</Text>
-          </AbsoluteYStack>
-          <AbsoluteYStack pointerEvents="none" bottom={-10} zIndex={1000} left={-40} rotate="10deg">
-            <Text fontSize={62}>🍜</Text>
-          </AbsoluteYStack>
         </>
       }
     >

@@ -1,4 +1,13 @@
-import { Heading, Separator, Spacer, Text, TextProps, XStack, YStack, YStackProps } from '@dish/ui'
+import {
+  Heading,
+  Separator,
+  Spacer,
+  Text,
+  TextProps,
+  XStack,
+  YStack,
+  YStackProps,
+} from '@dish/ui'
 import React, { memo } from 'react'
 
 export const SmallTitle = memo(
@@ -21,14 +30,14 @@ export const SmallTitle = memo(
       divider?: 'center' | 'bottom' | 'off'
     }) => {
     const dividerElement = color ? (
-      <Separator flex={1} backgroundColor={color} opacity={0.1} />
+      <Separator alignSelf="center" flex={1} backgroundColor={color} opacity={0.1} />
     ) : (
-      <Separator flex={1} />
+      <Separator alignSelf="center" flex={1} />
     )
 
     return (
-      <YStack width="100%" alignItems="center" {...rest}>
-        <XStack width="100%" alignItems="center">
+      <YStack width="100%" ai="center" {...rest}>
+        <XStack width="100%" ai="center">
           {divider === 'center' && dividerElement}
           <Heading
             paddingHorizontal={20}

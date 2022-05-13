@@ -70,7 +70,7 @@ export const AuthForm = memo(
     }
 
     return (
-      <YStack alignItems="center" space="$2">
+      <YStack alignItems="center" space="$4">
         {isWeb && (
           <>
             <YStack>
@@ -117,8 +117,6 @@ export const AuthForm = memo(
             <ErrorParagraph>{userStore.messages.join(', ')}</ErrorParagraph>
           )}
         </YStack>
-
-        <Spacer />
       </YStack>
     )
   }
@@ -243,7 +241,11 @@ export const LoginForm = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
       submitText="Go"
       errorText={errorMessage}
       after={
-        <Link alignSelf="flex-end" fontSize={14} onClick={(e) => setFormPage?.('forgotPassword')}>
+        <Link
+          alignSelf="flex-end"
+          fontSize={14}
+          onClick={(e) => setFormPage?.('forgotPassword')}
+        >
           Forgot password?
         </Link>
       }

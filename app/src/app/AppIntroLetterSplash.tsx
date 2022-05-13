@@ -69,14 +69,11 @@ export const AppIntroLetter = memo(() => {
         outside={
           <>
             <SmallCircleButton
-              icon={<Home size={24} color="rgba(255,255,255,0.5)" />}
+              icon={Home}
               zIndex={1000}
               top={15}
               right={15}
-              size={48}
-              hoverStyle={{
-                backgroundColor: 'rgba(255,255,255,0.3)',
-              }}
+              size="$6"
               onPress={() => {
                 setCloses(closes + 1)
                 store.setHidden(true)
@@ -330,7 +327,10 @@ const GridItem = (props: {
         })}
       >
         <YStack borderRadius={13} overflow="hidden">
-          <Image source={{ uri: props.image }} style={{ width: 380 / 2.5, height: 774 / 2.5 }} />
+          <Image
+            source={{ uri: props.image }}
+            style={{ width: 380 / 2.5, height: 774 / 2.5 }}
+          />
         </YStack>
       </YStack>
     </YStack>
