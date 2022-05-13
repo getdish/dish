@@ -2,7 +2,6 @@ version: '3.7'
 
 x-dish-env: &dish-env
   HASURA_ENDPOINT: ${HASURA_ENDPOINT?bad_env}
-  SEARCH_ENDPOINT: ${SEARCH_ENDPOINT?bad_env}
   GORSE_ENDPOINT: ${GORSE_ENDPOINT?bad_env}
   APP_ENDPOINT: ${APP_ENDPOINT?bad_env}
   BERT_ENDPOINT: ${BERT_ENDPOINT?bad_env}
@@ -123,9 +122,7 @@ services:
     #   retries: 5
 
   hasura:
-    # image: ${DOCKER_HASURA_IMAGE:-hasura/graphql-engine:v2.3.0}
-    build:
-      context: ${DOCKER_HASURA_FOLDER:-./services/hasura}
+    image: ${DOCKER_HASURA_IMAGE:-hasura/graphql-engine:v2.6.1.cli-migrations-v2}
     restart: on-failure:3
     networks:
       - traefik-public
@@ -169,46 +166,8 @@ services:
     #   # - 'postgres'
     #   - 'redis'
 
-  search:
-    image: registry.dishapp.com/dish-search${DISH_IMAGE_TAG}
-    build:
-      context: ./services/search
-      dockerfile: ./Dockerfile
-    ports:
-      - 9999:9999
-    restart: on-failure:3
-    networks:
-      - default
-      - traefik-public
-    deploy:
-      replicas: ${DOCKER_REPLICAS:-1}
-      update_config:
-        order: start-first
-        failure_action: rollback
-        parallelism: 1
-        delay: 5s
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-      labels:
-        - traefik.enable=true
-        - traefik.docker.network=traefik-public
-        - traefik.constraint-label=traefik-public
-        - traefik.http.routers.search-http.rule=Host(`search.${DOMAIN}`)
-        - traefik.http.routers.search-http.entrypoints=http
-        - traefik.http.routers.search-http.middlewares=dish-https-redirect
-        - traefik.http.routers.search-https.rule=Host(`search.${DOMAIN}`)
-        - traefik.http.routers.search-https.entrypoints=https
-        - traefik.http.routers.search-https.tls=true
-        - traefik.http.routers.search-https.tls.certresolver=dishresolver
-        - traefik.http.services.search.loadbalancer.server.port=9999
-    environment:
-      <<: *dish-env
-    # depends_on:
-    #   - 'postgres'
-
   tileserver:
-    image: registry.dishapp.com/dish-tileserver${DISH_IMAGE_TAG}
+    image: urbica/martin:0.5.0
     networks:
       - default
       - traefik-public
@@ -237,9 +196,6 @@ services:
         # - traefik.http.routers.tileserver-https.tls=true
         # - traefik.http.routers.tileserver-https.tls.certresolver=dishresolver
         - traefik.http.services.tileserver.loadbalancer.server.port=3000
-    build:
-      context: ./services/tileserver
-      dockerfile: ./Dockerfile
     ports:
       - 3005:3000
     environment:

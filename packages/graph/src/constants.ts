@@ -11,10 +11,14 @@ export const isManualDebugMode = search.startsWith('?debug')
 // Because its nice to be able to test production endpoints in dev mode
 // ... hmm may want to default to this in production, but have a flag to force
 export const isProd =
-  process.env.IS_LIVE === '1' || hostname === 'dishapp.com' || hostname.includes('live') || false
+  process.env.IS_LIVE === '1' ||
+  hostname === 'dishapp.com' ||
+  hostname.includes('live') ||
+  false
 
 export const isNode = process.env.TARGET !== 'web' || !getWindow() || false
-export const isStaging = process.env.NODE_ENV === 'staging' || hostname.includes('staging') || false
+export const isStaging =
+  process.env.NODE_ENV === 'staging' || hostname.includes('staging') || false
 export const isDev = (!isProd && !isStaging) || false
 export const isNative = process.env.TARGET === 'native'
 
@@ -46,14 +50,6 @@ const ORIGIN_MINUS_PORT = ORIGIN.replace(/:[0-9]+/, '')
 export const DISH_API_ENDPOINT = `${ORIGIN}/api`
 
 export const SEARCH_DOMAIN = `${DISH_API_ENDPOINT}/search`
-export const SEARCH_DOMAIN_INTERNAL = (() => {
-  const staging = 'https://search-staging.dishapp.com'
-  const live = 'https://search.dishapp.com'
-  const local = process.env.SEARCH_ENDPOINT ?? `${ORIGIN_MINUS_PORT}:9999`
-  if (isProd) return live
-  if (isStaging) return staging
-  return local
-})()
 
 export const ZeroUUID = '00000000-0000-0000-0000-000000000000'
 export const OneUUID = '00000000-0000-0000-0000-000000000001'
@@ -65,7 +61,8 @@ export const TILES_HOST_INTERNAL =
   process.env.TILES_HOST_INTERNAL ?? process.env.TILES_HOST ?? `tileserver:3000`
 
 export const GRAPH_DOMAIN =
-  process.env.HASURA_ENDPOINT || `http://${ORIGIN_MINUS_PORT}:${process.env.HASURA_PORT || 8080}`
+  process.env.HASURA_ENDPOINT ||
+  `http://${ORIGIN_MINUS_PORT}:${process.env.HASURA_PORT || 8080}`
 export const GRAPH_API_INTERNAL = `${GRAPH_DOMAIN}/v1/graphql`
 export const GRAPH_API = `${DISH_API_ENDPOINT}/graph`
 
@@ -80,7 +77,6 @@ if (DISH_DEBUG >= 2) {
     HASURA_ENDPOINT: process.env.HASURA_ENDPOINT,
     APP_ENDPOINT: process.env.APP_ENDPOINT,
     DISH_API_ENDPOINT,
-    SEARCH_DOMAIN_INTERNAL,
     LOCAL_HOST,
     TILES_HOST,
     GRAPH_API,

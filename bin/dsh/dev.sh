@@ -1,5 +1,75 @@
 #!/bin/bash
 
+# runs everything all in one
+# mac m1 only for now but not hard to adapt
+function dev() {
+  function ctrl_c() {
+      echo "👋 BYE"
+      kill -KILL "$PID1" "$PID2" "$PID3" "$PID4" "$PID5"
+  }
+
+  trap ctrl_c INT SIGINT
+
+  # start postgres
+  if dev_get_pg_status | grep -q 'no server running'; then
+    open -a Postgres
+    sleep 1
+    echo "✅ started postgres"
+  else
+    echo "✅ postgres running"
+  fi
+
+  # # start docker / compose
+  if [[ -z "$(! docker stats --no-stream 2> /dev/null)" ]]; then
+    dev_start_docker_then_compose &
+    PID1=$!
+  else
+    compose_up &
+    PID1=$!
+  fi
+  echo "✅ started docker"
+
+  echo "✅ sync tamagui"
+  ./bin/sync-tamagui.sh & 
+  PID2=$!
+
+  echo "✅ yarn watch"
+  yarn watch &
+  PID3=$!
+
+  # sleep a bit so watch doesn't clog/restart app
+  sleep 3
+
+  echo "✅ start app (web)"
+  yarn web &
+  PID4=$!
+
+  echo "✅ start app (native)"
+  yarn app &
+  PID5=$!
+
+  wait
+}
+
+function dev_get_pg_status() {
+  PGDATA="$POSTGRES_DATA_DIR" log_command pg_ctl status
+}
+
+function dev_start_docker() {
+  printf "Starting Docker for Mac";
+  open -a Docker;
+  while [[ -z "$(! docker stats --no-stream 2> /dev/null)" ]];
+    do printf ".";
+    sleep 1
+  done
+  echo "";
+}
+
+function dev_start_docker_then_compose() {
+  dev_start_docker
+  compose_up
+}
+
 function run() {
   set -a
   source_env

@@ -1,5 +1,3 @@
-import '@dish/helpers/polyfill'
-
 import {
   Auth,
   Restaurant,
@@ -15,6 +13,7 @@ import {
   userFindOne,
   userUpdate,
 } from '@dish/graph'
+import '@dish/helpers/polyfill'
 import anyTest, { TestInterface } from 'ava'
 
 interface Context {}
@@ -74,13 +73,17 @@ test.skip('Normal user cannot delete things', async (t) => {
   Auth.as('user')
 
   error = await t.throwsAsync(() => deleteAllBy('restaurant', 'id', ZeroUUID))
-  t.assert(error.message.includes('field "delete_restaurant" not found in type: \'mutation_root\''))
+  t.assert(
+    error.message.includes('field "delete_restaurant" not found in type: \'mutation_root\'')
+  )
 
   error = await t.throwsAsync(() => deleteAllBy('user', 'id', ZeroUUID))
   t.assert(error.message.includes('field "delete_user" not found in type: \'mutation_root\''))
 
   error = await t.throwsAsync(() => deleteAllBy('menu_item', 'id', ZeroUUID))
-  t.assert(error.message.includes('field "delete_menu_item" not found in type: \'mutation_root\''))
+  t.assert(
+    error.message.includes('field "delete_menu_item" not found in type: \'mutation_root\'')
+  )
 })
 
 test('Normal user can see restaurants', async (t) => {
@@ -101,7 +104,7 @@ test('Normal user can see restaurants', async (t) => {
 })
 
 test('Contributor can edit restaurants', async (t) => {
-  let [restaurant] = await restaurantInsert([
+  const [restaurant] = await restaurantInsert([
     {
       name: 'test',
       location: {

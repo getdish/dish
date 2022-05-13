@@ -42,7 +42,7 @@ export DOCKER_CONFIG="$PROJECT_ROOT/etc/docker"
 
 cd "$PROJECT_ROOT"
 
-deps="etc/dsh_ctl_sh_deps"
+deps="bin/dsh"
 source "$deps/utils.sh"
 source "$deps/compose.sh"
 source "$deps/deploy.sh"

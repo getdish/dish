@@ -7,7 +7,7 @@ FROM="$HOME/tamagui"
 TO="$HOME/dish/node_modules"
 
 function sync() {
-  echo "syncing...."
+  echo "syncing tamagui...."
   
   # copy in *all* non-tamagui node modules to ensure sub-deps shared (but prefer not to overwrite)
   rsync --ignore-existing -aq --exclude="*tamagui*" "$FROM/node_modules/" "$TO"
@@ -26,10 +26,12 @@ function sync() {
   
   wait
 
-  pushd "$TO" || exit
+  pushd "$TO" > /dev/null || exit
   watchman watch-del-all 2&> /dev/null
   rm -r "$TMPDIR/metro-cache" 2&> /dev/null || true
-  popd || exit
+  popd > /dev/null || exit
+
+  echo "synced tamagui"
 }
 
 sync
