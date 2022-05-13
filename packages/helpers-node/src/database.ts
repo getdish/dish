@@ -55,12 +55,12 @@ export class Database {
     if (!client) {
       throw new Error('no client')
     }
-    const timeout = sleep(process.env.NODE_ENV === 'test' ? 15000 : 80000)
+    const timeout = sleep(process.env.NODE_ENV === 'test' ? 15_000 : 80_000)
     try {
       const res = await Promise.race([
         client.query(query, values),
         timeout.then(() => {
-          console.error(`Timed out on query`, query)
+          console.error(`Timed out on query`, query, values)
           return 'timed_out'
         }),
       ] as const)

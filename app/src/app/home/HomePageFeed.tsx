@@ -1,6 +1,7 @@
 import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
 import { UseSetAppMapProps, appMapStore, useSetAppMap } from '../appMapStore'
+import { useHomeStore } from '../homeStore'
 import { setLocation } from '../setLocation'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
@@ -8,6 +9,7 @@ import { SlantedTitle } from '../views/SlantedTitle'
 import { ListCard } from '../views/list/ListCard'
 import { FeedCard } from './FeedCard'
 import { homePageStore } from './homePageStore'
+import { useTopCuisines } from './useTopCuisines'
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import {
@@ -17,7 +19,6 @@ import {
   H2,
   Paragraph,
   Spacer,
-  Theme,
   XStack,
   YStack,
   useDebounce,
@@ -50,9 +51,13 @@ export const HomePageFeed = memo(
       const [hovered, setHovered] = useState<null | RestaurantOnlyIds[]>(null)
       const refetch = useRefetch()
       const setHoveredDbc = useDebounce(setHovered, 400)
+      const homeStore = useHomeStore()
+      const topCuisines = useTopCuisines(homeStore.currentState.center)
       const setHoverCancel = () => {
         setHoveredDbc.cancel()
       }
+
+      console.log('topCuisines2', topCuisines.data)
 
       useSetAppMap({
         showRank: !!hovered,

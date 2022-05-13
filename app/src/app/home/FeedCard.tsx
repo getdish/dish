@@ -14,7 +14,7 @@ import {
   getFontSizeToken,
   useTheme,
 } from '@dish/ui'
-import React, { RefObject, useRef, useState } from 'react'
+import React from 'react'
 import { StyleSheet, View } from 'react-native'
 
 export type FeedCardProps = CardProps & {

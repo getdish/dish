@@ -4,13 +4,16 @@ import { getMapZoom } from '../getMap'
 import { DISH_API_ENDPOINT, LngLat, TopCuisine } from '@dish/graph'
 import { sortBy, uniqBy } from 'lodash'
 
-export const useTopCuisines = (center: LngLat) => {
+export const useTopCuisines = (center?: LngLat | null) => {
   return useQueryLoud(`topcuisine-${JSON.stringify(center)}`, () => getHomeCuisines(center), {
     suspense: false,
   })
 }
 
-const getHomeCuisines = async (center: LngLat) => {
+const getHomeCuisines = async (center?: LngLat | null) => {
+  if (!center) {
+    return null
+  }
   const zoom = (await getMapZoom()) ?? 11
   const cuisineItems = await getHomeDishes(center.lng, center.lat, zoom)
   const all: TopCuisine[] = []

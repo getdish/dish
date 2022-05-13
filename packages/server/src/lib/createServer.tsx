@@ -1,15 +1,13 @@
-import { join } from 'path'
-import { Worker } from 'worker_threads'
-
+import { ServerConfig, ServerConfigNormal } from '../types'
+import { createWebServer } from './createWebServer'
+import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 import compression from 'compression'
 import cors from 'cors'
 import express from 'express'
 import proxy from 'express-http-proxy'
 import getPort from 'get-port'
-
-import { ServerConfig, ServerConfigNormal } from '../types'
-import { createWebServer } from './createWebServer'
-import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
+import { join } from 'path'
+import { Worker } from 'worker_threads'
 
 export async function createServer(serverConf: ServerConfig) {
   const rootDir = serverConf.rootDir ?? process.cwd()
@@ -54,8 +52,9 @@ export async function createServer(serverConf: ServerConfig) {
 
   const allowedOrigins = new Set([
     'http://localhost:4444',
-    'http://d1live.com',
-    'http://d1sh.com',
+    'http://dish.localhost',
+    'http://live.dish.localhost',
+    'http://staging.dish.localhost',
     'https://dishapp.com',
   ])
 
@@ -64,11 +63,16 @@ export async function createServer(serverConf: ServerConfig) {
       origin: (origin, callback) => {
         // allow requests with no origin
         // (like mobile apps or curl requests)
-        if (!origin) return callback(null, true)
+        if (!origin) {
+          return callback(null, true)
+        }
         if (!allowedOrigins.has(origin)) {
-          var msg =
-            'The CORS policy for this site does not ' + 'allow access from the specified Origin.'
-          return callback(new Error(msg), false)
+          return callback(
+            new Error(
+              `The CORS policy for this site does not allow access from the specified Origin.`
+            ),
+            false
+          )
         }
         return callback(null, true)
       },

@@ -114,9 +114,9 @@ At the root of the monorepo:
 You'll want to add:
 
 ```
-d1sh.com 127.0.0.1
-d1staging.com 127.0.0.1
-d1live.com 127.0.0.1
+dish.localhost 127.0.0.1
+staging.dish.localhost 127.0.0.1
+live.dish.localhost 127.0.0.1
 ```
 
 Which are for local, staging, prod, respectively.
@@ -128,12 +128,13 @@ If you want to load those URL's without ports, which is recommended, you'll want
 ```
 server {
   listen 80;
-  server_name d1sh.com;
+  server_name dish.localhost;
 
   location / {
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "upgrade";
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
     proxy_set_header Host $host;
     proxy_pass http://0.0.0.0:4444;
   }

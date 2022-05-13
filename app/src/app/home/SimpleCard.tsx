@@ -1,4 +1,3 @@
-// debug
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { XStack, YStack, YStackProps } from '@dish/ui'
 import React from 'react'
@@ -11,7 +10,13 @@ export type SimpleCardProps = YStackProps & {
   isBehind?: boolean
 }
 
-export const SimpleCard = ({ children, size, slanted, isBehind, ...props }: SimpleCardProps) => {
+export const SimpleCard = ({
+  children,
+  size,
+  slanted,
+  isBehind,
+  ...props
+}: SimpleCardProps) => {
   return (
     <YStack
       bc="$backgroundHover"

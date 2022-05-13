@@ -4,10 +4,12 @@ import sql from 'sql-template-tag'
 
 export default jsonRoute(async (req, res) => {
   const { body } = req
-  const distance = parseFloat(body['distance'] ?? 1)
+  // just testing and at least sometimes 0.015 goes up to ~5s
+  const distance = Math.min(0.03, parseFloat(body['distance'] ?? 1))
   const lon = body['lon']
   const lat = body['lat']
   try {
+    console.log('querying', { lat, lon, distance })
     const query = getTopCuisinesQuery({
       distance,
       lon,
@@ -15,7 +17,8 @@ export default jsonRoute(async (req, res) => {
     })
 
     const { rows } = await main_db.query(query.text, query.values)
-    const data = rows[0]?.json_build_object
+    const data = rows[0]?.json_agg ?? []
+    console.log('returning', rows)
     res.json(data)
   } catch (err) {
     console.log('err', err)
@@ -107,7 +110,7 @@ function getTopCuisinesQuery(p: { lon: string; lat: string; distance: number }) 
   
   SELECT json_agg(t) FROM (
     SELECT * FROM by_country
-      WHERE frequency > 50
+      WHERE frequency > 1
     ORDER BY avg_score DESC
     LIMIT 10
   ) t

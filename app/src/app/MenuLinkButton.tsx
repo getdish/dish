@@ -14,7 +14,7 @@ export const MenuLinkButton = (props: LinkButtonProps) => {
       textProps={{
         textAlign: 'left',
       }}
-      onPressOut={appMenuStore.hide}
+      // onPressOut={appMenuStore.hide}
       {...props}
     />
   )

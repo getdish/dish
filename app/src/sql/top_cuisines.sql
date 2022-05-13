@@ -18,7 +18,7 @@ WITH by_country AS (
           'avg_score', (
             SELECT AVG(trbda_rt.score) FROM restaurant trbda
             JOIN restaurant_tag trbda_rt ON trbda_rt.restaurant_id = trbda.id
-              WHERE ST_DWithin(trbda.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+              WHERE ST_DWithin(trbda.location, ST_SetSRID(ST_MakePoint(-122.64741320619552, 37.90808839307098), 0), 0.088)
               AND trbda_rt.tag_id = hot_tags.id
               AND trbda_rt.score IS NOT NULL
           ),
@@ -26,7 +26,7 @@ WITH by_country AS (
             FROM (
               SELECT trbdb.id, trbdb.name, trbdb.slug, AVG(trbdb_rt.score) as dish_score FROM restaurant trbdb
               JOIN restaurant_tag trbdb_rt ON trbdb_rt.restaurant_id = trbdb.id
-                WHERE ST_DWithin(trbdb.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+                WHERE ST_DWithin(trbdb.location, ST_SetSRID(ST_MakePoint(-122.64741320619552, 37.90808839307098), 0), 0.088)
                 AND trbdb_rt.tag_id = hot_tags.id
                 AND trbdb_rt.score IS NOT NULL
               GROUP BY trbdb.id
@@ -41,7 +41,7 @@ WITH by_country AS (
             SELECT COUNT(restaurant.id) FROM restaurant
               JOIN restaurant_tag ON restaurant_id = restaurant.id
               WHERE tags_by_cuisine.id = restaurant_tag.tag_id
-                AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+                AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(-122.64741320619552, 37.90808839307098), 0), 0.088)
                 AND restaurant.score > 0
           ) AS matching_restaurants_count
         FROM (
@@ -64,7 +64,7 @@ WITH by_country AS (
       SELECT json_agg(t) FROM (
         SELECT trbc.id, trbc.name, trbc.slug, trbc.score FROM restaurant trbc
         JOIN restaurant_tag trbc_rt ON trbc_rt.restaurant_id = trbc.id
-          WHERE ST_DWithin(trbc.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+          WHERE ST_DWithin(trbc.location, ST_SetSRID(ST_MakePoint(-122.64741320619552, 37.90808839307098), 0), 0.088)
           AND trbc_rt.tag_id = (SELECT DISTINCT cuisine_tag.id)
         GROUP BY trbc.id
         ORDER BY AVG(trbc.score) DESC NULLS LAST
@@ -75,7 +75,7 @@ WITH by_country AS (
   JOIN restaurant_tag rt ON restaurant.id = rt.restaurant_id
   JOIN tag cuisine_tag ON rt.tag_id = cuisine_tag.id
   WHERE cuisine_tag.type = 'country'
-    AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(?0, ?1), 0), ?2)
+    AND ST_DWithin(restaurant.location, ST_SetSRID(ST_MakePoint(-122.64741320619552, 37.90808839307098), 0), 0.088)
   GROUP BY cuisine_tag.id
 )
 
