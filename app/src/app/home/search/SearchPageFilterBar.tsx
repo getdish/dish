@@ -104,7 +104,6 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
               tag={tag as any}
               index={index - groupIndex}
               isActive={isActive}
-              position="relative"
               {...getGroupedButtonProps({
                 index: groupIndex,
                 items: group,

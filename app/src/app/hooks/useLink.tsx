@@ -63,7 +63,7 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
     if (props.asyncClick) {
       cancel.current = series([
         // just enough time to do a lil animation, but not enough to slow the action, hard to get right
-        () => sleep(20),
+        () => sleep(100),
         () => {
           cancel.current = null
           onPressCallback(navItem, newLinkProps, props, e)

@@ -4,6 +4,7 @@ import { resetResults } from '../home/search/SearchPageStore'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 import { Link } from './Link'
 import { SmallButton, SmallButtonProps } from './SmallButton'
+import { Button } from '@dish/ui'
 import { Clock, ShoppingBag } from '@tamagui/feather-icons'
 import React, { useEffect, useState } from 'react'
 
@@ -20,7 +21,6 @@ export const FilterButton = ({
   index?: number
   isActive?: boolean
 }) => {
-  const { name } = useCurrentLenseColor()
   const [isActive, setIsActive] = useState(isActiveParent)
 
   useEffect(() => {
@@ -40,25 +40,20 @@ export const FilterButton = ({
 
   return (
     <Link tag={tag} replace asyncClick>
-      <SmallButton
-        theme={name}
+      <Button
         icon={IconComponent}
-        fontWeight="700"
-        color={isActive ? '#fff' : undefined}
         {...rest}
         zIndex={100 - index + (isActive ? 1 : 0)}
-        // borderWidth={0}
-        bc="$backgroundHover"
-        hoverStyle={{
-          bc: '$backgroundPress',
-        }}
+        {...(isActive && {
+          theme: 'active',
+        })}
         onPress={() => {
           resetResults()
           setIsActive((x) => !x)
         }}
       >
         {rest.children ?? (tag.name ? tagDisplayNames[tag.name] : null) ?? tag.name}
-      </SmallButton>
+      </Button>
     </Link>
   )
 }

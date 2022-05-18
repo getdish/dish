@@ -48,11 +48,11 @@ export const LenseButton = ({
           height={scaledSize}
           backgroundColor={bg}
           hoverStyle={{
-            backgroundColor: '$backgroundHover',
+            backgroundColor: '$backgroundPress',
           }}
           borderRadius={100}
           marginRight={10}
-          scale={isActive ? 1.3 : 1.1}
+          scale={isActive ? 1.3 : 1}
           {...(media.sm && {
             marginRight: 5,
             transform: [
@@ -88,6 +88,7 @@ export const LenseButton = ({
               fontSize={isLong ? 12 : 14}
               color={color}
               textAlign="center"
+              cursor="pointer"
               height={16}
               ellipse
             >
