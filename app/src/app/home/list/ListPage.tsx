@@ -41,10 +41,9 @@ import {
 import { assertPresent } from '@dish/helpers'
 import {
   Button,
+  Group,
   H1,
   Input,
-  InteractiveContainer,
-  Modal,
   Paragraph,
   Spacer,
   Switch,
@@ -605,7 +604,7 @@ const ListPageContent = memo(
                           />
                         </XStack>
 
-                        <InteractiveContainer alignItems="center">
+                        <Group alignItems="center">
                           <SmallButton
                             borderRadius={0}
                             theme={listFont === 0 ? 'active' : null}
@@ -624,9 +623,9 @@ const ListPageContent = memo(
                           >
                             Deco
                           </SmallButton>
-                        </InteractiveContainer>
+                        </Group>
 
-                        <InteractiveContainer alignItems="center">
+                        <Group alignItems="center">
                           <Paragraph
                             size="$3"
                             opacity={0.5}
@@ -655,7 +654,7 @@ const ListPageContent = memo(
                           >
                             Minimal
                           </Paragraph>
-                        </InteractiveContainer>
+                        </Group>
                         <XStack alignItems="center" space="$1">
                           <Paragraph>Public:&nbsp;</Paragraph>
                           <Switch checked={isPublic} onCheckedChange={setPublic} />

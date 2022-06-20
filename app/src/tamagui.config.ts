@@ -1,40 +1,12 @@
-import { animations } from './constants/animations'
-import { media } from './constants/media'
-import { createTamagui, createTokens } from '@dish/ui'
-import { createInterFont } from '@tamagui/font-inter'
-import { shorthands } from '@tamagui/shorthands'
-import { color, radius, size, space, themes, zIndex } from '@tamagui/theme-base'
+import { config } from '@tamagui/config-base'
+import { createTamagui } from 'tamagui'
 
-const interFont = createInterFont({
-  weight: {
-    1: '500',
-    7: '700',
-  },
-})
+const tamaConf = createTamagui(config)
 
-const config = createTamagui({
-  fonts: {
-    heading: interFont,
-    body: interFont,
-  },
-  animations,
-  defaultTheme: 'light',
-  shorthands,
-  themes,
-  media,
-  tokens: createTokens({
-    size,
-    space,
-    zIndex,
-    color,
-    radius,
-  }),
-})
-
-export type Conf = typeof config
+export type Conf = typeof tamaConf
 
 declare module '@dish/ui' {
   interface TamaguiCustomConfig extends Conf {}
 }
 
-export default config
+export default tamaConf

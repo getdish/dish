@@ -1,5 +1,5 @@
 import { series, sleep } from '@dish/async'
-import { AbsoluteYStack, Theme, YStack, prevent, useMedia } from '@dish/ui'
+import { AbsoluteYStack, Theme, YStack, prevent } from '@dish/ui'
 import React, { useLayoutEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 
@@ -16,7 +16,6 @@ export const DarkModal = ({
   onDismiss?: any
   fullscreen?: boolean
 }) => {
-  const media = useMedia()
   const [fullHide, setFullHide] = useState(hide)
 
   useLayoutEffect(() => {

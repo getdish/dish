@@ -8,7 +8,7 @@ import { supportsTouchWeb } from '@dish/helpers'
 import {
   AbsoluteYStack,
   Card,
-  InteractiveContainer,
+  Group,
   Paragraph,
   TooltipSimple,
   XStack,
@@ -94,7 +94,7 @@ export const Score = memo(
       )
       voteContent = (
         <>
-          <InteractiveContainer
+          <Group
             flexWrap="nowrap"
             flexDirection="column"
             height={btnSize * 4.5}
@@ -110,11 +110,15 @@ export const Score = memo(
             {subtle ? (
               getDownvote({})
             ) : (
-              <TooltipSimple placement="right" label={downTooltip ?? 'Downvote'} {...isOpenProp}>
+              <TooltipSimple
+                placement="right"
+                label={downTooltip ?? 'Downvote'}
+                {...isOpenProp}
+              >
                 {getDownvote({})}
               </TooltipSimple>
             )}
-          </InteractiveContainer>
+          </Group>
         </>
       )
     }
@@ -122,7 +126,13 @@ export const Score = memo(
     const theme = useTheme()
 
     const colors =
-      typeof rating === 'number' ? (rating >= 7 ? 'green' : rating < 5 ? 'red' : 'grey') : 'grey'
+      typeof rating === 'number'
+        ? rating >= 7
+          ? 'green'
+          : rating < 5
+          ? 'red'
+          : 'grey'
+        : 'grey'
 
     return (
       <XStack
