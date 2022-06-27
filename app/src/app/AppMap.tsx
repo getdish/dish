@@ -357,7 +357,6 @@ export const AppMapContents = memo(function AppMapContents() {
 })
 
 const AppMapBottomFade = memo(() => {
-  const theme = useTheme()
   const isPhone = useIsMobileDevice()
 
   if (isPhone) {
@@ -384,13 +383,22 @@ const AppMapRightFade = memo(() => {
   }
 
   return (
-    <AbsoluteYStack zIndex={300} pointerEvents="none" bottom={0} top={0} right={0} width={100}>
+    <AbsoluteYStack
+      o={0}
+      // $gtLarge={{ o: 1 }}
+      zIndex={300}
+      pointerEvents="none"
+      bottom={0}
+      top={0}
+      right={0}
+      width={100}
+    >
       <LinearGradient
         pointerEvents="none"
-        style={StyleSheet.absoluteFill}
+        fullscreen
         start={[0, 0]}
         end={[1, 0]}
-        colors={[`${theme.background}00`, theme.background.toString()]}
+        colors={[theme.backgroundTransparent.toString(), theme.background.toString()]}
       />
     </AbsoluteYStack>
   )

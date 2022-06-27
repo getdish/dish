@@ -87,7 +87,7 @@ export const AppMenuContents = memo(
               <MenuLinkButton
                 promptLogin
                 name="list"
-                icon={<Plus color="#999" size={14} />}
+                icon={Plus}
                 params={{
                   userSlug: slugify(user?.username ?? 'me'),
                   slug: 'create',

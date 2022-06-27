@@ -84,12 +84,7 @@ export const AutocompleteFrame = memo(
               />
             )}
           </AbsoluteYStack>
-          <AbsoluteYStack
-            zIndex={10000}
-            top={media.sm ? 10 : searchBarHeight + 18}
-            right={10}
-            pointerEvents="auto"
-          >
+          <AbsoluteYStack zIndex={10000} top={10} right={10} pointerEvents="auto">
             <CloseButton
               elevation="$1"
               onPressOut={prevent}

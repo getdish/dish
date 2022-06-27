@@ -26,7 +26,9 @@ export const HiddenSection = (props: {
       </AbsoluteXStack>
       <LinearGradient
         pointerEvents="none"
-        style={[StyleSheet.absoluteFill, { top: '50%', opacity: open ? 0 : 1 }]}
+        fullscreen
+        top="50%"
+        opacity={open ? 0 : 1}
         start={[0, 0]}
         end={[0, 1]}
         colors={['$backgroundTransparent', '$background']}

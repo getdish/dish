@@ -273,9 +273,11 @@ const HomeTagLenses = memo(() => {
             <Link key={i} tag={lense}>
               <H2
                 theme={`${lense.color}_alt2`}
+                color="$colorMid"
+                cursor="pointer"
+                px="$2"
                 size="$8"
                 py="$1"
-                color="$color"
                 hoverStyle={{
                   color: '$colorHover',
                 }}

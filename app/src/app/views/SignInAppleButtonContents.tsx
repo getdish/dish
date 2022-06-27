@@ -1,12 +1,11 @@
-import { sleep } from '@dish/async'
-import { Auth } from '@dish/graph'
-import { isSafari } from '@dish/helpers'
-import { Text, Toast, XStack, YStack } from '@dish/ui'
-import React, { useEffect, useState } from 'react'
-
 import { useIsMountedRef } from '../../helpers/useIsMountedRef'
 import { userStore } from '../userStore'
 import { AppleLogoWhite } from './AppleLogoWhite'
+import { sleep } from '@dish/async'
+import { Auth } from '@dish/graph'
+import { isSafari } from '@dish/helpers'
+import { SizableText, Text, Toast, XStack, YStack } from '@dish/ui'
+import React, { useEffect, useState } from 'react'
 
 let auth
 
@@ -79,7 +78,7 @@ export function SignInAppleButtonContents() {
       >
         <XStack paddingRight={20} backgroundColor="#000" alignItems="center">
           <AppleLogoWhite />
-          <Text
+          <SizableText
             textAlign="center"
             flex={1}
             color="#fff"
@@ -90,7 +89,7 @@ export function SignInAppleButtonContents() {
             ellipse
           >
             {loading ? 'Loading...' : 'Sign in with Apple'}
-          </Text>
+          </SizableText>
         </XStack>
       </YStack>
     </YStack>

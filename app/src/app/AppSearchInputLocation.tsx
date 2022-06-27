@@ -26,7 +26,7 @@ const isWebTouch = supportsTouchWeb
 export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
   const inputStore = useInputStoreLocation()
   const curLocName = useHomeStoreSelector((x) => x.currentState.curLocName)
-  const { color } = useTheme()
+  // const { color } = useTheme()
 
   // focus on visible
   useAutocompleteInputFocus(inputStore)

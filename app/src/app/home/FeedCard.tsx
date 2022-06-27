@@ -139,7 +139,7 @@ const FeedCardContent = ({
 }: // & { galleryRef: RefObject<GalleryRef> }
 FeedCardProps) => {
   const titleLen = typeof title === 'string' ? title.length : 20
-  const relativeSize = Math.max(1, Math.min(4, Math.round(60 / titleLen)))
+  const relativeSize = Math.max(1, Math.min(4, Math.round(30 / titleLen)))
   // @ts-expect-error
   const titleSize = getFontSizeToken(size, {
     relativeSize,
@@ -190,14 +190,14 @@ FeedCardProps) => {
 
         <YStack p="$2" br="$2" pos="relative" ov="hidden" space="$1">
           <YStack position="relative" display={isWeb ? 'block' : 'flex'}>
-            <H2 color="$colorFocus" size={titleSize || undefined}>
+            <H2 cur="inherit" color="$colorFocus" size={titleSize || undefined}>
               {title}
             </H2>
           </YStack>
 
           {!!(author || typeof numItems !== 'undefined') && (
             // @ts-expect-error
-            <Paragraph size={size} opacity={0.6}>
+            <Paragraph cursor="inherit" size={size} opacity={0.6}>
               {typeof numItems !== 'undefined' ? (
                 <>{`${pluralize(numItems, 'item')}`} &middot; </>
               ) : (

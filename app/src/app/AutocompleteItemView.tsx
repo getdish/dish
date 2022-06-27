@@ -4,7 +4,16 @@ import { ShowAutocomplete, autocompletesStore } from './AutocompletesStore'
 import { CircleButton } from './home/restaurant/CircleButton'
 import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'
-import { Spacer, Text, Theme, XStack, YStack, useDebounce, useTheme } from '@dish/ui'
+import {
+  SizableText,
+  Spacer,
+  Text,
+  Theme,
+  XStack,
+  YStack,
+  useDebounce,
+  useTheme,
+} from '@dish/ui'
 import { Plus } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 import { Keyboard } from 'react-native'
@@ -35,7 +44,7 @@ export const AutocompleteItemView = memo(
     isActive?: boolean
     hideIcon?: boolean
   }) => {
-    const showLocation = target === 'location'
+    // const showLocation = target === 'location'
     const theme = useTheme()
     const hideAutocompleteSlow = useDebounce(() => autocompletesStore.setVisible(false), 50)
     const plusButtonEl = showAddButton ? (
@@ -70,7 +79,6 @@ export const AutocompleteItemView = memo(
       <LinkButton
         alignSelf="stretch"
         justifyContent="flex-start"
-        minHeight={46}
         backgroundColor={isActive ? '#000' : 'transparent'}
         borderRadius={0}
         hoverStyle={{
@@ -95,21 +103,21 @@ export const AutocompleteItemView = memo(
         <XStack alignItems="center" width="100%">
           <YStack overflow="hidden" flex={1}>
             <XStack width="100%" marginVertical={-3} flex={1} alignItems="center">
-              <Text fontWeight="600" ellipse color={theme.color} fontSize={18} lineHeight={30}>
+              <SizableText fontWeight="600" ellipse color={theme.color} lineHeight={30}>
                 {!!result.namePrefix && (
                   <>
-                    <Text>{result.namePrefix}</Text>{' '}
+                    <SizableText>{result.namePrefix}</SizableText>{' '}
                   </>
                 )}
                 {result.name}
-              </Text>
+              </SizableText>
             </XStack>
             {!!result.description && (
               <>
                 <Spacer size="$1" />
-                <Text ellipse color={theme.colorHover} fontSize={15}>
+                <SizableText ellipse color={theme.colorHover}>
                   {result.description}
-                </Text>
+                </SizableText>
               </>
             )}
           </YStack>
