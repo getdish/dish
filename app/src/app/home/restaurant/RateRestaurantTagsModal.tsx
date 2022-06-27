@@ -40,11 +40,12 @@ export const RateRestaurantTagsModal = ({ onDismiss }: { onDismiss: any }) => {
   const [showRateModal, setShowRateModal] = useState(false)
   return (
     <>
-      <Modal visible maxWidth={480} width="90%" maxHeight="90%" onDismiss={onDismiss}>
-        <PaneControlButtons>
-          <CloseButton onPress={onDismiss} />
-        </PaneControlButtons>
-
+      <Modal
+        maxWidth={480}
+        width="90%"
+        maxHeight="90%"
+        onOpenChange={(val) => val === false && onDismiss()}
+      >
         <Spacer />
 
         <SlantedTitle size="$4" alignSelf="center">
@@ -74,7 +75,12 @@ export const RateRestaurantTagsModal = ({ onDismiss }: { onDismiss: any }) => {
       </Modal>
 
       {showRateModal && (
-        <Modal visible maxWidth={480} width="90%" maxHeight="90%" onDismiss={onDismiss}>
+        <Modal
+          maxWidth={480}
+          width="90%"
+          maxHeight="90%"
+          onOpenChange={(val) => val === false && onDismiss()}
+        >
           <RateRestaurantTagModal onDismiss={() => setShowRateModal(false)} />
         </Modal>
       )}
@@ -83,7 +89,13 @@ export const RateRestaurantTagsModal = ({ onDismiss }: { onDismiss: any }) => {
 }
 const RateRestaurantTagModal = ({ onDismiss }: { onDismiss: any }) => {
   return (
-    <Modal visible maxWidth={480} width="90%" maxHeight="90%" onDismiss={onDismiss}>
+    <Modal
+      open
+      maxWidth={480}
+      width="90%"
+      maxHeight="90%"
+      onOpenChange={(val) => val === false && onDismiss}
+    >
       <PaneControlButtons>
         <CloseButton onPress={onDismiss} />
       </PaneControlButtons>

@@ -19,7 +19,7 @@
     "watch": "tamagui-build --watch"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.1-beta.70"
+    "@tamagui/build": "^1.0.1-beta.78"
   },
   "sideEffects": false
 }

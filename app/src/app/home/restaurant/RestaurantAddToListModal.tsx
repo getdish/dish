@@ -61,18 +61,14 @@ export const RestaurantAddToListModal = graphql(
 
     return (
       <Modal
-        visible
+        open
         width="98%"
         maxWidth={600}
         height="95%"
         maxHeight={800}
-        overlayDismisses
-        onDismiss={onDismiss}
+        closable
+        onOpenChange={(val) => val === false && onDismiss()}
       >
-        <PaneControlButtons>
-          <CloseButton onPress={onDismiss} />
-        </PaneControlButtons>
-
         <AbsoluteYStack alignItems="center" top={-15}>
           <SlantedTitle size="$4">Add to list</SlantedTitle>
         </AbsoluteYStack>

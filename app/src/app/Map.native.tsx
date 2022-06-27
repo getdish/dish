@@ -8,7 +8,7 @@ import { series, sleep } from '@dish/async'
 import { DISH_API_ENDPOINT } from '@dish/graph'
 import { useDebounce, useTheme } from '@dish/ui'
 import MapboxGL from '@react-native-mapbox-gl/maps'
-import { allLightColors } from '@tamagui/theme-base'
+import { lightColors } from '@tamagui/theme-base'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, useWindowDimensions } from 'react-native'
 
@@ -112,7 +112,12 @@ export default function Map({
                 minZoomLevel={minZoom}
                 maxZoomLevel={maxZoom}
                 style={{
-                  fillColor: ['case', ['has', 'color'], ['get', 'color'], 'rgba(100,200,100,0.4)'],
+                  fillColor: [
+                    'case',
+                    ['has', 'color'],
+                    ['get', 'color'],
+                    'rgba(100,200,100,0.4)',
+                  ],
 
                   // [
                   //   'case',
@@ -304,8 +309,8 @@ export default function Map({
               1,
               'rgba(255,255,255,1)',
               0,
-              allLightColors.purple10,
-              allLightColors.purple10,
+              lightColors.purple10,
+              lightColors.purple10,
             ],
             circleRadius: ['interpolate', ['exponential', 1.5], ['zoom'], 9, 4, 11, 8, 16, 22],
           }}

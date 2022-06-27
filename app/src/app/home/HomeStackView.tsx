@@ -1,13 +1,13 @@
-import { isSafari } from '@dish/helpers'
-import { isTouchDevice, useDebounceValue, useMedia, YStack } from '@dish/ui'
-import { useStore } from '@dish/use-store'
-import React, { memo, Suspense, useEffect, useMemo } from 'react'
 import { searchBarHeight, searchBarTopOffset } from '../../constants/constants'
 import { HomeStateItem } from '../../types/homeTypes'
 import { useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { ContentParentStore } from '../views/ContentScrollView'
 import { ErrorBoundary } from '../views/ErrorBoundary'
+import { isSafari } from '@dish/helpers'
+import { YStack, useDebounceValue, useIsTouchDevice, useMedia } from '@dish/ui'
+import { useStore } from '@dish/use-store'
+import React, { Suspense, memo, useEffect, useMemo } from 'react'
 
 export type StackItemProps<A> = {
   item: A
@@ -75,6 +75,7 @@ const AppStackViewItem = memo(
     const isFullyActive = !isRemoving && !isAdding
 
     // safari ios drag optimization: when fully inactive hide it
+    const isTouchDevice = useIsTouchDevice()
     const isInactive = isSafari && isTouchDevice && !isRemoving && !isActive && !isActive
     const isInactiveDelayed = useDebounceValue(isInactive, 300)
     const isFullyInactive = isInactive && isInactiveDelayed

@@ -3,7 +3,7 @@ import { CommentBubble } from './CommentBubble'
 import { Link } from './Link'
 import { getUserName, graphql, review, useRefetch } from '@dish/graph'
 import { Paragraph, Separator, Text, XStack, useLazyEffect } from '@dish/ui'
-import { allLightColors } from '@tamagui/theme-base'
+import { lightColors } from '@tamagui/theme-base'
 import { uniqBy } from 'lodash'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
@@ -69,10 +69,10 @@ export const Review = memo(
         borderRadius={100}
         backgroundColor={
           review.rating >= 4
-            ? allLightColors.green8
+            ? lightColors.green8
             : review.rating >= 3
-            ? allLightColors.yellow8
-            : allLightColors.red8
+            ? lightColors.yellow8
+            : lightColors.red8
         }
         lineHeight={20}
         paddingHorizontal={12}
@@ -138,7 +138,8 @@ export const Review = memo(
           <>
             {!!review.favorited && (
               <Paragraph>
-                {getUserName(review.user)} favorited {review.list?.name ?? review.restaurant?.name}
+                {getUserName(review.user)} favorited{' '}
+                {review.list?.name ?? review.restaurant?.name}
               </Paragraph>
             )}
           </>

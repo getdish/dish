@@ -1,11 +1,10 @@
-import { YStack, isTouchDevice, useDebounce, useGet } from '@dish/ui'
-import { useStoreSelector } from '@dish/use-store'
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
-import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
-
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
 import { ContentScrollContext, ScrollStore } from './ContentScrollView'
 import { useScrollLock } from './useScrollLock'
+import { YStack, useDebounce, useGet } from '@dish/ui'
+import { useStoreSelector } from '@dish/use-store'
+import React, { useContext, useMemo, useRef, useState } from 'react'
+import { ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
 
 export const useContentScrollHorizontalFitter = () => {
   const drawerWidth = useAppDrawerWidth()

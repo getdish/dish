@@ -23,7 +23,7 @@ import { App } from './app/App'
 // import { App } from './app/App'
 import { homeStore } from './app/homeStore'
 import { useUserStore, userStore } from './app/userStore'
-import { isWeb, showRadar } from './constants/constants'
+import { showRadar } from './constants/constants'
 import { initialHomeState } from './constants/initialHomeState'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
 import './globals'
@@ -33,7 +33,7 @@ import Tamagui from './tamagui.config'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import { Theme, Toast } from '@dish/ui'
+import { Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import { Drawer } from '@tamagui/drawer'
 import * as Font from 'expo-font'
@@ -55,15 +55,15 @@ async function start() {
     return
   }
 
-  if (!isWeb) {
+  if (process.env.TAMAGUI_TARGET === 'native') {
     await Font.loadAsync({
-      'Inter-Thin': require('./assets/fonts/Inter-Thin.otf'),
-      'Inter-Light': require('./assets/fonts/Inter-Light.otf'),
-      'Inter-LightItalic': require('./assets/fonts/Inter-LightItalic.otf'),
-      'Inter-Bold': require('./assets/fonts/Inter-Bold.otf'),
-      'Inter-BoldItalic': require('./assets/fonts/Inter-BoldItalic.otf'),
-      'Inter-Black': require('./assets/fonts/Inter-Black.otf'),
-      'Inter-BlackItalic': require('./assets/fonts/Inter-BlackItalic.otf'),
+      // 'Inter-Thin': require('./assets/fonts/Inter-Thin.otf'),
+      // 'Inter-Light': require('./assets/fonts/Inter-Light.otf'),
+      // 'Inter-LightItalic': require('./assets/fonts/Inter-LightItalic.otf'),
+      // 'Inter-Bold': require('./assets/fonts/Inter-Bold.otf'),
+      // 'Inter-BoldItalic': require('./assets/fonts/Inter-BoldItalic.otf'),
+      // 'Inter-Black': require('./assets/fonts/Inter-Black.otf'),
+      // 'Inter-BlackItalic': require('./assets/fonts/Inter-BlackItalic.otf'),
     })
   }
 
@@ -143,7 +143,7 @@ export function Root() {
   console.log('Root.render', { colorScheme, defaultTheme })
 
   return (
-    <Tamagui.Provider injectCSS defaultTheme={defaultTheme}>
+    <Tamagui.Provider defaultTheme={defaultTheme}>
       <Drawer.Provider>
         <ProvideRouter routes={routes}>
           <Suspense fallback={null}>

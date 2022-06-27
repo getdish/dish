@@ -61,13 +61,12 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
       {show && (
         <Theme name="light">
           <Modal
-            overlayDismisses
-            onDismiss={() => setShow(false)}
+            onOpenChange={setShow}
             width="98%"
             maxWidth={400}
             height="90%"
             maxHeight={300}
-            visible
+            open
           >
             <SafeAreaView style={{ flex: 1, width: '100%', position: 'relative' }}>
               <PaneControlButtons>

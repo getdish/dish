@@ -10,7 +10,7 @@ import { SuspenseFallback } from '../SuspenseFallback'
 import { ListQueryProps, useList } from './useList'
 import { getUserName, graphql, mutate, query, resolved, slugify } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { AbsoluteYStack, Hoverable, Theme, Toast, YStack, isTouchDevice } from '@dish/ui'
+import { AbsoluteYStack, Hoverable, Theme, Toast, YStack, useIsTouchDevice } from '@dish/ui'
 import React, { Suspense, memo, useState } from 'react'
 
 export type ListCardProps = ListQueryProps &
@@ -70,6 +70,7 @@ export const ListCardFrame = graphql((props: ListCardProps) => {
   const { list, onHover, outside, deletable, onDelete, theme, ...feedCardProps } = props
   const listColor = useListColor(list?.color)
   const userStore = useUserStore()
+  const isTouchDevice = useIsTouchDevice()
 
   if (hidden) {
     return null

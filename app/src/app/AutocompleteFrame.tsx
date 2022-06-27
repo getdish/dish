@@ -7,11 +7,10 @@ import {
   AbsoluteYStack,
   BlurView,
   YStack,
-  isTouchDevice,
   prevent,
   useDebounceValue,
+  useIsTouchDevice,
   useMedia,
-  useTheme,
 } from '@dish/ui'
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useEffect } from 'react'
@@ -21,9 +20,9 @@ export const AutocompleteFrame = memo(
     const autocompletes = useStoreInstance(autocompletesStore)
     const isShowing = autocompletes.visible && autocompletes.target === target
     const media = useMedia()
-    const theme = useTheme()
 
     // safari ios drag optimization, when fully inactive hide it
+    const isTouchDevice = useIsTouchDevice()
     const isOut = isSafari && isTouchDevice && !isShowing
     const isOutDelayed = useDebounceValue(isOut, 300)
     const isFullyOut = isOutDelayed
@@ -31,7 +30,7 @@ export const AutocompleteFrame = memo(
     const contentParentStore = useStore(ContentParentStore)
     useEffect(() => {
       if (isShowing) {
-        let prev = contentParentStore.activeId
+        const prev = contentParentStore.activeId
         contentParentStore.setActiveId('autocomplete')
         return () => {
           contentParentStore.setActiveId(prev)
@@ -69,7 +68,11 @@ export const AutocompleteFrame = memo(
           overflow="hidden"
           // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
         >
-          <AbsoluteYStack backgroundColor="$background" fullscreen opacity={isSafari ? 1 : 0.9} />
+          <AbsoluteYStack
+            backgroundColor="$background"
+            fullscreen
+            opacity={isSafari ? 1 : 0.9}
+          />
           <AbsoluteYStack fullscreen display={media.sm ? 'none' : 'flex'}>
             {!isSafari && (
               <BlurView

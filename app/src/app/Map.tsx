@@ -12,7 +12,7 @@ import { fullyIdle, series, sleep } from '@dish/async'
 import { TILES_HOST, slugify } from '@dish/graph'
 import { supportsTouchWeb } from '@dish/helpers'
 import { useGet, useThemeName } from '@dish/ui'
-import { allLightColors } from '@tamagui/theme-base'
+import { lightColors } from '@tamagui/theme-base'
 import bbox from '@turf/bbox'
 import union from '@turf/union'
 import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
@@ -110,7 +110,8 @@ export default function Map(props: MapProps) {
     return null
   }
 
-  const { center, span, padding, features, style, hovered, selected, hideRegions, tileId } = props
+  const { center, span, padding, features, style, hovered, selected, hideRegions, tileId } =
+    props
   const isMounted = useIsMountedRef()
   const mapNode = useRef<HTMLDivElement>(null)
   const [map, setMap] = useState<mapboxgl.Map | null>(null)
@@ -460,8 +461,8 @@ export default function Map(props: MapProps) {
 
           const pointColor =
             themeName === 'dark'
-              ? hexToRGB(allLightColors.pink3, 0.44).string
-              : hexToRGB(allLightColors.pink10, 0.44).string
+              ? hexToRGB(lightColors.pink3, 0.44).string
+              : hexToRGB(lightColors.pink10, 0.44).string
           map.addLayer({
             id: POINT_LAYER_ID,
             type: 'circle',
@@ -530,7 +531,7 @@ export default function Map(props: MapProps) {
               // 'text-anchor': 'bottom',
             },
             paint: {
-              'text-color': isDark ? allLightColors.pink4 : allLightColors.pink10,
+              'text-color': isDark ? lightColors.pink4 : lightColors.pink10,
               // 'text-halo-color': blue,
               // 'text-halo-width': 1,
             },

@@ -18,7 +18,7 @@ import {
 } from '@dish/ui'
 import { ChevronDown, ChevronUp, Edit, Plus, X } from '@tamagui/feather-icons'
 import { sortBy } from 'lodash'
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { Image, ScrollView } from 'react-native'
 
 export type EditTagsProps = {
@@ -29,12 +29,11 @@ export type EditTagsProps = {
 
 export const EditRestaurantTagsButton = graphql((props: EditTagsProps) => {
   const [isOpen, setIsOpen] = useState(false)
-  const hide = useCallback(() => setIsOpen(false), [])
   return (
     <>
       <Button onPress={() => setIsOpen(true)} icon={<Edit size={16} color="#999" />} />
-      <Modal visible={isOpen} maxWidth={480} width="90%" maxHeight="90%" onDismiss={hide}>
-        {(isOpen) => (isOpen ? <EditTagsModal {...props} setIsOpen={setIsOpen} /> : null)}
+      <Modal open={isOpen} onOpenChange={setIsOpen}>
+        <EditTagsModal {...props} setIsOpen={setIsOpen} />
       </Modal>
     </>
   )

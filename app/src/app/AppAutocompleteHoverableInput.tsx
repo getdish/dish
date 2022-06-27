@@ -1,8 +1,7 @@
-import { Hoverable, isTouchDevice } from '@dish/ui'
-import React, { useRef } from 'react'
-
 import { autocompletesStore } from './AutocompletesStore'
 import { homeStore } from './homeStore'
+import { Hoverable, useIsTouchDevice } from '@dish/ui'
+import React, { useRef } from 'react'
 
 export function AppAutocompleteHoverableInput({
   children,
@@ -13,6 +12,7 @@ export function AppAutocompleteHoverableInput({
   input?: HTMLInputElement | null
   autocompleteTarget: 'search' | 'location'
 }) {
+  const isTouchDevice = useIsTouchDevice()
   if (isTouchDevice) {
     return children
   }

@@ -29,7 +29,7 @@ import {
   AbsoluteYStack,
   Button,
   Circle,
-  InteractiveContainer,
+  Group,
   LoadingItem,
   LoadingItemsSmall,
   Paragraph,
@@ -430,7 +430,7 @@ const RestaurantListItemContent = memo(
               {beforeBottomRow}
 
               <XStack display={media.sm ? 'none' : 'flex'}>
-                <InteractiveContainer paddingLeft={10}>
+                <Group paddingLeft={10}>
                   <Link
                     name="restaurant"
                     params={{
@@ -479,7 +479,7 @@ const RestaurantListItemContent = memo(
                       noLabel
                     />
                   </Suspense>
-                </InteractiveContainer>
+                </Group>
               </XStack>
 
               <XStack marginLeft={-5} alignItems="center">

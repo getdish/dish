@@ -39,9 +39,11 @@ export default memo(
       <>
         <PageTitle title={title} />
         <Modal
-          visible
-          onDismiss={() => {
-            homeStore.up()
+          open
+          onOpenChange={(open) => {
+            if (!open) {
+              homeStore.up()
+            }
           }}
           width={380}
           maxHeight={480}

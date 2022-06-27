@@ -44,6 +44,7 @@ import {
   Group,
   H1,
   Input,
+  Modal,
   Paragraph,
   Spacer,
   Switch,
@@ -338,23 +339,11 @@ const ListPageContent = memo(
           )}
 
           {isMyList && (
-            <Modal
-              visible={showAddModal}
-              onDismiss={() => setShowAddModal(false)}
-              width={380}
-              flex={1}
-              height="90%"
-              minHeight={480}
-            >
+            <Modal open={showAddModal} onOpenChange={setShowAddModal} closable>
               {showAddModal && (
-                <>
-                  <PaneControlButtons>
-                    <CloseButton onPress={() => setShowAddModal(false)} />
-                  </PaneControlButtons>
-                  <SuspenseFallback>
-                    <ListAddRestuarant listSlug={listSlug} onAdd={listItems.add} />
-                  </SuspenseFallback>
-                </>
+                <SuspenseFallback>
+                  <ListAddRestuarant listSlug={listSlug} onAdd={listItems.add} />
+                </SuspenseFallback>
               )}
             </Modal>
           )}

@@ -1,6 +1,5 @@
 import {
   drawerWidthMax,
-  isWeb,
   pageWidthMax,
   searchBarHeight,
   zIndexDrawer,
@@ -18,7 +17,7 @@ import { HomeDrawerSmallView } from './HomeDrawerSmallView'
 import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
-import { LinearGradient, XStack, YStack, supportsTouchWeb, useMedia, useTheme } from '@dish/ui'
+import { LinearGradient, XStack, YStack, useIsTouchDevice, useMedia, useTheme } from '@dish/ui'
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import { Keyboard } from 'react-native'
@@ -91,6 +90,8 @@ export function HomeContainer(props: { children: any }) {
 }
 
 const HomeDrawerSmall = (props: { children: any }) => {
+  const isTouchDevice = useIsTouchDevice()
+
   useEffect(() => {
     return reaction(
       autocompletesStore,
@@ -113,7 +114,7 @@ const HomeDrawerSmall = (props: { children: any }) => {
     )
   }, [])
 
-  if (!isWeb || supportsTouchWeb) {
+  if (isTouchDevice) {
     return <HomeDrawerSmallViewNative {...props} />
   }
 

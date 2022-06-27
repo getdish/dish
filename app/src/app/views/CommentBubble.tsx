@@ -79,14 +79,7 @@ export const CommentBubble = (props: CommentBubbleProps) => {
       {fullWidth && ensureFlexText}
 
       {isExpanded && (
-        <Modal
-          overlayDismisses
-          visible
-          width="98%"
-          maxWidth={760}
-          maxHeight="90%"
-          onDismiss={() => setIsExpanded(false)}
-        >
+        <Modal open onOpenChange={setIsExpanded}>
           <PaneControlButtons>
             <CloseButton onPress={() => setIsExpanded(false)} />
           </PaneControlButtons>
@@ -96,7 +89,11 @@ export const CommentBubble = (props: CommentBubbleProps) => {
         </Modal>
       )}
 
-      <CommentBubbleContents {...props} onExpand={() => setIsExpanded(true)} expanded={false} />
+      <CommentBubbleContents
+        {...props}
+        onExpand={() => setIsExpanded(true)}
+        expanded={false}
+      />
     </YStack>
   )
 }

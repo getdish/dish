@@ -6,6 +6,8 @@ export * from './LoadingItems'
 export * from './UnorderedList'
 export * from './SlantedYStack'
 export * from './SearchInput'
+export * from './Dialog'
+export * from './Modal'
 
 export * from './useGet'
 export * from './useOnMount'

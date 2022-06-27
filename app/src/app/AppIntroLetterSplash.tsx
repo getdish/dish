@@ -15,7 +15,6 @@ import { SlantedTitle } from './views/SlantedTitle'
 import {
   AbsoluteYStack,
   Button,
-  LinearGradient,
   Modal,
   Paragraph,
   Spacer,
@@ -28,7 +27,6 @@ import {
 import { useStore } from '@dish/use-store'
 import { Home } from '@tamagui/feather-icons'
 import React, { memo, useLayoutEffect, useMemo, useState } from 'react'
-import { StyleSheet } from 'react-native'
 
 export const AppIntroLetter = memo(() => {
   const [showSignup, setShowSignup] = useState(false)
@@ -99,8 +97,8 @@ export const AppIntroLetter = memo(() => {
 
       <Theme name="dark">
         <Modal
-          visible={showSignup}
-          onDismiss={() => setShowSignup(false)}
+          open={showSignup}
+          onOpenChange={setShowSignup}
           flex={1}
           paddingHorizontal={20}
           paddingVertical={20}
