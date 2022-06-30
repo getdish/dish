@@ -73,11 +73,10 @@
     "timescale:psql": "psql -d postgres -U postgres -p 5432 -h localhost"
   },
   "resolutions": {
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-is": "17.0.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-is": "18.2.0",
     "@turf/helpers": "6.5.0",
-    "@floating-ui/core": "0.7.0",
     "domelementtype": "2.3.0",
     "fbjs": "3.0.4",
     "@sentry/utils": "6.19.7",
@@ -87,7 +86,7 @@
     "react-native-svg": "12.1.1",
     "expo-modules-autolinking": "0.8.0",
     "expo-screen-orientation": "4.2.0",
-    "react-native-reanimated": "2.8.0",
+    "react-native-reanimated": "3.0.0-rc.0",
     "react-native-gesture-handler": "2.4.2",
     "metro": "0.66.2",
     "metro-babel-register": "0.66.2",
@@ -102,7 +101,7 @@
     "@types/react-native": "0.66.6",
     "@types/react": "17.0.19",
     "react-refresh": "0.13.0",
-    "@testing-library/react": "13.0.0-alpha.1",
+    "@testing-library/react": "13.3.0",
     "fs-extra": "10.1.0",
     "@react-native-community/cli": "6.2.0",
     "@react-native-community/cli-server-api": "6.2.0",
@@ -131,7 +130,7 @@
     "@babel/parser": "7.15.7",
     "@babel/traverse": "7.15.4",
     "@babel/types": "7.15.6",
-    "react-native-web": "0.18.1"
+    "react-native-web": "0.18.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.13.16",
