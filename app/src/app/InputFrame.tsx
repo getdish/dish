@@ -16,9 +16,9 @@ export const InputFrame = forwardRef(({ children }: { children: any }, ref) => {
       borderColor="$borderColorHover"
       backgroundColor="$backgroundHover"
       hoverStyle={{
-        backgroundColor: 'rgba(150,150,150,0.1)',
+        backgroundColor: '$backgroundStrong',
       }}
-      // @ts-ignore
+      // doesn't work because it's focusWithin...
       focusStyle={{
         backgroundColor: 'rgba(150,150,150,0.1)',
       }}

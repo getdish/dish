@@ -32,6 +32,8 @@ export const LinkListItem = forwardRef(function LinkListItemContent<
   const getElement = () =>
     wrapWithLinkElement(
       <ListItem
+        size="$5"
+        hoverTheme
         {...restProps}
         ref={ref}
         theme={isActive ? 'active' : null}

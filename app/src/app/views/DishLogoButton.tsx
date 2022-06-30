@@ -17,11 +17,11 @@ export const DishLogoButton = memo(() => {
           className="ease-in-out-fast transform-origin-center"
           scale={0.8}
           hoverStyle={{
-            scale: 1.025,
+            scale: 0.85,
           }}
           pressStyle={{
-            opacity: 0.8,
-            scale: 0.975,
+            opacity: 0.85,
+            scale: 0.78,
           }}
         >
           {el}

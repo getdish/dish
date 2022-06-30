@@ -144,7 +144,7 @@ const HomeContainerLarge = memo((props) => {
     >
       <YStack
         className="blur"
-        br="$4"
+        br="$6"
         pointerEvents="auto"
         position="absolute"
         top="$3"
@@ -153,20 +153,25 @@ const HomeContainerLarge = memo((props) => {
         width={drawerWidth}
         zIndex={10}
         flex={1}
-        shadowColor="$shadowColor"
-        shadowRadius={25}
-        shadowOffset={{ width: 10, height: 0 }}
+        shadowColor="rgba(0,0,0,0.135)"
+        shadowRadius={7}
+        shadowOffset={{
+          height: 4,
+          width: 0,
+        }}
+        bw={1}
+        boc="$borderColor"
         justifyContent="flex-end"
         $gtSm={{
           marginLeft: 'auto',
           maxWidth: drawerWidthMax,
         }}
       >
-        <XStack opacity={0.5} zi={-1} fullscreen br="$4" backgroundColor="$background" />
+        <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" />
 
         <XStack
           pe="none"
-          br="$4"
+          br="$6"
           overflow="hidden"
           zi={100}
           pos="absolute"

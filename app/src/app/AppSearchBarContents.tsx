@@ -30,10 +30,10 @@ export const AppSearchBarContents = memo(() => {
       pointerEvents="auto"
       alignItems="center"
       justifyContent="center"
-      paddingHorizontal="$1"
+      paddingHorizontal="$2"
       minHeight={searchBarHeight}
     >
-      <YStack px="$1" maxHeight={searchBarHeight} overflow="hidden">
+      <YStack px="$2" maxHeight={searchBarHeight} overflow="hidden">
         <DishLogoButton />
       </YStack>
 
@@ -136,9 +136,7 @@ export const AppSearchBarContents = memo(() => {
             </>
           )}
 
-          <YStack>
-            <AppActionButton />
-          </YStack>
+          <AppActionButton />
 
           <Suspense fallback={null}>
             <AppMenuButton />

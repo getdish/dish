@@ -16,6 +16,7 @@ export const Modal = ({
 }: ModalProps) => {
   return (
     <Dialog
+      modal
       {...{
         open,
         defaultOpen,

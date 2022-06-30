@@ -76,6 +76,7 @@ export const AppMenuContents = memo(
                 <MenuLinkButton
                   name="user"
                   icon={<UserMenuButton />}
+                  py="$6"
                   params={{
                     username: slugify(user?.username ?? ''),
                   }}

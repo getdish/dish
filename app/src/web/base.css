@@ -269,7 +269,7 @@ textarea {
 }
 
 ::placeholder {
-  color: rgba(200, 200, 200, 0.5);
+  color: rgba(150, 150, 150, 0.85);
   text-overflow: ellipsis;
 }
 
@@ -329,8 +329,8 @@ div,
 }
 
 .blur {
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
 }
 
 .overflow-y-hidden {

@@ -27,6 +27,7 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
     (x) => x.lock === 'vertical' || x.lock === 'drawer',
     { id }
   )
+
   const getIsLockedOut = useGet(isLockedOut)
   const scrollLock = useScrollLock({ id, direction: 'horizontal' })
   const isTouching = useRef(false)

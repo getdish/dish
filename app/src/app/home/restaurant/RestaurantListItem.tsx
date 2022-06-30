@@ -439,18 +439,11 @@ const RestaurantListItemContent = memo(
                     }}
                   >
                     <SmallButton
-                      borderRadius={0}
-                      borderWidth={0}
-                      marginRight={-0.5}
                       tooltip={`Rating Breakdown (${totalReviews} reviews)`}
                       icon={
                         <MessageSquare
-                          style={{
-                            opacity: 0.5,
-                            marginLeft: -8,
-                          }}
                           size={14}
-                          color={isWeb ? 'var(--color3)' : 'rgba(150,150,150,0.3)'}
+                          color={isWeb ? 'var(--colorPress)' : 'rgba(150,150,150,0.3)'}
                         />
                       }
                     >
@@ -459,25 +452,11 @@ const RestaurantListItemContent = memo(
                   </Link>
 
                   <Suspense fallback={<Spacer size={44} />}>
-                    <YStack marginRight={-0.5}>
-                      <RestaurantFavoriteButton
-                        opacity={0.5}
-                        borderRadius={0}
-                        borderWidth={0}
-                        size="$4"
-                        restaurantSlug={restaurantSlug}
-                      />
-                    </YStack>
+                    <RestaurantFavoriteButton size="$3" restaurantSlug={restaurantSlug} />
                   </Suspense>
 
                   <Suspense fallback={<Spacer size={44} />}>
-                    <RestaurantAddToListButton
-                      opacity={0.4}
-                      borderRadius={0}
-                      borderWidth={0}
-                      restaurantSlug={restaurantSlug}
-                      noLabel
-                    />
+                    <RestaurantAddToListButton restaurantSlug={restaurantSlug} noLabel />
                   </Suspense>
                 </Group>
               </XStack>

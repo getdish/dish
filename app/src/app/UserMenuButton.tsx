@@ -1,10 +1,9 @@
-import { slugify } from '@dish/graph'
-import { Tooltip } from '@dish/ui'
-import React from 'react'
-
 import { UserAvatar } from './home/user/UserAvatar'
 import { useUserStore } from './userStore'
 import { LinkButton } from './views/LinkButton'
+import { slugify } from '@dish/graph'
+import { Tooltip } from '@dish/ui'
+import React from 'react'
 
 export const UserMenuButton = () => {
   const user = useUserStore().user
@@ -20,6 +19,7 @@ export const UserMenuButton = () => {
       position="relative"
       name="user"
       noTextWrap
+      px="$2"
       params={{
         username: slugify(user.username ?? ''),
       }}

@@ -16,6 +16,7 @@ export const AppActionButton = () => {
         <AppMenuLinkButton Icon={Plus} tooltip="Create" />
       </Popover.Trigger>
       <Popover.Content>
+        <Popover.Arrow />
         <AppActionButtonContents />
       </Popover.Content>
     </Popover>
