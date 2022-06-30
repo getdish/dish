@@ -103,10 +103,10 @@ Dependencies/
 .accio/
 
 # fastlane
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots/**/*.png
-fastlane/test_output
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
 
 # Code Injection
 # https://github.com/johnno1962/injectionforxcode
