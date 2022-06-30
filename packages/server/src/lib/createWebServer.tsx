@@ -1,11 +1,9 @@
-import { Worker } from 'worker_threads'
-
+import { ServerConfigNormal } from '../types'
 import proxy from 'express-http-proxy'
 import findCacheDir from 'find-cache-dir'
 import { pathExists, remove } from 'fs-extra'
 import getPort from 'get-port'
-
-import { ServerConfigNormal } from '../types'
+import { Worker } from 'worker_threads'
 
 export async function createWebServer(app: any, serverConfig: ServerConfigNormal) {
   if (serverConfig.resetCache) {
@@ -26,11 +24,14 @@ export async function createWebServer(app: any, serverConfig: ServerConfigNormal
   await start()
 
   async function start() {
-    console.log(` [web] starting web in ${config.env} mode ${config.watch ? '(watch)' : ''}...`)
+    console.log(
+      ` [web] starting web in ${config.env} mode ${config.watch ? '(watch)' : ''}...`
+    )
     const args = {
       ...config,
       port,
     }
+    // createWebServerProd createWebServerDev
     const filePath = __filename.replace(
       '.js',
       `${config.env === 'development' ? 'Dev' : 'Prod'}.worker.js`

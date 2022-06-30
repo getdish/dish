@@ -326,7 +326,7 @@ const RestaurantListItemContent = memo(
                       overflow: 'hidden',
                     })}
                   >
-                    <Text
+                    <Paragraph
                       fontSize={titleFontSize}
                       lineHeight={titleHeight}
                       height={titleHeight}
@@ -337,7 +337,7 @@ const RestaurantListItemContent = memo(
                       ellipse
                     >
                       {restaurantName}
-                    </Text>
+                    </Paragraph>
                   </XStack>
                 </Link>
               </XStack>
@@ -462,7 +462,7 @@ const RestaurantListItemContent = memo(
               </XStack>
 
               <XStack marginLeft={-5} alignItems="center">
-                <Text
+                <Paragraph
                   width={42}
                   textAlign="center"
                   fontSize={14}
@@ -470,10 +470,10 @@ const RestaurantListItemContent = memo(
                   color="$colorPress"
                 >
                   {price_range ?? '-'}
-                </Text>
+                </Paragraph>
 
                 <Circle
-                  size="$6"
+                  size="$0.5"
                   marginHorizontal={4}
                   backgroundColor={open.isOpen ? '$green9' : '$red9'}
                 />

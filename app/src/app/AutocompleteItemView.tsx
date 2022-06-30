@@ -77,12 +77,13 @@ export const AutocompleteItemView = memo(
     return (
       // @ts-expect-error
       <LinkButton
+        size="$5"
         alignSelf="stretch"
         justifyContent="flex-start"
         backgroundColor={isActive ? '#000' : 'transparent'}
         borderRadius={0}
         hoverStyle={{
-          backgroundColor: isActive ? '#000' : theme.backgroundTransparent,
+          backgroundColor: isActive ? '#000' : theme.background,
         }}
         {...(hideBackground && {
           backgroundColor: 'transparent',

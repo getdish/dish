@@ -11,7 +11,6 @@ import React, { Suspense, memo, useContext } from 'react'
 
 export const SearchHeader = memo(() => {
   const { width, setWidthDebounce } = useContentScrollHorizontalFitter()
-  const media = useMedia()
   const curProps = useContext(SearchPagePropsContext)!
 
   const { title, subTitle } = getTitleForState(curProps.item, {
@@ -34,23 +33,19 @@ export const SearchHeader = memo(() => {
           <XStack position="relative" zIndex={100}>
             <YStack
               theme={lenseColor}
-              py={8}
-              px={25}
+              py="$4"
+              px="$6"
               $sm={{ px: 25 }}
               position="relative"
               zIndex={100}
               x={-10}
             >
-              <H1 className="font-title" size="$9">
-                {title.trim()}
-              </H1>
-              {!!subTitle && <H3 size="$6">in {subTitle.trim()}</H3>}
-              {!media.sm && (
-                <>
-                  <Spacer size="$1" />
-                  <SearchPageScoring />
-                </>
-              )}
+              <H1 className="font-title">{title.trim()}</H1>
+              {!!subTitle && <H3>in {subTitle.trim()}</H3>}
+              <YStack $sm={{ display: 'none' }}>
+                <Spacer size="$2" />
+                <SearchPageScoring />
+              </YStack>
             </YStack>
             <XStack marginLeft={-10} marginBottom={8} position="relative">
               {/* <YStack position="relative" alignItems="center" justifyContent="center" x={-10}>

@@ -1,0 +1,18 @@
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/subset-Inter-Medium.woff2') format('woff2'),
+      url('/assets/fonts/subset-Inter-Medium.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/assets/fonts/subset-Inter-ExtraBold.woff2') format('woff2'),
+      url('/assets/fonts/subset-Inter-ExtraBold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

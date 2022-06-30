@@ -1,8 +1,7 @@
-import { useMedia, useThemeName } from '@dish/ui'
-import React from 'react'
-
 import { isWeb } from '../../constants/constants'
 import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
+import { useMedia, useThemeName } from '@dish/ui'
+import React from 'react'
 
 export const PageHead = (props: { children: any; isActive: boolean; color?: any }) => {
   const media = useMedia()
@@ -25,6 +24,7 @@ export const PageHead = (props: { children: any; isActive: boolean; color?: any 
     <Helmet>
       <title>{props.children}</title>
       <meta name="theme-color" content={themeColor} />
+      <link href="/assets/fonts/inter.css" rel="stylesheet" />
     </Helmet>
   )
 }

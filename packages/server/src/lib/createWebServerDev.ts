@@ -1,15 +1,15 @@
+import { ServerConfigNormal } from '../types'
+import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
 import connectHistoryApiFallback from 'connect-history-api-fallback'
 import express from 'express'
+import { join } from 'path'
 import webpack from 'webpack'
 import middleware from 'webpack-dev-middleware'
 import hotMiddleware from 'webpack-hot-middleware'
 
-import { ServerConfigNormal } from '../types'
-import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
-
 export function createWebServerDev(
   app: express.Application,
-  { webpackConfig, rootDir, resetCache }: ServerConfigNormal
+  { webpackConfig, rootDir, resetCache, env }: ServerConfigNormal
 ) {
   process.env.TARGET = 'web'
   const createConfig = getWebpackConfigBuilder({ rootDir })
@@ -36,11 +36,19 @@ export function createWebServerDev(
 
   const historyFb = connectHistoryApiFallback()
   app.use(historyFb)
-  app.use(
-    middleware(compiler, {
-      publicPath: config.output?.publicPath ?? '/',
-    })
-  )
-  app.use(hotMiddleware(compiler))
+
+  const assetsDir = join(rootDir, 'src', 'assets')
+  console.log('assetsDir', assetsDir)
+  app.use('/assets', express.static(assetsDir))
+
+  if (env === 'development') {
+    app.use(
+      middleware(compiler, {
+        publicPath: config.output?.publicPath ?? '/',
+      })
+    )
+    app.use(hotMiddleware(compiler))
+  }
+
   return compiler
 }

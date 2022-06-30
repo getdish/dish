@@ -35,7 +35,7 @@ export const AutocompleteResults = memo(
           const isActive = !isWeb ? index === 0 : activeIndex === index
           return (
             <React.Fragment key={`${result.id}${index}`}>
-              <Theme name={isActive ? 'active' : 'dark'}>
+              <Theme name={isActive ? 'active' : null}>
                 <AutocompleteItemView
                   target={target}
                   index={index}
@@ -44,7 +44,6 @@ export const AutocompleteResults = memo(
                   isActive={isActive}
                 />
               </Theme>
-              <Spacer size={1} />
             </React.Fragment>
           )
         })}

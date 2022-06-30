@@ -13,7 +13,7 @@ export const BackButton = memo((props: CircleButtonProps) => {
 })
 
 export const SmallCircleButton = forwardRef(
-  ({ children, width, height, size = '$5', ...props }: CircleButtonProps, ref) => {
+  ({ children, width, height, size = '$4', ...props }: CircleButtonProps, ref) => {
     return (
       <Button ref={ref as any} size={size} circular {...props}>
         {children}
