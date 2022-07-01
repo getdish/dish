@@ -7,12 +7,14 @@ import {
 import { router } from '../../router'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
+import { AppMapControls } from '../AppMapControls'
 import { appMenuStore } from '../AppMenuStore'
 import { AppSearchBarInline } from '../AppSearchBarInline'
 import { autocompletesStore } from '../AutocompletesStore'
 import { DrawerPortalProvider } from '../Portal'
 import { drawerStore } from '../drawerStore'
 import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
+import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 import { HomeDrawerSmallView } from './HomeDrawerSmallView'
 import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 import { HomeStackView } from './HomeStackView'
@@ -130,7 +132,7 @@ const HomeContainerLarge = memo((props) => {
   // const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
 
   return (
-    <YStack
+    <XStack
       fullscreen
       margin="auto"
       maxWidth={pageWidthMax}
@@ -146,10 +148,8 @@ const HomeContainerLarge = memo((props) => {
         className="blur"
         br="$6"
         pointerEvents="auto"
-        position="absolute"
-        top="$3"
-        left="$3"
-        bottom="$3"
+        height="100%"
+        mr="auto"
         width={drawerWidth}
         zIndex={10}
         flex={1}
@@ -194,7 +194,16 @@ const HomeContainerLarge = memo((props) => {
 
         <DrawerPortalProvider />
       </YStack>
-    </YStack>
+
+      <YStack $sm={{ disp: 'none' }} ov="hidden" pos="relative" f={1} h="100%">
+        <XStack maw="100%" height={80} x="$4" top={0} right={0} zi={100000} pos="absolute">
+          <AppFloatingTagMenuBar />
+        </XStack>
+        <XStack zi="$2" pos="absolute" height={90} right={0} bottom={0}>
+          <AppMapControls />
+        </XStack>
+      </YStack>
+    </XStack>
   )
 })
 

@@ -14,9 +14,7 @@ import {
 } from './appMapStoreUpdateRegion'
 import { drawerStore } from './drawerStore'
 import { AppFloatingTagMenuBar } from './home/AppFloatingTagMenuBar'
-import { ensureFlexText } from './home/restaurant/ensureFlexText'
 import { homeStore } from './homeStore'
-import { useAppDrawerWidth } from './hooks/useAppDrawerWidth'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { mapStyles } from './mapStyles'
@@ -38,8 +36,7 @@ import {
 } from '@dish/ui'
 import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import loadable from '@loadable/component'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { StyleSheet } from 'react-native'
+import React, { memo, useCallback, useEffect, useMemo } from 'react'
 
 export default memo(function AppMap() {
   // lighthouse/slow browser optimization
@@ -99,7 +96,7 @@ export const AppMapContents = memo(function AppMapContents() {
   const hideRegions = !isOnHome || appMapStore.hideRegions
   const media = useMedia()
   const mapSize = useMapSize(media.sm)
-  const { width, paddingLeft } = useDebounceValue(mapSize, 1000)
+  const { width, paddingLeft } = useDebounceValue(mapSize, 100)
   const showUserLocation = useStoreInstanceSelector(appMapStore, (x) => !!x.userLocation)
   const appMap = useStoreInstance(appMapStore)
   const show = true //useAppShouldShow('map')
@@ -312,24 +309,6 @@ export const AppMapContents = memo(function AppMapContents() {
           },
         })}
       >
-        {!media.sm && (
-          <>
-            <XStack
-              height={80}
-              x="$4"
-              width={width}
-              top={0}
-              right={0}
-              zi={100000}
-              pos="absolute"
-            >
-              <AppFloatingTagMenuBar />
-            </XStack>
-            <XStack zi="$2" pos="absolute" height={90} width={width} right={0} bottom={0}>
-              <AppMapControls />
-            </XStack>
-          </>
-        )}
         {media.sm && <AppMapBottomFade />}
         {!media.sm && <AppMapRightFade />}
         <Map

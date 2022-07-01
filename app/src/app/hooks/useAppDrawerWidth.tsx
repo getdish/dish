@@ -10,14 +10,15 @@ export const getAppDrawerWidth = (max = drawerWidthMax): number => {
   }
   let scaleFactor = 0
   if (width < 1150) {
-    scaleFactor = 0.7
-  } else if (width < 1350) {
     scaleFactor = 0.65
-  } else {
+  } else if (width < 1350) {
     scaleFactor = 0.6
+  } else {
+    scaleFactor = 0.55
   }
-  const next = Math.floor(Math.min(Math.max(100, width * scaleFactor), Math.min(max, width)))
-  return Math.min(drawerWidthMax, next)
+  let next = Math.floor(Math.min(Math.max(100, width * scaleFactor), Math.min(max, width)))
+  next = Math.min(drawerWidthMax, next)
+  return next
 }
 
 export const useAppDrawerWidth = (max?: number) => {

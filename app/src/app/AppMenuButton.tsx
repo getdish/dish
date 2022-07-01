@@ -38,7 +38,6 @@ export const AppMenuButton = memo(() => {
           br="$4"
         >
           <YStack zi={0} br="$4" fullscreen bc="$background" o={0.8} />
-          {/* @ts-expect-error */}
           <Popover.Arrow size="$2" />
           <AppMenuContents hideUserMenu={appMenu.hide} />
         </Popover.Content>
