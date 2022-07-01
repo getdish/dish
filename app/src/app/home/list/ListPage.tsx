@@ -422,7 +422,7 @@ const ListPageContent = memo(
 
               <YStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
                 {/* START HEADER */}
-                <YStack paddingBottom={5} position="relative">
+                <YStack pt="$4" paddingBottom={5} position="relative">
                   <XStack paddingHorizontal={20}>
                     {/* <AbsoluteYStack
                       overflow="hidden"

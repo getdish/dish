@@ -145,7 +145,7 @@ export const HomePageFeed = memo(
         [allRestaurantsKey]
       )
 
-      const numAddButtons = Math.max(0, 8 - trendingLists.length)
+      const numAddButtons = Math.max(0, 9 - trendingLists.length)
 
       return (
         <>

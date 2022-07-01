@@ -144,55 +144,53 @@ const HomeContainerLarge = memo((props) => {
       ai="flex-start"
       zi={zIndexDrawer}
     >
-      <YStack
-        className="blur"
-        br="$6"
-        pointerEvents="auto"
-        height="100%"
-        mr="auto"
-        width={drawerWidth}
-        zIndex={10}
-        flex={1}
-        shadowColor="rgba(0,0,0,0.135)"
-        shadowRadius={7}
-        shadowOffset={{
-          height: 4,
-          width: 0,
-        }}
-        bw={1}
-        boc="$borderColor"
-        justifyContent="flex-end"
-        $gtSm={{
-          marginLeft: 'auto',
-          maxWidth: drawerWidthMax,
-        }}
-      >
-        <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" />
-
-        <XStack
-          pe="none"
+      <YStack p="$3" pos="relative" h="100%">
+        <YStack
+          className="blur"
           br="$6"
-          overflow="hidden"
-          zi={100}
-          pos="absolute"
-          top={0}
-          left={0}
-          right={0}
-          height={100}
-          ai="flex-start"
+          pointerEvents="auto"
+          f={1}
+          width={drawerWidth}
+          zIndex={10}
+          flex={1}
+          shadowColor="rgba(0,0,0,0.135)"
+          shadowRadius={7}
+          shadowOffset={{
+            height: 4,
+            width: 0,
+          }}
+          bw={1}
+          boc="$borderColor"
+          justifyContent="flex-end"
+          maxWidth={drawerWidthMax}
         >
-          <AppSearchBarInline />
-          <AppSearchBarFade />
-        </XStack>
+          <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" />
 
-        <XStack pos="absolute" fullscreen top={searchBarHeight}>
-          <AppAutocompleteSearch />
-          <AppAutocompleteLocation />
-        </XStack>
+          <XStack
+            pe="none"
+            br="$6"
+            overflow="hidden"
+            zi={1}
+            pos="absolute"
+            top={0}
+            left={0}
+            right={0}
+            height={80}
+            ai="flex-start"
+          >
+            <AppSearchBarInline />
+            <AppSearchBarFade />
+          </XStack>
 
-        {props.children}
+          <XStack pos="absolute" fullscreen top={searchBarHeight}>
+            <AppAutocompleteSearch />
+            <AppAutocompleteLocation />
+          </XStack>
 
-        <DrawerPortalProvider />
+          {props.children}
+
+          <DrawerPortalProvider />
+        </YStack>
       </YStack>
 
       <YStack $sm={{ disp: 'none' }} ov="hidden" pos="relative" f={1} h="100%">
@@ -208,16 +206,20 @@ const HomeContainerLarge = memo((props) => {
 })
 
 const AppSearchBarFade = () => {
-  return null
   const theme = useTheme()
 
   return (
     <LinearGradient
       // TODO need to dedupe react-native when linked in or else absolutefill breaks
-      style={[{ top: 0, right: 0, bottom: 0, left: 0, position: 'absolute', zIndex: -1 }]}
-      // start={[0, 0]}
-      // end={[0, 1]}
-      colors={[theme.background.toString(), theme.backgroundTransparent.toString()]}
+      fullscreen
+      zi={-1}
+      start={[0, 0]}
+      end={[0, 1]}
+      colors={[
+        theme.backgroundHover.toString(),
+        theme.backgroundHover.toString(),
+        theme.backgroundTransparent.toString(),
+      ]}
     />
   )
 }

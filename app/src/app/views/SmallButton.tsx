@@ -13,7 +13,6 @@ export const SmallButton = themeable(
       const contents = (
         <Button
           ref={ref as any}
-          borderRadius={200}
           size={size}
           hoverStyle={{
             backgroundColor: '$backgroundHover',
