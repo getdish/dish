@@ -1,10 +1,7 @@
-// @ts-nocheck
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
-import { CloseButton } from './views/CloseButton'
-import { PaneControlButtons } from './views/PaneControlButtons'
-import { AbsoluteYStack, Button, Modal, YStack, useMedia, useSafeAreaInsets } from '@dish/ui'
+import { AbsoluteYStack, Button, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Drawer } from '@tamagui/drawer'
 import { Menu } from '@tamagui/feather-icons'
@@ -14,15 +11,12 @@ import { useWindowDimensions } from 'react-native'
 export const AppMenuButtonFloating = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
-  const safeArea = useSafeAreaInsets()
   const { height } = useWindowDimensions()
   const drawerHeight = height * 0.8
 
   if (!(media.sm || media.xs)) {
     return null
   }
-
-  console.log('rendered', appMenu.isVisible)
 
   return (
     <>
@@ -50,7 +44,8 @@ export const AppMenuButtonFloating = memo(() => {
       </Drawer>
 
       <AbsoluteYStack
-        top={safeArea.top ? safeArea.top : 10}
+        // top={safeArea.top ? safeArea.top : 10}
+        top={10}
         right={10}
         zIndex={zIndexDrawer - 1}
         // pointerEvents="none"

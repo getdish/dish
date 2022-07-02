@@ -1,19 +1,17 @@
-import { AbsoluteYStack, XStack, YStack, useMedia, useSafeAreaInsets } from '@dish/ui'
-import { useStoreInstanceSelector } from '@dish/use-store'
-import React, { Suspense, memo } from 'react'
-
 import { searchBarHeight, zIndexMapControls } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
 import { AppMapRestaurantPeek } from './AppMapRestaurantPeek'
 import { drawerStore } from './drawerStore'
 import { ReviewImagesRow } from './home/restaurant/ReviewImagesRow'
 import { useMapSize } from './hooks/useMapSize'
+import { AbsoluteYStack, XStack, YStack, useMedia } from '@dish/ui'
+import { useStoreInstanceSelector } from '@dish/use-store'
+import React, { Suspense, memo } from 'react'
 
 export const AppMapControlsOverlay = memo(() => {
   const media = useMedia()
   const { paddingLeft, width } = useMapSize(media.sm)
   const isAtBottom = useStoreInstanceSelector(drawerStore, (x) => x.snapIndexName === 'bottom')
-  const edgeInsets = useSafeAreaInsets()
   let bottom = 0
   if (isAtBottom) {
     bottom = getWindowHeight() - getWindowHeight() * drawerStore.snapPoints[2]
@@ -55,7 +53,8 @@ export const AppMapControlsOverlay = memo(() => {
             flexWrap="wrap"
             paddingLeft={media.sm ? 10 : 30}
             paddingRight={15}
-            paddingBottom={media.xs ? edgeInsets.bottom + 15 : 15}
+            // paddingBottom={media.xs ? edgeInsets.bottom + 15 : 15}
+            paddingBottom={15}
             paddingTop={20}
           >
             {/* todo make loadable() if adding back in */}
@@ -71,7 +70,13 @@ export const AppMapControlsOverlay = memo(() => {
               </>
             )}
 
-            <ReviewImagesRow floating showGenericImages isEditing imgWidth={66} imgHeight={66} />
+            <ReviewImagesRow
+              floating
+              showGenericImages
+              isEditing
+              imgWidth={66}
+              imgHeight={66}
+            />
           </XStack>
 
           <YStack flex={1} />

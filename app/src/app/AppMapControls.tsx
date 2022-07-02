@@ -5,22 +5,13 @@ import { getSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
-import {
-  AbsoluteXStack,
-  AbsoluteYStack,
-  Spacer,
-  Theme,
-  YStack,
-  useMedia,
-  useSafeAreaInsets,
-} from '@dish/ui'
+import { AbsoluteXStack, AbsoluteYStack, Spacer, Theme, YStack, useMedia } from '@dish/ui'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import { Minus, Plus, RefreshCcw, X } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 
 export const AppMapControls = memo(() => {
   const media = useMedia()
-  const safeArea = useSafeAreaInsets()
   const showSearchHere = useShowSearchHere()
   const appMap = useStoreInstance(appMapStore)
   const isHoverZoomed = useStoreInstanceSelector(
@@ -41,9 +32,9 @@ export const AppMapControls = memo(() => {
           fullscreen
           left={5}
           right={5}
-          {...(!isWeb && {
-            top: safeArea.top - 10,
-          })}
+          // {...(!isWeb && {
+          //   top: safeArea.top - 10,
+          // })}
           zIndex={20000000}
           alignItems="center"
           pointerEvents="none"

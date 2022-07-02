@@ -4,15 +4,7 @@ import { HomeStateItemSearch } from '../../../types/homeTypes'
 import { useLastHomeState } from '../../homeStore'
 import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { SearchPageFilterBar } from './SearchPageFilterBar'
-import {
-  AbsoluteYStack,
-  Theme,
-  XStack,
-  YStack,
-  useMedia,
-  useSafeAreaInsets,
-  useTheme,
-} from '@dish/ui'
+import { AbsoluteYStack, Theme, XStack, YStack, useMedia, useTheme } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import { G, Path, Svg } from 'react-native-svg'
 
@@ -20,7 +12,10 @@ const InverseRoundedEdge = () => {
   return (
     <Svg width="20px" height="20px" viewBox="0 0 20 20">
       <G stroke="none">
-        <Path d="M20,5 L20,20 L5,20 C13.2842712,20 20,13.2842712 20,5 L20,5 Z" fill="#000000" />
+        <Path
+          d="M20,5 L20,20 L5,20 C13.2842712,20 20,13.2842712 20,5 L20,5 Z"
+          fill="#000000"
+        />
       </G>
     </Svg>
   )
@@ -28,7 +23,6 @@ const InverseRoundedEdge = () => {
 
 export const SearchPageNavBar = memo(() => {
   const media = useMedia()
-  const safeArea = useSafeAreaInsets()
 
   let content: any
 
@@ -45,7 +39,11 @@ export const SearchPageNavBar = memo(() => {
               <InverseRoundedEdge />
             </AbsoluteYStack>
           </>
-          <YStack backgroundColor="#000" paddingBottom={safeArea.bottom}>
+          <YStack
+            backgroundColor="#000"
+            // https://benfrain.com/how-to-get-the-value-of-phone-notches-environment-variables-env-in-javascript-from-css/
+            // paddingBottom={safeArea.bottom}
+          >
             <SearchPageNavBarContent />
           </YStack>
         </YStack>
@@ -90,7 +88,12 @@ const SearchPageNavBarContent = memo(() => {
         opacity={state ? 1 : 0}
       >
         {state && (
-          <XStack width="100%" alignItems="center" justifyContent="space-between" height="100%">
+          <XStack
+            width="100%"
+            alignItems="center"
+            justifyContent="space-between"
+            height="100%"
+          >
             <XStack height="100%" alignItems="center" justifyContent="center">
               <LenseButtonBar activeTags={state.activeTags} />
             </XStack>
