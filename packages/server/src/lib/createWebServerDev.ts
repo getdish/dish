@@ -41,12 +41,13 @@ export function createWebServerDev(
   console.log('assetsDir', assetsDir)
   app.use('/assets', express.static(assetsDir))
 
+  app.use(
+    middleware(compiler, {
+      publicPath: config.output?.publicPath ?? '/',
+    })
+  )
+
   if (env === 'development') {
-    app.use(
-      middleware(compiler, {
-        publicPath: config.output?.publicPath ?? '/',
-      })
-    )
     app.use(hotMiddleware(compiler))
   }
 

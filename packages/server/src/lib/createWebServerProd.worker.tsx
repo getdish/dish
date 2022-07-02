@@ -1,13 +1,11 @@
-import * as Path from 'path'
-import { parentPort, workerData } from 'worker_threads'
-
-import express from 'express'
-import { readFile } from 'fs-extra'
-
 import { ServerConfigNormal } from '../types'
 import { buildApp } from './buildApp'
 import { createWebServerDev } from './createWebServerDev'
 import { getWebpackConfigBuilder } from './getWebpackConfigBuilder'
+import express from 'express'
+import { readFile } from 'fs-extra'
+import * as Path from 'path'
+import { parentPort, workerData } from 'worker_threads'
 
 // import { ChunkExtractor } from '@loadable/server'
 // import { existsSync, pathExists, readFileSync, renameSync } from 'fs-extra'

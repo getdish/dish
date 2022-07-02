@@ -40,8 +40,12 @@ function dev() {
   # sleep a bit so watch doesn't clog/restart app
   sleep 3
 
-  echo "✅ start app (web)"
-  yarn web &
+  echo "✅ start app (web) $ORIGINAL_ARGS"
+  if [ "$ORIGINAL_ARGS" = "--prod" ]; then
+    yarn web:prod &
+  else
+    yarn web &
+  fi
   PID4=$!
 
   echo "✅ start app (native)"

@@ -21,13 +21,13 @@ export const isRedisConnected = () => connected
 
 let isDown = false
 redisClient.on('error', (err) => {
-  if (err.code === 'ECONNREFUSED') {
+  if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {
     if (!isDown) {
       console.warn('⚠️ Redis not up, cache disabled')
       isDown = true
     }
   } else {
-    console.log('Redis error:', err)
+    console.log('Redis error:', err.message)
   }
 })
 
