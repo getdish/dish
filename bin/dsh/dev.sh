@@ -5,7 +5,7 @@
 function dev() {
   function ctrl_c() {
       echo "👋 BYE"
-      kill -KILL "$PID1" "$PID2" "$PID3" "$PID4" "$PID5"
+      kill -KILL "$PID1" "$PID2" "$PID3" "$PID4" "$PID5" 2> /dev/null
   }
 
   trap ctrl_c INT SIGINT
@@ -37,20 +37,24 @@ function dev() {
   yarn watch &
   PID3=$!
 
-  # sleep a bit so watch doesn't clog/restart app
-  sleep 3
-
-  echo "✅ start app (web) $ORIGINAL_ARGS"
-  if [ "$ORIGINAL_ARGS" = "--prod" ]; then
-    yarn web:prod &
+  if [[ "$ORIGINAL_ARGS" == *"--backend"* ]]; then
+    echo "started backend"
   else
-    yarn web &
-  fi
-  PID4=$!
+    # sleep a bit so watch doesn't clog/restart app
+    sleep 3
 
-  echo "✅ start app (native)"
-  yarn app &
-  PID5=$!
+    echo "✅ start app (web) $ORIGINAL_ARGS"
+    if [ "$ORIGINAL_ARGS" = "--prod" ]; then
+      yarn web:prod &
+    else
+      yarn web &
+    fi
+    PID4=$!
+
+    echo "✅ start app (native)"
+    yarn app &
+    PID5=$!
+  fi
 
   wait
 }
@@ -77,11 +81,21 @@ function dev_start_docker_then_compose() {
 function run() {
   set -a
   source_env
-  if [ "$DISH_DEBUG" -gt "2" ]; then
-    echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
+  if [ "$1" = "native" ]; then
+    run_native_app
+  else
+    if [ "$DISH_DEBUG" -gt "2" ]; then
+      echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
+    fi
+    pushd "$CWD_DIR"
+    bash -c "$ORIGINAL_ARGS"
+    popd
   fi
-  pushd "$CWD_DIR"
-  bash -c "$ORIGINAL_ARGS"
+}
+
+function run_native_app() {
+  pushd app
+  DISH_DEBUG=1 LOCAL_HOST=$(ipconfig getifaddr en0) LOG_LEVEL=1 TAMAGUI_TARGET=native ../node_modules/.bin/react-native start --reset-cache
   popd
 }
 

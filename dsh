@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "start"
 
 if [ "$KEEP_ALIVE" != "true" ]; then
   set -e
