@@ -35,6 +35,7 @@ import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
+import { Inter_400Regular, Inter_800ExtraBold } from '@expo-google-fonts/inter'
 import { Drawer } from '@tamagui/drawer'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
@@ -56,14 +57,10 @@ async function start() {
   }
 
   if (process.env.TAMAGUI_TARGET === 'native') {
+    // todo move to hook in app.native https://docs.expo.dev/guides/using-custom-fonts/
     await Font.loadAsync({
-      // 'Inter-Thin': require('./assets/fonts/Inter-Thin.otf'),
-      // 'Inter-Light': require('./assets/fonts/Inter-Light.otf'),
-      // 'Inter-LightItalic': require('./assets/fonts/Inter-LightItalic.otf'),
-      // 'Inter-Bold': require('./assets/fonts/Inter-Bold.otf'),
-      // 'Inter-BoldItalic': require('./assets/fonts/Inter-BoldItalic.otf'),
-      // 'Inter-Black': require('./assets/fonts/Inter-Black.otf'),
-      // 'Inter-BlackItalic': require('./assets/fonts/Inter-BlackItalic.otf'),
+      Inter: Inter_400Regular,
+      'Inter-ExtraBold': Inter_800ExtraBold,
     })
   }
 
@@ -151,7 +148,7 @@ export function Root() {
               <>
                 <App />
                 {process.env.NODE_ENV === 'development' && <DebugHUD />}
-                <div id="before-bottom-sheet-temp" />
+                {isWeb && <div id="before-bottom-sheet-temp" />}
               </>
             ) : null}
           </Suspense>

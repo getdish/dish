@@ -49,12 +49,9 @@ const HomePageFilterBarSmall = ({ activeTags }: FilterBarProps) => {
       >
         Filters
         {num ? (
-          <>
-            {' '}
-            <Text color={theme.colorFocus} fontSize={13}>
-              ({num})
-            </Text>
-          </>
+          <Text color={theme.colorFocus} fontSize={13}>
+            ({num})
+          </Text>
         ) : null}
       </SmallButton>
 

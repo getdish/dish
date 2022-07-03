@@ -74,14 +74,14 @@ export const AutocompleteFrame = memo(
             opacity={isSafari ? 1 : 0.9}
           />
           <AbsoluteYStack fullscreen display={media.sm ? 'none' : 'flex'}>
-            <BlurView
+            {/* <BlurView
               fallbackBackgroundColor="transparent"
               blurRadius={20}
               blurType="dark"
               position="absolute"
               // @ts-ignore
               fullscreen
-            />
+            /> */}
           </AbsoluteYStack>
           <AbsoluteYStack zIndex={10000} top={10} right={10} pointerEvents="auto">
             <CloseButton

@@ -29,9 +29,9 @@ function dev() {
   fi
   echo "✅ started docker"
 
-  echo "✅ sync tamagui"
-  ./bin/sync-tamagui.sh & 
-  PID2=$!
+  # echo "✅ sync tamagui"
+  # ./bin/sync-tamagui.sh & 
+  # PID2=$!
 
   echo "✅ yarn watch"
   yarn watch &

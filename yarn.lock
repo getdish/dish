@@ -1917,6 +1917,7 @@ __metadata:
     "@envelop/response-cache": ^0.2.1
     "@envelop/response-cache-redis": ^0.1.0
     "@envelop/validation-cache": ^1.0.0
+    "@expo-google-fonts/inter": ^0.2.2
     "@graphql-tools/wrap": ^8.1.1
     "@loadable/component": ^5.14.1
     "@mdx-js/react": ^1.6.22
@@ -1968,6 +1969,7 @@ __metadata:
     date-fns: ^2.21.1
     eas-cli: ^0.28.2
     expo: 45.0.1
+    expo-font: ^10.1.0
     expo-image-picker: ^13.1.1
     expo-linear-gradient: ^11.3.0
     expo-screen-orientation: ^4.2.0
@@ -2532,6 +2534,13 @@ __metadata:
     minimatch: ^3.0.4
     strip-json-comments: ^3.1.1
   checksum: 03a7704150b868c318aab6a94d87a33d30dc2ec579d27374575014f06237ba1370ae11178db772f985ef680d469dc237e7b16a1c5d8edaaeb8c3733e7a95a6d3
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/inter@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@expo-google-fonts/inter@npm:0.2.2"
+  checksum: 0041307bf0325a4154a35a565b338cd80dd6aab0d6df7152fd9db9ad3a7590e1a3c66f5d16bece33425a12371c134250e5d2e5e538e686d8e5868a91422a5166
   languageName: node
   linkType: hard
 
@@ -12646,7 +12655,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-font@npm:~10.1.0":
+"expo-font@npm:^10.1.0, expo-font@npm:~10.1.0":
   version: 10.1.0
   resolution: "expo-font@npm:10.1.0"
   dependencies:
