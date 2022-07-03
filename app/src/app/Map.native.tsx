@@ -7,13 +7,13 @@ import { tiles } from './tiles'
 import { series, sleep } from '@dish/async'
 import { DISH_API_ENDPOINT } from '@dish/graph'
 import { useDebounce, useTheme } from '@dish/ui'
-import MapboxGL from '@react-native-mapbox-gl/maps'
+import MapboxGL from '@rnmapbox/maps'
 import { lightColors } from '@tamagui/theme-base'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, useWindowDimensions } from 'react-native'
 
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN)
-MapboxGL.setTelemetryEnabled(false)
+// MapboxGL.setTelemetryEnabled(false)
 
 const idFn = (_) => _
 
@@ -248,6 +248,7 @@ export default function Map({
         ref={cameraRef}
         minZoomLevel={2}
         maxZoomLevel={22}
+        zoomLevel={span.lng * 200}
         defaultSettings={{
           zoomLevel: span.lng * 200,
           bounds,

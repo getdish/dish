@@ -23,7 +23,7 @@ export const App = memo(() => {
       <AbsoluteYStack fullscreen backgroundColor="$backgroundStrong">
         <Suspense fallback={null}>
           {/* keep indent  */}
-          {/* <AppMap /> */}
+          <AppMap />
         </Suspense>
 
         <Home />
