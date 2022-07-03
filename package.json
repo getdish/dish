@@ -99,7 +99,7 @@
     "react-refresh": "0.13.0",
     "@testing-library/react": "13.3.0",
     "fs-extra": "10.1.0",
-    "@react-native-community/cli": "8.0.2",
+    "@react-native-community/cli": "7.0.2",
     "react-native": "0.68.1",
     "typescript": "4.6.3",
     "aws-sdk": "2.762.0",

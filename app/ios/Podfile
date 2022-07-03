@@ -9,8 +9,11 @@ podfile_properties = JSON.parse(File.read('./Podfile.properties.json')) rescue {
 
 flipperkit_version = '0.111.0'
 
-$RNMBGL_Use_SPM = true
-$RNMGL_USE_MAPLIBRE = true
+# $RNMBGL_Use_SPM = true
+# $RNMGL_USE_MAPLIBRE = true
+
+$RNMapboxMapsImpl = 'mapbox'
+$RNMapboxMapsVersion = '~> 10.6.0'
 
 target 'dish' do  
   use_expo_modules!
@@ -25,11 +28,11 @@ target 'dish' do
   # use_flipper!({ 'Flipper' => flipperkit_version, 'Flipper-Folly' => '2.6.9', 'Flipper-RSocket' => '1.4.3', 'Flipper-DoubleConversion' => '3.1.7', 'Flipper-Glog' => '0.3.9', 'Flipper-PeerTalk' => '0.0.4' })
 
   pre_install do |installer|
-    $RNMBGL.pre_install(installer)
+    $RNMapboxMaps.pre_install(installer)
   end
 
   post_install do |installer|
-    $RNMBGL.post_install(installer)
+    $RNMapboxMaps.post_install(installer)
 
     react_native_post_install(installer)
 
