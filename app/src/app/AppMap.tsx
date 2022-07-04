@@ -13,7 +13,6 @@ import {
   updateRegionFaster,
 } from './appMapStoreUpdateRegion'
 import { drawerStore } from './drawerStore'
-import { AppFloatingTagMenuBar } from './home/AppFloatingTagMenuBar'
 import { homeStore } from './homeStore'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
@@ -36,21 +35,25 @@ import {
 } from '@dish/ui'
 import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import loadable from '@loadable/component'
-import React, { memo, useCallback, useEffect, useMemo } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { Animated, StyleSheet } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default memo(function AppMap() {
   // lighthouse/slow browser optimization
   const isFullyIdle = useIsInteractive()
   const media = useMedia()
-  // const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
-  // const y0 = media.sm
-  //   ? (() => {
-  //       const distanceFromCenter = getWindowHeight() - drawerStore.snapHeights[1] - drawerHeight
-  //       return Math.round(Math.min(0, -drawerHeight / 1.8 + distanceFromCenter / 4))
-  //     })()
-  //   : 0
 
-  // const y = useDebounceValue(y0, 150)
+  const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
+  const y0 = media.sm
+    ? (() => {
+        const distanceFromCenter =
+          getWindowHeight() - drawerStore.snapHeights[1] - drawerHeight
+        return Math.round(Math.min(0, -drawerHeight / 1.8 + distanceFromCenter / 4))
+      })()
+    : 0
+
+  // const y = useDebounceValue(y0, 100)
   // const [translateY] = useState(() => new Animated.Value(y))
   // const offset = useSharedValue(y)
   // const animatedStyles = useAnimatedStyle(() => {
@@ -60,6 +63,7 @@ export default memo(function AppMap() {
   // }, [])
 
   // useEffect(() => {
+  //   console.log('gogo', translateY)
   //   Animated.spring(translateY, {
   //     useNativeDriver: !isWeb,
   //     toValue: y,
@@ -72,10 +76,21 @@ export default memo(function AppMap() {
 
   return (
     <>
-      {media.sm && <AppMapControls />}
-      {/* this is breaking suddenly but not anything to do with tamagui */}
-      {/* the position relative from .css-view is overriding the atomic position absolute */}
-      {/* <Animated.View
+      {media.sm && (
+        <>
+          <AppMapControls />
+          <AppMapBottomFade />
+          <AppMapTopFade />
+        </>
+      )}
+
+      <YStack
+        // works but slow in simulator native
+        // animation="bouncy"
+        fullscreen
+        y={y0}
+      >
+        {/* <Animated.View
         style={[
           StyleSheet.absoluteFill,
           {
@@ -83,8 +98,9 @@ export default memo(function AppMap() {
           },
         ]}
       > */}
-      <AppMapContents />
-      {/* </Animated.View> */}
+        <AppMapContents />
+        {/* </Animated.View> */}
+      </YStack>
     </>
   )
 })
@@ -309,7 +325,6 @@ export const AppMapContents = memo(function AppMapContents() {
           },
         })}
       >
-        {media.sm && <AppMapBottomFade />}
         {!media.sm && <AppMapRightFade />}
         <Map
           center={center}
@@ -350,6 +365,22 @@ const AppMapBottomFade = memo(() => {
         colors={[`${theme.background}00`, theme.background.toString()]}
       /> */}
     </AbsoluteYStack>
+  )
+})
+
+const AppMapTopFade = memo(() => {
+  const safeArea = useSafeAreaInsets()
+
+  return (
+    <LinearGradient
+      pointerEvents="none"
+      fullscreen
+      bottom="auto"
+      top={-20}
+      height={safeArea.top + 20}
+      zIndex={100}
+      colors={['#000', 'rgba(0,0,0,0)']}
+    />
   )
 })
 

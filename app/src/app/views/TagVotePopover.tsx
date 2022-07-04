@@ -28,41 +28,39 @@ export const TagVotePopover = graphql(
         placement="top"
         {...popoverProps}
         label={
-          <Theme name="dark">
-            <Card paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
-              <XStack>
-                {tagRatings.map((rating) => (
-                  <LinkButton
-                    promptLogin
-                    borderRadius={1000}
-                    width={38}
-                    height={38}
-                    paddingHorizontal={0}
-                    letterSpacing={-1}
-                    fontWeight="600"
-                    onPress={(e) => {
-                      e.stopPropagation()
-                      setVote(rating)
-                      // give time to see it update
-                      setTimeout(() => {
-                        hovPopRef.current?.close()
-                      }, 200)
-                    }}
-                    key={rating}
-                    {...(vote === rating
-                      ? {
-                          backgroundColor: '$blue3',
-                        }
-                      : {
-                          backgroundColor: 'transparent',
-                        })}
-                  >
-                    {rating}
-                  </LinkButton>
-                ))}
-              </XStack>
-            </Card>
-          </Theme>
+          <Card theme="dark" paddingVertical={1} paddingHorizontal={1} borderRadius={80}>
+            <XStack>
+              {tagRatings.map((rating) => (
+                <LinkButton
+                  promptLogin
+                  borderRadius={1000}
+                  width={38}
+                  height={38}
+                  paddingHorizontal={0}
+                  letterSpacing={-1}
+                  fontWeight="600"
+                  onPress={(e) => {
+                    e.stopPropagation()
+                    setVote(rating)
+                    // give time to see it update
+                    setTimeout(() => {
+                      hovPopRef.current?.close()
+                    }, 200)
+                  }}
+                  key={rating}
+                  {...(vote === rating
+                    ? {
+                        backgroundColor: '$blue3',
+                      }
+                    : {
+                        backgroundColor: 'transparent',
+                      })}
+                >
+                  {rating}
+                </LinkButton>
+              ))}
+            </XStack>
+          </Card>
         }
       >
         {children}

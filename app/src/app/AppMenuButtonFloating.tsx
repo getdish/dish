@@ -7,12 +7,14 @@ import { Drawer } from '@tamagui/drawer'
 import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 import { useWindowDimensions } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const AppMenuButtonFloating = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
   const { height } = useWindowDimensions()
   const drawerHeight = height * 0.8
+  const safeArea = useSafeAreaInsets()
 
   if (!(media.sm || media.xs)) {
     return null
@@ -44,8 +46,7 @@ export const AppMenuButtonFloating = memo(() => {
       </Drawer>
 
       <AbsoluteYStack
-        // top={safeArea.top ? safeArea.top : 10}
-        top={10}
+        top={safeArea.top ? safeArea.top : 10}
         right={10}
         zIndex={zIndexDrawer - 1}
         // pointerEvents="none"

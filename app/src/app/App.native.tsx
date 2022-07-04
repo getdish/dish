@@ -20,24 +20,23 @@ export const App = memo(() => {
       <RootPortalProvider />
       <AppStatusBar />
       <AutocompleteEffects />
-      <AbsoluteYStack fullscreen backgroundColor="$backgroundStrong">
-        <Suspense fallback={null}>
-          {/* keep indent  */}
-          <AppMap />
-        </Suspense>
+      {/* <AbsoluteYStack fullscreen backgroundColor="$backgroundStrong"> */}
+      <Suspense fallback={null}>
+        <AppMap />
+      </Suspense>
 
-        <Home />
+      <Home />
 
-        <AppMenuButtonFloating />
+      <AppMenuButtonFloating />
 
-        <Suspense fallback={null}>
-          <GalleryPage />
-          <RestaurantReviewPage />
-          <Route name="restaurantHours">
-            <RestaurantHoursPage />
-          </Route>
-        </Suspense>
-      </AbsoluteYStack>
+      <Suspense fallback={null}>
+        <GalleryPage />
+        <RestaurantReviewPage />
+        <Route name="restaurantHours">
+          <RestaurantHoursPage />
+        </Route>
+      </Suspense>
+      {/* </AbsoluteYStack> */}
     </>
   )
 })

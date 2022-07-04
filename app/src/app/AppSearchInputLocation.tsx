@@ -78,7 +78,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
   return (
     // needs overflow hidden or else search box expands past edge on media.sm
     // while searching location
-    <YStack position="relative" flex={1} overflow="hidden">
+    <YStack jc="center" position="relative" flex={1} overflow="hidden">
       <InputFrame>
         <XStack
           position="relative"

@@ -41,6 +41,7 @@ import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { Appearance, useColorScheme } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 console.log('Appearance', Appearance.getColorScheme())
 
@@ -140,22 +141,24 @@ export function Root() {
   console.log('Root.render', { colorScheme, defaultTheme })
 
   return (
-    <Tamagui.Provider defaultTheme={defaultTheme}>
-      <Drawer.Provider>
-        <ProvideRouter routes={routes}>
-          <Suspense fallback={null}>
-            {isLoaded ? (
-              <>
-                <App />
-                {process.env.NODE_ENV === 'development' && <DebugHUD />}
-                {isWeb && <div id="before-bottom-sheet-temp" />}
-              </>
-            ) : null}
-          </Suspense>
-        </ProvideRouter>
-        {showRadar && <Radar />}
-      </Drawer.Provider>
-    </Tamagui.Provider>
+    <SafeAreaProvider>
+      <Tamagui.Provider defaultTheme={defaultTheme}>
+        <Drawer.Provider>
+          <ProvideRouter routes={routes}>
+            <Suspense fallback={null}>
+              {isLoaded ? (
+                <>
+                  <App />
+                  {process.env.NODE_ENV === 'development' && <DebugHUD />}
+                  {isWeb && <div id="before-bottom-sheet-temp" />}
+                </>
+              ) : null}
+            </Suspense>
+          </ProvideRouter>
+          {showRadar && <Radar />}
+        </Drawer.Provider>
+      </Tamagui.Provider>
+    </SafeAreaProvider>
   )
 }
 

@@ -106,6 +106,7 @@ const tileSetter =
 
 export default function Map(props: MapProps) {
   if (isM1Sim) {
+    console.warn('m1 sim breaks...')
     // bug: https://github.com/mapbox/mapbox-gl-js/issues/10260
     return null
   }
