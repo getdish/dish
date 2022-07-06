@@ -50,43 +50,23 @@ export const Home = memo(function Home() {
 
   return (
     <Suspense fallback={null}>
-      <HomeContainer>
+      <HomeDrawer>
         <HomeStackView>
           {(props) => {
             return <HomeStackViewPages {...props} />
           }}
         </HomeStackView>
-      </HomeContainer>
+      </HomeDrawer>
     </Suspense>
   )
 })
 
-// const { Reparentable, sendReparentableChild } = createReparentableSpace()
-
-export function HomeContainer(props: { children: any }) {
+export function HomeDrawer(props: { children: any }) {
   const media = useMedia()
-  // const [parent, setParent] = useState(() => (media.sm ? 'sm' : 'lg'))
-  // const children = [<React.Fragment key="1">{props.children}</React.Fragment>]
-
-  // useLayoutEffect(() => {
-  //   setParent((last) => {
-  //     const next = media.sm ? 'sm' : 'lg'
-  //     sendReparentableChild(last, next, 0, 0)
-  //     return next
-  //   })
-  // }, [media.sm])
-
   return (
     <>
       {media.sm && <HomeDrawerSmall>{props.children}</HomeDrawerSmall>}
-      {!media.sm && <HomeContainerLarge>{props.children}</HomeContainerLarge>}
-      {/* <HomeDrawerSmall>
-        <Reparentable id="sm">{parent === 'sm' ? children : []}</Reparentable>
-      </HomeDrawerSmall>
-
-      <HomeContainerLarge>
-        <Reparentable id="lg">{parent === 'lg' ? children : []}</Reparentable>
-      </HomeContainerLarge> */}
+      {!media.sm && <HomeDrawerLarge>{props.children}</HomeDrawerLarge>}
     </>
   )
 }
@@ -127,7 +107,7 @@ const HomeDrawerSmall = (props: { children: any }) => {
   )
 }
 
-const HomeContainerLarge = memo((props) => {
+const HomeDrawerLarge = memo((props) => {
   const drawerWidth = useAppDrawerWidth(Infinity)
   // const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
 

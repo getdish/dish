@@ -29,7 +29,7 @@ import {
   View,
 } from 'react-native'
 
-let isTouchingHandle = false
+const isTouchingHandle = false
 let isPanActive = false
 const getActiveParentId = () => {
   return getStore(ContentParentStore).activeId
