@@ -273,11 +273,12 @@ const RestaurantListItemContent = memo(
           >
             {/* LINK */}
             <Link
-              flex={2}
+              // flex={2} // messes up native
               tagName="div"
               name="restaurant"
               params={{ slug: restaurantSlug }}
               zIndex={2}
+              noWrapText
             >
               <XStack
                 paddingLeft={hideRate ? 10 : 64}
@@ -316,7 +317,6 @@ const RestaurantListItemContent = memo(
                     borderRadius={8}
                     alignItems="center"
                     marginVertical={-5}
-                    maxWidth={contentSideProps.maxWidth}
                     hoverStyle={{
                       backgroundColor: '$backgroundHover',
                     }}

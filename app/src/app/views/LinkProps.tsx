@@ -17,6 +17,7 @@ export type LinkProps<A, B> = LinkSharedProps &
     params?: B
     tagName?: string
     underline?: boolean
+    noWrapText?: boolean
   }
 
 export type LinkSharedProps = Pick<

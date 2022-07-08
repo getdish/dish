@@ -28,6 +28,7 @@ export const Link = forwardRef(function Link<Name extends DRouteName = DRouteNam
     tag,
     children,
     display,
+    noWrapText,
     promptLogin,
     href,
     ...styleProps
@@ -35,19 +36,13 @@ export const Link = forwardRef(function Link<Name extends DRouteName = DRouteNam
   const { wrapWithLinkElement } = useLink(allProps, styleProps)
   const isInParagraph = useContext(TextAncestorContext)
   return wrapWithLinkElement(
-    isStringChild(children) ? (
+    isStringChild(children) && !noWrapText ? (
       <Text
         textDecorationLine={
           underline === false ? 'none' : isInParagraph || underline ? 'underline' : 'none'
         }
         color="$colorHover"
         display={display as any}
-        // {...(isInParagraph && {
-        //   color: red400,
-        //   hoverStyle: {
-        //     color: `${red400}99`,
-        //   },
-        // })}
       >
         {children}
       </Text>
