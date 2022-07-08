@@ -531,6 +531,7 @@ const ListPageContent = memo(
                                   {items.map((x, i) => {
                                     return (
                                       <Paragraph
+                                        selectable={false}
                                         paddingBottom={i < items.length - 1 ? 26 : 0}
                                         key={i}
                                         size={i == 0 ? '$6' : '$4'}
@@ -549,7 +550,7 @@ const ListPageContent = memo(
                           <XStack space alignSelf="center">
                             {/* listColors.color */}
                             <Move size={16} color={'red'} />
-                            <Paragraph opacity={0.6} size="$3">
+                            <Paragraph selectable={false} opacity={0.6} size="$3">
                               press and hold on any item to sort
                             </Paragraph>
                           </XStack>

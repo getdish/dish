@@ -23,7 +23,7 @@
     "react": "*"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.1-beta.94",
+    "@tamagui/build": "^1.0.1-beta.95",
     "react-native-sync-localstorage": "^0.0.3"
   }
 }

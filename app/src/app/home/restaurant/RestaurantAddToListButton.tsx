@@ -19,13 +19,15 @@ export const RestaurantAddToListButton = ({
     <>
       {!!(showModal && restaurantSlug) && (
         <Suspense fallback={null}>
-          <RestaurantAddToListModal slug={restaurantSlug} onDismiss={() => setShowModal(false)} />
+          <RestaurantAddToListModal
+            slug={restaurantSlug}
+            onDismiss={() => setShowModal(false)}
+          />
         </Suspense>
       )}
       <SmallButton
         tooltip="Add to list"
         elevation={floating ? '$1' : '$0'}
-        borderRadius={100}
         icon={Plus}
         onPress={() => {
           if (!userStore.promptLogin()) {

@@ -1,6 +1,7 @@
 import { brandColor, isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getWindowWidth } from '../../../helpers/getWindow'
+import { numberFormat } from '../../../helpers/numberFormat'
 import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { QueryRestaurantTagsProps } from '../../../queries/queryRestaurantTags'
 import { GeocodePlace } from '../../../types/homeTypes'
@@ -327,6 +328,7 @@ const RestaurantListItemContent = memo(
                     })}
                   >
                     <Paragraph
+                      selectable={false}
                       fontSize={titleFontSize}
                       lineHeight={titleHeight}
                       height={titleHeight}
@@ -447,7 +449,10 @@ const RestaurantListItemContent = memo(
                         />
                       }
                     >
-                      {/* {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')} */}
+                      {numberFormat(
+                        restaurant.reviews_aggregate().aggregate?.count() ?? 0,
+                        'sm'
+                      )}
                     </SmallButton>
                   </Link>
 
@@ -468,6 +473,7 @@ const RestaurantListItemContent = memo(
                   fontSize={14}
                   fontWeight="500"
                   color="$colorPress"
+                  selectable={false}
                 >
                   {price_range ?? '-'}
                 </Paragraph>

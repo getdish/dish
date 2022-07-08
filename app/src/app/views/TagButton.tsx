@@ -166,24 +166,22 @@ const TagButtonInner = (props: TagButtonProps) => {
       alignItems="flex-start"
       flexWrap="nowrap"
       flexShrink={0}
-      opacity={rank && rank < 100 ? 1 : 0}
+      opacity={rank && rank < 100 ? 0.5 : 0}
     >
-      <Text pointerEvents="none" color="$color" fontSize={7} opacity={0.15}>
+      <Paragraph selectable={false} pointerEvents="none" fontSize={smallerFontSize}>
         #
-      </Text>
-      <Text
+      </Paragraph>
+      <Paragraph
+        selectable={false}
         pointerEvents="none"
         fontSize={smallerFontSize}
         alignContent="center"
         justifyContent="center"
         alignItems="center"
         display="flex"
-        color="$color"
-        letterSpacing={-1.5}
-        opacity={0.2}
       >
         {rank}
-      </Text>
+      </Paragraph>
     </XStack>
   )
 
@@ -200,9 +198,9 @@ const TagButtonInner = (props: TagButtonProps) => {
         }}
       />
     ) : (
-      <Text pointerEvents="none" fontSize={fontSize}>
+      <Paragraph selectable={false} pointerEvents="none" fontSize={fontSize}>
         {icon}
-      </Text>
+      </Paragraph>
     )
 
   // allows for controlled or user-controlled... not pretty
@@ -237,7 +235,7 @@ const TagButtonInner = (props: TagButtonProps) => {
       {!hideRating && typeof rating !== 'undefined' && (
         <>
           {ratingStyle === 'pie' && (
-            <YStack marginVertical={-2} position="relative">
+            <YStack marginVertical={-2} mx={smallerFontSize} position="relative">
               {/* {rating === 0 ? null : rating * 10 < 18 ? (
                 <Text fontSize={16}>😕</Text>
               ) : rating * 10 > 90 ? (

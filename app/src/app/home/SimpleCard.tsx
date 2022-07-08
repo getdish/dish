@@ -30,7 +30,7 @@ export const SimpleCard = ({
       position="relative"
       opacity={1}
       scale={0.95}
-      translateX={0}
+      x={0}
       hoverStyle={{
         scale: 0.975,
       }}

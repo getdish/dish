@@ -177,8 +177,6 @@ const RestaurantPage = memo(
         exclude: ['category', 'country', 'lense'],
       }).map((x) => x.tag.name)
 
-      const themeName = useThemeName()
-
       if (!restaurant) {
         return <NotFoundPage />
       }
@@ -195,7 +193,7 @@ const RestaurantPage = memo(
               <RestaurantAddToListButton floating restaurantSlug={restaurantSlug} />
             </Suspense>
             <Suspense fallback={null}>
-              <RestaurantFavoriteButton floating size="$6" restaurantSlug={restaurantSlug} />
+              <RestaurantFavoriteButton floating size="$3" restaurantSlug={restaurantSlug} />
             </Suspense>
           </PaneControlButtonsLeft>
           <YStack
@@ -213,7 +211,13 @@ const RestaurantPage = memo(
                 <YStack>
                   {/* title row */}
                   <XStack paddingLeft={20} alignItems="flex-end" position="relative">
-                    <YStack width={66} height={66} marginRight={-15} marginBottom={0} zIndex={200}>
+                    <YStack
+                      width={66}
+                      height={66}
+                      marginRight={-15}
+                      marginBottom={0}
+                      zIndex={200}
+                    >
                       <RestaurantRatingView floating size={66} restaurant={restaurant} />
                     </YStack>
 
@@ -279,7 +283,10 @@ const RestaurantPage = memo(
                               <Spacer size="$2" />
 
                               <YStack>
-                                <RestaurantAddress size="xs" address={restaurant?.address ?? ''} />
+                                <RestaurantAddress
+                                  size="xs"
+                                  address={restaurant?.address ?? ''}
+                                />
                               </YStack>
 
                               <Spacer size="$2" />
@@ -324,10 +331,10 @@ const RestaurantPage = memo(
                     restaurant={restaurant}
                     spacing={10}
                     maxItems={5}
-                    size="$7"
+                    size="$5"
                     tagButtonProps={{
                       hideRank: false,
-                      hideRating: false,
+                      // hideRating: false,
                       backgroundColor: 'transparent',
                       borderWidth: 0,
                       votable: true,
@@ -336,7 +343,16 @@ const RestaurantPage = memo(
                 </XStack>
               </ContentScrollViewHorizontal>
 
-              <ContentScrollViewHorizontal>
+              <RestaurantOverview
+                isDishBot
+                maxLines={5}
+                size="$5"
+                restaurantSlug={restaurantSlug}
+              />
+
+              <Spacer />
+
+              {/* <ContentScrollViewHorizontal>
                 <XStack flexShrink={0} marginBottom={20}>
                   <YStack
                     flex={1}
@@ -348,7 +364,7 @@ const RestaurantPage = memo(
                     <RestaurantOverview
                       isDishBot
                       maxLines={5}
-                      size="lg"
+                      size="$5"
                       restaurantSlug={restaurantSlug}
                     />
                   </YStack>
@@ -372,7 +388,7 @@ const RestaurantPage = memo(
                     />
                   </YStack>
                 </XStack>
-              </ContentScrollViewHorizontal>
+              </ContentScrollViewHorizontal> */}
             </YStack>
           </YStack>
         </>

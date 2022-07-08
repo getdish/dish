@@ -2,7 +2,16 @@ import { queryRestaurant } from '../../../queries/queryRestaurant'
 import { ensureFlexText } from '../../home/restaurant/ensureFlexText'
 import { graphql } from '@dish/graph'
 import { ellipseText } from '@dish/helpers'
-import { Input, Paragraph, XStack, YStack, useDebounce, useTheme } from '@dish/ui'
+import {
+  FontSizeTokens,
+  Input,
+  Paragraph,
+  XStack,
+  YStack,
+  getFontSize,
+  useDebounce,
+  useTheme,
+} from '@dish/ui'
 import { capitalize } from 'lodash'
 import React, { memo } from 'react'
 
@@ -17,14 +26,14 @@ export const RestaurantOverview = memo(
     onEditCancel,
     restaurantSlug,
     fullHeight,
-    size = 'md',
+    size = '$4',
     disableEllipse,
     maxLines = 3,
   }: {
     isDishBot?: boolean
     restaurantSlug: string
     fullHeight?: boolean
-    size?: 'lg' | 'md'
+    size?: FontSizeTokens
     text?: string | null
     isEditingDescription?: boolean
     onEditDescription?: (next: string) => void
@@ -34,6 +43,7 @@ export const RestaurantOverview = memo(
   }) {
     const [restaurant] = queryRestaurant(restaurantSlug)
     const onChangeDescriptionDbc = useDebounce(onEditDescription ?? idFn, 150)
+    const fontSize = getFontSize(size)
 
     if (!restaurant) {
       return null
@@ -44,19 +54,14 @@ export const RestaurantOverview = memo(
       .map((x) => x?.sentence)
       .join(' ')
     const summary = text || restaurant.summary || headlines || ''
-    const scale = size === 'lg' ? 1.1 : 1
-    const extra = size === 'lg' ? 4 : 1
-    const lineHeight = Math.round((size === 'lg' ? 26 : 24) * scale + extra * scale)
-    const fontSize = Math.round(14 * scale + extra)
 
     if (summary || isEditingDescription) {
       const content = (
         // height 100% necessary for native
         <YStack
           width="100%"
-          marginVertical={lineHeight * 0.5}
           height={fullHeight ? 'auto' : undefined}
-          maxHeight={lineHeight * maxLines}
+          maxHeight={fontSize * 1.5 * maxLines}
         >
           <XStack
             maxWidth="100%"
@@ -79,8 +84,7 @@ export const RestaurantOverview = memo(
                   maxWidth="100%"
                   multiline
                   numberOfLines={5}
-                  fontSize={fontSize}
-                  lineHeight={lineHeight}
+                  size={size}
                   color="$color"
                   onChangeText={onChangeDescriptionDbc}
                 />
@@ -89,14 +93,9 @@ export const RestaurantOverview = memo(
               <Paragraph
                 className="break-word"
                 display="flex"
-                fontSize={fontSize}
-                lineHeight={lineHeight}
                 selectable
-                // short descriptions look bad in minHieght
-                // minHeight={lineHeight * 2}
-                // fontWeight="500"
-                color={size === 'lg' ? '$color' : '$colorHover'}
                 pointerEvents="auto"
+                size={size}
               >
                 {disableEllipse
                   ? summary

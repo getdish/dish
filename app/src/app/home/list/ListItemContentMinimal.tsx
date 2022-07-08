@@ -18,7 +18,16 @@ import { ensureFlexText } from '../restaurant/ensureFlexText'
 import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 import { graphql, useRefetch } from '@dish/graph'
-import { H3, LoadingItem, Text, XStack, YStack, useMedia, useTheme, useThemeName } from '@dish/ui'
+import {
+  H3,
+  LoadingItem,
+  Text,
+  XStack,
+  YStack,
+  useMedia,
+  useTheme,
+  useThemeName,
+} from '@dish/ui'
 import { PenTool, X } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useState } from 'react'
 
@@ -55,18 +64,12 @@ const Header = memo(
       minimal,
     } = props
     const review = reviewQuery?.[0]
-    const media = useMedia()
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
     const open = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
-    const nameLen = restaurantName.length
-
     const theme = useTheme()
     const [isFocused, setIsFocused] = useState(false)
     const drawerWidth = useAppDrawerWidth()
-    const themeName = useThemeName()
-    const isDark = themeName === 'dark'
-    const titleSize = `$${Math.max(4, Math.min(10, Math.round(nameLen / 10) + 5))}`
 
     if (!restaurant) {
       return null
@@ -75,7 +78,6 @@ const Header = memo(
     return (
       <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
         <YStack
-          // hoverStyle={{ backgroundColor: `${listColors.backgroundColor}11` }}
           hoverStyle={{
             backgroundColor: '$backgroundTransparent',
           }}
@@ -109,6 +111,7 @@ const Header = memo(
                       }}
                       fontWeight="200"
                       maxWidth="100%"
+                      selectable={false}
                     >
                       {restaurantName}
                     </H3>
@@ -162,7 +165,12 @@ const Header = memo(
                     <RestaurantRatingView restaurant={restaurant} size={28} />
                   </YStack> */}
 
-                  <Text marginHorizontal={10} opacity={0.5} fontSize={14} color={theme.colorPress}>
+                  <Text
+                    marginHorizontal={10}
+                    opacity={0.5}
+                    fontSize={14}
+                    color={theme.colorPress}
+                  >
                     {price_range ?? '?'}
                   </Text>
 

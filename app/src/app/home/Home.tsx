@@ -126,6 +126,7 @@ const HomeDrawerLarge = memo((props) => {
     >
       <YStack p="$3" pos="relative" h="100%">
         <YStack
+          pos="relative"
           className="blur"
           br="$6"
           pointerEvents="auto"
@@ -148,14 +149,15 @@ const HomeDrawerLarge = memo((props) => {
 
           <XStack
             pe="none"
-            br="$6"
+            btrr="$6"
+            btlr="$6"
             overflow="hidden"
             zi={1}
             pos="absolute"
             top={0}
             left={0}
             right={0}
-            height={80}
+            height={70}
             ai="flex-start"
           >
             <AppSearchBarInline />
@@ -198,7 +200,7 @@ const AppSearchBarFade = () => {
       colors={[
         theme.backgroundHover.toString(),
         theme.backgroundHover.toString(),
-        theme.backgroundTransparent.toString(),
+        'transparent',
       ]}
     />
   )

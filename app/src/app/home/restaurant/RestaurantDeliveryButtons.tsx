@@ -4,7 +4,7 @@ import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { getRestaurantDeliverySources } from './getRestaurantDeliverySources'
 import { graphql } from '@dish/graph'
-import { Text, XStack, YStack, YStackProps, useTheme } from '@dish/ui'
+import { Paragraph, SizableText, Text, XStack, YStack, YStackProps, useTheme } from '@dish/ui'
 import React, { memo } from 'react'
 
 type Props = YStackProps & {
@@ -21,7 +21,6 @@ export const RestaurantDeliveryButtons = memo(
     ...props
   }: Props) {
     const [restaurant] = queryRestaurant(restaurantSlug)
-    const theme = useTheme()
     if (!restaurant) {
       return null
     }
@@ -30,9 +29,9 @@ export const RestaurantDeliveryButtons = memo(
     return (
       <XStack flexWrap="wrap" alignItems="center" space="$1" {...props}>
         {!!label && (
-          <Text fontSize={14} color={theme.colorFocus} marginRight={8} y={-1}>
+          <Paragraph selectable={false} size="$3" marginRight={8} y={-1}>
             {label}
-          </Text>
+          </Paragraph>
         )}
         {sources.map((source, i) => {
           return (
@@ -48,9 +47,9 @@ export const RestaurantDeliveryButtons = memo(
           )
         })}
         {!sources.length && label !== false && (
-          <Text textAlign="center" fontSize={11} color={theme.colorFocus}>
+          <Paragraph selectable={false} textAlign="center" size="$3">
             No delivery
-          </Text>
+          </Paragraph>
         )}
       </XStack>
     )
