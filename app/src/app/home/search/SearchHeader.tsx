@@ -27,43 +27,42 @@ export const SearchHeader = memo(() => {
 
   return (
     <>
-      <ContentScrollViewHorizontalFitted width={width} setWidth={setWidthDebounce}>
-        <YStack width="100%">
-          <YStack pt="$3" />
-          <XStack position="relative" zIndex={100}>
-            <YStack
-              theme={lenseColor}
-              py="$4"
-              px="$6"
-              $sm={{ px: 25 }}
-              position="relative"
-              zIndex={100}
-              x={-10}
-            >
-              <H1 className="font-title">{title.trim()}</H1>
-              {!!subTitle && <H3>in {subTitle.trim()}</H3>}
-              <YStack $sm={{ display: 'none' }}>
-                <Spacer size="$2" />
-                <SearchPageScoring />
-              </YStack>
-            </YStack>
-            <XStack marginLeft={-10} marginBottom={8} position="relative">
-              {/* <YStack position="relative" alignItems="center" justifyContent="center" x={-10}>
+      <XStack pt="$3" position="relative" zIndex={100}>
+        <YStack
+          theme={lenseColor}
+          py="$4"
+          px="$6"
+          $sm={{ px: 25 }}
+          position="relative"
+          zIndex={100}
+          x={-10}
+        >
+          <H1 size="$5">{title.trim()}</H1>
+          {!!subTitle && <H3>in {subTitle.trim()}</H3>}
+          <YStack $sm={{ display: 'none' }}>
+            <Spacer size="$2" />
+            <SearchPageScoring />
+          </YStack>
+        </YStack>
+        <XStack marginLeft={-10} marginBottom={8} position="relative">
+          {/* <YStack position="relative" alignItems="center" justifyContent="center" x={-10}>
                 <SlantedTitle size="xs">Lists</SlantedTitle>
                 <AbsoluteYStack right={-14} rotate="90deg">
                   <Arrow />
                 </AbsoluteYStack>
               </YStack> */}
 
-              {/* <SearchForkListButton size="sm" /> */}
+          {/* <SearchForkListButton size="sm" /> */}
 
-              {/* <Suspense fallback={null}>
+          {/* <Suspense fallback={null}>
                 <SearchPageListsRow />
               </Suspense> */}
-            </XStack>
-          </XStack>
-        </YStack>
-      </ContentScrollViewHorizontalFitted>
+        </XStack>
+      </XStack>
+
+      {/* <ContentScrollViewHorizontalFitted width={width} setWidth={setWidthDebounce}>
+        
+      </ContentScrollViewHorizontalFitted> */}
       <Suspense fallback={null}>
         {/* <SearchPageResultsInfoBox state={curProps.item} /> */}
       </Suspense>

@@ -31,6 +31,7 @@ import {
   Button,
   Circle,
   Group,
+  H2,
   LoadingItem,
   LoadingItemsSmall,
   Paragraph,
@@ -46,7 +47,7 @@ import { MessageSquare } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
-export const ITEM_HEIGHT = 180
+export const ITEM_HEIGHT = 130
 
 export type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
@@ -327,19 +328,9 @@ const RestaurantListItemContent = memo(
                       overflow: 'hidden',
                     })}
                   >
-                    <Paragraph
-                      selectable={false}
-                      fontSize={titleFontSize}
-                      lineHeight={titleHeight}
-                      height={titleHeight}
-                      color="$color"
-                      fontWeight="600"
-                      letterSpacing={-0.5}
-                      paddingHorizontal={1} // prevents clipping due to letter-spacing
-                      ellipse
-                    >
+                    <H2 selectable={false} size="$9" ellipse fow="300">
                       {restaurantName}
-                    </Paragraph>
+                    </H2>
                   </XStack>
                 </Link>
               </XStack>
@@ -348,66 +339,6 @@ const RestaurantListItemContent = memo(
             <Spacer size="$4" />
           </YStack>
 
-          {/* ROW: CENTER CONTENT AREA */}
-          {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
-          {!shouldShowOneLine && (
-            <XStack
-              y={-10}
-              pointerEvents="none"
-              zIndex={10}
-              paddingLeft={hideRate ? 0 : 65}
-              paddingRight={10}
-              flex={1}
-              maxHeight={flexibleHeight ? 1000 : 66}
-            >
-              <YStack
-                {...contentSideProps}
-                className="fix-safari-shrink-height"
-                justifyContent="center"
-                flex={1}
-                zIndex={100}
-                paddingHorizontal={20}
-                opacity={0.65}
-                {...(media.notSm && {
-                  y: -12,
-                })}
-              >
-                {/* ROW: OVERVIEW */}
-
-                <RestaurantOverview
-                  isDishBot
-                  isEditingDescription={state.editing}
-                  text={state.description}
-                  onEditCancel={() => {
-                    setState((prev) => ({ ...prev, editing: false }))
-                  }}
-                  onEditDescription={(description) => {
-                    setState((prev) => ({ ...prev, description }))
-                  }}
-                  fullHeight
-                  restaurantSlug={restaurantSlug}
-                  maxLines={flexibleHeight ? 2000 : 2}
-                />
-                {flexibleHeight ? <YStack flex={1} /> : null}
-              </YStack>
-
-              {/* PEEK / TAGS (RIGHT SIDE) */}
-              {/* margin top: negative the titles second row height */}
-              <Suspense fallback={null}>
-                <RestaurantPeekDishes
-                  restaurantSlug={props.restaurantSlug}
-                  restaurantId={props.restaurantId}
-                  activeTagSlugs={activeTagSlugs}
-                  tagSlugs={dishSlugs}
-                  editable={editableDishes}
-                  onChangeTags={handleChangeDishes}
-                  size={dishSize}
-                  isLoaded={isLoaded}
-                />
-              </Suspense>
-            </XStack>
-          )}
-
           {/* ROW: BOTTOM ROW */}
 
           <XStack
@@ -415,7 +346,7 @@ const RestaurantListItemContent = memo(
             height={50}
             marginTop={-5}
             paddingBottom={20}
-            marginLeft={-30}
+            marginLeft={65}
             alignItems="center"
             space="$6"
           >
@@ -431,7 +362,7 @@ const RestaurantListItemContent = memo(
             >
               {beforeBottomRow}
 
-              <XStack display={media.sm ? 'none' : 'flex'}>
+              {/* <XStack display={media.sm ? 'none' : 'flex'}>
                 <Group paddingLeft={10}>
                   <Link
                     name="restaurant"
@@ -464,7 +395,7 @@ const RestaurantListItemContent = memo(
                     <RestaurantAddToListButton restaurantSlug={restaurantSlug} noLabel />
                   </Suspense>
                 </Group>
-              </XStack>
+              </XStack> */}
 
               <XStack marginLeft={-5} alignItems="center">
                 <Paragraph
@@ -506,14 +437,14 @@ const RestaurantListItemContent = memo(
                 />
               </Suspense>
 
-              <RestaurantOverallAndTagReviews
+              {/* <RestaurantOverallAndTagReviews
                 borderless
                 hideDescription
                 size="sm"
                 showScoreTable
                 key={restaurantSlug}
                 restaurant={restaurant}
-              />
+              /> */}
 
               {!!editableDescription && state.editing && (
                 <Button
@@ -564,3 +495,49 @@ const RestaurantListItemContent = memo(
     )
   })
 )
+
+// {/* ROW: CENTER CONTENT AREA */}
+// {/* zindex must be above title/bottom so hovers work on dishview voting/search */}
+// {!shouldShowOneLine && (
+//   <XStack
+//     y={-10}
+//     pointerEvents="none"
+//     zIndex={10}
+//     paddingLeft={hideRate ? 0 : 65}
+//     paddingRight={10}
+//     flex={1}
+//     maxHeight={flexibleHeight ? 1000 : 66}
+//   >
+//     {/* ROW: OVERVIEW */}
+
+//     {/* <RestaurantOverview
+//       isDishBot
+//       isEditingDescription={state.editing}
+//       text={state.description}
+//       onEditCancel={() => {
+//         setState((prev) => ({ ...prev, editing: false }))
+//       }}
+//       onEditDescription={(description) => {
+//         setState((prev) => ({ ...prev, description }))
+//       }}
+//       fullHeight
+//       restaurantSlug={restaurantSlug}
+//       maxLines={flexibleHeight ? 2000 : 2}
+//     /> */}
+
+//     {/* {flexibleHeight ? <YStack flex={1} /> : null} */}
+
+//     {/* <Suspense fallback={null}>
+//       <RestaurantPeekDishes
+//         restaurantSlug={props.restaurantSlug}
+//         restaurantId={props.restaurantId}
+//         activeTagSlugs={activeTagSlugs}
+//         tagSlugs={dishSlugs}
+//         editable={editableDishes}
+//         onChangeTags={handleChangeDishes}
+//         size={dishSize}
+//         isLoaded={isLoaded}
+//       />
+//     </Suspense> */}
+//   </XStack>
+// )}

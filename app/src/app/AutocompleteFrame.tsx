@@ -41,6 +41,7 @@ export const AutocompleteFrame = memo(
     return (
       <AbsoluteYStack
         fullscreen
+        className="blur"
         opacity={isShowing ? 1 : 0}
         pointerEvents={isShowing ? 'auto' : 'none'}
         zIndex={isShowing ? zIndexAutocomplete : -100}

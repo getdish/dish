@@ -9,7 +9,7 @@ export const OverlayLinkButton = forwardRef(function OverlayLinkButtonContent<
   Params = RoutesTable[Name]['params']
 >({ children, ...props }: LinkButtonProps<Name, Params>, ref) {
   return (
-    <LinkButton ref={ref} size="$6" elevation="$3" pointerEvents="auto" {...props}>
+    <LinkButton ref={ref} size="$5" elevate pointerEvents="auto" {...props}>
       {children}
     </LinkButton>
   )

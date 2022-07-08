@@ -18,7 +18,7 @@
     "watch": "tamagui-build --watch"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.1-beta.95",
+    "@tamagui/build": "^1.0.1-beta.96",
     "@types/requestidlecallback": "0.3.1"
   }
 }

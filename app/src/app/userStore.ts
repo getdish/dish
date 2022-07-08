@@ -14,7 +14,12 @@ import {
   userFetchSimple,
 } from '@dish/graph'
 import { Toast } from '@dish/ui'
-import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import {
+  Store,
+  createStore,
+  useStoreInstance,
+  useStoreInstanceSelector,
+} from '@dish/use-store'
 
 type ThemeName = 'dark' | 'light' | 'auto'
 
@@ -59,7 +64,7 @@ class UserStore extends Store {
     let complete = false
     const header = await Promise.race([
       userFetchSimple(method, path, data),
-      sleep(3000).then(() => {
+      sleep(8000).then(() => {
         if (!complete) {
           Toast.error('Timed out!')
           throw new Error(`Timed out`)

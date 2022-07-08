@@ -57,176 +57,51 @@ export const HomePageFeed = memo(
         setHoveredDbc.cancel()
       }
 
-      console.log('topCuisines2', topCuisines.data)
-
-      useSetAppMap({
-        showRank: !!hovered,
-        center,
-        ...useSetAppMapProps,
-        hideRegions: false,
-        results: hovered ?? useSetAppMapProps.results,
-      })
-
-      const tagLists = query.list({
-        where: {
-          region: {
-            _eq: region,
-          },
-          tags: {
-            tag: {
-              type: {
-                _in: ['country', 'dish'],
-              },
-            },
-          },
-        },
-        order_by: [{ updated_at: order_by.asc }],
-        limit: 12,
-      })
-
-      const trendingLists = query.list_populated({
-        args: {
-          min_items: 2,
-        },
-        where: {
-          region: {
-            _eq: region,
-          },
-        },
-        order_by: [{ updated_at: order_by.asc }],
-        limit: 16,
-      })
-
-      const queryOneList = (tagSlug: string) => {
-        return query.list_populated({
-          args: {
-            min_items: 5,
-          },
-          where: {
-            tags: {
-              tag: {
-                slug: {
-                  _eq: tagSlug,
-                },
-              },
-            },
-            region: {
-              _eq: region,
-            },
-          },
-          order_by: [{ updated_at: order_by.asc }],
-          limit: 1,
-        })?.[0]
+      if (!topCuisines.data) {
+        return null
       }
 
-      const lenseLists = [
-        queryOneList('lenses__gems'),
-        queryOneList('lenses__veg'),
-        queryOneList('lenses__drinks'),
-        queryOneList('lenses__vibe'),
-      ]
+      console.log('topCuisines', topCuisines.data)
 
-      const allRestaurants = [
-        ...[...tagLists, ...lenseLists.filter(isPresent), ...trendingLists].flatMap((list) => {
-          return list
-            ?.restaurants({ limit: 20 })
-            .map((x) => getRestaurantIdentifiers(x.restaurant))
-        }),
-      ]
-
-      const allRestaurantsKey = allRestaurants.map((x) => x.id).join('')
-
-      useDebounceEffect(
-        () => {
-          if (!allRestaurants[0]?.id) return
-          homePageStore.setResults(allRestaurants)
-        },
-        100,
-        [allRestaurantsKey]
-      )
-
-      const numAddButtons = Math.max(0, 9 - trendingLists.length)
+      // useSetAppMap({
+      //   showRank: !!hovered,
+      //   center,
+      //   ...useSetAppMapProps,
+      //   hideRegions: false,
+      //   results: hovered ?? useSetAppMapProps.results,
+      // })
 
       return (
         <>
-          <HomeTagLenses />
-
-          {/* <HomeNearbyRegions lng={center?.lng} lat={center?.lat} /> */}
-
-          <Spacer size="$6" />
-
-          <YStack paddingHorizontal={10} position="relative">
-            <AbsoluteYStack zIndex={100} top={-15} left={10}>
-              <SlantedTitle size="$4">Top Playlists</SlantedTitle>
-            </AbsoluteYStack>
-
-            <Grid itemMinWidth={220}>
-              {trendingLists.map((list, i) => {
-                const listSlug = list.slug
+          <ContentScrollViewHorizontal>
+            <XStack pe="auto" ai="center" space="$5" px="$4">
+              {topCuisines.data.map((cuisine, i) => {
                 return (
-                  <XStack
-                    alignItems="center"
-                    flexShrink={0}
-                    key={`${list.id ?? i}`}
-                    marginBottom={5}
-                  >
-                    <Spacer size="$1" />
-                    <ListCard
-                      onDelete={refetch}
-                      query={trendingLists}
-                      list={list}
-                      size="$6"
-                      colored
-                      flexible
-                      {...(!!listSlug && {
-                        onHoverIn: async () => {
-                          setHoveredDbc(await getListPlaces(listSlug))
-                        },
-                        onHoverOut: setHoverCancel,
-                      })}
-                    />
-                    <Spacer size="$1" />
-                  </XStack>
-                )
-              })}
-
-              {[...new Array(numAddButtons)].map((_, index) =>
-                index > 6 ? null : (
-                  <XStack
-                    paddingHorizontal={2}
-                    alignItems="center"
-                    flex={1}
-                    key={index}
-                    marginBottom={5}
-                  >
-                    <Link
-                      promptLogin
-                      name="list"
-                      width="100%"
-                      params={{
-                        userSlug: 'me',
-                        slug: 'create',
+                  <Link key={i} tag={{ type: 'country', slug: cuisine.tag_slug }}>
+                    <H2
+                      color="$colorMid"
+                      cursor="pointer"
+                      px="$2"
+                      size="$8"
+                      py="$1"
+                      hoverStyle={{
+                        color: '$colorHover',
                       }}
                     >
-                      <FeedCard flexible chromeless size="$6" flat>
-                        <AbsoluteYStack
-                          opacity={0.26}
-                          hoverStyle={{ opacity: 1 }}
-                          fullscreen
-                          alignItems="center"
-                          justifyContent="center"
-                        >
-                          <Plus color="#eeeeee" />
-                        </AbsoluteYStack>
-                      </FeedCard>
-                    </Link>
-                  </XStack>
+                      {cuisine.country}
+                    </H2>
+                  </Link>
                 )
-              )}
-            </Grid>
+              })}
+            </XStack>
+          </ContentScrollViewHorizontal>
 
+          {/* <HomeTagLenses /> */}
+          {/* <HomeNearbyRegions lng={center?.lng} lat={center?.lat} /> */}
+          {/* <Spacer size="$6" /> */}
+
+          <YStack paddingHorizontal="$4" position="relative">
             <Spacer size="$8" />
-
             {/* <HomeTrendingSpots region={region} /> */}
           </YStack>
         </>

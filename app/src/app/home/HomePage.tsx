@@ -56,7 +56,6 @@ export default memo(function HomePage(props: Props) {
 const HomePageContent = (props: Props) => {
   const { isActive, item } = props
   const state = useHomeStateById<HomeStateItemHome>(item.id)
-  const theme = useTheme()
   const enabled = isActive && !!state.region
   const regionResponse = useRegionQuery(state.region, {
     isPaused() {
@@ -124,11 +123,6 @@ const HomePageContent = (props: Props) => {
     }
   }, [isActive, state.region])
 
-  // if (process.env.NODE_ENV === 'development') {
-  //   // prettier-ignore
-  //   console.log('👀 HomePage', { enabled, regionResponse, position, item, region, state, isActive })
-  // }
-
   const wasEverActive = useLastValueWhen(() => props.isActive, !props.isActive)
 
   const homePageFeedProps = {
@@ -140,8 +134,6 @@ const HomePageContent = (props: Props) => {
     span: state.span,
     region: state.region,
   }
-
-  // {/* TODO pass isActive once gqty supports skeleton loading */}
 
   return (
     <>
