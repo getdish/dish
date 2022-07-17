@@ -9,10 +9,7 @@ export * from './SearchInput'
 export * from './Dialog'
 export * from './Modal'
 
-export * from './useGet'
 export * from './useOnMount'
 export * from './useComposeRefs'
 export * from './useDebounceEffect'
 export * from './useLazyEffect'
-
-export const prevent = (e) => [e.preventDefault(), e.stopPropagation()]

@@ -700,3 +700,29 @@ mark {
 #before-bottom-sheet-temp + div {
   z-index: 100000000;
 }
+
+.custom-scroll {
+  display: contents;
+}
+
+.custom-scroll > div {
+  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: overlay;
+}
+
+.custom-scroll > div::-webkit-scrollbar{
+  height: 14px;
+  width: 14px;
+}
+
+.custom-scroll > div::-webkit-scrollbar-button{height:0;width:0}
+.custom-scroll > div::-webkit-scrollbar-thumb{
+  border: 5.5px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  border-radius: 9999px;
+  background-color: rgba(150,150,150,0.15);
+  display:none;
+}
+.custom-scroll:hover > div::-webkit-scrollbar-thumb{display:flex;}
+

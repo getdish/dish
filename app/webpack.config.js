@@ -252,8 +252,6 @@ if (process.env.TAMAGUI_TARGET === 'native') {
           'react-native-reanimated': require.resolve('react-native-reanimated'),
           gqty: path.join(require.resolve('gqty'), '..'),
           recyclerlistview: 'recyclerlistview/web',
-          'react-native/Libraries/Renderer/shims/ReactFabric':
-            require.resolve('@tamagui/proxy-worm'),
           // bugfix until merged
           'react-native-web/src/modules/normalizeColor':
             'react-native-web/dist/modules/normalizeColor',

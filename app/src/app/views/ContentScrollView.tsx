@@ -123,8 +123,6 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
     const lastUpdate = useRef<any>(0)
     const finish = useRef<any>(0)
 
-    console.log('getScrollActive()', id, getScrollActive())
-
     // note, not using it, not reacting
     const scrollStore = getStore(ScrollStore, { id })
 
@@ -213,131 +211,130 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
       return scrollStore.lock === 'vertical' && scrollStore.isAtTop
     }
 
-    console.log('isScrollingVerticalFromTop', isScrollingVerticalFromTop(), props, style)
-
     return (
       <ContentScrollContext.Provider value={id}>
-        <ScrollView
-          removeClippedSubviews
-          {...props}
-          // for native...
-          bounces={isWeb ? true : false}
-          {...(bidirectional && {
-            nestedScrollEnabled: true,
-            bounces: false,
-          })}
-          ref={combineRefs(scrollRef, ref)}
-          scrollEventThrottle={16}
-          onScroll={(e) => {
-            console.log('?')
-            // calls the recyclerview scroll
-            props.onScroll?.(e)
-            const y = e.nativeEvent.contentOffset.y
-            const atTop = y <= 0
-            scrollCurY.set(id, y)
-            // goin up
-            if (state.current!.lastYs) {
-              state.current!.lastYs = null
-            }
-            const isChangingTopIsAtTop = atTop !== isScrollAtTop.get(id)
-            const hasBeenAWhile =
-              isChangingTopIsAtTop || Date.now() - lastUpdate.current > THROTTLE_SCROLL
-            const shouldUpdate = isChangingTopIsAtTop || hasBeenAWhile
-            if (shouldUpdate) {
-              lastUpdate.current = Date.now()
-              doUpdate(y, e)
-            }
-          }}
-          onMomentumScrollEnd={({ nativeEvent }) => {
-            scrollLastY.set(id, nativeEvent.contentOffset.y)
-          }}
-          {...(isTouchDevice && {
-            onTouchStart() {
-              console.log('start')
-              scrollStore.lastTouchStart = Date.now()
-            },
-            onTouchEnd: () => {
-              scrollStore.lastTouchEnd = Date.now()
-              if (scrollStore.lock !== 'none') {
-                scrollStore.setLock('none')
+        <div className="custom-scroll">
+          <ScrollView
+            removeClippedSubviews
+            {...props}
+            // for native...
+            bounces={isWeb ? true : false}
+            {...(bidirectional && {
+              nestedScrollEnabled: true,
+              bounces: false,
+            })}
+            ref={combineRefs(scrollRef, ref)}
+            scrollEventThrottle={16}
+            onScroll={(e) => {
+              // calls the recyclerview scroll
+              props.onScroll?.(e)
+              const y = e.nativeEvent.contentOffset.y
+              const atTop = y <= 0
+              scrollCurY.set(id, y)
+              // goin up
+              if (state.current!.lastYs) {
+                state.current!.lastYs = null
               }
-            },
-          })}
-          // DONT USE THIS ON WEB IT CAUSES REFLOWS see classname above
-          // oh well we have to deal with reapints, just try and time them
-          scrollEnabled={getScrollActive()}
-          style={[styles.scroll, style]}
-        >
-          {isTouchDevice ? (
-            <View
-              style={{ flexGrow: 1 }}
-              onMoveShouldSetResponderCapture={isScrollingVerticalFromTop}
-              onTouchMove={(e) => {
-                // this handles when things are scrolling already
-                // it moves the drawer once scroll goes above the top
-                if (e.nativeEvent.touches.length !== 1) {
-                  return
+              const isChangingTopIsAtTop = atTop !== isScrollAtTop.get(id)
+              const hasBeenAWhile =
+                isChangingTopIsAtTop || Date.now() - lastUpdate.current > THROTTLE_SCROLL
+              const shouldUpdate = isChangingTopIsAtTop || hasBeenAWhile
+              if (shouldUpdate) {
+                lastUpdate.current = Date.now()
+                doUpdate(y, e)
+              }
+            }}
+            onMomentumScrollEnd={({ nativeEvent }) => {
+              scrollLastY.set(id, nativeEvent.contentOffset.y)
+            }}
+            {...(isTouchDevice && {
+              onTouchStart() {
+                console.log('start')
+                scrollStore.lastTouchStart = Date.now()
+              },
+              onTouchEnd: () => {
+                scrollStore.lastTouchEnd = Date.now()
+                if (scrollStore.lock !== 'none') {
+                  scrollStore.setLock('none')
                 }
-                if (!isScrollingVerticalFromTop()) {
-                  return
-                }
-                const ss = state.current!
-                const pageY = e.nativeEvent.touches[0]?.pageY
-                if (!ss.at) {
-                  ss.active = true
-                  ss.at = pageY
-                  ss.start = getWindowHeight() - drawerStore.currentSnapHeight
-                }
-                const start = getWindowHeight() - drawerStore.currentSnapHeight
-                const pY = ss.at - pageY
-                const y = start - pY
-                if (y < drawerStore.minY) {
-                  console.warn('I DISABLED THIS', y, drawerStore.minY)
-                  drawerStore.setIsDragging(false)
-                  return
-                }
-                if (!ss.lastYs) {
-                  ss.lastYs = []
-                }
-                ss.lastYs.push(y)
-                if (ss.lastYs.length > 15) {
-                  ss.lastYs = ss.lastYs.slice(0, 2)
-                }
-                if (!drawerStore.isDragging) {
-                  drawerStore.setIsDragging(true)
-                }
-                if (scrollStore.lock === 'vertical') {
-                  drawerStore._setY(y)
-                }
-              }}
-              onTouchEnd={(e) => {
-                scrollStore.setLock('none')
-                const ss = state.current!
-                if (!ss.active) return
-                ss.active = false
-                ss.at = 0
-                const vY = (() => {
-                  const ys = ss.lastYs
-                  if (!ys) return 10
-                  const num = ys.length
-                  return (
-                    -ys
-                      .map((cur, i) => {
-                        const next = ys[i + 1]
-                        return next ? cur - next : 0
-                      })
-                      .reduce((a, c) => a + c / num, 0) * 0.5
-                  )
-                })()
-                drawerStore.animateDrawerToPx(drawerStore.pan['_value'], vY)
-              }}
-            >
+              },
+            })}
+            // DONT USE THIS ON WEB IT CAUSES REFLOWS see classname above
+            // oh well we have to deal with reapints, just try and time them
+            scrollEnabled={getScrollActive()}
+            style={[styles.scroll, style]}
+          >
+            {isTouchDevice ? (
+              <View
+                style={{ flexGrow: 1 }}
+                onMoveShouldSetResponderCapture={isScrollingVerticalFromTop}
+                onTouchMove={(e) => {
+                  // this handles when things are scrolling already
+                  // it moves the drawer once scroll goes above the top
+                  if (e.nativeEvent.touches.length !== 1) {
+                    return
+                  }
+                  if (!isScrollingVerticalFromTop()) {
+                    return
+                  }
+                  const ss = state.current!
+                  const pageY = e.nativeEvent.touches[0]?.pageY
+                  if (!ss.at) {
+                    ss.active = true
+                    ss.at = pageY
+                    ss.start = getWindowHeight() - drawerStore.currentSnapHeight
+                  }
+                  const start = getWindowHeight() - drawerStore.currentSnapHeight
+                  const pY = ss.at - pageY
+                  const y = start - pY
+                  if (y < drawerStore.minY) {
+                    console.warn('I DISABLED THIS', y, drawerStore.minY)
+                    drawerStore.setIsDragging(false)
+                    return
+                  }
+                  if (!ss.lastYs) {
+                    ss.lastYs = []
+                  }
+                  ss.lastYs.push(y)
+                  if (ss.lastYs.length > 15) {
+                    ss.lastYs = ss.lastYs.slice(0, 2)
+                  }
+                  if (!drawerStore.isDragging) {
+                    drawerStore.setIsDragging(true)
+                  }
+                  if (scrollStore.lock === 'vertical') {
+                    drawerStore._setY(y)
+                  }
+                }}
+                onTouchEnd={(e) => {
+                  scrollStore.setLock('none')
+                  const ss = state.current!
+                  if (!ss.active) return
+                  ss.active = false
+                  ss.at = 0
+                  const vY = (() => {
+                    const ys = ss.lastYs
+                    if (!ys) return 10
+                    const num = ys.length
+                    return (
+                      -ys
+                        .map((cur, i) => {
+                          const next = ys[i + 1]
+                          return next ? cur - next : 0
+                        })
+                        .reduce((a, c) => a + c / num, 0) * 0.5
+                    )
+                  })()
+                  drawerStore.animateDrawerToPx(drawerStore.pan['_value'], vY)
+                }}
+              >
+                <Suspense fallback={null}>{childrenMemo}</Suspense>
+              </View>
+            ) : (
               <Suspense fallback={null}>{childrenMemo}</Suspense>
-            </View>
-          ) : (
-            <Suspense fallback={null}>{childrenMemo}</Suspense>
-          )}
-        </ScrollView>
+            )}
+          </ScrollView>
+        </div>
       </ContentScrollContext.Provider>
     )
   }
