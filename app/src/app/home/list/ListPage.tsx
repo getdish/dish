@@ -256,7 +256,7 @@ const ListPageContent = memo(
       fontSize = Math.round(fontSize)
 
       const renderItem = useCallback(
-        ({ item, index = 0, drag, isActive }: RenderItemParams<any>) => {
+        ({ item, drag, isActive }: RenderItemParams<any>, index) => {
           const { restaurantId, restaurant, dishSlugs, position, list_restaurant } = item
           const content = (
             <ListItem

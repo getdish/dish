@@ -11,7 +11,6 @@ import { Button, Spacer, XStack, YStack, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { MapPin, Search } from '@tamagui/feather-icons'
 import React, { Suspense, memo } from 'react'
-import { TouchableOpacity } from 'react-native'
 
 export const AppSearchBarContents = memo(() => {
   const autocompletes = useStoreInstance(autocompletesStore)

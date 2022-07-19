@@ -35,6 +35,9 @@ export const AppIntroLetter = memo(() => {
     return null
   }
 
+  console.warn('disable intro modal')
+  return null
+
   return (
     <DarkModal
       hide={store.hidden}

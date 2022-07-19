@@ -19,6 +19,7 @@ export const AppMenuButton = memo(() => {
         <Popover.Trigger>
           <AppMenuLinkButton Icon={Menu} onPress={() => appMenu.setIsVisible(!showUserMenu)}>
             <SizableText
+              size="$2"
               {...((media.sm || userStore.isLoggedIn) && {
                 w: 0,
                 ov: 'hidden',

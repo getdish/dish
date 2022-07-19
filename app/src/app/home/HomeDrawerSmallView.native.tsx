@@ -18,8 +18,8 @@ import {
 import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 import { AssertionError } from '@dish/helpers'
 import { YStack } from '@dish/ui'
-import { getStore } from '@dish/use-store'
-import React, { memo, useMemo, useRef } from 'react'
+import { getStore, useStoreInstanceSelector } from '@dish/use-store'
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Animated,
   GestureResponderEvent,
@@ -37,6 +37,7 @@ const getActiveParentId = () => {
 
 export const HomeDrawerSmallView = memo((props: { children: any }) => {
   const panViewRef = useRef()
+  const drawerStoreAtTop = useStoreInstanceSelector(drawerStore, (x) => x.snapIndex === 0)
 
   const panResponder = useMemo(() => {
     let curSnapY = 0
@@ -201,44 +202,82 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     return responder
   }, [])
 
+  const [searchBarY] = useState(() => new Animated.Value(0))
+
+  console.log('drawerStore.snapIndex', drawerStore.snapIndex)
+  useEffect(() => {
+    const to = drawerStoreAtTop ? 250 : 0
+    Animated.spring(searchBarY, {
+      toValue: to,
+      useNativeDriver: !isWeb,
+    }).start()
+  }, [drawerStoreAtTop])
+
   // {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
   // {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
   return (
-    <Animated.View
-      style={[
-        styles.animatedView,
-        {
+    <>
+      {/* <Animated.View
+        style={{
+          height: searchBarHeight,
           transform: [
+            {
+              translateY: searchBarHeight + 10,
+            },
             {
               translateY: drawerStore.pan,
             },
           ],
-        },
-      ]}
-    >
-      <AppFloatingTagMenuBar />
-      {useMemo(
-        () => (
-          <BottomSheetContainer>
-            <View
-              ref={panViewRef as any}
-              style={styles.container}
-              {...panResponder.panHandlers}
-            >
-              <YStack height={searchBarHeight} zIndex={1000}>
-                <AppSearchBarInline />
-              </YStack>
-              <YStack position="relative" flex={1}>
-                <AppAutocompleteLocation />
-                <AppAutocompleteSearch />
-                {props.children}
-              </YStack>
-            </View>
-          </BottomSheetContainer>
-        ),
-        [props.children]
-      )}
-    </Animated.View>
+          zIndex: 100000000,
+        }}
+      >
+        
+      </Animated.View> */}
+      <Animated.View
+        style={[
+          styles.animatedView,
+          {
+            transform: [
+              {
+                translateY: drawerStore.pan,
+              },
+            ],
+          },
+        ]}
+      >
+        <AppFloatingTagMenuBar />
+        {useMemo(
+          () => (
+            <BottomSheetContainer>
+              <View
+                ref={panViewRef as any}
+                style={styles.container}
+                {...panResponder.panHandlers}
+              >
+                <Animated.View
+                  style={{
+                    zIndex: 10000000000,
+                    transform: [
+                      {
+                        translateY: searchBarY,
+                      },
+                    ],
+                  }}
+                >
+                  <AppSearchBarInline />
+                </Animated.View>
+                <YStack position="relative" flex={1}>
+                  <AppAutocompleteLocation />
+                  <AppAutocompleteSearch />
+                  {props.children}
+                </YStack>
+              </View>
+            </BottomSheetContainer>
+          ),
+          [props.children]
+        )}
+      </Animated.View>
+    </>
   )
 })
 

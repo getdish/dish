@@ -26,6 +26,8 @@ export const ReviewImagesRow = ({
   imgHeight?: number
   showGenericImages?: boolean
 }) => {
+  return null
+
   const refetch = useRefetch()
   // headers get lowercased over the wire
   const pickImage = usePickImage({
@@ -34,7 +36,7 @@ export const ReviewImagesRow = ({
   })
   const genericPhotos =
     showGenericImages && restaurantSlug
-      ? useRestaurantPhotos(queryRestaurant(restaurantSlug)[0], 5)?.photos || []
+      ? useRestaurantPhotos(queryRestaurant(restaurantSlug || '')[0], 5)?.photos || []
       : []
 
   const photos = restaurantSlug
@@ -112,7 +114,10 @@ export const ReviewImagesRow = ({
             height={imgHeight}
             // opacity={isEditing && index > myImages.length - 1 ? 0.5 : 1}
           >
-            <Image source={{ uri: uri || '' }} style={{ width: imgWidth, height: imgHeight }} />
+            <Image
+              source={{ uri: uri || '' }}
+              style={{ width: imgWidth, height: imgHeight }}
+            />
           </ImageFrame>
         )
 

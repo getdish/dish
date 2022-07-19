@@ -78,6 +78,7 @@ export const AutocompleteItemView = memo(
       // @ts-expect-error
       <LinkButton
         size="$5"
+        px="$3"
         alignSelf="stretch"
         justifyContent="flex-start"
         backgroundColor={isActive ? '#000' : 'transparent'}
@@ -102,6 +103,7 @@ export const AutocompleteItemView = memo(
         noTextWrap
       >
         <XStack alignItems="center" width="100%">
+          {!hideIcon && <XStack w={40}>{icon}</XStack>}
           <YStack overflow="hidden" flex={1}>
             <XStack width="100%" marginVertical={-3} flex={1} alignItems="center">
               <SizableText fontWeight="600" ellipse color={theme.color} lineHeight={30}>
@@ -122,12 +124,6 @@ export const AutocompleteItemView = memo(
               </>
             )}
           </YStack>
-          {!hideIcon && (
-            <>
-              <YStack flex={1} />
-              {icon}
-            </>
-          )}
           {plusButtonEl}
         </XStack>
       </LinkButton>

@@ -1,7 +1,8 @@
 import { searchBarHeight } from '../../constants/constants'
+import { isTouchDevice } from '../../constants/platforms'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { PageFooter } from './PageFooter'
-import { LoadingItems, YStack, YStackProps } from '@dish/ui'
+import { LoadingItems, YStack, YStackProps, isWeb } from '@dish/ui'
 // @ts-ignore
 import React, { Suspense, SuspenseList, SuspenseListProps } from 'react'
 
@@ -29,7 +30,8 @@ export const PageContentWithFooter = ({
         )}
       </Suspense>
       <YStack height={40} />
-      <PageFooter />
+
+      {!isTouchDevice && <PageFooter />}
     </YStack>
   )
 }

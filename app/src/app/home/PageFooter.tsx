@@ -1,11 +1,9 @@
-import { YStack, useMedia, useTheme } from '@dish/ui'
-import React, { memo } from 'react'
-
 import { AppIntroLogin } from '../AppIntroLogin'
+import { YStack, useMedia } from '@dish/ui'
+import React, { memo } from 'react'
 
 export const PageFooter = memo(() => {
   const media = useMedia()
-  const theme = useTheme()
 
   return (
     <YStack position="relative">

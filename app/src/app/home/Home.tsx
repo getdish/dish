@@ -161,7 +161,7 @@ const HomeDrawerLarge = memo((props) => {
             ai="flex-start"
           >
             <AppSearchBarInline />
-            <AppSearchBarFade />
+            {/* <AppSearchBarFade /> */}
           </XStack>
 
           <XStack pos="absolute" fullscreen top={searchBarHeight}>
@@ -175,7 +175,7 @@ const HomeDrawerLarge = memo((props) => {
         </YStack>
       </YStack>
 
-      <YStack $sm={{ disp: 'none' }} ov="hidden" pos="relative" f={1} h="100%">
+      <YStack $sm={{ dsp: 'none' }} ov="hidden" pos="relative" f={1} h="100%">
         <XStack maw="100%" height={80} x="$4" top={0} right={0} zi={100000} pos="absolute">
           <AppFloatingTagMenuBar />
         </XStack>

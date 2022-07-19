@@ -2005,7 +2005,7 @@ __metadata:
     react-native-clean-project: ^3.6.4
     react-native-codegen: ^0.0.7
     react-native-dotenv: ^2.5.3
-    react-native-draggable-flatlist: ^2.6.2
+    react-native-draggable-flatlist: 4.0.0-beta.5
     react-native-fast-image: ^8.5.11
     react-native-gesture-handler: 2.1.0
     react-native-reanimated: ^2.3.1
@@ -22552,14 +22552,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-draggable-flatlist@npm:^2.6.2":
-  version: 2.6.2
-  resolution: "react-native-draggable-flatlist@npm:2.6.2"
+"react-native-draggable-flatlist@npm:4.0.0-beta.5":
+  version: 4.0.0-beta.5
+  resolution: "react-native-draggable-flatlist@npm:4.0.0-beta.5"
+  dependencies:
+    "@babel/preset-typescript": ^7.17.12
   peerDependencies:
-    react-native: ">=0.62.0"
-    react-native-gesture-handler: ^1.0.0
-    react-native-reanimated: ^2.0.0
-  checksum: 2381d047678d9fb2860b63861a9b47beb78f53f092aebff27c53509a5a571d3d0ec491084591b6ad7240e43871ec9d84ce4045b4341bf6d1ad3ca3b59482df99
+    react-native: ">=0.64.0"
+    react-native-gesture-handler: ">=2.0.0"
+    react-native-reanimated: ">=2.8.0"
+  checksum: cee2900e7734b5d1cadc3f3603ba09490a8232530621d73045701249c691f5115a05e4fcd9db97f45e7d99092009bf9e12f2883ed17cbd61db6afdfdcb847cfd
   languageName: node
   linkType: hard
 

@@ -213,7 +213,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
   // const isOnSearch = useIsRouteActive('search')
   const loading = isHomeLoading
   return (
-    <YStack width={16} marginLeft={0} scale={loading ? 1.2 : 1}>
+    <YStack width={10} marginLeft={0} scale={loading ? 1.2 : 1}>
       <TouchableOpacity onPress={focusSearchInput}>
         {loading ? (
           // DO NOT ROTATE THIS ON MOBILE WEB IT SLOWS THINGS DOWN *INCREDIBLY*
@@ -223,7 +223,7 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
         ) : (
           <Search
             color={color}
-            size={media.xs ? 18 : 20}
+            size={media.xs ? 14 : 16}
             style={{
               opacity: 0.7,
             }}

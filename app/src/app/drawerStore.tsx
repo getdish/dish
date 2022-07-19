@@ -1,16 +1,15 @@
-import { isSafari } from '@dish/helpers'
-import { Store, createStore } from '@dish/use-store'
-import { Animated } from 'react-native'
-
 import { isWeb } from '../constants/constants'
 import { getWindowHeight } from '../helpers/getWindow'
 import { autocompletesStore } from './AutocompletesStore'
+import { isSafari } from '@dish/helpers'
+import { Store, createStore } from '@dish/use-store'
+import { Animated } from 'react-native'
 
 type DrawerSnapPoint = 'bottom' | 'middle' | 'top'
 
 class DrawerStore extends Store {
   // 0 = top, 1 = middle, 2 = bottom
-  snapPoints = [isWeb ? 0.02 : 0.05, 0.28, 0.8]
+  snapPoints = [0, 0.28, 0.8]
   snapIndex = 1
   isDragging = false
   spring: Animated.CompositeAnimation | null = null
