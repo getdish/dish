@@ -7,17 +7,7 @@ import { Link } from './views/Link'
 import { SignInAppleButton } from './views/SignInAppleButton'
 import { SmallTitle } from './views/SmallTitle'
 import { Auth } from '@dish/graph'
-import {
-  Button,
-  Group,
-  Heading,
-  Paragraph,
-  Spacer,
-  Text,
-  XGroup,
-  XStack,
-  YStack,
-} from '@dish/ui'
+import { Button, Heading, Paragraph, Spacer, Text, XGroup, XStack, YStack } from '@dish/ui'
 import React, { memo, useEffect, useState } from 'react'
 
 type AuthFormPageProps = {

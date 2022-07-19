@@ -90,14 +90,15 @@ export const AppSearchBarContents = memo(() => {
 
       {!media.xs && (
         <>
-          <Spacer size={4} />
           <YStack
             className="ease-in-out"
             overflow="hidden"
-            minWidth={260}
+            minWidth={130}
             width="19%"
             maxWidth="50%"
-            flex={10}
+            flex={1}
+            blw={1}
+            boc="$borderColor"
             $sm={{
               flex: 1,
               maxWidth: focus === 'search' ? 120 : focus === 'location' ? '100%' : '25%',

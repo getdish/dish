@@ -121,7 +121,7 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
             selectTextOnFocus
             ref={setInputNode}
             value={showLocationTag ? '' : inputStore.value ?? ''}
-            // placeholder={curLocName ?? '...'}
+            placeholder="in"
             onFocus={() => {
               inputStore.setIsFocused(true)
             }}
