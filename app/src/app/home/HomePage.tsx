@@ -19,6 +19,7 @@ import { HomePageFeed } from './HomePageFeed'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { PageContentWithFooter } from './PageContentWithFooter'
 import { homePageStore } from './homePageStore'
+import { series, sleep } from '@dish/async'
 import { slugify } from '@dish/graph'
 import {
   AbsoluteYStack,
@@ -57,35 +58,62 @@ const HomePageContent = (props: Props) => {
   const { isActive, item } = props
   const state = useHomeStateById<HomeStateItemHome>(item.id)
   const enabled = isActive && !!state.region
-  const regionResponse = useRegionQuery(state.region, {
-    isPaused() {
-      return !enabled
-    },
-    suspense: false,
-  })
-  const region = regionResponse.data
+  // const regionResponse = useRegionQuery(state.region, {
+  //   isPaused() {
+  //     return !enabled
+  //   },
+  //   suspense: false,
+  // })
+  // const region = regionResponse.data
   // const [position, setPosition] = useState<MapPosition>(initialPosition)
   const { results } = useStoreInstance(homePageStore)
 
-  // region based effects
   useEffect(() => {
-    if (!isActive) return
-    if (!region || !region.center || !region.span) return
-    setInitialRegionSlug(item.region)
-    cancelUpdateRegion()
-    homeStore.updateCurrentState('HomePage.curLoc', {
-      curLocName: region.name,
-    })
-    if (!region) return
-    // move initially to url region - this seems non-ideal state should just drive map
-    // if (!hasMovedToInitialRegion) {
-    // hasMovedToInitialRegion = true
-    homeStore.updateCurrentState('HomePage region initial move effect', {
-      center: region.center,
-      span: region.span,
-    })
-    // }
-  }, [isActive, JSON.stringify([region])])
+    return series([
+      // initial load wait to zoom all the way in
+      () => sleep(1500),
+      () => {
+        // homeStore.updateCurrentState('HomePage.curLoc', {
+        //   curLocName: region.name,
+        // })
+        // move initially to url region - this seems non-ideal state should just drive map
+        // if (!hasMovedToInitialRegion) {
+        // hasMovedToInitialRegion = true
+        homeStore.updateCurrentState('HomePage region initial move effect', {
+          center: homeStore.currentState.center,
+          span: {
+            lng: 1,
+            lat: 1,
+          },
+        })
+      },
+    ])
+  }, [])
+
+  // region based effects
+  // useEffect(() => {
+  //   if (!isActive) return
+  //   if (!region || !region.center || !region.span) return
+  //   setInitialRegionSlug(item.region)
+  //   cancelUpdateRegion()
+
+  //   return series([
+  //     // initial load wait to zoom all the way in
+  //     () => sleep(1000),
+  //     () => {
+  //       homeStore.updateCurrentState('HomePage.curLoc', {
+  //         curLocName: region.name,
+  //       })
+  //       // move initially to url region - this seems non-ideal state should just drive map
+  //       // if (!hasMovedToInitialRegion) {
+  //       // hasMovedToInitialRegion = true
+  //       homeStore.updateCurrentState('HomePage region initial move effect', {
+  //         center: region.center,
+  //         span: region.span,
+  //       })
+  //     },
+  //   ])
+  // }, [isActive, JSON.stringify([region])])
 
   // useEffect(() => {
   //   return () => {
@@ -94,34 +122,34 @@ const HomePageContent = (props: Props) => {
   // }, [state.region])
 
   // set location for next reload + move map on initial load
-  useEffect(() => {
-    if (!isActive) return
-    if (regionResponse.error) return
-    if (!region) return
-    const next = region.slug ?? slugify(region.name)
-    const prev = getDefaultLocation().region
-    if (next !== prev) {
-      setDefaultLocation({
-        center: region.center,
-        span: region.span,
-        region: next,
-      })
-    }
-  }, [isActive, region])
+  // useEffect(() => {
+  //   if (!isActive) return
+  //   if (regionResponse.error) return
+  //   if (!region) return
+  //   const next = region.slug ?? slugify(region.name)
+  //   const prev = getDefaultLocation().region
+  //   if (next !== prev) {
+  //     setDefaultLocation({
+  //       center: region.center,
+  //       span: region.span,
+  //       region: next,
+  //     })
+  //   }
+  // }, [isActive, region])
 
   // if no region, nav to default one
-  useEffect(() => {
-    if (isActive && !state.region) {
-      // no region found!
-      console.warn('no region, nav', region)
-      router.navigate({
-        name: 'homeRegion',
-        params: {
-          region: getDefaultLocation().region ?? 'ca-san-francisco',
-        },
-      })
-    }
-  }, [isActive, state.region])
+  // useEffect(() => {
+  //   if (isActive && !state.region) {
+  //     // no region found!
+  //     console.warn('no region, nav', region)
+  //     router.navigate({
+  //       name: 'homeRegion',
+  //       params: {
+  //         region: getDefaultLocation().region ?? 'ca-san-francisco',
+  //       },
+  //     })
+  //   }
+  // }, [isActive, state.region])
 
   const wasEverActive = useLastValueWhen(() => props.isActive, !props.isActive)
 

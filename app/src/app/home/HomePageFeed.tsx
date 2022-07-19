@@ -74,12 +74,11 @@ export const HomePageFeed = memo(
       return (
         <>
           <ContentScrollViewHorizontal>
-            <XStack pe="auto" ai="center" space="$5" px="$4">
+            <XStack pe="auto" ai="center" space="$5" py="$2" px="$4">
               {topCuisines.data.map((cuisine, i) => {
                 return (
                   <Link key={i} tag={{ type: 'country', slug: cuisine.tag_slug }}>
                     <H2
-                      color="$colorMid"
                       cursor="pointer"
                       px="$2"
                       size="$8"

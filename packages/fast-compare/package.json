@@ -6,7 +6,7 @@
     "access": "public"
   },
   "source": "src/index.ts",
-  "typings": "types",
+  "types": "types/index.d.ts",
   "main": "dist/cjs",
   "module": "dist/esm",
   "files": [

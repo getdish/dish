@@ -11,7 +11,13 @@ import {
 import { isEqualSubsetShallow } from './comparators'
 import { configureOpts } from './configureUseStore'
 import { UNWRAP_PROXY, defaultOptions } from './constants'
-import { UNWRAP_STORE_INFO, cache, getStoreDescriptors, getStoreUid, simpleStr } from './helpers'
+import {
+  UNWRAP_STORE_INFO,
+  cache,
+  getStoreDescriptors,
+  getStoreUid,
+  simpleStr,
+} from './helpers'
 import { Selector, StoreInfo, UseStoreOptions } from './interfaces'
 import {
   DebugStores,
@@ -94,7 +100,11 @@ export function useStoreInstance<A extends Store<B>, B>(instance: A, debug?: boo
   return useStoreFromInfo(info)
 }
 
-export function useStoreInstanceSelector<A extends Store<B>, B, Selector extends (store: A) => any>(
+export function useStoreInstanceSelector<
+  A extends Store<B>,
+  B,
+  Selector extends (store: A) => any
+>(
   instance: A,
   selector: Selector,
   debug?: boolean
@@ -292,7 +302,8 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
   const curInternal = internal.current!
 
   const shouldPrintDebug =
-    !!process.env.LOG_LEVEL && (configureOpts.logLevel === 'debug' || shouldDebug(component, info))
+    !!process.env.LOG_LEVEL &&
+    (configureOpts.logLevel === 'debug' || shouldDebug(component, info))
 
   const getSnapshot = useCallback(() => {
     const curInternal = internal.current!
@@ -430,7 +441,8 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
           apply(target, thisArg, args) {
             const isDebugging = DebugStores.has(constr)
             const shouldLog =
-              process.env.LOG_LEVEL !== '0' && (isDebugging || configureOpts.logLevel !== 'error')
+              process.env.LOG_LEVEL !== '0' &&
+              (isDebugging || configureOpts.logLevel !== 'error')
 
             if (!shouldLog) {
               return Reflect.apply(target, thisArg, args)
@@ -458,14 +470,18 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
                 `color: ${color};`,
                 'color: black;',
               ])
-              logs.add([` ARGS`, ...args])
               if (curSetters.size) {
                 curSetters.forEach(({ key, value }) => {
-                  logs.add([` SET`, key, '=', value])
+                  if (
+                    typeof value === 'string' ||
+                    typeof value === 'number' ||
+                    typeof value === 'boolean'
+                  ) {
+                    logs.add([` SET ${key} ${value}`, value])
+                  } else {
+                    logs.add([` SET ${key}`, value])
+                  }
                 })
-              }
-              if (typeof res !== 'undefined') {
-                logs.add([' =>', res])
               }
 
               if (isTopLevelLogger) {
@@ -478,12 +494,18 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
                     }
                     const [head, ...rest] = item
                     if (head) {
-                      console.groupCollapsed(...head)
-                      console.groupCollapsed('trace >')
+                      console.group(...head)
+                      console.groupCollapsed('(..args) => response + [trace]')
+                      console.log('args', args)
+                      console.log('response', res)
+                      console.groupCollapsed('trace')
                       console.trace()
                       console.groupEnd()
-                      for (const log of rest) {
+                      console.groupEnd()
+                      for (const [name, ...log] of rest) {
+                        console.groupCollapsed(name)
                         console.log(...log)
+                        console.groupEnd()
                       }
                     } else {
                       console.log('Weird log', head, ...rest)
@@ -563,7 +585,8 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
         }
       }
 
-      const shouldPrintDebug = process.env.NODE_ENV === 'development' && DebugStores.has(constr)
+      const shouldPrintDebug =
+        process.env.NODE_ENV === 'development' && DebugStores.has(constr)
 
       if (gettersState.isGetting) {
         gettersState.curGetKeys.add(key)

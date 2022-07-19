@@ -1,8 +1,4 @@
-import {
-  getDefaultLocation,
-  initialLocation,
-  setDefaultLocation,
-} from '../constants/initialHomeState'
+import { getDefaultLocation } from '../constants/initialHomeState'
 import {
   MapZoomLevel,
   bboxToLngLat,
@@ -26,7 +22,12 @@ import {
   resolved,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import {
+  Store,
+  createStore,
+  useStoreInstance,
+  useStoreInstanceSelector,
+} from '@dish/use-store'
 import bbox from '@turf/bbox'
 import getCenter from '@turf/center'
 import { featureCollection } from '@turf/helpers'
@@ -186,14 +187,19 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
       //   features: [],
       // })
     }
-  }, [JSON.stringify(results), fitToResults, isActive, zoomOnHover, hideRegions, region, showRank])
+  }, [
+    JSON.stringify(results),
+    fitToResults,
+    isActive,
+    zoomOnHover,
+    hideRegions,
+    region,
+    showRank,
+  ])
 }
-let defaultLocation = getDefaultLocation()
-// fix broken localstorage
-if (!defaultLocation.center?.lat) {
-  setDefaultLocation(initialLocation)
-  defaultLocation = getDefaultLocation()
-}
+
+const defaultLocation = getDefaultLocation()
+
 class AppMapStore extends Store {
   regionSlugToTileId: { [key: string]: string } = {}
   selected: RestaurantOnlyIds | null = null
@@ -440,7 +446,10 @@ export const useZoomLevel = () => {
 export function appMapStoreUpdateRegion(region: MapRegionEvent) {
   cancelUpdateRegion()
   const { currentState } = homeStore
-  if (currentState.type === 'home' || (currentState.type === 'search' && region.via === 'click')) {
+  if (
+    currentState.type === 'home' ||
+    (currentState.type === 'search' && region.via === 'click')
+  ) {
     if (currentState.region === region.slug) {
       return
     }

@@ -241,7 +241,6 @@ const SearchCancelButton = memo(function SearchCancelButton() {
     return hasSearch || hasSearchTags
   })
   const media = useMedia()
-  console.log('todo make this a button')
   return (
     <YStack
       opacity={isActive ? 0.6 : 0}

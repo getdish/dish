@@ -138,8 +138,6 @@ export function Root() {
     colorScheme ??
     'dark'
 
-  console.log('Root.render', { colorScheme, defaultTheme })
-
   return (
     <SafeAreaProvider>
       <Tamagui.Provider defaultTheme={defaultTheme}>

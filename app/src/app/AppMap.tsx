@@ -33,7 +33,7 @@ import {
   useTheme,
   useThemeName,
 } from '@dish/ui'
-import { useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import { reaction, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import loadable from '@loadable/component'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Animated, StyleSheet } from 'react-native'
@@ -112,12 +112,23 @@ export const AppMapContents = memo(function AppMapContents() {
   const hideRegions = !isOnHome || appMapStore.hideRegions
   const media = useMedia()
   const mapSize = useMapSize(media.sm)
-  const { width, paddingLeft } = useDebounceValue(mapSize, 100)
+  const { paddingLeft } = useDebounceValue(mapSize, 100)
   const showUserLocation = useStoreInstanceSelector(appMapStore, (x) => !!x.userLocation)
   const appMap = useStoreInstance(appMapStore)
   const show = true //useAppShouldShow('map')
   const position = appMap.currentPosition
   const { center, span } = position
+
+  // react to homestore
+  useEffect(() => {
+    return reaction(
+      homeStore,
+      (store) => store.currentState,
+      (state) => {
+        console.log('state', state)
+      }
+    )
+  }, [])
 
   // HOVERED
   useEffect(() => {

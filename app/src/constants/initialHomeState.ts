@@ -1,9 +1,8 @@
-import { DISH_DEBUG, MapPosition } from '@dish/graph'
-
 import { getLocalJSON, setLocalJSON } from '../helpers/getLocalJSON'
 import { router } from '../router'
 import { HomeStateItemHome, HomeStateItemLocation } from '../types/homeTypes'
 import { AppMapPosition } from '../types/mapTypes'
+import { DISH_DEBUG, MapPosition } from '@dish/graph'
 
 const location = getLocalJSON('DEFAULT_LOCATION')
 
@@ -13,8 +12,8 @@ export const initialPosition: MapPosition = {
     lat: 37.759251,
   },
   span: location?.span ?? {
-    lat: 0.15,
-    lng: 0.15,
+    lat: 2,
+    lng: 2,
   },
 }
 
@@ -31,17 +30,23 @@ export const initialHomeState: HomeStateItemHome = {
   section: '',
 }
 
-export const initialLocation = {
+const initialLocation = {
   ...initialPosition,
   region: initialHomeState.region,
 }
 
 export function getDefaultLocation(): AppMapPosition & { region?: string } {
-  const location = getLocalJSON('DEFAULT_LOCATION', initialPosition)
+  // const location = getLocalJSON('DEFAULT_LOCATION', initialPosition)
+  console.log('location', location)
   return {
     via: 'init',
-    ...location,
-    region: initialRegion,
+    at: Date.now(),
+    center: { lng: -158, lat: 21.4 },
+    span: {
+      lat: 35,
+      lng: 35,
+    },
+    region: 'world',
   }
 }
 

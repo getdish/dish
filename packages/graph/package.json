@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "sideEffects": false,
   "private": true,
-  "typings": "types",
+  "types": "types/index.d.ts",
   "main": "dist/cjs",
   "module": "dist/esm",
   "files": [

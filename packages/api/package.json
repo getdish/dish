@@ -2,7 +2,7 @@
   "name": "@dish/api",
   "version": "0.0.1",
   "source": "src/index.ts",
-  "typings": "types",
+  "types": "types/index.d.ts",
   "main": "dist/cjs",
   "module": "dist/esm",
   "files": [

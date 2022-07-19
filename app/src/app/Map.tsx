@@ -166,7 +166,7 @@ export default function Map(props: MapProps) {
       container: mapNode.current,
       style: props.style,
       center: props.center,
-      zoom: 11,
+      zoom: 30,
       attributionControl: false,
     }).addControl(
       new mapboxgl.AttributionControl({

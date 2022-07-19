@@ -5,7 +5,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "typings": "types",
+  "types": "types/index.d.ts",
   "main": "dist/cjs",
   "module": "dist/esm",
   "files": [
