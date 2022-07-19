@@ -8,6 +8,7 @@ import { Link } from '../views/Link'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { ListCard } from '../views/list/ListCard'
 import { FeedCard } from './FeedCard'
+import { HomeTopSearches } from './HomeTopSearches'
 import { homePageStore } from './homePageStore'
 import { useTopCuisines } from './useTopCuisines'
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
@@ -16,6 +17,7 @@ import {
   AbsoluteYStack,
   Button,
   Grid,
+  H1,
   H2,
   Paragraph,
   Spacer,
@@ -57,10 +59,6 @@ export const HomePageFeed = memo(
         setHoveredDbc.cancel()
       }
 
-      if (!topCuisines.data) {
-        return null
-      }
-
       console.log('topCuisines', topCuisines.data)
 
       // useSetAppMap({
@@ -73,7 +71,7 @@ export const HomePageFeed = memo(
 
       return (
         <>
-          <ContentScrollViewHorizontal>
+          {/* <ContentScrollViewHorizontal>
             <XStack pe="auto" ai="center" space="$5" py="$2" px="$4">
               {topCuisines.data.map((cuisine, i) => {
                 return (
@@ -93,7 +91,61 @@ export const HomePageFeed = memo(
                 )
               })}
             </XStack>
-          </ContentScrollViewHorizontal>
+          </ContentScrollViewHorizontal> */}
+
+          <YStack p="$4">
+            <H1>
+              Kailua{' '}
+              <Paragraph fos="$10" fow="200" color="$colorMid">
+                Hawaii
+              </Paragraph>
+            </H1>
+          </YStack>
+
+          <HomeTopSearches />
+
+          <Spacer />
+
+          <YStack>
+            {[
+              {
+                name: `Helena's Hawaiian BBQ`,
+              },
+              {
+                name: `Sasabune`,
+              },
+              {
+                name: `Taqueria Gallardo Rosa`,
+              },
+              {
+                name: `Senia`,
+              },
+              {
+                name: `Adela's Country Eatery`,
+              },
+              {
+                name: `The Pig and the Lady`,
+              },
+              {
+                name: `Pho 77`,
+              },
+            ].map(({ name }, index) => {
+              return (
+                <YStack
+                  key={name}
+                  p="$4"
+                  hoverStyle={{
+                    backgroundColor: '$backgroundHover',
+                  }}
+                >
+                  <Paragraph>
+                    {index + 1}
+                    <H2>{name}</H2>
+                  </Paragraph>
+                </YStack>
+              )
+            })}
+          </YStack>
 
           {/* <HomeTagLenses /> */}
           {/* <HomeNearbyRegions lng={center?.lng} lat={center?.lat} /> */}

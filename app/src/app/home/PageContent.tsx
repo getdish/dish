@@ -6,12 +6,14 @@ import { LoadingItems, YStack, YStackProps, isWeb } from '@dish/ui'
 // @ts-ignore
 import React, { Suspense, SuspenseList, SuspenseListProps } from 'react'
 
-export const PageContentWithFooter = ({
+export const PageContent = ({
   children,
   suspenseOrder,
+  hideFooter,
   ...props
 }: YStackProps & {
   suspenseOrder?: SuspenseListProps['revealOrder']
+  hideFooter?: boolean
 }) => {
   return (
     <YStack minHeight={Math.min(250, getWindowHeight() * 1 - searchBarHeight)} {...props}>
@@ -31,7 +33,7 @@ export const PageContentWithFooter = ({
       </Suspense>
       <YStack height={40} />
 
-      {!isTouchDevice && <PageFooter />}
+      {!isTouchDevice && !hideFooter && <PageFooter />}
     </YStack>
   )
 }

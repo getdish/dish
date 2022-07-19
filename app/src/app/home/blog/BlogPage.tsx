@@ -3,7 +3,7 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
-import { PageContentWithFooter } from '../PageContentWithFooter'
+import { PageContent } from '../PageContent'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { BlogPageDetail } from './BlogPageDetail'
 import { BlogPostMeta } from './BlogPostMeta'
@@ -23,10 +23,10 @@ export default function BlogPage(props: HomeStackViewProps<HomeStateItemBlog>) {
     <MDX>
       <StackDrawer closable title="Blog">
         <ContentScrollView id="blog">
-          <PageContentWithFooter>
+          <PageContent>
             {!slug && <BlogPageIndex />}
             {!!slug && <BlogPageDetail post={posts[slug]} />}
-          </PageContentWithFooter>
+          </PageContent>
         </ContentScrollView>
       </StackDrawer>
     </MDX>

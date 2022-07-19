@@ -46,7 +46,7 @@ import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { PageHead } from '../../views/PageHead'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeSuspense } from '../HomeSuspense'
-import { PageContentWithFooter } from '../PageContentWithFooter'
+import { PageContent } from '../PageContent'
 import { ITEM_HEIGHT, RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { SearchHeader } from './SearchHeader'
 import { SearchPageNavBar } from './SearchPageNavBar'
@@ -514,13 +514,13 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
         onSizeChanged?.(x.nativeEvent.layout)
       }}>
         <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
-          <PageContentWithFooter>
+          <PageContent>
             <SearchHeader />
             <SearchContent id={id} />
             <Suspense fallback={null}>
               <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
             </Suspense>
-          </PageContentWithFooter>
+          </PageContent>
         </ContentScrollView>
       </View>
     )

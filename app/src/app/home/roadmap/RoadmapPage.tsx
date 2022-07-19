@@ -6,9 +6,9 @@ import { ContentScrollView } from '../../views/ContentScrollView'
 import { LinkButton } from '../../views/LinkButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
-import { PageContentWithFooter } from '../PageContentWithFooter'
+import { PageContent } from '../PageContent'
 import { OneUUID, ZeroUUID, order_by, review, useQuery, useRefetch } from '@dish/graph'
-import { Button, Group, Input, Paragraph, Spacer, XGroup, XStack, YStack } from '@dish/ui'
+import { Button, Input, Paragraph, Spacer, XGroup, XStack, YStack } from '@dish/ui'
 import { ChevronDown, ChevronUp } from '@tamagui/feather-icons'
 import React, { useCallback, useState } from 'react'
 import { FlatList } from 'react-native'
@@ -83,7 +83,7 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
   const content = (
     <StackDrawer closable title="Roadmap">
       <ContentScrollView id="roadmap">
-        <PageContentWithFooter>
+        <PageContent>
           <YStack space="$8">
             <YStack paddingHorizontal="5%" space="$8">
               <YStack />
@@ -148,7 +148,7 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
               <Spacer />
             </YStack>
           </YStack>
-        </PageContentWithFooter>
+        </PageContent>
       </ContentScrollView>
     </StackDrawer>
   )

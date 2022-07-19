@@ -19,7 +19,7 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { RestaurantOverview } from '../../views/restaurant/RestaurantOverview'
 import { RestaurantTagsList } from '../../views/restaurant/RestaurantTagsList'
 import { HomeStackViewProps } from '../HomeStackViewProps'
-import { PageContentWithFooter } from '../PageContentWithFooter'
+import { PageContent } from '../PageContent'
 import { RestaurantRatingView } from '../RestaurantRatingView'
 import { getSearchPageStore } from '../search/SearchPageStore'
 import { RestaurantAddCommentButton } from './RestaurantAddCommentReviewButton'
@@ -59,9 +59,9 @@ export default function RestaurantPageContainer(props: Props) {
             borderBottomWidth={1}
             minHeight={450}
           >
-            <PageContentWithFooter>
+            <PageContent>
               <LoadingItems />
-            </PageContentWithFooter>
+            </PageContent>
           </YStack>
         }
       >
@@ -406,7 +406,7 @@ const RestaurantPage = memo(
             }}
             id="restaurant"
           >
-            <PageContentWithFooter>
+            <PageContent>
               {/* HEADER */}
               {/* -1 margin bottom to overlap bottom border */}
               <YStack
@@ -463,7 +463,7 @@ const RestaurantPage = memo(
                   <RestaurantMenu restaurantSlug={restaurantSlug} />
                 </Suspense>
               </YStack>
-            </PageContentWithFooter>
+            </PageContent>
           </ContentScrollView>
         </>
       )

@@ -30,7 +30,6 @@ import {
   AbsoluteYStack,
   Button,
   Circle,
-  Group,
   H2,
   LoadingItem,
   LoadingItemsSmall,

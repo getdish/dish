@@ -17,7 +17,7 @@ import { PageHead } from '../views/PageHead'
 import { PaneControlButtons } from '../views/PaneControlButtons'
 import { HomePageFeed } from './HomePageFeed'
 import { HomeStackViewProps } from './HomeStackViewProps'
-import { PageContentWithFooter } from './PageContentWithFooter'
+import { PageContent } from './PageContent'
 import { homePageStore } from './homePageStore'
 import { series, sleep } from '@dish/async'
 import { slugify } from '@dish/graph'
@@ -179,9 +179,9 @@ const HomePageContent = (props: Props) => {
       >
         <ContentScrollView id="home">
           <HomeTopSpacer />
-          <PageContentWithFooter>
+          <PageContent hideFooter>
             {wasEverActive && <HomePageFeed {...homePageFeedProps} />}
-          </PageContentWithFooter>
+          </PageContent>
         </ContentScrollView>
       </YStack>
     </>

@@ -8,7 +8,6 @@ import { supportsTouchWeb } from '@dish/helpers'
 import {
   AbsoluteYStack,
   Card,
-  Group,
   Paragraph,
   TooltipSimple,
   XStack,

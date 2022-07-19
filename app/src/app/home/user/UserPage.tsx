@@ -20,7 +20,7 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { ListCard } from '../../views/list/ListCard'
 import { StackItemProps } from '../HomeStackView'
-import { PageContentWithFooter } from '../PageContentWithFooter'
+import { PageContent } from '../PageContent'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
 import { CardCarousel } from './CardCarousel'
 import { UserAvatar } from './UserAvatar'
@@ -99,7 +99,9 @@ function useQueryIsLoaded<A>(cb: (isLoaded: boolean) => A, opts?: { skeleton?: n
 
 const UserPageContent = memo(
   graphql(
-    (props: StackItemProps<HomeStateItemUser> & { pane: UserPane | null; setPane: Function }) => {
+    (
+      props: StackItemProps<HomeStateItemUser> & { pane: UserPane | null; setPane: Function }
+    ) => {
       const refetch = useRefetch()
       const { item, isActive, pane, setPane } = props
       const username = item.username
@@ -259,7 +261,7 @@ const UserPageContent = memo(
 
       return (
         <ContentScrollView id="user">
-          <PageContentWithFooter>
+          <PageContent>
             <Suspense
               fallback={
                 <YStack height={160} borderColor="#eee" borderBottomWidth={1}>
@@ -441,7 +443,7 @@ const UserPageContent = memo(
                 </YStack>
               </YStack>
             </YStack>
-          </PageContentWithFooter>
+          </PageContent>
         </ContentScrollView>
       )
     },
@@ -500,7 +502,11 @@ const UserHeader = memo(
           <YStack flex={1} paddingHorizontal={20} paddingTop={55}>
             <XStack alignItems="flex-end" flex={1} position="relative">
               <YStack marginLeft={media.sm ? -60 : -40} marginBottom={-10} marginRight={10}>
-                <UserAvatar size={170} avatar={user.avatar ?? ''} charIndex={user.charIndex ?? 0} />
+                <UserAvatar
+                  size={170}
+                  avatar={user.avatar ?? ''}
+                  charIndex={user.charIndex ?? 0}
+                />
               </YStack>
               <YStack paddingTop={20} flex={1}>
                 <H1 paddingRight={30}>{user.name || user.username}</H1>
@@ -522,7 +528,9 @@ const UserHeader = memo(
                       <Spacer />
                       <Middot />
                       <Spacer />
-                      <Paragraph opacity={0.5}>Joined {getTimeFormat(new Date(date))}</Paragraph>
+                      <Paragraph opacity={0.5}>
+                        Joined {getTimeFormat(new Date(date))}
+                      </Paragraph>
                     </>
                   )}
                 </XStack>
@@ -543,12 +551,21 @@ const UserHeader = memo(
   )
 )
 
-const UserSubscribeButton = ({ username, ...rest }: SmallButtonProps & { username: string }) => {
+const UserSubscribeButton = ({
+  username,
+  ...rest
+}: SmallButtonProps & { username: string }) => {
   const user = queryUser(username)
   const theme = useTheme()
 
   return (
-    <SmallButton tooltip="Follow user" borderRadius={100} icon={Plus} onPress={() => {}} {...rest}>
+    <SmallButton
+      tooltip="Follow user"
+      borderRadius={100}
+      icon={Plus}
+      onPress={() => {}}
+      {...rest}
+    >
       Subscribe
     </SmallButton>
   )
