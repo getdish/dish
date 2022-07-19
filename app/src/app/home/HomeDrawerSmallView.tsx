@@ -30,8 +30,25 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
   }, [])
 
   const panResponder = useMemo(() => {
+    let isActive = false
+
+    const off = () => {
+      console.log('release')
+      drawerStore.setIsDragging(false)
+      drawerStore.pan.flattenOffset()
+      isActive = false
+      // document.body.classList.remove('all-input-blur')
+    }
+
     return PanResponder.create({
+      onStartShouldSetPanResponder: () => {
+        console.log('?')
+        isActive = true
+        return true
+      },
       onMoveShouldSetPanResponder: (_, { dy }) => {
+        if (!isActive) return false
+        console.log('?????')
         const threshold = 15
         return Math.abs(dy) > threshold
       },
@@ -47,12 +64,11 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       onPanResponderMove: Animated.event([null, { dy: drawerStore.pan }], {
         useNativeDriver: !isWeb,
       }),
+      onPanResponderReject: off,
+      onPanResponderTerminate: off,
       onPanResponderRelease: () => {
-        console.log('release')
-        drawerStore.setIsDragging(false)
-        drawerStore.pan.flattenOffset()
+        off()
         drawerStore.animateDrawerToPx(drawerStore.pan['_value'])
-        // document.body.classList.remove('all-input-blur')
       },
     })
   }, [])
@@ -93,7 +109,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
             {/* overlay over entire content to make dragging it up easy */}
             {(isWebIOS || drawerStore.snapIndex === 2) && (
               <AbsoluteYStack pe="auto" fullscreen zi={1000000}>
-                <View style={{ width: '100%', height: '100%' }} {...panResponder.panHandlers} />
+                <View
+                  style={{ width: '100%', height: '100%' }}
+                  {...panResponder.panHandlers}
+                />
               </AbsoluteYStack>
             )}
 

@@ -51,6 +51,7 @@ import {
   Text,
   Theme,
   Toast,
+  XGroup,
   XStack,
   YStack,
   useForceUpdate,
@@ -594,7 +595,7 @@ const ListPageContent = memo(
                           />
                         </XStack>
 
-                        <Group alignItems="center">
+                        <XGroup alignItems="center">
                           <SmallButton
                             borderRadius={0}
                             theme={listFont === 0 ? 'active' : null}
@@ -613,9 +614,9 @@ const ListPageContent = memo(
                           >
                             Deco
                           </SmallButton>
-                        </Group>
+                        </XGroup>
 
-                        <Group alignItems="center">
+                        <XGroup alignItems="center">
                           <Paragraph
                             size="$3"
                             opacity={0.5}
@@ -644,7 +645,7 @@ const ListPageContent = memo(
                           >
                             Minimal
                           </Paragraph>
-                        </Group>
+                        </XGroup>
                         <XStack alignItems="center" space="$1">
                           <Paragraph>Public:&nbsp;</Paragraph>
                           <Switch checked={isPublic} onCheckedChange={setPublic} />

@@ -454,6 +454,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
             const logs = new Set<any[]>()
             logStack.add(logs)
             let res
+            const id = counter++
             try {
               // 🏃‍♀️ run action here now
               res = Reflect.apply(target, thisArg, args)
@@ -464,7 +465,9 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
               const color = strColor(name)
               const simpleArgs = args.map(simpleStr)
               logs.add([
-                `💰 %c${name.padStart(18)}%c.${key}(${simpleArgs.join(', ')})${
+                `💰 %c ${id} ${name.padStart(
+                  isTopLevelLogger ? 8 : 4
+                )}%c.${key}(${simpleArgs.join(', ')})${
                   isTopLevelLogger && logStack.size > 1 ? ` (+${logStack.size - 1})` : ''
                 }`,
                 `color: ${color};`,
@@ -495,7 +498,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
                     const [head, ...rest] = item
                     if (head) {
                       console.group(...head)
-                      console.groupCollapsed('(..args) => response + [trace]')
+                      console.groupCollapsed('...')
                       console.log('args', args)
                       console.log('response', res)
                       console.groupCollapsed('trace')
@@ -670,6 +673,8 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
 
   return proxiedStore
 }
+
+let counter = 0
 
 const passThroughKeys = {
   subscribe: true,

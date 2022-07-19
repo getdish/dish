@@ -8,7 +8,7 @@ import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
 import { PageContentWithFooter } from '../PageContentWithFooter'
 import { OneUUID, ZeroUUID, order_by, review, useQuery, useRefetch } from '@dish/graph'
-import { Button, Group, Input, Paragraph, Spacer, XStack, YStack } from '@dish/ui'
+import { Button, Group, Input, Paragraph, Spacer, XGroup, XStack, YStack } from '@dish/ui'
 import { ChevronDown, ChevronUp } from '@tamagui/feather-icons'
 import React, { useCallback, useState } from 'react'
 import { FlatList } from 'react-native'
@@ -125,7 +125,7 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
                   }
                   return (
                     <XStack space="$6" alignItems="center">
-                      <Group scale={0.7} marginVertical={-5} flexDirection="column">
+                      <XGroup scale={0.7} marginVertical={-5} flexDirection="column">
                         <Button
                           onPress={() => vote(1)}
                           borderRadius={0}
@@ -136,7 +136,7 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
                           borderRadius={0}
                           icon={<ChevronDown color="#777" size={16} />}
                         />
-                      </Group>
+                      </XGroup>
                       <Paragraph size="$8">{`${item.votes}`}</Paragraph>
                       <Paragraph>{item.icon}</Paragraph>
                       <Paragraph>{removeEmojis(item.text || '')}</Paragraph>
@@ -167,7 +167,7 @@ const Add = ({ items }: { items: review[] }) => {
   const [curIcon, setIcon] = useState(icons[0])
   return (
     <XStack space alignItems="center">
-      <Group>
+      <XGroup>
         {icons.map((icon) => (
           <Button
             themeInverse={icon === curIcon}
@@ -180,7 +180,7 @@ const Add = ({ items }: { items: review[] }) => {
             {icon}
           </Button>
         ))}
-      </Group>
+      </XGroup>
       <Input onChangeText={setText} placeholder="Add..." />
       <LinkButton
         promptLogin

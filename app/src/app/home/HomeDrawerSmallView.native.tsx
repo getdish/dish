@@ -1,4 +1,5 @@
 import { isWeb, pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
+import { isTouchDevice } from '../../constants/platforms'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
@@ -206,7 +207,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
 
   console.log('drawerStore.snapIndex', drawerStore.snapIndex)
   useEffect(() => {
-    const to = drawerStoreAtTop ? 250 : 0
+    const to = isTouchDevice && drawerStoreAtTop ? 250 : 0
     Animated.spring(searchBarY, {
       toValue: to,
       useNativeDriver: !isWeb,
@@ -233,6 +234,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
       >
         
       </Animated.View> */}
+
       <Animated.View
         style={[
           styles.animatedView,
@@ -266,6 +268,7 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
                 >
                   <AppSearchBarInline />
                 </Animated.View>
+
                 <YStack position="relative" flex={1}>
                   <AppAutocompleteLocation />
                   <AppAutocompleteSearch />

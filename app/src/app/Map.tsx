@@ -981,13 +981,14 @@ export default function Map(props: MapProps) {
     const next = mapPositionToBBox({ center, span })
     const shouldMove = hasMovedAtLeast(getCurrentLocation(map), { center, span })
     if (shouldMove) {
-      const duration = 300
+      const duration = 400
       const cancelSeries = series([
         () => {
           internal.preventMoveEnd = true
         },
         () => fullyIdle({ checks: 1, max: 50 }),
         () => {
+          console.warn('fit bounds to', next)
           map!.fitBounds(next, {
             duration,
             padding,

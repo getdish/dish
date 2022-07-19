@@ -14,7 +14,7 @@ export const AppSearchBarInline = () => {
         fullscreen
         r="$2"
         l="$2"
-        shac={isZoomed ? '$shadowColorHover' : '$shadowColor'}
+        shac={isZoomed ? '$shadowColor' : '$shadowColor'}
         shar={isZoomed ? '$4' : '$3'}
         // shof={{ height: 2, width: 0 }}
         br="$6"

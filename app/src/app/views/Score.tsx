@@ -12,6 +12,7 @@ import {
   Paragraph,
   TooltipSimple,
   XStack,
+  YGroup,
   YStack,
   YStackProps,
   useTheme,
@@ -94,12 +95,7 @@ export const Score = memo(
       )
       voteContent = (
         <>
-          <Group
-            flexWrap="nowrap"
-            flexDirection="column"
-            height={btnSize * 4.5}
-            marginVertical={-4}
-          >
+          <YGroup>
             {subtle ? (
               getUpvote({})
             ) : (
@@ -118,7 +114,7 @@ export const Score = memo(
                 {getDownvote({})}
               </TooltipSimple>
             )}
-          </Group>
+          </YGroup>
         </>
       )
     }

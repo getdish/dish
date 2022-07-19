@@ -41,7 +41,7 @@ export function getDefaultLocation(): AppMapPosition & { region?: string } {
   return {
     via: 'init',
     at: Date.now(),
-    center: { lng: -158, lat: 21.4 },
+    center: { lng: -157.743, lat: 21.395 },
     span: {
       lat: 35,
       lng: 35,

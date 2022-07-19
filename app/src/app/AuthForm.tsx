@@ -7,7 +7,17 @@ import { Link } from './views/Link'
 import { SignInAppleButton } from './views/SignInAppleButton'
 import { SmallTitle } from './views/SmallTitle'
 import { Auth } from '@dish/graph'
-import { Button, Group, Heading, Paragraph, Spacer, Text, XStack, YStack } from '@dish/ui'
+import {
+  Button,
+  Group,
+  Heading,
+  Paragraph,
+  Spacer,
+  Text,
+  XGroup,
+  XStack,
+  YStack,
+} from '@dish/ui'
 import React, { memo, useEffect, useState } from 'react'
 
 type AuthFormPageProps = {
@@ -74,7 +84,7 @@ export const AuthForm = memo(
           </>
         )}
 
-        <Group alignSelf="center">
+        <XGroup alignSelf="center">
           <Button
             borderRadius={0}
             fontSize={12}
@@ -99,7 +109,7 @@ export const AuthForm = memo(
           >
             Signup
           </Button>
-        </Group>
+        </XGroup>
 
         {getContent()}
 

@@ -126,6 +126,12 @@ export const AppMapContents = memo(function AppMapContents() {
       (store) => store.currentState,
       (state) => {
         console.log('state', state)
+        if (state.center && state.span) {
+          appMapStore.setNextPosition({
+            center: state.center,
+            span: state.span,
+          })
+        }
       }
     )
   }, [])

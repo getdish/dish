@@ -96,7 +96,7 @@ const HomeDrawerSmall = (props: { children: any }) => {
     )
   }, [])
 
-  if (isTouchDevice) {
+  if (true) {
     return <HomeDrawerSmallViewNative {...props} />
   }
 

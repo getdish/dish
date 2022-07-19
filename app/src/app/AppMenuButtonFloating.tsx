@@ -3,17 +3,14 @@ import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
 import { AbsoluteYStack, Button, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
-import { Drawer } from '@tamagui/drawer'
 import { Menu } from '@tamagui/feather-icons'
+import { Sheet } from '@tamagui/sheet'
 import React, { memo } from 'react'
-import { useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const AppMenuButtonFloating = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
-  const { height } = useWindowDimensions()
-  const drawerHeight = height * 0.8
   const safeArea = useSafeAreaInsets()
 
   if (!(media.sm || media.xs)) {
@@ -22,16 +19,20 @@ export const AppMenuButtonFloating = memo(() => {
 
   return (
     <>
-      <Drawer
+      <Sheet
+        modal
         open={appMenu.isVisible}
+        position={0}
         onChangeOpen={(open) => {
           console.log('changed open', open)
           appMenu.setIsVisible(open)
         }}
-        onDismiss={appMenu.hide}
-        snapPoints={[drawerHeight]}
+        dismissOnOverlayPress
+        dismissOnSnapToBottom
+        snapPoints={[80]}
       >
-        <Drawer.Frame maxHeight={drawerHeight} height={drawerHeight} p={0}>
+        <Sheet.Overlay />
+        <Sheet.Frame>
           {/* this causes every tap to close on web */}
           <AppMenuContents
             width="100%"
@@ -42,8 +43,8 @@ export const AppMenuButtonFloating = memo(() => {
           {/* <PaneControlButtons>
             <CloseButton onPress={appMenu.hide} />
           </PaneControlButtons> */}
-        </Drawer.Frame>
-      </Drawer>
+        </Sheet.Frame>
+      </Sheet>
 
       <AbsoluteYStack
         top={safeArea.top ? safeArea.top : 10}

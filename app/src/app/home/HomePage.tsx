@@ -82,8 +82,8 @@ const HomePageContent = (props: Props) => {
         homeStore.updateCurrentState('HomePage region initial move effect', {
           center: homeStore.currentState.center,
           span: {
-            lng: 1,
-            lat: 1,
+            lng: 0.05,
+            lat: 0.05,
           },
         })
       },
