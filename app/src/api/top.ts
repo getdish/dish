@@ -1,6 +1,5 @@
 import { jsonRoute } from '@dish/api'
-import { main_db } from '@dish/helpers-node'
-import sql from 'sql-template-tag'
+import { main_db, sql } from '@dish/helpers-node'
 
 export default jsonRoute(async (req, res) => {
   const { body } = req
@@ -9,17 +8,14 @@ export default jsonRoute(async (req, res) => {
   const lon = body['lon']
   const lat = body['lat']
   try {
-    console.log('querying', { lat, lon, distance })
-    const query = getTopCuisinesQuery({
+    const response = await getTopCuisinesQuery({
       distance,
       lon,
       lat,
     })
 
-    const { rows } = await main_db.query(query.text, query.values)
-    const data = rows[0]?.json_agg ?? []
-    console.log('returning', rows)
-    res.json(data)
+    console.log('response', response)
+    res.json(response[0].data_agg)
   } catch (err) {
     console.log('err', err)
     res.json({ error: err.message })

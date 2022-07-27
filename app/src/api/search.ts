@@ -1,6 +1,5 @@
 import { jsonRoute } from '@dish/api'
-import { main_db } from '@dish/helpers-node'
-import sql from 'sql-template-tag'
+import { sql } from '@dish/helpers-node'
 
 type SQLFilterBool = 'true' | 'false'
 
@@ -46,7 +45,8 @@ export default jsonRoute(async (req, res) => {
   ) as any
 
   try {
-    const query = getSearchQuery({
+    console.log('try')
+    const results = await getSearchResults({
       query: userQuery,
       deliveries,
       distance,
@@ -64,16 +64,14 @@ export default jsonRoute(async (req, res) => {
       y2,
     })
 
-    const { rows } = await main_db.query(query.text, query.values)
-    const data = rows[0]?.json_build_object
-    res.json(data)
+    res.json(results[0].json_build_object)
   } catch (err) {
     console.log('err', err)
     res.json({ error: err.message })
   }
 })
 
-function getSearchQuery(p: {
+function getSearchResults(p: {
   query: string
   lon: string
   lat: string

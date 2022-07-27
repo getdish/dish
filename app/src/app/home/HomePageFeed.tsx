@@ -30,6 +30,7 @@ import { Plus } from '@tamagui/feather-icons'
 import getCenter from '@turf/center'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'
+import { ScrollView } from 'react-native'
 
 const getListPlaces = async (listSlug: string) => {
   return await resolved(() =>
@@ -55,6 +56,7 @@ export const HomePageFeed = memo(
       const setHoveredDbc = useDebounce(setHovered, 400)
       const homeStore = useHomeStore()
       const topCuisines = useTopCuisines(homeStore.currentState.center)
+      console.log('topCuisines', topCuisines)
       const setHoverCancel = () => {
         setHoveredDbc.cancel()
       }
@@ -94,15 +96,31 @@ export const HomePageFeed = memo(
           </ContentScrollViewHorizontal> */}
 
           <YStack p="$4">
-            <H1>
-              Kailua{' '}
-              <Paragraph fos="$10" fow="200" color="$colorMid">
-                Hawaii
-              </Paragraph>
-            </H1>
+            <XStack>
+              <H1>
+                Kailua{' '}
+                <Paragraph fos="$10" fow="200" color="$colorMid">
+                  Hawaii
+                </Paragraph>
+              </H1>
+
+              <Spacer flex />
+
+              <YStack>
+                <Spacer flex />
+                <Paragraph>Popular here</Paragraph>
+              </YStack>
+            </XStack>
           </YStack>
 
-          <HomeTopSearches />
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            bounces
+            horizontal
+            style={{ width: '100%' }}
+          >
+            <HomeTopSearches />
+          </ScrollView>
 
           <Spacer />
 

@@ -12,7 +12,7 @@ export const AppFloatingTagMenuBar = memo(() => {
     autocompletesStore,
     (x) => x.visible && x.target === 'location'
   )
-  const shouldHide = media.notSm && isShowingLocationAutocomplete
+  const shouldHide = media.gtSm && isShowingLocationAutocomplete
 
   return (
     <XStack

@@ -9,14 +9,13 @@ export const Modal = ({
   open,
   defaultOpen,
   onOpenChange,
-  modal,
+  modal = true,
   allowPinchZoom,
   children,
   ...rest
 }: ModalProps) => {
   return (
     <Dialog
-      modal
       {...{
         open,
         defaultOpen,

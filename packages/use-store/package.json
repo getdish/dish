@@ -25,7 +25,7 @@
     "use-sync-external-store": "^1.2.0"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.1-beta.113",
+    "@tamagui/build": "^1.0.1-beta.122",
     "@types/jest": "*",
     "jest": "*"
   }

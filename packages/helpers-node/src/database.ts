@@ -3,6 +3,7 @@ import { sentryException } from '@dish/common'
 import { DISH_DEBUG } from '@dish/graph'
 import createDebug from 'debug'
 import { Pool, PoolConfig, QueryResult } from 'pg'
+import postgres from 'postgres'
 
 const debug = createDebug('Database')
 
@@ -112,6 +113,15 @@ const main_db_config: PoolConfig = {
   connectionTimeoutMillis: 300000,
   max: 10,
 }
+
+export const sql = postgres({
+  host: main_db_config.host,
+  port: main_db_config.port,
+  ssl: main_db_config.ssl,
+  user: main_db_config.user,
+  password: main_db_config.password,
+  database: main_db_config.database,
+})
 
 // console.log('main_db_config', main_db_config, scrape_db_config)
 

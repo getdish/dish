@@ -3,15 +3,7 @@ import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
 import { CloseButton } from './views/CloseButton'
 import { ContentParentStore, ContentScrollView } from './views/ContentScrollView'
 import { isSafari } from '@dish/helpers'
-import {
-  AbsoluteYStack,
-  BlurView,
-  YStack,
-  prevent,
-  useDebounceValue,
-  useIsTouchDevice,
-  useMedia,
-} from '@dish/ui'
+import { AbsoluteYStack, YStack, useDebounceValue, useIsTouchDevice, useMedia } from '@dish/ui'
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { memo, useEffect } from 'react'
 
@@ -52,7 +44,7 @@ export const AutocompleteFrame = memo(
         {...(media.sm && {
           transform: [{ translateY: 10 }],
         })}
-        {...(media.notSm && {
+        {...(media.gtSm && {
           paddingTop: searchBarHeight + 10,
           marginLeft: 'auto',
           width: '100%',
@@ -85,12 +77,7 @@ export const AutocompleteFrame = memo(
             /> */}
           </AbsoluteYStack>
           <AbsoluteYStack zIndex={10000} top={10} right={10} pointerEvents="auto">
-            <CloseButton
-              elevation="$1"
-              onPressOut={prevent}
-              zIndex={1000}
-              onPress={hideAutocompletes}
-            />
+            <CloseButton elevation="$1" zIndex={1000} onPress={hideAutocompletes} />
           </AbsoluteYStack>
           <YStack
             className="ease-in-out"

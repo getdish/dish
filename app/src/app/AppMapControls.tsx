@@ -51,7 +51,7 @@ export const AppMapControls = memo(() => {
           justifyContent="center"
           flexWrap="wrap"
           pointerEvents="none"
-          {...(media.notSm && {
+          {...(media.gtSm && {
             top: 'auto',
             bottom: 20,
           })}
@@ -78,7 +78,7 @@ export const AppMapControls = memo(() => {
 
           {showSearchHere && (
             <OverlayLinkButton icon={RefreshCcw} onPress={pagesStore.refresh}>
-              {media.notSm ? 'Search' : null}
+              {media.gtSm ? 'Search' : null}
             </OverlayLinkButton>
           )}
 

@@ -4,7 +4,7 @@ import React from 'react'
 export function GradientButton({ children }: { children?: any }) {
   const theme = useTheme()
   return (
-    <Button borderRadius={1000} elevation="$0.5">
+    <Button borderRadius="$4" bw={1} boc="$borderColor" elevation="$1">
       {children}
     </Button>
   )
