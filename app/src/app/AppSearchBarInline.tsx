@@ -21,7 +21,7 @@ export const AppSearchBarInline = () => {
         bw={0.5}
         boc="$borderColor"
         scale={isZoomed ? 1.05 : 1}
-        bc="$backgroundStrong"
+        bc="$background"
         zi={-1}
       />
       <Suspense fallback={null}>

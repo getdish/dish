@@ -45,6 +45,7 @@ html, body {
   z-index: 0;
   overflow: hidden;
   position: relative;
+  pointer-events: auto;
 }
 
 html.mobile-layout, html.mobile-layout body, html.mobile-layout #root {

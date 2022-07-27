@@ -161,7 +161,6 @@ const HomeDrawerLarge = memo((props) => {
             ai="flex-start"
           >
             <AppSearchBarInline />
-            {/* <AppSearchBarFade /> */}
           </XStack>
 
           <XStack pos="absolute" fullscreen top={searchBarHeight}>

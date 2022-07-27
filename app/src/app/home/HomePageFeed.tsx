@@ -3,6 +3,7 @@ import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers
 import { UseSetAppMapProps, appMapStore, useSetAppMap } from '../appMapStore'
 import { useHomeStore } from '../homeStore'
 import { setLocation } from '../setLocation'
+import { ContentScrollView } from '../views/ContentScrollView'
 import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
 import { Link } from '../views/Link'
 import { SlantedTitle } from '../views/SlantedTitle'
@@ -147,10 +148,31 @@ export const HomePageFeed = memo(
               {
                 name: `Pho 77`,
               },
+              {
+                name: `Helena's Hawaiian BBQ`,
+              },
+              {
+                name: `Sasabune`,
+              },
+              {
+                name: `Taqueria Gallardo Rosa`,
+              },
+              {
+                name: `Senia`,
+              },
+              {
+                name: `Adela's Country Eatery`,
+              },
+              {
+                name: `The Pig and the Lady`,
+              },
+              {
+                name: `Pho 77`,
+              },
             ].map(({ name }, index) => {
               return (
                 <YStack
-                  key={name}
+                  key={name + index}
                   p="$4"
                   hoverStyle={{
                     backgroundColor: '$backgroundHover',
