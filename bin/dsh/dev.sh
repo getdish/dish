@@ -19,19 +19,25 @@ function dev() {
     echo "✅ postgres running"
   fi
 
-  # # start docker / compose
-  if [[ -z "$(! docker stats --no-stream 2> /dev/null)" ]]; then
-    dev_start_docker_then_compose &
-    PID1=$!
-  else
-    compose_up &
-    PID1=$!
-  fi
-  echo "✅ started docker"
+  if [[ "$ORIGINAL_ARGS" == *"--local"* ]]; then
+    # no docker just run bare minimum directly
 
-  # echo "✅ sync tamagui"
-  # ./bin/sync-tamagui.sh & 
-  # PID2=$!
+    # hasura
+    HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL} HASURA_GRAPHQL_ENABLE_CONSOLE=true ./services/hasura/bin/graphql-engine serve  --server-port 8091 --admin-secret=password &
+    PID1=$!
+
+    # tileserver
+  else
+    # # start docker / compose
+    if [[ -z "$(! docker stats --no-stream 2> /dev/null)" ]]; then
+      dev_start_docker_then_compose &
+      PID1=$!
+    else
+      compose_up &
+      PID1=$!
+    fi
+    echo "✅ started docker"
+  fi
 
   echo "✅ yarn watch"
   yarn watch &

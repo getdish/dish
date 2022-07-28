@@ -1,5 +1,5 @@
 version: 2
-endpoint: ""
+endpoint: "http://localhost:8080"
 metadata_directory: metadata
 actions:
   kind: synchronous
