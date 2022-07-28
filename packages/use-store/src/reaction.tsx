@@ -1,6 +1,6 @@
+import { Store } from './Store'
 import { isEqualSubsetShallow } from './comparators'
 import { UNWRAP_PROXY } from './constants'
-import { Store } from './Store'
 import { setIsInReaction } from './useStore'
 
 const dispose = (d: any) => {
@@ -15,7 +15,9 @@ export function reaction<
 >(
   store: StoreInstance,
   selector: Selector,
-  receiver: Selector extends (a: StoreInstance) => infer Derived ? (a: Derived) => any : unknown,
+  receiver: Selector extends (a: StoreInstance) => infer Derived
+    ? (a: Derived) => any
+    : unknown,
   equalityFn: (a: any, b: any) => boolean = isEqualSubsetShallow
 ) {
   let last: any = undefined
@@ -29,7 +31,7 @@ export function reaction<
       if (!equalityFn(last, next)) {
         if (process.env.NODE_ENV === 'development') {
           console.groupCollapsed(
-            `💰  ⏭ %c${receiver.name.padStart(24)} (${storeInstance.constructor.name}${
+            `🌑  ⏭ %c${receiver.name.padStart(24)} (${storeInstance.constructor.name}${
               store.props?.id ? `:${store.props.id}` : ''
             }) ${last} => ${next}`,
             'color: chocolate;'

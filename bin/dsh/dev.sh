@@ -23,10 +23,13 @@ function dev() {
     # no docker just run bare minimum directly
 
     # hasura
+    echo "running hasura"
     HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL} HASURA_GRAPHQL_ENABLE_CONSOLE=true ./services/hasura/bin/graphql-engine serve  --server-port 8091 --admin-secret=password &
     PID1=$!
 
     # tileserver
+    DATABASE_URL=${POSTGRES_URL_INTERNAL} ./services/tileserver/bin/martin --listen-addresses=0.0.0.0:3005 &
+    PID2=$!
   else
     # # start docker / compose
     if [[ -z "$(! docker stats --no-stream 2> /dev/null)" ]]; then
@@ -38,10 +41,6 @@ function dev() {
     fi
     echo "✅ started docker"
   fi
-
-  echo "✅ yarn watch"
-  yarn watch &
-  PID3=$!
 
   if [[ "$ORIGINAL_ARGS" == *"--backend"* ]]; then
     echo "started backend"
@@ -57,10 +56,20 @@ function dev() {
     fi
     PID4=$!
 
-    echo "✅ start app (native)"
-    yarn app &
-    PID5=$!
+    if [[ "$ORIGINAL_ARGS" == *"--skip-native"* ]]; then
+      echo "skipping native"
+    else
+      echo "✅ start app (native)"
+      yarn app &
+      PID5=$!
+    fi
   fi
+
+  # start watch after to let things start quicker
+  sleep 5
+  echo "✅ yarn watch"
+  yarn watch &
+  PID3=$!
 
   wait
 }

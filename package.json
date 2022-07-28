@@ -23,7 +23,7 @@
     "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader",
     "link:tamagui": "yarn link ~/tamagui --all",
     "dev": "dsh dev",
-    "dev:local": "dsh dev --local",
+    "dev:local": "IS_LOCAL=1 dsh dev --local --skip-native",
     "dev:prod": "dsh dev --prod",
     "dev:backend": "dsh dev --backend",
     "dev:web": "yarn web",

@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
-
 import { isEqualSubsetShallow } from './comparators'
 import { UNWRAP_PROXY } from './constants'
 import { setIsInReaction, trackStoresAccess } from './useStore'
+import { useEffect, useState } from 'react'
 
 // TODO i think we can just replace reaction() with this, its not worse in any way
 
@@ -14,7 +13,7 @@ const logUpdate =
           return `${str.constructor.name}${store.props?.id ? `:${store.props.id}` : ''}`
         }
         const storeNames = stores.map(getStoreLogName).join(', ')
-        const name = `💰  ▶️ %c${fn.name} ${storeNames} () ${last} => ${next}`
+        const name = `🌑  ▶️ %c${fn.name} ${storeNames} () ${last} => ${next}`
         console.groupCollapsed(name, 'color: tomato;')
         console.groupCollapsed('trace >')
         console.trace()

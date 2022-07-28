@@ -335,7 +335,7 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
       })
     if (shouldPrintDebug) {
       // prettier-ignore
-      console.log('💰 getSnapshot', { userSelector, info, isUnchanged, component, keys, snap, curInternal })
+      console.log('🌑 getSnapshot', { userSelector, info, isUnchanged, component, keys, snap, curInternal })
     }
     if (isUnchanged) {
       return last
@@ -361,7 +361,7 @@ function useStoreFromInfo(info: StoreInfo, userSelector?: Selector<any> | undefi
       curInternal.isTracking = false
       curInternal.firstRun = false
       if (shouldPrintDebug) {
-        console.log('💰 finish render, tracking', [...curInternal.tracked])
+        console.log('🌑 finish render, tracking', [...curInternal.tracked])
       }
     })
   } else {
@@ -465,7 +465,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
               const color = strColor(name)
               const simpleArgs = args.map(simpleStr)
               logs.add([
-                `💰 %c ${id} ${name.padStart(
+                `%c 🌑 ${id} ${name.padStart(
                   isTopLevelLogger ? 8 : 4
                 )}%c.${key}(${simpleArgs.join(', ')})${
                   isTopLevelLogger && logStack.size > 1 ? ` (+${logStack.size - 1})` : ''
@@ -497,7 +497,7 @@ function createProxiedStore(storeInfo: Omit<StoreInfo, 'store' | 'source'>) {
                     }
                     const [head, ...rest] = item
                     if (head) {
-                      console.group(...head)
+                      console.groupCollapsed(...head)
                       console.groupCollapsed('...')
                       console.log('args', args)
                       console.log('response', res)
