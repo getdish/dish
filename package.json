@@ -150,7 +150,6 @@
     "@tamagui/demos": "portal:/Users/n8/tamagui/packages/demos",
     "@tamagui/dialog": "portal:/Users/n8/tamagui/packages/dialog",
     "@tamagui/dismissable": "portal:/Users/n8/tamagui/packages/dismissable",
-    "@tamagui/drawer": "portal:/Users/n8/tamagui/packages/drawer",
     "@tamagui/fake-react-native": "portal:/Users/n8/tamagui/packages/fake-react-native",
     "@tamagui/feather-icons": "portal:/Users/n8/tamagui/packages/feather-icons",
     "@tamagui/focus-scope": "portal:/Users/n8/tamagui/packages/focus-scope",
