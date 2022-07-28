@@ -1,6 +1,5 @@
-100% single stack dx
-  
-  - services/search => api/search
+- non-urgent but martin tileserver unmaintained, this one has same api
+  - https://github.com/CrunchyData/pg_tileserv
   
   BACKEND ACTIONS / JOBS / CRON / TEST + CRAWLERS
     
@@ -37,21 +36,12 @@
   - https://github.com/software-mansion/react-native-screens
   - https://github.com/software-mansion/react-freeze
 
-best test case of "does it work to launch?"- when getting mike (kyles friend) recs in kuilea, if i could have instead said:
-
-- "want to send it to me using my app" or some variant
-- and designing around having that interaction go well such that
-- download => make list => send is the easiest possible set of steps
-- and after that they see to customize profile, add friends, see realtime map stuff
-
 high level:
-  - put money in business account, switch billing to business
   - fix crawlers and get running again
   - get osm data imported for worldwide coverage
   - get native app to usability
   - make listing, profiles, home better
-  - needs some sort of commenting feature
-  - slowly make great lists
+  - make listing, adding favorites, simple discovery beautiful
 
 - list cards would be really nice on native/mobile if they had a swipe to see them. swipe right to see first item. like instagram gallery photos. would work nicely on desktop too and look pretty nice.
 

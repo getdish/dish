@@ -62,6 +62,7 @@
     "migrate": "./dsh migrate_all",
     "test:migrate": "DISH_ENV=test ./dsh migrate_all",
     "crawl:tucson": "node services/crawlers/dist/yelp/all.js --city 'Tucson, Arizona'",
+    "crawl:osm": "DISH_ENV=development IS_LOCAL=1 DISH_DEBUG=3 ./dsh run 'node -r esbuild-register services/crawlers/scripts/crawl_osm.ts'",
     "crawl:one": "DISH_ENV=test IS_LOCAL=1 DISH_DEBUG=3 SLUG=$SLUG ./dsh run 'node -r esbuild-register services/crawlers/scripts/crawl_one.ts'",
     "crawl:one:production": "IS_LIVE=1 DEBUG=1 DISH_ENV=production SLUG=$SLUG yarn crawl:one",
     "crawl:one:external": "SKIP=internal yarn crawl:one",
