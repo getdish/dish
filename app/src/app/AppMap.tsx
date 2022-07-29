@@ -41,7 +41,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default memo(function AppMap() {
   // lighthouse/slow browser optimization
-  const isFullyIdle = useIsInteractive()
+  const isFullyIdle = true // useIsInteractive()
   const media = useMedia()
 
   const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)

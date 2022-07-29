@@ -123,6 +123,19 @@ export const sql = postgres({
   database: main_db_config.database,
 })
 
+// test connection
+async function testConnection() {
+  try {
+    const res = await sql`SELECT * FROM tag LIMIT 0`
+    console.log('✅ database connected')
+  } catch(err) {
+    console.warn(`⚠️ database connection error`, err)
+  }
+}
+
+testConnection()
+
+
 // console.log('main_db_config', main_db_config, scrape_db_config)
 
 export const main_db = new Database(main_db_config)

@@ -23,7 +23,7 @@ let isDown = false
 redisClient.on('error', (err) => {
   if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {
     if (!isDown) {
-      console.warn('⚠️ Redis not up, cache disabled')
+      console.warn(`⚠️ Redis not up on ${host}:${port} no caching`)
       isDown = true
     }
   } else {

@@ -16,9 +16,14 @@ export function useQueryLoud<TData = unknown, TError = unknown, TQueryFnData = T
     queryKey,
     async (...args) => {
       try {
+        const start = Date.now()
         const res = await queryFn(...args)
-        if (process.env.NODE_ENV === 'development' || process.env.DEBUG || process.env.LOG_FETCH) {
-          console.groupCollapsed(`🔦 ${queryKey.slice(0, 50)}`)
+        if (
+          process.env.NODE_ENV === 'development' ||
+          process.env.DEBUG ||
+          process.env.LOG_FETCH
+        ) {
+          console.groupCollapsed(`🔦 ${queryKey.slice(0, 50)} (${Date.now() - start}ms)`)
           console.log(res)
           console.groupEnd()
         }

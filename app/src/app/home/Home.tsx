@@ -152,7 +152,7 @@ const HomeDrawerLarge = memo((props) => {
             btrr="$6"
             btlr="$6"
             overflow="hidden"
-            zi={1}
+            zi={10000000}
             pos="absolute"
             top={0}
             left={0}

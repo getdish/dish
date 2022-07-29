@@ -2025,7 +2025,7 @@ __metadata:
     react-native-web: ^0.18.7
     react-reparenting: ^0.6.1
     react-test-renderer: 18.0.0-beta-149b420f6-20211119
-    recyclerlistview: ^3.0.5
+    recyclerlistview: ^4.1.1
     redis: ^3.1.2
     swr: ^1.3.0
     testcafe: ^1.11.0
@@ -22981,17 +22981,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"recyclerlistview@npm:^3.0.5":
-  version: 3.0.5
-  resolution: "recyclerlistview@npm:3.0.5"
+"recyclerlistview@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "recyclerlistview@npm:4.1.1"
   dependencies:
     lodash.debounce: 4.0.8
-    prop-types: 15.5.8
+    prop-types: 15.8.1
     ts-object-utils: 0.0.5
   peerDependencies:
     react: ">= 15.2.1"
     react-native: ">= 0.30.0"
-  checksum: 68fe28f044a42d30ea92f2a2a37d3d96bfb5f57cb2aea763edd37c52f1c735a7e4c559b6ab88339b4ce04cd043490fdaf210a43e0e3eb0eb00fcc25fd0f9ccfe
+  checksum: 9c8e1bf8f939abf78871ca22e22339207f6262d2b9d95a03f2568e005587c3418412cd71037cd517f0a485b7f9e0df487fe2dc123a32e57498820c45c9956996
   languageName: node
   linkType: hard
 

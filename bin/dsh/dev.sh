@@ -45,10 +45,11 @@ function dev() {
   if [[ "$ORIGINAL_ARGS" == *"--backend"* ]]; then
     echo "started backend"
   else
-    echo "✅ start app (web) $ORIGINAL_ARGS"
-    if [ "$ORIGINAL_ARGS" = "--prod" ]; then
+    if [ "$ORIGINAL_ARGS" = "--prod" ] || [ "$DISH_ENV" = "production" ]; then
+      echo "✅ start app (web production) $ORIGINAL_ARGS"
       yarn web:prod &
     else
+      echo "✅ start app (web) $ORIGINAL_ARGS"
       yarn web &
     fi
     PID4=$!
@@ -68,9 +69,10 @@ function dev() {
   # local mode run console (after server starts)
   if [[ "$ORIGINAL_ARGS" == *"--local"* ]]; then
     # hasura console (has to run separately and in serviecs/hasura for migrations to work)
-    pushd ./services/hasura
-    HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL} hasura console --endpoint "http://localhost:8091"
-    popd
+    pushd ./services/hasura || exit 1
+    HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL} hasura console --endpoint "http://localhost:8091" --no-browser &
+    PID6=$!
+    popd || exit 1
   fi
 
   echo "✅ yarn watch"

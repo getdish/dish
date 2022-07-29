@@ -1,3 +1,4 @@
+import { redisGet, redisSet } from './_redis'
 import { jsonRoute } from '@dish/api'
 import { sql } from '@dish/helpers-node'
 
@@ -45,8 +46,7 @@ export default jsonRoute(async (req, res) => {
   ) as any
 
   try {
-    console.log('try')
-    const results = await getSearchResults({
+    const params = {
       query: userQuery,
       deliveries,
       distance,
@@ -62,9 +62,17 @@ export default jsonRoute(async (req, res) => {
       x2,
       y1,
       y2,
-    })
-
-    res.json(results[0].json_build_object)
+    }
+    const key = JSON.stringify(params)
+    const cached = await redisGet(key)
+    if (cached) {
+      res.json(JSON.parse(cached))
+      return
+    }
+    const results = await getSearchResults(params)
+    const response = results[0].json_build_object
+    redisSet(key, JSON.stringify(response))
+    res.json(response)
   } catch (err) {
     console.log('err', err)
     res.json({ error: err.message })

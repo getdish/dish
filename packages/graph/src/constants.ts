@@ -29,7 +29,7 @@ export const LOCAL_HOST = process.env.LOCAL_HOST ?? (hostname || `localhost`)
 
 // const PROD_ORIGIN = 'https://dishapp.com'
 const ORIGIN = isProd
-  ? 'https://dishapp.com'
+  ? process.env.APP_ENDPOINT ?? 'https://dishapp.com'
   : LOCAL_HOST !== 'localhost'
   ? `http://${LOCAL_HOST}`
   : process.env.TARGET === 'web'
