@@ -25,6 +25,10 @@
     - `dish POST /api/crawl/yelp`
     - `dish test run_crawl` (finds run_crawl) || `dish run actions/hourly/run_crawl`
 
+- worldwide boundaries for country / state:
+  - https://www.naturalearthdata.com/downloads/
+  - https://gadm.org/
+
 - add tests inline with any file (see vitest)
 
 - move the mostly "monitoring" shit into /backoffice

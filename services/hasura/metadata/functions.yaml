@@ -1,15 +1,15 @@
 - function:
-    schema: public
     name: list_populated
-- function:
     schema: public
+- function:
     name: restaurant_new
-- function:
     schema: public
+- function:
     name: restaurant_top_tags
-- function:
     schema: public
+- function:
     name: restaurant_trending
-- function:
     schema: public
+- function:
     name: restaurant_with_tags
+    schema: public

@@ -1,3 +1,5 @@
+data/**
+
 .watchman-cookie*
 
 app/ios/assets/**/*
@@ -133,9 +135,6 @@ app/test/screenshots
 
 # asdf local node version
 .tool-versions
-
-# Docker compose data
-data/
 
 etc/docker/config.json
 *.hprof

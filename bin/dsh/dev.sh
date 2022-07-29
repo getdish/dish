@@ -5,7 +5,7 @@
 function dev() {
   function ctrl_c() {
       echo "👋 BYE"
-      kill -KILL "$PID1" "$PID2" "$PID3" "$PID4" "$PID5" 2> /dev/null
+      kill -KILL "$PID1" "$PID2" "$PID3" "$PID4" "$PID5" "$PID6" 2> /dev/null
   }
 
   trap ctrl_c INT SIGINT
@@ -23,8 +23,8 @@ function dev() {
     # no docker just run bare minimum directly
 
     # hasura
-    echo "running hasura"
-    HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL} HASURA_GRAPHQL_ENABLE_CONSOLE=true ./services/hasura/bin/graphql-engine serve  --server-port 8091 --admin-secret=password &
+    echo "running hasura server"
+    HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL} HASURA_GRAPHQL_ENABLE_CONSOLE=false ./services/hasura/bin/graphql-engine serve  --server-port 8091 &
     PID1=$!
 
     # tileserver
@@ -45,9 +45,6 @@ function dev() {
   if [[ "$ORIGINAL_ARGS" == *"--backend"* ]]; then
     echo "started backend"
   else
-    # sleep a bit so watch doesn't clog/restart app
-    sleep 3
-
     echo "✅ start app (web) $ORIGINAL_ARGS"
     if [ "$ORIGINAL_ARGS" = "--prod" ]; then
       yarn web:prod &
@@ -67,6 +64,15 @@ function dev() {
 
   # start watch after to let things start quicker
   sleep 5
+
+  # local mode run console (after server starts)
+  if [[ "$ORIGINAL_ARGS" == *"--local"* ]]; then
+    # hasura console (has to run separately and in serviecs/hasura for migrations to work)
+    pushd ./services/hasura
+    HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL} hasura console --endpoint "http://localhost:8091"
+    popd
+  fi
+
   echo "✅ yarn watch"
   yarn watch &
   PID3=$!
