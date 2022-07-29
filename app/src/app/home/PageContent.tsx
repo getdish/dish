@@ -3,16 +3,13 @@ import { isTouchDevice } from '../../constants/platforms'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { PageFooter } from './PageFooter'
 import { LoadingItems, YStack, YStackProps, isWeb } from '@dish/ui'
-// @ts-ignore
-import React, { Suspense, SuspenseList, SuspenseListProps } from 'react'
+import React, { Suspense } from 'react'
 
 export const PageContent = ({
   children,
-  suspenseOrder,
   hideFooter,
   ...props
 }: YStackProps & {
-  suspenseOrder?: SuspenseListProps['revealOrder']
   hideFooter?: boolean
 }) => {
   return (
@@ -25,11 +22,7 @@ export const PageContent = ({
           </>
         }
       >
-        {suspenseOrder ? (
-          <SuspenseList revealOrder={suspenseOrder}>{children}</SuspenseList>
-        ) : (
-          children
-        )}
+        {children}
       </Suspense>
       <YStack height={40} />
 

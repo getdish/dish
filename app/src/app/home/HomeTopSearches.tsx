@@ -4,7 +4,7 @@ import { useHomeStoreSelector } from '../homeStore'
 import { Link } from '../views/Link'
 import { GradientButton } from './GradientButton'
 import { TagsText } from './TagsText'
-import { Theme, XStack } from '@dish/ui'
+import { Button, Grid, Theme, XStack, YStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const HomeTopSearches = memo(() => {

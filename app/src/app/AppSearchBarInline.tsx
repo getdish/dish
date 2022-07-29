@@ -10,7 +10,7 @@ export const AppSearchBarInline = () => {
 
   return (
     <XStack px="$2" maw="100%" f={1} mt="$2" pos="relative">
-      <XStack
+      {/* <XStack
         fullscreen
         r="$2"
         l="$2"
@@ -23,7 +23,7 @@ export const AppSearchBarInline = () => {
         scale={isZoomed ? 1.05 : 1}
         bc="$background"
         zi={-1}
-      />
+      /> */}
       <Suspense fallback={null}>
         <AppSearchBarContents />
       </Suspense>

@@ -1,12 +1,13 @@
 import { searchBarHeight, searchBarTopOffset } from '../../constants/constants'
 import { HomeStateItem } from '../../types/homeTypes'
+import { autocompleteSearchStore, autocompletesStore } from '../AutocompletesStore'
 import { useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { ContentParentStore } from '../views/ContentScrollView'
 import { ErrorBoundary } from '../views/ErrorBoundary'
 import { isSafari } from '@dish/helpers'
 import { YStack, useDebounceValue, useIsTouchDevice, useMedia } from '@dish/ui'
-import { useStore } from '@dish/use-store'
+import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useMemo } from 'react'
 
 export type StackItemProps<A> = {
@@ -27,6 +28,11 @@ export function HomeStackView<A extends HomeStateItem>(props: { children: GetChi
   const isRemoving = currentStates.length > homeStates.length
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
+
+  // when autocomplete active, show home and filter that:
+  // nice because home should always display your current map position too as a special case
+  const { visible } = useStoreInstance(autocompletesStore)
+  console.log('autocomplete', visible)
 
   // prettier-ignore
   // console.log('HomeStackView', breadcrumbs, JSON.stringify({ isAdding, isRemoving }), items.map((x) => x.type))

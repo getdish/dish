@@ -96,11 +96,11 @@ export const HomePageFeed = memo(
             </XStack>
           </ContentScrollViewHorizontal> */}
 
-          <YStack p="$4">
+          {/* <YStack p="$4">
             <XStack>
-              <H1>
+              <H1 fontFamily="$stylish">
                 Kailua{' '}
-                <Paragraph fos="$10" fow="200" color="$colorMid">
+                <Paragraph fofam="$stylish" fos="$10" fow="200" color="$colorMid">
                   Hawaii
                 </Paragraph>
               </H1>
@@ -112,16 +112,18 @@ export const HomePageFeed = memo(
                 <Paragraph>Popular here</Paragraph>
               </YStack>
             </XStack>
-          </YStack>
+          </YStack> */}
 
-          <ScrollView
+          {/* <ScrollView
             showsHorizontalScrollIndicator={false}
             bounces
             horizontal
             style={{ width: '100%' }}
           >
-            <HomeTopSearches />
-          </ScrollView>
+            
+          </ScrollView> */}
+
+          {/* <HomeTopSearches /> */}
 
           <Spacer />
 
@@ -178,9 +180,11 @@ export const HomePageFeed = memo(
                     backgroundColor: '$backgroundHover',
                   }}
                 >
-                  <Paragraph>
+                  <Paragraph cursor="default" fontFamily="$stylish">
                     {index + 1}
-                    <H2>{name}</H2>
+                    <H2 cursor="default" fontFamily="$stylish">
+                      {name}
+                    </H2>
                   </Paragraph>
                 </YStack>
               )

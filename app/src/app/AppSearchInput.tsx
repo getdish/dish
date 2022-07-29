@@ -23,8 +23,10 @@ import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import {
+  Button,
   SearchInput,
   Spacer,
+  Square,
   XStack,
   YStack,
   getMedia,
@@ -108,11 +110,6 @@ export const AppSearchInput = memo(() => {
 
   return (
     <InputFrame>
-      {/* Loading / Search Icon */}
-      <SearchInputIcon color={theme.color.toString()} />
-
-      <Spacer size="$2" />
-
       <YStack
         // @ts-ignore
         ref={searchInputContainer}
@@ -198,6 +195,8 @@ export const AppSearchInput = memo(() => {
         </ScrollView>
       </YStack>
 
+      <SearchLoadingIcon color={theme.color.toString()} />
+
       <SearchCancelButton />
 
       <Spacer size={8} />
@@ -206,8 +205,7 @@ export const AppSearchInput = memo(() => {
 })
 
 // TODO not happy with logical structure here
-const SearchInputIcon = memo(({ color }: { color: string }) => {
-  const media = useMedia()
+const SearchLoadingIcon = memo(({ color }: { color: string }) => {
   const isHomeLoading = useHomeStoreSelector((x) => x.loading)
   // const search = useSearchPageStore()
   // const isOnSearch = useIsRouteActive('search')
@@ -221,13 +219,14 @@ const SearchInputIcon = memo(({ color }: { color: string }) => {
             <Loader color={color} size={16} />
           </YStack>
         ) : (
-          <Search
-            color={color}
-            size={media.xs ? 14 : 16}
-            style={{
-              opacity: 0.7,
-            }}
-          />
+          <Square size={16} />
+          // <Search
+          //   color={color}
+          //   size={media.xs ? 14 : 16}
+          //   style={{
+          //     opacity: 0.7,
+          //   }}
+          // />
         )}
       </TouchableOpacity>
     </YStack>
@@ -240,17 +239,13 @@ const SearchCancelButton = memo(function SearchCancelButton() {
     const hasSearchTags = !!x.searchBarTags.length
     return hasSearch || hasSearchTags
   })
-  const media = useMedia()
   return (
-    <YStack
-      opacity={isActive ? 0.6 : 0}
+    <Button
+      size="$4"
+      circular
+      icon={X}
       disabled={!isActive}
-      width={34}
-      height={34}
-      borderRadius={100}
-      alignItems="center"
-      justifyContent="center"
-      backgroundColor="rgba(220,220,220,0.1)"
+      opacity={isActive ? 1 : 0}
       onPress={() => {
         if (autocompletesStore.visible) {
           autocompletesStore.setVisible(false)
@@ -258,9 +253,7 @@ const SearchCancelButton = memo(function SearchCancelButton() {
           homeStore.clearSearch()
         }
       }}
-    >
-      <X size={16} color={media.sm ? '#888' : '#fff'} style={{ marginTop: 1 }} />
-    </YStack>
+    />
   )
 })
 

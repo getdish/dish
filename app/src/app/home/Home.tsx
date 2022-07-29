@@ -1,12 +1,5 @@
-import {
-  drawerWidthMax,
-  pageWidthMax,
-  searchBarHeight,
-  zIndexDrawer,
-} from '../../constants/constants'
+import { drawerWidthMax, pageWidthMax, zIndexDrawer } from '../../constants/constants'
 import { router } from '../../router'
-import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
-import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { AppMapControls } from '../AppMapControls'
 import { appMenuStore } from '../AppMenuStore'
 import { AppSearchBarInline } from '../AppSearchBarInline'
@@ -161,11 +154,6 @@ const HomeDrawerLarge = memo((props) => {
             ai="flex-start"
           >
             <AppSearchBarInline />
-          </XStack>
-
-          <XStack pos="absolute" fullscreen top={searchBarHeight}>
-            <AppAutocompleteSearch />
-            <AppAutocompleteLocation />
           </XStack>
 
           {props.children}

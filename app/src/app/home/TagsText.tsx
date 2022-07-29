@@ -1,13 +1,13 @@
 import { tagDisplayName } from '../../constants/tagDisplayName'
-import { Paragraph, Spacer } from '@dish/ui'
+import { FontSizeTokens, Paragraph, Spacer } from '@dish/ui'
 import React from 'react'
 
-export function TagsText({ tags }: { tags: any[] }) {
+export function TagsText({ tags, size }: { tags: any[]; size?: FontSizeTokens }) {
   return (
     <>
       {tags.map((tag, index) => (
         <React.Fragment key={tag.name}>
-          {tag.icon ? (
+          {/* {tag.icon ? (
             <Paragraph
               cursor="inherit"
               width="$1.5"
@@ -17,9 +17,9 @@ export function TagsText({ tags }: { tags: any[] }) {
             >
               {tag.icon.trim()}{' '}
             </Paragraph>
-          ) : null}
-          {!!tag.icon && <Spacer size="$2" />}
-          <Paragraph cursor="inherit" fontSize="$5" fontWeight="500">
+          ) : null} */}
+          {/* {!!tag.icon && <Spacer size="$2" />} */}
+          <Paragraph fofam="$stylish" cursor="inherit" size={size} fontWeight="500">
             {tagDisplayName(tag)}
           </Paragraph>
           {index < tags.length - 1 ? (

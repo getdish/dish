@@ -6,8 +6,11 @@ export const SearchInput = styled(Input, {
   borderRadius: 0,
   backgroundColor: 'transparent',
   borderWidth: 0,
-  shadowOpacity: 0,
+  fontFamily: '$stylish',
+  fontSize: 42,
   fontWeight: '500',
+  letterSpacing: -1,
+  shadowOpacity: 0,
 
   focusStyle: {
     borderWidth: 0,
