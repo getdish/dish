@@ -9,7 +9,7 @@ export const AppSearchBarInline = () => {
   const isZoomed = drawerStoreAtTop
 
   return (
-    <XStack px="$2" maw="100%" f={1} mt="$2" pos="relative">
+    <XStack px="$2" maw="100%" ov="hidden" f={1} mt="$2" pos="relative">
       {/* <XStack
         fullscreen
         r="$2"

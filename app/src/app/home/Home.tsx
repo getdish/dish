@@ -150,7 +150,6 @@ const HomeDrawerLarge = memo((props) => {
             top={0}
             left={0}
             right={0}
-            height={70}
             ai="flex-start"
           >
             <AppSearchBarInline />

@@ -1,5 +1,5 @@
 import { config } from '@tamagui/config-base'
-import { createFont, createTamagui } from 'tamagui'
+import { createFont, createTamagui, isWeb } from 'tamagui'
 
 function fontSizing<A extends Record<string, number>>(
   size: A,
@@ -17,8 +17,7 @@ function fontSizing<A extends Record<string, number>>(
 }
 
 const garamondFont = createFont({
-  family: 'Inter', // not on native yet
-  // family: `Garamond`,
+  family: isWeb ? `"Garamond"` : 'Inter',
   ...fontSizing({
     1: 11,
     2: 12,

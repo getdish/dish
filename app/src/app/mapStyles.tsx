@@ -1,5 +1,6 @@
 export const mapStyles = {
-  light: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy', // dish2 light
+  light: `mapbox://styles/nwienert/cl688g950000314tgzveqb9l6`,
+  // light: 'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy', // dish2 light
   // 'mapbox://styles/nwienert/ckl1sc28t0btd17mk1n435qf4', // basic light
   // 'mapbox://styles/nwienert/ckl1saj8w0nmo17mqz5b42s8k', // pink
   //'mapbox://styles/nwienert/ckddrrcg14e4y1ipj0l4kf1xy', // dish light

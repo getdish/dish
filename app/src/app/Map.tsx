@@ -632,7 +632,7 @@ export default function Map(props: MapProps) {
                   ['==', ['feature-state', 'active'], true],
                   1.0,
                   ['==', ['feature-state', 'hover'], true],
-                  isDark ? 0.5 : 0.2,
+                  isDark ? 0.5 : 0.1,
                   ['==', ['feature-state', 'active'], null],
                   isDark ? 0.25 : 0.05,
                   0,
@@ -651,28 +651,28 @@ export default function Map(props: MapProps) {
               'source-layer': name,
             })
 
-            map.addLayer({
-              id: `${name}.line`,
-              type: 'line',
-              source: name,
-              minzoom: minZoom,
-              maxzoom: maxZoom,
-              paint: {
-                'line-color': [
-                  'case',
-                  ['==', ['feature-state', 'active'], true],
-                  ['get', 'color'],
-                  ['==', ['feature-state', 'hover'], true],
-                  ['get', 'color'],
-                  ['==', ['feature-state', 'active'], null],
-                  'rgba(0,0,0,0.1)',
-                  'green',
-                ],
-                'line-opacity': 1,
-                'line-width': 0.5,
-              },
-              'source-layer': name,
-            })
+            // map.addLayer({
+            //   id: `${name}.line`,
+            //   type: 'line',
+            //   source: name,
+            //   minzoom: minZoom,
+            //   maxzoom: maxZoom,
+            //   paint: {
+            //     'line-color': [
+            //       'case',
+            //       ['==', ['feature-state', 'active'], true],
+            //       ['get', 'color'],
+            //       ['==', ['feature-state', 'hover'], true],
+            //       ['get', 'color'],
+            //       ['==', ['feature-state', 'active'], null],
+            //       'rgba(0,0,0,0.1)',
+            //       'green',
+            //     ],
+            //     'line-opacity': 1,
+            //     'line-width': 0.5,
+            //   },
+            //   'source-layer': name,
+            // })
 
             if (label) {
               if (labelSource) {
