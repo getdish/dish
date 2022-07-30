@@ -1,12 +1,9 @@
 import { drawerBorderRadius } from '../../constants/constants'
 import { DrawerPortalProvider } from '../Portal'
-import { Square, YStack, isWeb, useTheme } from '@dish/ui'
+import { YStack, YStackProps } from '@dish/ui'
 import React from 'react'
-import { View } from 'react-native'
 
-// only renders on small views
-
-export const BottomSheetContainer = (props: { children: any }) => {
+export const BottomSheetContainer = ({ children, ...props }: YStackProps) => {
   return (
     <YStack
       width="100%"
@@ -19,13 +16,13 @@ export const BottomSheetContainer = (props: { children: any }) => {
       pointerEvents="auto"
       bc="$background"
       elevation="$4"
-      // overflow="hidden"
       position="relative"
       zIndex={10}
       className="blur"
+      {...props}
     >
       <DrawerPortalProvider />
-      {props.children}
+      {children}
     </YStack>
   )
 }

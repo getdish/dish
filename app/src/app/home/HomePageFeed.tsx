@@ -100,7 +100,7 @@ export const HomePageFeed = memo(
             <XStack>
               <H1 fontFamily="$stylish">
                 Kailua{' '}
-                <Paragraph fofam="$stylish" fos="$10" fow="200" color="$colorMid">
+                <Paragraph ff="$stylish" fos="$10" fow="200" color="$colorMid">
                   Hawaii
                 </Paragraph>
               </H1>
@@ -124,8 +124,6 @@ export const HomePageFeed = memo(
           </ScrollView> */}
 
           {/* <HomeTopSearches /> */}
-
-          <Spacer />
 
           <YStack>
             {[
@@ -173,20 +171,22 @@ export const HomePageFeed = memo(
               },
             ].map(({ name }, index) => {
               return (
-                <YStack
+                <XStack
                   key={name + index}
                   p="$4"
+                  ai="center"
                   hoverStyle={{
                     backgroundColor: '$backgroundHover',
                   }}
                 >
                   <Paragraph cursor="default" fontFamily="$stylish">
                     {index + 1}
-                    <H2 cursor="default" fontFamily="$stylish">
-                      {name}
-                    </H2>
                   </Paragraph>
-                </YStack>
+                  <Spacer size="$2" />
+                  <H2 size="$7" ellipse cursor="default" fontFamily="$stylish">
+                    {name}
+                  </H2>
+                </XStack>
               )
             })}
           </YStack>

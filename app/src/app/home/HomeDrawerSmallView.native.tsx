@@ -19,7 +19,7 @@ import {
 } from '../views/ContentScrollView'
 import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 import { AssertionError } from '@dish/helpers'
-import { Spacer, YStack } from '@dish/ui'
+import { H1, Spacer, Square, YStack } from '@dish/ui'
 import { getStore, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
@@ -215,27 +215,10 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
     }).start()
   }, [drawerStoreAtTop])
 
-  // {/* DONT OVERLAY BECAUSE WE NEED HORIZONTAL SCROLLING */}
-  // {/* SEE CONTENTSCROLLVIEW FOR PREVENTING SCROLL */}
+  console.log('drawerStore.snapIndex', drawerStore.snapIndex)
+
   return (
     <>
-      {/* <Animated.View
-        style={{
-          height: searchBarHeight,
-          transform: [
-            {
-              translateY: searchBarHeight + 10,
-            },
-            {
-              translateY: drawerStore.pan,
-            },
-          ],
-          zIndex: 100000000,
-        }}
-      >
-        
-      </Animated.View> */}
-
       <Animated.View
         style={[
           styles.animatedView,
@@ -253,11 +236,14 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         <View ref={panViewRef as any} style={styles.container} {...panResponder.panHandlers}>
           <AppSearchBarFloating />
 
-          <Spacer />
+          {/* <Spacer /> */}
 
-          <BottomSheetContainer>
+          <BottomSheetContainer
+          // animation="quick"
+          // opacity={drawerStore.snapIndex === 2 ? 0 : 1}
+          >
             <YStack position="relative" flex={1}>
-              <AppAutocompleteLocation />
+              {/* <AppAutocompleteLocation /> */}
               <AppAutocompleteSearch />
               {props.children}
             </YStack>

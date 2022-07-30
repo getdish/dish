@@ -4,7 +4,7 @@ import { useHomeStoreSelector } from '../homeStore'
 import { Link } from '../views/Link'
 import { GradientButton } from './GradientButton'
 import { TagsText } from './TagsText'
-import { Button, Grid, Theme, XStack, YStack } from '@dish/ui'
+import { Button, Grid, Theme, ThemeInverse, XStack, YStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const HomeTopSearches = memo(() => {
@@ -27,11 +27,21 @@ export const HomeTopSearches = memo(() => {
     >
       {recentSearches.map((search, index) => {
         // const rgb = search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
+        const inner = (
+          <YStack
+            p="$2"
+            br="$2"
+            {...(index === 0 && {
+              bc: '$background',
+            })}
+          >
+            <TagsText tags={search.tags} />
+          </YStack>
+        )
+
         const contents = (
           <Link key={index} tags={search.tags} asyncClick>
-            <YStack>
-              <TagsText tags={search.tags} />
-            </YStack>
+            {index === 0 ? <ThemeInverse>{inner}</ThemeInverse> : inner}
           </Link>
         )
         if (activeTags[search.tags[0]?.slug || '']) {

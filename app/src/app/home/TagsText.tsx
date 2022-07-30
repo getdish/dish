@@ -19,7 +19,13 @@ export function TagsText({ tags, size }: { tags: any[]; size?: FontSizeTokens })
             </Paragraph>
           ) : null} */}
           {/* {!!tag.icon && <Spacer size="$2" />} */}
-          <Paragraph fofam="$stylish" cursor="inherit" size={size} fontWeight="500">
+          <Paragraph
+            color="$color"
+            ff="$stylish"
+            cursor="inherit"
+            size={size}
+            fontWeight="500"
+          >
             {tagDisplayName(tag)}
           </Paragraph>
           {index < tags.length - 1 ? (
