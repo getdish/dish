@@ -40,9 +40,6 @@ export const AppMenuButtonFloating = memo(() => {
             flex={1}
             hideUserMenu={appMenu.hide}
           />
-          {/* <PaneControlButtons>
-            <CloseButton onPress={appMenu.hide} />
-          </PaneControlButtons> */}
         </Sheet.Frame>
       </Sheet>
 
@@ -50,7 +47,6 @@ export const AppMenuButtonFloating = memo(() => {
         top={safeArea.top ? safeArea.top : 10}
         right={10}
         zIndex={zIndexDrawer - 1}
-        // pointerEvents="none"
       >
         <ThemeInverse>
           <Button

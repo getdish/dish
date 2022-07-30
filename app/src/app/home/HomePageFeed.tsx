@@ -9,6 +9,7 @@ import { Link } from '../views/Link'
 import { SlantedTitle } from '../views/SlantedTitle'
 import { ListCard } from '../views/list/ListCard'
 import { FeedCard } from './FeedCard'
+import { HomeRegionTitle } from './HomeRegionTitle'
 import { HomeTopSearches } from './HomeTopSearches'
 import { homePageStore } from './homePageStore'
 import { useTopCuisines } from './useTopCuisines'
@@ -76,7 +77,7 @@ export const HomePageFeed = memo(
         <>
           {/* <ContentScrollViewHorizontal>
             <XStack pe="auto" ai="center" space="$5" py="$2" px="$4">
-              {topCuisines.data.map((cuisine, i) => {
+              {topCuisines.data?.map((cuisine, i) => {
                 return (
                   <Link key={i} tag={{ type: 'country', slug: cuisine.tag_slug }}>
                     <H2
@@ -124,6 +125,8 @@ export const HomePageFeed = memo(
           </ScrollView> */}
 
           {/* <HomeTopSearches /> */}
+
+          <HomeRegionTitle />
 
           <YStack>
             {[
