@@ -26,7 +26,7 @@ PODS:
     - ExpoModulesCore
   - ExpoLinearGradient (11.3.0):
     - ExpoModulesCore
-  - ExpoModulesCore (0.9.2):
+  - ExpoModulesCore (0.9.1):
     - React-Core
     - ReactCommon/turbomodule/core
   - EXScreenOrientation (4.2.0):
@@ -280,8 +280,8 @@ PODS:
   - React-jsinspector (0.68.1)
   - React-logger (0.68.1):
     - glog
-  - react-native-blur (0.8.0):
-    - React
+  - react-native-blur (4.1.0):
+    - React-Core
   - react-native-geolocation (2.1.0):
     - React-Core
   - react-native-safe-area-context (4.2.5):
@@ -632,7 +632,7 @@ SPEC CHECKSUMS:
   ExpoImagePicker: d9d6b4f29db437fc7796f13cee5f133f5b4b5f7c
   ExpoKeepAwake: c0c494b442ecd8122974c13b93ccfb57bd408e88
   ExpoLinearGradient: 0debcf7d6cd7fea3050c218544f0db2de9a64f42
-  ExpoModulesCore: e4278a668e8c13c0269ed8b8a4200989deea2973
+  ExpoModulesCore: 5597629698cc026bd3dff1ef182fe2cc67c31084
   EXScreenOrientation: e3c072fb0add472a3037482ea43ccbade9b88a25
   EXSplashScreen: 34f460788db8d682883871708dddbfac72095bb7
   EXStructuredHeaders: 5d86829469399370a9fc7cb1e4391b09de87681d
@@ -660,7 +660,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 4a4bae5671b064a2248a690cf75957669489d08c
   React-jsinspector: 218a2503198ff28a085f8e16622a8d8f507c8019
   React-logger: f79dd3cc0f9b44f5611c6c7862badd891a862cf8
-  react-native-blur: cad4d93b364f91e7b7931b3fa935455487e5c33c
+  react-native-blur: ba2f37268542f8a26d809f48c5162705a3261fc6
   react-native-geolocation: 69f4fd37650b8e7fee91816d395e62dd16f5ab8d
   react-native-safe-area-context: ebf8c413eb8b5f7c392a036a315eb7b46b96845f
   React-perflogger: 30ab8d6db10e175626069e742eead3ebe8f24fd5

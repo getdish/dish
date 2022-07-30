@@ -36,7 +36,9 @@ const garamondFont = createFont({
     15: 114,
     16: 134,
   }),
-  letterSpacing: {},
+  letterSpacing: {
+    1: 0,
+  },
   weight: {},
 })
 
