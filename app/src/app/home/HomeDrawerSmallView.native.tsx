@@ -3,6 +3,7 @@ import { isTouchDevice } from '../../constants/platforms'
 import { getWindowHeight } from '../../helpers/getWindow'
 import { AppAutocompleteLocation } from '../AppAutocompleteLocation'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
+import { AppSearchBarFloating } from '../AppSearchBarFloating'
 import { AppSearchBarInline } from '../AppSearchBarInline'
 import { autocompletesStore } from '../AutocompletesStore'
 import { isTouchingSearchBar } from '../SearchInputNativeDragFix'
@@ -18,7 +19,7 @@ import {
 } from '../views/ContentScrollView'
 import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 import { AssertionError } from '@dish/helpers'
-import { YStack } from '@dish/ui'
+import { Spacer, YStack } from '@dish/ui'
 import { getStore, useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react'
 import {
@@ -248,37 +249,20 @@ export const HomeDrawerSmallView = memo((props: { children: any }) => {
         ]}
       >
         <AppFloatingTagMenuBar />
-        {useMemo(
-          () => (
-            <BottomSheetContainer>
-              <View
-                ref={panViewRef as any}
-                style={styles.container}
-                {...panResponder.panHandlers}
-              >
-                <Animated.View
-                  style={{
-                    zIndex: 10000000000,
-                    transform: [
-                      {
-                        translateY: searchBarY,
-                      },
-                    ],
-                  }}
-                >
-                  <AppSearchBarInline />
-                </Animated.View>
 
-                <YStack position="relative" flex={1}>
-                  <AppAutocompleteLocation />
-                  <AppAutocompleteSearch />
-                  {props.children}
-                </YStack>
-              </View>
-            </BottomSheetContainer>
-          ),
-          [props.children]
-        )}
+        <View ref={panViewRef as any} style={styles.container} {...panResponder.panHandlers}>
+          <AppSearchBarFloating />
+
+          <Spacer />
+
+          <BottomSheetContainer>
+            <YStack position="relative" flex={1}>
+              <AppAutocompleteLocation />
+              <AppAutocompleteSearch />
+              {props.children}
+            </YStack>
+          </BottomSheetContainer>
+        </View>
       </Animated.View>
     </>
   )

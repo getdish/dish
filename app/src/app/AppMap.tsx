@@ -6,6 +6,7 @@ import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { MapRegionEvent } from '../types/homeTypes'
 import { AppMapControls } from './AppMapControls'
+import { AppMapSpotlight } from './AppMapSpotlight'
 import { useAppMapStore } from './appMapStore'
 import {
   cancelUpdateRegion,
@@ -98,6 +99,7 @@ export default memo(function AppMap() {
           },
         ]}
       > */}
+        <AppMapSpotlight />
         <AppMapContents />
         {/* </Animated.View> */}
       </YStack>

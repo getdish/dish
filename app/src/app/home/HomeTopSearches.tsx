@@ -29,9 +29,9 @@ export const HomeTopSearches = memo(() => {
         // const rgb = search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
         const contents = (
           <Link key={index} tags={search.tags} asyncClick>
-            <GradientButton>
+            <YStack>
               <TagsText tags={search.tags} />
-            </GradientButton>
+            </YStack>
           </Link>
         )
         if (activeTags[search.tags[0]?.slug || '']) {

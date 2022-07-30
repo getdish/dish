@@ -22,21 +22,7 @@ export const HomeRegionTitle = memo(() => {
   return (
     <Link onPress={() => autocompletesStore.setTarget('location')}>
       <ThemeInverse>
-        <SlantedTitle
-          alignSelf="center"
-          fontWeight="900"
-          size={
-            regionName.length > 24
-              ? '$2'
-              : regionName.length > 17
-              ? '$3'
-              : regionName.length > 14
-              ? '$4'
-              : regionName.length > 8
-              ? '$5'
-              : '$6'
-          }
-        >
+        <SlantedTitle alignSelf="center" fontWeight="900" size="$2">
           {regionName}
         </SlantedTitle>
       </ThemeInverse>

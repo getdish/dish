@@ -5,6 +5,7 @@ import { getSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
+import { SlantedTitle } from './views/SlantedTitle'
 import { AbsoluteXStack, AbsoluteYStack, Spacer, Theme, YStack, useMedia } from '@dish/ui'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import { Minus, Plus, RefreshCcw, X } from '@tamagui/feather-icons'
@@ -75,6 +76,12 @@ export const AppMapControls = memo(() => {
               />
             </>
           )}
+
+          <YStack fullscreen ai="center" jc="center">
+            <SlantedTitle size="$2" als="center">
+              Kailua
+            </SlantedTitle>
+          </YStack>
 
           {showSearchHere && (
             <OverlayLinkButton icon={RefreshCcw} onPress={pagesStore.refresh}>

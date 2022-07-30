@@ -16,4 +16,12 @@ export const SearchInput = styled(Input, {
     borderWidth: 0,
     margin: 0,
   },
+
+  variants: {
+    floating: {
+      true: {
+        fontSize: 18,
+      }
+    }
+  }
 })

@@ -42,7 +42,7 @@ import { ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 
 const isWebTouch = isWeb && supportsTouchWeb
 
-export const AppSearchInput = memo(() => {
+export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
   const inputStore = useInputStoreSearch()
   const isSearchingCuisine = useHomeStoreSelector((x) => !!x.searchBarTags.length)
   const theme = useTheme()
@@ -141,6 +141,7 @@ export const AppSearchInput = memo(() => {
             >
               {isTouchDevice && <SearchInputNativeDragFix name="search" />}
               <SearchInput
+                floating={floating}
                 ref={(view) => {
                   textInput$.current = view
                   setInputNode(view)
@@ -219,7 +220,7 @@ const SearchLoadingIcon = memo(({ color }: { color: string }) => {
             <Loader color={color} size={16} />
           </YStack>
         ) : (
-          <Square size={16} />
+          <Spacer size={16} />
           // <Search
           //   color={color}
           //   size={media.xs ? 14 : 16}

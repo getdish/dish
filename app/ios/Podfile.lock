@@ -290,6 +290,35 @@ PODS:
     - RCTTypeSafety
     - React
     - ReactCommon/turbomodule/core
+  - react-native-skia (0.1.137):
+    - React
+    - React-callinvoker
+    - React-Core
+    - react-native-skia/Api (= 0.1.137)
+    - react-native-skia/Jsi (= 0.1.137)
+    - react-native-skia/RNSkia (= 0.1.137)
+    - react-native-skia/SkiaHeaders (= 0.1.137)
+    - react-native-skia/Utils (= 0.1.137)
+  - react-native-skia/Api (0.1.137):
+    - React
+    - React-callinvoker
+    - React-Core
+  - react-native-skia/Jsi (0.1.137):
+    - React
+    - React-callinvoker
+    - React-Core
+  - react-native-skia/RNSkia (0.1.137):
+    - React
+    - React-callinvoker
+    - React-Core
+  - react-native-skia/SkiaHeaders (0.1.137):
+    - React
+    - React-callinvoker
+    - React-Core
+  - react-native-skia/Utils (0.1.137):
+    - React
+    - React-callinvoker
+    - React-Core
   - React-perflogger (0.68.1)
   - React-RCTActionSheet (0.68.1):
     - React-Core/RCTActionSheetHeaders (= 0.68.1)
@@ -461,6 +490,7 @@ DEPENDENCIES:
   - "react-native-blur (from `../../node_modules/@react-native-community/blur`)"
   - "react-native-geolocation (from `../../node_modules/@react-native-community/geolocation`)"
   - react-native-safe-area-context (from `../../node_modules/react-native-safe-area-context`)
+  - "react-native-skia (from `../../node_modules/@shopify/react-native-skia`)"
   - React-perflogger (from `../../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../../node_modules/react-native/Libraries/NativeAnimation`)
@@ -575,6 +605,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@react-native-community/geolocation"
   react-native-safe-area-context:
     :path: "../../node_modules/react-native-safe-area-context"
+  react-native-skia:
+    :path: "../../node_modules/@shopify/react-native-skia"
   React-perflogger:
     :path: "../../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -663,6 +695,7 @@ SPEC CHECKSUMS:
   react-native-blur: ba2f37268542f8a26d809f48c5162705a3261fc6
   react-native-geolocation: 69f4fd37650b8e7fee91816d395e62dd16f5ab8d
   react-native-safe-area-context: ebf8c413eb8b5f7c392a036a315eb7b46b96845f
+  react-native-skia: 860cc2544d03ef15884ed40480a7d7b4cae57b0d
   React-perflogger: 30ab8d6db10e175626069e742eead3ebe8f24fd5
   React-RCTActionSheet: 4b45da334a175b24dabe75f856b98fed3dfd6201
   React-RCTAnimation: d6237386cb04500889877845b3e9e9291146bc2e

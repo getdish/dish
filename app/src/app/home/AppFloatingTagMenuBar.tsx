@@ -51,7 +51,7 @@ export const AppFloatingTagMenuBar = memo(() => {
             paddingHorizontal: 10,
           })}
         >
-          <HomeRegionTitle />
+          {/* <HomeRegionTitle /> */}
           <HomeTopSearches />
         </XStack>
       </ScrollView>

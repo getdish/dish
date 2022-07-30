@@ -63,6 +63,11 @@ export default function Map({
       styleURL={style}
       style={[styles.map /* isDrawerAtTop ? { opacity: 0 } : null */]}
       ref={mapRef}
+      compassEnabled={false}
+      scaleBarEnabled={false}
+      logoEnabled={false}
+      rotateEnabled={false}
+      attributionEnabled={false}
       // styleURL={style}
       onDidFinishLoadingMap={() => {
         setIsLoaded(1)

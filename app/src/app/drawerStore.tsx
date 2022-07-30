@@ -10,7 +10,7 @@ type DrawerSnapPoint = 'bottom' | 'middle' | 'top'
 class DrawerStore extends Store {
   // 0 = top, 1 = middle, 2 = bottom
   snapPoints = [0, 0.28, 0.8]
-  snapIndex = 1
+  snapIndex = 2
   isDragging = false
   spring: Animated.CompositeAnimation | null = null
   toValue = 0

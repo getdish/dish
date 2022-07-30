@@ -17,7 +17,8 @@ function fontSizing<A extends Record<string, number>>(
 }
 
 const garamondFont = createFont({
-  family: `Garamond`,
+  family: 'Inter', // not on native yet
+  // family: `Garamond`,
   ...fontSizing({
     1: 11,
     2: 12,

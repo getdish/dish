@@ -1,7 +1,7 @@
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
-import { AbsoluteYStack, Button, useMedia } from '@dish/ui'
+import { AbsoluteYStack, Button, ThemeInverse, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
 import { Sheet } from '@tamagui/sheet'
@@ -52,16 +52,19 @@ export const AppMenuButtonFloating = memo(() => {
         zIndex={zIndexDrawer - 1}
         // pointerEvents="none"
       >
-        <Button
-          pointerEvents="auto"
-          elevation="$3"
-          shop={0.2}
-          size="$6"
-          icon={Menu}
-          circular
-          overflow="visible"
-          onPress={appMenu.toggle}
-        />
+        <ThemeInverse>
+          <Button
+            pointerEvents="auto"
+            elevation="$3"
+            shop={0.2}
+            size="$5"
+            icon={Menu}
+            circular
+            chromeless
+            overflow="visible"
+            onPress={appMenu.toggle}
+          />
+        </ThemeInverse>
       </AbsoluteYStack>
     </>
   )

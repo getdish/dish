@@ -19,12 +19,12 @@
   },
   "dependencies": {
     "@react-native-community/blur": "^4.1.0",
-    "@tamagui/use-debounce": "^1.0.1-beta.123",
-    "@tamagui/use-force-update": "^1.0.1-beta.123",
-    "@tamagui/use-window-size": "^1.0.1-beta.123",
-    "tamagui": "^1.0.1-beta.123"
+    "@tamagui/use-debounce": "^1.0.1-beta.131",
+    "@tamagui/use-force-update": "^1.0.1-beta.131",
+    "@tamagui/use-window-size": "^1.0.1-beta.131",
+    "tamagui": "^1.0.1-beta.131"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.1-beta.123"
+    "@tamagui/build": "^1.0.1-beta.131"
   }
 }
