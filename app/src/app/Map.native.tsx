@@ -129,7 +129,7 @@ export default function Map({
       {/* // Causes error on Android: // Error while updating property 'stop' of a  view managed by: RCTMGLCamera*/}
       <MapboxGL.Camera
         ref={cameraRef}
-        minZoomLevel={2}
+        minZoomLevel={0}
         maxZoomLevel={22}
         zoomLevel={span.lng * 200}
         defaultSettings={{
