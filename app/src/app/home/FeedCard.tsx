@@ -1,4 +1,3 @@
-// import { GalleryRef } from '../../SwipeGallery'
 import { isWeb } from '../../constants/constants'
 import { DishTagItem } from '../../helpers/getRestaurantDishes'
 import { pluralize } from '../../helpers/pluralize'
@@ -46,8 +45,6 @@ export const FeedCard = (props: FeedCardProps) => {
     theme: cardTheme = 'modern',
     ...cardProps
   } = props
-  // const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-  // const galleryRef = useRef<GalleryRef>(null)
   return (
     <Card
       className="hover-parent"
@@ -58,68 +55,9 @@ export const FeedCard = (props: FeedCardProps) => {
       size={size}
       {...cardProps}
     >
-      <View
-        style={[StyleSheet.absoluteFill]}
-        // onLayout={(e) => {
-        //   setDimensions(e.nativeEvent.layout)
-        // }}
-      />
+      <View style={[StyleSheet.absoluteFill]} />
 
       <FeedCardContent {...props} />
-      {/* galleryRef={galleryRef} */}
-
-      {/* {!!dimensions.width && (
-        <SwipeGallery
-          ref={galleryRef}
-          disableVerticalSwipe
-          disableSwipeUp
-          disablePinchToZoom
-          disableTapToZoom
-          keyExtractor={(x, i) => x.id || i}
-          renderItem={({ item, onLayout }) => {
-            return (
-              <View style={StyleSheet.absoluteFill} onLayout={onLayout}>
-                {(() => {
-                  if (item.id === -1) {
-                    return <FeedCardContent galleryRef={galleryRef} {...props} />
-                  }
-                  return (
-                    <YStack>
-                      <AbsoluteYStack zIndex={0} borderRadius={10} overflow="hidden" fullscreen>
-                        <Image
-                          source={{ uri: item.image }}
-                          resizeMode="cover"
-                          style={StyleSheet.absoluteFill}
-                        />
-                      </AbsoluteYStack>
-                      <AbsoluteYStack
-                        fullscreen
-                        alignItems="flex-start"
-                        justifyContent="flex-end"
-                        padding={10}
-                        borderRadius={10}
-                        overflow="hidden"
-                      >
-                        <LinearGradient
-                          style={[StyleSheet.absoluteFill, { zIndex: 0 }]}
-                          start={[0, 1]}
-                          end={[0, 0]}
-                          colors={[`#000000`, `#00000000`]}
-                        />
-                        <TitleStyled zIndex={10} size="$8" color="#fff">
-                          {item.title}
-                        </TitleStyled>
-                      </AbsoluteYStack>
-                    </YStack>
-                  )
-                })()}
-              </View>
-            )
-          }}
-          containerDimensions={dimensions}
-          data={[{ id: -1, image: '' }, ...(items || [])]}
-        />
-      )} */}
     </Card>
   )
 }

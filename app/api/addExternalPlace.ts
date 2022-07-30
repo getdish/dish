@@ -1,9 +1,8 @@
+import { ApplePlace } from '../src/types/homeTypes'
+import { ensureSecureRoute, getUserFromRoute } from './user/_user'
 import { route } from '@dish/api'
 import { Restaurant, restaurantUpsert } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
-
-import { ApplePlace } from '../types/homeTypes'
-import { ensureSecureRoute, getUserFromRoute } from './user/_user'
 
 export default route(async (req, res) => {
   await ensureSecureRoute(req, res, 'user')

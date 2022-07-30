@@ -1,1 +1,1 @@
-export const defaultUserImage = require('../assets/user-default.jpg').default
+export const defaultUserImage = require('../../assets/user-default.jpg').default

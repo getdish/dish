@@ -299,7 +299,7 @@ export default function Map(props: MapProps) {
       }
     }
 
-    const mapMarkerRed = require('../assets/map-marker-red.png')
+    const mapMarkerRed = require('../../assets/map-marker-red.png')
 
     cancels.add(
       series([
@@ -308,11 +308,6 @@ export default function Map(props: MapProps) {
             new Promise((res) => map.on('load', res)),
             new Promise((res) => map.on('idle', res)), // this waits for style load
             loadMarker('map-marker-red', mapMarkerRed),
-            // loadMarker('icon-sushi', require('../assets/icon-sushi.png').default),
-            // loadMarker(
-            //   'map-pin-blank',
-            //   require('../assets/map-pin-blank.png').default
-            // ),
           ]),
         () => {
           if (!map) return

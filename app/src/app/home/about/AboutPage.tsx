@@ -1,9 +1,5 @@
-import { AbsoluteYStack, Paragraph, Spacer, YStack } from '@dish/ui'
-import React from 'react'
-import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg'
-
 // @ts-expect-error
-import dontPanic from '../../../assets/dont-panic.svg'
+import dontPanic from '../../../../assets/dont-panic.svg'
 import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { Image } from '../../views/Image'
@@ -12,6 +8,9 @@ import { LogoColor } from '../../views/Logo'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
 import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
+import { AbsoluteYStack, Paragraph, Spacer, YStack } from '@dish/ui'
+import React from 'react'
+import Svg, { ClipPath, Defs, G, Path, Rect } from 'react-native-svg'
 
 // const inlineButton = {
 //   borderRadius: 10,

@@ -1,6 +1,5 @@
-import { Restaurant } from '@dish/graph'
-
 import { YelpScrape } from '../yelp/Yelp'
+import { Restaurant } from '@dish/graph'
 
 const GOOGLE_GEOCODER_ID = '0xgoogleid123'
 
@@ -22,11 +21,11 @@ export const restaurant_fixture_nearly_matches: Partial<Restaurant> = {
 }
 
 export type YelpDetailPageData = {
-  dynamic: typeof import('../fixtures/yelp-dynamic-fixture').default
-  json: typeof import('../fixtures/yelp-json-fixture').default
+  dynamic: typeof import('./yelp-dynamic-fixture').default
+  json: typeof import('./yelp-json-fixture').default
 }
 
-export type YelpPhotosData = typeof import('../fixtures/yelp-photos-fixture').default
+export type YelpPhotosData = typeof import('./yelp-photos-fixture').default
 
 export type YelpListItemData = {
   name: string
@@ -91,7 +90,11 @@ export const yelp: Partial<YelpScrape> = {
       name: 'Test Name Yelp',
       formattedAddress: '123 Street, Big City, America',
       businessUrl: '',
-      categories: [{ title: 'Test Mexican' }, { title: 'Test Pizza' }, { title: 'Test Spain' }],
+      categories: [
+        { title: 'Test Mexican' },
+        { title: 'Test Pizza' },
+        { title: 'Test Spain' },
+      ],
       rating: 4.0,
       priceRange: '$$',
       reviewCount: 2000,

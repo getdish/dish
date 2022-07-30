@@ -1,16 +1,14 @@
-import '@dish/helpers/polyfill'
-
+import * as Doordash from '../crawlers/doordash/one'
+import * as Google from '../crawlers/google/one'
+import * as Grubhub from '../crawlers/grubhub/one'
+import * as Infatuation from '../crawlers/infatuation/one'
+import { removeScrapeForRestaurant } from '../crawlers/scrape-helpers'
+import * as Self from '../crawlers/self/one'
+import * as Tripadvisor from '../crawlers/tripadvisor/one'
+import * as Yelp from '../crawlers/yelp/one'
 import { restaurantFindOne, restaurantUpdate } from '@dish/graph'
 import { scrape_db } from '@dish/helpers-node'
-
-import * as Doordash from '../src/doordash/one'
-import * as Google from '../src/google/one'
-import * as Grubhub from '../src/grubhub/one'
-import * as Infatuation from '../src/infatuation/one'
-import { removeScrapeForRestaurant } from '../src/scrape-helpers'
-import * as Self from '../src/self/one'
-import * as Tripadvisor from '../src/tripadvisor/one'
-import * as Yelp from '../src/yelp/one'
+import '@dish/helpers/polyfill'
 
 const skips = (process.env.SKIP ?? '').split(',').filter(Boolean)
 let onlys = (process.env.ONLY ?? '').split(',').filter(Boolean)
@@ -46,7 +44,9 @@ export async function main(slug: string) {
     // clear existing scrapes
     if (rest.id && !shouldSkip('external') && !shouldSkip('scrapes')) {
       if (process.env.CLEAR_EXISTING === '1') {
-        const res = await scrape_db.query(`DELETE FROM scrape WHERE restaurant_id = '${rest.id}';`)
+        const res = await scrape_db.query(
+          `DELETE FROM scrape WHERE restaurant_id = '${rest.id}';`
+        )
         console.log('Deleted', res.rows)
       } else {
         console.log('To clear existing scrapes for restaurant set CLEAR_EXISTING=1')

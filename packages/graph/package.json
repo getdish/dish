@@ -32,7 +32,6 @@
     "esbuild-register": "^2.6.0",
     "gqty": "^2.2.0",
     "graphql": "^15.5.0",
-    "isomorphic-unfetch": "^3.1.0",
     "lodash": "*",
     "moment": "^2.29.1",
     "react": "*"

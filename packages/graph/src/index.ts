@@ -1,4 +1,4 @@
-import 'isomorphic-unfetch'
+import '@dish/helpers/polyfill-node'
 
 if (process.env.TARGET !== 'web') {
   require('@dish/helpers/polyfill')

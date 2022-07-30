@@ -4,4 +4,7 @@ module.exports = {
   timeout: '20s',
   serial: true,
   failFast: false,
+  environmentVariables: {
+    NODE_ENV: 'test',
+  },
 }

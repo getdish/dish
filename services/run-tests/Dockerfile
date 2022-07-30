@@ -13,10 +13,10 @@ COPY --from=chrome /sbin /sbin
 COPY --from=chrome /usr /usr
 # may need /var
 
-WORKDIR /app/services/worker
+WORKDIR /app/app
 
-COPY services/worker/pin_nodesource /etc/apt/preferences.d/nodesource
-ADD services/worker/xvfb-chromium /usr/bin/xvfb-chromium
+COPY app/pin_nodesource /etc/apt/preferences.d/nodesource
+ADD app/xvfb-chromium /usr/bin/xvfb-chromium
 
 ENV NODE_ENV=production
 

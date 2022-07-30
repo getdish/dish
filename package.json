@@ -38,7 +38,6 @@
     "web": "yarn workspace @dish/app web",
     "web:prod": "yarn workspace @dish/app web:prod",
     "puppet-proxy": "./dsh run 'yarn workspace @dish/puppet-proxy start'",
-    "etc:colorize": "yarn workspace @dish/app etc:colorize",
     "ios": "yarn workspace @dish/app ios",
     "ios:install": "yarn workspace @dish/app ios:install",
     "postinstall": "manypkg check && ./bin/postinstall.sh",
