@@ -24,6 +24,7 @@ import { TagButton, getTagButtonProps } from '../../views/TagButton'
 import { getListFontFamily } from '../../views/TitleStyled'
 import { useListFavorite } from '../../views/list/useList'
 import { StackItemProps } from '../HomeStackView'
+import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { ColorPicker } from './ColorPicker'
 import { ListAddRestuarant } from './ListAddRestuarant'
 import { ListItem } from './ListItem'
@@ -259,21 +260,21 @@ const ListPageContent = memo(
         ({ item, drag, isActive }: RenderItemParams<any>, index) => {
           const { restaurantId, restaurant, dishSlugs, position, list_restaurant } = item
           const content = (
-            <ListItem
-              list={list}
+            <RestaurantListItem
+              // list={list}
               restaurant={restaurant}
-              listSlug={listSlug}
-              minimal={isMinimal || isSorting}
-              rank={index + 1}
-              hideRate
-              editable={isEditing || isMyList}
-              username={username}
-              // listColors={listColors}
-              onDelete={() => {
-                if (confirm('Delete item?')) {
-                  listItems.delete(restaurant.id)
-                }
-              }}
+              // listSlug={listSlug}
+              // minimal={isMinimal || isSorting}
+              // rank={index + 1}
+              // hideRate
+              // editable={isEditing || isMyList}
+              // username={username}
+              // // listColors={listColors}
+              // onDelete={() => {
+              //   if (confirm('Delete item?')) {
+              //     listItems.delete(restaurant.id)
+              //   }
+              // }}
             />
           )
 
@@ -351,21 +352,19 @@ const ListPageContent = memo(
           <ContentScrollView id="list">
             <>
               <PaneControlButtonsLeft>
-                <FavoriteButton floating isFavorite={isFavorited} onToggle={toggleFavorite}>
-                  {reviewsCount}
-                </FavoriteButton>
+                {!isEditing && (
+                  <FavoriteButton size="$3" isFavorite={isFavorited} onToggle={toggleFavorite}>
+                    {reviewsCount}
+                  </FavoriteButton>
+                )}
 
                 {isMyList && !isEditing && (
-                  <SmallButton elevation="$1" onPress={() => setIsEditing(true)}>
-                    Edit
-                  </SmallButton>
+                  <SmallButton onPress={() => setIsEditing(true)}>Edit</SmallButton>
                 )}
 
                 {isMyList && (
                   <SmallButton
                     icon={isSorting ? null : <ListIcon size={16} color="#888" />}
-                    elevation="$1"
-                    themeInverse
                     onPress={() => setIsSorting((x) => !x)}
                   >
                     {isSorting ? 'Done' : 'Sort'}
@@ -374,8 +373,10 @@ const ListPageContent = memo(
 
                 {isEditing && (
                   <>
+                    <Spacer />
+
                     <SmallButton
-                      themeInverse
+                      theme="active"
                       elevation="$1"
                       onPress={async () => {
                         router.setRouteAlert(null)
@@ -400,22 +401,16 @@ const ListPageContent = memo(
                       Save
                     </SmallButton>
 
-                    <Spacer />
+                    <Spacer size="$2" />
 
-                    <YStack
-                      opacity={0.8}
-                      hoverStyle={{
-                        opacity: 1,
-                      }}
-                      padding={6}
+                    <Button
+                      size="$3"
                       onPress={() => {
                         setIsEditing(false)
                       }}
                     >
-                      {/* listColors.color */}
-                      <X color={'red'} size={24} />
-                    </YStack>
-                    <Spacer size="$6" />
+                      Cancel
+                    </Button>
                   </>
                 )}
               </PaneControlButtonsLeft>
@@ -450,6 +445,7 @@ const ListPageContent = memo(
                       <YStack display={isWeb ? 'block' : 'flex'}>
                         <H1
                           color="$colorPress"
+                          fontFamily="$stylish"
                           size="$11"
                           {...(isEditing && {
                             width: '100%',
@@ -457,18 +453,16 @@ const ListPageContent = memo(
                         >
                           {isEditing ? (
                             <Input
-                              fontSize={fontSize}
-                              fontWeight="700"
-                              fontFamily={getListFontFamily(list.font)}
+                              size="$11"
+                              fontFamily="$stylish"
                               width="100%"
                               textAlign="left"
                               defaultValue={list.name || ''}
+                              padding={0}
+                              bw={0}
                               onChangeText={(val) => {
                                 draft.current.name = val
                               }}
-                              multiline
-                              numberOfLines={2}
-                              marginVertical={-5}
                             />
                           ) : (
                             list.name?.trim() || ''
@@ -594,57 +588,6 @@ const ListPageContent = memo(
                           />
                         </XStack>
 
-                        <XGroup alignItems="center">
-                          <SmallButton
-                            borderRadius={0}
-                            theme={listFont === 0 ? 'active' : null}
-                            onPress={() => {
-                              setFont(0)
-                            }}
-                          >
-                            Strong
-                          </SmallButton>
-                          <SmallButton
-                            borderRadius={0}
-                            theme={listFont === 1 ? 'active' : null}
-                            onPress={() => {
-                              setFont(1)
-                            }}
-                          >
-                            Deco
-                          </SmallButton>
-                        </XGroup>
-
-                        <XGroup alignItems="center">
-                          <Paragraph
-                            size="$3"
-                            opacity={0.5}
-                            onPress={() => {
-                              setTheme(0)
-                            }}
-                            paddingVertical={6}
-                            paddingHorizontal={12}
-                          >
-                            Full
-                          </Paragraph>
-                          <Switch
-                            checked={list.theme === 1}
-                            onCheckedChange={(isOn) => {
-                              setTheme(isOn ? 1 : 0)
-                            }}
-                          />
-                          <Paragraph
-                            size="$3"
-                            opacity={0.5}
-                            onPress={() => {
-                              setTheme(1)
-                            }}
-                            paddingVertical={6}
-                            paddingHorizontal={12}
-                          >
-                            Minimal
-                          </Paragraph>
-                        </XGroup>
                         <XStack alignItems="center" space="$1">
                           <Paragraph>Public:&nbsp;</Paragraph>
                           <Switch checked={isPublic} onCheckedChange={setPublic} />

@@ -1,8 +1,7 @@
+import { appMapStore } from '../../appMapStore'
 import { Hoverable } from '@dish/ui'
 import { debounce } from 'lodash'
 import React from 'react'
-
-import { appMapStore } from '../../appMapStore'
 
 /**
  * NOTE
@@ -11,21 +10,12 @@ import { appMapStore } from '../../appMapStore'
  *
  * for logged in calls, we often need to user restaurant_id
  */
-export const HoverToZoom = ({
-  children,
-  ...props
-}: {
-  children: any
-  id: string
-  slug?: string
-}) => {
+export const HoverToZoom = ({ children, slug }: { children: any; slug: string }) => {
   return (
     <Hoverable
       onHoverIn={() => {
         setHoveredSlow({
-          slug: '',
-          ...props,
-          // todo get from context?
+          slug: slug,
           via: 'list',
         })
       }}

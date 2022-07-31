@@ -25,7 +25,7 @@ import { RestaurantListItemScoreBreakdown } from './RestaurantListItemScoreBreak
 import { RestaurantOverallAndTagReviews } from './RestaurantOverallAndTagReviews'
 import { RestaurantPeekDishes } from './RestaurantPeekDishes'
 import { useTotalReviews } from './useTotalReviews'
-import { RestaurantItemMeta, graphql } from '@dish/graph'
+import { Restaurant, RestaurantItemMeta, RestaurantQuery, graphql } from '@dish/graph'
 import {
   AbsoluteYStack,
   Button,
@@ -50,8 +50,8 @@ export const ITEM_HEIGHT = 130
 
 export type RestaurantListItemProps = {
   curLocInfo: GeocodePlace | null
-  restaurantId: string
-  restaurantSlug: string
+  restaurantSlug?: string
+  restaurant?: RestaurantQuery
   hideRate?: boolean
   rank: number
   meta?: RestaurantItemMeta
@@ -96,14 +96,19 @@ export const RestaurantListItem = (props: RestaurantListItemProps) => {
 
 const excludeTags: QueryRestaurantTagsProps['exclude'] = ['dish']
 
+function error<Item>(msg: string) {
+  throw new Error(msg)
+  return null as any as Item
+}
+
 const RestaurantListItemContent = memo(
   graphql(function RestaurantListItemContent(
     props: RestaurantListItemProps & { isLoaded: boolean }
   ) {
     const {
       rank,
-      restaurantId,
-      restaurantSlug,
+      restaurant: restaurantProp,
+      restaurantSlug: restaurantSlugProp,
       dishSize,
       curLocInfo,
       activeTagSlugs,
@@ -123,7 +128,14 @@ const RestaurantListItemContent = memo(
       editableDescription,
     } = props
     // const media = useMedia()
-    const [restaurant] = queryRestaurant(restaurantSlug)
+    const restaurant =
+      restaurantProp ??
+      (restaurantSlugProp
+        ? queryRestaurant(restaurantSlugProp)[0]
+        : error<RestaurantQuery>(`needs restaurant or restaurantSlug prop`))
+
+    const restaurantSlug = restaurant?.slug ?? ''
+
     const [state, setState] = useState({
       editing: false,
       description: null as null | string,
@@ -151,7 +163,7 @@ const RestaurantListItemContent = memo(
     const [price_label, price_color, price_range] = priceRange(restaurant)
 
     return (
-      <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}>
+      <HoverToZoom slug={restaurantSlug}>
         <YStack
           className="hover-faded-in-parent"
           alignItems="flex-start"
