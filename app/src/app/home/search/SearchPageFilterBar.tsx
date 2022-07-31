@@ -9,7 +9,17 @@ import { FilterButton } from '../../views/FilterButton'
 import { PaneControlButtons } from '../../views/PaneControlButtons'
 import { SlantedTitle } from '../../views/SlantedTitle'
 import { SmallButton } from '../../views/SmallButton'
-import { Modal, Text, Theme, XStack, YStack, useMedia, useTheme } from '@dish/ui'
+import {
+  Modal,
+  Text,
+  Theme,
+  XGroup,
+  XStack,
+  YStack,
+  useIsTouchDevice,
+  useMedia,
+  useTheme,
+} from '@dish/ui'
 import { Filter } from '@tamagui/feather-icons'
 import { groupBy, sortBy } from 'lodash'
 import React, { memo, useState } from 'react'
@@ -29,7 +39,7 @@ export const SearchPageFilterBar = memo(({ activeTags }: FilterBarProps) => {
 const HomePageFilterBarLarge = ({ activeTags }: FilterBarProps) => {
   const filterButtons = useSearchFilterButtons({ activeTags })
   return (
-    <XStack alignItems="center" space={4} justifyContent="center">
+    <XStack alignItems="center" space="$2" justifyContent="center">
       {filterButtons}
     </XStack>
   )
@@ -88,10 +98,11 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
     sortBy(tagFilters, (x) => tagSort[x.slug]),
     (x) => tagGroup[x.slug] ?? ++last
   )
+  const isTouchable = useIsTouchDevice()
   const groupedList = Object.keys(grouped).map((k) => grouped[k])
   return groupedList.map((group, index) => {
     return (
-      <XStack key={index} borderRadius={100}>
+      <XGroup br="$10" key={index}>
         {group.map((tag, groupIndex) => {
           const isActive = activeTags[getTagSlug(tag.slug)] ?? false
           return (
@@ -99,6 +110,7 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
               key={tag.id + isActive}
               tag={tag as any}
               index={index - groupIndex}
+              size={isTouchable ? '$4' : '$3'}
               isActive={isActive}
               {...getGroupedButtonProps({
                 index: groupIndex,
@@ -107,7 +119,7 @@ const useSearchFilterButtons = ({ activeTags }: FilterBarProps) => {
             />
           )
         })}
-      </XStack>
+      </XGroup>
     )
   })
 }

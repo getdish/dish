@@ -43,6 +43,7 @@ export const FilterButton = ({
       <Button
         icon={IconComponent}
         {...rest}
+        chromeless
         zIndex={100 - index + (isActive ? 1 : 0)}
         {...(isActive && {
           theme: 'active',
