@@ -46,6 +46,7 @@ import {
   Input,
   Modal,
   Paragraph,
+  SizableStack,
   Spacer,
   Switch,
   Text,
@@ -261,7 +262,9 @@ const ListPageContent = memo(
           const { restaurantId, restaurant, dishSlugs, position, list_restaurant } = item
           const content = (
             <RestaurantListItem
-              // list={list}
+              // list={list
+              curLocInfo={null}
+              rank={0}
               restaurant={restaurant}
               // listSlug={listSlug}
               // minimal={isMinimal || isSorting}
@@ -352,15 +355,9 @@ const ListPageContent = memo(
           <ContentScrollView id="list">
             <>
               <PaneControlButtonsLeft>
-                {!isEditing && (
-                  <FavoriteButton size="$3" isFavorite={isFavorited} onToggle={toggleFavorite}>
-                    {reviewsCount}
-                  </FavoriteButton>
-                )}
-
-                {isMyList && !isEditing && (
-                  <SmallButton onPress={() => setIsEditing(true)}>Edit</SmallButton>
-                )}
+                <FavoriteButton size="$3" isFavorite={isFavorited} onToggle={toggleFavorite}>
+                  {reviewsCount}
+                </FavoriteButton>
 
                 {isMyList && (
                   <SmallButton
@@ -370,105 +367,51 @@ const ListPageContent = memo(
                     {isSorting ? 'Done' : 'Sort'}
                   </SmallButton>
                 )}
-
-                {isEditing && (
-                  <>
-                    <Spacer />
-
-                    <SmallButton
-                      theme="active"
-                      elevation="$1"
-                      onPress={async () => {
-                        router.setRouteAlert(null)
-                        setIsEditing(false)
-                        await listUpdate(
-                          {
-                            id: list.id,
-                            ...draft.current,
-                            // ...(listColors.backgroundColor && {
-                            //   color: allListColors.indexOf(listColors.backgroundColor),
-                            // }),
-                            public: isPublic,
-                          },
-                          {
-                            query: list,
-                          }
-                        )
-                        refetch()
-                        Toast.show('Saved')
-                      }}
-                    >
-                      Save
-                    </SmallButton>
-
-                    <Spacer size="$2" />
-
-                    <Button
-                      size="$3"
-                      onPress={() => {
-                        setIsEditing(false)
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </>
-                )}
               </PaneControlButtonsLeft>
 
               <YStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
                 {/* START HEADER */}
-                <YStack pt="$4" paddingBottom={5} position="relative">
-                  <XStack paddingHorizontal={20}>
-                    {/* <AbsoluteYStack
-                      overflow="hidden"
-                      zIndex={-1}
-                      borderRadius={1000}
-                      bottom={50}
-                      opacity={0.3}
-                      right={-150}
-                    >
+                <YStack paddingBottom={5} position="relative">
+                  <YStack paddingHorizontal={20}>
+                    {/*
                       <Image
                         source={{ uri: getListPhoto(list) }}
                         style={{ width: 400, height: 400 }}
-                      />
-                    </AbsoluteYStack> */}
+                      />*/}
                     <YStack
-                      // maxWidth={660}
-                      // minWidth={380}
                       alignItems="flex-start"
                       justifyContent="flex-end"
                       width="100%"
                       flex={1}
-                      maxWidth={550}
+                      py="$6"
                     >
-                      <YStack minHeight={75} flex={1} />
-                      <YStack display={isWeb ? 'block' : 'flex'}>
-                        <H1
-                          color="$colorPress"
-                          fontFamily="$stylish"
-                          size="$11"
-                          {...(isEditing && {
-                            width: '100%',
-                          })}
-                        >
-                          {isEditing ? (
-                            <Input
-                              size="$11"
-                              fontFamily="$stylish"
-                              width="100%"
-                              textAlign="left"
-                              defaultValue={list.name || ''}
-                              padding={0}
-                              bw={0}
-                              onChangeText={(val) => {
-                                draft.current.name = val
-                              }}
-                            />
-                          ) : (
-                            list.name?.trim() || ''
-                          )}
-                        </H1>
-                      </YStack>
+                      <H1
+                        color="$colorPress"
+                        // fontFamily="$stylish"
+                        size="$4"
+                        als="center"
+                        {...(isEditing && {
+                          width: '100%',
+                        })}
+                      >
+                        {isEditing ? (
+                          <Input
+                            size="$13"
+                            fontFamily="$stylish"
+                            width="100%"
+                            textAlign="left"
+                            defaultValue={list.name || ''}
+                            padding={0}
+                            bw={0}
+                            onChangeText={(val) => {
+                              draft.current.name = val
+                            }}
+                          />
+                        ) : (
+                          // `Cam's  ${list.name?.trim() || ''}`
+                          `Cam's top island 💎`
+                        )}
+                      </H1>
                       <YStack
                         maxWidth={800}
                         alignSelf="center"
@@ -487,9 +430,9 @@ const ListPageContent = memo(
                           after={
                             <>
                               {!!tagButtons.length && (
-                                <XStack space="$2" justifyContent="center">
+                                <YStack space="$2" justifyContent="center">
                                   {tagButtons}
-                                </XStack>
+                                </YStack>
                               )}
                             </>
                           }
@@ -539,42 +482,53 @@ const ListPageContent = memo(
                             })()
                           )}
                         </CommentBubble>
-
-                        {isMyList && isSorting && (
-                          <XStack space alignSelf="center">
-                            {/* listColors.color */}
-                            <Move size={16} color={'red'} />
-                            <Paragraph selectable={false} opacity={0.6} size="$3">
-                              press and hold on any item to sort
-                            </Paragraph>
-                          </XStack>
-                        )}
                       </YStack>
                     </YStack>
-                  </XStack>
+                  </YStack>
+
+                  {isMyList && isSorting && (
+                    <XStack
+                      // fullscreen
+                      // zi={10}
+                      // bottom="auto"
+                      pe="none"
+                      py="$6"
+                      space="$2"
+                      alignSelf="center"
+                      ai="center"
+                      jc="center"
+                    >
+                      {/* listColors.color */}
+                      <Move size={16} color={'red'} />
+                      <Paragraph selectable={false} opacity={0.6} size="$3">
+                        press and hold on any item to sort
+                      </Paragraph>
+                    </XStack>
+                  )}
 
                   {isMyList && isEditing && (
-                    <XStack
+                    <YStack
                       position="relative"
                       zIndex={1000}
                       marginTop={15}
                       alignItems="center"
                       justifyContent="center"
+                      pos="absolute"
+                      t="$4"
+                      r="$4"
                     >
-                      <XStack
+                      <YStack
                         backgroundColor="$background"
                         padding={5}
                         paddingHorizontal={20}
                         borderRadius={100}
-                        elevation="$1"
                         flex={1}
                         alignItems="center"
                         justifyContent="center"
                         flexWrap="wrap"
                         space="$8"
                       >
-                        <XStack alignItems="center" space="$1">
-                          <Paragraph>Color:</Paragraph>
+                        <YStack alignItems="center" space="$1">
                           <ColorPicker
                             // allListColors
                             colors={[]}
@@ -586,12 +540,12 @@ const ListPageContent = memo(
                               // setListColors(getListColors(index, themeName))
                             }}
                           />
-                        </XStack>
+                        </YStack>
 
-                        <XStack alignItems="center" space="$1">
+                        <YStack alignItems="center" space="$1">
                           <Paragraph>Public:&nbsp;</Paragraph>
                           <Switch checked={isPublic} onCheckedChange={setPublic} />
-                        </XStack>
+                        </YStack>
                         <SmallButton
                           tooltip="Delete"
                           icon={<Trash color="var(--red10)" size={20} />}
@@ -613,8 +567,8 @@ const ListPageContent = memo(
                             }
                           }}
                         />
-                      </XStack>
-                    </XStack>
+                      </YStack>
+                    </YStack>
                   )}
                 </YStack>
                 {/* END HEADER */}
@@ -650,7 +604,7 @@ const ListPageContent = memo(
                 {isMyList && (
                   <>
                     <Spacer size="$6" />
-                    <XStack paddingHorizontal={20}>
+                    <YStack paddingHorizontal={20}>
                       <Button
                         onPress={() => {
                           setShowAddModal(true)
@@ -664,7 +618,7 @@ const ListPageContent = memo(
                       >
                         Add
                       </Button>
-                    </XStack>
+                    </YStack>
                     <Spacer size="$8" />
                   </>
                 )}

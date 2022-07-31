@@ -1,7 +1,15 @@
 @font-face {
   font-family: Cardinal;
-  font-weight: 300;
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
   src: url('/assets/fonts/cardinal-trial.woff') format('woff');
+}
+
+@font-face {
+  font-family: Cardinal;
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: url('/assets/fonts/0fc38bc54535937a81e25a9bf238eccfa9f26b3d-TRIAL.woff') format('woff');
 }

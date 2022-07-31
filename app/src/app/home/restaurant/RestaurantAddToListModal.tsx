@@ -10,12 +10,17 @@ import {
   AbsoluteYStack,
   Button,
   Card,
+  Dialog,
+  Fieldset,
   Heading,
+  Input,
+  Label,
   Modal,
   Spacer,
   Text,
   Theme,
   Toast,
+  Unspaced,
   XStack,
   YStack,
 } from '@dish/ui'
@@ -60,99 +65,145 @@ export const RestaurantAddToListModal = graphql(
     console.log('mutation', status)
 
     return (
-      <Modal
-        open
-        width="98%"
-        maxWidth={600}
-        height="95%"
-        maxHeight={800}
-        closable
-        onOpenChange={(val) => val === false && onDismiss()}
-      >
-        <AbsoluteYStack alignItems="center" top={-15}>
-          <SlantedTitle size="$4">Add to list</SlantedTitle>
-        </AbsoluteYStack>
+      <Dialog sheetBreakpoint="$sm" modal>
+        <Dialog.Trigger asChild>
+          <Button>Edit Profile</Button>
+        </Dialog.Trigger>
 
-        <ScrollView style={{ width: '100%', flex: 1, paddingVertical: 30 }}>
-          <Spacer />
+        <Dialog.Sheet modal dismissOnSnapToBottom>
+          <Dialog.Sheet.Frame padding="$4">
+            <Dialog.SheetContents />
+          </Dialog.Sheet.Frame>
+          <Dialog.Sheet.Overlay />
+        </Dialog.Sheet>
 
-          <Theme name="yellow">
-            <Card marginHorizontal={12} paddingVertical={12} paddingHorizontal={12}>
-              <Text>
-                Add <Text fontWeight="700">{restaurant.name}</Text> to...
-              </Text>
-            </Card>
-          </Theme>
+        <Dialog.Portal>
+          <Dialog.Overlay
+            key="overlay"
+            animation="quick"
+            o={0.5}
+            enterStyle={{ o: 0 }}
+            exitStyle={{ o: 0 }}
+          />
+          <Dialog.Content
+            bordered
+            elevate
+            key="content"
+            animation={[
+              'quick',
+              {
+                opacity: {
+                  overshootClamping: true,
+                },
+              },
+            ]}
+            enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
+            exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
+            x={0}
+            scale={1}
+            opacity={1}
+            y={0}
+          >
+            <YStack space>
+              <Dialog.Title>Add to list</Dialog.Title>
+              <Dialog.Description>Add {restaurant.name} to...</Dialog.Description>
 
-          <Spacer />
+              <Fieldset space="$4" horizontal>
+                <Label w={160} justifyContent="flex-end" htmlFor="name">
+                  Name
+                </Label>
+                <Input f={1} id="name" defaultValue="Nate Wienert" />
+              </Fieldset>
 
-          {lists.map((list) => {
-            const listId = list.id
-            const isAdded = listsWithRestaurant.some((x) => x.id === listId)
-            return (
-              <Link
-                key={listId}
-                name="list"
-                params={{
-                  slug: list.slug ?? '',
-                  userSlug: userStore.user?.username ?? '',
-                }}
-                onPress={onDismiss}
-              >
-                <XStack paddingHorizontal={20} paddingVertical={3}>
-                  <YStack flex={1}>
-                    <Heading size="$5">{list?.name}</Heading>
-                  </YStack>
+              <Fieldset space="$4" horizontal>
+                <Label w={160} justifyContent="flex-end" htmlFor="username">
+                  Username
+                </Label>
+                <Input f={1} id="username" defaultValue="@natebirdman" />
+              </Fieldset>
+              {lists.map((list) => {
+                const listId = list.id
+                const isAdded = listsWithRestaurant.some((x) => x.id === listId)
+                return (
+                  <Link
+                    key={listId}
+                    name="list"
+                    params={{
+                      slug: list.slug ?? '',
+                      userSlug: userStore.user?.username ?? '',
+                    }}
+                    onPress={onDismiss}
+                  >
+                    <XStack paddingHorizontal={20} paddingVertical={3}>
+                      <YStack flex={1}>
+                        <Heading size="$5">{list?.name}</Heading>
+                      </YStack>
 
-                  {!isAdded && (
-                    <Button
-                      theme="active"
-                      // TODO
-                      borderRadius={1000}
-                      icon={<Plus size={12} color="#fff" />}
-                      onPress={async (e) => {
-                        e.stopPropagation()
-                        await mutation({
-                          fn: (m) => {
-                            return m.insert_list_restaurant_one({
-                              object: {
-                                restaurant_id: restaurantId,
-                                list_id: listId,
-                                user_id: user.id,
+                      {!isAdded && (
+                        <Button
+                          theme="active"
+                          // TODO
+                          borderRadius={1000}
+                          icon={<Plus size={12} color="#fff" />}
+                          onPress={async (e) => {
+                            e.stopPropagation()
+                            await mutation({
+                              fn: (m) => {
+                                return m.insert_list_restaurant_one({
+                                  object: {
+                                    restaurant_id: restaurantId,
+                                    list_id: listId,
+                                    user_id: user.id,
+                                  },
+                                })?.__typename
                               },
-                            })?.__typename
-                          },
-                        })
-                        Toast.success(`Added!`)
-                      }}
-                    >
-                      Add
-                    </Button>
-                  )}
+                            })
+                            Toast.success(`Added!`)
+                          }}
+                        >
+                          Add
+                        </Button>
+                      )}
 
-                  {isAdded && (
-                    <Button
-                      icon={<X size={16} />}
-                      onPress={async (e) => {
-                        e.stopPropagation()
-                        await mutation({
-                          fn: (m) => {
-                            return m.delete_list_restaurant_by_pk({
-                              list_id: listId,
-                              restaurant_id: restaurantId,
-                            })?.__typename
-                          },
-                        })
-                        Toast.success(`Removed`)
-                      }}
-                    />
-                  )}
-                </XStack>
-              </Link>
-            )
-          })}
-        </ScrollView>
-      </Modal>
+                      {isAdded && (
+                        <Button
+                          icon={<X size={16} />}
+                          onPress={async (e) => {
+                            e.stopPropagation()
+                            await mutation({
+                              fn: (m) => {
+                                return m.delete_list_restaurant_by_pk({
+                                  list_id: listId,
+                                  restaurant_id: restaurantId,
+                                })?.__typename
+                              },
+                            })
+                            Toast.success(`Removed`)
+                          }}
+                        />
+                      )}
+                    </XStack>
+                  </Link>
+                )
+              })}
+
+              <YStack ai="flex-end" mt="$2">
+                <Dialog.Close asChild>
+                  <Button theme="alt1" aria-label="Close">
+                    Save changes
+                  </Button>
+                </Dialog.Close>
+              </YStack>
+
+              <Unspaced>
+                <Dialog.Close asChild>
+                  <Button pos="absolute" t="$4" r="$4" circular icon={X} />
+                </Dialog.Close>
+              </Unspaced>
+            </YStack>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog>
     )
   }
 )

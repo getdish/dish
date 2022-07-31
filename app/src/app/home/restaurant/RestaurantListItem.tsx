@@ -189,7 +189,7 @@ const RestaurantListItemContent = memo(
           })}
         >
           {/* border left */}
-          <AbsoluteYStack
+          {/* <AbsoluteYStack
             top={0}
             bottom={0}
             zIndex={-1}
@@ -198,7 +198,7 @@ const RestaurantListItemContent = memo(
             backgroundColor={isActive ? brandColor : 'transparent'}
             borderTopRightRadius={8}
             borderBottomRightRadius={8}
-          />
+          /> */}
 
           {/* vote button and score */}
           <AbsoluteYStack
@@ -248,7 +248,8 @@ const RestaurantListItemContent = memo(
             >
               <XStack
                 paddingLeft={hideRate ? 10 : 45}
-                paddingTop={shouldShowOneLine ? 10 : 15}
+                py="$6"
+                pb="$2"
                 position="relative"
                 alignItems="center"
               >

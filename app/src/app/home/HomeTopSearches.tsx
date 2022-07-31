@@ -30,7 +30,9 @@ export const HomeTopSearches = memo(() => {
           <Button
             chromeless
             {...(index === 0 && {
-              bc: '$background',
+              bc: 'transparent',
+              boc: '$borderColor',
+              bw: 0.5,
             })}
           >
             <TagsText tags={search.tags} />

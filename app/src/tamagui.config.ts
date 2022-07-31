@@ -18,26 +18,33 @@ function fontSizing<A extends Record<string, number>>(
 
 const garamondFont = createFont({
   family: isWeb ? `"Cardinal"` : 'Inter',
-  ...fontSizing({
-    1: 11,
-    2: 12,
-    3: 13,
-    4: 14,
-    5: 16,
-    6: 20,
-    7: 27,
-    8: 33,
-    9: 44,
-    10: 56,
-    11: 75,
-    12: 92,
-    13: 122,
-    14: 92,
-    15: 114,
-    16: 134,
-  }),
+  ...fontSizing(
+    {
+      1: 11,
+      2: 12,
+      3: 13,
+      4: 14,
+      5: 16,
+      6: 20,
+      7: 27,
+      8: 33,
+      9: 44,
+      10: 56,
+      11: 75,
+      12: 92,
+      13: 108,
+      14: 92,
+      15: 114,
+      16: 134,
+    },
+    (size) => {
+      return Math.round(size * 0.9)
+    }
+  ),
   letterSpacing: {
     1: 0,
+    10: -1,
+    13: -2,
   },
   weight: {
     1: '800',
