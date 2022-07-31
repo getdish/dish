@@ -101,21 +101,6 @@ function dev_start_docker_then_compose() {
   compose_up
 }
 
-function run() {
-  set -a
-  source_env
-  if [ "$1" = "native" ]; then
-    run_native_app
-  else
-    if [ "$DISH_DEBUG" -gt "2" ]; then
-      echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
-    fi
-    pushd "$CWD_DIR"
-    bash -c "$ORIGINAL_ARGS"
-    popd
-  fi
-}
-
 function run_native_app() {
   pushd app
   DISH_DEBUG=1 LOCAL_HOST=$(ipconfig getifaddr en0) LOG_LEVEL=1 TAMAGUI_TARGET=native ../node_modules/.bin/react-native start --reset-cache

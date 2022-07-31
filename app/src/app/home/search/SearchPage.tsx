@@ -334,7 +334,6 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
       return (
         <RestaurantListItem
           curLocInfo={props.item.curLocInfo ?? null}
-          restaurantId={data.id}
           restaurantSlug={data.slug}
           rank={index + 1}
           activeTagSlugs={activeTagSlugs}

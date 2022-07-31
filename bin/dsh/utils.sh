@@ -35,6 +35,21 @@ function source_env() {
   fi
 }
 
+function run() {
+  set -a
+  source_env
+  if [ "$1" = "native" ]; then
+    run_native_app
+  else
+    if [ "$DISH_DEBUG" -gt "2" ]; then
+      echo "executing: $ORIGINAL_ARGS in $CWD_DIR"
+    fi
+    pushd "$CWD_DIR"
+    bash -c "$ORIGINAL_ARGS"
+    popd
+  fi
+}
+
 function pushd() {
   command pushd "$@" >/dev/null
 }

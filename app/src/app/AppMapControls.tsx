@@ -1,3 +1,4 @@
+// debug
 import { isWeb, zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { appMapStore } from './appMapStore'

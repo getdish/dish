@@ -109,11 +109,6 @@ function docker_login() {
   docker login registry.dishapp.com -u "$TRAEFIK_USERNAME" -p "$TRAEFIK_PASSWORD_PLAIN" || echo "login exit 1 but it succeeds sometimes?"
 }
 
-function run_dsh() {
-  esbuild ./dsh.ts --target=node15 --format=esm --outdir=node_modules/.cache --out-extension:.js=.mjs &>/dev/null
-  node ./node_modules/.bin/zx ./node_modules/.cache/dsh.mjs
-}
-
 function wait_until_hasura_ready() {
   echo "Waiting for Hasura to start ($HASURA_ENDPOINT)..."
   until [ $(curl -L $HASURA_ENDPOINT/healthz -o /dev/null -w '%{http_code}\n' -s) == "200" ]; do

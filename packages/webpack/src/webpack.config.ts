@@ -243,7 +243,7 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
           : [
               new CssMinimizerPlugin(),
               new ESBuildMinifyPlugin({
-                target: 'es2019',
+                target: 'es2020',
                 treeShaking: true,
                 css: false,
                 // implementation: esbuild,
