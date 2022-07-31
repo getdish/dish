@@ -8,12 +8,12 @@ import { homeStore } from '../homeStore'
 import { userStore } from '../userStore'
 import { LinkButtonProps, LinkProps } from '../views/LinkProps'
 import { series, sleep } from '@dish/async'
-import { useEvent, useForceUpdate } from '@dish/ui'
+import { SizableText, useEvent, useForceUpdate } from '@dish/ui'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
 import { Pressable } from 'react-native'
 
-export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
+export const useLink = (props: LinkProps<any, any>, styleProps?: any, asChild?: boolean) => {
   const forceUpdate = useForceUpdate()
   const linkProps = getNormalizeLinkProps(props as any, forceUpdate)
   const cancel = useRef<Function | null>(null)
@@ -80,24 +80,36 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
       if (isWeb) {
         const element = props.tagName ?? 'a'
         const href = props.href ?? router.getPathFromParams(navItem)
-        return React.createElement(
-          element,
-          {
-            ref,
-            onClick: onPress,
-            className: `a-link ${
-              props.disableDisplayContents ? '' : 'display-contents'
-            } cursor-pointer ${props.className ?? ''}`,
-            target: props.target,
-            ...(element === 'a' &&
-              href && {
-                href,
-                onMouseEnter: linkProps.onMouseEnter,
-              }),
-          },
-          children
+        const webProps = {
+          ref,
+          onPress,
+          className: asChild
+            ? props.className
+            : `a-link ${
+                props.disableDisplayContents ? '' : 'display-contents'
+              } cursor-pointer ${props.className ?? ''}`,
+          target: props.target,
+          ...(element === 'a' &&
+            href && {
+              href,
+              onMouseEnter: linkProps.onMouseEnter,
+            }),
+        }
+
+        return (
+          <SizableText asChild={asChild} {...webProps}>
+            {children}
+          </SizableText>
         )
       }
+
+      if (asChild) {
+        return React.cloneElement(children, {
+          onPress,
+          ...styleProps,
+        })
+      }
+
       // return children
       return (
         <Pressable

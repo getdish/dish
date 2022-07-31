@@ -53,21 +53,9 @@ export function SubmittableForm({
         )}
 
         {!isSuccess && (
-          <XStack>
-            <YStack flex={1} />
-            <Button
-              alignSelf="flex-end"
-              marginLeft="auto"
-              onPress={onSubmit}
-              theme="blue"
-              borderRadius={100}
-              elevation="$1"
-              disabled={isSubmitting}
-            >
-              {submitText}
-              {/* {isSubmitting ? '...' : ''} */}
-            </Button>
-          </XStack>
+          <Button f={1} onPress={onSubmit} theme="blue" disabled={isSubmitting}>
+            {submitText}
+          </Button>
         )}
 
         {isSuccess && (

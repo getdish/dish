@@ -232,11 +232,7 @@ export const LoginForm = ({ autoFocus, setFormPage }: AuthFormPageProps) => {
       submitText="Go"
       errorText={errorMessage}
       after={
-        <Link
-          alignSelf="flex-end"
-          fontSize={14}
-          onClick={(e) => setFormPage?.('forgotPassword')}
-        >
+        <Link mt="$2" size="$2" onClick={(e) => setFormPage?.('forgotPassword')}>
           Forgot password?
         </Link>
       }

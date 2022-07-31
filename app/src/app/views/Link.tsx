@@ -3,7 +3,7 @@ import { DRouteName } from '../../router'
 import { useLink } from '../hooks/useLink'
 import { LinkProps } from './LinkProps'
 import { RoutesTable } from '@dish/router'
-import { Text, TextAncestorContext, useTheme } from '@dish/ui'
+import { SizableText, Text, TextAncestorContext, useTheme } from '@dish/ui'
 import React, { forwardRef, useContext } from 'react'
 
 export const Link = forwardRef(function Link<Name extends DRouteName = DRouteName>(
@@ -31,21 +31,25 @@ export const Link = forwardRef(function Link<Name extends DRouteName = DRouteNam
     noWrapText,
     promptLogin,
     href,
+    asChild,
+    size,
     ...styleProps
   } = allProps
-  const { wrapWithLinkElement } = useLink(allProps, styleProps)
+  const { wrapWithLinkElement } = useLink(allProps, styleProps, asChild)
   const isInParagraph = useContext(TextAncestorContext)
   return wrapWithLinkElement(
     isStringChild(children) && !noWrapText ? (
-      <Text
+      <SizableText
         textDecorationLine={
           underline === false ? 'none' : isInParagraph || underline ? 'underline' : 'none'
         }
         color="$colorHover"
+        fontFamily="$body"
         display={display as any}
+        size={size}
       >
         {children}
-      </Text>
+      </SizableText>
     ) : (
       children
     ),

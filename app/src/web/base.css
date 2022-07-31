@@ -416,10 +416,10 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-.theme--dark input:-webkit-autofill,
-.theme--dark input:-webkit-autofill:hover,
-.theme--dark input:-webkit-autofill:focus,
-.theme--dark input:-webkit-autofill:active {
+.t_dark input:-webkit-autofill,
+.t_dark input:-webkit-autofill:hover,
+.t_dark input:-webkit-autofill:focus,
+.t_dark input:-webkit-autofill:active {
   -webkit-text-fill-color: #fff !important;
   -webkit-box-shadow: 0 0 0 100px #222 inset !important;
 }

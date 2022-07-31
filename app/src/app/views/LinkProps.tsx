@@ -1,6 +1,6 @@
 import { DRouteName } from '../../router'
 import { NavigableTag } from '../../types/tagTypes'
-import { ButtonProps, TextProps, YStackProps } from '@dish/ui'
+import { ButtonProps, SizableTextProps, TextProps, YStackProps } from '@dish/ui'
 import React from 'react'
 import { TextStyle } from 'react-native'
 
@@ -10,8 +10,8 @@ type AProps = React.DetailedHTMLProps<
 >
 
 export type LinkProps<A, B> = LinkSharedProps &
-  Omit<TextProps, 'display' | 'tag'> & {
-    display?: TextProps['display'] | 'inline'
+  Omit<SizableTextProps, 'display' | 'tag'> & {
+    display?: SizableTextProps['display'] | 'inline'
     name?: A | null
     // @ts-ignore
     params?: B
