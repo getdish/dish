@@ -38,65 +38,63 @@ export const LenseButton = ({
   const isLong = name.length > 4
 
   return (
-    <Pressable onPress={onPress}>
-      <Link tag={lense} replace asyncClick disallowDisableWhenActive>
+    <Link onPress={onPress} tag={lense} replace asyncClick disallowDisableWhenActive>
+      <YStack
+        className="unselectable ease-in-out-fastest"
+        alignItems="center"
+        justifyContent="center"
+        width={scaledWidth}
+        height={scaledSize}
+        backgroundColor={bg}
+        hoverStyle={{
+          backgroundColor: '$backgroundPress',
+        }}
+        borderRadius={100}
+        marginRight={10}
+        scale={isActive ? 1.3 : 1}
+        {...(media.sm && {
+          marginRight: 5,
+          transform: [
+            {
+              scale: isActive ? 1.25 : 0.85,
+            },
+          ],
+        })}
+        padding={0}
+        marginTop={-10}
+        pressStyle={{
+          backgroundColor: '$backgroundPress',
+        }}
+      >
+        <Text fontSize={iconSize} lineHeight={scaledSize} textAlign="center">
+          {(lense.icon ?? '').trim()}
+        </Text>
         <YStack
-          className="unselectable ease-in-out-fastest"
+          rotate="-10deg"
+          zIndex={100}
           alignItems="center"
-          justifyContent="center"
-          width={scaledWidth}
-          height={scaledSize}
-          backgroundColor={bg}
-          hoverStyle={{
-            backgroundColor: '$backgroundPress',
-          }}
-          borderRadius={100}
-          marginRight={10}
-          scale={isActive ? 1.3 : 1}
-          {...(media.sm && {
-            marginRight: 5,
-            transform: [
-              {
-                scale: isActive ? 1.25 : 0.85,
-              },
-            ],
-          })}
-          padding={0}
+          borderRadius={4}
+          paddingHorizontal={4}
           marginTop={-10}
-          pressStyle={{
-            backgroundColor: '$backgroundPress',
-          }}
+          backgroundColor="transparent"
+          {...(isActive && {
+            backgroundColor: lenseColorDark,
+          })}
         >
-          <Text fontSize={iconSize} lineHeight={scaledSize} textAlign="center">
-            {(lense.icon ?? '').trim()}
-          </Text>
-          <YStack
-            rotate="-10deg"
-            zIndex={100}
-            alignItems="center"
-            borderRadius={4}
-            paddingHorizontal={4}
-            marginTop={-10}
-            backgroundColor="transparent"
-            {...(isActive && {
-              backgroundColor: lenseColorDark,
-            })}
+          <Paragraph
+            fontWeight="700"
+            lineHeight={lineHeight}
+            fontSize={isLong ? 12 : 14}
+            color={color}
+            textAlign="center"
+            cursor="pointer"
+            height={16}
+            ellipse
           >
-            <Paragraph
-              fontWeight="700"
-              lineHeight={lineHeight}
-              fontSize={isLong ? 12 : 14}
-              color={color}
-              textAlign="center"
-              cursor="pointer"
-              height={16}
-              ellipse
-            >
-              {name}
-            </Paragraph>
-          </YStack>
+            {name}
+          </Paragraph>
         </YStack>
-      </Link>
-    </Pressable>
+      </YStack>
+    </Link>
   )
 }

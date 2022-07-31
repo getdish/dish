@@ -1,26 +1,3 @@
-import { series, sleep } from '@dish/async'
-import { RestaurantSearchItem, slugify } from '@dish/graph'
-import { HistoryItem } from '@dish/router'
-import {
-  AbsoluteYStack,
-  Button, combineRefs, LoadingItem,
-  Paragraph,
-  Spacer, Text,
-  Theme, useDebounceEffect, useMedia, XStack,
-  YStack, YStackProps
-} from '@dish/ui'
-import { compareStrict, reaction, Store, useStore, useStoreInstanceSelector } from '@dish/use-store'
-import { ArrowUp } from '@tamagui/feather-icons'
-import React, {
-  forwardRef,
-  memo, Suspense, useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef
-} from 'react'
-import { LayoutRectangle, ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
-import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 import { isWeb } from '../../../constants/constants'
 import { tagLenses } from '../../../constants/localTags'
 import { addTagsToCache, allTags } from '../../../helpers/allTags'
@@ -32,6 +9,7 @@ import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { weakKey } from '../../../helpers/weakKey'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
+import { RootPortalItem } from '../../Portal'
 import { appMapStore, useSetAppMap } from '../../appMapStore'
 import { drawerStore } from '../../drawerStore'
 import { homeStore, useHomeStateById } from '../../homeStore'
@@ -39,7 +17,6 @@ import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
-import { RootPortalItem } from '../../Portal'
 import { useIsMobileDevice } from '../../useIsMobileDevice'
 import { ContentScrollView } from '../../views/ContentScrollView'
 import { LenseButtonBar } from '../../views/LenseButtonBar'
@@ -54,7 +31,44 @@ import { SearchPagePropsContext } from './SearchPagePropsContext'
 import { getSearchPageStore, setStore, useSearchPageStore } from './SearchPageStore'
 import { SearchProps } from './SearchProps'
 import { useLocationFromRoute } from './useLocationFromRoute'
-
+import { series, sleep } from '@dish/async'
+import { RestaurantSearchItem, slugify } from '@dish/graph'
+import { HistoryItem } from '@dish/router'
+import {
+  AbsoluteYStack,
+  Button,
+  LoadingItem,
+  Paragraph,
+  Spacer,
+  Text,
+  Theme,
+  XStack,
+  YStack,
+  YStackProps,
+  combineRefs,
+  useDebounceEffect,
+  useMedia,
+} from '@dish/ui'
+import {
+  Store,
+  compareStrict,
+  reaction,
+  useStore,
+  useStoreInstanceSelector,
+} from '@dish/use-store'
+import { ArrowUp } from '@tamagui/feather-icons'
+import React, {
+  Suspense,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react'
+import { LayoutRectangle, ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
+import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 
 export default memo(function SearchPage(props: SearchProps) {
   const state = useHomeStateById<HomeStateItemSearch>(props.item.id)
@@ -106,6 +120,8 @@ export default memo(function SearchPage(props: SearchProps) {
     )
   }, [])
 
+  console.log('123', lenseTag['color'])
+
   return (
     <>
       <PageHead isActive={props.isActive}>{title}</PageHead>
@@ -113,7 +129,9 @@ export default memo(function SearchPage(props: SearchProps) {
         <StackDrawer closable>
           <HomeSuspense fallback={<SearchLoading />}>
             <SearchPageContent
-              key={state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])}
+              key={
+                state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])
+              }
               {...props}
               route={route}
               item={state}
@@ -371,21 +389,11 @@ type SearchPageScrollViewProps = ScrollViewProps & {
   id: string
 }
 
-class SearchPageChildrenStore extends Store<{ id: string }> {
-  @compareStrict
-  children = null
-
-  setChildren(next: any) {
-    this.children = next
-  }
-}
-
 const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   ({ children, onSizeChanged, id, ...props }, ref) => {
     const scrollRef = useRef<ScrollView>()
     const searchPageStore = getSearchPageStore()
     const isMobilePhone = useIsMobileDevice()
-    const searchPageChildrenStore = useStore(SearchPageChildrenStore, { id })
 
     // for now, scrollRef doesnt have scrollTo?
     useEffect(() => {
@@ -453,33 +461,25 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       scrollRef.current?.scrollTo?.({ x: 0, y: 0, animated: true })
     }, [])
 
-    console.warn('DONT USE searchPageChildrenStore USE PORTAL probably big perf cliff')
-    
-    useLayoutEffect(() => {
-      searchPageChildrenStore.setChildren(children)
-    }, [children])
-
-    useEffect(() => {
-      return () => {
-        searchPageChildrenStore.setChildren(null)
-      }
-    }, [])
-
     return (
-      <View ref={layoutRef} style={{ height: '100%', width: '100%', overflow: 'hidden' }} onLayout={(x) => {
-        if (isMobilePhone) {
-          // @ts-ignore
-          return onSizeChanged(getWindow())
-        }
-        console.log('x.nativeEvent.layout', x.nativeEvent.layout)
-        onSizeChanged?.(x.nativeEvent.layout)
-      }}>
+      <View
+        ref={layoutRef}
+        style={{ height: '100%', width: '100%', overflow: 'hidden' }}
+        onLayout={(x) => {
+          if (isMobilePhone) {
+            // @ts-ignore
+            return onSizeChanged(getWindow())
+          }
+          console.log('x.nativeEvent.layout', x.nativeEvent.layout)
+          onSizeChanged?.(x.nativeEvent.layout)
+        }}
+      >
         <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
           <PageContent>
             <SearchHeader />
             <SearchPageNavBar />
             <Spacer size="$7" />
-            <SearchContent id={id} />
+            <SearchContent>{children}</SearchContent>
             <Suspense fallback={null}>
               <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
             </Suspense>
@@ -490,8 +490,7 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
   }
 )
 
-const SearchContent = memo(({ id }: { id: string }) => {
-  const { children } = useStore(SearchPageChildrenStore, { id })
+const SearchContent = memo(({ children }: { children: React.ReactNode }) => {
   return (
     <YStack position="relative">
       <Suspense fallback={null}>{children}</Suspense>

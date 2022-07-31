@@ -396,7 +396,7 @@ const RestaurantListItemContent = memo(
                 </Link>
               )}
 
-              {!hideTagRow && (
+              {/* {!hideTagRow && (
                 <Suspense fallback={null}>
                   <RestaurantTagsList
                     size="$3"
@@ -415,7 +415,7 @@ const RestaurantListItemContent = memo(
                     }}
                   />
                 </Suspense>
-              )}
+              )} */}
             </XStack>
           </XStack>
 
