@@ -1,22 +1,3 @@
-// // debug
-// // for testing quickly
-// import React from 'react'
-// import { Paragraph, ThemeProvider, configureThemes } from '@dish/ui'
-// import themes from './constants/themes'
-// configureThemes(themes)
-// export function Root({ floating, size }) {
-//   return (
-//     <ThemeProvider themes={themes} defaultTheme="light">
-//       <Paragraph color="red" size="$8">
-//         test should be a snap. Know how you have your favorite nights out, places to walk, . Search
-//         delivery apps have sketchy reviews and fake popups to boot.
-//       </Paragraph>
-//     </ThemeProvider>
-//   )
-// }
-// ⚠️ NOTE TURNED OFF PRETTIER BECAUSE IT WAS ADDING `value` before all destructred imports
-// due to the import sort plugin :/ couldn't figure out why even just a single import in the
-// entire file caused it....
 import { DebugHUD } from './DebugHUD'
 import { Radar } from './Radar'
 import { App } from './app/App'

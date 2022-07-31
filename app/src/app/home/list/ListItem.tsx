@@ -1,8 +1,7 @@
-import { graphql, refetch } from '@dish/graph'
-import { memo, useState } from 'react'
-
 import { ListItemContentMinimal } from './ListItemContentMinimal'
 import { ListItemProps } from './ListItemProps'
+import { graphql, refetch } from '@dish/graph'
+import React, { memo, useState } from 'react'
 
 export const ListItem = memo(
   graphql((props: ListItemProps) => {
