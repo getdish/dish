@@ -42,7 +42,7 @@ import {
   useMedia,
 } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
-import { Heart, MessageSquare } from '@tamagui/feather-icons'
+import { Heart, MessageCircle, MessageSquare, Tag } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
@@ -418,6 +418,13 @@ const RestaurantListItemContent = memo(
                 </Suspense>
               )} */}
             </XStack>
+          </XStack>
+
+          <Spacer flex />
+
+          <XStack space fullscreen left="auto" bottom="$7" ai="center" jc="center" m="$4">
+            <Button icon={MessageCircle} size="$6" circular />
+            <Button icon={Tag} size="$6" circular />
           </XStack>
 
           {/* bottom spacing */}
