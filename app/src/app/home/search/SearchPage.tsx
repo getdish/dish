@@ -84,7 +84,7 @@ export default memo(function SearchPage(props: SearchProps) {
   )
 
   const activeSlugs = getActiveTagSlugs(state.activeTags)
-  const lenseSlug = activeSlugs.filter((x) => tagLenses[x])[0]
+  const lenseSlug = activeSlugs.filter((slug) => tagLenses.find((l) => l.slug === slug))[0]
   const lenseTag = lenseSlug ? tagLenses.find((x) => x.slug === lenseSlug)! : tagLenses[0]
 
   useLayoutEffect(() => {
@@ -119,8 +119,6 @@ export default memo(function SearchPage(props: SearchProps) {
       }
     )
   }, [])
-
-  console.log('123', lenseTag['color'])
 
   return (
     <>

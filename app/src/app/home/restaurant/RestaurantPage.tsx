@@ -218,7 +218,7 @@ const RestaurantPage = memo(
                       marginBottom={0}
                       zIndex={200}
                     >
-                      <RestaurantRatingView floating size={66} restaurant={restaurant} />
+                      <RestaurantRatingView floating size={45} restaurant={restaurant} />
                     </YStack>
 
                     <XStack
@@ -240,8 +240,7 @@ const RestaurantPage = memo(
                         paddingTop={50}
                       >
                         <H1
-                          className="font-title"
-                          fontFamily="$title"
+                          fontFamily="$stylish"
                           color="$colorFocus"
                           maxWidth={500}
                           alignSelf="flex-start"

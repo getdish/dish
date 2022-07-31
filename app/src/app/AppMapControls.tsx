@@ -8,7 +8,7 @@ import { OverlayLinkButton } from './views/OverlayLinkButton'
 import { SlantedTitle } from './views/SlantedTitle'
 import { AbsoluteXStack, AbsoluteYStack, Spacer, Theme, YStack, useMedia } from '@dish/ui'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import { Minus, Plus, RefreshCcw, X } from '@tamagui/feather-icons'
+import { Minus, Plus, RefreshCcw, X, ZoomOut } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 import { SafeAreaView, StatusBar, Text } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -73,18 +73,12 @@ export const AppMapControls = memo(() => {
           </YStack>
 
           {showSearchHere && (
-            <OverlayLinkButton icon={RefreshCcw} onPress={pagesStore.refresh}>
-              {media.gtSm ? 'Search' : null}
-            </OverlayLinkButton>
+            <OverlayLinkButton icon={RefreshCcw} onPress={pagesStore.refresh} />
           )}
 
           {/* <ToggleRegionButton /> */}
 
-          {isHoverZoomed && (
-            <OverlayLinkButton icon={X} onPress={appMap.clearHover}>
-              Clear hover
-            </OverlayLinkButton>
-          )}
+          {isHoverZoomed && <OverlayLinkButton icon={ZoomOut} onPress={appMap.clearHover} />}
 
           <Spacer flex />
         </AbsoluteXStack>

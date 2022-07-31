@@ -85,7 +85,9 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any) => {
           {
             ref,
             onClick: onPress,
-            className: `a-link display-contents cursor-pointer ${props.className ?? ''}`,
+            className: `a-link ${
+              props.disableDisplayContents ? '' : 'display-contents'
+            } cursor-pointer ${props.className ?? ''}`,
             target: props.target,
             ...(element === 'a' &&
               href && {

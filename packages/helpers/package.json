@@ -18,10 +18,10 @@
   },
   "dependencies": {
     "@dish/fast-compare": "*",
-    "undici": "^5.8.0",
     "lodash": "*",
     "node-localstorage": "^2.2.1",
-    "react": "*"
+    "react": "*",
+    "undici": "^5.8.0"
   },
   "devDependencies": {
     "@tamagui/build": "^1.0.1-beta.132",

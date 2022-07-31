@@ -228,11 +228,11 @@ const RestaurantListItemContent = memo(
             {/* LINK */}
             <Link
               // flex={2} // messes up native
-              tagName="div"
               name="restaurant"
               params={{ slug: restaurantSlug }}
               zIndex={2}
               noWrapText
+              disableDisplayContents
             >
               <XStack
                 paddingLeft={hideRate ? 10 : 45}
@@ -242,28 +242,16 @@ const RestaurantListItemContent = memo(
               >
                 {/* SECOND LINK WITH actual <a /> */}
 
-                <Link name="restaurant" params={{ slug: restaurantSlug }}>
-                  <XStack
-                    paddingHorizontal={8}
-                    borderRadius={8}
-                    alignItems="center"
-                    marginVertical={-5}
-                    hoverStyle={{
-                      backgroundColor: '$backgroundHover',
-                    }}
-                    pressStyle={{
-                      backgroundColor: '$backgroundPress',
-                    }}
-                    {...(shouldShowOneLine && {
-                      width: 200,
-                      overflow: 'hidden',
-                    })}
-                  >
-                    <H2 fontFamily="$stylish" selectable={false} size="$9" ellipse fow="300">
-                      {restaurantName}
-                    </H2>
-                  </XStack>
-                </Link>
+                <XStack
+                  paddingHorizontal={8}
+                  borderRadius={8}
+                  alignItems="center"
+                  marginVertical={-5}
+                >
+                  <H2 fontFamily="$stylish" selectable={false} size="$9" ellipse fow="300">
+                    {restaurantName}
+                  </H2>
+                </XStack>
               </XStack>
             </Link>
 

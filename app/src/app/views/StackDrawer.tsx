@@ -4,6 +4,7 @@ import { HomeSuspense } from '../home/HomeSuspense'
 import { useIsMobileDevice } from '../useIsMobileDevice'
 import { StackCloseButton } from './StackCloseButton'
 import { series, sleep } from '@dish/async'
+import { isSafari } from '@dish/helpers'
 import {
   AbsoluteYStack,
   LoadingItems,
@@ -86,16 +87,17 @@ export const StackDrawer = ({
         {controls}
         <YStack
           // keep this nested, fix-overflow hides box-shadow otherwise
-          className="safari-fix-overflow"
+          className={'safari-fix-overflow' + (isSafari ? ' blur2x' : '')}
+          // this doesnt work in chrome
           position="relative"
           flexGrow={1}
           flexShrink={1}
           borderRadius={drawerBorderRadius}
           maxWidth={media.sm ? '100%' : drawerWidthMax}
-          backgroundColor="$background"
           overflow="hidden"
           {...props}
         >
+          <YStack fullscreen backgroundColor="$background" o={isSafari ? 0.5 : 1} />
           <HomeSuspense fallback={fallback ?? <LoadingItems />}>
             {isLoaded ? children : null}
           </HomeSuspense>

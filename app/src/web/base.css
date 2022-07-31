@@ -722,10 +722,14 @@ mark {
 }
 .custom-scroll:hover > div::-webkit-scrollbar-thumb{display:flex;}
 
-
 .blur {
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+}
+
+.blur2x {
+  backdrop-filter: blur(100px);
+  -webkit-backdrop-filter: blur(100px);
 }
 
 .inner-shadow {
