@@ -1,27 +1,16 @@
 import { drawerWidthMax } from '../../constants/constants'
 import { media } from '../../constants/media'
-import { getWindowWidth } from '../../helpers/getWindow'
 import { useWindowSize } from '@dish/ui'
 
-export const getAppDrawerWidth = (max = drawerWidthMax): number => {
-  const width = getWindowWidth()
+export const DRAWER_WIDTH_PCT = 0.6
+
+export const useAppDrawerWidth = () => {
+  const width = useWindowSize()[0]
   if (width <= media.sm.maxWidth) {
     return width
   }
-  let scaleFactor = 0
-  if (width < 1150) {
-    scaleFactor = 0.65
-  } else if (width < 1350) {
-    scaleFactor = 0.6
-  } else {
-    scaleFactor = 0.55
-  }
-  let next = Math.floor(Math.min(Math.max(100, width * scaleFactor), Math.min(max, width)))
-  next = Math.min(drawerWidthMax, next)
-  return next
-}
-
-export const useAppDrawerWidth = (max?: number) => {
-  useWindowSize()
-  return getAppDrawerWidth(max)
+  let next = width * DRAWER_WIDTH_PCT
+  next = Math.max(next, media.sm.maxWidth)
+  next = Math.min(next, drawerWidthMax)
+  return Math.floor(next)
 }

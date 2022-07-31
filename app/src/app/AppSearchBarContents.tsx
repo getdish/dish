@@ -1,11 +1,13 @@
 import { searchBarHeight } from '../constants/constants'
 import { AppActionButton } from './AppActionButton'
 import { AppMenuButton } from './AppMenuButton'
+import { appMenuStore } from './AppMenuStore'
 import { AppSearchInput } from './AppSearchInput'
 import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
 import { DishLogoButton } from './views/DishLogoButton'
-import { Spacer, XStack, YStack, useMedia } from '@dish/ui'
+import { Button, Spacer, XStack, YStack, useMedia } from '@dish/ui'
+import { Menu } from '@tamagui/feather-icons'
 import React, { Suspense, memo } from 'react'
 
 export const AppSearchBarContents = memo(() => {
@@ -26,9 +28,11 @@ export const AppSearchBarContents = memo(() => {
     >
       <AppSearchInput />
 
-      <YStack px="$4" maxHeight={searchBarHeight} overflow="hidden">
+      {/* <YStack px="$4" maxHeight={searchBarHeight} overflow="hidden">
         <DishLogoButton />
-      </YStack>
+      </YStack> */}
+
+      <AppMenuButton />
 
       {/* {media.gtSm && (
         <>

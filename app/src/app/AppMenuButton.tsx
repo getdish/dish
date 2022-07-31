@@ -2,6 +2,8 @@ import { AppMenuContents } from './AppMenuContents'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { appMenuStore } from './AppMenuStore'
 import { useUserStore } from './userStore'
+import { DishLogoButton } from './views/DishLogoButton'
+import { LogoCircle } from './views/Logo'
 import { Popover, SizableText, XStack, YStack, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
@@ -17,17 +19,13 @@ export const AppMenuButton = memo(() => {
     <XStack alignItems="center">
       <Popover placement="bottom" open={showUserMenu} onOpenChange={appMenu.setIsVisible}>
         <Popover.Trigger>
-          <AppMenuLinkButton Icon={Menu} onPress={() => appMenu.setIsVisible(!showUserMenu)}>
-            <SizableText
-              size="$2"
-              {...((media.sm || userStore.isLoggedIn) && {
-                w: 0,
-                ov: 'hidden',
-                ml: '$-2',
-              })}
-            >
-              Signup
-            </SizableText>
+          <AppMenuLinkButton
+            size="$5"
+            br="$8"
+            Icon={Menu}
+            onPress={() => appMenu.setIsVisible(!showUserMenu)}
+          >
+            <LogoCircle />
           </AppMenuLinkButton>
         </Popover.Trigger>
         <Popover.Content

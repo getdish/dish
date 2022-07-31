@@ -125,13 +125,9 @@ export default function Map(props: MapProps) {
     let cancel: Function | null = null
     const handleResize = debounce(() => {
       cancel = series([
-        () => sleep(100),
-        () => map.resize(),
-        () => sleep(100),
-        () => map.resize(),
-        () => sleep(400),
-        () => map.resize(),
+        //
         () => sleep(500),
+        () => console.warn('resize'),
         () => map.resize(),
       ])
     }, 50)
@@ -875,6 +871,7 @@ export default function Map(props: MapProps) {
           })
         },
         () => {
+          console.warn('resize')
           map.resize()
           setMap(map)
           if (map) {

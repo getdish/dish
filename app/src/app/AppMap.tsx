@@ -1,4 +1,10 @@
-import { isWeb, pageWidthMax, searchBarHeight, zIndexMap } from '../constants/constants'
+import {
+  isWeb,
+  mapWidths,
+  pageWidthMax,
+  searchBarHeight,
+  zIndexMap,
+} from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
 import { coordsToLngLat, getMinLngLat } from '../helpers/mapHelpers'
@@ -25,6 +31,7 @@ import { resolved } from '@dish/graph'
 // import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import {
   AbsoluteYStack,
+  Circle,
   LinearGradient,
   XStack,
   YStack,
@@ -320,9 +327,27 @@ export const AppMapContents = memo(function AppMapContents() {
       maxHeight="100%"
       alignItems="flex-end"
       justifyContent="flex-end"
-      maxWidth={pageWidthMax}
+      // maxWidth={pageWidthMax}
+      width="100%"
       margin="auto"
+      // new strat: fixed width, offset the edges
+      $gtSm={{
+        width: mapWidths.md,
+      }}
+      $gtMd={{
+        width: mapWidths.lg,
+      }}
+      $gtLg={{
+        width: mapWidths.xl,
+      }}
     >
+      {isWeb && (
+        <YStack zi={100000} pe="none" fullscreen left="23%" ai="center" jc="center">
+          <YStack fullscreen className="fade-right" />
+          <Circle className="inner-shadow" size={1200} bc="transparent" />
+        </YStack>
+      )}
+
       {/* <MapFlexItem /> */}
       <YStack
         pos="relative"
@@ -344,7 +369,6 @@ export const AppMapContents = memo(function AppMapContents() {
           },
         })}
       >
-        {!media.sm && <AppMapRightFade />}
         <Map
           center={center}
           span={span}
@@ -400,36 +424,6 @@ const AppMapTopFade = memo(() => {
       zIndex={100}
       colors={['#000', 'rgba(0,0,0,0)']}
     />
-  )
-})
-
-const AppMapRightFade = memo(() => {
-  const theme = useTheme()
-  const isPhone = useIsMobileDevice()
-
-  if (isPhone) {
-    return null
-  }
-
-  return (
-    <AbsoluteYStack
-      o={0}
-      // $gtLarge={{ o: 1 }}
-      zIndex={300}
-      pointerEvents="none"
-      bottom={0}
-      top={0}
-      right={0}
-      width={100}
-    >
-      <LinearGradient
-        pointerEvents="none"
-        fullscreen
-        start={[0, 0]}
-        end={[1, 0]}
-        colors={[theme.backgroundTransparent.toString(), theme.background.toString()]}
-      />
-    </AbsoluteYStack>
   )
 })
 

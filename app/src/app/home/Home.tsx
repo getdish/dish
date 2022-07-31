@@ -98,15 +98,11 @@ const HomeDrawerSmall = (props: { children: any }) => {
 }
 
 const HomeDrawerLarge = memo((props) => {
-  const drawerWidth = useAppDrawerWidth(Infinity)
-  // const lastWidth = useLastValueWhen(() => drawerWidth, media.sm)
-
   return (
     <XStack
       fullscreen
       margin="auto"
       maxWidth={pageWidthMax}
-      // TODO ui-static this fails if i remove conditional above!
       f={1}
       p="absolute"
       top="$2"
@@ -116,43 +112,41 @@ const HomeDrawerLarge = memo((props) => {
       ai="flex-start"
       zi={zIndexDrawer}
     >
-      <YStack
-        pos="relative"
-        className="blur"
-        br="$6"
-        pointerEvents="auto"
-        f={1}
-        width={drawerWidth}
-        h="100%"
-        zIndex={10}
-        flex={1}
-        shadowColor="rgba(0,0,0,0.135)"
-        shadowRadius={7}
-        shadowOffset={{
-          height: 4,
-          width: 0,
-        }}
-        bw={1}
-        boc="$borderColor"
-        justifyContent="flex-end"
-        maxWidth={drawerWidthMax}
-      >
-        {/* <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" /> */}
+      <YStack h="100%" f={1} w="100%" maxWidth="60%">
+        <YStack
+          pos="relative"
+          className="blur"
+          bc="$backgroundDrawer"
+          br="$6"
+          pointerEvents="auto"
+          maxWidth={drawerWidthMax}
+          f={1}
+          zIndex={10}
+          flex={1}
+          shadowColor="rgba(0,0,0,0.135)"
+          shadowRadius={7}
+          shadowOffset={{
+            height: 4,
+            width: 0,
+          }}
+          bw={1}
+          boc="$borderColor"
+          justifyContent="flex-end"
+        >
+          {/* <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" /> */}
 
-        <AppSearchBarInline />
+          <AppSearchBarInline />
 
-        {props.children}
+          {props.children}
 
-        <DrawerPortalProvider />
+          <DrawerPortalProvider />
+        </YStack>
       </YStack>
 
-      <YStack $sm={{ dsp: 'none' }} ov="hidden" pos="relative" f={1} h="100%">
-        <XStack maw="100%" height={80} x="$4" top={0} right={0} zi={100000} pos="absolute">
-          <AppFloatingTagMenuBar />
-        </XStack>
-        <XStack zi="$2" pos="absolute" height={90} left={0} right={0} bottom={0}>
+      <YStack ov="hidden" pos="relative" f={1} h="100%" px="$4">
+        <YStack pos="relative" f={1}>
           <AppMapControls />
-        </XStack>
+        </YStack>
       </YStack>
     </XStack>
   )

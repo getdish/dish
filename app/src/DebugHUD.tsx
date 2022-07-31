@@ -1,9 +1,11 @@
 import { isHermes } from './constants/platforms'
-import { Paragraph } from '@dish/ui'
+import { Paragraph, isWeb } from '@dish/ui'
 import React from 'react'
 import { SafeAreaView } from 'react-native'
 
 export const DebugHUD = () => {
+  if (isWeb) return null
+
   return (
     <SafeAreaView>
       <Paragraph

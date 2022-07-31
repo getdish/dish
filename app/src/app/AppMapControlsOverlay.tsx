@@ -17,6 +17,8 @@ export const AppMapControlsOverlay = memo(() => {
     bottom = getWindowHeight() - getWindowHeight() * drawerStore.snapPoints[2]
   }
 
+  return null
+
   return (
     <AbsoluteYStack
       zIndex={zIndexMapControls}
@@ -62,21 +64,21 @@ export const AppMapControlsOverlay = memo(() => {
               <AppMapPIP />
             </Suspense> */}
 
-            {!media.sm && (
+            {/* {!media.sm && (
               <>
                 <Suspense fallback={null}>
                   <AppMapRestaurantPeek />
                 </Suspense>
               </>
-            )}
+            )} */}
 
-            <ReviewImagesRow
+            {/* <ReviewImagesRow
               floating
               showGenericImages
               isEditing
               imgWidth={66}
               imgHeight={66}
-            />
+            /> */}
           </XStack>
 
           <YStack flex={1} />

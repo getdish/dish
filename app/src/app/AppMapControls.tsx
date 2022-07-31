@@ -24,13 +24,7 @@ export const AppMapControls = memo(() => {
   )
 
   return (
-    <AbsoluteYStack
-      zi={zIndexDrawer - 1}
-      ml="auto"
-      fullscreen
-      pe="none"
-      $gtSm={{ zi: zIndexDrawer + 1 }}
-    >
+    <AbsoluteYStack zi={zIndexDrawer - 1} ml="auto" fullscreen pe="none">
       <AbsoluteYStack
         fullscreen
         left={5}
@@ -50,12 +44,7 @@ export const AppMapControls = memo(() => {
           left={0}
           alignItems="center"
           justifyContent="center"
-          flexWrap="wrap"
           pointerEvents="none"
-          {...(media.gtSm && {
-            top: 'auto',
-            bottom: 20,
-          })}
         >
           {/* {isWeb && <ToggleRegionButton />} */}
 
@@ -97,7 +86,7 @@ export const AppMapControls = memo(() => {
             </OverlayLinkButton>
           )}
 
-          <YStack flex={media.sm ? 1 : 0} />
+          <Spacer flex />
         </AbsoluteXStack>
       </AbsoluteYStack>
     </AbsoluteYStack>

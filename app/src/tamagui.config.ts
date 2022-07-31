@@ -46,6 +46,17 @@ const garamondFont = createFont({
 
 const tamaConf = createTamagui({
   ...config,
+  themes: {
+    ...config.themes,
+    dark: {
+      ...config.themes.dark,
+      backgroundDrawer: 'rgba(0,0,0,0.2)',
+    },
+    light: {
+      ...config.themes.light,
+      backgroundDrawer: 'rgba(255,255,255,0.2)',
+    },
+  },
   fonts: {
     ...config.fonts,
     stylish: garamondFont,

@@ -191,7 +191,10 @@ export const HomePageFeed = memo(
                     p="$4"
                     ai="center"
                     hoverStyle={{
-                      backgroundColor: '$backgroundHover',
+                      backgroundColor: '$backgroundTransparent',
+                    }}
+                    pressStyle={{
+                      backgroundColor: '$backgroundSoft',
                     }}
                   >
                     <Paragraph cursor="default" fontFamily="$stylish">

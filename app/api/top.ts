@@ -14,8 +14,10 @@ export default jsonRoute(async (req, res) => {
       lat,
     })
 
-    console.log('response', response)
-    res.json(response[0].data_agg)
+    const data = response[0].data_agg
+    console.log('top_cuisines', data)
+
+    res.json(data ?? [])
   } catch (err) {
     console.log('err', err)
     res.json({ error: err.message })
