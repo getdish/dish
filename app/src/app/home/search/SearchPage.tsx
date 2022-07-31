@@ -111,9 +111,6 @@ export default memo(function SearchPage(props: SearchProps) {
       <PageHead isActive={props.isActive}>{title}</PageHead>
       <Theme name={lenseTag['color']}>
         <StackDrawer closable>
-          <HomeSuspense>
-            <SearchNavBarContainer isActive={props.isActive} />
-          </HomeSuspense>
           <HomeSuspense fallback={<SearchLoading />}>
             <SearchPageContent
               key={state.id + JSON.stringify([state.activeTags, state.searchQuery, state.region])}
@@ -247,35 +244,6 @@ const SearchPageContent = memo(function SearchPageContent(
   )
 })
 
-const SearchNavBarContainer = memo(({ isActive }: { isActive: boolean }) => {
-  const media = useMedia()
-  const isDrawerAtBottom = useStoreInstanceSelector(
-    drawerStore,
-    (x) => x.snapIndexName === 'bottom'
-  )
-  let contents = isActive ? <SearchPageNavBar /> : null
-
-  if (!media.sm) {
-    return <XStack>{contents}</XStack>
-  }
-
-  if (!isWeb) {
-    contents = (
-      <AbsoluteYStack pointerEvents="none" bottom={0} height={150} width="100%">
-        {contents}
-      </AbsoluteYStack>
-    )
-  }
-
-  return (
-    <RootPortalItem key={`${isActive}${isDrawerAtBottom}`}>
-      <AbsoluteYStack className="ease-in-out-slower" fullscreen y={isDrawerAtBottom ? 50 : 0}>
-        {contents}
-      </AbsoluteYStack>
-    </RootPortalItem>
-  )
-})
-
 // prevent warning
 delete RecyclerListView.propTypes['externalScrollView']
 
@@ -398,16 +366,6 @@ const SearchEmptyResults = () => {
   )
 }
 
-const sheet = StyleSheet.create({
-  listStyle: {
-    width: '100%',
-    minWidth: 300,
-    minHeight: 100,
-    height: '100%',
-    maxHeight: '100%',
-  },
-})
-
 type SearchPageScrollViewProps = ScrollViewProps & {
   onSizeChanged: (props?: LayoutRectangle) => void
   id: string
@@ -495,6 +453,8 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
       scrollRef.current?.scrollTo?.({ x: 0, y: 0, animated: true })
     }, [])
 
+    console.warn('DONT USE searchPageChildrenStore USE PORTAL probably big perf cliff')
+    
     useLayoutEffect(() => {
       searchPageChildrenStore.setChildren(children)
     }, [children])
@@ -511,11 +471,14 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           // @ts-ignore
           return onSizeChanged(getWindow())
         }
+        console.log('x.nativeEvent.layout', x.nativeEvent.layout)
         onSizeChanged?.(x.nativeEvent.layout)
       }}>
         <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
           <PageContent>
             <SearchHeader />
+            <SearchPageNavBar />
+            <Spacer size="$7" />
             <SearchContent id={id} />
             <Suspense fallback={null}>
               <SearchFooter id={id} scrollToTop={scrollToTopHandler} />

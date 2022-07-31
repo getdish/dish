@@ -239,7 +239,5 @@ const HomePageWelcomeBubble = memo(() => {
 
 const HomeTopSpacer = () => {
   const media = useMedia()
-  return (
-    <YStack pointerEvents="none" marginTop={5} height={media.sm ? 0 : searchBarHeight + 10} />
-  )
+  return <YStack pointerEvents="none" height={media.sm ? 0 : searchBarHeight + 5} />
 }

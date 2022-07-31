@@ -17,8 +17,8 @@ export const TagButtonVote = graphql(
     // const tagSlug = getTagSlug(props.slug)
     const theme = useTheme()
     const iconProps = {
-      size: 14,
-      color: 'rgba(150,150,150,0.25)',
+      size: 10,
+      color: 'rgba(150,150,150,0.1)',
     }
     const contents = (
       <YStack
@@ -45,7 +45,12 @@ export const TagButtonVote = graphql(
             justifyContent="center"
             pointerEvents="none"
           >
-            <Text color={theme.color} letterSpacing={-1} fontSize={20 * scale} fontWeight="400">
+            <Text
+              color={theme.color}
+              letterSpacing={-1}
+              fontSize={20 * scale}
+              fontWeight="400"
+            >
               {`${vote}`}
             </Text>
           </YStack>

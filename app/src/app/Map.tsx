@@ -163,7 +163,7 @@ export default function Map(props: MapProps) {
     const isDark = themeName === 'dark'
 
     const map = new mapboxgl.Map({
-      projection: 'globe',
+      projection: 'globe' as any,
       container: mapNode.current,
       style: props.style,
       center: props.center,

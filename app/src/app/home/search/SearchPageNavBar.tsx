@@ -50,22 +50,7 @@ export const SearchPageNavBar = memo(() => {
       </Theme>
     )
   } else {
-    content = (
-      <YStack
-        position="absolute"
-        bottom={0}
-        left={0}
-        right={0}
-        maxWidth={drawerWidthMax}
-        backgroundColor="$backgroundHover"
-        shadowColor="$shadowColorHover"
-        shadowRadius={6}
-        shadowOffset={{ height: 3, width: 0 }}
-        zIndex={10000}
-      >
-        <SearchPageNavBarContent />
-      </YStack>
-    )
+    content = <SearchPageNavBarContent />
   }
 
   return <Suspense fallback={null}>{content}</Suspense>

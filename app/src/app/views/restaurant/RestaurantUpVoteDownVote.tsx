@@ -55,11 +55,13 @@ const RestaurantUpVoteDownVoteContents = graphql(
 
     ratio = ratio ?? restaurantRatio(restaurant)
     score =
-      display === 'ratio' ? Math.round(ratio * 100) : score ?? Math.round(restaurant.score) + vote
+      display === 'ratio'
+        ? Math.round(ratio * 100)
+        : score ?? Math.round(restaurant.score) + vote
 
     return (
       <YStack pointerEvents="auto" position="relative">
-        <YStack
+        {/* <YStack
           position="absolute"
           bottom={-15}
           right={-30}
@@ -71,7 +73,7 @@ const RestaurantUpVoteDownVoteContents = graphql(
           shadowRadius={3}
         >
           <RestaurantRatingView restaurant={restaurant} floating size={36} />
-        </YStack>
+        </YStack> */}
         <RatingWithVotes
           score={score || 0}
           ratio={ratio}
@@ -123,7 +125,6 @@ const RatingWithVotes = memo(
         {...props}
         size={20 * scale}
         Icon={isMultiple ? ChevronsUp : ChevronUp}
-        shadowDirection="up"
         voted={vote == 1}
         color={vote === 1 ? 'green' : voteButtonColor}
         onPress={(e) => {

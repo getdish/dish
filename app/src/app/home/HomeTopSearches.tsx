@@ -2,9 +2,8 @@ import { tagLenses } from '../../constants/localTags'
 import { NavigableTag } from '../../types/tagTypes'
 import { useHomeStoreSelector } from '../homeStore'
 import { Link } from '../views/Link'
-import { GradientButton } from './GradientButton'
 import { TagsText } from './TagsText'
-import { Button, Grid, Theme, ThemeInverse, XStack, YStack } from '@dish/ui'
+import { Button, Theme, ThemeInverse, XStack, YStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const HomeTopSearches = memo(() => {
@@ -16,7 +15,7 @@ export const HomeTopSearches = memo(() => {
       // for easier touchability
       paddingVertical={10}
       marginVertical={-10}
-      space="$3"
+      space="$1"
       marginHorizontal="auto"
       maxWidth="100%"
       ov="hidden"
@@ -28,15 +27,14 @@ export const HomeTopSearches = memo(() => {
       {recentSearches.map((search, index) => {
         // const rgb = search.tags.find((x) => x.type === 'lense')?.rgb ?? tagLenses[0].rgb
         const inner = (
-          <YStack
-            p="$2"
-            br="$2"
+          <Button
+            chromeless
             {...(index === 0 && {
               bc: '$background',
             })}
           >
             <TagsText tags={search.tags} />
-          </YStack>
+          </Button>
         )
 
         const contents = (
@@ -110,6 +108,21 @@ const recentSearches: { tags: NavigableTag[] }[] = [
         slug: 'lenses__veg',
       },
     ],
+  },
+  {
+    tags: [{ name: 'Pho', icon: '🍜', type: 'dish', slug: 'vietnamese__pho' }],
+  },
+  {
+    tags: [tagLenses[1]],
+  },
+  {
+    tags: [{ name: 'Sushi', icon: '🍣', type: 'dish', slug: 'japanese__sushi' }],
+  },
+  {
+    tags: [{ name: 'Steak', icon: '🥩', type: 'dish', slug: 'american__steak' }],
+  },
+  {
+    tags: [{ name: 'Thai', icon: '🇹🇭', type: 'country', slug: 'asia__thai' }],
   },
   {
     tags: [{ name: 'Pho', icon: '🍜', type: 'dish', slug: 'vietnamese__pho' }],

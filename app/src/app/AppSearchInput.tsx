@@ -50,7 +50,7 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
   const textInput$ = useRef<TextInput | null>(null)
   const setSearch = useDebounce(autocompleteSearchStore.setQuery, 100)
 
-  const height = searchBarHeight - 6
+  const height = searchBarHeight
   const outerHeight = height - 1
   const innerHeight = height - 1
 
@@ -109,7 +109,7 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
   }
 
   return (
-    <InputFrame>
+    <>
       <YStack
         // @ts-ignore
         ref={searchInputContainer}
@@ -141,6 +141,8 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
             >
               {isTouchDevice && <SearchInputNativeDragFix name="search" />}
               <SearchInput
+                maxWidth={500}
+                height={searchBarHeight}
                 floating={floating}
                 ref={(view) => {
                   textInput$.current = view
@@ -158,7 +160,7 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
                   // }
                 }}
                 onKeyPress={handleKeyPressInner}
-                placeholderTextColor={theme.color.toString()}
+                placeholderTextColor="red"
                 onFocus={(e) => {
                   inputStore.setIsFocused(true)
                   if (isDesktop) {
@@ -188,7 +190,7 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
                     ? 'Add restaurant to list...'
                     : isSearchingCuisine
                     ? '...'
-                    : `Search...`
+                    : `Kailua`
                 }
               />
             </XStack>
@@ -201,7 +203,7 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
       <SearchCancelButton />
 
       <Spacer size={8} />
-    </InputFrame>
+    </>
   )
 })
 

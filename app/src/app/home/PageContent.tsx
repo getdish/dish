@@ -13,7 +13,11 @@ export const PageContent = ({
   hideFooter?: boolean
 }) => {
   return (
-    <YStack minHeight={Math.min(250, getWindowHeight() * 1 - searchBarHeight)} {...props}>
+    <YStack
+      width="100%"
+      minHeight={Math.min(250, getWindowHeight() * 1 - searchBarHeight)}
+      {...props}
+    >
       <Suspense
         fallback={
           <>
@@ -25,7 +29,6 @@ export const PageContent = ({
         {children}
       </Suspense>
       <YStack height={40} />
-
       {!isTouchDevice && !hideFooter && <PageFooter />}
     </YStack>
   )

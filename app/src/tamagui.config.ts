@@ -17,7 +17,7 @@ function fontSizing<A extends Record<string, number>>(
 }
 
 const garamondFont = createFont({
-  family: isWeb ? `"Garamond"` : 'Inter',
+  family: isWeb ? `"Cardinal"` : 'Inter',
   ...fontSizing({
     1: 11,
     2: 12,
@@ -27,7 +27,7 @@ const garamondFont = createFont({
     6: 20,
     7: 27,
     8: 33,
-    9: 40,
+    9: 44,
     10: 56,
     11: 75,
     12: 92,
@@ -39,7 +39,9 @@ const garamondFont = createFont({
   letterSpacing: {
     1: 0,
   },
-  weight: {},
+  weight: {
+    1: '800',
+  },
 })
 
 const tamaConf = createTamagui({

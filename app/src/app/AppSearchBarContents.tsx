@@ -14,23 +14,23 @@ export const AppSearchBarContents = memo(() => {
 
   return (
     <XStack
-      width="100%"
       flex={1}
       pointerEvents="auto"
       alignItems="center"
       justifyContent="center"
       paddingHorizontal="$2"
       minHeight={searchBarHeight}
+      ov="hidden"
+      maxHeight={searchBarHeight}
+      zi={100000}
     >
-      <YStack px="$2" maxHeight={searchBarHeight} overflow="hidden">
+      <AppSearchInput />
+
+      <YStack px="$4" maxHeight={searchBarHeight} overflow="hidden">
         <DishLogoButton />
       </YStack>
 
-      <YStack f={10} className="ease-in-out" position="relative" alignItems="center">
-        <AppSearchInput />
-      </YStack>
-
-      {media.gtSm && (
+      {/* {media.gtSm && (
         <>
           <Spacer />
 
@@ -48,7 +48,7 @@ export const AppSearchBarContents = memo(() => {
             <AppMenuButton />
           </Suspense>
         </>
-      )}
+      )} */}
     </XStack>
   )
 })

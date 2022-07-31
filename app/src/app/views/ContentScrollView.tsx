@@ -349,6 +349,7 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
     height: '100%',
+    width: '100%',
     maxHeight: '100%',
   },
 })

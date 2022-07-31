@@ -42,7 +42,7 @@ import {
   useMedia,
 } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
-import { MessageSquare } from '@tamagui/feather-icons'
+import { Heart, MessageSquare } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
@@ -78,18 +78,20 @@ export const RestaurantListItem = (props: RestaurantListItemProps) => {
   const handleScroll = isLoaded ? undefined : handleScrollMemo
   const [width, setWidth] = useState(getWindowWidth())
 
-  return (
-    <ContentScrollViewHorizontalFitted
-      width={width}
-      setWidth={setWidth}
-      onScroll={handleScroll}
-      scrollEventThrottle={100}
-    >
-      <Suspense fallback={<LoadingItem size="lg" />}>
-        <RestaurantListItemContent isLoaded={isLoaded} {...props} />
-      </Suspense>
-    </ContentScrollViewHorizontalFitted>
-  )
+  return <RestaurantListItemContent isLoaded={isLoaded} {...props} />
+
+  // return (
+  //   <ContentScrollViewHorizontalFitted
+  //     width={width}
+  //     setWidth={setWidth}
+  //     onScroll={handleScroll}
+  //     scrollEventThrottle={100}
+  //   >
+  //     <Suspense fallback={<LoadingItem size="lg" />}>
+  //       <RestaurantListItemContent isLoaded={isLoaded} {...props} />
+  //     </Suspense>
+  //   </ContentScrollViewHorizontalFitted>
+  // )
 }
 
 const excludeTags: QueryRestaurantTagsProps['exclude'] = ['dish']
@@ -120,7 +122,7 @@ const RestaurantListItemContent = memo(
       onChangeDescription,
       editableDescription,
     } = props
-    const media = useMedia()
+    // const media = useMedia()
     const [restaurant] = queryRestaurant(restaurantSlug)
     const [state, setState] = useState({
       editing: false,
@@ -131,11 +133,7 @@ const RestaurantListItemContent = memo(
       getSearchPageStore(),
       (x) => x.index === rank - 1
     )
-    const [isExpanded, setIsExpanded] = useState(false)
-    const toggleSetExpanded = useCallback(() => {
-      setIsExpanded((x) => !x)
-    }, [])
-    const totalReviews = useTotalReviews(restaurant)
+    // const totalReviews = useTotalReviews(restaurant)
 
     useEffect(() => {
       setState((prev) => ({
@@ -149,35 +147,8 @@ const RestaurantListItemContent = memo(
     }
 
     const restaurantName = (restaurant.name ?? '').slice(0, 300)
-    const contentSideProps: YStackProps = {
-      width: media.sm ? '70%' : '60%',
-      minWidth: media.sm ? (isWeb ? '55vw' : Dimensions.get('window').width * 0.65) : 320,
-      maxWidth: Math.min(
-        Dimensions.get('window').width * 0.5,
-        // flexibleHeight here should really be allowMoreWidth or something
-        media.sm ? 360 : flexibleHeight ? 560 : 480
-      ),
-    }
     const open = openingHours(restaurant)
     const [price_label, price_color, price_range] = priceRange(restaurant)
-    const nameLen = restaurantName.length
-    const titleFontScale =
-      nameLen > 50
-        ? 0.8
-        : nameLen > 40
-        ? 0.85
-        : nameLen > 30
-        ? 0.95
-        : nameLen > 25
-        ? 0.975
-        : nameLen > 15
-        ? 1
-        : 1
-    const titleFontSize =
-      Math.round((media.sm ? 20 : 24) * titleFontScale) * (shouldShowOneLine ? 0.8 : 1)
-    const titleHeight = titleFontSize + 8 * 2
-    const score = Math.round((meta?.effective_score ?? 0) / 20)
-    const imgSize = shouldShowOneLine ? 44 : 58
 
     return (
       <HoverToZoom id={props.restaurantId} slug={props.restaurantSlug}>
@@ -189,15 +160,12 @@ const RestaurantListItemContent = memo(
           // turn this off breaks something? but hides the rest of title hover?
           // overflow="hidden"
           // prevent jitter/layout moving until loaded
-          display={restaurant.name === null ? 'none' : 'flex'}
+          // display={restaurant.name === null ? 'none' : 'flex'}
           position="relative"
           {...(!flexibleHeight && {
             height: ITEM_HEIGHT,
             minHeight: ITEM_HEIGHT,
             maxHeight: ITEM_HEIGHT,
-          })}
-          {...(isExpanded && {
-            transform: [{ translateX: 300 }],
           })}
           {...(shouldShowOneLine && {
             flexDirection: 'row',
@@ -208,28 +176,6 @@ const RestaurantListItemContent = memo(
             },
           })}
         >
-          {/* expanded content */}
-          {meta && isExpanded && (
-            <AbsoluteYStack
-              backgroundColor="$backgroundStrong"
-              width={300 - 40}
-              x={-320}
-              height="100%"
-              padding={20}
-              overflow="hidden"
-            >
-              <SlantedTitle alignSelf="center">Breakdown</SlantedTitle>
-              <Spacer />
-              <Suspense fallback={<LoadingItemsSmall />}>
-                <RestaurantListItemScoreBreakdown
-                  activeTagSlugs={props.activeTagSlugs}
-                  restaurant={restaurant}
-                  meta={meta}
-                />
-              </Suspense>
-            </AbsoluteYStack>
-          )}
-
           {/* border left */}
           <AbsoluteYStack
             top={0}
@@ -243,10 +189,19 @@ const RestaurantListItemContent = memo(
           />
 
           {/* vote button and score */}
-          <AbsoluteYStack top={34} left={-5} zIndex={200000000}>
+          <AbsoluteYStack
+            fullscreen
+            right="auto"
+            ai="center"
+            jc="center"
+            pl="$4"
+            zIndex={200000000}
+          >
             {above}
 
-            {!hideRate && (
+            {/* just swipe to like on mobile, or tiny heart on desktop */}
+            <Heart opacity={0.35} size={12} />
+            {/* {!hideRate && (
               <RestaurantUpVoteDownVote
                 rounded
                 score={score}
@@ -254,14 +209,14 @@ const RestaurantListItemContent = memo(
                 activeTags={activeTagSlugs}
                 onClickPoints={toggleSetExpanded}
               />
-            )}
+            )} */}
           </AbsoluteYStack>
 
           {/* ROW: TITLE */}
 
           <YStack
             hoverStyle={{ backgroundColor: '$backgroundPress' }}
-            width={950}
+            width="100%"
             {...(shouldShowOneLine && {
               width: 'auto',
               hoverStyle: {
@@ -280,34 +235,11 @@ const RestaurantListItemContent = memo(
               noWrapText
             >
               <XStack
-                paddingLeft={hideRate ? 10 : 64}
+                paddingLeft={hideRate ? 10 : 45}
                 paddingTop={shouldShowOneLine ? 10 : 15}
                 position="relative"
                 alignItems="center"
               >
-                <YStack
-                  backgroundColor="$backgroundHover"
-                  borderRadius={1000}
-                  width={imgSize}
-                  height={imgSize}
-                  marginLeft={shouldShowOneLine ? 0 : hideRate ? -20 : -40}
-                  marginVertical={-18}
-                  marginRight={2}
-                  overflow="hidden"
-                >
-                  <Image
-                    source={{ uri: getImageUrl(restaurant.image ?? '', imgSize, imgSize) }}
-                    style={{
-                      width: imgSize,
-                      height: imgSize,
-                    }}
-                  />
-                </YStack>
-
-                <YStack opacity={0.25} marginRight={-10} y={3} marginLeft={-5}>
-                  <RankView rank={rank} />
-                </YStack>
-
                 {/* SECOND LINK WITH actual <a /> */}
 
                 <Link name="restaurant" params={{ slug: restaurantSlug }}>
@@ -327,7 +259,7 @@ const RestaurantListItemContent = memo(
                       overflow: 'hidden',
                     })}
                   >
-                    <H2 selectable={false} size="$9" ellipse fow="300">
+                    <H2 fontFamily="$stylish" selectable={false} size="$9" ellipse fow="300">
                       {restaurantName}
                     </H2>
                   </XStack>
@@ -345,7 +277,7 @@ const RestaurantListItemContent = memo(
             height={50}
             marginTop={-5}
             paddingBottom={20}
-            marginLeft={65}
+            marginLeft={50}
             alignItems="center"
             space="$6"
           >
@@ -398,11 +330,10 @@ const RestaurantListItemContent = memo(
 
               <XStack marginLeft={-5} alignItems="center">
                 <Paragraph
+                  o={0.5}
                   width={42}
                   textAlign="center"
-                  fontSize={14}
                   fontWeight="500"
-                  color="$colorPress"
                   selectable={false}
                 >
                   {price_range ?? '-'}
@@ -429,12 +360,12 @@ const RestaurantListItemContent = memo(
                 </SmallButton>
               )}
 
-              <Suspense fallback={null}>
+              {/* <Suspense fallback={null}>
                 <RestaurantDeliveryButtons
                   showLabels={!shouldShowOneLine}
                   restaurantSlug={restaurantSlug}
                 />
-              </Suspense>
+              </Suspense> */}
 
               {/* <RestaurantOverallAndTagReviews
                 borderless
@@ -468,6 +399,7 @@ const RestaurantListItemContent = memo(
               {!hideTagRow && (
                 <Suspense fallback={null}>
                   <RestaurantTagsList
+                    size="$3"
                     exclude={excludeTags}
                     excludeOverall
                     restaurant={restaurant}

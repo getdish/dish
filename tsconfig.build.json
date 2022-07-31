@@ -6,9 +6,6 @@
     "skipLibCheck": true
   },
   "references": [
-    { "path": "app" },
-    { "path": "packages/worker" },
-    { "path": "services/crawlers" },
-    { "path": "services/worker" }
+    { "path": "app" }
   ]
 }

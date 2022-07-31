@@ -124,9 +124,15 @@ export const HomePageFeed = memo(
             
           </ScrollView> */}
 
-          {/* <HomeTopSearches /> */}
+          <ContentScrollViewHorizontal>
+            <XStack px="$4">
+              <HomeTopSearches />
+            </XStack>
+          </ContentScrollViewHorizontal>
 
-          <HomeRegionTitle />
+          <Spacer />
+
+          {/* <HomeRegionTitle /> */}
 
           <YStack>
             {[
@@ -174,22 +180,29 @@ export const HomePageFeed = memo(
               },
             ].map(({ name }, index) => {
               return (
-                <XStack
+                <Link
                   key={name + index}
-                  p="$4"
-                  ai="center"
-                  hoverStyle={{
-                    backgroundColor: '$backgroundHover',
+                  name="restaurant"
+                  params={{
+                    slug: 'mau',
                   }}
                 >
-                  <Paragraph cursor="default" fontFamily="$stylish">
-                    {index + 1}
-                  </Paragraph>
-                  <Spacer size="$2" />
-                  <H2 size="$7" ellipse cursor="default" fontFamily="$stylish">
-                    {name}
-                  </H2>
-                </XStack>
+                  <XStack
+                    p="$4"
+                    ai="center"
+                    hoverStyle={{
+                      backgroundColor: '$backgroundHover',
+                    }}
+                  >
+                    <Paragraph cursor="default" fontFamily="$stylish">
+                      {index + 1}
+                    </Paragraph>
+                    <Spacer size="$2" />
+                    <H2 size="$9" ellipse cursor="default" fontFamily="$stylish">
+                      {name}
+                    </H2>
+                  </XStack>
+                </Link>
               )
             })}
           </YStack>

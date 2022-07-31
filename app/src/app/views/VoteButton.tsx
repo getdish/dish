@@ -64,9 +64,8 @@ export const VoteButton = forwardRef(
             left={10}
             right={10}
             borderRadius={1000}
-            shadowColor="#000"
-            shadowOpacity={0.15}
-            shadowRadius={4}
+            boc="$borderColor"
+            bw={1}
             y={translateDir * -10}
           />
         </AbsoluteYStack>

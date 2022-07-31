@@ -37,7 +37,7 @@ export function createWebServerDev(
   const historyFb = connectHistoryApiFallback()
   app.use(historyFb)
 
-  const assetsDir = join(rootDir, 'src', 'assets')
+  const assetsDir = join(rootDir, 'assets')
   console.log('assetsDir', assetsDir)
   app.use('/assets', express.static(assetsDir))
 

@@ -1,9 +1,7 @@
-import { join } from 'path'
-
-import { Command, flags } from '@oclif/command'
-
 import { createServer } from '../lib/createServer'
 import { ServerConfig } from '../types'
+import { Command, flags } from '@oclif/command'
+import { join } from 'path'
 
 if (!process.env.NODE_ENV) {
   console.warn('No node env set, setting to development')
@@ -70,7 +68,7 @@ export class Start extends Command {
       clean: flags.clean,
       env: flags.prod ? 'production' : 'development',
       watch: flags.ssr ? false : true,
-      apiDir: flags['no-api'] ? null : join(rootDir, 'src', 'api'),
+      apiDir: flags['no-api'] ? null : join(rootDir, 'api'),
       noOptimize: flags['no-optimize'] ?? false,
       https: flags.https,
       serial: flags.serial,

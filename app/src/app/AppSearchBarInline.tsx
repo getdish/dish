@@ -5,11 +5,11 @@ import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { Suspense } from 'react'
 
 export const AppSearchBarInline = () => {
-  const drawerStoreAtTop = useStoreInstanceSelector(drawerStore, (x) => x.snapIndex === 0)
-  const isZoomed = drawerStoreAtTop
+  // const drawerStoreAtTop = useStoreInstanceSelector(drawerStore, (x) => x.snapIndex === 0)
+  // const isZoomed = drawerStoreAtTop
 
   return (
-    <XStack px="$2" maw="100%" ov="hidden" f={1} mt="$2" pos="relative">
+    <>
       {/* <XStack
         fullscreen
         r="$2"
@@ -27,6 +27,6 @@ export const AppSearchBarInline = () => {
       <Suspense fallback={null}>
         <AppSearchBarContents />
       </Suspense>
-    </XStack>
+    </>
   )
 }

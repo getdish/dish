@@ -236,11 +236,6 @@ const TagButtonInner = (props: TagButtonProps) => {
         <>
           {ratingStyle === 'pie' && (
             <YStack marginVertical={-2} mx={smallerFontSize} position="relative">
-              {/* {rating === 0 ? null : rating * 10 < 18 ? (
-                <Text fontSize={16}>😕</Text>
-              ) : rating * 10 > 90 ? (
-                <Text fontSize={16}>💎</Text>
-              ) : ( */}
               <YStack
                 position="relative"
                 backgroundColor="$backgroundFocus"
@@ -278,18 +273,10 @@ const TagButtonInner = (props: TagButtonProps) => {
           // @ts-ignore
           size={size}
           fontWeight={fontWeight || '400'}
-          paddingLeft={3}
-          color={color || theme.color}
+          // color={color || theme.color}
           pointerEvents="none"
-          {...(floating && {
-            color: '#fff',
-            textShadowColor: '$shadowColorHover',
-            textShadowOffset: { height: 3, width: 0 },
-            textShadowRadius: 3,
-          })}
-          hoverStyle={{
-            opacity: 1,
-          }}
+          selectable={false}
+          o={0.6}
         >
           {tagDisplayName(name)}
         </Paragraph>

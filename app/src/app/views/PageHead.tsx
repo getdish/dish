@@ -25,7 +25,7 @@ export const PageHead = (props: { children: any; isActive: boolean; color?: any 
       <title>{props.children}</title>
       <meta name="theme-color" content={themeColor} />
       <link href="/assets/fonts/inter.css" rel="stylesheet" />
-      <link href="/assets/fonts/garamond.css" rel="stylesheet" />
+      <link href="/assets/fonts/cardinal.css" rel="stylesheet" />
     </Helmet>
   )
 }

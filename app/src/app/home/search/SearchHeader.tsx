@@ -27,22 +27,11 @@ export const SearchHeader = memo(() => {
 
   return (
     <>
-      <XStack pt="$3" position="relative" zIndex={100}>
-        <YStack
-          theme={lenseColor}
-          py="$4"
-          px="$6"
-          $sm={{ px: 25 }}
-          position="relative"
-          zIndex={100}
-          x={-10}
-        >
-          <H1 size="$5">{title.trim()}</H1>
-          {!!subTitle && <H3>in {subTitle.trim()}</H3>}
-          <YStack $sm={{ display: 'none' }}>
-            <Spacer size="$2" />
-            <SearchPageScoring />
-          </YStack>
+      <XStack position="relative" zIndex={100}>
+        <YStack theme={lenseColor} py="$4" zIndex={100} ai="center" w="100%">
+          <H1 o={0.5} size="$5">
+            {title.trim()} in {subTitle.trim()}
+          </H1>
         </YStack>
         <XStack marginLeft={-10} marginBottom={8} position="relative">
           {/* <YStack position="relative" alignItems="center" justifyContent="center" x={-10}>

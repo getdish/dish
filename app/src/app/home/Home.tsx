@@ -18,6 +18,8 @@ import React, { Suspense, memo, useEffect } from 'react'
 import { Keyboard } from 'react-native'
 
 export const Home = memo(function Home() {
+  const media = useMedia()
+
   // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {
     useEffect(() => {
@@ -41,28 +43,23 @@ export const Home = memo(function Home() {
     )
   }, [])
 
+  const contents = (
+    <YStack f={1}>
+      <HomeStackView>
+        {(props) => {
+          return <HomeStackViewPages {...props} />
+        }}
+      </HomeStackView>
+    </YStack>
+  )
+
   return (
     <Suspense fallback={null}>
-      <HomeDrawer>
-        <HomeStackView>
-          {(props) => {
-            return <HomeStackViewPages {...props} />
-          }}
-        </HomeStackView>
-      </HomeDrawer>
+      {media.sm && <HomeDrawerSmall>{contents}</HomeDrawerSmall>}
+      {!media.sm && <HomeDrawerLarge>{contents}</HomeDrawerLarge>}
     </Suspense>
   )
 })
-
-export function HomeDrawer(props: { children: any }) {
-  const media = useMedia()
-  return (
-    <>
-      {media.sm && <HomeDrawerSmall>{props.children}</HomeDrawerSmall>}
-      {!media.sm && <HomeDrawerLarge>{props.children}</HomeDrawerLarge>}
-    </>
-  )
-}
 
 const HomeDrawerSmall = (props: { children: any }) => {
   const isTouchDevice = useIsTouchDevice()
@@ -112,82 +109,51 @@ const HomeDrawerLarge = memo((props) => {
       // TODO ui-static this fails if i remove conditional above!
       f={1}
       p="absolute"
-      top={0}
+      top="$2"
+      left="$2"
+      bottom="$2"
       pe="none"
       ai="flex-start"
       zi={zIndexDrawer}
     >
-      <YStack p="$3" pos="relative" h="100%">
-        <YStack
-          pos="relative"
-          className="blur"
-          br="$6"
-          pointerEvents="auto"
-          f={1}
-          width={drawerWidth}
-          zIndex={10}
-          flex={1}
-          shadowColor="rgba(0,0,0,0.135)"
-          shadowRadius={7}
-          shadowOffset={{
-            height: 4,
-            width: 0,
-          }}
-          bw={1}
-          boc="$borderColor"
-          justifyContent="flex-end"
-          maxWidth={drawerWidthMax}
-        >
-          <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" />
+      <YStack
+        pos="relative"
+        className="blur"
+        br="$6"
+        pointerEvents="auto"
+        f={1}
+        width={drawerWidth}
+        h="100%"
+        zIndex={10}
+        flex={1}
+        shadowColor="rgba(0,0,0,0.135)"
+        shadowRadius={7}
+        shadowOffset={{
+          height: 4,
+          width: 0,
+        }}
+        bw={1}
+        boc="$borderColor"
+        justifyContent="flex-end"
+        maxWidth={drawerWidthMax}
+      >
+        {/* <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" /> */}
 
-          <XStack
-            pe="none"
-            btrr="$6"
-            btlr="$6"
-            overflow="hidden"
-            zi={10000000}
-            pos="absolute"
-            top={0}
-            left={0}
-            right={0}
-            ai="flex-start"
-          >
-            <AppSearchBarInline />
-          </XStack>
+        <AppSearchBarInline />
 
-          {props.children}
+        {props.children}
 
-          <DrawerPortalProvider />
-        </YStack>
+        <DrawerPortalProvider />
       </YStack>
 
       <YStack $sm={{ dsp: 'none' }} ov="hidden" pos="relative" f={1} h="100%">
         <XStack maw="100%" height={80} x="$4" top={0} right={0} zi={100000} pos="absolute">
           <AppFloatingTagMenuBar />
         </XStack>
-        <XStack zi="$2" pos="absolute" height={90} right={0} bottom={0}>
+        <XStack zi="$2" pos="absolute" height={90} left={0} right={0} bottom={0}>
           <AppMapControls />
         </XStack>
       </YStack>
     </XStack>
   )
 })
-
-const AppSearchBarFade = () => {
-  const theme = useTheme()
-
-  return (
-    <LinearGradient
-      // TODO need to dedupe react-native when linked in or else absolutefill breaks
-      fullscreen
-      zi={-1}
-      start={[0, 0]}
-      end={[0, 1]}
-      colors={[
-        theme.backgroundHover.toString(),
-        theme.backgroundHover.toString(),
-        'transparent',
-      ]}
-    />
-  )
-}
