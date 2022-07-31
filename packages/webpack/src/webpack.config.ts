@@ -107,6 +107,40 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
     const cacheDir = join(rootNodeModules, '.cache', 'webpack')
     ensureDirSync(cacheDir)
 
+    function defaultBabelInclude(inputPath: string) {
+      if (inputPath.startsWith(cwd)) {
+        return true
+      }
+      if (inputPath.includes('react-native-awesome-gallery')) {
+        return true
+      }
+      if (inputPath.includes('react-native-gallery-toolkit')) {
+        return true
+      }
+      if (inputPath.includes('react-native-web/dist/exports/View')) {
+        return true
+      }
+      if (inputPath.includes('@dish/')) {
+        return true
+      }
+      if (inputPath.includes('tamagui')) {
+        return true
+      }
+      if (inputPath.includes('react-native-animatable')) {
+        return true
+      }
+      if (inputPath.includes('match-media')) {
+        return true
+      }
+      if (inputPath.includes('react-native-reanimated')) {
+        return true
+      }
+      if (excludedRootPaths.some((excluded) => inputPath.includes(path.normalize(excluded)))) {
+        return false
+      }
+      return true
+    }
+
     let config: Webpack.Configuration = {
       infrastructureLogging: {
         debug: process.env.DEBUG_CACHE ? /webpack\.cache/ : false,
@@ -485,37 +519,6 @@ const excludedRootPaths = [
   // Prevent transpiling webpack generated files.
   '(webpack)',
 ]
-
-function defaultBabelInclude(inputPath: string) {
-  if (inputPath.includes('react-native-awesome-gallery')) {
-    return true
-  }
-  if (inputPath.includes('react-native-gallery-toolkit')) {
-    return true
-  }
-  if (inputPath.includes('react-native-web/dist/exports/View')) {
-    return true
-  }
-  if (inputPath.includes('@dish/')) {
-    return true
-  }
-  if (inputPath.includes('tamagui')) {
-    return true
-  }
-  if (inputPath.includes('react-native-animatable')) {
-    return true
-  }
-  if (inputPath.includes('match-media')) {
-    return true
-  }
-  if (inputPath.includes('react-native-reanimated')) {
-    return true
-  }
-  if (excludedRootPaths.some((excluded) => inputPath.includes(path.normalize(excluded)))) {
-    return false
-  }
-  return true
-}
 
 const simpleHash = (str: string) => {
   let hash = 0
