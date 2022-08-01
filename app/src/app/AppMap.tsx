@@ -106,7 +106,7 @@ export default memo(function AppMap() {
           },
         ]}
       > */}
-        <AppMapSpotlight />
+        {/* <AppMapSpotlight /> */}
         <AppMapContents />
         {/* </Animated.View> */}
       </YStack>
