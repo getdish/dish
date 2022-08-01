@@ -3,8 +3,9 @@ import { Root } from './Root'
 import './web/base.css'
 import { startLogging } from '@dish/graph'
 import '@tamagui/core/reset.css'
-import React from 'react'
+import React, { StrictMode } from 'react'
 import { render } from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { AppRegistry } from 'react-native'
 
 if (process.env.NODE_ENV === 'development') {
@@ -30,7 +31,11 @@ async function main() {
   //   return
   // }
   // createRoot(ROOT).render(<Root />)
-  render(<Root />, ROOT)
+  createRoot(ROOT).render(
+    <StrictMode>
+      <Root />
+    </StrictMode>
+  )
 }
 
 // SSR exports
