@@ -1,3 +1,5 @@
+import { CreateApp, EZApp } from './_graphez'
+import { isRedisConnected, redisClient } from './_redis'
 import { CACHE_KEY_PREFIX, route, useRouteBodyParser } from '@dish/api'
 import { sleep } from '@dish/async'
 import { DISH_DEBUG, GRAPH_API_INTERNAL, fetchLog } from '@dish/graph'
@@ -8,9 +10,6 @@ import { useValidationCache } from '@envelop/validation-cache'
 import { introspectSchema, wrapSchema } from '@graphql-tools/wrap'
 import { Request } from 'express'
 import { print } from 'graphql'
-
-import { CreateApp, EZApp } from './_graphez'
-import { isRedisConnected, redisClient } from './_redis'
 
 const avoidCache = !process.env.NODE_ENV || process.env.NODE_ENV === 'test'
 const hasuraHeaders = {
@@ -67,6 +66,7 @@ async function start() {
       plugins: [
         useValidationCache(),
         useResponseCache({
+          session: () => null,
           ttl: oneDay * 7,
           ttlPerType: {
             // user: 0,
