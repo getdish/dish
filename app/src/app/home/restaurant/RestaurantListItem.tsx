@@ -212,7 +212,7 @@ const RestaurantListItemContent = memo(
             {above}
 
             {/* just swipe to like on mobile, or tiny heart on desktop */}
-            <Heart opacity={0.35} size={12} />
+            <Heart opacity={0.3} size={12} />
             {/* {!hideRate && (
               <RestaurantUpVoteDownVote
                 rounded
@@ -247,7 +247,7 @@ const RestaurantListItemContent = memo(
               disableDisplayContents
             >
               <XStack
-                paddingLeft={hideRate ? 10 : 45}
+                paddingLeft={hideRate ? 10 : 40}
                 py="$6"
                 pb="$2"
                 position="relative"
@@ -278,7 +278,7 @@ const RestaurantListItemContent = memo(
             height={50}
             marginTop={-5}
             paddingBottom={20}
-            marginLeft={50}
+            marginLeft={30}
             alignItems="center"
             space="$6"
           >
@@ -424,7 +424,7 @@ const RestaurantListItemContent = memo(
 
           <XStack space fullscreen left="auto" bottom="$7" ai="center" jc="center" m="$4">
             <Button icon={MessageCircle} size="$6" circular />
-            <Button icon={Tag} size="$6" circular />
+            {/* <Button icon={Tag} size="$6" circular /> */}
           </XStack>
 
           {/* bottom spacing */}

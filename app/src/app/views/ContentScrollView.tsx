@@ -260,7 +260,7 @@ export const ContentScrollView = forwardRef<ScrollView, ContentScrollViewProps>(
           })}
           // DONT USE THIS ON WEB IT CAUSES REFLOWS see classname above
           // oh well we have to deal with reapints, just try and time them
-          scrollEnabled={getScrollActive()}
+          // scrollEnabled={getScrollActive()}
           pointerEvents={getScrollActive() ? 'auto' : 'none'}
           style={[styles.scroll, style]}
         >

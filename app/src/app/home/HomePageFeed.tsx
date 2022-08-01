@@ -1,5 +1,6 @@
 import { tagLenses } from '../../constants/localTags'
 import { getRestaurantIdentifiers } from '../../helpers/getRestaurantIdentifiers'
+import { queryRestaurant } from '../../queries/queryRestaurant'
 import { UseSetAppMapProps, appMapStore, useSetAppMap } from '../appMapStore'
 import { useHomeStore } from '../homeStore'
 import { setLocation } from '../setLocation'
@@ -12,6 +13,7 @@ import { FeedCard } from './FeedCard'
 import { HomeRegionTitle } from './HomeRegionTitle'
 import { HomeTopSearches } from './HomeTopSearches'
 import { homePageStore } from './homePageStore'
+import { RestaurantListItem } from './restaurant/RestaurantListItem'
 import { useTopCuisines } from './useTopCuisines'
 import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
@@ -23,16 +25,20 @@ import {
   H2,
   Paragraph,
   Spacer,
+  Square,
   XStack,
   YStack,
+  isWeb,
   useDebounce,
   useDebounceEffect,
 } from '@dish/ui'
 import { Plus } from '@tamagui/feather-icons'
 import getCenter from '@turf/center'
 import { capitalize } from 'lodash'
-import React, { memo, useState } from 'react'
-import { ScrollView } from 'react-native'
+import React, { memo, useCallback, useState } from 'react'
+import { Pressable, ScrollView } from 'react-native'
+import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
+import SwipeableItem from 'react-native-swipeable-item'
 
 const getListPlaces = async (listSlug: string) => {
   return await resolved(() =>
@@ -50,6 +56,30 @@ const getListPlaces = async (listSlug: string) => {
   )
 }
 
+const items = [
+  {
+    name: `Helena's Hawaiian BBQ`,
+  },
+  {
+    name: `Sasabune`,
+  },
+  {
+    name: `Taqueria Gallardo Rosa`,
+  },
+  {
+    name: `Senia`,
+  },
+  {
+    name: `Adela's Country Eatery`,
+  },
+  {
+    name: `The Pig and the Lady`,
+  },
+  {
+    name: `Pho 77`,
+  },
+]
+
 export const HomePageFeed = memo(
   graphql(
     ({ region, center, ...useSetAppMapProps }: UseSetAppMapProps & { region: string }) => {
@@ -59,6 +89,14 @@ export const HomePageFeed = memo(
       const homeStore = useHomeStore()
       const topCuisines = useTopCuisines(homeStore.currentState.center)
       console.log('topCuisines', topCuisines)
+      const restaurants = query.restaurant({
+        limit: 10,
+        order_by: [
+          {
+            created_at: order_by.asc,
+          },
+        ],
+      })
       const setHoverCancel = () => {
         setHoveredDbc.cancel()
       }
@@ -124,61 +162,20 @@ export const HomePageFeed = memo(
             
           </ScrollView> */}
 
-          <ContentScrollViewHorizontal>
-            <XStack px="$4">
-              <HomeTopSearches />
-            </XStack>
-          </ContentScrollViewHorizontal>
+          <XStack $sm={{ display: 'none' }}>
+            <ContentScrollViewHorizontal>
+              <XStack px="$4">
+                <HomeTopSearches />
+              </XStack>
+            </ContentScrollViewHorizontal>
+          </XStack>
 
           <Spacer />
 
           {/* <HomeRegionTitle /> */}
 
-          <YStack>
-            {[
-              {
-                name: `Helena's Hawaiian BBQ`,
-              },
-              {
-                name: `Sasabune`,
-              },
-              {
-                name: `Taqueria Gallardo Rosa`,
-              },
-              {
-                name: `Senia`,
-              },
-              {
-                name: `Adela's Country Eatery`,
-              },
-              {
-                name: `The Pig and the Lady`,
-              },
-              {
-                name: `Pho 77`,
-              },
-              {
-                name: `Helena's Hawaiian BBQ`,
-              },
-              {
-                name: `Sasabune`,
-              },
-              {
-                name: `Taqueria Gallardo Rosa`,
-              },
-              {
-                name: `Senia`,
-              },
-              {
-                name: `Adela's Country Eatery`,
-              },
-              {
-                name: `The Pig and the Lady`,
-              },
-              {
-                name: `Pho 77`,
-              },
-            ].map(({ name }, index) => {
+          {/* <YStack>
+            {.map(({ name }, index) => {
               return (
                 <Link
                   key={name + index}
@@ -208,7 +205,68 @@ export const HomePageFeed = memo(
                 </Link>
               )
             })}
-          </YStack>
+          </YStack> */}
+
+          <DraggableFlatList
+            keyExtractor={(item, index) => `draggable-item-${item?.name}`}
+            data={restaurants}
+            renderItem={useCallback(
+              ({ item, drag, isActive }: RenderItemParams<any>, index) => {
+                const content = (
+                  <SwipeableItem
+                    key={item.id}
+                    item={item}
+                    snapPointsRight={[100]}
+                    overSwipe={20}
+                    renderUnderlayRight={() => <Square size={50} bc="red" />}
+                  >
+                    <RestaurantListItem
+                      // list={list
+                      curLocInfo={null}
+                      rank={0}
+                      restaurant={item}
+                    />
+                  </SwipeableItem>
+                )
+                return (
+                  <Pressable
+                    style={
+                      isActive
+                        ? {
+                            shadowColor: '#000',
+                            shadowRadius: 10,
+                            shadowOffset: { height: 4, width: 0 },
+                            shadowOpacity: 0.2,
+                          }
+                        : null
+                    }
+                    // style={{
+                    //   // height: 100,
+                    //   // backgroundColor: isActive ? 'red' : undefined,
+                    // }}
+                    delayLongPress={200}
+                    onLongPress={drag}
+                  >
+                    {content}
+                  </Pressable>
+                )
+              },
+              [restaurants.length]
+            )}
+            onDragBegin={() => {
+              if (isWeb) {
+                window.getSelection?.()?.empty?.()
+                window.getSelection?.()?.removeAllRanges?.()
+                document.body.classList.add('unselectable-all')
+              }
+            }}
+            onDragEnd={(items) => {
+              // listItems.sort(items)
+              if (isWeb) {
+                document.body.classList.remove('unselectable-all')
+              }
+            }}
+          />
 
           {/* <HomeTagLenses /> */}
           {/* <HomeNearbyRegions lng={center?.lng} lat={center?.lat} /> */}

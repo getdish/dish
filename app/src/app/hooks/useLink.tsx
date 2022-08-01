@@ -146,6 +146,7 @@ const getNormalizeLinkProps = (
   delete next['tag']
   delete next['tags']
   delete next['asyncClick']
+  delete next['promptLogin']
   return next
 }
 

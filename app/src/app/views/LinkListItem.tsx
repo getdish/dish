@@ -27,6 +27,7 @@ export const LinkListItem = forwardRef(function LinkListItemContent<
     textProps,
     opacity,
     theme,
+    promptLogin,
     ...restProps
   } = props
   const getElement = () =>

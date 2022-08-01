@@ -32,9 +32,9 @@ async function main() {
   // }
   // createRoot(ROOT).render(<Root />)
   createRoot(ROOT).render(
-    <StrictMode>
+    <>
       <Root />
-    </StrictMode>
+    </>
   )
 }
 
