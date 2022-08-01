@@ -18,6 +18,9 @@ target 'dish' do
   use_expo_modules!
   flags = get_default_flags()
 
+  puts flags
+  puts podfile_properties
+
   use_react_native!(
     :path => config[:reactNativePath],
     :production => production,

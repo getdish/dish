@@ -1,3 +1,6 @@
+- blocking ios:install with RCT_NEW_ARCH_ENABLED=1
+  - react-native-blur 4.1.0
+
 - non-urgent but martin tileserver unmaintained, this one has same api
   - https://github.com/CrunchyData/pg_tileserv
   

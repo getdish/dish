@@ -10,6 +10,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		24469F2CF31331A315312B05 /* libPods-dish.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95A6AF90E22D88885B9D24A9 /* libPods-dish.a */; };
 		2D5A5EE767273F91CF5C95EE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0FA4667F25CF9EECBFC91A /* ExpoModulesProvider.swift */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		AEFA3F7F2827C9AD00179791 /* Mapbox in Frameworks */ = {isa = PBXBuildFile; productRef = C7EEA285D7FB2FCA9FE5F3BD /* Mapbox */; };
@@ -31,6 +32,7 @@
 		6C2E3173556A471DD304B334 /* Pods-dish.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dish.debug.xcconfig"; path = "Target Support Files/Pods-dish/Pods-dish.debug.xcconfig"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-dish.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-dish.release.xcconfig"; path = "Target Support Files/Pods-dish/Pods-dish.release.xcconfig"; sourceTree = "<group>"; };
 		8B0FA4667F25CF9EECBFC91A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-dish/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		95A6AF90E22D88885B9D24A9 /* libPods-dish.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-dish.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = dish/SplashScreen.storyboard; sourceTree = "<group>"; };
 		AEFA3F802827CB3F00179791 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = dish/AppDelegate.mm; sourceTree = "<group>"; };
 		AEFA3F812827CB3F00179791 /* app.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = app.entitlements; path = dish/app.entitlements; sourceTree = "<group>"; };
@@ -44,6 +46,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AEFA3F7F2827C9AD00179791 /* Mapbox in Frameworks */,
+				24469F2CF31331A315312B05 /* libPods-dish.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				95A6AF90E22D88885B9D24A9 /* libPods-dish.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
