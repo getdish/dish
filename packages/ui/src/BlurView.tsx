@@ -4,7 +4,6 @@ import React from 'react'
 
 export type BlurViewProps = StackProps & {
   blurAmount?: number // 0 - 100
-  blurRadius?: number
   fallbackBackgroundColor?: string
   blurType?:
     | 'xlight'
@@ -38,8 +37,8 @@ export function BlurView({
   children,
   borderRadius,
   fallbackBackgroundColor,
-  blurRadius = 20,
   blurType,
+  blurAmount = 20,
   downsampleFactor,
   ...props
 }: BlurViewProps) {
@@ -53,7 +52,7 @@ export function BlurView({
           position: 'absolute',
           width: '100%',
           height: '100%',
-          backdropFilter: `blur(${blurRadius}px)`,
+          backdropFilter: `blur(${blurAmount}px)`,
           // @ts-ignore
           borderRadius,
           zIndex: -1,

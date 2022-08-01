@@ -5,7 +5,7 @@ import { AppSearchInput } from './AppSearchInput'
 import { UserMenuButton } from './UserMenuButton'
 import { useUserStore } from './userStore'
 import { DishLogoButton } from './views/DishLogoButton'
-import { BlurView, Spacer, XStack, YStack, useMedia, useTheme } from '@dish/ui'
+import { BlurView, Spacer, XStack, YStack, isWeb, useMedia, useTheme } from '@dish/ui'
 import React, { Suspense, memo } from 'react'
 import Squircle from 'react-native-squircle-skia'
 
@@ -32,6 +32,9 @@ export const AppSearchBarFloating = memo(() => {
           height: 58,
           borderRadius: 22,
           transform: [{ translateY: 11 }],
+          position: 'absolute',
+          top: 0,
+          left: 0,
         }}
       />
       <XStack
@@ -43,19 +46,23 @@ export const AppSearchBarFloating = memo(() => {
         alignItems="center"
         justifyContent="center"
       >
-        <Squircle
-          smoothing={6}
-          style={[
-            {
-              position: 'absolute',
-              width: '100%',
-              height: 58,
-              opacity: 0.33,
-              backgroundColor: theme.background.toString(),
-              borderRadius: 25,
-            },
-          ]}
-        />
+        {isWeb ? (
+          <YStack height={58} opacity={0.33} bc="$background" br={25} w="100%" />
+        ) : (
+          <Squircle
+            smoothing={6}
+            style={[
+              {
+                position: 'absolute',
+                width: '100%',
+                height: 58,
+                opacity: 0.33,
+                backgroundColor: theme.background.toString(),
+                borderRadius: 25,
+              },
+            ]}
+          />
+        )}
         <YStack px="$2" maxHeight={searchBarHeight} overflow="hidden">
           <DishLogoButton />
         </YStack>

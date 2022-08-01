@@ -302,10 +302,6 @@ div,
   overflow-y: hidden;
 }
 
-.inner-shadow {
-  box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, 0.02);
-}
-
 .inner-glow {
   box-shadow: inset 0 0 10px 0 rgba(255, 255, 255, 0.75);
 }
@@ -354,7 +350,7 @@ li {
   display: none;
 }
 
-.searchbar-inner-shadow {
+.searchbar-map-spotlight {
   box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.1);
 }
 
@@ -732,11 +728,12 @@ mark {
   -webkit-backdrop-filter: blur(100px);
 }
 
-.inner-shadow {
+.map-spotlight {
+  box-shadow: inset 0 0 100px 100px var(--backgroundStrong), 0 0 0 1000px var(--backgroundStrong);
+}
+
+.map-spotlight-large {
   transform: scaleX(1.15);
-  box-shadow:
-    inset 0 0 100px 100px var(--backgroundStrong),
-    0 0 0 1000px var(--backgroundStrong);
 }
 
 .fade-right {

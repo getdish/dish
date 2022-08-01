@@ -342,9 +342,17 @@ export const AppMapContents = memo(function AppMapContents() {
       }}
     >
       {isWeb && (
-        <YStack zi={100000} pe="none" fullscreen left="23%" ai="center" jc="center">
+        <YStack
+          $sm={{ dsp: 'none' }}
+          zi={100000}
+          pe="none"
+          fullscreen
+          left="23%"
+          ai="center"
+          jc="center"
+        >
           <YStack fullscreen className="fade-right" />
-          <Circle className="inner-shadow" size={1200} bc="transparent" />
+          <Circle className="map-spotlight map-spotlight-large" size={1200} bc="transparent" />
         </YStack>
       )}
 
