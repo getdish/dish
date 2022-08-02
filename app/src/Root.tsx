@@ -17,6 +17,7 @@ import { ProvideRouter } from '@dish/router'
 import { Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import { Inter_400Regular, Inter_800ExtraBold } from '@expo-google-fonts/inter'
+import { DrawerProvider } from '@tamagui/drawer'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
@@ -119,22 +120,24 @@ export function Root() {
     'dark'
 
   return (
-    <SafeAreaProvider>
-      <Tamagui.Provider defaultTheme={defaultTheme}>
-        <ProvideRouter routes={routes}>
-          <Suspense fallback={null}>
-            {isLoaded ? (
-              <>
-                <App />
-                {process.env.NODE_ENV === 'development' && <DebugHUD />}
-                {isWeb && <div id="before-bottom-sheet-temp" />}
-              </>
-            ) : null}
-          </Suspense>
-        </ProvideRouter>
-        {showRadar && <Radar />}
-      </Tamagui.Provider>
-    </SafeAreaProvider>
+    <DrawerProvider>
+      <SafeAreaProvider>
+        <Tamagui.Provider defaultTheme={defaultTheme}>
+          <ProvideRouter routes={routes}>
+            <Suspense fallback={null}>
+              {isLoaded ? (
+                <>
+                  <App />
+                  {process.env.NODE_ENV === 'development' && <DebugHUD />}
+                  {isWeb && <div id="before-bottom-sheet-temp" />}
+                </>
+              ) : null}
+            </Suspense>
+          </ProvideRouter>
+          {showRadar && <Radar />}
+        </Tamagui.Provider>
+      </SafeAreaProvider>
+    </DrawerProvider>
   )
 }
 

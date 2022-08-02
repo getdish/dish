@@ -45,16 +45,16 @@
 		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
-			<key>New Exception Domain</key>
+			<key>d1live.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>dish.localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
 				<key>NSIncludesSubdomains</key>
-				<true/>
-			</dict>
-			<key>d1live.com</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
 				<true/>
 			</dict>
 			<key>dishapp.com</key>
@@ -72,6 +72,21 @@
 	<string>Allow $(PRODUCT_NAME) to access your microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to access your photos</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Inter-Bold.otf</string>
+		<string>Inter-BoldItalic.otf</string>
+		<string>Inter-Light.otf</string>
+		<string>Inter-LightItalic.otf</string>
+		<string>Inter-Thin.otf</string>
+		<string>Magnat.otf</string>
+		<string>Magnat.woff</string>
+		<string>WhyteHeavy.otf</string>
+		<string>WhyteHeavy.woff</string>
+		<string>WhyteHeavy.woff2</string>
+		<string>Inter-Black.otf</string>
+		<string>Inter-BlackItalic.otf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -93,20 +108,5 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Inter-Bold.otf</string>
-		<string>Inter-BoldItalic.otf</string>
-		<string>Inter-Light.otf</string>
-		<string>Inter-LightItalic.otf</string>
-		<string>Inter-Thin.otf</string>
-		<string>Magnat.otf</string>
-		<string>Magnat.woff</string>
-		<string>WhyteHeavy.otf</string>
-		<string>WhyteHeavy.woff</string>
-		<string>WhyteHeavy.woff2</string>
-		<string>Inter-Black.otf</string>
-		<string>Inter-BlackItalic.otf</string>
-	</array>
 </dict>
 </plist>

@@ -716,7 +716,18 @@ mark {
   background-color: rgba(150,150,150,0.15);
   display:none;
 }
-.custom-scroll:hover > div::-webkit-scrollbar-thumb{display:flex;}
+.custom-scroll:hover > div::-webkit-scrollbar-thumb{
+  display:flex;
+}
+/* 
+@media (pointer: coarse) {
+  .custom-scroll > div::-webkit-scrollbar{
+    width: 1px;
+  }
+  .custom-scroll > div::-webkit-scrollbar-thumb {
+    display: none;
+  }
+} */
 
 .blur {
   backdrop-filter: blur(5px);

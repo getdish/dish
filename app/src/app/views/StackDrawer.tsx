@@ -50,15 +50,6 @@ export const StackDrawer = ({
     </>
   )
 
-  if (isPhone) {
-    return (
-      <>
-        {controls}
-        <HomeSuspense fallback={fallback ?? <LoadingItems />}>{children}</HomeSuspense>
-      </>
-    )
-  }
-
   useEffect(() => {
     return series([
       // dont show right away to get animation
@@ -66,6 +57,15 @@ export const StackDrawer = ({
       () => setIsLoaded(true),
     ])
   }, [])
+
+  // if (isPhone) {
+  //   return (
+  //     <>
+  //       {controls}
+  //       <HomeSuspense fallback={fallback ?? <LoadingItems />}>{children}</HomeSuspense>
+  //     </>
+  //   )
+  // }
 
   return (
     <>

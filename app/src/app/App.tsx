@@ -65,39 +65,37 @@ function AppHomeContent(props: { children?: any }) {
   return (
     <>
       {/* background */}
-      <AbsoluteYStack fullscreen zIndex={0} backgroundColor="$backgroundStrong" />
+      {/* <AbsoluteYStack fullscreen zIndex={0} backgroundColor="$backgroundStrong" /> */}
 
-      <RootPortalProvider />
+      {/* <RootPortalProvider /> */}
 
       <Suspense fallback={null}>
         {/* THIS IS THE DRAWER AND ITS CONTENTS */}
         <Home />
       </Suspense>
 
-      {!isSSR && (
+      {/* {!isSSR && (
         <ErrorBoundary name="main-map">
           <Suspense fallback={null}>
-            {/*  */}
             <AppMap />
           </Suspense>
         </ErrorBoundary>
-      )}
+      )} */}
 
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}>
         <AppIntroLetter />
-      </Suspense>
+      </Suspense> */}
 
-      <Suspense fallback={null}>
-        {/*  */}
+      {/* <Suspense fallback={null}>
         <AppMapControlsOverlay />
-      </Suspense>
+      </Suspense> */}
 
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}>
         <AppMenuButtonFloating />
-      </Suspense>
+      </Suspense> */}
 
       {/* Modals outside the above YStack to stay above */}
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}>
         <UserEditPage />
       </Suspense>
       <Suspense fallback={null}>
@@ -110,7 +108,7 @@ function AppHomeContent(props: { children?: any }) {
         <Route name="restaurantHours">
           <RestaurantHoursPage />
         </Route>
-      </Suspense>
+      </Suspense> */}
 
       {props.children}
     </>
