@@ -63,48 +63,17 @@ export type RestaurantListItemProps = {
   editableDishes?: boolean
   onChangeDishes?: (slugs: string[]) => void
   hideTagRow?: boolean
-  flexibleHeight?: boolean
-  above?: any
-  beforeBottomRow?: any
   dishSize?: 'md' | 'lg'
   shouldShowOneLine?: boolean
 }
-
-export const RestaurantListItem = (props: RestaurantListItemProps) => {
-  const [isLoaded, setIsLoaded] = useState(false)
-  const handleScrollMemo = useCallback(() => {
-    setIsLoaded(true)
-  }, [])
-  const handleScroll = isLoaded ? undefined : handleScrollMemo
-  const [width, setWidth] = useState(getWindowWidth())
-
-  return <RestaurantListItemContent isLoaded={isLoaded} {...props} />
-
-  // return (
-  //   <ContentScrollViewHorizontalFitted
-  //     width={width}
-  //     setWidth={setWidth}
-  //     onScroll={handleScroll}
-  //     scrollEventThrottle={100}
-  //   >
-  //     <Suspense fallback={<LoadingItem size="lg" />}>
-  //       <RestaurantListItemContent isLoaded={isLoaded} {...props} />
-  //     </Suspense>
-  //   </ContentScrollViewHorizontalFitted>
-  // )
-}
-
-const excludeTags: QueryRestaurantTagsProps['exclude'] = ['dish']
 
 function error<Item>(msg: string) {
   throw new Error(msg)
   return null as any as Item
 }
 
-const RestaurantListItemContent = memo(
-  graphql(function RestaurantListItemContent(
-    props: RestaurantListItemProps & { isLoaded: boolean }
-  ) {
+export const RestaurantListItem = memo(
+  graphql(function RestaurantListItemContent(props: RestaurantListItemProps) {
     const {
       rank,
       restaurant: restaurantProp,
@@ -113,15 +82,11 @@ const RestaurantListItemContent = memo(
       curLocInfo,
       activeTagSlugs,
       shouldShowOneLine,
-      isLoaded,
       hideRate,
       meta,
       hideTagRow,
-      beforeBottomRow,
       description = null,
       dishSlugs,
-      flexibleHeight,
-      above,
       editableDishes,
       onChangeDishes,
       onChangeDescription,
@@ -140,11 +105,11 @@ const RestaurantListItemContent = memo(
       editing: false,
       description: null as null | string,
     })
-    const handleChangeDishes = useCallback(onChangeDishes as any, [])
-    const isActive = useStoreInstanceSelector(
-      getSearchPageStore(),
-      (x) => x.index === rank - 1
-    )
+    // const handleChangeDishes = useCallback(onChangeDishes as any, [])
+    // const isActive = useStoreInstanceSelector(
+    //   getSearchPageStore(),
+    //   (x) => x.index === rank - 1
+    // )
     // const totalReviews = useTotalReviews(restaurant)
 
     useEffect(() => {
@@ -164,29 +129,14 @@ const RestaurantListItemContent = memo(
 
     return (
       <HoverToZoom slug={restaurantSlug}>
-        <YStack
-          className="hover-faded-in-parent"
-          alignItems="flex-start"
-          justifyContent="flex-start"
+        <XStack
           flexGrow={1}
-          // turn this off breaks something? but hides the rest of title hover?
-          // overflow="hidden"
-          // prevent jitter/layout moving until loaded
-          // display={restaurant.name === null ? 'none' : 'flex'}
           position="relative"
-          {...(!flexibleHeight && {
-            height: ITEM_HEIGHT,
-            minHeight: ITEM_HEIGHT,
-            maxHeight: ITEM_HEIGHT,
-          })}
-          {...(shouldShowOneLine && {
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingVertical: 5,
-            hoverStyle: {
-              backgroundColor: '$backgroundPress',
-            },
-          })}
+          pb="$3"
+          debug="verbose"
+          hoverStyle={{
+            backgroundColor: 'rgba(100,100,100,0.1)',
+          }}
         >
           {/* border left */}
           {/* <AbsoluteYStack
@@ -201,16 +151,7 @@ const RestaurantListItemContent = memo(
           /> */}
 
           {/* vote button and score */}
-          <AbsoluteYStack
-            fullscreen
-            right="auto"
-            ai="center"
-            jc="center"
-            pl="$4"
-            zIndex={200000000}
-          >
-            {above}
-
+          <YStack t={0} b={0} ai="center" jc="center" px="$2">
             {/* just swipe to like on mobile, or tiny heart on desktop */}
             <Heart opacity={0.3} size={12} />
             {/* {!hideRate && (
@@ -222,21 +163,11 @@ const RestaurantListItemContent = memo(
                 onClickPoints={toggleSetExpanded}
               />
             )} */}
-          </AbsoluteYStack>
+          </YStack>
 
           {/* ROW: TITLE */}
 
-          <YStack
-            hoverStyle={{ backgroundColor: '$backgroundPress' }}
-            width="100%"
-            {...(shouldShowOneLine && {
-              width: 'auto',
-              hoverStyle: {
-                backgroundColor: 'transparent',
-              },
-            })}
-            position="relative"
-          >
+          <YStack width="100%" position="relative">
             {/* LINK */}
             <Link
               // flex={2} // messes up native
@@ -246,55 +177,17 @@ const RestaurantListItemContent = memo(
               noWrapText
               disableDisplayContents
             >
-              <XStack
-                paddingLeft={hideRate ? 10 : 40}
-                py="$6"
-                pb="$2"
-                position="relative"
-                alignItems="center"
-              >
+              <XStack px="$4" pt="$4" position="relative" alignItems="center">
                 {/* SECOND LINK WITH actual <a /> */}
-
-                <XStack
-                  paddingHorizontal={8}
-                  borderRadius={8}
-                  alignItems="center"
-                  marginVertical={-5}
-                >
-                  <H2 fontFamily="$stylish" selectable={false} size="$9" ellipse fow="300">
-                    {restaurantName}
-                  </H2>
-                </XStack>
+                <H2 fontFamily="$stylish" selectable={false} size="$9" ellipse fow="300">
+                  {restaurantName}
+                </H2>
               </XStack>
             </Link>
 
-            <Spacer size="$4" />
-          </YStack>
-
-          {/* ROW: BOTTOM ROW */}
-
-          <XStack
-            position="relative"
-            height={50}
-            marginTop={-5}
-            paddingBottom={20}
-            marginLeft={30}
-            alignItems="center"
-            space="$6"
-          >
-            <XStack
-              paddingLeft={20}
-              alignItems="center"
-              space="$6"
-              {...(shouldShowOneLine && {
-                paddingLeft: 0,
-                minWidth: 460,
-                justifyContent: 'flex-start',
-              })}
-            >
-              {beforeBottomRow}
-
-              {/* <XStack display={media.sm ? 'none' : 'flex'}>
+            <XStack position="relative" alignItems="center">
+              <XStack paddingLeft={20} alignItems="center" space="$6">
+                {/* <XStack display={media.sm ? 'none' : 'flex'}>
                 <Group paddingLeft={10}>
                   <Link
                     name="restaurant"
@@ -329,46 +222,48 @@ const RestaurantListItemContent = memo(
                 </Group>
               </XStack> */}
 
-              <XStack marginLeft={-5} alignItems="center">
-                <Paragraph
-                  o={0.5}
-                  width={42}
-                  textAlign="center"
-                  fontWeight="500"
-                  selectable={false}
-                >
-                  {price_range ?? '-'}
-                </Paragraph>
+                <XStack marginLeft={-5} alignItems="center">
+                  <Paragraph
+                    o={0.5}
+                    width={42}
+                    textAlign="center"
+                    fontWeight="500"
+                    selectable={false}
+                  >
+                    {price_range ?? '-'}
+                  </Paragraph>
 
-                <Circle
-                  size="$0.5"
-                  marginHorizontal={4}
-                  backgroundColor={open.isOpen ? '$green9' : '$red9'}
-                />
-
-                {!!restaurant.address && (
-                  <RestaurantAddress
-                    size={shouldShowOneLine ? 'xxs' : 'xs'}
-                    curLocInfo={curLocInfo!}
-                    address={restaurant.address}
+                  <Circle
+                    size="$0.5"
+                    marginHorizontal={4}
+                    backgroundColor={open.isOpen ? '$green9' : '$red9'}
                   />
+
+                  {!!restaurant.address && (
+                    <RestaurantAddress
+                      size="xs"
+                      curLocInfo={curLocInfo!}
+                      address={restaurant.address}
+                    />
+                  )}
+                </XStack>
+
+                {!!editableDescription && !state.editing && (
+                  <SmallButton
+                    onPress={() => setState((prev) => ({ ...prev, editing: true }))}
+                  >
+                    Edit
+                  </SmallButton>
                 )}
-              </XStack>
 
-              {!!editableDescription && !state.editing && (
-                <SmallButton onPress={() => setState((prev) => ({ ...prev, editing: true }))}>
-                  Edit
-                </SmallButton>
-              )}
-
-              {/* <Suspense fallback={null}>
+                {/* <Suspense fallback={null}>
                 <RestaurantDeliveryButtons
                   showLabels={!shouldShowOneLine}
                   restaurantSlug={restaurantSlug}
                 />
               </Suspense> */}
 
-              {/* <RestaurantOverallAndTagReviews
+                {/* <RestaurantOverallAndTagReviews
                 borderless
                 hideDescription
                 size="sm"
@@ -377,27 +272,27 @@ const RestaurantListItemContent = memo(
                 restaurant={restaurant}
               /> */}
 
-              {!!editableDescription && state.editing && (
-                <Button
-                  themeInverse
-                  onPress={() => {
-                    setState((prev) => ({ ...prev, editing: false }))
-                    onChangeDescription?.(state.description ?? '')
-                  }}
-                >
-                  Save
-                </Button>
-              )}
+                {!!editableDescription && state.editing && (
+                  <Button
+                    themeInverse
+                    onPress={() => {
+                      setState((prev) => ({ ...prev, editing: false }))
+                      onChangeDescription?.(state.description ?? '')
+                    }}
+                  >
+                    Save
+                  </Button>
+                )}
 
-              {!!open.nextTime && (
-                <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
-                  <SmallButton textProps={{ opacity: 0.6 }}>
-                    {open.nextTime || '~~'}
-                  </SmallButton>
-                </Link>
-              )}
+                {!!open.nextTime && (
+                  <Link name="restaurantHours" params={{ slug: restaurantSlug }}>
+                    <SmallButton textProps={{ opacity: 0.6 }}>
+                      {open.nextTime || '~~'}
+                    </SmallButton>
+                  </Link>
+                )}
 
-              {/* {!hideTagRow && (
+                {/* {!hideTagRow && (
                 <Suspense fallback={null}>
                   <RestaurantTagsList
                     size="$3"
@@ -417,19 +312,20 @@ const RestaurantListItemContent = memo(
                   />
                 </Suspense>
               )} */}
+              </XStack>
             </XStack>
-          </XStack>
+          </YStack>
 
-          <Spacer flex />
+          {/* ROW: BOTTOM ROW */}
 
-          <XStack space fullscreen left="auto" bottom="$7" ai="center" jc="center" m="$4">
+          <XStack space fullscreen left="auto" ai="center" jc="center" m="$4">
             <Button icon={MessageCircle} size="$6" circular />
             {/* <Button icon={Tag} size="$6" circular /> */}
           </XStack>
 
           {/* bottom spacing */}
-          {!shouldShowOneLine && <Spacer size={10} />}
-        </YStack>
+          <Spacer size={10} />
+        </XStack>
       </HoverToZoom>
     )
   })

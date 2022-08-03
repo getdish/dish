@@ -38,7 +38,7 @@ const garamondFont = createFont({
       16: 134,
     },
     (size) => {
-      return Math.round(size * 0.9)
+      return Math.round(size * 1.25)
     }
   ),
   letterSpacing: {

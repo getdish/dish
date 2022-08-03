@@ -78,9 +78,9 @@ export const ToastRoot = memo(function ToastRoot(props: { animation?: AnimationK
 
   const contents = (
     <YStack
-      position="absolute"
       pointerEvents="none"
       fullscreen
+      position={isWeb ? ('fixed' as any) : 'absolute'}
       alignItems="center"
       justifyContent="flex-end"
       zIndex={10000000000}
