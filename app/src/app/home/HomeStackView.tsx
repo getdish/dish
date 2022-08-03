@@ -1,13 +1,11 @@
-import { searchBarHeight, searchBarTopOffset } from '../../constants/constants'
 import { HomeStateItem } from '../../types/homeTypes'
-import { autocompleteSearchStore, autocompletesStore } from '../AutocompletesStore'
 import { useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { ContentParentStore } from '../views/ContentScrollView'
 import { ErrorBoundary } from '../views/ErrorBoundary'
 import { isSafari } from '@dish/helpers'
-import { YStack, useDebounceValue, useIsTouchDevice, useMedia } from '@dish/ui'
-import { useStore, useStoreInstance } from '@dish/use-store'
+import { YStack, useDebounceValue, useIsTouchDevice } from '@dish/ui'
+import { useStore } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useMemo } from 'react'
 
 export type StackItemProps<A> = {

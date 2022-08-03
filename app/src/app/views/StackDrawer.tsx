@@ -21,6 +21,7 @@ export type StackDrawerProps = YStackProps & {
   closable?: boolean
   fallback?: any
   topLeftControls?: any
+  onClose?: () => void
 }
 
 export const StackDrawer = ({
@@ -29,6 +30,7 @@ export const StackDrawer = ({
   children,
   fallback,
   topLeftControls,
+  onClose,
   ...props
 }: StackDrawerProps) => {
   const media = useMedia()
@@ -47,7 +49,7 @@ export const StackDrawer = ({
           {topLeftControls}
         </AbsoluteYStack>
       )}
-      {closable && <StackCloseButton />}
+      {closable && <StackCloseButton onClose={onClose} />}
     </>
   )
 
@@ -78,7 +80,7 @@ export const StackDrawer = ({
         {controls}
         <YStack
           // keep this nested, fix-overflow hides box-shadow otherwise
-          className={'safari-fix-overflow' + (isSafari ? ' blur2x' : '')}
+          className={'safari-fix-overflow' + ' blur2x'}
           // this doesnt work in chrome
           position="relative"
           flexGrow={1}
@@ -88,7 +90,7 @@ export const StackDrawer = ({
           overflow="hidden"
           {...props}
         >
-          <YStack fullscreen backgroundColor="$background" o={isSafari ? 0.5 : 1} />
+          <YStack fullscreen backgroundColor="$background" o={isSafari ? 0.5 : 0.9} />
           <HomeSuspense fallback={fallback ?? <LoadingItems />}>
             {isLoaded ? children : null}
           </HomeSuspense>

@@ -1,21 +1,15 @@
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
-import { getDefaultLocation, setDefaultLocation } from '../../constants/initialHomeState'
 import { useRegionQuery } from '../../helpers/fetchRegion'
-import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
-import { AutocompleteResults } from '../AutocompleteResults'
-import { autocompletesStore } from '../AutocompletesStore'
 import { IntroModalStore } from '../IntroModalStore'
 import { PortalItem } from '../Portal'
 import { cancelUpdateRegion } from '../appMapStoreUpdateRegion'
-import { suspense } from '../hoc/suspense'
 import { homeStore, useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { setInitialRegionSlug } from '../initialRegionSlug'
 import { CloseButton } from '../views/CloseButton'
-import { ContentScrollView } from '../views/ContentScrollView'
 import { Link } from '../views/Link'
 import { PageHead } from '../views/PageHead'
 import { PaneControlButtons } from '../views/PaneControlButtons'
@@ -24,7 +18,6 @@ import { HomeStackViewProps } from './HomeStackViewProps'
 import { PageContent } from './PageContent'
 import { homePageStore } from './homePageStore'
 import { series, sleep } from '@dish/async'
-import { slugify } from '@dish/graph'
 import {
   AbsoluteYStack,
   LoadingItems,
@@ -33,7 +26,6 @@ import {
   Theme,
   YStack,
   useMedia,
-  useTheme,
 } from '@dish/ui'
 import { useStore, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'

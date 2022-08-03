@@ -37,11 +37,15 @@ export const AutocompleteFrame = memo(
         minHeight={100000}
         opacity={isShowing ? 1 : 0}
         pointerEvents={isShowing ? 'auto' : 'none'}
-        zIndex={1}
+        zIndex={isShowing ? 1 : -1}
         display={isFullyOut ? 'none' : 'flex'}
-        overflow="hidden"
       >
-        <StackDrawer closable>
+        <StackDrawer
+          closable
+          onClose={() => {
+            autocompletes.setVisible(false)
+          }}
+        >
           <YStack
             className="ease-in-out"
             position="relative"

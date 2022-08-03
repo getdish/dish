@@ -19,18 +19,6 @@ import { groupBy } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useMemo } from 'react'
 
 export const AppAutocompleteSearch = memo(() => {
-  return (
-    <Theme name="dark">
-      <Suspense fallback={null}>
-        <AutocompleteFrame target="search">
-          <AutocompleteSearchInner />
-        </AutocompleteFrame>
-      </Suspense>
-    </Theme>
-  )
-})
-
-const AutocompleteSearchInner = memo(() => {
   const home = useHomeStore()
   const store = useStoreInstance(autocompleteSearchStore)
   const { lastActiveTags, currentSearchQuery } = home
@@ -47,38 +35,38 @@ const AutocompleteSearchInner = memo(() => {
 
   useSearchQueryEffect(query, store, activeTags)
 
-  const prefixResults = useMemo(() => {
-    return currentSearchQuery
-      ? [
-          {
-            name: isTouchDevice ? 'Tap to search' : 'Enter to search',
-            icon: '🔍',
-            tagId: '',
-            type: 'orphan' as const,
-            description: '',
-          },
-        ]
-      : []
-  }, [currentSearchQuery])
-
-  const handleSelect = useCallback((result) => {
-    // clear query
-    if (result.type === 'orphan') {
-      home.clearTags()
-      home.setSearchQuery(getQuery())
-    } else if (result.type !== 'restaurant') {
-      home.setSearchQuery('')
-    }
-  }, [])
-
   return (
-    <>
-      <AutocompleteResults
-        target="search"
-        prefixResults={prefixResults}
-        onSelect={handleSelect}
-      />
-    </>
+    <Theme name="dark">
+      <Suspense fallback={null}>
+        <AutocompleteFrame target="search">
+          <AutocompleteResults
+            target="search"
+            prefixResults={useMemo(() => {
+              return currentSearchQuery
+                ? [
+                    {
+                      name: isTouchDevice ? 'Tap to search' : 'Enter to search',
+                      icon: '🔍',
+                      tagId: '',
+                      type: 'orphan' as const,
+                      description: '',
+                    },
+                  ]
+                : []
+            }, [currentSearchQuery])}
+            onSelect={useCallback((result) => {
+              // clear query
+              if (result.type === 'orphan') {
+                home.clearTags()
+                home.setSearchQuery(getQuery())
+              } else if (result.type !== 'restaurant') {
+                home.setSearchQuery('')
+              }
+            }, [])}
+          />
+        </AutocompleteFrame>
+      </Suspense>
+    </Theme>
   )
 })
 
