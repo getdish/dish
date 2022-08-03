@@ -89,9 +89,7 @@ const HomeDrawerLarge = memo((props) => {
         margin="auto"
         maxWidth={pageWidthMax}
         f={1}
-        top="$2"
-        left="$2"
-        bottom="$2"
+        p="$2"
         pe="none"
         ai="flex-start"
         zi={zIndexDrawer}
@@ -133,21 +131,6 @@ const HomeDrawerLarge = memo((props) => {
           </YStack>
         </YStack>
       </XStack>
-
-      {isWeb && (
-        <YStack
-          $sm={{ dsp: 'none' }}
-          zi={200}
-          pe="none"
-          fullscreen
-          left="23%"
-          ai="center"
-          jc="center"
-        >
-          <YStack fullscreen className="fade-right" />
-          <Circle className="map-spotlight map-spotlight-large" size={1200} bc="transparent" />
-        </YStack>
-      )}
     </>
   )
 })

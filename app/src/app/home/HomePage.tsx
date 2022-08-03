@@ -170,7 +170,6 @@ const HomePageContent = (props: Props) => {
       <HomePageWelcomeBubble />
 
       <YStack maxWidth={drawerWidthMax}>
-        <HomeTopSpacer />
         <PageContent hideFooter>
           {wasEverActive && <HomePageFeed {...homePageFeedProps} />}
         </PageContent>
@@ -227,8 +226,3 @@ const HomePageWelcomeBubble = memo(() => {
     </PortalItem>
   )
 })
-
-const HomeTopSpacer = () => {
-  const media = useMedia()
-  return <YStack pointerEvents="none" height={media.sm ? 0 : searchBarHeight + 5} />
-}

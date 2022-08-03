@@ -72,8 +72,8 @@ const tamaConf = createTamagui({
     ...config.media,
     pointerCoarse: { pointer: 'coarse' },
     // never true on native
-    smWeb: isWeb
-      ? config.media.sm
+    mdWeb: isWeb
+      ? config.media.md
       : {
           maxWidth: 0,
         },

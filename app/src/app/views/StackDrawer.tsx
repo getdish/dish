@@ -1,3 +1,4 @@
+// debug
 import { drawerBorderRadius, drawerWidthMax } from '../../constants/constants'
 import { STACK_ANIMATION_DURATION } from '../home/HomeStackView'
 import { HomeSuspense } from '../home/HomeSuspense'
@@ -70,8 +71,8 @@ export const StackDrawer = ({
 
   return (
     <>
-      <AbsoluteYStack
-        position="absolute"
+      <YStack
+        debug="verbose"
         left={media.sm ? 0 : 'auto'}
         right={media.sm ? 0 : 0}
         maxHeight="100%"
@@ -84,9 +85,6 @@ export const StackDrawer = ({
         justifyContent="flex-end"
         shadowRadius={9}
         shadowColor="$shadowColor"
-        $smWeb={{
-          pos: 'relative',
-        }}
       >
         {controls}
         <YStack
@@ -106,7 +104,7 @@ export const StackDrawer = ({
             {isLoaded ? children : null}
           </HomeSuspense>
         </YStack>
-      </AbsoluteYStack>
+      </YStack>
     </>
   )
 }

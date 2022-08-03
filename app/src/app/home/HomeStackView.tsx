@@ -32,7 +32,7 @@ export function HomeStackView<A extends HomeStateItem>(props: { children: GetChi
   // when autocomplete active, show home and filter that:
   // nice because home should always display your current map position too as a special case
   const { visible } = useStoreInstance(autocompletesStore)
-  console.log('autocomplete', visible)
+  console.log('▲ show autocomplete', visible)
 
   // prettier-ignore
   // console.log('HomeStackView', breadcrumbs, JSON.stringify({ isAdding, isRemoving }), items.map((x) => x.type))
@@ -74,10 +74,7 @@ const AppStackViewItem = memo(
     isAdding: boolean
   }) => {
     const contentParentStore = useStore(ContentParentStore)
-    const media = useMedia()
-    const top = media.sm
-      ? Math.max(0, index - 1) * 3 + 6
-      : index * 5 + (index > 0 ? searchBarHeight + searchBarTopOffset : 0)
+    const top = Math.max(0, index - 1) * 3 + 6
     const isFullyActive = !isRemoving && !isAdding
 
     // safari ios drag optimization: when fully inactive hide it
@@ -122,7 +119,7 @@ const AppStackViewItem = memo(
         {...(isActive && {
           pos: 'relative',
         })}
-        $smWeb={{
+        $mdWeb={{
           opacity: isActive ? 1 : 0,
         }}
       >
