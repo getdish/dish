@@ -246,7 +246,6 @@ export default memo(function AppMap() {
       maxHeight="100%"
       alignItems="flex-end"
       justifyContent="flex-end"
-      // maxWidth={pageWidthMax}
       width="100%"
       margin="auto"
       // new strat: fixed width, offset the edges
@@ -260,7 +259,6 @@ export default memo(function AppMap() {
         width: mapWidths.xl,
       }}
     >
-      {/* <MapFlexItem /> */}
       <YStack
         pos="relative"
         pe="auto"

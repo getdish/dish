@@ -6,7 +6,15 @@ import { homeStore } from './homeStore'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
 import { SlantedTitle } from './views/SlantedTitle'
-import { AbsoluteXStack, AbsoluteYStack, Spacer, Theme, YStack, useMedia } from '@dish/ui'
+import {
+  AbsoluteXStack,
+  AbsoluteYStack,
+  Spacer,
+  Theme,
+  ThemeInverse,
+  YStack,
+  useMedia,
+} from '@dish/ui'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import { Minus, Plus, RefreshCcw, X, ZoomOut } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
@@ -66,10 +74,12 @@ export const AppMapControls = memo(() => {
             </>
           )}
 
-          <YStack fullscreen ai="center" jc="center">
-            <SlantedTitle size="$2" als="center">
-              Kailua
-            </SlantedTitle>
+          <YStack className="test123" fullscreen ai="center" jc="center">
+            <ThemeInverse>
+              <SlantedTitle size="$2" als="center">
+                Kailua
+              </SlantedTitle>
+            </ThemeInverse>
           </YStack>
 
           {showSearchHere && (

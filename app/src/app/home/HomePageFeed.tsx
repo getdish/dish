@@ -107,6 +107,8 @@ export const HomePageFeed = memo(
         showRank: !!hovered,
         center,
         ...useSetAppMapProps,
+        fitToResults: true,
+        // zoomOnHover: true,
         hideRegions: false,
         results: hovered ?? restaurants,
       })

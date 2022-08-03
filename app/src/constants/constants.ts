@@ -30,7 +30,7 @@ export const pageWidthMax = 1800
 
 export const mapWidths = {
   md: 1020,
-  lg: 1200,
+  lg: 1254,
   xl: pageWidthMax,
 }
 

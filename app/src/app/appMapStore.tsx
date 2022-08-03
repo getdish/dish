@@ -150,6 +150,8 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
           features,
         }
 
+        console.warn('📍', state)
+
         appMapStore.setState(state)
 
         if (fitToResults && features.length) {

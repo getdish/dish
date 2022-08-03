@@ -12,7 +12,7 @@ import { fullyIdle, series, sleep } from '@dish/async'
 import { TILES_HOST, slugify } from '@dish/graph'
 import { supportsTouchWeb } from '@dish/helpers'
 import { useGet, useThemeName } from '@dish/ui'
-import { lightColors } from '@tamagui/theme-base'
+import { darkColors, lightColors } from '@tamagui/theme-base'
 import bbox from '@turf/bbox'
 import union from '@turf/union'
 import _, { capitalize, debounce, isEqual, throttle } from 'lodash'
@@ -456,10 +456,7 @@ export default function Map(props: MapProps) {
             generateId: true,
           })
 
-          const pointColor =
-            themeName === 'dark'
-              ? hexToRGB(lightColors.pink3, 0.44).string
-              : hexToRGB(lightColors.pink10, 0.44).string
+          const pointColor = themeName === 'dark' ? darkColors.pink6 : lightColors.pink6
           map.addLayer({
             id: POINT_LAYER_ID,
             type: 'circle',
@@ -524,7 +521,7 @@ export default function Map(props: MapProps) {
               'text-size': 14,
               'text-line-height': 1,
               'text-variable-anchor': ['bottom'],
-              // 'text-offset': [0, 20],
+              'text-offset': [0, -1],
               // 'text-anchor': 'bottom',
             },
             paint: {
