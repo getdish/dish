@@ -14,7 +14,7 @@ export const showRadar =
 
 export const drawerPad = 8
 export const drawerBorderRadius = 16
-export const drawerWidthMax = 880
+export const drawerWidthMax = 1020
 export const drawerExtraLeftScrollSpace = 500
 
 export const listItemMaxSideWidth = Math.round(drawerWidthMax / 2.5 - 40)
@@ -29,7 +29,7 @@ export const logoXsHeight = Math.round(1024 * 0.035)
 export const pageWidthMax = 1800
 
 export const mapWidths = {
-  md: 1000,
+  md: 1020,
   lg: 1200,
   xl: pageWidthMax,
 }

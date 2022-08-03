@@ -3,29 +3,12 @@ import { router } from '../../router'
 import { AppMapControls } from '../AppMapControls'
 import { appMenuStore } from '../AppMenuStore'
 import { AppSearchBarInline } from '../AppSearchBarInline'
-import { autocompletesStore } from '../AutocompletesStore'
 import { DrawerPortalProvider } from '../Portal'
-import { drawerStore } from '../drawerStore'
-import { useAppDrawerWidth } from '../hooks/useAppDrawerWidth'
-import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
-import { HomeDrawerSmallView } from './HomeDrawerSmallView'
-import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
-import {
-  Circle,
-  LinearGradient,
-  Spacer,
-  XStack,
-  YStack,
-  isWeb,
-  useIsTouchDevice,
-  useMedia,
-  useTheme,
-} from '@dish/ui'
+import { Spacer, XStack, YStack, styled, useMedia } from '@dish/ui'
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
-import { Keyboard } from 'react-native'
 
 export const Home = memo(function Home() {
   const media = useMedia()
@@ -65,8 +48,8 @@ export const Home = memo(function Home() {
 
   return (
     <Suspense fallback={null}>
-      {media.sm && <HomeDrawerSmall>{contents}</HomeDrawerSmall>}
-      {!media.sm && <HomeDrawerLarge>{contents}</HomeDrawerLarge>}
+      {media.md && <HomeDrawerSmall key={0}>{contents}</HomeDrawerSmall>}
+      {!media.md && <HomeDrawerLarge key={1}>{contents}</HomeDrawerLarge>}
     </Suspense>
   )
 })
@@ -75,12 +58,12 @@ const HomeDrawerSmall = (props: { children: any }) => {
   return (
     <YStack pe="none" pos="relative" zi={100000000000}>
       <Spacer pe="none" size={400} />
-      <YStack pe="auto">{props.children}</YStack>
+      <DrawerFrame>{props.children}</DrawerFrame>
     </YStack>
   )
 }
 
-const HomeDrawerLarge = memo((props) => {
+const HomeDrawerLarge = memo((props: any) => {
   return (
     <>
       <XStack
@@ -95,34 +78,12 @@ const HomeDrawerLarge = memo((props) => {
         zi={zIndexDrawer}
       >
         <YStack f={1} w="100%" maxWidth="60%">
-          <YStack
-            pos="relative"
-            className="blur"
-            bc="$backgroundDrawer"
-            br="$6"
-            pointerEvents="auto"
-            maxWidth={drawerWidthMax}
-            f={1}
-            zIndex={10}
-            flex={1}
-            shadowColor="rgba(0,0,0,0.135)"
-            shadowRadius={7}
-            shadowOffset={{
-              height: 4,
-              width: 0,
-            }}
-            bw={1}
-            boc="$borderColor"
-            justifyContent="flex-end"
-          >
-            {/* <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" /> */}
-
+          <DrawerFrame>
+            <XStack opacity={0.2} zi={-1} fullscreen br="$6" backgroundColor="$background" />
             <AppSearchBarInline />
-
             {props.children}
-
             <DrawerPortalProvider />
-          </YStack>
+          </DrawerFrame>
         </YStack>
 
         <YStack ov="hidden" pos="relative" f={1} h="100%" px="$4">
@@ -133,4 +94,25 @@ const HomeDrawerLarge = memo((props) => {
       </XStack>
     </>
   )
+})
+
+const DrawerFrame = styled(YStack, {
+  pos: 'relative',
+  className: 'blur',
+  bc: '$backgroundDrawer',
+  br: '$6',
+  pointerEvents: 'auto',
+  maxWidth: drawerWidthMax,
+  f: 1,
+  zIndex: 10,
+  flex: 1,
+  shadowColor: 'rgba(0,0,0,0.135)',
+  shadowRadius: 7,
+  shadowOffset: {
+    height: 4,
+    width: 0,
+  },
+  bw: 1,
+  boc: '$borderColor',
+  justifyContent: 'flex-end',
 })
