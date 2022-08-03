@@ -2,21 +2,22 @@ import { Circle, YStack } from '@dish/ui'
 import React from 'react'
 import { useWindowDimensions } from 'react-native'
 
+// only rendered on small web
+
 export const AppMapSpotlight = () => {
-  const { window, size, cx, cy } = useAppMapSpotlight()
+  const { window, size, cx, cy } = useAppMapSpotlight(1.4)
 
   return (
     <>
-      <YStack zi={1000000000000} fullscreen pe="none">
+      <YStack zi={200} fullscreen pe="none" y="-20%">
         <Circle bc="transparent" size={size} y={cy} x={cx} className="map-spotlight" />
       </YStack>
     </>
   )
 }
 
-export const useAppMapSpotlight = () => {
+export const useAppMapSpotlight = (overlap = 1.75) => {
   const { width, height } = useWindowDimensions()
-  const overlap = 1.75
   const minSize = Math.min(width, height)
   const size = minSize * overlap
   const adjustSide = width < height ? 'width' : 'height'

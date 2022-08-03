@@ -1,4 +1,5 @@
 import AppMap from './AppMap'
+import AppMapContainer from './AppMapContainer'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
 import { RootPortalProvider } from './Portal'
@@ -22,7 +23,9 @@ export const App = memo(() => {
       <AutocompleteEffects />
       {/* <AbsoluteYStack fullscreen backgroundColor="$backgroundStrong"> */}
       <Suspense fallback={null}>
-        <AppMap />
+        <AppMapContainer>
+          <AppMap />
+        </AppMapContainer>
       </Suspense>
 
       <Home />

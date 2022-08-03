@@ -109,7 +109,9 @@ const AppStackViewItem = memo(
       <YStack
         // position="absolute"
         zIndex={index}
-        className={`animate-up ${isFullyActive ? 'active' : 'untouchable'}`}
+        className={`${index === 0 ? '' : 'animate-up'} ${
+          isFullyActive ? 'active' : 'untouchable'
+        }`}
         display={isFullyInactive ? 'none' : 'flex'}
         top={top}
         right={0}

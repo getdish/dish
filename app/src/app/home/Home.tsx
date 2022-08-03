@@ -13,10 +13,12 @@ import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSm
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
 import {
+  Circle,
   LinearGradient,
   Spacer,
   XStack,
   YStack,
+  isWeb,
   useIsTouchDevice,
   useMedia,
   useTheme,
@@ -80,55 +82,72 @@ const HomeDrawerSmall = (props: { children: any }) => {
 
 const HomeDrawerLarge = memo((props) => {
   return (
-    <XStack
-      fullscreen
-      margin="auto"
-      maxWidth={pageWidthMax}
-      f={1}
-      p="absolute"
-      top="$2"
-      left="$2"
-      bottom="$2"
-      pe="none"
-      ai="flex-start"
-      zi={zIndexDrawer}
-    >
-      <YStack h="100%" f={1} w="100%" maxWidth="60%">
+    <>
+      <XStack
+        // fullscreen
+        pos="relative"
+        margin="auto"
+        maxWidth={pageWidthMax}
+        f={1}
+        top="$2"
+        left="$2"
+        bottom="$2"
+        pe="none"
+        ai="flex-start"
+        zi={zIndexDrawer}
+      >
+        <YStack f={1} w="100%" maxWidth="60%">
+          <YStack
+            pos="relative"
+            className="blur"
+            bc="$backgroundDrawer"
+            br="$6"
+            pointerEvents="auto"
+            maxWidth={drawerWidthMax}
+            f={1}
+            zIndex={10}
+            flex={1}
+            shadowColor="rgba(0,0,0,0.135)"
+            shadowRadius={7}
+            shadowOffset={{
+              height: 4,
+              width: 0,
+            }}
+            bw={1}
+            boc="$borderColor"
+            justifyContent="flex-end"
+          >
+            {/* <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" /> */}
+
+            <AppSearchBarInline />
+
+            {props.children}
+
+            <DrawerPortalProvider />
+          </YStack>
+        </YStack>
+
+        <YStack ov="hidden" pos="relative" f={1} h="100%" px="$4">
+          <YStack pos="relative" f={1}>
+            <AppMapControls />
+          </YStack>
+        </YStack>
+      </XStack>
+
+      {isWeb && (
         <YStack
-          pos="relative"
-          className="blur"
-          bc="$backgroundDrawer"
-          br="$6"
-          pointerEvents="auto"
-          maxWidth={drawerWidthMax}
-          f={1}
-          zIndex={10}
-          flex={1}
-          shadowColor="rgba(0,0,0,0.135)"
-          shadowRadius={7}
-          shadowOffset={{
-            height: 4,
-            width: 0,
-          }}
-          bw={1}
-          boc="$borderColor"
-          justifyContent="flex-end"
+          $sm={{ dsp: 'none' }}
+          zi={200}
+          pe="none"
+          fullscreen
+          left="23%"
+          ai="center"
+          jc="center"
         >
-          {/* <XStack opacity={0.5} zi={-1} fullscreen br="$6" backgroundColor="$background" /> */}
-
-          <AppSearchBarInline />
-
-          {props.children}
-
-          <DrawerPortalProvider />
+          <YStack fullscreen className="fade-right" />
+          <Circle className="map-spotlight map-spotlight-large" size={1200} bc="transparent" />
         </YStack>
-      </YStack>
-
-      <YStack ov="hidden" pos="relative" f={1} h="100%" px="$4">
-        <YStack pos="relative" f={1}>
-          <AppMapControls />
-        </YStack>
-      </YStack>
-    </XStack>
+      )}
+    </>
   )
 })

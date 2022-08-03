@@ -2,6 +2,7 @@ import { isSSR } from '../constants/constants'
 import { AppHomeMobileWeb } from './AppHomeMobileWeb'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
+import AppMapContainer from './AppMapContainer'
 import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
@@ -77,7 +78,9 @@ function PublicContent(props: { children?: any }) {
       {!isSSR && (
         <ErrorBoundary name="main-map">
           <Suspense fallback={null}>
-            <AppMap />
+            <AppMapContainer>
+              <AppMap />
+            </AppMapContainer>
           </Suspense>
         </ErrorBoundary>
       )}

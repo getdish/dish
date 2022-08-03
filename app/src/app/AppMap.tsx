@@ -1,18 +1,10 @@
-import {
-  isWeb,
-  mapWidths,
-  pageWidthMax,
-  searchBarHeight,
-  zIndexMap,
-} from '../constants/constants'
+import { isWeb, mapWidths, searchBarHeight, zIndexMap } from '../constants/constants'
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
 import { coordsToLngLat, getMinLngLat } from '../helpers/mapHelpers'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { MapRegionEvent } from '../types/homeTypes'
-import { AppMapControls } from './AppMapControls'
-import { AppMapSpotlight } from './AppMapSpotlight'
 import { useAppMapStore } from './appMapStore'
 import {
   cancelUpdateRegion,
@@ -24,95 +16,24 @@ import { homeStore } from './homeStore'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useMapSize } from './hooks/useMapSize'
 import { mapStyles } from './mapStyles'
-import { useIsInteractive } from './useIsInteractive'
 import { useIsMobileDevice } from './useIsMobileDevice'
 import { series } from '@dish/async'
 import { resolved } from '@dish/graph'
-// import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import {
   AbsoluteYStack,
   Circle,
-  LinearGradient,
   XStack,
   YStack,
   useDebounceValue,
   useGet,
   useMedia,
-  useTheme,
   useThemeName,
 } from '@dish/ui'
 import { reaction, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import loadable from '@loadable/component'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
-import { Animated, StyleSheet } from 'react-native'
+import React, { memo, useCallback, useEffect, useMemo } from 'react'
 
 export default memo(function AppMap() {
-  // lighthouse/slow browser optimization
-  const isFullyIdle = true // useIsInteractive()
-  const media = useMedia()
-
-  const drawerHeight = useStoreInstanceSelector(drawerStore, (x) => x.heightIgnoringFullyOpen)
-  const y0 = media.sm
-    ? (() => {
-        const distanceFromCenter =
-          getWindowHeight() - drawerStore.snapHeights[1] - drawerHeight
-        return Math.round(Math.min(0, -drawerHeight / 1.8 + distanceFromCenter / 4))
-      })()
-    : 0
-
-  // const y = useDebounceValue(y0, 100)
-  // const [translateY] = useState(() => new Animated.Value(y))
-  // const offset = useSharedValue(y)
-  // const animatedStyles = useAnimatedStyle(() => {
-  //   return {
-  //     transform: [{ translateY: offset.value }],
-  //   }
-  // }, [])
-
-  // useEffect(() => {
-  //   console.log('gogo', translateY)
-  //   Animated.spring(translateY, {
-  //     useNativeDriver: !isWeb,
-  //     toValue: y,
-  //   }).start()
-  // }, [y])
-
-  if (!isFullyIdle) {
-    return null
-  }
-
-  return (
-    <>
-      {media.sm && (
-        <>
-          <AppMapControls />
-          <AppMapBottomFade />
-        </>
-      )}
-
-      <YStack
-        // works but slow in simulator native
-        // animation="bouncy"
-        fullscreen
-        y={y0}
-      >
-        {/* <Animated.View
-        style={[
-          StyleSheet.absoluteFill,
-          {
-            transform: [{ translateY }],
-          },
-        ]}
-      > */}
-        <AppMapSpotlight />
-        <AppMapContents />
-        {/* </Animated.View> */}
-      </YStack>
-    </>
-  )
-})
-
-export const AppMapContents = memo(function AppMapContents() {
   const appMapStore = useAppMapStore()
   const { features, results, showRank, region, hovered, zoomOnHover } = appMapStore
   const isOnHome = useStoreInstanceSelector(homeStore, (x) => x.currentStateType === 'home')
@@ -339,21 +260,6 @@ export const AppMapContents = memo(function AppMapContents() {
         width: mapWidths.xl,
       }}
     >
-      {isWeb && (
-        <YStack
-          $sm={{ dsp: 'none' }}
-          zi={100000}
-          pe="none"
-          fullscreen
-          left="23%"
-          ai="center"
-          jc="center"
-        >
-          <YStack fullscreen className="fade-right" />
-          <Circle className="map-spotlight map-spotlight-large" size={1200} bc="transparent" />
-        </YStack>
-      )}
-
       {/* <MapFlexItem /> */}
       <YStack
         pos="relative"
