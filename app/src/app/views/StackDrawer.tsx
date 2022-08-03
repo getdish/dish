@@ -59,19 +59,9 @@ export const StackDrawer = ({
     ])
   }, [])
 
-  // if (isPhone) {
-  //   return (
-  //     <>
-  //       {controls}
-  //       <HomeSuspense fallback={fallback ?? <LoadingItems />}>{children}</HomeSuspense>
-  //     </>
-  //   )
-  // }
-
   return (
     <>
       <YStack
-        debug="verbose"
         left={media.sm ? 0 : 'auto'}
         right={media.sm ? 0 : 0}
         maxHeight="100%"

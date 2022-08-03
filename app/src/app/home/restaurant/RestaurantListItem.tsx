@@ -133,7 +133,6 @@ export const RestaurantListItem = memo(
           flexGrow={1}
           position="relative"
           pb="$3"
-          debug="verbose"
           hoverStyle={{
             backgroundColor: 'rgba(100,100,100,0.1)',
           }}

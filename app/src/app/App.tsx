@@ -1,5 +1,4 @@
 import { isSSR } from '../constants/constants'
-import { AppHomeMobileWeb } from './AppHomeMobileWeb'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
 import AppMapContainer from './AppMapContainer'
@@ -54,15 +53,6 @@ export function App() {
 }
 
 function PublicContent(props: { children?: any }) {
-  // const isMobileWeb = useIsMobilePhone()
-  // if (isMobileWeb) {
-  //   return (
-  //     <>
-  //       <AppHomeMobileWeb />
-  //     </>
-  //   )
-  // }
-
   return (
     <>
       {/* background */}

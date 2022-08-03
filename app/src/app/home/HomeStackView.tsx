@@ -20,7 +20,13 @@ type GetChildren<A> = (props: StackItemProps<A>) => React.ReactNode
 
 export const STACK_ANIMATION_DURATION = 160
 
-export function HomeStackView<A extends HomeStateItem>(props: { children: GetChildren<A> }) {
+export function HomeStackView<A extends HomeStateItem>({
+  children,
+  limitVisibleStates = Infinity,
+}: {
+  children: GetChildren<A>
+  limitVisibleStates?: number
+}) {
   const { breadcrumbs } = useHomeStore()
   const key = JSON.stringify(breadcrumbs.map((x) => x.id))
   const homeStates = useMemo(() => breadcrumbs, [key])
@@ -29,18 +35,20 @@ export function HomeStackView<A extends HomeStateItem>(props: { children: GetChi
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
-  // when autocomplete active, show home and filter that:
-  // nice because home should always display your current map position too as a special case
-  const { visible } = useStoreInstance(autocompletesStore)
-  console.log('▲ show autocomplete', visible)
-
   // prettier-ignore
   // console.log('HomeStackView', breadcrumbs, JSON.stringify({ isAdding, isRemoving }), items.map((x) => x.type))
+
+  // when autocomplete active, show home and filter that:
+  // nice because home should always display your current map position too as a special case
+
+  const activeIndex = Math.min(limitVisibleStates, items.length - 1)
+  console.log('activeIndex', activeIndex)
+  // .slice(0, limitVisibleStates ?? Infinity)
 
   return (
     <>
       {items.map((item, i) => {
-        const isActive = i === items.length - 1
+        const isActive = i === activeIndex
         return (
           <AppStackViewItem
             key={`${item.id}`}
@@ -49,7 +57,7 @@ export function HomeStackView<A extends HomeStateItem>(props: { children: GetChi
             isActive={isActive}
             isRemoving={isRemoving && isActive}
             isAdding={isAdding && isActive}
-            getChildren={props.children as any}
+            getChildren={children as any}
           />
         )
       })}
@@ -110,7 +118,7 @@ const AppStackViewItem = memo(
           isFullyActive ? 'active' : 'untouchable'
         }`}
         display={isFullyInactive ? 'none' : 'flex'}
-        top={top}
+        marginTop={top}
         right={0}
         bottom={-(index * 5)}
         left={0}
