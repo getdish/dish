@@ -33,7 +33,7 @@ export const StackDrawer = ({
 }: StackDrawerProps) => {
   const media = useMedia()
   const [isLoaded, setIsLoaded] = useState(false)
-  const isPhone = useIsMobileDevice()
+  // const isPhone = useIsMobileDevice()
 
   const controls = (
     <>
@@ -62,15 +62,15 @@ export const StackDrawer = ({
   return (
     <>
       <YStack
-        left={media.sm ? 0 : 'auto'}
-        right={media.sm ? 0 : 0}
+        left={media.md ? 0 : 'auto'}
+        right={media.md ? 0 : 0}
         maxHeight="100%"
         height="100%"
         minHeight="100%"
         width="100%"
         borderRadius={drawerBorderRadius}
-        maxWidth={media.sm ? '100%' : drawerWidthMax}
-        minWidth={media.sm ? '100%' : 200}
+        maxWidth={media.md ? '100%' : drawerWidthMax}
+        minWidth={media.md ? '100%' : 200}
         justifyContent="flex-end"
         shadowRadius={9}
         shadowColor="$shadowColor"

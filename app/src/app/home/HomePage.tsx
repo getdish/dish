@@ -3,9 +3,13 @@ import { getDefaultLocation, setDefaultLocation } from '../../constants/initialH
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
+import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
+import { AutocompleteResults } from '../AutocompleteResults'
+import { autocompletesStore } from '../AutocompletesStore'
 import { IntroModalStore } from '../IntroModalStore'
 import { PortalItem } from '../Portal'
 import { cancelUpdateRegion } from '../appMapStoreUpdateRegion'
+import { suspense } from '../hoc/suspense'
 import { homeStore, useHomeStateById } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
@@ -46,6 +50,7 @@ export default memo(function HomePage(props: Props) {
         </YStack>
       }
     >
+      <AppAutocompleteSearch />
       <HomePageContent {...props} />
     </Suspense>
   )

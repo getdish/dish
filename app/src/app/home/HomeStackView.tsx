@@ -31,32 +31,32 @@ export function HomeStackView<A extends HomeStateItem>({
   const key = JSON.stringify(breadcrumbs.map((x) => x.id))
   const homeStates = useMemo(() => breadcrumbs, [key])
   const currentStates = useDebounceValue(homeStates, STACK_ANIMATION_DURATION) ?? homeStates
-  const isRemoving = currentStates.length > homeStates.length
+  let isRemoving = currentStates.length > homeStates.length
   const isAdding = currentStates.length < homeStates.length
   const items = isRemoving ? currentStates : homeStates
 
   // prettier-ignore
   // console.log('HomeStackView', breadcrumbs, JSON.stringify({ isAdding, isRemoving }), items.map((x) => x.type))
 
-  // when autocomplete active, show home and filter that:
-  // nice because home should always display your current map position too as a special case
-
   const activeIndex = Math.min(limitVisibleStates, items.length - 1)
-  console.log('activeIndex', activeIndex)
-  // .slice(0, limitVisibleStates ?? Infinity)
 
   return (
     <>
-      {items.map((item, i) => {
-        const isActive = i === activeIndex
+      {items.map((item, index) => {
+        const isActive = index === activeIndex
+        const isHidingChildren = !isActive && limitVisibleStates < 1_000
+        if (isHidingChildren) {
+          isRemoving = index > activeIndex
+        }
         return (
           <AppStackViewItem
             key={`${item.id}`}
             item={item}
-            index={i}
+            index={index}
             isActive={isActive}
             isRemoving={isRemoving && isActive}
             isAdding={isAdding && isActive}
+            isHidingChildren={isHidingChildren}
             getChildren={children as any}
           />
         )
@@ -73,6 +73,7 @@ const AppStackViewItem = memo(
     isRemoving,
     isAdding,
     getChildren,
+    isHidingChildren,
   }: {
     getChildren: GetChildren<HomeStateItem>
     item: HomeStateItem
@@ -80,6 +81,7 @@ const AppStackViewItem = memo(
     isActive: boolean
     isRemoving: boolean
     isAdding: boolean
+    isHidingChildren: boolean
   }) => {
     const contentParentStore = useStore(ContentParentStore)
     const top = Math.max(0, index - 1) * 3 + 6
@@ -114,9 +116,11 @@ const AppStackViewItem = memo(
       <YStack
         // position="absolute"
         zIndex={index}
-        className={`${index === 0 ? '' : 'animate-up'} ${
-          isFullyActive ? 'active' : 'untouchable'
-        }`}
+        className={
+          isHidingChildren
+            ? ''
+            : `${index === 0 ? '' : 'animate-up'} ${isFullyActive ? 'active' : 'untouchable'}`
+        }
         display={isFullyInactive ? 'none' : 'flex'}
         marginTop={top}
         right={0}
@@ -128,7 +132,7 @@ const AppStackViewItem = memo(
           pos: 'relative',
         })}
         $mdWeb={{
-          opacity: isActive ? 1 : 0,
+          opacity: isActive && !isHidingChildren ? 1 : 0,
         }}
       >
         <ErrorBoundary name={`AppStackView.${item.type}`}>

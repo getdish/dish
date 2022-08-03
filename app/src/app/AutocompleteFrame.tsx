@@ -2,6 +2,7 @@ import { drawerWidthMax, searchBarHeight, zIndexAutocomplete } from '../constant
 import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
 import { CloseButton } from './views/CloseButton'
 import { ContentParentStore, ContentScrollView } from './views/ContentScrollView'
+import { StackDrawer } from './views/StackDrawer'
 import { isSafari } from '@dish/helpers'
 import { AbsoluteYStack, YStack, useDebounceValue, useIsTouchDevice, useMedia } from '@dish/ui'
 import { useStore, useStoreInstance } from '@dish/use-store'
@@ -31,64 +32,23 @@ export const AutocompleteFrame = memo(
     }, [isShowing])
 
     return (
-      <AbsoluteYStack
+      <YStack
         fullscreen
-        className="blur"
+        minHeight={100000}
         opacity={isShowing ? 1 : 0}
         pointerEvents={isShowing ? 'auto' : 'none'}
-        zIndex={isShowing ? zIndexAutocomplete : -100}
+        zIndex={1}
         display={isFullyOut ? 'none' : 'flex'}
-        borderRadius={14}
         overflow="hidden"
-        flex={1}
-        {...(media.sm && {
-          transform: [{ translateY: 10 }],
-        })}
-        {...(media.gtSm && {
-          paddingTop: searchBarHeight + 10,
-          marginLeft: 'auto',
-          width: '100%',
-          maxWidth: drawerWidthMax,
-        })}
-
-        // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
       >
-        <YStack
-          maxWidth={drawerWidthMax}
-          width="100%"
-          height="100%"
-          maxHeight="100%"
-          overflow="hidden"
-          // DONT PUT EVENT HERE NEED TO DEBUG WHY IT BREAKS ON NATIVE
-        >
-          <AbsoluteYStack
-            backgroundColor="$background"
-            fullscreen
-            opacity={isSafari ? 1 : 0.9}
-          />
-          <AbsoluteYStack fullscreen display={media.sm ? 'none' : 'flex'}>
-            {/* <BlurView
-              fallbackBackgroundColor="transparent"
-              blurRadius={20}
-              blurType="dark"
-              position="absolute"
-              // @ts-ignore
-              fullscreen
-            /> */}
-          </AbsoluteYStack>
-          <AbsoluteYStack zIndex={10000} top={10} right={10} pointerEvents="auto">
-            <CloseButton elevation="$1" zIndex={1000} onPress={hideAutocompletes} />
-          </AbsoluteYStack>
+        <StackDrawer closable>
           <YStack
             className="ease-in-out"
             position="relative"
-            // width 100% messes up width on web to be too wide, using alignSelf instead
             alignSelf="stretch"
             height="100%"
             minHeight={200}
             padding={5}
-            borderRadius={media.sm ? 0 : 10}
-            flex={media.sm ? 1 : 0}
             overflow="hidden"
             // dont add events here :(
           >
@@ -106,8 +66,8 @@ export const AutocompleteFrame = memo(
               <YStack height={100} />
             </ContentScrollView>
           </YStack>
-        </YStack>
-      </AbsoluteYStack>
+        </StackDrawer>
+      </YStack>
     )
   }
 )
