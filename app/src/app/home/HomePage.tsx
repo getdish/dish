@@ -58,62 +58,63 @@ const HomePageContent = (props: Props) => {
   const { isActive, item } = props
   const state = useHomeStateById<HomeStateItemHome>(item.id)
   const enabled = isActive && !!state.region
-  // const regionResponse = useRegionQuery(state.region, {
-  //   isPaused() {
-  //     return !enabled
-  //   },
-  //   suspense: false,
-  // })
-  // const region = regionResponse.data
+  const regionResponse = useRegionQuery(state.region, {
+    isPaused() {
+      return !enabled
+    },
+    suspense: false,
+  })
+  const region = regionResponse.data
+
   // const [position, setPosition] = useState<MapPosition>(initialPosition)
   const { results } = useStoreInstance(homePageStore)
 
-  useEffect(() => {
-    return series([
-      // initial load wait to zoom all the way in
-      () => sleep(1500),
-      () => {
-        // homeStore.updateCurrentState('HomePage.curLoc', {
-        //   curLocName: region.name,
-        // })
-        // move initially to url region - this seems non-ideal state should just drive map
-        // if (!hasMovedToInitialRegion) {
-        // hasMovedToInitialRegion = true
-        homeStore.updateCurrentState('HomePage region initial move effect', {
-          center: homeStore.currentState.center,
-          span: {
-            lng: 0.05,
-            lat: 0.05,
-          },
-        })
-      },
-    ])
-  }, [])
-
-  // region based effects
   // useEffect(() => {
-  //   if (!isActive) return
-  //   if (!region || !region.center || !region.span) return
-  //   setInitialRegionSlug(item.region)
-  //   cancelUpdateRegion()
-
   //   return series([
   //     // initial load wait to zoom all the way in
-  //     () => sleep(1000),
+  //     () => sleep(1500),
   //     () => {
-  //       homeStore.updateCurrentState('HomePage.curLoc', {
-  //         curLocName: region.name,
-  //       })
+  //       // homeStore.updateCurrentState('HomePage.curLoc', {
+  //       //   curLocName: region.name,
+  //       // })
   //       // move initially to url region - this seems non-ideal state should just drive map
   //       // if (!hasMovedToInitialRegion) {
   //       // hasMovedToInitialRegion = true
   //       homeStore.updateCurrentState('HomePage region initial move effect', {
-  //         center: region.center,
-  //         span: region.span,
+  //         center: homeStore.currentState.center,
+  //         span: {
+  //           lng: 0.05,
+  //           lat: 0.05,
+  //         },
   //       })
   //     },
   //   ])
-  // }, [isActive, JSON.stringify([region])])
+  // }, [])
+
+  // region based effects
+  useEffect(() => {
+    if (!isActive) return
+    if (!region || !region.center || !region.span) return
+    setInitialRegionSlug(item.region)
+    cancelUpdateRegion()
+
+    return series([
+      // initial load wait to zoom all the way in
+      () => sleep(1000),
+      () => {
+        homeStore.updateCurrentState('HomePage.curLoc', {
+          curLocName: region.name,
+        })
+        // move initially to url region - this seems non-ideal state should just drive map
+        // if (!hasMovedToInitialRegion) {
+        // hasMovedToInitialRegion = true
+        homeStore.updateCurrentState('HomePage region initial move effect', {
+          center: region.center,
+          span: region.span,
+        })
+      },
+    ])
+  }, [isActive, JSON.stringify([region])])
 
   // useEffect(() => {
   //   return () => {

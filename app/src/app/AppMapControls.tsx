@@ -15,7 +15,6 @@ import { SafeAreaView, StatusBar, Text } from 'react-native'
 // import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const AppMapControls = memo(() => {
-  const media = useMedia()
   const showSearchHere = useShowSearchHere()
   const appMap = useStoreInstance(appMapStore)
   // const safeArea = useSafeAreaInsets()

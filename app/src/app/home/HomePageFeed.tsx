@@ -101,15 +101,15 @@ export const HomePageFeed = memo(
         setHoveredDbc.cancel()
       }
 
-      console.log('topCuisines', topCuisines.data)
+      console.log('topCuisines', topCuisines.data, restaurants)
 
-      // useSetAppMap({
-      //   showRank: !!hovered,
-      //   center,
-      //   ...useSetAppMapProps,
-      //   hideRegions: false,
-      //   results: hovered ?? useSetAppMapProps.results,
-      // })
+      useSetAppMap({
+        showRank: !!hovered,
+        center,
+        ...useSetAppMapProps,
+        hideRegions: false,
+        results: hovered ?? restaurants,
+      })
 
       return (
         <>

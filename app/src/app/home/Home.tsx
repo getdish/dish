@@ -58,7 +58,10 @@ const HomeDrawerSmall = (props: { children: any }) => {
   return (
     <YStack pe="none" pos="relative" zi={100000000000}>
       <Spacer pe="none" size={400} />
-      <DrawerFrame>{props.children}</DrawerFrame>
+      <DrawerFrame>
+        <DrawerFrameBg />
+        {props.children}
+      </DrawerFrame>
     </YStack>
   )
 }
@@ -79,7 +82,7 @@ const HomeDrawerLarge = memo((props: any) => {
       >
         <YStack f={1} w="100%" maxWidth="60%">
           <DrawerFrame>
-            <XStack opacity={0.2} zi={-1} fullscreen br="$6" backgroundColor="$background" />
+            <DrawerFrameBg />
             <AppSearchBarInline />
             {props.children}
             <DrawerPortalProvider />
@@ -94,6 +97,14 @@ const HomeDrawerLarge = memo((props: any) => {
       </XStack>
     </>
   )
+})
+
+const DrawerFrameBg = styled(YStack, {
+  opacity: 0.2,
+  zi: -1,
+  fullscreen: true,
+  br: '$6',
+  backgroundColor: '$background',
 })
 
 const DrawerFrame = styled(YStack, {

@@ -12,7 +12,7 @@ export default memo(function AppMapContainer(props: { children: React.ReactNode 
       <YStack fullscreen position={'fixed' as any} zi={zIndexMap}>
         <AppMapControls />
         <AppMapSpotlight />
-        {props.children}
+        <YStack f={1}>{props.children}</YStack>
       </YStack>
     )
   }

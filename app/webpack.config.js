@@ -250,6 +250,9 @@ if (process.env.TAMAGUI_TARGET === 'native') {
           'react-native-web$': require.resolve('react-native-web'),
           'react-native-safe-area-context': require.resolve('react-native-safe-area-context'),
           'react-native-reanimated': require.resolve('react-native-reanimated'),
+          // doesn't work..
+          // 'react-native/Libraries/Renderer/shims/ReactFabric':
+          //   require.resolve('@tamagui/proxy-worm'),
           gqty: path.join(require.resolve('gqty'), '..'),
           recyclerlistview: 'recyclerlistview/web',
           // bugfix until merged
