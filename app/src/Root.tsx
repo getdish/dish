@@ -120,8 +120,8 @@ export function Root() {
     'dark'
 
   return (
-    <DrawerProvider>
-      <SafeAreaProvider>
+    <>
+      <>
         <Tamagui.Provider defaultTheme={defaultTheme}>
           <ProvideRouter routes={routes}>
             <Suspense fallback={null}>
@@ -136,8 +136,8 @@ export function Root() {
           </ProvideRouter>
           {showRadar && <Radar />}
         </Tamagui.Provider>
-      </SafeAreaProvider>
-    </DrawerProvider>
+      </>
+    </>
   )
 }
 

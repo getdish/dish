@@ -1,6 +1,3 @@
-import { parseSchemaType, selectFields } from 'gqty'
-import { omit } from 'lodash'
-
 import { DISH_DEBUG } from '../constants'
 import {
   Scalars,
@@ -26,6 +23,8 @@ import {
 } from '../helpers/queryResolvers'
 import { ModelName, ModelType, WithID } from '../types'
 import { isMutatableField, isMutatableRelation } from './isMutatableField'
+import { parseSchemaType, selectFields } from 'gqty'
+import { omit } from 'lodash'
 
 type scaleUid = Scalars['uuid']
 
@@ -253,7 +252,7 @@ function removeReadOnlyProperties<T extends Object>(table: string, objects: T[])
   })
 }
 
-export function prepareData<T>(
+export function prepareData<T extends Object>(
   table: string,
   objects: T[],
   inputType: '_set_input' | '_insert_input'

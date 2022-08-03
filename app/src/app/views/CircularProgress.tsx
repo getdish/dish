@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
-import { G, Linecap, Path, Svg } from 'react-native-svg'
+import { G, Path, Svg } from 'react-native-svg'
 
 type CircularProgressProps = {
   fill: number
@@ -12,7 +12,7 @@ type CircularProgressProps = {
   tintTransparency?: boolean
   backgroundColor?: string
   rotation?: number
-  lineCap?: Linecap
+  lineCap?: any
   arcSweepAngle?: number
   children?: any
   childrenContainerStyle?: any
@@ -55,8 +55,19 @@ export function CircularProgress({
     tintTransparency ? 0 : currentFillAngle,
     arcSweepAngle
   )
-  const circlePath = getCirclePath(sizeWithPadding, sizeWithPadding, radius, 0, currentFillAngle)
-  const coordinate = polarToCartesian(sizeWithPadding, sizeWithPadding, radius, currentFillAngle)
+  const circlePath = getCirclePath(
+    sizeWithPadding,
+    sizeWithPadding,
+    radius,
+    0,
+    currentFillAngle
+  )
+  const coordinate = polarToCartesian(
+    sizeWithPadding,
+    sizeWithPadding,
+    radius,
+    currentFillAngle
+  )
   const cap = renderCap?.({ center: coordinate }) ?? null
   const offset = size - maxWidthCircle * 2
 
@@ -73,7 +84,9 @@ export function CircularProgress({
   }
 
   const strokeDasharrayTint =
-    dashedTint.gap > 0 ? Object.values(dashedTint).map((value) => parseInt(String(value))) : null
+    dashedTint.gap > 0
+      ? Object.values(dashedTint).map((value) => parseInt(String(value)))
+      : null
 
   const strokeDasharrayBackground =
     dashedBackground.gap > 0
@@ -115,7 +128,7 @@ export function CircularProgress({
 const clampFill = (fill) => Math.min(100, Math.max(0, fill))
 
 function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
-  var angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0
+  const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0
   return {
     x: centerX + radius * Math.cos(angleInRadians),
     y: centerY + radius * Math.sin(angleInRadians),
@@ -123,9 +136,9 @@ function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
 }
 
 function getCirclePath(x, y, radius, startAngle, endAngle) {
-  var start = polarToCartesian(x, y, radius, endAngle * 0.9999)
-  var end = polarToCartesian(x, y, radius, startAngle)
-  var largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1'
-  var d = ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y]
+  const start = polarToCartesian(x, y, radius, endAngle * 0.9999)
+  const end = polarToCartesian(x, y, radius, startAngle)
+  const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1'
+  const d = ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y]
   return d.join(' ')
 }

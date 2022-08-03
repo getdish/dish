@@ -18,6 +18,7 @@ export const TrendingButton = <
 }) => {
   return (
     <XStack alignItems="center">
+      {/* @ts-ignore */}
       <LinkButton
         backgroundColor="transparent"
         flexDirection="row"

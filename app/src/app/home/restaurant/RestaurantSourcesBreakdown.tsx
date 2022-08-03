@@ -1,3 +1,9 @@
+import { tagDisplayName } from '../../../constants/tagDisplayName'
+import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
+import { queryRestaurant } from '../../../queries/queryRestaurant'
+import { homeStore } from '../../homeStore'
+import { Image } from '../../views/Image'
+import { useBreakdownsBySources } from './useBreakdownsBySources'
 import { graphql } from '@dish/graph'
 import {
   Spacer,
@@ -13,13 +19,6 @@ import {
 } from '@dish/ui'
 import { sortBy } from 'lodash'
 import React, { memo } from 'react'
-
-import { tagDisplayName } from '../../../constants/tagDisplayName'
-import { thirdPartyCrawlSources } from '../../../constants/thirdPartyCrawlSources'
-import { queryRestaurant } from '../../../queries/queryRestaurant'
-import { homeStore } from '../../homeStore'
-import { Image } from '../../views/Image'
-import { useBreakdownsBySources } from './useBreakdownsBySources'
 
 export const col0Props: TableCellProps = {
   flex: 0,
@@ -129,7 +128,7 @@ export const RestaurantSourcesBreakdown = memo(
 
                     <TableCell {...col3Props}>
                       <Text opacity={0.5} fontSize={12}>
-                        {item[tag.name]}
+                        {item[tag.name!]}
                       </Text>
                     </TableCell>
                   </TableRow>

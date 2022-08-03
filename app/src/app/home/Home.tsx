@@ -12,7 +12,15 @@ import { HomeDrawerSmallView } from './HomeDrawerSmallView'
 import { HomeDrawerSmallView as HomeDrawerSmallViewNative } from './HomeDrawerSmallView.native'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
-import { LinearGradient, XStack, YStack, useIsTouchDevice, useMedia, useTheme } from '@dish/ui'
+import {
+  LinearGradient,
+  Spacer,
+  XStack,
+  YStack,
+  useIsTouchDevice,
+  useMedia,
+  useTheme,
+} from '@dish/ui'
 import { reaction } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 import { Keyboard } from 'react-native'
@@ -62,38 +70,11 @@ export const Home = memo(function Home() {
 })
 
 const HomeDrawerSmall = (props: { children: any }) => {
-  const isTouchDevice = useIsTouchDevice()
-
-  useEffect(() => {
-    return reaction(
-      autocompletesStore,
-      (x) => x.visible,
-      function autocompleteVisibleToSnapAndKeyboard(visible) {
-        if (visible === true) {
-          if (drawerStore.snapIndex !== 0) {
-            drawerStore.setSnapIndex(0)
-          }
-        } else {
-          Keyboard.dismiss()
-          if (drawerStore.isDragging) {
-            return
-          }
-          if (drawerStore.snapIndex !== 1) {
-            drawerStore.setSnapIndex(1)
-          }
-        }
-      }
-    )
-  }, [])
-
-  if (true) {
-    return <HomeDrawerSmallViewNative {...props} />
-  }
-
   return (
-    <>
-      <HomeDrawerSmallView {...props} />
-    </>
+    <YStack pe="none" pos="relative" zi={100000000000}>
+      <Spacer pe="none" size={400} />
+      <YStack pe="auto">{props.children}</YStack>
+    </YStack>
   )
 }
 

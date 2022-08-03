@@ -113,6 +113,29 @@ export const HomePageFeed = memo(
 
       return (
         <>
+          {restaurants.map((item, index) => {
+            return (
+              <SwipeableItem
+                key={item.id}
+                item={item}
+                snapPointsRight={[100]}
+                overSwipe={20}
+                renderUnderlayRight={() => <Square size={50} bc="red" />}
+              >
+                <RestaurantListItem
+                  // list={list
+                  curLocInfo={null}
+                  rank={0}
+                  restaurant={item}
+                />
+              </SwipeableItem>
+            )
+          })}
+        </>
+      )
+
+      return (
+        <>
           {/* <ContentScrollViewHorizontal>
             <XStack pe="auto" ai="center" space="$5" py="$2" px="$4">
               {topCuisines.data?.map((cuisine, i) => {
@@ -207,7 +230,7 @@ export const HomePageFeed = memo(
             })}
           </YStack> */}
 
-          <DraggableFlatList
+          {/* <DraggableFlatList
             keyExtractor={(item, index) => `draggable-item-${item?.name}`}
             data={restaurants}
             renderItem={useCallback(
@@ -266,7 +289,7 @@ export const HomePageFeed = memo(
                 document.body.classList.remove('unselectable-all')
               }
             }}
-          />
+          /> */}
 
           {/* <HomeTagLenses /> */}
           {/* <HomeNearbyRegions lng={center?.lng} lat={center?.lat} /> */}

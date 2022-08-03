@@ -169,20 +169,11 @@ const HomePageContent = (props: Props) => {
 
       <HomePageWelcomeBubble />
 
-      <YStack
-        flex={1}
-        width="100%"
-        maxHeight="100%"
-        overflow="hidden"
-        maxWidth={drawerWidthMax}
-        alignSelf="flex-end"
-      >
-        <ContentScrollView id="home">
-          <HomeTopSpacer />
-          <PageContent hideFooter>
-            {wasEverActive && <HomePageFeed {...homePageFeedProps} />}
-          </PageContent>
-        </ContentScrollView>
+      <YStack maxWidth={drawerWidthMax}>
+        <HomeTopSpacer />
+        <PageContent hideFooter>
+          {wasEverActive && <HomePageFeed {...homePageFeedProps} />}
+        </PageContent>
       </YStack>
     </>
   )

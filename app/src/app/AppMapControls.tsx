@@ -11,13 +11,14 @@ import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/u
 import { Minus, Plus, RefreshCcw, X, ZoomOut } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 import { SafeAreaView, StatusBar, Text } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+// import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const AppMapControls = memo(() => {
   const media = useMedia()
   const showSearchHere = useShowSearchHere()
   const appMap = useStoreInstance(appMapStore)
-  const safeArea = useSafeAreaInsets()
+  // const safeArea = useSafeAreaInsets()
   const isHoverZoomed = useStoreInstanceSelector(
     appMapStore,
     (x) => x.hovered?.via === 'list' && x.zoomOnHover
@@ -29,9 +30,9 @@ export const AppMapControls = memo(() => {
         fullscreen
         left={5}
         right={5}
-        {...(!isWeb && {
-          top: safeArea.top - 10,
-        })}
+        // {...(!isWeb && {
+        //   top: safeArea.top - 10,
+        // })}
         zIndex={20000000}
         alignItems="center"
         pointerEvents="none"

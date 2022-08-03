@@ -107,7 +107,7 @@ const AppStackViewItem = memo(
 
     const contents = (
       <YStack
-        position="absolute"
+        // position="absolute"
         zIndex={index}
         className={`animate-up ${isFullyActive ? 'active' : 'untouchable'}`}
         display={isFullyInactive ? 'none' : 'flex'}
@@ -116,6 +116,13 @@ const AppStackViewItem = memo(
         bottom={-(index * 5)}
         left={0}
         pointerEvents={isActive ? 'auto' : 'none'}
+        pos="absolute"
+        {...(isActive && {
+          pos: 'relative',
+        })}
+        $smWeb={{
+          opacity: isActive ? 1 : 0,
+        }}
       >
         <ErrorBoundary name={`AppStackView.${item.type}`}>
           <Suspense fallback={null}>{children}</Suspense>

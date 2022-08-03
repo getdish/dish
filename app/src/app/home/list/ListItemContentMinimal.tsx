@@ -76,7 +76,7 @@ const Header = memo(
     }
 
     return (
-      <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
+      <HoverToZoom slug={restaurant.slug || ''}>
         <YStack
           hoverStyle={{
             backgroundColor: '$backgroundTransparent',

@@ -45,7 +45,6 @@ import { reaction, useStoreInstance, useStoreInstanceSelector } from '@dish/use-
 import loadable from '@loadable/component'
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { Animated, StyleSheet } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default memo(function AppMap() {
   // lighthouse/slow browser optimization
@@ -88,7 +87,6 @@ export default memo(function AppMap() {
         <>
           <AppMapControls />
           <AppMapBottomFade />
-          <AppMapTopFade />
         </>
       )}
 
@@ -106,7 +104,7 @@ export default memo(function AppMap() {
           },
         ]}
       > */}
-        {/* <AppMapSpotlight /> */}
+        <AppMapSpotlight />
         <AppMapContents />
         {/* </Animated.View> */}
       </YStack>
@@ -416,22 +414,6 @@ const AppMapBottomFade = memo(() => {
         colors={[`${theme.background}00`, theme.background.toString()]}
       /> */}
     </AbsoluteYStack>
-  )
-})
-
-const AppMapTopFade = memo(() => {
-  const safeArea = useSafeAreaInsets()
-
-  return (
-    <LinearGradient
-      pointerEvents="none"
-      fullscreen
-      bottom="auto"
-      top={-20}
-      height={safeArea.top + 20}
-      zIndex={100}
-      colors={['#000', 'rgba(0,0,0,0)']}
-    />
   )
 })
 

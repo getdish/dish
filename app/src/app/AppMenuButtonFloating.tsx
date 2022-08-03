@@ -6,16 +6,19 @@ import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
 import { Sheet } from '@tamagui/sheet'
 import React, { memo } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+// import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const AppMenuButtonFloating = memo(() => {
   const media = useMedia()
   const appMenu = useStoreInstance(appMenuStore)
-  const safeArea = useSafeAreaInsets()
+  // const safeArea = useSafeAreaInsets()
 
   if (!(media.sm || media.xs)) {
     return null
   }
+
+  return null
 
   return (
     <>
@@ -44,7 +47,7 @@ export const AppMenuButtonFloating = memo(() => {
       </Sheet>
 
       <AbsoluteYStack
-        top={safeArea.top ? safeArea.top : 10}
+        // top={safeArea.top ? safeArea.top : 10}
         right={10}
         zIndex={zIndexDrawer - 1}
       >

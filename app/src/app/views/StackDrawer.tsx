@@ -10,6 +10,7 @@ import {
   LoadingItems,
   YStack,
   YStackProps,
+  isWeb,
   useMedia,
   useTheme,
 } from '@dish/ui'
@@ -83,6 +84,9 @@ export const StackDrawer = ({
         justifyContent="flex-end"
         shadowRadius={9}
         shadowColor="$shadowColor"
+        $smWeb={{
+          pos: 'relative',
+        }}
       >
         {controls}
         <YStack

@@ -1,10 +1,3 @@
-import { fullyIdle, series } from '@dish/async'
-import { Text, XStack, YStack } from '@dish/ui'
-import { useStoreSelector } from '@dish/use-store'
-import { X } from '@tamagui/feather-icons'
-import React, { memo, useEffect, useRef, useState } from 'react'
-import { TextInput } from 'react-native'
-
 import {
   ColumnSelectionStore,
   RowSelectionStore,
@@ -12,6 +5,12 @@ import {
   useRowStore,
 } from './SelectionStore'
 import { styles } from './styles'
+import { fullyIdle, series } from '@dish/async'
+import { Text, XStack, YStack } from '@dish/ui'
+import { useStoreSelector } from '@dish/use-store'
+import { X } from '@tamagui/feather-icons'
+import React, { memo, useEffect, useRef, useState } from 'react'
+import { TextInput } from 'react-native'
 
 export type AdminListItemProps = {
   id: string
@@ -39,12 +38,15 @@ export const AdminListItem = memo(
   }: AdminListItemProps) => {
     const rowStore = useRowStore({ id, column })
     const columnStore = useColumnStore({ id })
-    const isRowActive = useStoreSelector(RowSelectionStore, (s) => s.row === row, { id, column })
+    const isRowActive = useStoreSelector(RowSelectionStore, (s) => s.row === row, {
+      id,
+      column,
+    })
     const isColumnActive = useStoreSelector(ColumnSelectionStore, (s) => s.column === column, {
       id,
     })
-    const isActive = isRowActive && isColumnActive
-    const isFormerlyActive = isRowActive && !isColumnActive
+    const isActive = !!(isRowActive && isColumnActive)
+    const isFormerlyActive = !!(isRowActive && !isColumnActive)
     const [isEditing, setIsEditing] = useState(false)
     const [hidden, setHidden] = useState(false)
     const lastTap = useRef(Date.now())

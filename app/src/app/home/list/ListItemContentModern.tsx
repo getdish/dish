@@ -23,8 +23,16 @@ import React, { Suspense, memo } from 'react'
 
 export const ListItemContentModern = memo(
   graphql((props: ListItemContentProps) => {
-    const { rank, restaurant, editable, reviewQuery, isEditing, setIsEditing, onUpdate, list } =
-      props
+    const {
+      rank,
+      restaurant,
+      editable,
+      reviewQuery,
+      isEditing,
+      setIsEditing,
+      onUpdate,
+      list,
+    } = props
     // modern default
     const review = reviewQuery?.[0]
     const media = useMedia()
@@ -65,7 +73,7 @@ export const ListItemContentModern = memo(
     }
 
     return (
-      <HoverToZoom id={restaurant.id} slug={restaurant.slug || ''}>
+      <HoverToZoom slug={restaurant.slug || ''}>
         <YStack
           hoverStyle={{ backgroundColor: '$backgroundTransparent' }}
           maxWidth="100%"
@@ -73,7 +81,13 @@ export const ListItemContentModern = memo(
           paddingVertical={16}
           paddingLeft={30}
         >
-          <XStack flex={1} marginLeft={-15} alignItems="center" flexGrow={1} position="relative">
+          <XStack
+            flex={1}
+            marginLeft={-15}
+            alignItems="center"
+            flexGrow={1}
+            position="relative"
+          >
             <Column width={320} flexDirection="row" justifyContent="flex-start">
               <YStack y={3} marginRight={-12} marginLeft={-8}>
                 <RankView rank={rank} />
@@ -107,7 +121,11 @@ export const ListItemContentModern = memo(
               </Link>
             </Column>
 
-            <ReviewTagsRow list={list} review={review} restaurantSlug={restaurant.slug || ''} />
+            <ReviewTagsRow
+              list={list}
+              review={review}
+              restaurantSlug={restaurant.slug || ''}
+            />
           </XStack>
 
           <XStack
@@ -185,7 +203,10 @@ export const ListItemContentModern = memo(
                         />
                       }
                     >
-                      {numberFormat(restaurant.reviews_aggregate().aggregate?.count() ?? 0, 'sm')}
+                      {numberFormat(
+                        restaurant.reviews_aggregate().aggregate?.count() ?? 0,
+                        'sm'
+                      )}
                     </SmallButton>
                   </Link>
                   <Spacer />
