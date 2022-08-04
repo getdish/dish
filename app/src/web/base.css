@@ -712,3 +712,8 @@ mark {
 .fade-right {
   background: linear-gradient(to right, var(--backgroundStrong), rgba(0,0,0,0) 34%);
 }
+
+.blur {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}

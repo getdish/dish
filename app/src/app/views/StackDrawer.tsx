@@ -90,7 +90,8 @@ export const StackDrawer = ({
           overflow="hidden"
           {...props}
         >
-          <YStack fullscreen backgroundColor="$background" o={isSafari ? 0.5 : 0.9} />
+          <YStack fullscreen backgroundColor="$colorMid" o={isSafari ? 0.5 : 0.9} />
+          <YStack fullscreen backgroundColor="$backgroundSoft" o={isSafari ? 0.5 : 0.9} />
           <HomeSuspense fallback={fallback ?? <LoadingItems />}>
             {isLoaded ? children : null}
           </HomeSuspense>

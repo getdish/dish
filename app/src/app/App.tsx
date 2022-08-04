@@ -80,10 +80,6 @@ function PublicContent(props: { children?: any }) {
       </Suspense>
 
       <Suspense fallback={null}>
-        <AppMapControlsOverlay />
-      </Suspense>
-
-      <Suspense fallback={null}>
         <AppMenuButtonFloating />
       </Suspense>
 

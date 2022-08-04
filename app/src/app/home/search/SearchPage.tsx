@@ -363,8 +363,7 @@ const SearchResultsInfiniteScroll = memo((props: SearchProps) => {
       rowRenderer={rowRenderer}
       dataProvider={dataProvider}
       layoutProvider={layoutProvider}
-      deterministic
-      useWindowScroll={isMobilePhone}
+      useWindowScroll
     />
   )
 })
@@ -471,17 +470,17 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           onSizeChanged?.(x.nativeEvent.layout)
         }}
       >
-        <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}>
-          <PageContent>
-            <SearchHeader />
-            <SearchPageNavBar />
-            <Spacer size="$7" />
-            <SearchContent>{children}</SearchContent>
-            <Suspense fallback={null}>
-              <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
-            </Suspense>
-          </PageContent>
-        </ContentScrollView>
+        {/* <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}> */}
+        <PageContent>
+          <SearchHeader />
+          <SearchPageNavBar />
+          <Spacer size="$7" />
+          <SearchContent>{children}</SearchContent>
+          <Suspense fallback={null}>
+            <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
+          </Suspense>
+        </PageContent>
+        {/* </ContentScrollView> */}
       </View>
     )
   }

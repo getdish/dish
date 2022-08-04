@@ -5,7 +5,7 @@ import React from 'react'
 export const StackCloseButton = (props: { onClose?: () => void }) => {
   return (
     <PaneControlButtons>
-      <StackViewCloseButton onPress={props.onClose} />
+      <StackViewCloseButton onPressOut={props.onClose} />
     </PaneControlButtons>
   )
 }

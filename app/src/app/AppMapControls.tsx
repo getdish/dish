@@ -74,14 +74,6 @@ export const AppMapControls = memo(() => {
             </>
           )}
 
-          <YStack className="test123" fullscreen ai="center" jc="center">
-            <ThemeInverse>
-              <SlantedTitle size="$2" als="center">
-                Kailua
-              </SlantedTitle>
-            </ThemeInverse>
-          </YStack>
-
           {showSearchHere && (
             <OverlayLinkButton icon={RefreshCcw} onPress={pagesStore.refresh} />
           )}

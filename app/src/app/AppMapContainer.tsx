@@ -10,8 +10,8 @@ export default memo(function AppMapContainer(props: { children: React.ReactNode 
   if (media.mdWeb) {
     return (
       <YStack fullscreen position={'fixed' as any} zi={zIndexMap}>
-        <AppMapControls />
         <AppMapSpotlight />
+        <AppMapControls />
         <YStack f={1}>{props.children}</YStack>
       </YStack>
     )

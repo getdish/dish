@@ -40,7 +40,7 @@
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
     "@gqty/cli": "^3.1.0",
-    "@tamagui/build": "^1.0.1-beta.133",
+    "@tamagui/build": "^1.0.1-beta.135",
     "@types/node": "^16.11.10",
     "ava": "^3.15.0"
   }

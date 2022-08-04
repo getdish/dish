@@ -1,41 +1,47 @@
+import { searchBarHeight } from '../../constants/constants'
 import { router } from '../../router'
+import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
 import { autocompletesStore } from '../AutocompletesStore'
 import { HomeDrawer } from './HomeDrawer'
+import HomePage from './HomePage'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
-import { reaction, useStoreInstance } from '@dish/use-store'
+import { Square, YStack } from '@dish/ui'
+import { useReaction, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 
-export const Home = memo(function Home() {
+export const Home = memo(() => {
   const { visible: autocompleteVisible } = useStoreInstance(autocompletesStore)
-
-  // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {
-    useEffect(() => {
-      return () => {
-        console.warn('🏡🏡🏡 Home UNCAUGHT SUSPENSE SOMEWHERE -- FIX IT!!\n\ns')
-      }
-    }, [])
+    useEffect(
+      () => () => {
+        console.warn('⚠️ this component should never unmount, uncaught suspense')
+      },
+      []
+    )
   }
 
-  useEffect(() => {
-    return reaction(
-      router as any,
-      (x) => {
-        return x.curPage.name
-      },
-      function appMenuShow(name) {
-        if (name == 'login' || name == 'register' || name == 'passwordReset') {
-          appMenuStore.show()
-        }
+  useReaction(
+    router,
+    (x) => x.curPage.name,
+    (name) => {
+      if (name == 'login' || name == 'register' || name == 'passwordReset') {
+        appMenuStore.show()
       }
-    )
-  }, [])
+    },
+    undefined,
+    []
+  )
 
   return (
     <Suspense fallback={null}>
       <HomeDrawer showAutocomplete={autocompleteVisible}>
+        <YStack fullscreen pt={searchBarHeight}>
+          <YStack pos="relative" f={1}>
+            <AppAutocompleteSearch />
+          </YStack>
+        </YStack>
         <HomeStackView limitVisibleStates={autocompleteVisible ? 0 : Infinity}>
           {(props) => {
             return <HomeStackViewPages {...props} />

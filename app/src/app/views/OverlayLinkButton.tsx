@@ -10,11 +10,11 @@ export const OverlayLinkButton = forwardRef(function OverlayLinkButtonContent<
   Params = RoutesTable[Name]['params']
 >({ children, ...props }: LinkButtonProps<Name, Params>, ref) {
   return (
-    <ThemeInverse>
+    <>
       {/* @ts-ignore */}
       <LinkButton ref={ref} chromeless size="$5" elevate pointerEvents="auto" {...props}>
         {children}
       </LinkButton>
-    </ThemeInverse>
+    </>
   )
 })

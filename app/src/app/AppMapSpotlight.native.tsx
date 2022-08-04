@@ -1,10 +1,16 @@
-import { useAppMapSpotlight } from './AppMapSpotlight'
+import { useAppMapSpotlight } from './useAppMapSpotlight'
 import { Blur, Canvas, Circle, Group, Mask, Rect } from '@shopify/react-native-skia'
 import React from 'react'
 import { View } from 'react-native'
 
+const isRemoteDebugging = typeof DedicatedWorkerGlobalScope !== 'undefined'
+
 export const AppMapSpotlight = () => {
-  const { window, size, cx, cy } = useAppMapSpotlight()
+  const { window, size, cx, cy } = useAppMapSpotlight({})
+
+  if (isRemoteDebugging) {
+    return null
+  }
 
   return (
     <View pointerEvents="none" style={{ flex: 1, zIndex: 1000000000 }}>

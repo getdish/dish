@@ -1,7 +1,6 @@
-import React, { forwardRef, memo } from 'react'
-
 import { LinkButtonAutoActive } from './views/LinkButtonAutoActive'
 import { LinkButtonProps } from './views/LinkProps'
+import React, { forwardRef, memo } from 'react'
 
 export const AppMenuLinkButton = memo(
   forwardRef(

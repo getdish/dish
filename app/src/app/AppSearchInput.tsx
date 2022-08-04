@@ -8,7 +8,6 @@ import {
   autocompleteSearchStore,
   autocompletesStore,
 } from './AutocompletesStore'
-import { InputFrame } from './InputFrame'
 import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { drawerStore } from './drawerStore'
 import { runSearch } from './home/search/SearchPageStore'
@@ -31,7 +30,6 @@ import {
   YStack,
   getMedia,
   useDebounce,
-  useMedia,
   useOnMount,
   useTheme,
 } from '@dish/ui'
@@ -51,7 +49,6 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
   const setSearch = useDebounce(autocompleteSearchStore.setQuery, 100)
 
   const height = searchBarHeight
-  const outerHeight = height - 1
   const innerHeight = height - 1
 
   const setSearchInputValue = (value: string) => {
@@ -88,9 +85,6 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
     })
   }, [])
 
-  // const input = inputStore.node
-  const searchInputContainer = useRef<View>()
-
   // focus for web
   const isDesktop = isWeb && !isWebTouch
   if (isDesktop) {
@@ -107,103 +101,81 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
     console.log('wut the', theme)
     return null
   }
+  // {/* <ScrollView
+  //   horizontal
+  //   showsHorizontalScrollIndicator={false}
+  //   contentContainerStyle={{
+  //     alignItems: 'center',
+  //     minHeight: 100000,
+  //     minWidth: '100%',
+  //     height: innerHeight,
+  //   }}
+  //   style={{
+  //     minWidth: '100%',
+  //     height: innerHeight,
+  //     flex: 1,
+  //   }}
+  // > */}
 
   return (
-    <>
-      <YStack
-        // @ts-ignore
-        ref={searchInputContainer}
-        minWidth="50%"
-        flex={2}
-        height={outerHeight}
-      >
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            alignItems: 'center',
-            minWidth: '100%',
+    <XStack f={1} height={innerHeight}>
+      {/* <AppSearchInputTagsRow /> */}
+      <XStack height={innerHeight} position="relative" flex={1} alignItems="center">
+        <SearchInput
+          flex={1}
+          height={searchBarHeight}
+          floating={floating}
+          ref={(view) => {
+            textInput$.current = view
+            setInputNode(view)
           }}
-          style={{
-            minWidth: '100%',
-            paddingRight: 10,
-            flex: 1,
+          onBlur={(e) => {
+            inputStore.setIsFocused(true)
+            setAvoidNextAutocompleteShowOnFocus(false)
+            // dont because it hides during autocomplete click
+            // and event is before mousedown even
+            // if (isWeb && !getMedia().sm) {
+            //   if (autocompletesStore.target === 'search') {
+            //     autocompletesStore.setVisible(false)
+            //   }
+            // }
           }}
-        >
-          <XStack alignSelf="center" alignItems="center" minWidth="100%" height={innerHeight}>
-            <AppSearchInputTagsRow />
-            <XStack
-              height={innerHeight}
-              maxWidth="100%"
-              position="relative"
-              flex={1}
-              alignItems="center"
-            >
-              {isTouchDevice && <SearchInputNativeDragFix name="search" />}
-              <SearchInput
-                maxWidth={500}
-                height={searchBarHeight}
-                floating={floating}
-                ref={(view) => {
-                  textInput$.current = view
-                  setInputNode(view)
-                }}
-                onBlur={(e) => {
-                  inputStore.setIsFocused(true)
-                  setAvoidNextAutocompleteShowOnFocus(false)
-                  // dont because it hides during autocomplete click
-                  // and event is before mousedown even
-                  // if (isWeb && !getMedia().sm) {
-                  //   if (autocompletesStore.target === 'search') {
-                  //     autocompletesStore.setVisible(false)
-                  //   }
-                  // }
-                }}
-                onKeyPress={handleKeyPressInner}
-                placeholderTextColor="red"
-                onFocus={(e) => {
-                  inputStore.setIsFocused(true)
-                  if (isDesktop) {
-                    console.log('ignore focus')
-                    // see above, we handle better for text selection
-                    return
-                  }
-                  if (drawerStore.isDragging) {
-                    return
-                  }
-                  if (homeStore.searchbarFocusedTag) {
-                    homeStore.setSearchBarTagIndex(0)
-                  } else {
-                    autocompletesStore.setTarget('search')
-                  }
-                }}
-                onChangeText={(text) => {
-                  if (text !== '') {
-                    if (autocompletesStore.target !== 'search') {
-                      autocompletesStore.setTarget('search')
-                    }
-                  }
-                  setSearch(text)
-                }}
-                placeholder={
-                  isEditingList
-                    ? 'Add restaurant to list...'
-                    : isSearchingCuisine
-                    ? '...'
-                    : `Kailua`
-                }
-              />
-            </XStack>
-          </XStack>
-        </ScrollView>
-      </YStack>
+          onKeyPress={handleKeyPressInner}
+          onFocus={(e) => {
+            inputStore.setIsFocused(true)
+            if (isDesktop) {
+              console.log('ignore focus')
+              // see above, we handle better for text selection
+              return
+            }
+            if (drawerStore.isDragging) {
+              return
+            }
+            if (homeStore.searchbarFocusedTag) {
+              homeStore.setSearchBarTagIndex(0)
+            } else {
+              autocompletesStore.setTarget('search')
+            }
+          }}
+          onChangeText={(text) => {
+            if (text !== '') {
+              if (autocompletesStore.target !== 'search') {
+                autocompletesStore.setTarget('search')
+              }
+            }
+            setSearch(text)
+          }}
+          placeholder={
+            isEditingList ? 'Add restaurant to list...' : isSearchingCuisine ? '...' : `Kailua`
+          }
+        />
+      </XStack>
 
+      {/* </ScrollView> */}
       <SearchLoadingIcon color={theme.color.toString()} />
 
       <SearchCancelButton />
-
-      <Spacer size={8} />
-    </>
+    </XStack>
   )
 })
 

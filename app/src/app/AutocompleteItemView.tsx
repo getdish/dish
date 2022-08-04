@@ -5,6 +5,7 @@ import { CircleButton } from './home/restaurant/CircleButton'
 import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'
 import {
+  ListItem,
   SizableText,
   Spacer,
   Text,
@@ -77,21 +78,7 @@ export const AutocompleteItemView = memo(
     return (
       // @ts-expect-error
       <LinkButton
-        size="$5"
-        px="$3"
-        alignSelf="stretch"
-        justifyContent="flex-start"
-        backgroundColor={isActive ? '#000' : 'transparent'}
-        borderRadius={0}
-        hoverStyle={{
-          backgroundColor: isActive ? '#000' : theme.background,
-        }}
-        {...(hideBackground && {
-          backgroundColor: 'transparent',
-          hoverStyle: {
-            backgroundColor: 'transparent',
-          },
-        })}
+        asChild
         onPressOut={() => {
           Keyboard.dismiss()
           hideAutocompleteSlow()
@@ -102,30 +89,16 @@ export const AutocompleteItemView = memo(
         {...getLinkForAutocomplete(result)}
         noTextWrap
       >
-        <XStack alignItems="center" width="100%">
-          {!hideIcon && <XStack w={40}>{icon}</XStack>}
-          <YStack overflow="hidden" flex={1}>
-            <XStack width="100%" marginVertical={-3} flex={1} alignItems="center">
-              <SizableText fontWeight="600" ellipse color={theme.color} lineHeight={30}>
-                {!!result.namePrefix && (
-                  <>
-                    <SizableText>{result.namePrefix}</SizableText>{' '}
-                  </>
-                )}
-                {result.name}
-              </SizableText>
-            </XStack>
-            {!!result.description && (
-              <>
-                <Spacer size="$1" />
-                <SizableText ellipse color={theme.colorHover}>
-                  {result.description}
-                </SizableText>
-              </>
-            )}
-          </YStack>
+        <ListItem
+          size="$6"
+          title={result.name}
+          subTitle={result.description}
+          icon={<XStack w={40}>{icon}</XStack>}
+          hoverTheme
+          // backgroundColor="$background"
+        >
           {plusButtonEl}
-        </XStack>
+        </ListItem>
       </LinkButton>
     )
   }

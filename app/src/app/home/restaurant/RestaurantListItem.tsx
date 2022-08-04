@@ -317,7 +317,15 @@ export const RestaurantListItem = memo(
 
           {/* ROW: BOTTOM ROW */}
 
-          <XStack space fullscreen left="auto" ai="center" jc="center" m="$4">
+          <XStack
+            $sm={{ dsp: 'none' }}
+            space
+            fullscreen
+            left="auto"
+            ai="center"
+            jc="center"
+            m="$4"
+          >
             <Button icon={MessageCircle} size="$6" circular />
             {/* <Button icon={Tag} size="$6" circular /> */}
           </XStack>

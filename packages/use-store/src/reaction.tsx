@@ -2,11 +2,27 @@ import { Store } from './Store'
 import { isEqualSubsetShallow } from './comparators'
 import { UNWRAP_PROXY } from './constants'
 import { setIsInReaction } from './useStore'
+import { useMemo } from 'react'
 
 const dispose = (d: any) => {
   if (typeof d === 'function') {
     d()
   }
+}
+
+export function useReaction<
+  StoreInstance extends Store<any>,
+  Selector extends (a: StoreInstance) => any
+>(
+  store: StoreInstance,
+  selector: Selector,
+  receiver: Selector extends (a: StoreInstance) => infer Derived
+    ? (a: Derived) => any
+    : unknown,
+  equalityFn: (a: any, b: any) => boolean = isEqualSubsetShallow,
+  memoArgs?: any[]
+) {
+  return useMemo(() => reaction(store, selector, receiver, equalityFn), [memoArgs])
 }
 
 export function reaction<
