@@ -4,10 +4,9 @@ import { AppAutocompleteSearch } from '../AppAutocompleteSearch'
 import { appMenuStore } from '../AppMenuStore'
 import { autocompletesStore } from '../AutocompletesStore'
 import { HomeDrawer } from './HomeDrawer'
-import HomePage from './HomePage'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
-import { Square, YStack } from '@dish/ui'
+import { YStack } from '@dish/ui'
 import { useReaction, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 
@@ -35,8 +34,8 @@ export const Home = memo(() => {
   )
 
   return (
-    <Suspense fallback={null}>
-      <HomeDrawer showAutocomplete={autocompleteVisible}>
+    <HomeDrawer showAutocomplete={autocompleteVisible}>
+      <Suspense fallback={null}>
         <YStack fullscreen pt={searchBarHeight}>
           <YStack pos="relative" f={1}>
             <AppAutocompleteSearch />
@@ -47,7 +46,7 @@ export const Home = memo(() => {
             return <HomeStackViewPages {...props} />
           }}
         </HomeStackView>
-      </HomeDrawer>
-    </Suspense>
+      </Suspense>
+    </HomeDrawer>
   )
 })

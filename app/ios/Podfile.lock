@@ -439,7 +439,7 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNGestureHandler (2.4.2):
+  - RNGestureHandler (2.5.0):
     - React-Core
   - rnmapbox-maps (10.0.0-beta.16):
     - MapboxMaps (~> 10.6.0)
@@ -452,7 +452,7 @@ PODS:
     - React
     - React-Core
     - Turf
-  - RNReanimated (3.0.0-rc.0):
+  - RNReanimated (2.9.1):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -783,9 +783,9 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 607eb048e22a16388c908ee1f6644200e8d1e19b
   ReactCommon: af7636436b382db7cde4583bbd642f0978e6e3ed
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
-  RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
+  RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   rnmapbox-maps: 39363ecf919d107ff1fbada0d4cd057ae52bdab5
-  RNReanimated: 89886d02e4748077c0dd3c645286b15a9bca097b
+  RNReanimated: 2cf7451318bb9cc430abeec8d67693f9cf4e039c
   RNSentry: 68644ef607b780551cc555f084869764f2566652
   RNSVG: f3b60aeeaa81960e2e0536c3a9eef50b667ef3a9
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d

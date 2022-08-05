@@ -222,12 +222,11 @@ export const HomePageFeed = memo(
       const setHoveredDbc = useDebounce(setHovered, 400)
       const homeStore = useHomeStore()
       const topCuisines = useTopCuisines(homeStore.currentState.center)
-      console.log('topCuisines', topCuisines)
       const restaurants = query.restaurant({
         limit: 10,
         order_by: [
           {
-            created_at: order_by.asc,
+            created_at: order_by.desc,
           },
         ],
       })
@@ -235,7 +234,7 @@ export const HomePageFeed = memo(
         setHoveredDbc.cancel()
       }
 
-      console.log('topCuisines', topCuisines.data, restaurants)
+      console.log('topCuisines', topCuisines.data, restaurants, center)
 
       useSetAppMap({
         showRank: !!hovered,

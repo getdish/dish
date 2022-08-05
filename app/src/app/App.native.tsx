@@ -8,7 +8,8 @@ import { Home } from './home/Home'
 import GalleryPage from './home/gallery/GalleryPage'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
-import { AbsoluteYStack, useTheme, useThemeName } from '@dish/ui'
+import { AbsoluteYStack, YStack, useTheme, useThemeName } from '@dish/ui'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 // import { StatusBar } from 'expo-status-bar'
 import React, { Suspense, memo } from 'react'
 import { LogBox, StatusBar } from 'react-native'
@@ -17,7 +18,7 @@ LogBox.ignoreAllLogs(true)
 
 export const App = memo(() => {
   return (
-    <>
+    <BottomSheetModalProvider>
       <RootPortalProvider />
       <AppStatusBar />
       <AutocompleteEffects />
@@ -40,7 +41,7 @@ export const App = memo(() => {
         </Route>
       </Suspense>
       {/* </AbsoluteYStack> */}
-    </>
+    </BottomSheetModalProvider>
   )
 })
 
