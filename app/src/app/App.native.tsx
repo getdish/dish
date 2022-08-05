@@ -18,7 +18,7 @@ LogBox.ignoreAllLogs(true)
 
 export const App = memo(() => {
   return (
-    <BottomSheetModalProvider>
+    <>
       <RootPortalProvider />
       <AppStatusBar />
       <AutocompleteEffects />
@@ -41,7 +41,7 @@ export const App = memo(() => {
         </Route>
       </Suspense>
       {/* </AbsoluteYStack> */}
-    </BottomSheetModalProvider>
+    </>
   )
 })
 

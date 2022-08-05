@@ -102,21 +102,21 @@ PODS:
   - fmt (6.2.1)
   - glog (0.3.5)
   - libevent (2.1.12)
-  - libwebp (1.2.1):
-    - libwebp/demux (= 1.2.1)
-    - libwebp/mux (= 1.2.1)
-    - libwebp/webp (= 1.2.1)
-  - libwebp/demux (1.2.1):
+  - libwebp (1.2.3):
+    - libwebp/demux (= 1.2.3)
+    - libwebp/mux (= 1.2.3)
+    - libwebp/webp (= 1.2.3)
+  - libwebp/demux (1.2.3):
     - libwebp/webp
-  - libwebp/mux (1.2.1):
+  - libwebp/mux (1.2.3):
     - libwebp/demux
-  - libwebp/webp (1.2.1)
-  - MapboxCommon (22.0.0)
-  - MapboxCoreMaps (10.6.0):
-    - MapboxCommon (~> 22.0)
-  - MapboxMaps (10.6.0):
-    - MapboxCommon (= 22.0.0)
-    - MapboxCoreMaps (= 10.6.0)
+  - libwebp/webp (1.2.3)
+  - MapboxCommon (22.1.0)
+  - MapboxCoreMaps (10.7.0):
+    - MapboxCommon (~> 22.1)
+  - MapboxMaps (10.7.0):
+    - MapboxCommon (= 22.1.0)
+    - MapboxCoreMaps (= 10.7.0)
     - MapboxMobileEvents (= 1.0.8)
     - Turf (~> 2.0)
   - MapboxMobileEvents (1.0.8)
@@ -441,14 +441,14 @@ PODS:
     - SDWebImageWebPCoder (~> 0.8.4)
   - RNGestureHandler (2.5.0):
     - React-Core
-  - rnmapbox-maps (10.0.0-beta.16):
-    - MapboxMaps (~> 10.6.0)
+  - rnmapbox-maps (10.0.0-beta.23):
+    - MapboxMaps (~> 10.7.0)
     - React
     - React-Core
-    - rnmapbox-maps/DynamicLibrary (= 10.0.0-beta.16)
+    - rnmapbox-maps/DynamicLibrary (= 10.0.0-beta.23)
     - Turf
-  - rnmapbox-maps/DynamicLibrary (10.0.0-beta.16):
-    - MapboxMaps (~> 10.6.0)
+  - rnmapbox-maps/DynamicLibrary (10.0.0-beta.23):
+    - MapboxMaps (~> 10.7.0)
     - React
     - React-Core
     - Turf
@@ -487,7 +487,7 @@ PODS:
   - SDWebImage (5.11.1):
     - SDWebImage/Core (= 5.11.1)
   - SDWebImage/Core (5.11.1)
-  - SDWebImageWebPCoder (0.8.4):
+  - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - Sentry (7.1.4):
@@ -746,10 +746,10 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 3d02b25ca00c2d456734d0bcff864cbc62f6ae1a
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  libwebp: 98a37e597e40bfdb4c911fc98f2c53d0b12d05fc
-  MapboxCommon: 8b10731406d2e4472d52ae6ec3679e6e5c4bd55e
-  MapboxCoreMaps: 2019935caed7e56be1417ff70d3ad0c0cbf0264e
-  MapboxMaps: e078cc1343a0513174869a5e16ae9a18d3977252
+  libwebp: 60305b2e989864154bd9be3d772730f08fc6a59c
+  MapboxCommon: 1e26303f61682e6307a10162792ea0f018d037b9
+  MapboxCoreMaps: 929f2cf9de62782347db31d6c04dc1b6b4ba80ad
+  MapboxMaps: c7df1efe838d7acb54929ada9ee735949137fde9
   MapboxMobileEvents: febdd92835daa258ca1c1faad0821c0b3394ef40
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: b9d9fe1fc70114b751c076104e52f3b1b5e5a95a
@@ -784,18 +784,18 @@ SPEC CHECKSUMS:
   ReactCommon: af7636436b382db7cde4583bbd642f0978e6e3ed
   RNFastImage: 1f2cab428712a4baaf78d6169eaec7f622556dd7
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
-  rnmapbox-maps: 39363ecf919d107ff1fbada0d4cd057ae52bdab5
+  rnmapbox-maps: e7489694dc38ba0f135e91f1b779eabf0ad4bb5f
   RNReanimated: 2cf7451318bb9cc430abeec8d67693f9cf4e039c
   RNSentry: 68644ef607b780551cc555f084869764f2566652
   RNSVG: f3b60aeeaa81960e2e0536c3a9eef50b667ef3a9
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
-  SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
+  SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: 1d3eb1a25f8c5333c88dd5603904a6d461cd9fcf
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Turf: 60b93cfdc62758526bc7bf1ef191a829aeb9694d
   Yoga: 44c64131616253fa83366295acdbce3d14926041
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: cdfb2ce5ab1a2db696b210c82f19be8af0c93c3c
+PODFILE CHECKSUM: baf31ee9968b009a6d16bf5f21100ec0b8ce9666
 
 COCOAPODS: 1.11.3

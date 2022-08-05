@@ -11,7 +11,7 @@ require 'json'
 podfile_properties = JSON.parse(File.read('./Podfile.properties.json')) rescue {}
 
 $RNMapboxMapsImpl = 'mapbox'
-$RNMapboxMapsVersion = '~> 10.6.0'
+$RNMapboxMapsVersion = '~> 10.7.0'
 
 target 'dish' do  
   config = use_native_modules!

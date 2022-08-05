@@ -13,7 +13,6 @@
 		24469F2CF31331A315312B05 /* libPods-dish.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95A6AF90E22D88885B9D24A9 /* libPods-dish.a */; };
 		2D5A5EE767273F91CF5C95EE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0FA4667F25CF9EECBFC91A /* ExpoModulesProvider.swift */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		AEFA3F7F2827C9AD00179791 /* Mapbox in Frameworks */ = {isa = PBXBuildFile; productRef = C7EEA285D7FB2FCA9FE5F3BD /* Mapbox */; };
 		AEFA3F822827CB3F00179791 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = AEFA3F802827CB3F00179791 /* AppDelegate.mm */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F37DA4FC23874A0780707C42 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C89C9D50C3C45CC8E917586 /* noop-file.swift */; };
@@ -45,7 +44,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AEFA3F7F2827C9AD00179791 /* Mapbox in Frameworks */,
 				24469F2CF31331A315312B05 /* libPods-dish.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -175,7 +173,6 @@
 			);
 			name = dish;
 			packageProductDependencies = (
-				C7EEA285D7FB2FCA9FE5F3BD /* Mapbox */,
 			);
 			productName = dish;
 			productReference = 13B07F961A680F5B00A75B9A /* app.app */;
@@ -589,14 +586,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		C7EEA285D7FB2FCA9FE5F3BD /* Mapbox */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2283BEE4CFC69863A09F3326 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
-			productName = Mapbox;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

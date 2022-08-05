@@ -3,6 +3,7 @@ import { Blur, Canvas, Circle, Group, Mask, Rect } from '@shopify/react-native-s
 import React from 'react'
 import { View } from 'react-native'
 
+// @ts-ignore
 const isRemoteDebugging = typeof DedicatedWorkerGlobalScope !== 'undefined'
 
 export const AppMapSpotlight = () => {

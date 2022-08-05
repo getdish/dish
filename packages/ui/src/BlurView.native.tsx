@@ -4,7 +4,7 @@ import { styled } from '@tamagui/core'
 export const BlurView = styled(NativeBlurView, {
   // @ts-ignore
   blurType: 'light',
-  blurAmount: 10,
+  // blurAmount: 10,
   position: 'absolute',
   top: 0,
   right: 0,

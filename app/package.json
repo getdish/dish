@@ -112,7 +112,7 @@
     "@graphql-tools/wrap": "^8.1.1",
     "@loadable/component": "^5.14.1",
     "@mdx-js/react": "^1.6.22",
-    "@react-native-community/blur": "^4.1.0",
+    "@react-native-community/blur": "^4.2.0",
     "@react-native-community/geolocation": "^2.1.0",
     "@rnmapbox/maps": "ssh://git@github.com:rnmapbox/maps.git#main",
     "@sendgrid/mail": "7.4.0",

@@ -46,7 +46,6 @@ export default function Map({
 
   useEffect(() => {
     const { ne, sw, paddingTop, paddingBottom } = bounds
-    console.log('bounds', ne, sw)
     cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0], 500)
   }, [JSON.stringify(bounds)])
 
@@ -130,14 +129,24 @@ export default function Map({
       {/* // Causes error on Android: // Error while updating property 'stop' of a  view managed by: RCTMGLCamera*/}
       <MapboxGL.Camera
         ref={cameraRef}
-        minZoomLevel={0}
+        minZoomLevel={4}
         maxZoomLevel={22}
         zoomLevel={span.lng * 200}
-        defaultSettings={{
-          zoomLevel: span.lng * 200,
-          bounds,
-        }}
+        // zoomLevel={1}
+        // defaultSettings={{
+        //   zoomLevel: span.lng * 200,
+        //   bounds,
+        // }}
       />
+
+      {/* <MapboxGL.SkyLayer
+        id="sky"
+        style={{
+          skyAtmosphereSun: [10],
+          skyOpacity: 0,
+          skyType: 'atmosphere',
+        }}
+      /> */}
 
       <MapboxGL.VectorSource
         id="regions"
@@ -279,30 +288,7 @@ export default function Map({
             circleRadius: 15,
           }}
         />
-        {/* <MapboxGL.SymbolLayer
-          id="pointCount"
-          style={{
-            textField: ['case', ['has', 'point_count'], '{point_count}', ['get', 'rank']],
-            textSize: 12,
-            textColor: theme.color.toString(),
-            textAllowOverlap: true,
-            iconAllowOverlap: true,
-          }}
-        /> */}
-        {/* <MapboxGL.SymbolLayer
-          id="pointLabel"
-          filter={['!', ['has', 'point_count']]}
-          style={{
-            textField: ['format', ['get', 'title']],
-            textSize: 12,
-            textFont: ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-            textColor: theme.color.toString(),
-            // doesnt support interpolate for now
-            textOffset: [0, 1.25],
-            textAnchor: 'top',
-            textAllowOverlap: false,
-          }}
-        /> */}
+
         <MapboxGL.CircleLayer
           id="circlePointsLayer"
           filter={['!', ['has', 'point_count']]}
@@ -334,3 +320,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
+
+// {/* <MapboxGL.SymbolLayer
+//           id="pointCount"
+//           style={{
+//             textField: ['case', ['has', 'point_count'], '{point_count}', ['get', 'rank']],
+//             textSize: 12,
+//             textColor: theme.color.toString(),
+//             textAllowOverlap: true,
+//             iconAllowOverlap: true,
+//           }}
+//         /> */}
+//         {/* <MapboxGL.SymbolLayer
+//           id="pointLabel"
+//           filter={['!', ['has', 'point_count']]}
+//           style={{
+//             textField: ['format', ['get', 'title']],
+//             textSize: 12,
+//             textFont: ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+//             textColor: theme.color.toString(),
+//             // doesnt support interpolate for now
+//             textOffset: [0, 1.25],
+//             textAnchor: 'top',
+//             textAllowOverlap: false,
+//           }}
+//         /> */}

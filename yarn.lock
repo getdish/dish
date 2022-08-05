@@ -1953,7 +1953,7 @@ __metadata:
     "@graphql-tools/wrap": ^8.1.1
     "@loadable/component": ^5.14.1
     "@mdx-js/react": ^1.6.22
-    "@react-native-community/blur": ^4.1.0
+    "@react-native-community/blur": ^4.2.0
     "@react-native-community/geolocation": ^2.1.0
     "@rnmapbox/maps": "ssh://git@github.com:rnmapbox/maps.git#main"
     "@rnx-kit/babel-preset-metro-react-native": ^1.1.0
@@ -2315,7 +2315,7 @@ __metadata:
   resolution: "@dish/ui@workspace:packages/ui"
   dependencies:
     "@gorhom/bottom-sheet": ^4.4.3
-    "@react-native-community/blur": ^4.1.0
+    "@react-native-community/blur": ^4.2.0
     "@tamagui/build": ^1.0.1-beta.135
     "@tamagui/use-debounce": ^1.0.1-beta.135
     "@tamagui/use-force-update": ^1.0.1-beta.135
@@ -4491,13 +4491,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/blur@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "@react-native-community/blur@npm:4.1.0"
+"@react-native-community/blur@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "@react-native-community/blur@npm:4.2.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 4e851975e4745d51002e2821684792055c101e9f3f79f5dc0f631e66c2d892a0835db3e88a0c25b91a60c3a468a2cfc42fb50654e70b361d8f84a93f67611e76
+  checksum: adfc7e423555bcf6581f68c2d836f73f2c5e562359ab189ceb723ef3019d72460432b67e86c258d596658b827efb3277f321ef46b29841dc380d1e4fc839abc6
   languageName: node
   linkType: hard
 
@@ -4753,8 +4753,8 @@ __metadata:
   linkType: hard
 
 "@rnmapbox/maps@ssh://git@github.com:rnmapbox/maps.git#main":
-  version: 10.0.0-beta.16
-  resolution: "@rnmapbox/maps@ssh://git@github.com:rnmapbox/maps.git#commit=67f005f308d611a69d6b41623181584d3cca0400"
+  version: 10.0.0-beta.23
+  resolution: "@rnmapbox/maps@ssh://git@github.com:rnmapbox/maps.git#commit=120c375b65734c707b15b54a94f7bfc7e96fd39b"
   dependencies:
     "@expo/config-plugins": ^4.0.3
     "@mapbox/geo-viewport": ">= 0.4.0"
@@ -4770,7 +4770,7 @@ __metadata:
     prop-types: ">=15.5.8"
     react: ">=16.6.1"
     react-native: ">=0.59.9"
-  checksum: 34d537a4680d49d3cd88fd25eb859de43548ad1e6cfbd2829ba62940630561b5a3968f1f7e0d1a7baf309af27fa3d47bcc8b1da167562944d64ae990919563c6
+  checksum: 2c5a83111b512c48c9aea6861aec0bb2dfa531ac97312832fa0c8b0d6ec8a830dcac325a356df36df27b48dde8b84f58964f3b37a24059f7d2bbc0a57af47ef5
   languageName: node
   linkType: hard
 

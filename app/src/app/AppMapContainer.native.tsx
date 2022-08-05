@@ -5,7 +5,7 @@ import React, { memo } from 'react'
 export default memo(function AppMapContainer(props: { children: React.ReactNode }) {
   // TODO handle animations etc
   return (
-    <YStack fullscreen>
+    <YStack bc="green" fullscreen>
       <AppMapSpotlight />
       {props.children}
     </YStack>
