@@ -31,6 +31,7 @@ import { ListItem } from './ListItem'
 import { useListItems } from './useListItems'
 import { series } from '@dish/async'
 import {
+  DISH_API_ENDPOINT,
   List,
   getUserName,
   graphql,
@@ -81,8 +82,18 @@ export default function ListPage(props: Props) {
     }
     // create a new list and redirect to it
     return series([
-      () => fetch('/api/randomName').then((res) => res.text()),
+      async () => {
+        try {
+          const request = await fetch(`${DISH_API_ENDPOINT}/api/randomName`, {})
+          if (request.status > 300) {
+            return await request.text()
+          }
+        } finally {
+          return `My List ${Math.round(Math.random() * 100_000_000)}`
+        }
+      },
       async (randomName) => {
+        console.log('its', randomName)
         // assertIsString(userStore.user.id, 'expected user id')
         const [list] = await listInsert([
           {

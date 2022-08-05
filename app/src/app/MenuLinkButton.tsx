@@ -4,5 +4,5 @@ import { LinkButtonProps } from './views/LinkProps'
 import React from 'react'
 
 export const MenuLinkButton = (props: LinkButtonProps) => {
-  return <LinkListItem onPress={appMenuStore.hide} {...props} />
+  return <LinkListItem pressTheme onPress={appMenuStore.hide} {...props} />
 }

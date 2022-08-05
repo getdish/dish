@@ -58,7 +58,7 @@ export const HomeDrawerSmall = (props: any) => {
         ref={ref as any}
         handleComponent={() => null}
         backgroundComponent={() => null}
-        snapPoints={['18%', '45%', '95%']}
+        snapPoints={['18%', '50%', '95%']}
         index={index}
         onChange={setIndex}
         enableDismissOnClose={false}

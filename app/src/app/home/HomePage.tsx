@@ -1,6 +1,7 @@
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
 import { tagLenses } from '../../constants/localTags'
 import { useRegionQuery } from '../../helpers/fetchRegion'
+import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
 import { IntroModalStore } from '../IntroModalStore'
 import { PortalItem } from '../Portal'
@@ -9,6 +10,7 @@ import { cancelUpdateRegion } from '../appMapStoreUpdateRegion'
 import { homeStore, useHomeStateById, useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
 import { useLocalStorageState } from '../hooks/useLocalStorageState'
+import { useCurrentUserQuery } from '../hooks/useUserReview'
 import { setInitialRegionSlug } from '../initialRegionSlug'
 import { setLocation } from '../setLocation'
 import { CloseButton } from '../views/CloseButton'
@@ -16,13 +18,22 @@ import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizonta
 import { Link } from '../views/Link'
 import { PageHead } from '../views/PageHead'
 import { PaneControlButtons } from '../views/PaneControlButtons'
+import { SquareDebug } from '../views/SquareDebug'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { PageContent } from './PageContent'
 import { homePageStore } from './homePageStore'
 import { RestaurantListItem } from './restaurant/RestaurantListItem'
 import { useTopCuisines } from './useTopCuisines'
 import { series, sleep } from '@dish/async'
-import { RestaurantOnlyIds, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
+import {
+  RestaurantOnlyIds,
+  graphql,
+  order_by,
+  query,
+  resolved,
+  slugify,
+  useRefetch,
+} from '@dish/graph'
 import {
   AbsoluteYStack,
   Button,
@@ -39,10 +50,15 @@ import {
   useMedia,
 } from '@dish/ui'
 import { useStore, useStoreInstance } from '@dish/use-store'
+import { Canvas, Rect } from '@shopify/react-native-skia'
 import getCenter from '@turf/center'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import SwipeableItem from 'react-native-swipeable-item'
+import { View } from 'react-native'
+import { ScaleDecorator } from 'react-native-draggable-flatlist'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import Animated, { call, useAnimatedStyle } from 'react-native-reanimated'
+import SwipeableItem, { useSwipeableItemParams } from 'react-native-swipeable-item'
 
 export type Props = HomeStackViewProps<HomeStateItemHome>
 
@@ -179,7 +195,7 @@ const HomePageContent = (props: Props) => {
     <>
       <PageHead isActive={props.isActive}>Dish - Uniquely Great Food</PageHead>
 
-      <HomePageWelcomeBubble />
+      {/* <HomePageWelcomeBubble /> */}
 
       <YStack maxWidth={drawerWidthMax}>
         <PageContent hideFooter>
@@ -190,29 +206,24 @@ const HomePageContent = (props: Props) => {
   )
 }
 
-const items = [
-  {
-    name: `Helena's Hawaiian BBQ`,
-  },
-  {
-    name: `Sasabune`,
-  },
-  {
-    name: `Taqueria Gallardo Rosa`,
-  },
-  {
-    name: `Senia`,
-  },
-  {
-    name: `Adela's Country Eatery`,
-  },
-  {
-    name: `The Pig and the Lady`,
-  },
-  {
-    name: `Pho 77`,
-  },
-]
+function UnderlayLeft() {
+  const { item, percentOpen } = useSwipeableItemParams()
+  const styles = useAnimatedStyle(() => ({
+    opacity: percentOpen.value,
+    left: -50 + percentOpen.value * 25,
+  }))
+
+  return (
+    <Animated.View style={[styles]}>
+      <XStack animation="quick" width={120} height="100%">
+        <SquareDebug />
+        {/* <Canvas style={{ width: 120, height: '100%', overflow: 'hidden' }}>
+          <Rect x={0} y={0} width={120} height={120} color="red" />
+        </Canvas> */}
+      </XStack>
+    </Animated.View>
+  )
+}
 
 export const HomePageFeed = memo(
   graphql(
@@ -222,6 +233,7 @@ export const HomePageFeed = memo(
       const setHoveredDbc = useDebounce(setHovered, 400)
       const homeStore = useHomeStore()
       const topCuisines = useTopCuisines(homeStore.currentState.center)
+      const user = useCurrentUserQuery()
       const restaurants = query.restaurant({
         limit: 10,
         order_by: [
@@ -249,31 +261,41 @@ export const HomePageFeed = memo(
       return (
         <>
           {restaurants.map((item, index) => {
-            // return (
-            //   <RestaurantListItem
-            //     key={item.id}
-            //     // list={list
-            //     curLocInfo={null}
-            //     rank={0}
-            //     restaurant={item}
-            //   />
-            // )
-
             return (
-              <SwipeableItem
-                key={item.id}
-                item={item}
-                snapPointsRight={[100]}
-                overSwipe={20}
-                renderUnderlayRight={() => <Square size={50} bc="red" />}
-              >
-                <RestaurantListItem
-                  // list={list
-                  curLocInfo={null}
-                  rank={0}
-                  restaurant={item}
-                />
-              </SwipeableItem>
+              // touchable actually fixes swipable
+              <TouchableWithoutFeedback key={item.id}>
+                <>
+                  <SwipeableItem
+                    item={item}
+                    snapPointsRight={[40]}
+                    overSwipe={30}
+                    renderUnderlayRight={() => (
+                      <UnderlayLeft
+                      // drag={drag}
+                      />
+                    )}
+                    activationThreshold={0}
+                    onChange={({ open }) => {
+                      console.log('is open', open)
+                      router.navigate({
+                        name: 'list',
+                        params: {
+                          userSlug: 'nate',
+                          slug: 'create',
+                        },
+                      })
+                    }}
+                    swipeEnabled
+                  >
+                    <RestaurantListItem
+                      // list={list
+                      curLocInfo={null}
+                      rank={0}
+                      restaurant={item}
+                    />
+                  </SwipeableItem>
+                </>
+              </TouchableWithoutFeedback>
             )
           })}
         </>
@@ -302,68 +324,6 @@ export const HomePageFeed = memo(
               })}
             </XStack>
           </ContentScrollViewHorizontal> */}
-
-          {/* <YStack p="$4">
-            <XStack>
-              <H1 fontFamily="$stylish">
-                Kailua{' '}
-                <Paragraph ff="$stylish" fos="$10" fow="200" color="$colorMid">
-                  Hawaii
-                </Paragraph>
-              </H1>
-
-              <Spacer flex />
-
-              <YStack>
-                <Spacer flex />
-                <Paragraph>Popular here</Paragraph>
-              </YStack>
-            </XStack>
-          </YStack> */}
-
-          {/* <ScrollView
-            showsHorizontalScrollIndicator={false}
-            bounces
-            horizontal
-            style={{ width: '100%' }}
-          >
-            
-          </ScrollView> */}
-
-          {/* <HomeRegionTitle /> */}
-
-          {/* <YStack>
-            {.map(({ name }, index) => {
-              return (
-                <Link
-                  key={name + index}
-                  name="restaurant"
-                  params={{
-                    slug: 'mau',
-                  }}
-                >
-                  <XStack
-                    p="$4"
-                    ai="center"
-                    hoverStyle={{
-                      backgroundColor: '$backgroundTransparent',
-                    }}
-                    pressStyle={{
-                      backgroundColor: '$backgroundSoft',
-                    }}
-                  >
-                    <Paragraph cursor="default" fontFamily="$stylish">
-                      {index + 1}
-                    </Paragraph>
-                    <Spacer size="$2" />
-                    <H2 size="$9" ellipse cursor="default" fontFamily="$stylish">
-                      {name}
-                    </H2>
-                  </XStack>
-                </Link>
-              )
-            })}
-          </YStack> */}
 
           {/* <DraggableFlatList
             keyExtractor={(item, index) => `draggable-item-${item?.name}`}
@@ -469,145 +429,145 @@ export const HomePageFeed = memo(
 //   )
 // })
 
-const HomeTagLenses = memo(() => {
-  return (
-    <ContentScrollViewHorizontal>
-      <XStack pe="auto" ai="center" space="$5" px="$4">
-        {tagLenses.map((lense, i) => {
-          return (
-            <Link key={i} tag={lense}>
-              <H2
-                theme={`${lense.color}_alt2`}
-                color="$colorMid"
-                cursor="pointer"
-                px="$2"
-                size="$8"
-                py="$1"
-                hoverStyle={{
-                  color: '$colorHover',
-                }}
-              >
-                {lense.name}
-              </H2>
-            </Link>
-          )
-        })}
-      </XStack>
-    </ContentScrollViewHorizontal>
-  )
-})
+// const HomeTagLenses = memo(() => {
+//   return (
+//     <ContentScrollViewHorizontal>
+//       <XStack pe="auto" ai="center" space="$5" px="$4">
+//         {tagLenses.map((lense, i) => {
+//           return (
+//             <Link key={i} tag={lense}>
+//               <H2
+//                 theme={`${lense.color}_alt2`}
+//                 color="$colorMid"
+//                 cursor="pointer"
+//                 px="$2"
+//                 size="$8"
+//                 py="$1"
+//                 hoverStyle={{
+//                   color: '$colorHover',
+//                 }}
+//               >
+//                 {lense.name}
+//               </H2>
+//             </Link>
+//           )
+//         })}
+//       </XStack>
+//     </ContentScrollViewHorizontal>
+//   )
+// })
 
-const HomeNearbyRegions = memo(
-  graphql(({ lng, lat }: { lng?: number; lat?: number }) => {
-    if (!lng || !lat) {
-      return null
-    }
+// const HomeNearbyRegions = memo(
+//   graphql(({ lng, lat }: { lng?: number; lat?: number }) => {
+//     if (!lng || !lat) {
+//       return null
+//     }
 
-    const nearbyRegions = query.hrr({
-      limit: 10,
-      where: {
-        wkb_geometry: {
-          _st_d_within: {
-            // todo: if span is large, make this larger proportionally
-            distance: 0.5,
-            from: {
-              type: 'Point',
-              coordinates: [lng, lat],
-            },
-          },
-        },
-      },
-    })
+//     const nearbyRegions = query.hrr({
+//       limit: 10,
+//       where: {
+//         wkb_geometry: {
+//           _st_d_within: {
+//             // todo: if span is large, make this larger proportionally
+//             distance: 0.5,
+//             from: {
+//               type: 'Point',
+//               coordinates: [lng, lat],
+//             },
+//           },
+//         },
+//       },
+//     })
 
-    return (
-      <>
-        {!!nearbyRegions.length && <Spacer size="$2" />}
+//     return (
+//       <>
+//         {!!nearbyRegions.length && <Spacer size="$2" />}
 
-        <ContentScrollViewHorizontal>
-          <XStack alignItems="center" space="$2" paddingHorizontal={16}>
-            {nearbyRegions.map((r, i) => {
-              const regionName = capitalize(r.hrrcity?.replace(/[a-z]+\-\s*/i, '') || '')
-              const center = r.wkb_geometry ? getCenter(r.wkb_geometry) : null
-              const region = r.slug || ''
-              return (
-                <Button
-                  key={i}
-                  chromeless
-                  noTextWrap
-                  {...(center && {
-                    onPress: () =>
-                      setLocation({
-                        region,
-                        name: regionName,
-                        center: {
-                          lng: center.geometry.coordinates[1],
-                          lat: center.geometry.coordinates[0],
-                        },
-                        span: appMapStore.nextPosition.span,
-                      }),
-                  })}
-                >
-                  <Paragraph ellipse size="$5" color="$colorPress">
-                    {regionName}
-                  </Paragraph>
-                </Button>
-              )
-            })}
-          </XStack>
-        </ContentScrollViewHorizontal>
-      </>
-    )
-  })
-)
+//         <ContentScrollViewHorizontal>
+//           <XStack alignItems="center" space="$2" paddingHorizontal={16}>
+//             {nearbyRegions.map((r, i) => {
+//               const regionName = capitalize(r.hrrcity?.replace(/[a-z]+\-\s*/i, '') || '')
+//               const center = r.wkb_geometry ? getCenter(r.wkb_geometry) : null
+//               const region = r.slug || ''
+//               return (
+//                 <Button
+//                   key={i}
+//                   chromeless
+//                   noTextWrap
+//                   {...(center && {
+//                     onPress: () =>
+//                       setLocation({
+//                         region,
+//                         name: regionName,
+//                         center: {
+//                           lng: center.geometry.coordinates[1],
+//                           lat: center.geometry.coordinates[0],
+//                         },
+//                         span: appMapStore.nextPosition.span,
+//                       }),
+//                   })}
+//                 >
+//                   <Paragraph ellipse size="$5" color="$colorPress">
+//                     {regionName}
+//                   </Paragraph>
+//                 </Button>
+//               )
+//             })}
+//           </XStack>
+//         </ContentScrollViewHorizontal>
+//       </>
+//     )
+//   })
+// )
 
-const HomePageWelcomeBubble = memo(() => {
-  const introStore = useStore(IntroModalStore)
-  const [show, setShow] = useLocalStorageState('home-intro-dialogue', true)
+// const HomePageWelcomeBubble = memo(() => {
+//   const introStore = useStore(IntroModalStore)
+//   const [show, setShow] = useLocalStorageState('home-intro-dialogue', true)
 
-  if (!show || !introStore.hidden) {
-    return null
-  }
+//   if (!show || !introStore.hidden) {
+//     return null
+//   }
 
-  return (
-    <PortalItem id="root">
-      <Theme name="dark">
-        <AbsoluteYStack
-          pointerEvents="none"
-          zIndex={100000000}
-          fullscreen
-          alignItems="flex-end"
-          justifyContent="flex-end"
-        >
-          <YStack
-            backgroundColor="$background"
-            borderColor="$borderColor"
-            borderWidth={1}
-            borderRadius={15}
-            margin={10}
-            marginHorizontal={15}
-            position="relative"
-            maxWidth={600}
-            pointerEvents="auto"
-            elevation="$1"
-          >
-            <PaneControlButtons>
-              <CloseButton onPress={() => setShow(false)} />
-            </PaneControlButtons>
-            <YStack paddingVertical={20} paddingHorizontal={20}>
-              <Paragraph>
-                <Text fontWeight="800">A better pocket guide to the world.</Text> Find and make
-                playlists of the real world and earn money.{' '}
-                <Link name="about" fontWeight="600">
-                  Learn more
-                </Link>
-              </Paragraph>
-            </YStack>
-          </YStack>
-        </AbsoluteYStack>
-      </Theme>
-    </PortalItem>
-  )
-})
+//   return (
+//     <PortalItem id="root">
+//       <Theme name="dark">
+//         <AbsoluteYStack
+//           pointerEvents="none"
+//           zIndex={100000000}
+//           fullscreen
+//           alignItems="flex-end"
+//           justifyContent="flex-end"
+//         >
+//           <YStack
+//             backgroundColor="$background"
+//             borderColor="$borderColor"
+//             borderWidth={1}
+//             borderRadius={15}
+//             margin={10}
+//             marginHorizontal={15}
+//             position="relative"
+//             maxWidth={600}
+//             pointerEvents="auto"
+//             elevation="$1"
+//           >
+//             <PaneControlButtons>
+//               <CloseButton onPress={() => setShow(false)} />
+//             </PaneControlButtons>
+//             <YStack paddingVertical={20} paddingHorizontal={20}>
+//               <Paragraph>
+//                 <Text fontWeight="800">A better pocket guide to the world.</Text> Find and make
+//                 playlists of the real world and earn money.{' '}
+//                 <Link name="about" fontWeight="600">
+//                   Learn more
+//                 </Link>
+//               </Paragraph>
+//             </YStack>
+//           </YStack>
+//         </AbsoluteYStack>
+//       </Theme>
+//     </PortalItem>
+//   )
+// })
 
 // const getListPlaces = async (listSlug: string) => {
 //   return await resolved(() =>
