@@ -178,7 +178,14 @@ export const RestaurantListItem = memo(
             >
               <XStack px="$4" pt="$4" position="relative" alignItems="center">
                 {/* SECOND LINK WITH actual <a /> */}
-                <H2 fontFamily="$stylish" selectable={false} size="$9" ellipse fow="300">
+                <H2
+                  fontFamily="$stylish"
+                  selectable={false}
+                  size="$9"
+                  $md={{ fontFamily: '$silkscreen', size: '$7' }}
+                  ellipse
+                  fow="300"
+                >
                   {restaurantName}
                 </H2>
               </XStack>

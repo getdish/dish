@@ -24,7 +24,6 @@ let hasOpened = false
 export const HomeDrawerSmall = (props: any) => {
   const { visible: autocompleteVisible } = useStoreInstance(autocompletesStore)
   const [index, setIndex] = useState(1)
-  console.log('index', index)
 
   useEffect(() => {
     if (autocompleteVisible) {
@@ -48,6 +47,7 @@ export const HomeDrawerSmall = (props: any) => {
   }, [index])
 
   const themeName = useThemeName()
+  const isDark = themeName === 'dark'
 
   return (
     <>
@@ -55,19 +55,19 @@ export const HomeDrawerSmall = (props: any) => {
         <AppMapHeader />
       </YStack>
       <BottomSheetModal
-        ref={ref}
+        ref={ref as any}
         handleComponent={() => null}
         backgroundComponent={() => null}
-        snapPoints={['15%', '45%', '95%']}
+        snapPoints={['18%', '45%', '95%']}
         index={index}
         onChange={setIndex}
         enableDismissOnClose={false}
         enablePanDownToClose={false}
       >
         <BlurView
-          blurType={themeName === 'dark' ? 'dark' : 'light'}
-          blurRadius={3}
-          blurAmount={3}
+          blurType={isDark ? 'dark' : 'xlight'}
+          blurRadius={6}
+          blurAmount={6}
           style={[StyleSheet.absoluteFill, { top: 40, borderRadius: 18, overflow: 'hidden' }]}
         />
         <YStack
@@ -82,8 +82,8 @@ export const HomeDrawerSmall = (props: any) => {
         >
           <AppSearchBarInline />
           <BottomSheetScrollView
-            // style={{ flex: 1 }}
-            bounces={false}
+          // style={{ flex: 1 }}
+          // bounces={false}
           >
             <DrawerFrame bc="transparent">
               <DrawerFrameBg />

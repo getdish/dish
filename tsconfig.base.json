@@ -22,6 +22,7 @@
     "preserveConstEnums": true,
     "removeComments": true,
     "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "sourceMap": false,
     // "strict": true,
     "strictNullChecks": true,

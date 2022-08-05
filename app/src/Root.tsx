@@ -42,6 +42,7 @@ async function start() {
   if (process.env.TAMAGUI_TARGET === 'native') {
     // todo move to hook in app.native https://docs.expo.dev/guides/using-custom-fonts/
     await Font.loadAsync({
+      Cardinal: require('../assets/fonts/cardinal-trial.otf'),
       Inter: Inter_400Regular,
       'Inter-ExtraBold': Inter_800ExtraBold,
     })
