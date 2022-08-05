@@ -62,25 +62,25 @@ export const HomeDrawerSmall = (props: any) => {
         enableDismissOnClose={false}
         enablePanDownToClose={false}
       >
-        {/* <BottomSheetView
-          style={{
-            backgroundColor: 'rgba(0,0,0,0)',
-            flex: 1,
-            shadowColor: 'rgba(0,0,0,1)',
-            shadowRadius: 20,
-            shadowOffset: { width: 0, height: 0 },
-          }}
-        > */}
-        <BottomSheetScrollView
-        // style={{ flex: 1 }}
+        <BlurView
+          blurType="light"
+          blurRadius={3}
+          blurAmount={3}
+          style={[StyleSheet.absoluteFill, { top: 40 }]}
+        />
+        <YStack
+          btrr="$8"
+          btlr="$8"
+          y={40}
+          shac="#000"
+          shar={20}
+          shop={0.4}
+          f={1}
+          pos="relative"
         >
-          <YStack f={1} pos="relative" zi={100000000000}>
-            <BlurView
-              blurType="light"
-              blurRadius={3}
-              blurAmount={3}
-              style={StyleSheet.absoluteFill}
-            />
+          <BottomSheetScrollView
+          // style={{ flex: 1 }}
+          >
             <DrawerFrame>
               <DrawerFrameBg />
 
@@ -89,9 +89,8 @@ export const HomeDrawerSmall = (props: any) => {
               {props.children}
               <Spacer flex />
             </DrawerFrame>
-          </YStack>
-        </BottomSheetScrollView>
-        {/* </BottomSheetView> */}
+          </BottomSheetScrollView>
+        </YStack>
       </BottomSheetModal>
     </>
   )

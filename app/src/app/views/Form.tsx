@@ -53,7 +53,7 @@ export function SubmittableForm({
         )}
 
         {!isSuccess && (
-          <Button f={1} onPress={onSubmit} theme="blue" disabled={isSubmitting}>
+          <Button onPress={onSubmit} theme="blue" disabled={isSubmitting}>
             {submitText}
           </Button>
         )}

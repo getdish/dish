@@ -49,6 +49,10 @@ export const AppMenuContents = memo(
         pointerEvents="auto"
         minWidth={300}
         width={300}
+        {...(!isWeb && {
+          width: '100%',
+          height: '100%',
+        })}
         ref={ref as any}
         {...props}
       >

@@ -2,7 +2,7 @@ import { AppMenuContents } from './AppMenuContents'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { appMenuStore } from './AppMenuStore'
 import { LogoCircle } from './views/Logo'
-import { Popover, YStack } from '@dish/ui'
+import { Popover, Spacer, YStack } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
@@ -12,7 +12,12 @@ export const AppMenuButton = memo(() => {
   const showUserMenu = appMenu.isVisible
 
   return (
-    <Popover placement="bottom" open={showUserMenu} onOpenChange={appMenu.setIsVisible}>
+    <Popover
+      sheetBreakpoint="$md"
+      placement="bottom"
+      open={showUserMenu}
+      onOpenChange={appMenu.setIsVisible}
+    >
       <Popover.Trigger>
         <AppMenuLinkButton
           size="$5"
@@ -23,6 +28,16 @@ export const AppMenuButton = memo(() => {
           <LogoCircle />
         </AppMenuLinkButton>
       </Popover.Trigger>
+
+      <Popover.Sheet dismissOnSnapToBottom modal>
+        <Popover.Sheet.Overlay />
+        <Popover.Sheet.Frame>
+          <Popover.Sheet.ScrollView contentContainerStyle={{ height: 1200 }}>
+            <Popover.SheetContents />
+          </Popover.Sheet.ScrollView>
+        </Popover.Sheet.Frame>
+      </Popover.Sheet>
+
       <Popover.Content
         backgroundColor="$backgroundTransparent"
         className="blur"
