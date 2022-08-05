@@ -2,9 +2,9 @@ import { pageWidthMax, zIndexDrawer } from '../../constants/constants'
 import { AppMapHeader } from '../AppMapHeader'
 import { AppSearchBarInline } from '../AppSearchBarInline'
 import { DrawerPortalProvider } from '../Portal'
-import { DrawerFrameBg } from './HomeDrawerFrame'
+import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
 import { HomeDrawerSmall } from './HomeDrawerSmall'
-import { DrawerFrame, XStack, YStack, useMedia } from '@dish/ui'
+import { XStack, YStack, useMedia } from '@dish/ui'
 import React from 'react'
 
 export const HomeDrawer = (props: {

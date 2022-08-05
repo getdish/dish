@@ -17,10 +17,11 @@ import { ProvideRouter } from '@dish/router'
 import { Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import { Inter_400Regular, Inter_800ExtraBold } from '@expo-google-fonts/inter'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { DrawerProvider } from '@tamagui/drawer'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { Suspense, useEffect, useLayoutEffect, useState } from 'react'
+import React, { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Appearance, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
@@ -121,8 +122,8 @@ export function Root() {
 
   return (
     <>
-      <>
-        <Tamagui.Provider defaultTheme={defaultTheme}>
+      <Tamagui.Provider defaultTheme={defaultTheme}>
+        <BottomSheetModalProvider>
           <ProvideRouter routes={routes}>
             <Suspense fallback={null}>
               {isLoaded ? (
@@ -135,8 +136,8 @@ export function Root() {
             </Suspense>
           </ProvideRouter>
           {showRadar && <Radar />}
-        </Tamagui.Provider>
-      </>
+        </BottomSheetModalProvider>
+      </Tamagui.Provider>
     </>
   )
 }

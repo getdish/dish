@@ -1,91 +1,98 @@
 import { AppMapHeader } from '../AppMapHeader'
 import { AppSearchBarInline } from '../AppSearchBarInline'
+import { autocompleteSearchStore, autocompletesStore } from '../AutocompletesStore'
+import { useAutocompleteInputFocus } from '../hooks/useAutocompleteInputFocus'
+import { SquareDebug } from '../views/SquareDebug'
 import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
-import { Spacer, XStack, YStack } from '@dish/ui'
-import BottomSheet, { BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet'
+import { Spacer, Square, YStack } from '@dish/ui'
+import { useStoreInstance } from '@dish/use-store'
+import BottomSheet, {
+  BottomSheetModal,
+  BottomSheetScrollView,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet'
 import { BlurView } from '@react-native-community/blur'
-import React, { useState } from 'react'
-import { FlatList, Pressable, ScrollView, StyleSheet, View } from 'react-native'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import React, { useEffect, useRef, useState } from 'react'
+import { Keyboard, StyleSheet } from 'react-native'
 
-// import { ScrollView } from 'react-native-gesture-handler'
+// broken..
+
+// https://github.com/gorhom/react-native-bottom-sheet/issues/1008
+
+let hasOpened = false
 
 export const HomeDrawerSmall = (props: any) => {
-  // return (
-  //   <FlatList
-  //     data={[1, 2]}
-  //     onStartShouldSetResponderCapture={() => false}
-  //     onStartShouldSetResponder={() => false}
-  //     onMoveShouldSetResponderCapture={() => false}
-  //     onMoveShouldSetResponder={() => false}
+  const { visible: autocompleteVisible } = useStoreInstance(autocompletesStore)
+  const [index, setIndex] = useState(1)
+  console.log('index', index)
 
-  //     renderItem={({ item }) => {
-  //       if (item === 1) {
-  //         return (
-  //           <Spacer
-  //             pointerEvents="none"
-  //             onTouchStart={() => {
-  //               console.log(1234)
-  //             }}
-  //             // bc="red"
-  //             pe="none"
-  //             size={500}
-  //           />
-  //         )
-  //       }
-  //       return (
-  //         <YStack pe="none" pos="relative" zi={100000000000}>
-  //           {/* <AppMapHeader /> */}
+  useEffect(() => {
+    if (autocompleteVisible) {
+      setIndex(2)
+    } else {
+      Keyboard.dismiss()
+      setIndex(1)
+    }
+  }, [autocompleteVisible])
 
-  //           <YStack bc="red">
-  //             <BlurView br="$4" ov="hidden" zi={-1} />
-  //             <DrawerFrame>
-  //               <DrawerFrameBg />
+  const ref = useRef<BottomSheetModal>()
+  useEffect(() => {
+    if (hasOpened) return
+    hasOpened = true
+    console.log('present')
+    ref.current?.present()
+  }, [])
 
-  //               <AppSearchBarInline />
-
-  //               {props.children}
-  //               <Spacer flex />
-  //             </DrawerFrame>
-  //           </YStack>
-  //         </YStack>
-  //       )
-  //     }}
-  //   />
-  // )
+  useEffect(() => {
+    ref.current?.snapToIndex(Math.max(0, index))
+  }, [index])
 
   return (
     <>
-      <YStack top={20}>
+      <YStack w="100%" h={70} top={20}>
         <AppMapHeader />
       </YStack>
-      <BottomSheet
+      <BottomSheetModal
+        ref={ref}
         handleComponent={() => null}
         backgroundComponent={() => null}
         snapPoints={['15%', '40%', '90%']}
-        index={0}
+        index={index}
+        onChange={setIndex}
+        enableDismissOnClose={false}
+        enablePanDownToClose={false}
       >
-        <BottomSheetView style={{ backgroundColor: 'rgba(0,0,0,0)', flex: 1 }}>
-          <BottomSheetScrollView bounces={false} style={{ flex: 1 }}>
-            <YStack f={1} pe="none" pos="relative" zi={100000000000}>
-              <BlurView
-                blurType="light"
-                blurRadius={3}
-                blurAmount={3}
-                style={StyleSheet.absoluteFill}
-              />
-              <DrawerFrame>
-                <DrawerFrameBg />
+        {/* <BottomSheetView
+          style={{
+            backgroundColor: 'rgba(0,0,0,0)',
+            flex: 1,
+            shadowColor: 'rgba(0,0,0,1)',
+            shadowRadius: 20,
+            shadowOffset: { width: 0, height: 0 },
+          }}
+        > */}
+        <BottomSheetScrollView
+        // style={{ flex: 1 }}
+        >
+          <YStack f={1} pos="relative" zi={100000000000}>
+            <BlurView
+              blurType="light"
+              blurRadius={3}
+              blurAmount={3}
+              style={StyleSheet.absoluteFill}
+            />
+            <DrawerFrame>
+              <DrawerFrameBg />
 
-                <AppSearchBarInline />
+              <AppSearchBarInline />
 
-                {props.children}
-                <Spacer flex />
-              </DrawerFrame>
-            </YStack>
-          </BottomSheetScrollView>
-        </BottomSheetView>
-      </BottomSheet>
+              {props.children}
+              <Spacer flex />
+            </DrawerFrame>
+          </YStack>
+        </BottomSheetScrollView>
+        {/* </BottomSheetView> */}
+      </BottomSheetModal>
     </>
   )
 }

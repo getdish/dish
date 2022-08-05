@@ -249,15 +249,15 @@ export const HomePageFeed = memo(
       return (
         <>
           {restaurants.map((item, index) => {
-            return (
-              <RestaurantListItem
-                key={item.id}
-                // list={list
-                curLocInfo={null}
-                rank={0}
-                restaurant={item}
-              />
-            )
+            // return (
+            //   <RestaurantListItem
+            //     key={item.id}
+            //     // list={list
+            //     curLocInfo={null}
+            //     rank={0}
+            //     restaurant={item}
+            //   />
+            // )
 
             return (
               <SwipeableItem

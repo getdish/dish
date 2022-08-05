@@ -5,7 +5,7 @@ import React, { memo } from 'react'
 
 export const AppSearchBarContents = memo(() => {
   return (
-    <XStack ai="center" px="$2">
+    <XStack zi={100} ai="center" px="$2">
       <AppSearchInput />
       <Spacer size={8} />
       {/* native needs set widht */}

@@ -1,5 +1,5 @@
 import { AppSearchBarContents } from './AppSearchBarContents'
-import { XStack } from '@dish/ui'
+import { SquareDebug } from './views/SquareDebug'
 import React, { Suspense } from 'react'
 
 export const AppSearchBarInline = () => {

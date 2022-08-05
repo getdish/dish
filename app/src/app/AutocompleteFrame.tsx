@@ -10,7 +10,7 @@ export const AutocompleteFrame = memo(
   ({ children, target }: { children: any; target: AutocompleteTarget }) => {
     const autocompletes = useStoreInstance(autocompletesStore)
     const isShowing = autocompletes.visible && autocompletes.target === target
-    const media = useMedia()
+    // const media = useMedia()
 
     // safari ios drag optimization, when fully inactive hide it
     const isTouchDevice = useIsTouchDevice()

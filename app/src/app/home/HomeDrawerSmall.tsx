@@ -1,7 +1,7 @@
 import { AppMapHeader } from '../AppMapHeader'
 import { AppSearchBarInline } from '../AppSearchBarInline'
-import { DrawerFrameBg } from './HomeDrawerFrame'
-import { DrawerFrame, Spacer, YStack } from '@dish/ui'
+import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
+import { Spacer, YStack } from '@dish/ui'
 import React from 'react'
 
 export const HomeDrawerSmall = (props: any) => {

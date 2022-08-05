@@ -19,6 +19,7 @@ import {
   setSearchBar,
 } from './searchInputActions'
 import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
+import { SquareDebug } from './views/SquareDebug'
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import {
@@ -33,7 +34,7 @@ import {
   useOnMount,
   useTheme,
 } from '@dish/ui'
-import { getStore, selector } from '@dish/use-store'
+import { getStore, selector, useReaction } from '@dish/use-store'
 import { Loader, Search, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
@@ -97,10 +98,16 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
 
   const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore, view), [])
 
-  if (!theme.color) {
-    console.log('wut the', theme)
-    return null
-  }
+  useReaction(
+    autocompletesStore,
+    (x) => x.visible,
+    (visible) => {
+      if (!visible) {
+        inputStore.node?.blur()
+      }
+    }
+  )
+
   // {/* <ScrollView
   //   horizontal
   //   showsHorizontalScrollIndicator={false}
@@ -118,7 +125,7 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
   // > */}
 
   return (
-    <XStack f={1} height={innerHeight}>
+    <XStack pe="auto" f={1} height={innerHeight}>
       {/* <AppSearchInputTagsRow /> */}
       <XStack height={innerHeight} position="relative" flex={1} alignItems="center">
         <SearchInput
