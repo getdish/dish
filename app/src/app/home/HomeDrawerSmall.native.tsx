@@ -4,7 +4,7 @@ import { autocompleteSearchStore, autocompletesStore } from '../AutocompletesSto
 import { useAutocompleteInputFocus } from '../hooks/useAutocompleteInputFocus'
 import { SquareDebug } from '../views/SquareDebug'
 import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
-import { Spacer, Square, YStack } from '@dish/ui'
+import { Spacer, Square, YStack, useThemeName } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import BottomSheet, {
   BottomSheetModal,
@@ -47,6 +47,8 @@ export const HomeDrawerSmall = (props: any) => {
     ref.current?.snapToIndex(Math.max(0, index))
   }, [index])
 
+  const themeName = useThemeName()
+
   return (
     <>
       <YStack w="100%" h={70} top={20}>
@@ -56,17 +58,17 @@ export const HomeDrawerSmall = (props: any) => {
         ref={ref}
         handleComponent={() => null}
         backgroundComponent={() => null}
-        snapPoints={['15%', '40%', '90%']}
+        snapPoints={['15%', '45%', '95%']}
         index={index}
         onChange={setIndex}
         enableDismissOnClose={false}
         enablePanDownToClose={false}
       >
         <BlurView
-          blurType="light"
+          blurType={themeName === 'dark' ? 'dark' : 'light'}
           blurRadius={3}
           blurAmount={3}
-          style={[StyleSheet.absoluteFill, { top: 40 }]}
+          style={[StyleSheet.absoluteFill, { top: 40, borderRadius: 18, overflow: 'hidden' }]}
         />
         <YStack
           btrr="$8"
@@ -78,13 +80,13 @@ export const HomeDrawerSmall = (props: any) => {
           f={1}
           pos="relative"
         >
+          <AppSearchBarInline />
           <BottomSheetScrollView
-          // style={{ flex: 1 }}
+            // style={{ flex: 1 }}
+            bounces={false}
           >
-            <DrawerFrame>
+            <DrawerFrame bc="transparent">
               <DrawerFrameBg />
-
-              <AppSearchBarInline />
 
               {props.children}
               <Spacer flex />

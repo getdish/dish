@@ -36,10 +36,14 @@ export const Home = memo(() => {
   return (
     <HomeDrawer showAutocomplete={autocompleteVisible}>
       <Suspense fallback={null}>
-        <YStack fullscreen pt={searchBarHeight}>
-          <YStack pos="relative" f={1}>
-            <AppAutocompleteSearch />
-          </YStack>
+        <YStack
+          zi={100000000}
+          fullscreen
+          pe="box-none"
+          // not on small screen at least
+          // pt={searchBarHeight}
+        >
+          <AppAutocompleteSearch />
         </YStack>
         <HomeStackView limitVisibleStates={autocompleteVisible ? 0 : Infinity}>
           {(props) => {
