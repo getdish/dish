@@ -69,7 +69,6 @@ export const StackDrawer = ({
       <YStack
         left={media.md ? 0 : 'auto'}
         right={media.md ? 0 : 0}
-        maxHeight="100%"
         height="100%"
         minHeight="100%"
         width="100%"

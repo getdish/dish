@@ -122,10 +122,10 @@ export function Root() {
     'dark'
 
   return (
-    <PortalProvider>
-      <Tamagui.Provider defaultTheme={defaultTheme}>
+    <Tamagui.Provider defaultTheme={defaultTheme}>
+      <ProvideRouter routes={routes}>
         <BottomSheetModalProvider>
-          <ProvideRouter routes={routes}>
+          <PortalProvider>
             <Suspense fallback={null}>
               {isLoaded ? (
                 <>
@@ -135,11 +135,11 @@ export function Root() {
                 </>
               ) : null}
             </Suspense>
-          </ProvideRouter>
+          </PortalProvider>
           {showRadar && <Radar />}
         </BottomSheetModalProvider>
-      </Tamagui.Provider>
-    </PortalProvider>
+      </ProvideRouter>
+    </Tamagui.Provider>
   )
 }
 

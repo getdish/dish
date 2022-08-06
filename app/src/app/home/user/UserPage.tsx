@@ -77,25 +77,6 @@ const getReviewRestuarants = (x: ReviewQuery) => {
   }
 }
 
-function useQueryIsLoaded<A>(cb: (isLoaded: boolean) => A, opts?: { skeleton?: number }): A {
-  const [loaded, setLoaded] = useState(false)
-  const query = cb(loaded)
-  // const skeleton = useMemo(() => query, [])
-  const item = query?.[0]
-  const exists = typeof item[Object.keys(item)[0]] !== 'undefined'
-  if (!Array.isArray(query)) {
-    return query
-  }
-  const numSkeletons = Math.min(0, 10 - query.length)
-  // useEffect(() => {
-  //   if (exists) {
-  //     setLoaded(true)
-  //   }
-  // }, [exists])
-  // @ts-ignore
-  return query //[...query, ...(numSkeletons ? new Array(numSkeletons).fill(skeleton) : [])]
-}
-
 const UserPageContent = memo(
   graphql(
     (
@@ -107,14 +88,6 @@ const UserPageContent = memo(
       const user = queryUser(username)
       const theme = useTheme()
 
-      const [hasLoadedAboveFold, setHasLoadedAboveFold] = useState(false)
-
-      useAsyncEffect(async (signal) => {
-        await sleep(500)
-        if (signal.aborted) return
-        setHasLoadedAboveFold(true)
-      }, [])
-
       // slow query hasLoadedAboveFold
       const lists = user?.lists({
         limit: 25,
@@ -125,24 +98,6 @@ const UserPageContent = memo(
         },
         order_by: [{ created_at: order_by.desc }],
       })
-      // useQueryIsLoaded(
-      //   (loaded) =>
-      //     user?.lists({
-      //       limit: loaded ? 10 : 2,
-      //       where: {
-      //         public: {
-      //           _eq: true,
-      //         },
-      //       },
-      //       order_by: [{ created_at: order_by.desc }],
-      //     }),
-      //   {
-      //     skeleton: 10,
-      //   }
-      // )
-      // // always === 10, keeps skeletons
-      // console.log('>>>>', lists)
-      // lists.length === 10
 
       const favoriteLists = user
         ?.reviews({
@@ -500,7 +455,7 @@ const UserHeader = memo(
             <XStack alignItems="flex-end" flex={1} position="relative">
               <YStack marginLeft={media.sm ? -60 : -40} marginBottom={-10} marginRight={10}>
                 <UserAvatar
-                  size={170}
+                  size={120}
                   avatar={user.avatar ?? ''}
                   charIndex={user.charIndex ?? 0}
                 />

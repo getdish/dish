@@ -4,15 +4,21 @@ import { UserOnboard } from '../../UserOnboard'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
 import { PageContent } from '../PageContent'
-import { Separator, YStack, useTheme } from '@dish/ui'
+import { useSnapToFullscreenOnMount } from '../restaurant/useSnapToFullscreenOnMount'
+import { Separator, Spacer, YStack, useTheme } from '@dish/ui'
 import React from 'react'
 
 export default function AccountPage(props: HomeStackViewProps<HomeStateItemAccount>) {
   const theme = useTheme()
+
+  useSnapToFullscreenOnMount()
+
   return (
     <StackDrawer closable title="Blog">
       <PageContent>
-        <UserOnboard />
+        <Spacer size="$8" />
+
+        <UserOnboard hideLogo />
 
         <Separator />
 

@@ -7,9 +7,9 @@ import React, { forwardRef } from 'react'
 
 export const LinkListItem = forwardRef(function LinkListItemContent<
   Name extends DRouteName = DRouteName
->(props: LinkButtonProps<Name, RoutesTable[Name]['params']>, ref) {
+>({ asChild, ...props }: LinkButtonProps<Name, RoutesTable[Name]['params']>, ref) {
   // @ts-ignore
-  const { wrapWithLinkElement } = useLink(props)
+  const { wrapWithLinkElement } = useLink(props, undefined, asChild)
   const {
     children,
     replace,
@@ -30,23 +30,22 @@ export const LinkListItem = forwardRef(function LinkListItemContent<
     promptLogin,
     ...restProps
   } = props
-  const getElement = () =>
-    wrapWithLinkElement(
-      <ListItem
-        size="$5"
-        hoverTheme
-        {...restProps}
-        ref={ref}
-        theme={isActive ? 'active' : null}
-        textProps={isActive ? props.activeTextStyle : textProps}
-      >
-        {getChildren(props, isActive)}
-      </ListItem>
-    )
+  const element = wrapWithLinkElement(
+    <ListItem
+      size="$5"
+      hoverTheme
+      {...restProps}
+      ref={ref}
+      theme={isActive ? 'active' : null}
+      textProps={isActive ? props.activeTextStyle : textProps}
+    >
+      {getChildren(props, isActive)}
+    </ListItem>
+  )
   if (!!tooltip) {
-    return <TooltipSimple label={tooltip}>{getElement()}</TooltipSimple>
+    return <TooltipSimple label={tooltip}>{element}</TooltipSimple>
   }
-  return getElement()
+  return element
 })
 
 const getChildren = (props: LinkButtonProps, isActive?: boolean) => {
