@@ -29,7 +29,7 @@ export default function Map({
 }: MapProps) {
   const height = useWindowDimensions().height
   // const isDrawerAtTop = useStoreInstanceSelector(drawerStore, (x) => x.snapIndexName === 'top')
-  const drawerHeight = drawerStore.snapHeights[2]
+  const drawerHeight = drawerStore.heights[2]
   const [isLoaded, setIsLoaded] = useState(0)
   const paddingVertical = isLoaded ? drawerHeight / 2 : 0
   const cameraRef = useRef<MapboxGL.Camera>(null)

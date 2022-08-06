@@ -1,31 +1,22 @@
-import { searchBarHeight } from '../../constants/constants'
 import { AppMapHeader } from '../AppMapHeader'
 import { AppSearchBarInline } from '../AppSearchBarInline'
-import { autocompleteSearchStore, autocompletesStore } from '../AutocompletesStore'
-import { useAutocompleteInputFocus } from '../hooks/useAutocompleteInputFocus'
-import { SquareDebug } from '../views/SquareDebug'
+import { autocompletesStore } from '../AutocompletesStore'
+import { drawerStore } from '../drawerStore'
 import { StackDrawerControlsPortal } from '../views/StackDrawer'
 import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
-import { Spacer, Square, YStack, useThemeName } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
-import BottomSheet, {
-  BottomSheetModal,
-  BottomSheetScrollView,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet'
+import { Spacer, YStack, useThemeName } from '@dish/ui'
+import { useReaction, useStoreInstance } from '@dish/use-store'
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { BlurView } from '@react-native-community/blur'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Keyboard, StyleSheet } from 'react-native'
-
-// broken..
-
-// https://github.com/gorhom/react-native-bottom-sheet/issues/1008
 
 let hasOpened = false
 
 export const HomeDrawerSmall = (props: any) => {
   const { visible: autocompleteVisible } = useStoreInstance(autocompletesStore)
   const [index, setIndex] = useState(1)
+  const [bottomSheet, setBottomSheet] = useState<BottomSheetModal>()
 
   useEffect(() => {
     if (autocompleteVisible) {
@@ -36,16 +27,17 @@ export const HomeDrawerSmall = (props: any) => {
     }
   }, [autocompleteVisible])
 
-  const ref = useRef<BottomSheetModal>()
-  useEffect(() => {
-    if (hasOpened) return
-    hasOpened = true
-    console.log('present')
-    ref.current?.present()
-  }, [])
+  useReaction(
+    drawerStore,
+    (s) => s.snapIndex,
+    (index) => {
+      setIndex(index)
+    }
+  )
 
   useEffect(() => {
-    ref.current?.snapToIndex(Math.max(0, index))
+    const next = Math.max(0, index)
+    drawerStore.setSnapIndex(next)
   }, [index])
 
   const themeName = useThemeName()
@@ -57,7 +49,16 @@ export const HomeDrawerSmall = (props: any) => {
         <AppMapHeader />
       </YStack>
       <BottomSheetModal
-        ref={ref as any}
+        ref={(sheet) => {
+          if (!sheet) return
+          if (bottomSheet) return
+          setBottomSheet(sheet)
+
+          if (!hasOpened) {
+            hasOpened = true
+            sheet.present()
+          }
+        }}
         handleComponent={() => null}
         backgroundComponent={() => null}
         snapPoints={['18%', '50%', '95%']}

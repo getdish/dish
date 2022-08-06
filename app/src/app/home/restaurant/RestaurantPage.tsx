@@ -158,7 +158,7 @@ const RestaurantPage = memo(
             return new Promise((res) => {
               // @ts-expect-error
               view.measure((_x, _y, _w, _h, _pX, pY) => {
-                const y = pY - drawerStore.currentMapHeight - searchBarHeight
+                const y = pY - drawerStore.mapHeight - searchBarHeight
                 res(y)
               })
             })

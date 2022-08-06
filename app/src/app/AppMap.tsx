@@ -204,11 +204,7 @@ export default memo(function AppMap() {
       },
     } as const
 
-    if (router.getIsRouteActive(route)) {
-      if (media.sm) {
-        drawerStore.setSnapIndex(0)
-      }
-    } else {
+    if (!router.getIsRouteActive(route)) {
       router.navigate(route)
     }
   }, [])
