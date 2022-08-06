@@ -53,7 +53,6 @@ export default memo(function AppMap() {
       homeStore,
       (store) => store.currentState,
       (state) => {
-        console.log('state', state)
         if (state.center && state.span) {
           appMapStore.setNextPosition({
             center: state.center,
@@ -186,9 +185,9 @@ export default memo(function AppMap() {
       return
     }
     // move drawer from bottom up to mid
-    if (drawerStore.snapIndex === 2) {
-      drawerStore.setSnapIndex(1)
-    }
+    // if (drawerStore.snapIndex === 2) {
+    //   drawerStore.setSnapIndex(1)
+    // }
     if (homeStore.currentStateType === 'search') {
       if (id !== appMapStore.selected?.id) {
         appMapStore.setSelected({
@@ -268,9 +267,9 @@ export default memo(function AppMap() {
         {...(isTouchDevice && {
           onTouchMove: () => {
             if (!isWeb || supportsTouchWeb) {
-              if (drawerStore.snapIndex !== 2) {
-                drawerStore.setSnapIndex(2)
-              }
+              // if (drawerStore.snapIndex !== 2) {
+              //   drawerStore.setSnapIndex(2)
+              // }
             }
           },
         })}

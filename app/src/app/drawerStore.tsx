@@ -40,24 +40,6 @@ class DrawerStore extends Store {
     this.snapIndex = point
     this.lastSnapAt = Date.now()
   }
-
-  toggleDrawerPosition() {
-    // when you release from drag it calls this
-    // but in general if you *just* snapped, don't snap again
-    if (Date.now() - this.lastSnapAt < 100) {
-      console.log('avoid snap, just snapped')
-      return
-    }
-
-    if (this.snapIndex === 0) {
-      autocompletesStore.setVisible(false)
-      this.setSnapIndex(1)
-    } else if (this.snapIndex === 1) {
-      this.setSnapIndex(2)
-    } else if (this.snapIndex === 2) {
-      this.setSnapIndex(1)
-    }
-  }
 }
 
 export const drawerStore = createStore(DrawerStore)
