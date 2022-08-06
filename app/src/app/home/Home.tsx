@@ -37,7 +37,7 @@ export const Home = memo(() => {
     <HomeDrawer showAutocomplete={autocompleteVisible}>
       <Suspense fallback={null}>
         <YStack
-          zi={100000000}
+          zi={10000000000}
           fullscreen
           pe="box-none"
           // not on small screen at least

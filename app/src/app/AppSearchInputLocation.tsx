@@ -125,10 +125,10 @@ export const AppSearchInputLocation = memo(function AppSearchInputLocation() {
             onFocus={() => {
               inputStore.setIsFocused(true)
             }}
-            onBlur={() => {
-              inputStore.setIsFocused(false)
-              // no action here it will go away
-            }}
+            // onBlur={() => {
+            //   inputStore.setIsFocused(false)
+            //   // no action here it will go away
+            // }}
             onKeyPress={handleKeyPress}
             onChangeText={(text) => {
               inputStore.setValue(text)

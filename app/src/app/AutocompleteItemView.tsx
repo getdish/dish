@@ -3,6 +3,7 @@ import { AutocompleteSelectCb } from './AutocompleteResults'
 import { ShowAutocomplete, autocompletesStore } from './AutocompletesStore'
 import { CircleButton } from './home/restaurant/CircleButton'
 import { Image } from './views/Image'
+import { Link } from './views/Link'
 import { LinkButton } from './views/LinkButton'
 import {
   ListItem,
@@ -76,8 +77,7 @@ export const AutocompleteItemView = memo(
       ) : null
 
     return (
-      // @ts-expect-error
-      <LinkButton
+      <Link
         asChild
         onPressOut={() => {
           Keyboard.dismiss()
@@ -87,7 +87,6 @@ export const AutocompleteItemView = memo(
         stopPropagation
         preventNavigate={preventNavigate}
         {...getLinkForAutocomplete(result)}
-        noTextWrap
       >
         <ListItem
           size="$6"
@@ -95,11 +94,11 @@ export const AutocompleteItemView = memo(
           subTitle={result.description}
           icon={<XStack w={40}>{icon}</XStack>}
           hoverTheme
-          // backgroundColor="$background"
+          pressTheme
         >
           {plusButtonEl}
         </ListItem>
-      </LinkButton>
+      </Link>
     )
   }
 )

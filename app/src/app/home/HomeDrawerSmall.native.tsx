@@ -23,6 +23,9 @@ import { Keyboard, MaskedViewIOS, StyleSheet, useWindowDimensions } from 'react-
 
 let hasOpened = false
 
+// @ts-ignore
+const isRemoteDebugging = typeof DedicatedWorkerGlobalScope !== 'undefined'
+
 export const HomeDrawerSmall = (props: any) => {
   const { visible: autocompleteVisible } = useStoreInstance(autocompletesStore)
   const [index, setIndex] = useState(1)
@@ -85,53 +88,58 @@ export const HomeDrawerSmall = (props: any) => {
           style={[StyleSheet.absoluteFill, { top: 40, borderRadius: 18, overflow: 'hidden' }]}
         />
 
-        <Canvas
-          style={{
-            flex: 1,
-            zIndex: -1,
-            transform: [{ translateY: -50 }],
-            maxHeight: 200,
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            left: 0,
-            height: 200,
-          }}
-        >
-          <Mask
-            mode="alpha"
-            mask={
-              <Group>
-                <RoundedRect
-                  width={dimensions.width}
-                  height={80}
-                  x={0}
-                  y={10}
-                  r={0}
-                  color="#fff"
-                />
-              </Group>
-            }
+        {!isRemoteDebugging && (
+          <Canvas
+            style={{
+              flex: 1,
+              zIndex: -1,
+              transform: [{ translateY: -50 }],
+              maxHeight: 200,
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              left: 0,
+              height: 200,
+            }}
           >
-            <RoundedRect
-              width={dimensions.width}
-              height={500}
-              x={0}
-              y={80}
-              r={20}
-              color="rgba(0,0,0,0.37)"
+            <Mask
+              mode="alpha"
+              mask={
+                <Group>
+                  <RoundedRect
+                    width={dimensions.width}
+                    height={80}
+                    x={0}
+                    y={10}
+                    r={0}
+                    color="#fff"
+                  />
+                </Group>
+              }
             >
-              <Blur blur={15} />
-            </RoundedRect>
-          </Mask>
-        </Canvas>
+              <RoundedRect
+                width={dimensions.width}
+                height={500}
+                x={0}
+                y={80}
+                r={20}
+                color="rgba(0,0,0,0.37)"
+              >
+                <Blur blur={15} />
+              </RoundedRect>
+            </Mask>
+          </Canvas>
+        )}
 
         <YStack btrr="$8" btlr="$8" y={40} zi={100} f={1} pos="relative">
           <AppSearchBarInline />
           <YStack zi={1000} y={0}>
             <StackDrawerControlsPortal />
           </YStack>
-          <BottomSheetScrollView>
+          <BottomSheetScrollView
+            keyboardDismissMode="on-drag"
+            keyboardShouldPersistTaps="always"
+          >
             <DrawerFrame bc="transparent">
               <DrawerFrameBg />
 

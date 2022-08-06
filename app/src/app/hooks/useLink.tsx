@@ -31,6 +31,7 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any, asChild?: 
 
   const onPress = useEvent((e: any) => {
     const justDragged = false
+    console.warn('?????????')
     // const justDragged = Date.now() - getLastDrag() < 100
     if (justDragged) {
       e.preventDefault()

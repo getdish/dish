@@ -1,10 +1,9 @@
+import { AutocompleteItem } from '../helpers/createAutocomplete'
+import { useRouterCurPage } from '../router'
 import { Store, createStore, useStoreInstance } from '@dish/use-store'
 import { clamp } from 'lodash'
 import { useEffect } from 'react'
 import { Keyboard } from 'react-native'
-
-import { AutocompleteItem } from '../helpers/createAutocomplete'
-import { useRouterCurPage } from '../router'
 
 class AutocompletesStore extends Store {
   visible: 'partial' | true | false = false

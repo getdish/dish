@@ -98,15 +98,15 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
 
   const setInputNode = useCallback((view) => setNodeOnInputStore(inputStore, view), [])
 
-  useReaction(
-    autocompletesStore,
-    (x) => x.visible,
-    (visible) => {
-      if (!visible) {
-        inputStore.node?.blur()
-      }
-    }
-  )
+  // useReaction(
+  //   autocompletesStore,
+  //   (x) => x.visible,
+  //   (visible) => {
+  //     if (!visible) {
+  //       inputStore.node?.blur()
+  //     }
+  //   }
+  // )
 
   // {/* <ScrollView
   //   horizontal
@@ -138,8 +138,8 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
             setInputNode(view)
           }}
           onBlur={(e) => {
-            inputStore.setIsFocused(true)
-            setAvoidNextAutocompleteShowOnFocus(false)
+            // inputStore.setIsFocused(true)
+            // setAvoidNextAutocompleteShowOnFocus(false)
             // dont because it hides during autocomplete click
             // and event is before mousedown even
             // if (isWeb && !getMedia().sm) {
