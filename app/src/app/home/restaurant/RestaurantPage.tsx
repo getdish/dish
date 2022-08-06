@@ -8,7 +8,6 @@ import { HomeStateItemRestaurant } from '../../../types/homeTypes'
 import { appMapStore, useSetAppMap } from '../../appMapStore'
 import { drawerStore } from '../../drawerStore'
 import { useAsyncEffect } from '../../hooks/useAsync'
-import { ContentScrollView } from '../../views/ContentScrollView'
 import { ContentScrollViewHorizontal } from '../../views/ContentScrollViewHorizontal'
 import { Link } from '../../views/Link'
 import { NotFoundPage } from '../../views/NotFoundPage'
@@ -398,72 +397,64 @@ const RestaurantPage = memo(
       return (
         <>
           <PageHead isActive={props.isActive}>{pageTitle}</PageHead>
-          <ContentScrollView
-            ref={setScrollView}
-            onScrollYThrottled={(y) => {
-              scrollY.current = y
-            }}
-            id="restaurant"
-          >
-            <PageContent>
-              {/* HEADER */}
-              {/* -1 margin bottom to overlap bottom border */}
-              <YStack
-                backgroundColor="$backgroundFocus"
-                borderBottomColor="$backgroundPress"
-                borderBottomWidth={1}
-              >
-                {headerEl}
-                {/* <RestaurantHeader
+          <PageContent>
+            {/* HEADER */}
+            {/* -1 margin bottom to overlap bottom border */}
+            <YStack
+              backgroundColor="$backgroundFocus"
+              borderBottomColor="$backgroundPress"
+              borderBottomWidth={1}
+            >
+              {headerEl}
+              {/* <RestaurantHeader
                     themeName={themeName}
                     minHeight={450}
                     restaurantSlug={restaurantSlug}
                   /> */}
 
-                <YStack marginHorizontal={-15} zIndex={0}>
-                  <RestaurantOverallAndTagReviews
-                    tagSlug={selectedDish}
-                    borderless
-                    showScoreTable
-                    key={restaurantSlug}
-                    restaurant={restaurant}
-                  />
-                </YStack>
-
-                <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
-
-                <Spacer />
-
-                <Suspense fallback={null}>
-                  <RestaurantLists restaurantSlug={restaurantSlug} />
-                </Suspense>
-
-                <Spacer size="$8" />
-
-                {/* END head color AREA */}
+              <YStack marginHorizontal={-15} zIndex={0}>
+                <RestaurantOverallAndTagReviews
+                  tagSlug={selectedDish}
+                  borderless
+                  showScoreTable
+                  key={restaurantSlug}
+                  restaurant={restaurant}
+                />
               </YStack>
+
+              <RestaurantTagPhotos tagSlug={selectedDish} restaurantSlug={restaurantSlug} />
 
               <Spacer />
 
-              <YStack ref={setReviewsSection}>
-                <Suspense fallback={null}>
-                  {hasLoadedAboveFold ? (
-                    <RestaurantReviewsList restaurantSlug={restaurantSlug} />
-                  ) : (
-                    <LoadingItems />
-                  )}
-                </Suspense>
-              </YStack>
+              <Suspense fallback={null}>
+                <RestaurantLists restaurantSlug={restaurantSlug} />
+              </Suspense>
 
               <Spacer size="$8" />
 
-              <YStack flex={1} marginBottom={20} width="100%" alignSelf="center">
-                <Suspense fallback={null}>
-                  <RestaurantMenu restaurantSlug={restaurantSlug} />
-                </Suspense>
-              </YStack>
-            </PageContent>
-          </ContentScrollView>
+              {/* END head color AREA */}
+            </YStack>
+
+            <Spacer />
+
+            <YStack ref={setReviewsSection}>
+              <Suspense fallback={null}>
+                {hasLoadedAboveFold ? (
+                  <RestaurantReviewsList restaurantSlug={restaurantSlug} />
+                ) : (
+                  <LoadingItems />
+                )}
+              </Suspense>
+            </YStack>
+
+            <Spacer size="$8" />
+
+            <YStack flex={1} marginBottom={20} width="100%" alignSelf="center">
+              <Suspense fallback={null}>
+                <RestaurantMenu restaurantSlug={restaurantSlug} />
+              </Suspense>
+            </YStack>
+          </PageContent>
         </>
       )
     },

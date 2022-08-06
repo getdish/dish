@@ -1,5 +1,4 @@
 import { HomeStateItemBlog } from '../../../types/homeTypes'
-import { ContentScrollView } from '../../views/ContentScrollView'
 import { Link } from '../../views/Link'
 import { StackDrawer } from '../../views/StackDrawer'
 import { HomeStackViewProps } from '../HomeStackViewProps'
@@ -22,12 +21,10 @@ export default function BlogPage(props: HomeStackViewProps<HomeStateItemBlog>) {
   return (
     <MDX>
       <StackDrawer closable title="Blog">
-        <ContentScrollView id="blog">
-          <PageContent>
-            {!slug && <BlogPageIndex />}
-            {!!slug && <BlogPageDetail post={posts[slug]} />}
-          </PageContent>
-        </ContentScrollView>
+        <PageContent>
+          {!slug && <BlogPageIndex />}
+          {!!slug && <BlogPageDetail post={posts[slug]} />}
+        </PageContent>
       </StackDrawer>
     </MDX>
   )

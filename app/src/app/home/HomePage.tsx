@@ -1,23 +1,14 @@
 import { drawerWidthMax, searchBarHeight } from '../../constants/constants'
-import { tagLenses } from '../../constants/localTags'
 import { useRegionQuery } from '../../helpers/fetchRegion'
 import { router } from '../../router'
 import { HomeStateItemHome } from '../../types/homeTypes'
-import { IntroModalStore } from '../IntroModalStore'
-import { PortalItem } from '../Portal'
-import { UseSetAppMapProps, appMapStore, useSetAppMap } from '../appMapStore'
+import { UseSetAppMapProps, useSetAppMap } from '../appMapStore'
 import { cancelUpdateRegion } from '../appMapStoreUpdateRegion'
 import { homeStore, useHomeStateById, useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
-import { useLocalStorageState } from '../hooks/useLocalStorageState'
 import { useCurrentUserQuery } from '../hooks/useUserReview'
 import { setInitialRegionSlug } from '../initialRegionSlug'
-import { setLocation } from '../setLocation'
-import { CloseButton } from '../views/CloseButton'
-import { ContentScrollViewHorizontal } from '../views/ContentScrollViewHorizontal'
-import { Link } from '../views/Link'
 import { PageHead } from '../views/PageHead'
-import { PaneControlButtons } from '../views/PaneControlButtons'
 import { SquareDebug } from '../views/SquareDebug'
 import { HomeStackViewProps } from './HomeStackViewProps'
 import { PageContent } from './PageContent'
@@ -25,39 +16,12 @@ import { homePageStore } from './homePageStore'
 import { RestaurantListItem } from './restaurant/RestaurantListItem'
 import { useTopCuisines } from './useTopCuisines'
 import { series, sleep } from '@dish/async'
-import {
-  RestaurantOnlyIds,
-  graphql,
-  order_by,
-  query,
-  resolved,
-  slugify,
-  useRefetch,
-} from '@dish/graph'
-import {
-  AbsoluteYStack,
-  Button,
-  H2,
-  LoadingItems,
-  Paragraph,
-  Spacer,
-  Square,
-  Text,
-  Theme,
-  XStack,
-  YStack,
-  useDebounce,
-  useMedia,
-} from '@dish/ui'
-import { useStore, useStoreInstance } from '@dish/use-store'
-import { Canvas, Rect } from '@shopify/react-native-skia'
-import getCenter from '@turf/center'
-import { capitalize } from 'lodash'
+import { RestaurantOnlyIds, graphql, order_by, query, useRefetch } from '@dish/graph'
+import { LoadingItems, Spacer, XStack, YStack, useDebounce, useMedia } from '@dish/ui'
+import { useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { View } from 'react-native'
-import { ScaleDecorator } from 'react-native-draggable-flatlist'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
-import Animated, { call, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import SwipeableItem, { useSwipeableItemParams } from 'react-native-swipeable-item'
 
 export type Props = HomeStackViewProps<HomeStateItemHome>

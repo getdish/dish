@@ -1,12 +1,10 @@
 import { HomeStateItem } from '../../types/homeTypes'
 import { useHomeStore } from '../homeStore'
 import { useLastValueWhen } from '../hooks/useLastValueWhen'
-import { ContentParentStore } from '../views/ContentScrollView'
 import { ErrorBoundary } from '../views/ErrorBoundary'
 import { isSafari } from '@dish/helpers'
 import { YStack, useDebounceValue, useIsTouchDevice } from '@dish/ui'
-import { useStore } from '@dish/use-store'
-import React, { Suspense, memo, useEffect, useMemo } from 'react'
+import React, { Suspense, memo, useMemo } from 'react'
 
 export type StackItemProps<A> = {
   item: A
@@ -81,7 +79,6 @@ const AppStackViewItem = memo(
     isAdding: boolean
     isHidingChildren: boolean
   }) => {
-    const contentParentStore = useStore(ContentParentStore)
     const top = Math.max(0, index - 1) * 3 + 6
     const isFullyActive = !isRemoving && !isAdding
 
@@ -103,12 +100,6 @@ const AppStackViewItem = memo(
     childProps = useLastValueWhen(() => childProps, isRemoving)
 
     const children = useMemo(() => getChildren(childProps), [childProps])
-
-    useEffect(() => {
-      if (isActive) {
-        contentParentStore.setActiveId(item.type)
-      }
-    }, [isActive])
 
     const contents = (
       <YStack

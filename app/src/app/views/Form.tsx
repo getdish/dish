@@ -1,5 +1,4 @@
 import { isWeb } from '../../constants/constants'
-import { ContentScrollContext } from '../views/ContentScrollView'
 import {
   Button,
   Form,
@@ -86,7 +85,6 @@ export const ValidatedInput = ({
   errors?: FieldError | null
 }) => {
   const theme = useTheme()
-  const scrollId = useContext(ContentScrollContext)
   return (
     <>
       <Controller

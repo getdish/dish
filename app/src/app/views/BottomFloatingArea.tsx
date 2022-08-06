@@ -1,5 +1,4 @@
-import { PortalItem } from '../Portal'
-import { AbsoluteYStack, XStack, useMedia } from '@dish/ui'
+import { AbsoluteYStack, PortalItem, XStack, useMedia } from '@dish/ui'
 import React, { useMemo } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -7,7 +6,7 @@ export function BottomFloatingArea(props: { children: any }) {
   const children = useMemo(() => props.children, [props.children])
   const media = useMedia()
   return (
-    <PortalItem id={media.sm ? 'root' : 'drawer'}>
+    <PortalItem hostName={media.sm ? 'root' : 'drawer'}>
       <SafeAreaView>
         <AbsoluteYStack
           zIndex={1000000000}

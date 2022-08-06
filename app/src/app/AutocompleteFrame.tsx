@@ -1,10 +1,9 @@
 import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
-import { ContentParentStore, ContentScrollView } from './views/ContentScrollView'
 import { StackDrawer } from './views/StackDrawer'
 import { isSafari } from '@dish/helpers'
-import { YStack, useDebounceValue, useIsTouchDevice, useMedia } from '@dish/ui'
-import { useStore, useStoreInstance } from '@dish/use-store'
-import React, { memo, useEffect } from 'react'
+import { YStack, useDebounceValue, useIsTouchDevice } from '@dish/ui'
+import { useStoreInstance } from '@dish/use-store'
+import React, { memo } from 'react'
 
 export const AutocompleteFrame = memo(
   ({ children, target }: { children: any; target: AutocompleteTarget }) => {
@@ -18,17 +17,6 @@ export const AutocompleteFrame = memo(
     const isOutDelayed = useDebounceValue(isOut, 300)
     const isFullyOut = isOutDelayed
 
-    const contentParentStore = useStore(ContentParentStore)
-    useEffect(() => {
-      if (isShowing) {
-        const prev = contentParentStore.activeId
-        contentParentStore.setActiveId('autocomplete')
-        return () => {
-          contentParentStore.setActiveId(prev)
-        }
-      }
-    }, [isShowing])
-
     return (
       <YStack
         fullscreen
@@ -40,23 +28,17 @@ export const AutocompleteFrame = memo(
       >
         <StackDrawer
           closable
+          disabled={!isShowing}
           onClose={() => {
             autocompletes.setVisible(false)
           }}
         >
-          <ContentScrollView
-            id="autocomplete"
-            // styles for native
-            style={{ maxHeight: '100%', flex: 1, height: '100%' }}
-            keyboardShouldPersistTaps="always"
-          >
-            {/* bugfix AutocompleteItemView causes dragging to disable */}
-            {/* second bugfix dont change children slows down rendering a ton... see if dragging bug happens again */}
-            {children}
+          {/* bugfix AutocompleteItemView causes dragging to disable */}
+          {/* second bugfix dont change children slows down rendering a ton... see if dragging bug happens again */}
+          {children}
 
-            {/* pad bottom to scroll */}
-            <YStack height={100} />
-          </ContentScrollView>
+          {/* pad bottom to scroll */}
+          <YStack height={100} />
         </StackDrawer>
       </YStack>
     )

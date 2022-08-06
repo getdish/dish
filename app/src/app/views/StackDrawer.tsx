@@ -8,6 +8,8 @@ import { isSafari } from '@dish/helpers'
 import {
   AbsoluteYStack,
   LoadingItems,
+  PortalHost,
+  PortalItem,
   YStack,
   YStackProps,
   isWeb,
@@ -31,6 +33,7 @@ export const StackDrawer = ({
   fallback,
   topLeftControls,
   onClose,
+  disabled,
   ...props
 }: StackDrawerProps) => {
   const media = useMedia()
@@ -77,7 +80,9 @@ export const StackDrawer = ({
         shadowRadius={9}
         shadowColor="$shadowColor"
       >
-        {controls}
+        {disabled ? null : (
+          <PortalItem hostName="stack-drawer-controls">{controls}</PortalItem>
+        )}
         <YStack
           // keep this nested, fix-overflow hides box-shadow otherwise
           className={'safari-fix-overflow' + ' blur2x'}
@@ -99,4 +104,8 @@ export const StackDrawer = ({
       </YStack>
     </>
   )
+}
+
+export const StackDrawerControlsPortal = () => {
+  return <PortalHost name="stack-drawer-controls" />
 }

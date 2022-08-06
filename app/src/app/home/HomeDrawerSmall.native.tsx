@@ -1,8 +1,10 @@
+import { searchBarHeight } from '../../constants/constants'
 import { AppMapHeader } from '../AppMapHeader'
 import { AppSearchBarInline } from '../AppSearchBarInline'
 import { autocompleteSearchStore, autocompletesStore } from '../AutocompletesStore'
 import { useAutocompleteInputFocus } from '../hooks/useAutocompleteInputFocus'
 import { SquareDebug } from '../views/SquareDebug'
+import { StackDrawerControlsPortal } from '../views/StackDrawer'
 import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
 import { Spacer, Square, YStack, useThemeName } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
@@ -81,10 +83,10 @@ export const HomeDrawerSmall = (props: any) => {
           pos="relative"
         >
           <AppSearchBarInline />
-          <BottomSheetScrollView
-          // style={{ flex: 1 }}
-          // bounces={false}
-          >
+          <YStack zi={1000} y={0}>
+            <StackDrawerControlsPortal />
+          </YStack>
+          <BottomSheetScrollView>
             <DrawerFrame bc="transparent">
               <DrawerFrameBg />
 

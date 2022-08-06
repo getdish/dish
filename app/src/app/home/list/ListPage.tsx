@@ -13,7 +13,6 @@ import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
 import { CloseButton } from '../../views/CloseButton'
 import { CommentBubble } from '../../views/CommentBubble'
-import { ContentScrollView } from '../../views/ContentScrollView'
 import { FavoriteButton } from '../../views/FavoriteButton'
 import { PageHead } from '../../views/PageHead'
 import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
@@ -363,281 +362,279 @@ const ListPageContent = memo(
             </Modal>
           )}
 
-          <ContentScrollView id="list">
-            <>
-              <PaneControlButtonsLeft>
-                <FavoriteButton size="$3" isFavorite={isFavorited} onToggle={toggleFavorite}>
-                  {reviewsCount}
-                </FavoriteButton>
+          <>
+            <PaneControlButtonsLeft>
+              <FavoriteButton size="$3" isFavorite={isFavorited} onToggle={toggleFavorite}>
+                {reviewsCount}
+              </FavoriteButton>
 
-                {isMyList && (
-                  <SmallButton
-                    icon={isSorting ? null : <ListIcon size={16} color="#888" />}
-                    onPress={() => setIsSorting((x) => !x)}
-                  >
-                    {isSorting ? 'Done' : 'Sort'}
-                  </SmallButton>
-                )}
-              </PaneControlButtonsLeft>
+              {isMyList && (
+                <SmallButton
+                  icon={isSorting ? null : <ListIcon size={16} color="#888" />}
+                  onPress={() => setIsSorting((x) => !x)}
+                >
+                  {isSorting ? 'Done' : 'Sort'}
+                </SmallButton>
+              )}
+            </PaneControlButtonsLeft>
 
-              <YStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
-                {/* START HEADER */}
-                <YStack paddingBottom={5} position="relative">
-                  <YStack paddingHorizontal={20}>
-                    {/*
+            <YStack overflow="hidden" width="100%" minHeight={getWindowHeight()}>
+              {/* START HEADER */}
+              <YStack paddingBottom={5} position="relative">
+                <YStack paddingHorizontal={20}>
+                  {/*
                       <Image
                         source={{ uri: getListPhoto(list) }}
                         style={{ width: 400, height: 400 }}
                       />*/}
-                    <YStack
-                      alignItems="flex-start"
-                      justifyContent="flex-end"
-                      width="100%"
-                      flex={1}
-                      py="$6"
+                  <YStack
+                    alignItems="flex-start"
+                    justifyContent="flex-end"
+                    width="100%"
+                    flex={1}
+                    py="$6"
+                  >
+                    <H1
+                      color="$colorPress"
+                      // fontFamily="$stylish"
+                      size="$4"
+                      als="center"
+                      {...(isEditing && {
+                        width: '100%',
+                      })}
                     >
-                      <H1
-                        color="$colorPress"
-                        // fontFamily="$stylish"
-                        size="$4"
-                        als="center"
-                        {...(isEditing && {
-                          width: '100%',
-                        })}
+                      {isEditing ? (
+                        <Input
+                          size="$13"
+                          fontFamily="$stylish"
+                          width="100%"
+                          textAlign="left"
+                          defaultValue={list.name || ''}
+                          padding={0}
+                          bw={0}
+                          onChangeText={(val) => {
+                            draft.current.name = val
+                          }}
+                        />
+                      ) : (
+                        // `Cam's  ${list.name?.trim() || ''}`
+                        `Cam's top island 💎`
+                      )}
+                    </H1>
+                    <YStack
+                      maxWidth={800}
+                      alignSelf="center"
+                      width="100%"
+                      zIndex={100}
+                      position="relative"
+                    >
+                      <CommentBubble
+                        size="lg"
+                        showChildren={!!(isEditing || list.description)}
+                        // color={listColors.color}
+                        chromeless
+                        paddingHorizontal={0}
+                        marginLeft={-5}
+                        date={list.created_at}
+                        after={
+                          <>
+                            {!!tagButtons.length && (
+                              <YStack space="$2" justifyContent="center">
+                                {tagButtons}
+                              </YStack>
+                            )}
+                          </>
+                        }
+                        username={list.user?.username}
+                        avatar={{
+                          image: list.user?.avatar || '',
+                          charIndex: list.user?.charIndex || 0,
+                        }}
+                        name={userFullNameOrUsername}
                       >
                         {isEditing ? (
                           <Input
-                            size="$13"
-                            fontFamily="$stylish"
-                            width="100%"
-                            textAlign="left"
-                            defaultValue={list.name || ''}
-                            padding={0}
-                            bw={0}
+                            placeholder="Write..."
+                            multiline
+                            numberOfLines={4}
+                            lineHeight={30}
+                            fontSize={20}
+                            marginVertical={-10}
+                            marginHorizontal={-15}
+                            defaultValue={list.description ?? ''}
                             onChangeText={(val) => {
-                              draft.current.name = val
+                              draft.current.description = val
                             }}
                           />
                         ) : (
-                          // `Cam's  ${list.name?.trim() || ''}`
-                          `Cam's top island 💎`
+                          (() => {
+                            if (!list.description) {
+                              return null
+                            }
+                            const items = list.description?.split('\n\n') ?? []
+                            return (
+                              <>
+                                {items.map((x, i) => {
+                                  return (
+                                    <Paragraph
+                                      selectable={false}
+                                      paddingBottom={i < items.length - 1 ? 26 : 0}
+                                      key={i}
+                                      size={i == 0 ? '$6' : '$4'}
+                                    >
+                                      {x}
+                                    </Paragraph>
+                                  )
+                                })}
+                              </>
+                            )
+                          })()
                         )}
-                      </H1>
-                      <YStack
-                        maxWidth={800}
-                        alignSelf="center"
-                        width="100%"
-                        zIndex={100}
-                        position="relative"
-                      >
-                        <CommentBubble
-                          size="lg"
-                          showChildren={!!(isEditing || list.description)}
-                          // color={listColors.color}
-                          chromeless
-                          paddingHorizontal={0}
-                          marginLeft={-5}
-                          date={list.created_at}
-                          after={
-                            <>
-                              {!!tagButtons.length && (
-                                <YStack space="$2" justifyContent="center">
-                                  {tagButtons}
-                                </YStack>
-                              )}
-                            </>
-                          }
-                          username={list.user?.username}
-                          avatar={{
-                            image: list.user?.avatar || '',
-                            charIndex: list.user?.charIndex || 0,
-                          }}
-                          name={userFullNameOrUsername}
-                        >
-                          {isEditing ? (
-                            <Input
-                              placeholder="Write..."
-                              multiline
-                              numberOfLines={4}
-                              lineHeight={30}
-                              fontSize={20}
-                              marginVertical={-10}
-                              marginHorizontal={-15}
-                              defaultValue={list.description ?? ''}
-                              onChangeText={(val) => {
-                                draft.current.description = val
-                              }}
-                            />
-                          ) : (
-                            (() => {
-                              if (!list.description) {
-                                return null
-                              }
-                              const items = list.description?.split('\n\n') ?? []
-                              return (
-                                <>
-                                  {items.map((x, i) => {
-                                    return (
-                                      <Paragraph
-                                        selectable={false}
-                                        paddingBottom={i < items.length - 1 ? 26 : 0}
-                                        key={i}
-                                        size={i == 0 ? '$6' : '$4'}
-                                      >
-                                        {x}
-                                      </Paragraph>
-                                    )
-                                  })}
-                                </>
-                              )
-                            })()
-                          )}
-                        </CommentBubble>
-                      </YStack>
+                      </CommentBubble>
                     </YStack>
                   </YStack>
+                </YStack>
 
-                  {isMyList && isSorting && (
-                    <XStack
-                      // fullscreen
-                      // zi={10}
-                      // bottom="auto"
-                      pe="none"
-                      py="$6"
-                      space="$2"
-                      alignSelf="center"
-                      ai="center"
-                      jc="center"
-                    >
-                      {/* listColors.color */}
-                      <Move size={16} color={'red'} />
-                      <Paragraph selectable={false} opacity={0.6} size="$3">
-                        press and hold on any item to sort
-                      </Paragraph>
-                    </XStack>
-                  )}
+                {isMyList && isSorting && (
+                  <XStack
+                    // fullscreen
+                    // zi={10}
+                    // bottom="auto"
+                    pe="none"
+                    py="$6"
+                    space="$2"
+                    alignSelf="center"
+                    ai="center"
+                    jc="center"
+                  >
+                    {/* listColors.color */}
+                    <Move size={16} color={'red'} />
+                    <Paragraph selectable={false} opacity={0.6} size="$3">
+                      press and hold on any item to sort
+                    </Paragraph>
+                  </XStack>
+                )}
 
-                  {isMyList && isEditing && (
+                {isMyList && isEditing && (
+                  <YStack
+                    position="relative"
+                    zIndex={1000}
+                    marginTop={15}
+                    alignItems="center"
+                    justifyContent="center"
+                    pos="absolute"
+                    t="$4"
+                    r="$4"
+                  >
                     <YStack
-                      position="relative"
-                      zIndex={1000}
-                      marginTop={15}
+                      backgroundColor="$background"
+                      padding={5}
+                      paddingHorizontal={20}
+                      borderRadius={100}
+                      flex={1}
                       alignItems="center"
                       justifyContent="center"
-                      pos="absolute"
-                      t="$4"
-                      r="$4"
+                      flexWrap="wrap"
+                      space="$8"
                     >
-                      <YStack
-                        backgroundColor="$background"
-                        padding={5}
-                        paddingHorizontal={20}
-                        borderRadius={100}
-                        flex={1}
-                        alignItems="center"
-                        justifyContent="center"
-                        flexWrap="wrap"
-                        space="$8"
-                      >
-                        <YStack alignItems="center" space="$1">
-                          <ColorPicker
-                            // allListColors
-                            colors={[]}
-                            // listColors.backgroundColor
-                            color={'red'}
-                            onChange={(backgroundColor) => {
-                              console.warn('tood')
-                              // const index = allListColors.indexOf(backgroundColor)
-                              // setListColors(getListColors(index, themeName))
-                            }}
-                          />
-                        </YStack>
-
-                        <YStack alignItems="center" space="$1">
-                          <Paragraph>Public:&nbsp;</Paragraph>
-                          <Switch checked={isPublic} onCheckedChange={setPublic} />
-                        </YStack>
-                        <SmallButton
-                          tooltip="Delete"
-                          icon={<Trash color="var(--red10)" size={20} />}
-                          onPress={async () => {
-                            assertPresent(list.id, 'no list id')
-                            if (confirm('Permanently delete this list?')) {
-                              router.setRouteAlert(null)
-                              await mutate((mutation) => {
-                                return mutation.delete_list({
-                                  where: {
-                                    id: {
-                                      _eq: list.id,
-                                    },
-                                  },
-                                })?.__typename
-                              })
-                              Toast.show('Deleted list')
-                              homeStore.popBack()
-                            }
+                      <YStack alignItems="center" space="$1">
+                        <ColorPicker
+                          // allListColors
+                          colors={[]}
+                          // listColors.backgroundColor
+                          color={'red'}
+                          onChange={(backgroundColor) => {
+                            console.warn('tood')
+                            // const index = allListColors.indexOf(backgroundColor)
+                            // setListColors(getListColors(index, themeName))
                           }}
                         />
                       </YStack>
-                    </YStack>
-                  )}
-                </YStack>
-                {/* END HEADER */}
 
-                {!listItems.items.length && (
-                  <YStack padding={20} margin={20} borderRadius={10}>
-                    <Paragraph>Nothing on this list, yet.</Paragraph>
+                      <YStack alignItems="center" space="$1">
+                        <Paragraph>Public:&nbsp;</Paragraph>
+                        <Switch checked={isPublic} onCheckedChange={setPublic} />
+                      </YStack>
+                      <SmallButton
+                        tooltip="Delete"
+                        icon={<Trash color="var(--red10)" size={20} />}
+                        onPress={async () => {
+                          assertPresent(list.id, 'no list id')
+                          if (confirm('Permanently delete this list?')) {
+                            router.setRouteAlert(null)
+                            await mutate((mutation) => {
+                              return mutation.delete_list({
+                                where: {
+                                  id: {
+                                    _eq: list.id,
+                                  },
+                                },
+                              })?.__typename
+                            })
+                            Toast.show('Deleted list')
+                            homeStore.popBack()
+                          }
+                        }}
+                      />
+                    </YStack>
                   </YStack>
                 )}
+              </YStack>
+              {/* END HEADER */}
 
-                <YStack flex={1}>
-                  <ListViewElement
-                    keyExtractor={(item, index) => `draggable-item-${item?.key}-${isMyList}`}
-                    data={listItems.items}
-                    // @ts-ignore
-                    renderItem={renderItem}
-                    onDragBegin={() => {
-                      if (isWeb) {
-                        window.getSelection?.()?.empty?.()
-                        window.getSelection?.()?.removeAllRanges?.()
-                        document.body.classList.add('unselectable-all')
-                      }
-                    }}
-                    onDragEnd={(items) => {
-                      listItems.sort(items)
-                      if (isWeb) {
-                        document.body.classList.remove('unselectable-all')
-                      }
-                    }}
-                  />
+              {!listItems.items.length && (
+                <YStack padding={20} margin={20} borderRadius={10}>
+                  <Paragraph>Nothing on this list, yet.</Paragraph>
                 </YStack>
+              )}
 
-                {isMyList && (
-                  <>
-                    <Spacer size="$6" />
-                    <YStack paddingHorizontal={20}>
-                      <Button
-                        onPress={() => {
-                          setShowAddModal(true)
-                        }}
-                        icon={<Plus size={16} color="rgba(150,150,150,0.8)" />}
-                        paddingVertical={16}
-                        paddingHorizontal={28}
-                        textProps={{
-                          fontSize: 18,
-                        }}
-                      >
-                        Add
-                      </Button>
-                    </YStack>
-                    <Spacer size="$8" />
-                  </>
-                )}
+              <YStack flex={1}>
+                <ListViewElement
+                  keyExtractor={(item, index) => `draggable-item-${item?.key}-${isMyList}`}
+                  data={listItems.items}
+                  // @ts-ignore
+                  renderItem={renderItem}
+                  onDragBegin={() => {
+                    if (isWeb) {
+                      window.getSelection?.()?.empty?.()
+                      window.getSelection?.()?.removeAllRanges?.()
+                      document.body.classList.add('unselectable-all')
+                    }
+                  }}
+                  onDragEnd={(items) => {
+                    listItems.sort(items)
+                    if (isWeb) {
+                      document.body.classList.remove('unselectable-all')
+                    }
+                  }}
+                />
               </YStack>
 
-              <YStack width={1} height={media.sm ? 600 : 300} />
-            </>
-          </ContentScrollView>
+              {isMyList && (
+                <>
+                  <Spacer size="$6" />
+                  <YStack paddingHorizontal={20}>
+                    <Button
+                      onPress={() => {
+                        setShowAddModal(true)
+                      }}
+                      icon={<Plus size={16} color="rgba(150,150,150,0.8)" />}
+                      paddingVertical={16}
+                      paddingHorizontal={28}
+                      textProps={{
+                        fontSize: 18,
+                      }}
+                    >
+                      Add
+                    </Button>
+                  </YStack>
+                  <Spacer size="$8" />
+                </>
+              )}
+            </YStack>
+
+            <YStack width={1} height={media.sm ? 600 : 300} />
+          </>
         </>
       )
     },

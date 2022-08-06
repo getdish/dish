@@ -6,7 +6,6 @@ import { useSetAppMap } from '../../appMapStore'
 import { useAsyncEffect } from '../../hooks/useAsync'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useUserStore } from '../../userStore'
-import { ContentScrollView } from '../../views/ContentScrollView'
 import { Image } from '../../views/Image'
 import { Link } from '../../views/Link'
 import { Middot } from '../../views/Middot'
@@ -260,62 +259,61 @@ const UserPageContent = memo(
       }
 
       return (
-        <ContentScrollView id="user">
-          <PageContent>
-            <Suspense
-              fallback={
-                <YStack height={160} borderColor="#eee" borderBottomWidth={1}>
-                  <LoadingItem lines={2} />
-                </YStack>
-              }
+        <PageContent>
+          <Suspense
+            fallback={
+              <YStack height={160} borderColor="#eee" borderBottomWidth={1}>
+                <LoadingItem lines={2} />
+              </YStack>
+            }
+          >
+            <UserHeader {...props} />
+          </Suspense>
+
+          <Spacer />
+
+          <XStack space="$2" justifyContent="center">
+            <SmallButton
+              fontWeight="800"
+              theme={!pane ? 'active' : null}
+              onPress={() => {
+                setPane()
+              }}
             >
-              <UserHeader {...props} />
-            </Suspense>
+              Profile
+            </SmallButton>
+            <SmallButton
+              fontWeight="800"
+              theme={pane === 'review' ? 'active' : null}
+              onPress={() => {
+                setPane('review')
+              }}
+            >
+              Reviews
+            </SmallButton>
+            <SmallButton
+              fontWeight="800"
+              theme={pane === 'favorite' ? 'active' : null}
+              onPress={() => {
+                setPane('favorite')
+              }}
+            >
+              Favorites
+            </SmallButton>
+            <SmallButton
+              fontWeight="800"
+              theme={pane === 'vote' ? 'active' : null}
+              onPress={() => {
+                setPane('vote')
+              }}
+            >
+              Votes
+            </SmallButton>
+          </XStack>
 
-            <Spacer />
+          <Spacer size="$6" />
 
-            <XStack space="$2" justifyContent="center">
-              <SmallButton
-                fontWeight="800"
-                theme={!pane ? 'active' : null}
-                onPress={() => {
-                  setPane()
-                }}
-              >
-                Profile
-              </SmallButton>
-              <SmallButton
-                fontWeight="800"
-                theme={pane === 'review' ? 'active' : null}
-                onPress={() => {
-                  setPane('review')
-                }}
-              >
-                Reviews
-              </SmallButton>
-              <SmallButton
-                fontWeight="800"
-                theme={pane === 'favorite' ? 'active' : null}
-                onPress={() => {
-                  setPane('favorite')
-                }}
-              >
-                Favorites
-              </SmallButton>
-              <SmallButton
-                fontWeight="800"
-                theme={pane === 'vote' ? 'active' : null}
-                onPress={() => {
-                  setPane('vote')
-                }}
-              >
-                Votes
-              </SmallButton>
-            </XStack>
-
-            <Spacer size="$6" />
-
-            {/* <YStack>
+          {/* <YStack>
               <Separator />
               <Spacer />
               <XStack space alignItems="center" justifyContent="center">
@@ -338,113 +336,112 @@ const UserPageContent = memo(
               <Separator />
             </YStack> */}
 
-            {/* <Spacer size="$6" /> */}
+          {/* <Spacer size="$6" /> */}
 
-            <YStack space="$6" paddingVertical={20}>
-              {/* PHOTOS FEED */}
-              <XStack space>
-                {user
-                  .reviews({
-                    order_by: [{ authored_at: order_by.desc }],
-                    where: {
-                      photos: {
-                        photo_id: {
-                          _is_null: false,
-                        },
+          <YStack space="$6" paddingVertical={20}>
+            {/* PHOTOS FEED */}
+            <XStack space>
+              {user
+                .reviews({
+                  order_by: [{ authored_at: order_by.desc }],
+                  where: {
+                    photos: {
+                      photo_id: {
+                        _is_null: false,
                       },
                     },
-                  })
-                  .map((review, index) => {
+                  },
+                })
+                .map((review, index) => {
+                  return (
+                    <YStack
+                      key={review.id || index}
+                      borderRadius={1000}
+                      overflow="hidden"
+                      borderWidth={2}
+                      borderColor={theme.borderColor}
+                    >
+                      <Image
+                        source={{ uri: review.photos({ limit: 1 })[0]?.photo?.url || '' }}
+                        style={{ width: 60, height: 60 }}
+                      />
+                    </YStack>
+                  )
+                })}
+            </XStack>
+
+            {/* ABOUT */}
+            {!pane && !!user.about && (
+              <YStack>
+                <SmallTitle>About</SmallTitle>
+                <Paragraph size="$6">{user.about}</Paragraph>
+              </YStack>
+            )}
+
+            {/* PLAYLISTS */}
+            {!pane && !!lists.length && (
+              <YStack position="relative">
+                <AbsoluteYStack zIndex={100} top={-15} left={10}>
+                  <SlantedTitle size="$4">Playlists</SlantedTitle>
+                </AbsoluteYStack>
+                <CardCarousel>
+                  {lists.map((list, i) => {
                     return (
-                      <YStack
-                        key={review.id || index}
-                        borderRadius={1000}
-                        overflow="hidden"
-                        borderWidth={2}
-                        borderColor={theme.borderColor}
-                      >
-                        <Image
-                          source={{ uri: review.photos({ limit: 1 })[0]?.photo?.url || '' }}
-                          style={{ width: 60, height: 60 }}
-                        />
-                      </YStack>
+                      <ListCard
+                        colored
+                        size="$6"
+                        floating
+                        key={list.slug || i}
+                        list={list}
+                        query={lists}
+                      />
                     )
                   })}
-              </XStack>
+                </CardCarousel>
+              </YStack>
+            )}
 
-              {/* ABOUT */}
-              {!pane && !!user.about && (
-                <YStack>
-                  <SmallTitle>About</SmallTitle>
-                  <Paragraph size="$6">{user.about}</Paragraph>
-                </YStack>
-              )}
-
-              {/* PLAYLISTS */}
-              {!pane && !!lists.length && (
-                <YStack position="relative">
-                  <AbsoluteYStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="$4">Playlists</SlantedTitle>
-                  </AbsoluteYStack>
-                  <CardCarousel>
-                    {lists.map((list, i) => {
-                      return (
-                        <ListCard
-                          colored
-                          size="$6"
-                          floating
-                          key={list.slug || i}
-                          list={list}
-                          query={lists}
-                        />
-                      )
-                    })}
-                  </CardCarousel>
-                </YStack>
-              )}
-
-              {/* FAVORITE LISTS */}
-              {!pane && !!favoriteLists.length && (
-                <YStack position="relative">
-                  <AbsoluteYStack zIndex={100} top={-15} left={10}>
-                    <SlantedTitle size="$4">Liked lists</SlantedTitle>
-                  </AbsoluteYStack>
-                  <CardCarousel>
-                    {favoriteLists.map((list, i) => {
-                      return (
-                        <ListCard
-                          colored
-                          floating
-                          key={list.slug || i}
-                          list={list}
-                          query={favoriteLists}
-                        />
-                      )
-                    })}
-                  </CardCarousel>
-                </YStack>
-              )}
-
-              <YStack position="relative" paddingHorizontal={20}>
+            {/* FAVORITE LISTS */}
+            {!pane && !!favoriteLists.length && (
+              <YStack position="relative">
                 <AbsoluteYStack zIndex={100} top={-15} left={10}>
-                  <SlantedTitle size="$4">
-                    {pane === 'review' ? 'Reviews' : pane === 'vote' ? 'Votes' : 'Recently'}
-                  </SlantedTitle>
+                  <SlantedTitle size="$4">Liked lists</SlantedTitle>
                 </AbsoluteYStack>
+                <CardCarousel>
+                  {favoriteLists.map((list, i) => {
+                    return (
+                      <ListCard
+                        colored
+                        floating
+                        key={list.slug || i}
+                        list={list}
+                        query={favoriteLists}
+                      />
+                    )
+                  })}
+                </CardCarousel>
+              </YStack>
+            )}
 
-                <YStack paddingVertical={25}>
-                  {!hasReviews && <Paragraph padding={30}>None yet...</Paragraph>}
-                  {hasReviews &&
-                    reviews.map((review, i) => (
-                      <SuspenseFallback key={`${i}${review.id}`}>
-                        <Review review={review} />
-                      </SuspenseFallback>
-                    ))}
-                </YStack>
+            <YStack position="relative" paddingHorizontal={20}>
+              <AbsoluteYStack zIndex={100} top={-15} left={10}>
+                <SlantedTitle size="$4">
+                  {pane === 'review' ? 'Reviews' : pane === 'vote' ? 'Votes' : 'Recently'}
+                </SlantedTitle>
+              </AbsoluteYStack>
+
+              <YStack paddingVertical={25}>
+                {!hasReviews && <Paragraph padding={30}>None yet...</Paragraph>}
+                {hasReviews &&
+                  reviews.map((review, i) => (
+                    <SuspenseFallback key={`${i}${review.id}`}>
+                      <Review review={review} />
+                    </SuspenseFallback>
+                  ))}
               </YStack>
             </YStack>
-          </PageContent>
-        </ContentScrollView>
+          </YStack>
+        </PageContent>
       )
     },
     {

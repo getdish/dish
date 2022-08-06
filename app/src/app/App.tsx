@@ -2,10 +2,8 @@ import { isSSR } from '../constants/constants'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
 import AppMapContainer from './AppMapContainer'
-import { AppMapControlsOverlay } from './AppMapControlsOverlay'
 import { AppMenuButtonFloating } from './AppMenuButtonFloating'
 import { AutocompleteEffects } from './AutocompletesStore'
-import { RootPortalProvider } from './Portal'
 import { PrivateRoute, Route, RouteSwitch } from './Route'
 import { Shortcuts } from './Shortcuts'
 import AdminPage from './admin/AdminPage'
@@ -57,8 +55,6 @@ function PublicContent(props: { children?: any }) {
     <>
       {/* background */}
       <AbsoluteYStack fullscreen zIndex={0} backgroundColor="$backgroundStrong" />
-
-      <RootPortalProvider />
 
       <Suspense fallback={null}>
         {/* THIS IS THE DRAWER AND ITS CONTENTS */}

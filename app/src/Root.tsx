@@ -14,7 +14,7 @@ import Tamagui from './tamagui.config'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import { Toast, isWeb } from '@dish/ui'
+import { PortalProvider, Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import { Inter_400Regular, Inter_800ExtraBold } from '@expo-google-fonts/inter'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
@@ -122,7 +122,7 @@ export function Root() {
     'dark'
 
   return (
-    <>
+    <PortalProvider>
       <Tamagui.Provider defaultTheme={defaultTheme}>
         <BottomSheetModalProvider>
           <ProvideRouter routes={routes}>
@@ -139,7 +139,7 @@ export function Root() {
           {showRadar && <Radar />}
         </BottomSheetModalProvider>
       </Tamagui.Provider>
-    </>
+    </PortalProvider>
   )
 }
 

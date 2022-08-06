@@ -9,16 +9,13 @@ import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { weakKey } from '../../../helpers/weakKey'
 import { router } from '../../../router'
 import { HomeStateItemSearch } from '../../../types/homeTypes'
-import { RootPortalItem } from '../../Portal'
 import { appMapStore, useSetAppMap } from '../../appMapStore'
-import { drawerStore } from '../../drawerStore'
 import { homeStore, useHomeStateById } from '../../homeStore'
 import { useAppDrawerWidth } from '../../hooks/useAppDrawerWidth'
 import { useLastValue } from '../../hooks/useLastValue'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { usePageLoadEffect } from '../../hooks/usePageLoadEffect'
 import { useIsMobileDevice } from '../../useIsMobileDevice'
-import { ContentScrollView } from '../../views/ContentScrollView'
 import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { PageHead } from '../../views/PageHead'
 import { StackDrawer } from '../../views/StackDrawer'
@@ -35,7 +32,6 @@ import { series, sleep } from '@dish/async'
 import { RestaurantSearchItem, slugify } from '@dish/graph'
 import { HistoryItem } from '@dish/router'
 import {
-  AbsoluteYStack,
   Button,
   LoadingItem,
   Paragraph,
@@ -45,17 +41,9 @@ import {
   XStack,
   YStack,
   YStackProps,
-  combineRefs,
   useDebounceEffect,
-  useMedia,
 } from '@dish/ui'
-import {
-  Store,
-  compareStrict,
-  reaction,
-  useStore,
-  useStoreInstanceSelector,
-} from '@dish/use-store'
+import { reaction } from '@dish/use-store'
 import { ArrowUp } from '@tamagui/feather-icons'
 import React, {
   Suspense,
@@ -67,7 +55,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react'
-import { LayoutRectangle, ScrollView, ScrollViewProps, StyleSheet, View } from 'react-native'
+import { LayoutRectangle, ScrollView, ScrollViewProps, View } from 'react-native'
 import { DataProvider, LayoutProvider, RecyclerListView } from 'recyclerlistview'
 
 export default memo(function SearchPage(props: SearchProps) {
@@ -470,7 +458,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
           onSizeChanged?.(x.nativeEvent.layout)
         }}
       >
-        {/* <ContentScrollView id="search" ref={combineRefs(ref, scrollRef) as any} {...props}> */}
         <PageContent>
           <SearchHeader />
           <SearchPageNavBar />
@@ -480,7 +467,6 @@ const SearchPageScrollView = forwardRef<ScrollView, SearchPageScrollViewProps>(
             <SearchFooter id={id} scrollToTop={scrollToTopHandler} />
           </Suspense>
         </PageContent>
-        {/* </ContentScrollView> */}
       </View>
     )
   }

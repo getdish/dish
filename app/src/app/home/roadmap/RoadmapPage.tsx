@@ -2,7 +2,6 @@ import { HomeStateItemAbout } from '../../../types/homeTypes'
 import { useLastValueWhen } from '../../hooks/useLastValueWhen'
 import { upsertUserReview } from '../../hooks/useUserReview'
 import { useUserStore, userStore } from '../../userStore'
-import { ContentScrollView } from '../../views/ContentScrollView'
 import { LinkButton } from '../../views/LinkButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { StackItemProps } from '../HomeStackView'
@@ -82,74 +81,72 @@ export default function RoadmapPage({ item, isActive }: StackItemProps<HomeState
 
   const content = (
     <StackDrawer closable title="Roadmap">
-      <ContentScrollView id="roadmap">
-        <PageContent>
-          <YStack space="$8">
-            <YStack paddingHorizontal="5%" space="$8">
-              <YStack />
+      <PageContent>
+        <YStack space="$8">
+          <YStack paddingHorizontal="5%" space="$8">
+            <YStack />
 
-              <Paragraph fontWeight="800" size="$6">
-                Roadmap
-              </Paragraph>
+            <Paragraph fontWeight="800" size="$6">
+              Roadmap
+            </Paragraph>
 
-              <Paragraph size="$6">Vote on things you want to see done.</Paragraph>
-              <Paragraph size="$6">
-                {icons.map((icon, i) => `${icon} ${descriptions[i]}      `)}
-              </Paragraph>
+            <Paragraph size="$6">Vote on things you want to see done.</Paragraph>
+            <Paragraph size="$6">
+              {icons.map((icon, i) => `${icon} ${descriptions[i]}      `)}
+            </Paragraph>
 
-              <Add items={roadmapItems} />
+            <Add items={roadmapItems} />
 
-              <FlatList
-                data={[
-                  ...roadmapItems.map((review) => {
-                    const text = review.text || ''
-                    const icon = text.match(emojiRegex)?.[0] || icons[0]
-                    console.log('icon', text, icon)
-                    return {
-                      text,
-                      icon: validIconMap[icon] || icons[0],
-                      authored_at: review.authored_at,
-                      votes: review.reviews_aggregate({}).aggregate?.count({
-                        columns: ['vote' as any],
-                      }),
-                    }
-                  }),
-                  'LOAD_MORE',
-                ]}
-                renderItem={({ index, item, separators }) => {
-                  if (typeof item === 'string') {
-                    if (roadmapItems.length < expect) {
-                      return null
-                    }
-                    return <Button onPress={() => setPage((x) => x + 1)}>Load more</Button>
+            <FlatList
+              data={[
+                ...roadmapItems.map((review) => {
+                  const text = review.text || ''
+                  const icon = text.match(emojiRegex)?.[0] || icons[0]
+                  console.log('icon', text, icon)
+                  return {
+                    text,
+                    icon: validIconMap[icon] || icons[0],
+                    authored_at: review.authored_at,
+                    votes: review.reviews_aggregate({}).aggregate?.count({
+                      columns: ['vote' as any],
+                    }),
                   }
-                  return (
-                    <XStack space="$6" alignItems="center">
-                      <XGroup scale={0.7} marginVertical={-5} flexDirection="column">
-                        <Button
-                          onPress={() => vote(1)}
-                          borderRadius={0}
-                          icon={<ChevronUp color="#777" size={16} />}
-                        />
-                        <Button
-                          onPress={() => vote(-1)}
-                          borderRadius={0}
-                          icon={<ChevronDown color="#777" size={16} />}
-                        />
-                      </XGroup>
-                      <Paragraph size="$8">{`${item.votes}`}</Paragraph>
-                      <Paragraph>{item.icon}</Paragraph>
-                      <Paragraph>{removeEmojis(item.text || '')}</Paragraph>
-                    </XStack>
-                  )
-                }}
-              />
+                }),
+                'LOAD_MORE',
+              ]}
+              renderItem={({ index, item, separators }) => {
+                if (typeof item === 'string') {
+                  if (roadmapItems.length < expect) {
+                    return null
+                  }
+                  return <Button onPress={() => setPage((x) => x + 1)}>Load more</Button>
+                }
+                return (
+                  <XStack space="$6" alignItems="center">
+                    <XGroup scale={0.7} marginVertical={-5} flexDirection="column">
+                      <Button
+                        onPress={() => vote(1)}
+                        borderRadius={0}
+                        icon={<ChevronUp color="#777" size={16} />}
+                      />
+                      <Button
+                        onPress={() => vote(-1)}
+                        borderRadius={0}
+                        icon={<ChevronDown color="#777" size={16} />}
+                      />
+                    </XGroup>
+                    <Paragraph size="$8">{`${item.votes}`}</Paragraph>
+                    <Paragraph>{item.icon}</Paragraph>
+                    <Paragraph>{removeEmojis(item.text || '')}</Paragraph>
+                  </XStack>
+                )
+              }}
+            />
 
-              <Spacer />
-            </YStack>
+            <Spacer />
           </YStack>
-        </PageContent>
-      </ContentScrollView>
+        </YStack>
+      </PageContent>
     </StackDrawer>
   )
 
