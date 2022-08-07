@@ -97,6 +97,7 @@
     "@dish/graph": "*",
     "@dish/helpers": "*",
     "@dish/helpers-node": "*",
+    "@dish/osm-import": "*",
     "@dish/router": "*",
     "@dish/server": "*",
     "@dish/ui": "*",

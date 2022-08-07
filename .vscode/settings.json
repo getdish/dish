@@ -4,5 +4,8 @@
   "workbench.colorCustomizations": {
     "titleBar.activeForeground": "#ffff00",
     "titleBar.inactiveForeground": "#ffff00",
+  },
+  "gopls": {
+    "experimentalWorkspaceModule": true,
   }
 }

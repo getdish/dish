@@ -63,14 +63,14 @@
     "test:dev": "IS_LOCAL=1 yarn test",
     "migrate": "./dsh migrate_all",
     "test:migrate": "DISH_ENV=test ./dsh migrate_all",
-    "crawl:tucson": "node services/crawlers/dist/yelp/all.js --city 'Tucson, Arizona'",
-    "crawl:osm": "DISH_ENV=development IS_LOCAL=1 DISH_DEBUG=3 ./dsh run 'node -r esbuild-register services/crawlers/scripts/crawl_osm.ts'",
+    "crawl:yelp:tucson": "node services/crawlers/dist/yelp/all.js --city 'Tucson, Arizona'",
+    "crawl:osm": "DISH_ENV=development IS_LOCAL=1 DISH_DEBUG=3 ./dsh run 'node -r esbuild-register ./app/scripts/crawl_osm.ts'",
     "crawl:osm:kailua": "LAT=21.38942705899535 LNG=-157.7446711063385 SPAN=0.01 yarn crawl:osm",
-    "crawl:one": "DISH_ENV=test IS_LOCAL=1 DISH_DEBUG=3 SLUG=$SLUG ./dsh run 'node -r esbuild-register services/crawlers/scripts/crawl_one.ts'",
+    "crawl:one": "DISH_ENV=test IS_LOCAL=1 DISH_DEBUG=3 SLUG=$SLUG ./dsh run 'node -r esbuild-register ./app/scripts/crawl_one.ts'",
     "crawl:one:production": "IS_LIVE=1 DEBUG=1 DISH_ENV=production SLUG=$SLUG yarn crawl:one",
     "crawl:one:external": "SKIP=internal yarn crawl:one",
     "crawl:one:yelp": "SKIP=internal,google,tripadvisor yarn crawl:one",
-    "crawl:internal": "./dsh run 'RUN=1 QUERY=\"SELECT id from restaurant $QUERY\" node ./services/crawlers/dist/self/one.js'",
+    "crawl:internal": "./dsh run 'RUN=1 QUERY=\"SELECT id from restaurant $QUERY\" node -r esbuild-register ./app/crawlers/self/one.ts'",
     "crawl:internal:slug": "QUERY=\"WHERE slug = '$SLUG' LIMIT 1\" yarn crawl:internal",
     "graph:generate": "yarn workspace @dish/graph generate",
     "clean": "./dsh clean",
@@ -162,7 +162,7 @@
     "react-test-renderer": "18.2.0",
     "typescript": "*",
     "ultra-runner": "^3.10.5",
-    "zx": "^1.14.1"
+    "zx": "^7.0.8"
   },
   "importSort": {
     ".js, .jsx, .ts, .tsx": {

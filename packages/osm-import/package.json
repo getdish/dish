@@ -1,0 +1,16 @@
+{
+  "name": "@dish/osm-import",
+  "version": "0.0.1",
+  "main": "./dist/index",
+  "types": "./types/index.d.ts",
+  "scripts": {
+    "build": "tamagui-build",
+    "watch": "true"
+  },
+  "dependencies": {
+    "zx": "^7.0.8"
+  },
+  "devDependencies": {
+    "@tamagui/build": "^1.0.1-beta.135"
+  }
+}
