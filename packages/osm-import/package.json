@@ -5,7 +5,7 @@
   "types": "./types/index.d.ts",
   "scripts": {
     "build": "tamagui-build",
-    "watch": "true"
+    "watch": "tamagui-build --watch"
   },
   "dependencies": {
     "zx": "^7.0.8"
