@@ -16,7 +16,11 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import React, { Suspense, memo } from 'react'
 import { LogBox, StatusBar, useWindowDimensions } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 
 LogBox.ignoreAllLogs(true)
 
@@ -29,18 +33,42 @@ export const App = memo(() => {
       transform: [{ translateX: offset.value.x }],
     }
   })
+
+  const snapPoints = [0, -windowDimensions.width]
+
   const gesture = Gesture.Pan()
     .onBegin(() => {
       // isPressed.value = true;
+      // probably set start.value.x to current offset.value.x
     })
     .onUpdate((e) => {
       offset.value = {
         x: e.translationX + start.value.x,
       }
     })
-    .onEnd(() => {
+    .onEnd((e) => {
+      const vx = e.velocityX
+      const endIndex = offset.value.x + vx
+
+      let closestSnapPoint = 0
+      let distanceToLast = Infinity
+      for (const point of snapPoints) {
+        const dist = Math.abs(Math.abs(endIndex) - Math.abs(point))
+        if (dist < distanceToLast) {
+          distanceToLast = dist
+          closestSnapPoint = point
+        }
+      }
+
+      console.log('endIndex', endIndex, closestSnapPoint)
+
       start.value = {
-        x: offset.value.x,
+        x: closestSnapPoint,
+      }
+
+      console.log('closestSnapPoint', closestSnapPoint, vx)
+      offset.value = {
+        x: withSpring(closestSnapPoint),
       }
     })
     .onFinalize(() => {
@@ -54,7 +82,7 @@ export const App = memo(() => {
 
       <YStack zi={100000000000000} fullscreen pe="box-none">
         <GestureDetector gesture={gesture}>
-          <YStack fullscreen left="auto" width={50} bc="rgba(0,0,0,0.1)" />
+          <YStack fullscreen left="auto" width={30} bc="rgba(0,0,0,0.1)" />
         </GestureDetector>
       </YStack>
 
