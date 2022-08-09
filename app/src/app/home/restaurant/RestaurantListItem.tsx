@@ -150,10 +150,10 @@ export const RestaurantListItem = memo(
           /> */}
 
           {/* vote button and score */}
-          <YStack t={0} b={0} ai="center" jc="center" px="$2">
-            {/* just swipe to like on mobile, or tiny heart on desktop */}
-            <Heart opacity={0.3} size={12} />
-            {/* {!hideRate && (
+          {/* <YStack t={0} b={0} ai="center" jc="center" px="$2"> */}
+          {/* just swipe to like on mobile, or tiny heart on desktop */}
+          {/* <Heart opacity={0.3} size={12} /> */}
+          {/* {!hideRate && (
               <RestaurantUpVoteDownVote
                 rounded
                 score={score}
@@ -162,7 +162,7 @@ export const RestaurantListItem = memo(
                 onClickPoints={toggleSetExpanded}
               />
             )} */}
-          </YStack>
+          {/* </YStack> */}
 
           {/* ROW: TITLE */}
 

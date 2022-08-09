@@ -17,8 +17,18 @@ import { RestaurantListItem } from './restaurant/RestaurantListItem'
 import { useTopCuisines } from './useTopCuisines'
 import { series, sleep } from '@dish/async'
 import { RestaurantOnlyIds, graphql, order_by, query, useRefetch } from '@dish/graph'
-import { LoadingItems, Spacer, XStack, YStack, useDebounce, useMedia } from '@dish/ui'
+import {
+  LoadingItems,
+  Spacer,
+  Text,
+  XStack,
+  YStack,
+  getTokens,
+  useDebounce,
+  useMedia,
+} from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
+import { Heart } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
@@ -170,20 +180,27 @@ const HomePageContent = (props: Props) => {
   )
 }
 
+const overSwipe = 40
+const underlaySize = 75
+
 function UnderlayLeft() {
   const { item, percentOpen } = useSwipeableItemParams()
+  console.log('percentOpen.value', percentOpen.value, item)
   const styles = useAnimatedStyle(() => ({
     opacity: percentOpen.value,
-    left: -50 + percentOpen.value * 25,
+    left: -50 + percentOpen.value * 50,
+    transform: [
+      {
+        scale: percentOpen.value > 1 ? 1 + (percentOpen.value - 1) * 1 : 1,
+      },
+    ],
   }))
 
   return (
-    <Animated.View style={[styles]}>
-      <XStack animation="quick" width={120} height="100%">
-        <SquareDebug />
-        {/* <Canvas style={{ width: 120, height: '100%', overflow: 'hidden' }}>
-          <Rect x={0} y={0} width={120} height={120} color="red" />
-        </Canvas> */}
+    <Animated.View style={[styles, { width: underlaySize, height: '100%' }]}>
+      <XStack w={underlaySize} f={1} ai="center" jc="center">
+        <Heart color="red" size={32} />
+        {/* <Text>{percentOpen.value}</Text> */}
       </XStack>
     </Animated.View>
   )
@@ -231,8 +248,8 @@ export const HomePageFeed = memo(
                 <>
                   <SwipeableItem
                     item={item}
-                    snapPointsRight={[40]}
-                    overSwipe={30}
+                    snapPointsRight={[underlaySize]}
+                    overSwipe={overSwipe}
                     renderUnderlayRight={() => (
                       <UnderlayLeft
                       // drag={drag}
@@ -241,13 +258,13 @@ export const HomePageFeed = memo(
                     activationThreshold={0}
                     onChange={({ open }) => {
                       console.log('is open', open)
-                      router.navigate({
-                        name: 'list',
-                        params: {
-                          userSlug: 'nate',
-                          slug: 'create',
-                        },
-                      })
+                      // router.navigate({
+                      //   name: 'list',
+                      //   params: {
+                      //     userSlug: 'nate',
+                      //     slug: 'create',
+                      //   },
+                      // })
                     }}
                     swipeEnabled
                   >
