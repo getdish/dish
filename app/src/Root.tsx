@@ -17,7 +17,6 @@ import { ProvideRouter } from '@dish/router'
 import { PortalProvider, Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import { Inter_400Regular, Inter_800ExtraBold } from '@expo-google-fonts/inter'
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { DrawerProvider } from '@tamagui/drawer'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
@@ -124,20 +123,18 @@ export function Root() {
   return (
     <Tamagui.Provider defaultTheme={defaultTheme}>
       <ProvideRouter routes={routes}>
-        <BottomSheetModalProvider>
-          <PortalProvider>
-            <Suspense fallback={null}>
-              {isLoaded ? (
-                <>
-                  <App />
-                  {process.env.NODE_ENV === 'development' && <DebugHUD />}
-                  {isWeb && <div id="before-bottom-sheet-temp" />}
-                </>
-              ) : null}
-            </Suspense>
-          </PortalProvider>
-          {showRadar && <Radar />}
-        </BottomSheetModalProvider>
+        <PortalProvider>
+          <Suspense fallback={null}>
+            {isLoaded ? (
+              <>
+                <App />
+                {process.env.NODE_ENV === 'development' && <DebugHUD />}
+                {isWeb && <div id="before-bottom-sheet-temp" />}
+              </>
+            ) : null}
+          </Suspense>
+        </PortalProvider>
+        {showRadar && <Radar />}
       </ProvideRouter>
     </Tamagui.Provider>
   )
