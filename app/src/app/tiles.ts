@@ -54,6 +54,19 @@ export const tiles: Tile[] = [
     label: 'hrr_city',
     name: 'public.hrr',
   },
+
+  // {
+  //   minZoom: 0,
+  //   maxZoom: 22,
+  //   promoteId: 'name',
+  //   activeColor: `rgba(255, 255, 255, 0)`,
+  //   hoverColor: `rgba(250,200,150, 0.2)`,
+  //   color: `rgba(250,200,150, 0.3)`,
+  //   label: 'place',
+  //   type: 'geojson',
+  //   name: 'public.planet_osm_point',
+  // },
+
   // {
   //   maxZoom: 4,
   //   minZoom: 0,

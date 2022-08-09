@@ -1,5 +1,5 @@
 import '@dish/common'
-import { osmFilter } from '@dish/osm-import'
+import { osmFilter, osmImport } from '@dish/osm-import'
 import { WorkerJob } from '@dish/worker'
 import { JobOptions, QueueOptions } from 'bull'
 
@@ -19,5 +19,6 @@ export class OSM extends WorkerJob {
     await osmFilter({
       region: 'HI',
     })
+    await osmImport()
   }
 }

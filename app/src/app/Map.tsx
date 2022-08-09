@@ -585,6 +585,38 @@ export default function Map(props: MapProps) {
             map.removeLayer(CLUSTER_LABEL_LAYER_ID)
           })
 
+          map.addSource('public.planet_osm_point', {
+            type: 'vector',
+            url: `${TILES_HOST}/public.planet_osm_point.json`,
+            promoteId: 'osm_id',
+          })
+
+          map.addLayer({
+            id: `public.planet_osm_point.label`,
+            source: `public.planet_osm_point`,
+            'source-layer': `public.planet_osm_point`,
+            type: 'symbol',
+            minzoom: 0,
+            maxzoom: 22,
+            layout: {
+              'text-field': `{name}`,
+              'text-font': ['PT Sans Bold', 'Arial Unicode MS Bold'],
+              'text-variable-anchor': ['center', 'center'],
+              'text-size': {
+                base: 1,
+                stops: [
+                  [10, 8],
+                  [16, 26],
+                ],
+              },
+              'text-justify': 'center',
+              'symbol-placement': 'point',
+            },
+            paint: {
+              'text-color': '#000',
+            },
+          })
+
           // start making regions
           for (const tile of tiles) {
             const {
