@@ -10,7 +10,7 @@ import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
 import { useCurrentUserQuery } from './hooks/useUserReview'
 import { useQuery } from '@dish/graph'
-import { Square, XStack, YStack, useThemeName } from '@dish/ui'
+import { H2, Square, Theme, XStack, YStack, ZStack, useTheme, useThemeName } from '@dish/ui'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 // import { StatusBar } from 'expo-status-bar'
 import React, { Suspense, memo } from 'react'
@@ -25,6 +25,7 @@ import Animated, {
 LogBox.ignoreAllLogs(true)
 
 export const App = memo(() => {
+  const theme = useTheme()
   const windowDimensions = useWindowDimensions()
   const offset = useSharedValue({ x: 0 })
   const start = useSharedValue({ x: 0 })
@@ -49,11 +50,15 @@ export const App = memo(() => {
     .onEnd((e) => {
       const vx = e.velocityX
       const endIndex = offset.value.x + vx
+      const direction = vx < 0 ? 'left' : 'right'
+
+      console.log('direction', direction)
 
       let closestSnapPoint = 0
       let distanceToLast = Infinity
       for (const point of snapPoints) {
-        const dist = Math.abs(Math.abs(endIndex) - Math.abs(point))
+        const dist = -Math.abs(Math.abs(endIndex) - Math.abs(point))
+        console.log(point, 'dist', dist, point, endIndex)
         if (dist < distanceToLast) {
           distanceToLast = dist
           closestSnapPoint = point
@@ -80,15 +85,27 @@ export const App = memo(() => {
       <AppStatusBar />
       <AutocompleteEffects />
 
+      {/* side swipe gestures */}
       <YStack zi={100000000000000} fullscreen pe="box-none">
         <GestureDetector gesture={gesture}>
-          <YStack fullscreen left="auto" width={30} bc="rgba(0,0,0,0.1)" />
+          <XStack fullscreen pe="box-none">
+            <YStack fullscreen left="auto" width={30} bc="rgba(0,0,0,0)" />
+            <YStack fullscreen right="auto" width={30} bc="rgba(0,0,0,0)" />
+          </XStack>
         </GestureDetector>
       </YStack>
 
       <Animated.View
         pointerEvents="box-none"
-        style={[{ width: '100%', height: '100%', flexDirection: 'row' }, style]}
+        style={[
+          {
+            width: '100%',
+            height: '100%',
+            flexDirection: 'row',
+            backgroundColor: theme.background,
+          },
+          style,
+        ]}
       >
         <XStack
           pe="box-none"
@@ -97,7 +114,7 @@ export const App = memo(() => {
           shadowColor="#000"
           shadowRadius={10}
         >
-          <XStack pe="box-none" br="$10" ov="hidden">
+          <XStack zi={1} pe="box-none" br="$10" ov="hidden">
             <BottomSheetModalProvider>
               <Suspense fallback={null}>
                 <AppMapContainer>
@@ -109,9 +126,11 @@ export const App = memo(() => {
             </BottomSheetModalProvider>
           </XStack>
 
-          <XStack ml={100} pe="box-none" w={windowDimensions.width}>
-            <MyLists />
-          </XStack>
+          <Theme name="dark">
+            <XStack zi={0} bc="$background" pe="box-none" w={windowDimensions.width}>
+              <MyLists />
+            </XStack>
+          </Theme>
         </XStack>
       </Animated.View>
 
@@ -132,14 +151,15 @@ export const App = memo(() => {
 const MyLists = () => {
   const [user] = useCurrentUserQuery()
 
-  console.log(
-    'user lists',
-    user.lists().map((l) => ({ name: l.name }))
-  )
-
   return (
-    <YStack>
-      <Square size={400} bc="red" />
+    <YStack py="$13" px="$3">
+      {user.lists({ limit: 20 }).map((list) => {
+        return (
+          <H2 key={list.name} ff="$stylish">
+            {list.name}
+          </H2>
+        )
+      })}
     </YStack>
   )
 }
