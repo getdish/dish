@@ -3,7 +3,7 @@ import { HomeTopSearches } from './HomeTopSearches'
 import { XStack, useMedia } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
 import React, { memo } from 'react'
-import { ScrollView } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native'
 
 export const AppFloatingTagMenuBar = memo(() => {
   const media = useMedia()

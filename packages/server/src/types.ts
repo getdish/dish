@@ -32,7 +32,7 @@ export type CreateWebpackConfig = {
   // legacy?: boolean
   env: 'development' | 'production'
   cwd?: string
-  babelInclude?: (path: string) => boolean
+  tamaguiInclude?: (path: string) => boolean
   tamaguiOptions: {
     // user options
     themesFile?: string

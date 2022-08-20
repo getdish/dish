@@ -6,7 +6,6 @@ import '@tamagui/core/reset.css'
 import React, { StrictMode } from 'react'
 import { render } from 'react-dom'
 import { createRoot } from 'react-dom/client'
-import { AppRegistry } from 'react-native'
 
 if (process.env.NODE_ENV === 'development') {
   startLogging()
@@ -14,9 +13,6 @@ if (process.env.NODE_ENV === 'development') {
 
 const FORCE_NOT_CONCURRENT = window.location.search.indexOf(`not-concurrent`) > -1
 const ROOT = document.getElementById('root')!
-
-// register root component
-AppRegistry.registerComponent('dish', () => Root)
 
 async function main() {
   if (FORCE_NOT_CONCURRENT) {

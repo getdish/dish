@@ -37,7 +37,7 @@ import {
 import { getStore, selector, useReaction } from '@dish/use-store'
 import { Loader, Search, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
-import { ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
+import { ScrollView, TextInput, View } from 'react-native'
 
 const isWebTouch = isWeb && supportsTouchWeb
 
@@ -194,24 +194,22 @@ const SearchLoadingIcon = memo(({ color }: { color: string }) => {
   // const isOnSearch = useIsRouteActive('search')
   const loading = isHomeLoading
   return (
-    <YStack width={10} marginLeft={0} scale={loading ? 1.2 : 1}>
-      <TouchableOpacity onPress={focusSearchInput}>
-        {loading ? (
-          // DO NOT ROTATE THIS ON MOBILE WEB IT SLOWS THINGS DOWN *INCREDIBLY*
-          <YStack className={supportsTouchWeb ? '' : 'rotating'} opacity={1}>
-            <Loader color={color} size={16} />
-          </YStack>
-        ) : (
-          <Spacer size={16} />
-          // <Search
-          //   color={color}
-          //   size={media.xs ? 14 : 16}
-          //   style={{
-          //     opacity: 0.7,
-          //   }}
-          // />
-        )}
-      </TouchableOpacity>
+    <YStack onPress={focusSearchInput} width={10} marginLeft={0} scale={loading ? 1.2 : 1}>
+      {loading ? (
+        // DO NOT ROTATE THIS ON MOBILE WEB IT SLOWS THINGS DOWN *INCREDIBLY*
+        <YStack className={supportsTouchWeb ? '' : 'rotating'} opacity={1}>
+          <Loader color={color} size={16} />
+        </YStack>
+      ) : (
+        <Spacer size={16} />
+        // <Search
+        //   color={color}
+        //   size={media.xs ? 14 : 16}
+        //   style={{
+        //     opacity: 0.7,
+        //   }}
+        // />
+      )}
     </YStack>
   )
 })

@@ -65,8 +65,6 @@ export const App = memo(() => {
         }
       }
 
-      console.log('endIndex', endIndex, closestSnapPoint)
-
       start.value = {
         x: closestSnapPoint,
       }
@@ -114,7 +112,7 @@ export const App = memo(() => {
           shadowColor="#000"
           shadowRadius={10}
         >
-          <XStack zi={1} pe="box-none" br="$10" ov="hidden">
+          <XStack h="100%" w="100%" zi={1} pe="box-none" br="$10" ov="hidden">
             <BottomSheetModalProvider>
               <Suspense fallback={null}>
                 <AppMapContainer>

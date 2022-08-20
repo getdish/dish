@@ -1,7 +1,6 @@
 import { DebugHUD } from './DebugHUD'
 import { Radar } from './Radar'
 import { App } from './app/App'
-// import { App } from './app/App'
 import { homeStore } from './app/homeStore'
 import { useUserStore, userStore } from './app/userStore'
 import { showRadar } from './constants/constants'
@@ -10,11 +9,11 @@ import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/local
 import './globals'
 import { addTagsToCache } from './helpers/allTags'
 import { DRoutesTable, router, routes } from './router'
-import Tamagui from './tamagui.config'
+import config from './tamagui.config'
 import { useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import { PortalProvider, Toast, isWeb } from '@dish/ui'
+import { PortalProvider, TamaguiProvider, Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import { Inter_400Regular, Inter_800ExtraBold } from '@expo-google-fonts/inter'
 import { DrawerProvider } from '@tamagui/drawer'
@@ -121,7 +120,7 @@ export function Root() {
     'dark'
 
   return (
-    <Tamagui.Provider defaultTheme={defaultTheme}>
+    <TamaguiProvider config={config} defaultTheme={defaultTheme}>
       <ProvideRouter routes={routes}>
         <PortalProvider>
           <Suspense fallback={null}>
@@ -136,7 +135,7 @@ export function Root() {
         </PortalProvider>
         {showRadar && <Radar />}
       </ProvideRouter>
-    </Tamagui.Provider>
+    </TamaguiProvider>
   )
 }
 

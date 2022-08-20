@@ -24,7 +24,7 @@
     "react-test-renderer": "18.2.0"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.1-beta.138",
+    "@tamagui/build": "^1.0.1-beta.149",
     "@types/react": "*",
     "@types/react-dom": "*",
     "@types/react-native": "*",

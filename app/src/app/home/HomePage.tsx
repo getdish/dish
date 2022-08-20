@@ -30,7 +30,6 @@ import {
 import { useStoreInstance } from '@dish/use-store'
 import { Heart } from '@tamagui/feather-icons'
 import React, { Suspense, memo, useEffect, useState } from 'react'
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import SwipeableItem, { useSwipeableItemParams } from 'react-native-swipeable-item'
 
@@ -244,39 +243,39 @@ export const HomePageFeed = memo(
           {restaurants.map((item, index) => {
             return (
               // touchable actually fixes swipable
-              <TouchableWithoutFeedback key={item.id}>
-                <>
-                  <SwipeableItem
-                    item={item}
-                    snapPointsRight={[underlaySize]}
-                    overSwipe={overSwipe}
-                    renderUnderlayRight={() => (
-                      <UnderlayLeft
-                      // drag={drag}
-                      />
-                    )}
-                    activationThreshold={0}
-                    onChange={({ open }) => {
-                      console.log('is open', open)
-                      // router.navigate({
-                      //   name: 'list',
-                      //   params: {
-                      //     userSlug: 'nate',
-                      //     slug: 'create',
-                      //   },
-                      // })
-                    }}
-                    swipeEnabled
-                  >
-                    <RestaurantListItem
-                      // list={list
-                      curLocInfo={null}
-                      rank={0}
-                      restaurant={item}
+              // <TouchableWithoutFeedback key={item.id}>
+              <>
+                <SwipeableItem
+                  item={item}
+                  snapPointsRight={[underlaySize]}
+                  overSwipe={overSwipe}
+                  renderUnderlayRight={() => (
+                    <UnderlayLeft
+                    // drag={drag}
                     />
-                  </SwipeableItem>
-                </>
-              </TouchableWithoutFeedback>
+                  )}
+                  activationThreshold={0}
+                  onChange={({ open }) => {
+                    console.log('is open', open)
+                    // router.navigate({
+                    //   name: 'list',
+                    //   params: {
+                    //     userSlug: 'nate',
+                    //     slug: 'create',
+                    //   },
+                    // })
+                  }}
+                  swipeEnabled
+                >
+                  <RestaurantListItem
+                    // list={list
+                    curLocInfo={null}
+                    rank={0}
+                    restaurant={item}
+                  />
+                </SwipeableItem>
+              </>
+              // </TouchableWithoutFeedback>
             )
           })}
         </>

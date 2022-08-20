@@ -64,7 +64,7 @@ function dev() {
   fi
 
   # start watch after to let things start quicker
-  sleep 5
+  sleep 10
 
   # local mode run console (after server starts)
   if [[ "$ORIGINAL_ARGS" == *"--local"* ]]; then

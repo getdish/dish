@@ -65,7 +65,7 @@ export const RestaurantAddToListModal = graphql(
     console.log('mutation', status)
 
     return (
-      <Dialog sheetBreakpoint="$sm" modal>
+      <Dialog sheetBreakpoint="sm" modal>
         <Dialog.Trigger asChild>
           <Button>Edit Profile</Button>
         </Dialog.Trigger>

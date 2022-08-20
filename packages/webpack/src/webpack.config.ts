@@ -50,7 +50,7 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
     env,
     target,
     cwd = process.cwd(),
-    babelInclude,
+    tamaguiInclude,
     tamaguiOptions,
     disableHot,
     resolve,
@@ -107,26 +107,14 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
     const cacheDir = join(rootNodeModules, '.cache', 'webpack')
     ensureDirSync(cacheDir)
 
-    function defaultBabelInclude(inputPath: string) {
+    function defaultTamaguiInclude(inputPath: string) {
       if (inputPath.startsWith(cwd)) {
-        return true
-      }
-      if (inputPath.includes('react-native-awesome-gallery')) {
-        return true
-      }
-      if (inputPath.includes('react-native-gallery-toolkit')) {
-        return true
-      }
-      if (inputPath.includes('react-native-web/dist/exports/View')) {
         return true
       }
       if (inputPath.includes('@dish/')) {
         return true
       }
       if (inputPath.includes('tamagui')) {
-        return true
-      }
-      if (inputPath.includes('react-native-animatable')) {
         return true
       }
       if (inputPath.includes('match-media')) {
@@ -305,7 +293,7 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
 
               {
                 test: /\.[jt]sx?$/,
-                include: babelInclude ?? defaultBabelInclude,
+                include: tamaguiInclude ?? defaultTamaguiInclude,
 
                 use: [
                   'thread-loader',

@@ -62,7 +62,6 @@ import { List as ListIcon, Move, Plus, Trash, X } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Pressable } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
-import { FlatList } from 'react-native-gesture-handler'
 
 type Props = StackItemProps<HomeStateItemList>
 
@@ -321,7 +320,8 @@ const ListPageContent = memo(
         [isMyList, isEditing, isSorting, isMinimal, list.theme, listFont]
       )
 
-      const ListViewElement = isSorting ? DraggableFlatList : FlatList
+      // const ListViewElement = isSorting ? DraggableFlatList : FlatList
+      const ListViewElement = DraggableFlatList
 
       // <Theme name={themeName === 'dark' ? `green-${themeName}` : 'green'}>
       return (

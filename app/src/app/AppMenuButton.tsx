@@ -13,7 +13,7 @@ export const AppMenuButton = memo(() => {
 
   return (
     <Popover
-      sheetBreakpoint="$md"
+      sheetBreakpoint="md"
       placement="bottom"
       open={showUserMenu}
       onOpenChange={appMenu.setIsVisible}
