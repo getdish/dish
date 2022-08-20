@@ -5,7 +5,7 @@ import { getSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
-import { AbsoluteXStack, AbsoluteYStack, Spacer } from '@dish/ui'
+import { AbsoluteXStack, AbsoluteYStack, Spacer, XStack } from '@dish/ui'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import { Minus, Plus, RefreshCcw, ZoomOut } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
@@ -22,60 +22,35 @@ export const AppMapControls = memo(() => {
   )
 
   return (
-    <AbsoluteYStack zi={zIndexDrawer - 1} ml="auto" fullscreen pe="none">
-      <AbsoluteYStack
-        fullscreen
-        left={5}
-        right={5}
-        // {...(!isWeb && {
-        //   top: safeArea.top - 10,
-        // })}
-        zIndex={20000000}
-        alignItems="center"
-        pointerEvents="none"
-        justifyContent="center"
-      >
-        <AbsoluteXStack
-          top={8}
-          right={0}
-          minHeight={50}
-          left={0}
-          alignItems="center"
-          justifyContent="center"
-          pointerEvents="none"
-        >
-          {/* {isWeb && <ToggleRegionButton />} */}
+    <XStack space="$2" h="100%" ai="center" w="100%">
+      {/* {isWeb && <ToggleRegionButton />} */}
 
-          {!appMap.hideRegions && (
-            <>
-              <OverlayLinkButton
-                circular
-                disabled={appMap.currentZoomLevel === 'far'}
-                icon={Minus}
-                onPress={appMap.zoomOut}
-              />
-              <Spacer size="$2" />
-              <OverlayLinkButton
-                circular
-                disabled={appMap.currentZoomLevel === 'close'}
-                icon={Plus}
-                onPress={appMap.zoomIn}
-              />
-            </>
-          )}
+      {!appMap.hideRegions && (
+        <>
+          <OverlayLinkButton
+            circular
+            disabled={appMap.currentZoomLevel === 'far'}
+            icon={Minus}
+            onPress={appMap.zoomOut}
+          />
+          <Spacer size="$2" />
+          <OverlayLinkButton
+            circular
+            disabled={appMap.currentZoomLevel === 'close'}
+            icon={Plus}
+            onPress={appMap.zoomIn}
+          />
+        </>
+      )}
 
-          {showSearchHere && (
-            <OverlayLinkButton icon={RefreshCcw} onPress={pagesStore.refresh} />
-          )}
+      {showSearchHere && <OverlayLinkButton icon={RefreshCcw} onPress={pagesStore.refresh} />}
 
-          {/* <ToggleRegionButton /> */}
+      {/* <ToggleRegionButton /> */}
 
-          {isHoverZoomed && <OverlayLinkButton icon={ZoomOut} onPress={appMap.clearHover} />}
+      {isHoverZoomed && <OverlayLinkButton icon={ZoomOut} onPress={appMap.clearHover} />}
 
-          <Spacer flex />
-        </AbsoluteXStack>
-      </AbsoluteYStack>
-    </AbsoluteYStack>
+      <Spacer flex />
+    </XStack>
   )
 })
 

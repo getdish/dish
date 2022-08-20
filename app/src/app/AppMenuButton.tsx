@@ -1,8 +1,7 @@
 import { AppMenuContents } from './AppMenuContents'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { appMenuStore } from './AppMenuStore'
-import { LogoCircle } from './views/Logo'
-import { Popover, Spacer, YStack } from '@dish/ui'
+import { Popover, YStack } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
@@ -20,13 +19,11 @@ export const AppMenuButton = memo(() => {
     >
       <Popover.Trigger>
         <AppMenuLinkButton
-          size="$5"
-          br="$8"
+          size="$6"
+          px="$4"
           Icon={Menu}
           onPress={() => appMenu.setIsVisible(!showUserMenu)}
-        >
-          <LogoCircle />
-        </AppMenuLinkButton>
+        ></AppMenuLinkButton>
       </Popover.Trigger>
 
       <Popover.Sheet dismissOnSnapToBottom modal>

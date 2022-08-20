@@ -36,7 +36,7 @@ export const mapWidths = {
 
 export const searchBarBorderRadius = 7
 export const searchBarTopOffset = 3
-export const searchBarHeight = 84
+export const searchBarHeight = 80
 export const searchBarHeightWithPadding = searchBarHeight + searchBarTopOffset + 12
 export const searchBarMaxWidth = 1240
 

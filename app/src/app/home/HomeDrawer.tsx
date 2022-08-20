@@ -1,5 +1,4 @@
 import { pageWidthMax, zIndexDrawer } from '../../constants/constants'
-import { AppMapHeader } from '../AppMapHeader'
 import { AppSearchBarInline } from '../AppSearchBarInline'
 import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
 import { HomeDrawerSmall } from './HomeDrawerSmall'
@@ -37,7 +36,6 @@ export const HomeDrawer = (props: {
           {props.children}
         </DrawerFrame>
       </YStack>
-      <AppMapHeader />
     </XStack>
   )
 }

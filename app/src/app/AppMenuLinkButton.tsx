@@ -23,11 +23,9 @@ export const AppMenuLinkButton = memo(
           ref={ref}
           {...props}
           className="ease-in-out-faster"
-          padding={12}
           backgroundColor="transparent"
           opacity={0.6}
           alignSelf="stretch"
-          width="100%"
           icon={Icon}
           iconActive={ActiveIcon}
           pressStyle={{
