@@ -12,6 +12,7 @@ import { useCurrentUserQuery } from './hooks/useUserReview'
 import { useQuery } from '@dish/graph'
 import { H2, Square, Theme, XStack, YStack, ZStack, useTheme, useThemeName } from '@dish/ui'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import { variableToString } from '@tamagui/core'
 // import { StatusBar } from 'expo-status-bar'
 import React, { Suspense, memo } from 'react'
 import { LogBox, StatusBar, useWindowDimensions } from 'react-native'
@@ -100,7 +101,7 @@ export const App = memo(() => {
             width: '100%',
             height: '100%',
             flexDirection: 'row',
-            backgroundColor: theme.background,
+            backgroundColor: variableToString(theme.background),
           },
           style,
         ]}

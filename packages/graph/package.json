@@ -29,7 +29,7 @@
     "@dish/use-store": "*",
     "@gqty/logger": "^2.0.2",
     "@gqty/react": "^2.1.0",
-    "esbuild-register": "^2.6.0",
+    "esbuild-register": "^3.3.3",
     "gqty": "^2.2.0",
     "graphql": "^15.5.0",
     "lodash": "*",

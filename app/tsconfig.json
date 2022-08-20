@@ -2,14 +2,6 @@
   "extends": "../tsconfig.base",
   "compilerOptions": {
     "baseUrl": ".",
-    // "paths": {
-    //   "@tamagui/*": [
-    //     "packages/*"
-    //   ],
-    //   "react-native": [
-    //     "react-native-web"
-    //   ]
-    // },
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -27,6 +19,8 @@
     "target": "es2019",
     "strict": false,
     "strictNullChecks": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
     "removeComments": true,
     "typeRoots": [
       "node_modules/@types",
@@ -34,6 +28,7 @@
       "../../node_modules/@types"
     ]
   },
+  "files": [],
   "include": [
     "src",
     "api",

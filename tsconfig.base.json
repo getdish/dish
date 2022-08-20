@@ -30,7 +30,7 @@
     "types": ["node", "jest"],
     "lib": ["es2021", "dom", "esnext"]
   },
-  "exclude": ["_"],
+  "exclude": ["_", "node_modules"],
   "typeAcquisition": {
     "enable": true
   }

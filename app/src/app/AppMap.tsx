@@ -33,6 +33,11 @@ import { reaction, useStoreInstance, useStoreInstanceSelector } from '@dish/use-
 import loadable from '@loadable/component'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 
+export const useAppMapVerticalPad = () => {
+  const thirdWinHeight = getWindowHeight() * 0.333
+  return Math.round(Math.max(50, Math.min(130, thirdWinHeight)))
+}
+
 export default memo(function AppMap() {
   const appMapStore = useAppMapStore()
   const { features, results, showRank, region, hovered, zoomOnHover } = appMapStore
@@ -107,8 +112,8 @@ export default memo(function AppMap() {
     })
   }, [restaurantSelected])
 
+  const verticalPad = useAppMapVerticalPad()
   const padding = useMemo(() => {
-    const verticalPad = Math.round(Math.max(50, Math.min(130, getWindowHeight() * 0.333)))
     return media.sm
       ? {
           left: 10,

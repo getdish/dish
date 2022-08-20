@@ -1,24 +1,14 @@
-import { isWeb, zIndexDrawer } from '../constants/constants'
+import { zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { appMapStore } from './appMapStore'
 import { getSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
-import { SlantedTitle } from './views/SlantedTitle'
-import {
-  AbsoluteXStack,
-  AbsoluteYStack,
-  Spacer,
-  Theme,
-  ThemeInverse,
-  YStack,
-  useMedia,
-} from '@dish/ui'
+import { AbsoluteXStack, AbsoluteYStack, Spacer } from '@dish/ui'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import { Minus, Plus, RefreshCcw, X, ZoomOut } from '@tamagui/feather-icons'
+import { Minus, Plus, RefreshCcw, ZoomOut } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
-import { SafeAreaView, StatusBar, Text } from 'react-native'
 
 // import { useSafeAreaInsets } from 'react-native-safe-area-context'
 

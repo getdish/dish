@@ -39,13 +39,14 @@ export const Home = memo(() => {
         <YStack
           zi={10000000000}
           fullscreen
+          top={searchBarHeight}
           pe="box-none"
           // not on small screen at least
           // pt={searchBarHeight}
         >
           <AppAutocompleteSearch />
         </YStack>
-        <HomeStackView limitVisibleStates={autocompleteVisible ? 0 : Infinity}>
+        <HomeStackView limitVisibleStates={autocompleteVisible ? 1 : Infinity}>
           {(props) => {
             return <HomeStackViewPages {...props} />
           }}

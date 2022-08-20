@@ -79,7 +79,7 @@ const AppStackViewItem = memo(
     isAdding: boolean
     isHidingChildren: boolean
   }) => {
-    const top = Math.max(0, index - 1) * 3 + 6
+    // const top = Math.max(0, index - 1) * 3 + 6
     const isFullyActive = !isRemoving && !isAdding
 
     // safari ios drag optimization: when fully inactive hide it
@@ -111,7 +111,7 @@ const AppStackViewItem = memo(
             : `${index === 0 ? '' : 'animate-up'} ${isFullyActive ? 'active' : 'untouchable'}`
         }
         display={isFullyInactive ? 'none' : 'flex'}
-        marginTop={top}
+        // marginTop={top}
         right={0}
         bottom={-(index * 5)}
         left={0}

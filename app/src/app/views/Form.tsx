@@ -10,6 +10,7 @@ import {
   YStack,
   useTheme,
 } from '@dish/ui'
+import { variableToString } from '@tamagui/core'
 import { capitalize } from 'lodash'
 import React, { Suspense, useContext } from 'react'
 import { Controller, FieldError, RegisterOptions } from 'react-hook-form'
@@ -105,7 +106,7 @@ export const ValidatedInput = ({
               //   // }
               // }}
               {...(!isWeb && {
-                placeholderTextColor: theme.colorPress,
+                placeholderTextColor: variableToString(theme.colorPress),
               })}
               {...rest}
               // name={name}

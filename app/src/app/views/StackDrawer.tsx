@@ -96,9 +96,11 @@ export const StackDrawer = ({
         >
           <YStack fullscreen backgroundColor="$colorMid" o={isSafari ? 0.5 : 0.9} />
           <YStack fullscreen backgroundColor="$backgroundSoft" o={isSafari ? 0.5 : 0.9} />
-          <HomeSuspense fallback={fallback ?? <LoadingItems />}>
-            {isLoaded ? children : null}
-          </HomeSuspense>
+          <YStack zi={100}>
+            <HomeSuspense fallback={fallback ?? <LoadingItems />}>
+              {isLoaded ? children : null}
+            </HomeSuspense>
+          </YStack>
         </YStack>
       </YStack>
     </>
@@ -106,5 +108,9 @@ export const StackDrawer = ({
 }
 
 export const StackDrawerControlsPortal = () => {
-  return <PortalHost name="stack-drawer-controls" />
+  return (
+    <YStack pos="absolute" top={0} right={0}>
+      <PortalHost name="stack-drawer-controls" />
+    </YStack>
+  )
 }

@@ -670,6 +670,9 @@ export default function Map(props: MapProps) {
               },
               'source-layer': name,
             })
+            cancels.add(() => {
+              map.removeLayer(`${name}.fill`)
+            })
 
             // map.addLayer({
             //   id: `${name}.line`,
@@ -745,14 +748,16 @@ export default function Map(props: MapProps) {
             }
 
             cancels.add(() => {
-              map.removeLayer(`${name}.fill`)
-              map.removeLayer(`${name}.line`)
               if (label) {
                 map.removeLayer(`${name}.label`)
               }
               if (labelSource) {
                 map.removeSource(labelSource)
               }
+            })
+
+            cancels.add(() => {
+              // must be after removing all the layers
               map.removeSource(name)
             })
           }

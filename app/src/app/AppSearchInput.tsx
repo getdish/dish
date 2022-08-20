@@ -125,8 +125,8 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
   // > */}
 
   return (
-    <XStack pe="auto" f={1} height={innerHeight}>
-      {/* <AppSearchInputTagsRow /> */}
+    <XStack ai="center" pe="auto" f={1} height={innerHeight}>
+      <AppSearchInputTagsRow />
       <XStack height={innerHeight} position="relative" flex={1} alignItems="center">
         <SearchInput
           placeholderTextColor="#777"

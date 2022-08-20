@@ -1,7 +1,7 @@
 import loadable from '@loadable/component'
 
 export type PostEntry = {
-  View: React.SFC
+  View: React.FunctionComponent
   title: string
   date: string
   author: string

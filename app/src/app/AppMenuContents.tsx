@@ -29,7 +29,6 @@ export const AppMenuContents = memo(
     const [showContents, setShowContents] = useState(false)
     const colorScheme = useColorScheme()
 
-    console.log('AppMenuContents.render', userStore.theme)
     useTilg()
 
     // dirty web autofocus fix
@@ -48,7 +47,7 @@ export const AppMenuContents = memo(
         alignItems="stretch"
         pointerEvents="auto"
         minWidth={300}
-        width={300}
+        // width={300}
         {...(!isWeb && {
           width: '100%',
           height: '100%',
