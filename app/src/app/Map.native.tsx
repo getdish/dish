@@ -7,7 +7,7 @@ import { tiles } from './tiles'
 import { series, sleep } from '@dish/async'
 import { DISH_API_ENDPOINT } from '@dish/graph'
 import { useDebounce, useTheme } from '@dish/ui'
-import MapboxGL from '@rnmapbox/maps'
+import MapboxGL from '@tamagui/maps'
 import { lightColors } from '@tamagui/theme-base'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, useWindowDimensions } from 'react-native'
@@ -222,7 +222,10 @@ export default function Map({
                     fillOpacity: 0.25,
                   }}
                 />
-                {labelSource && (
+
+                {/* temp disable not working on new rnmaps "BridgeValue must be a primitive/array/object" */}
+
+                {/* {labelSource && (
                   <MapboxGL.SymbolLayer
                     id={labelID}
                     sourceLayerID={labelSource}
@@ -262,7 +265,7 @@ export default function Map({
                       textHaloWidth: 1,
                     }}
                   />
-                )}
+                )} */}
               </React.Fragment>
             )
           }

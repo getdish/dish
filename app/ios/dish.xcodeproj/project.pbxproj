@@ -172,8 +172,6 @@
 			dependencies = (
 			);
 			name = dish;
-			packageProductDependencies = (
-			);
 			productName = dish;
 			productReference = 13B07F961A680F5B00A75B9A /* app.app */;
 			productType = "com.apple.product-type.application";

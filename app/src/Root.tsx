@@ -42,7 +42,7 @@ async function start() {
     await Font.loadAsync({
       Cardinal: require('../assets/fonts/cardinal-trial.otf'),
       Inter: Inter_400Regular,
-      'Inter-ExtraBold': Inter_800ExtraBold,
+      InterBold: Inter_800ExtraBold,
     })
   }
 

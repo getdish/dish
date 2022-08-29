@@ -17,7 +17,7 @@
     "playwright": "^1.15.2"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.1-beta.150",
+    "@tamagui/build": "^1.0.1-beta.156",
     "typescript": "*"
   }
 }

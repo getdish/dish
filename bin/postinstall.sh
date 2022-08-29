@@ -28,7 +28,6 @@ function patch_app_packages() {
 
 PROJECT_ROOT="$(dirname "$0")/.."
 # delete_and_link_duplicate_modules &
-yarn patch-package || true &
 patch_app_packages &
 wait
 
