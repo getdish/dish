@@ -22,7 +22,7 @@ export const AppMapControls = memo(() => {
   )
 
   return (
-    <XStack space="$2" h="100%" ai="center" w="100%">
+    <XStack space="$2" h="100%" ai="center" pe="box-none">
       {/* {isWeb && <ToggleRegionButton />} */}
 
       {!appMap.hideRegions && (
@@ -36,7 +36,7 @@ export const AppMapControls = memo(() => {
           <Spacer size="$2" />
           <OverlayLinkButton
             circular
-            disabled={appMap.currentZoomLevel === 'close'}
+            disabled={appMap.currentZoomLevel === 'closest'}
             icon={Plus}
             onPress={appMap.zoomIn}
           />

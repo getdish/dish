@@ -109,7 +109,7 @@ export const StackDrawer = ({
 
 export const StackDrawerControlsPortal = () => {
   return (
-    <YStack pos="absolute" top={0} right={0}>
+    <YStack pe="auto" zi={1000000} pos="absolute" top={0} right={0}>
       <PortalHost name="stack-drawer-controls" />
     </YStack>
   )

@@ -12,7 +12,14 @@ export const OverlayLinkButton = forwardRef(function OverlayLinkButtonContent<
   return (
     <>
       {/* @ts-ignore */}
-      <LinkButton ref={ref} size="$5" elevation="$3" bordered pointerEvents="auto" {...props}>
+      <LinkButton
+        ref={ref}
+        chromeless
+        size="$5"
+        elevation="$3"
+        pointerEvents="auto"
+        {...props}
+      >
         {children}
       </LinkButton>
     </>

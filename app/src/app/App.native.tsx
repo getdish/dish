@@ -87,14 +87,14 @@ export const App = memo(() => {
       <AutocompleteEffects />
 
       {/* side swipe gestures */}
-      <YStack zi={100000000000000} fullscreen pe="box-none">
+      {/* <YStack zi={100000000000000} fullscreen pe="box-none">
         <GestureDetector gesture={gesture}>
           <XStack fullscreen pe="box-none">
             <YStack fullscreen left="auto" width={30} bc="rgba(0,0,0,0)" />
             <YStack fullscreen right="auto" width={30} bc="rgba(0,0,0,0)" />
           </XStack>
         </GestureDetector>
-      </YStack>
+      </YStack> */}
 
       <Animated.View
         pointerEvents="box-none"

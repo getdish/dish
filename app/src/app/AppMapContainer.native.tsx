@@ -24,20 +24,21 @@ export default memo(function AppMapContainer(props: { children: React.ReactNode 
       </YStack>
 
       {/* GPS */}
-      <YStack fullscreen bottom="auto" zIndex={10000000000}>
-        <SafeAreaView>
-          <XStack px="$4">
-            {/* <AppMapControls /> */}
+      <YStack pe="box-none" fullscreen bottom="auto" zIndex={10000000000}>
+        <SafeAreaView pointerEvents="box-none">
+          <XStack pe="box-none" px="$4">
+            <AppMapControls />
 
             <AppMapHeader />
 
             <Spacer flex />
 
             <Button
-              pe="auto"
+              pointerEvents="auto"
               size="$5"
               circular
               elevate
+              chromeless
               theme="dark"
               icon={Navigation}
               pressStyle={{
