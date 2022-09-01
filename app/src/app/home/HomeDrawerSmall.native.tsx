@@ -3,8 +3,9 @@ import { AppSearchBarInline } from '../AppSearchBarInline'
 import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore } from '../drawerStore'
 import { StackDrawerControlsPortal } from '../views/StackDrawer'
+import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
-import { Spacer, YStack, useThemeName } from '@dish/ui'
+import { Spacer, Square, YStack, useThemeName } from '@dish/ui'
 import { useReaction, useStoreInstance } from '@dish/use-store'
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { BlurView } from '@react-native-community/blur'
@@ -17,8 +18,9 @@ import {
   Rect,
   RoundedRect,
   Shadow,
+  Skia,
 } from '@shopify/react-native-skia'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Keyboard, MaskedViewIOS, StyleSheet, useWindowDimensions } from 'react-native'
 
 let hasOpened = false
@@ -56,6 +58,7 @@ export const HomeDrawerSmall = (props: any) => {
 
   const themeName = useThemeName()
   const isDark = themeName === 'dark'
+  const drawerOffsetY = 50
 
   return (
     <>
@@ -71,6 +74,12 @@ export const HomeDrawerSmall = (props: any) => {
           }
         }}
         handleComponent={() => null}
+        // handleComponent={() => {
+        //   return <Square size={100} bc="red" />
+        // }}
+        // backdropComponent={() => {
+        //   return <Square size={100} bc="red" />
+        // }}
         backgroundComponent={() => null}
         snapPoints={drawerStore.snapPoints.map((p) => `${p * 100}%`)}
         index={index}
@@ -78,19 +87,27 @@ export const HomeDrawerSmall = (props: any) => {
         enableDismissOnClose={false}
         enablePanDownToClose={false}
       >
+        <YStack pos="absolute" t={-10}>
+          <AppFloatingTagMenuBar />
+        </YStack>
+
         <BlurView
           blurType={isDark ? 'dark' : 'xlight'}
           blurRadius={6}
           blurAmount={6}
-          style={[StyleSheet.absoluteFill, { top: 40, borderRadius: 18, overflow: 'hidden' }]}
+          style={[
+            StyleSheet.absoluteFill,
+            { top: drawerOffsetY, borderRadius: 18, overflow: 'hidden' },
+          ]}
         />
 
+        {/* custom shadow */}
         {!isRemoteDebugging && (
           <Canvas
             style={{
               flex: 1,
-              zIndex: -1,
-              transform: [{ translateY: -50 }],
+              zIndex: 100000000000000,
+              transform: [{ translateY: -20 }],
               maxHeight: 200,
               position: 'absolute',
               top: 0,
@@ -99,20 +116,13 @@ export const HomeDrawerSmall = (props: any) => {
               height: 200,
             }}
           >
-            <Mask
-              mode="alpha"
-              mask={
-                <Group>
-                  <RoundedRect
-                    width={dimensions.width}
-                    height={80}
-                    x={0}
-                    y={10}
-                    r={0}
-                    color="#fff"
-                  />
-                </Group>
-              }
+            <Group
+              invertClip
+              clip={Skia.RRectXY(
+                Skia.XYWHRect(0, 70, dimensions.width, dimensions.height),
+                20,
+                20
+              )}
             >
               <RoundedRect
                 width={dimensions.width}
@@ -120,15 +130,15 @@ export const HomeDrawerSmall = (props: any) => {
                 x={0}
                 y={80}
                 r={20}
-                color="rgba(0,0,0,0.37)"
+                color="rgba(0,0,0,0.75)"
               >
                 <Blur blur={15} />
               </RoundedRect>
-            </Mask>
+            </Group>
           </Canvas>
         )}
 
-        <YStack btrr="$8" btlr="$8" y={40} zi={100} f={1} pos="relative">
+        <YStack btrr="$8" btlr="$8" y={drawerOffsetY} zi={100} f={1} pos="relative">
           <AppSearchBarInline />
           <YStack zi={1000} y={0}>
             <StackDrawerControlsPortal />

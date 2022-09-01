@@ -9,7 +9,7 @@ export const SlantedTitle = ({ size, children, ...props }: SlantedTitleProps) =>
   return (
     <SlantedYStack alignSelf="flex-start" size={size} {...props}>
       {isStringChild(children) ? (
-        <H2 fontWeight="700" size={size} textAlign="center">
+        <H2 color="$color" fontWeight="700" size={size} textAlign="center">
           {children}
         </H2>
       ) : (

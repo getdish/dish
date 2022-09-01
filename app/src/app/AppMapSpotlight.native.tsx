@@ -27,7 +27,7 @@ export const AppMapSpotlight = () => {
                 r={size / 2}
                 color="black"
               >
-                <Blur blur={70} />
+                <Blur blur={60} />
               </Circle>
             </Group>
           }

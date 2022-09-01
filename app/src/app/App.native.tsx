@@ -87,6 +87,7 @@ export const App = memo(() => {
       <AutocompleteEffects />
 
       {/* side swipe gestures */}
+      {/* tricky - covers elements on the side unfortunately would need passthrough */}
       {/* <YStack zi={100000000000000} fullscreen pe="box-none">
         <GestureDetector gesture={gesture}>
           <XStack fullscreen pe="box-none">
@@ -96,7 +97,7 @@ export const App = memo(() => {
         </GestureDetector>
       </YStack> */}
 
-      <Animated.View
+      {/* <Animated.View
         pointerEvents="box-none"
         style={[
           {
@@ -114,26 +115,26 @@ export const App = memo(() => {
           br="$10"
           shadowColor="#000"
           shadowRadius={10}
-        >
-          <XStack h="100%" w="100%" zi={1} pe="box-none" br="$10" ov="hidden">
-            <BottomSheetModalProvider>
-              <Suspense fallback={null}>
-                <AppMapContainer>
-                  <AppMap />
-                </AppMapContainer>
-              </Suspense>
+        > */}
+      <XStack h="100%" w="100%" zi={1} pe="box-none" br="$10" ov="hidden">
+        <BottomSheetModalProvider>
+          <Suspense fallback={null}>
+            <AppMapContainer>
+              <AppMap />
+            </AppMapContainer>
+          </Suspense>
 
-              <Home />
-            </BottomSheetModalProvider>
-          </XStack>
+          <Home />
+        </BottomSheetModalProvider>
+      </XStack>
 
-          <Theme name="dark">
-            <XStack zi={0} bc="$background" pe="box-none" w={windowDimensions.width}>
-              <MyLists />
-            </XStack>
-          </Theme>
+      <Theme name="dark">
+        <XStack zi={0} bc="$background" pe="box-none" w={windowDimensions.width}>
+          <MyLists />
         </XStack>
-      </Animated.View>
+      </Theme>
+      {/* </XStack>
+      </Animated.View> */}
 
       <AppMenuButtonFloating />
 
