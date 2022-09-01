@@ -106,7 +106,7 @@ export const HomeDrawerSmall = (props: any) => {
           <Canvas
             style={{
               flex: 1,
-              zIndex: 100000000000000,
+              zIndex: -1,
               transform: [{ translateY: -20 }],
               maxHeight: 200,
               position: 'absolute',

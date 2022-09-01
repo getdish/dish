@@ -13,9 +13,9 @@ export const HomeTopSearches = memo(() => {
     <XStack
       paddingHorizontal={10}
       // for easier touchability
-      paddingVertical={10}
+      paddingVertical={0}
       marginVertical={-10}
-      space="$1"
+      space="$2"
       marginHorizontal="auto"
       maxWidth="100%"
       ov="hidden"
@@ -29,13 +29,16 @@ export const HomeTopSearches = memo(() => {
         const inner = (
           <Button
             chromeless
+            size="$5"
+            circular
             {...(index === 0 && {
               bc: 'transparent',
-              boc: '$borderColor',
+              boc: '#fff',
               bw: 0.5,
             })}
           >
-            <TagsText tags={search.tags} />
+            {search.tags.map((x) => x.icon ?? x.name)}
+            {/* <TagsText tags={search.tags} /> */}
           </Button>
         )
 
