@@ -13,21 +13,19 @@ import config from './tamagui.config'
 import { createAuth, useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import { PortalProvider, TamaguiProvider, Toast, isWeb } from '@dish/ui'
+import { PortalProvider, Square, TamaguiProvider, Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@dish/use-store'
 import { Inter_400Regular, Inter_800ExtraBold } from '@expo-google-fonts/inter'
-import { DrawerProvider } from '@tamagui/drawer'
 import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
-import React, { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { Appearance, useColorScheme } from 'react-native'
+import React, { Suspense, useEffect, useState } from 'react'
+import { useColorScheme } from 'react-native'
 
 declare module '@dish/router' {
   interface RoutesTable extends DRoutesTable {}
 }
 
 let isStarted = false
-// let startPromise
 
 async function start() {
   if (isStarted) {
@@ -43,32 +41,36 @@ async function start() {
     })
   }
 
-  await (async () => {
-    addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
+  addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
 
-    await createAuth()
-    await userStore.checkForExistingLogin()
-    const initialHomeState = await getInitialHomeState()
+  await createAuth()
+  await userStore.checkForExistingLogin()
 
-    // if coming in fresh, redirect to our initial region
-    if (router.curPage.name === 'home' && !router.curPage.params.region) {
-      router.navigate({
-        name: 'homeRegion',
-        params: {
-          region: initialHomeState.initialHomeState.region,
-        },
-        replace: true,
-      })
-    }
+  await Promise.all([
+    //
+    homeStore.mount(),
+    userStore.mount(),
+  ])
 
-    return new Promise<void>((res) => {
-      router.onRouteChange((item) => {
-        homeStore.handleRouteChange(item)
-        // startPromise = null
-        res()
-      })
+  const { initialHomeState } = await getInitialHomeState()
+
+  // if coming in fresh, redirect to our initial region
+  if (router.curPage.name === 'home' && !router.curPage.params.region) {
+    router.navigate({
+      name: 'homeRegion',
+      params: {
+        region: initialHomeState.region,
+      },
+      replace: true,
     })
-  })()
+  }
+
+  await new Promise<void>((res) => {
+    router.onRouteChange((item) => {
+      homeStore.handleRouteChange(item)
+      res()
+    })
+  })
 
   isStarted = true
 }
@@ -140,14 +142,3 @@ export function Root() {
     </TamaguiProvider>
   )
 }
-
-// can be used by ssr in the future to load app
-// export function RootSuspenseLoad(props: any) {
-//   if (!isStarted && !startPromise) {
-//     startPromise = start()
-//   }
-//   if (startPromise) {
-//     throw startPromise
-//   }
-//   return <Suspense fallback={null}>{props.children}</Suspense>
-// }

@@ -243,7 +243,6 @@ class HomeStore extends Store {
     if (!val.id) {
       throw new Error(`Must have id`)
     }
-    console.warn('update', via, val.id)
     const state = this.allStates[val.id] ?? null
     // disable: should be explicit
     // default to replace the current state if type doesn't change

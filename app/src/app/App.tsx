@@ -51,7 +51,7 @@ export function App() {
 }
 
 function PublicContent(props: { children?: any }) {
-  console.log('wtf', RestaurantReviewPage)
+  console.warn('??')
   return (
     <>
       {/* background */}

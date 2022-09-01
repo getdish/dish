@@ -1,9 +1,15 @@
-import { useForceUpdate } from '@dish/ui'
-import React, { createContext, useContext, useLayoutEffect, useMemo, useRef, useState } from 'react'
-
 import { routePathToName, routes, useRouter, useRouterCurPage } from '../router'
 import { useLastValueWhen } from './hooks/useLastValueWhen'
 import { useUserStore } from './userStore'
+import { useForceUpdate } from '@dish/ui'
+import React, {
+  createContext,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 type RouteState = 'collect' | 'active' | 'inactive'
 
@@ -24,7 +30,11 @@ export function RouteSwitch(props: { children: any }) {
   const stateListeners = useRef(new Set<Function>())
   const nextActiveIndex = names.findIndex((x) => activeRoutes[x])
   const getState = (index: number): RouteState =>
-    activeIndex.current <= -1 ? 'collect' : activeIndex.current === index ? 'active' : 'inactive'
+    activeIndex.current <= -1
+      ? 'collect'
+      : activeIndex.current === index
+      ? 'active'
+      : 'inactive'
 
   useLayoutEffect(() => {
     activeIndex.current = nextActiveIndex
@@ -61,6 +71,8 @@ export function RouteSwitch(props: { children: any }) {
 
   //  we could have the stratey here of first hiding the prev route, then later
   //  on requestIdle unmounting things... but concurrent should sovle for us right?
+
+  console.log('children', children)
 
   return (
     <>
@@ -119,6 +131,8 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
 
     return null
   }, [props.exact, props.children, isMatched, isExactMatching, isParentMatching])
+
+  console.log('curPage', curPage, props, content)
 
   const children = (() => {
     const state = stateRef.current

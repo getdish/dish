@@ -123,12 +123,12 @@ export const App = memo(() => {
       <XStack h="100%" w="100%" zi={1} pe="box-none" br="$10" ov="hidden">
         <BottomSheetModalProvider>
           <Suspense fallback={null}>
-            {/* <AppMapContainer>
+            <AppMapContainer>
               <AppMap />
-            </AppMapContainer> */}
+            </AppMapContainer>
           </Suspense>
 
-          {/* <Home /> */}
+          <Home />
         </BottomSheetModalProvider>
       </XStack>
 

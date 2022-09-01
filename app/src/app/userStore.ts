@@ -24,19 +24,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type ThemeName = 'dark' | 'light' | 'auto'
 
-const hasLoggedInBefore = Boolean(await AsyncStorage.getItem('has-logged-in'))
 const THEME_KEY = 'user-theme'
-const currentTheme = (await AsyncStorage.getItem(THEME_KEY)) as ThemeName
 
 class UserStore extends Store {
   user: Partial<User> | null = null
   loading = false
   messages: string[] = []
   allVotes: { [id: string]: Review } = {}
-  theme: ThemeName = currentTheme ?? 'auto'
+  theme: ThemeName = 'auto'
+  hasLoggedInBefore = false
 
-  get hasLoggedInBefore() {
-    return hasLoggedInBefore
+  async mount() {
+    this.theme = (await AsyncStorage.getItem(THEME_KEY)) as ThemeName
+    this.hasLoggedInBefore = Boolean(await AsyncStorage.getItem('has-logged-in'))
   }
 
   get isLoggedIn() {

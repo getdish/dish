@@ -24,17 +24,19 @@ type RunSearchProps = {
   force?: boolean
 }
 
-const homeState = await getInitialHomeState()
-
 class SearchPageStore extends Store<{ id: string }> {
   index = -1
   event: ActiveEvent = null
   status: 'loading' | 'complete' = 'loading'
   results: RestaurantSearchItem[] = []
   meta: HomeMeta | null = null
-  searchPosition = homeState.initialPosition
+  searchPosition: MapPosition | null = null
   searchRegion = false
   private lastSearchArgs: RestaurantSearchArgs | null = null
+
+  async mount() {
+    this.searchPosition = (await getInitialHomeState()).initialPosition
+  }
 
   setIndex(index: number, event: ActiveEvent) {
     this.index = Math.min(Math.max(-1, index), this.max)
