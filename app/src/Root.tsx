@@ -21,7 +21,6 @@ import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Appearance, useColorScheme } from 'react-native'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 console.log('Appearance', Appearance.getColorScheme())
 

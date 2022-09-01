@@ -13,6 +13,7 @@ import { useQuery } from '@dish/graph'
 import { H2, Square, Theme, XStack, YStack, ZStack, useTheme, useThemeName } from '@dish/ui'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { variableToString } from '@tamagui/core'
+import * as Location from 'expo-location'
 // import { StatusBar } from 'expo-status-bar'
 import React, { Suspense, memo } from 'react'
 import { LogBox, StatusBar, useWindowDimensions } from 'react-native'
@@ -24,6 +25,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 LogBox.ignoreAllLogs(true)
+Location.installWebGeolocationPolyfill()
 
 export const App = memo(() => {
   const theme = useTheme()

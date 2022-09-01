@@ -58,6 +58,8 @@ export default function Map({
 
   // const pointColor = theme.name === 'dark' ? '#000' : 'rgba(20,30,240,0.5)'
 
+  console.log('map', { showUserLocation })
+
   return (
     <MapboxGL.MapView
       styleURL={style}
@@ -125,7 +127,16 @@ export default function Map({
         }
       }}
     >
-      {showUserLocation && <MapboxGL.UserLocation animated renderMode="native" />}
+      {showUserLocation && (
+        <MapboxGL.UserLocation
+          onUpdate={(location) => {
+            console.log('got location', location)
+          }}
+          animated
+          renderMode="native"
+        />
+      )}
+
       {/* // Causes error on Android: // Error while updating property 'stop' of a  view managed by: RCTMGLCamera*/}
       <MapboxGL.Camera
         ref={cameraRef}

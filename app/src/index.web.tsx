@@ -7,6 +7,11 @@ import React, { StrictMode } from 'react'
 import { render } from 'react-dom'
 import { createRoot } from 'react-dom/client'
 
+// @ts-ignore
+// import { jsx } from 'react/jsx-runtime'
+
+// globalThis['_jsx'] = jsx
+
 if (process.env.NODE_ENV === 'development') {
   startLogging()
 }

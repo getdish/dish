@@ -321,21 +321,26 @@ class AppMapStore extends Store {
         lat: position.coords.latitude,
       }
     }
-    const position = await this.getUserPosition()
-    if (position) {
-      const positionLngLat = positionToLngLat(position)
-      this.userLocation = positionLngLat
-      const state = homeStore.currentState
-      appMapStore.setPosition({
-        center: positionLngLat,
-      })
-      // watching actually is anti-pattern, just move where they are once
-      // we could "show" where they are at all times, but that may be doable through mapbox
-      // this.watchId = navigator.geolocation.watchPosition(position => {
-      //   appMapStore.setPosition({
-      //     center: positionToLngLat(position)
-      //   })
-      // })
+    try {
+      const position = await this.getUserPosition()
+      console.log('position', position)
+      if (position) {
+        const positionLngLat = positionToLngLat(position)
+        this.userLocation = positionLngLat
+        const state = homeStore.currentState
+        appMapStore.setPosition({
+          center: positionLngLat,
+        })
+        // watching actually is anti-pattern, just move where they are once
+        // we could "show" where they are at all times, but that may be doable through mapbox
+        // this.watchId = navigator.geolocation.watchPosition(position => {
+        //   appMapStore.setPosition({
+        //     center: positionToLngLat(position)
+        //   })
+        // })
+      }
+    } catch (err) {
+      console.error(`Error getting position`, err)
     }
   }
 
@@ -387,6 +392,7 @@ class AppMapStore extends Store {
 
   getUserPosition = () => {
     return new Promise<any>((res, rej) => {
+      console.log('getting position...')
       navigator.geolocation.getCurrentPosition(res, rej)
     })
   }

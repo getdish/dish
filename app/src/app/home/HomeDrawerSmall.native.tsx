@@ -59,9 +59,6 @@ export const HomeDrawerSmall = (props: any) => {
 
   return (
     <>
-      <YStack w="100%" h={70} top={20}>
-        <AppMapHeader />
-      </YStack>
       <BottomSheetModal
         ref={(sheet) => {
           if (!sheet) return

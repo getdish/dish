@@ -293,10 +293,14 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
 
               {
                 test: /\.[jt]sx?$/,
-                include: tamaguiInclude ?? defaultTamaguiInclude,
+                include: (file) => {
+                  const res = (tamaguiInclude ?? defaultTamaguiInclude)(file)
+                  // console.log('including', res, file)
+                  return res
+                },
 
                 use: [
-                  'thread-loader',
+                  // 'thread-loader',
 
                   // {
                   //   loader: 'babel-loader',
@@ -309,7 +313,15 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
                     loader: require.resolve('esbuild-loader'),
                     options: {
                       loader: 'tsx',
-                      target: 'es2020',
+                      target: 'es2021',
+                      implementation: require('esbuild'),
+                      jsx: 'automatic',
+                      tsconfigRaw: {
+                        compilerOptions: {
+                          jsx: 'react-jsx',
+                          jsxFactory: 'React.createElement',
+                        },
+                      },
                       keepNames: true,
                     },
                   },
