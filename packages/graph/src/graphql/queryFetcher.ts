@@ -15,10 +15,11 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
     }
   }
   clear()
+  const authHeaders = await getAuthHeaders(Auth.isAdmin)
   const headers = {
     'content-type': 'application/json',
     'x-user-is-logged-in': `${Auth.isLoggedIn}`,
-    ...(await getAuthHeaders(Auth.isAdmin)),
+    ...authHeaders,
   }
   const body = JSON.stringify({
     query,

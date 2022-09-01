@@ -41,11 +41,12 @@ export async function userFetchSimple(
   data: any = {},
   { handleLogOut, rawData, isAdmin, headers }: UserFetchOpts = {}
 ) {
+  const authHeaders = await getAuthHeaders(isAdmin)
   const init: RequestInit = {
     method,
     headers: {
       ...headers,
-      ...(await getAuthHeaders(isAdmin)),
+      ...authHeaders,
       ...(!rawData && {
         'Content-Type': 'application/json',
       }),
@@ -147,7 +148,7 @@ class AuthModel {
       return [response.status, response.statusText] as const
     }
     const data = await response.json()
-    this.setLoginData(data)
+    await this.setLoginData(data)
     return [response.status, data.user] as const
   }
 
@@ -174,7 +175,7 @@ class AuthModel {
       throw new Error(response.statusText)
     }
     const data = await response.json()
-    this.setLoginData(data)
+    await this.setLoginData(data)
     return data
   }
 

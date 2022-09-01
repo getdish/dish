@@ -5,7 +5,7 @@ if (process.env.TARGET !== 'web') {
 }
 
 export * from './react'
-export * from './graphql/index'
+export * from './graphql'
 export * from './graphql/fetchLog'
 export * from './graphql/queryFetcher'
 export * from './startLogging'
