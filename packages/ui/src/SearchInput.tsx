@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { forwardRef } from 'react'
-import { Input, InputProps, styled } from 'tamagui'
+import { Input, InputProps } from 'tamagui'
 
 export const SearchInput = forwardRef((props: InputProps, ref) => (
   <Input

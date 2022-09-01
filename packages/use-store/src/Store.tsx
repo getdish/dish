@@ -23,7 +23,7 @@ export const setDisableStoreTracking = (storeInstance: any, val: boolean) => {
   disableTracking.set(store, val)
 }
 
-export class Store<Props extends Object | null = null> {
+export class Store<Props extends Object = {}> {
   private _listeners = new Set<Function>()
   private _trackers = new Set<StoreTracker>()
   _version = 0

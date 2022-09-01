@@ -26,7 +26,12 @@
       "node_modules/@types",
       "./types",
       "../../node_modules/@types"
-    ]
+    ],
+    "paths": {
+      "@dish/*": [
+        "../packages/*"
+      ]
+    },
   },
   "files": [],
   "include": [

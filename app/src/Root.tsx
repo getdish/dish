@@ -43,7 +43,7 @@ async function start() {
     })
   }
 
-  await new Promise<void>(async (res) => {
+  await (async () => {
     addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
 
     await createAuth()
@@ -61,12 +61,14 @@ async function start() {
       })
     }
 
-    router.onRouteChange((item) => {
-      homeStore.handleRouteChange(item)
-      // startPromise = null
-      res()
+    return new Promise<void>((res) => {
+      router.onRouteChange((item) => {
+        homeStore.handleRouteChange(item)
+        // startPromise = null
+        res()
+      })
     })
-  })
+  })()
 
   isStarted = true
 }
