@@ -6,7 +6,7 @@ import { autocompletesStore } from '../AutocompletesStore'
 import { HomeDrawer } from './HomeDrawer'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
-import { YStack } from '@dish/ui'
+import { YStack, isWeb } from '@dish/ui'
 import { useReaction, useStoreInstance } from '@dish/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 
@@ -36,14 +36,7 @@ export const Home = memo(() => {
   return (
     <HomeDrawer showAutocomplete={autocompleteVisible}>
       <Suspense fallback={null}>
-        <YStack
-          zi={10000000000}
-          fullscreen
-          top={searchBarHeight}
-          pe="box-none"
-          // not on small screen at least
-          // pt={searchBarHeight}
-        >
+        <YStack zi={10000000000} fullscreen top={isWeb ? searchBarHeight : 0} pe="box-none">
           <AppAutocompleteSearch />
         </YStack>
         <HomeStackView limitVisibleStates={autocompleteVisible ? 1 : Infinity}>

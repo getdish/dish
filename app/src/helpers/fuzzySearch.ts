@@ -1,3 +1,5 @@
+import { create, insertBatch, search } from '@lyrasearch/lyra'
+
 export async function fuzzySearch<A extends { [key: string]: any }>({
   items,
   limit = 20,
@@ -9,42 +11,30 @@ export async function fuzzySearch<A extends { [key: string]: any }>({
   keys?: (keyof A)[]
   limit?: number
 }): Promise<A[]> {
-  const FlexSearch = (await import('flexsearch')).default
-  const flexSearch = FlexSearch.create<number>({
-    encode: 'simple',
-    tokenize: 'forward',
-    resolution: 3,
-    cache: false,
+  const db = create({
+    schema: {
+      ...(Object.fromEntries(keys.map((key) => [key, 'string'])) as A),
+      index: 'number',
+    },
   })
-  const numKeys = keys.length
-  const padIndex = Math.pow(10, numKeys)
-  for (const [index, item] of items.entries()) {
-    for (const [keyIndex, key] of keys.entries()) {
-      const fi = index * padIndex + keyIndex
-      flexSearch.add(fi, item[key])
-    }
-  }
-  const foundIndices = await flexSearch.search(query, limit)
-  const foundSorted: number[] = []
-  const foundAlternates: number[] = []
-  const foundExact: number[] = []
-  for (const index of foundIndices) {
-    const isAlternate = index % 0 > 0
-    if (isAlternate) {
-      foundAlternates.push(Math.floor(index / padIndex))
-    } else {
-      const realIndex = Math.round(index / padIndex)
-      // exact match flexsearch fails on...
-      if (items[realIndex][keys[0]].toLowerCase() === query) {
-        foundExact.push(realIndex)
-      } else {
-        foundSorted.push(realIndex)
-      }
-    }
-  }
-  return [...new Set([...foundExact, ...foundSorted, ...foundAlternates])]
-    .slice(0, limit)
-    .map((index) => items[index])
+
+  await insertBatch(
+    db,
+    items.map((item, index) => ({
+      index,
+      ...(Object.fromEntries(keys.map((key) => [key, item[key]])) as A),
+    }))
+  )
+
+  const results = search(db, {
+    term: query,
+    // @ts-ignore
+    properties: keys,
+  })
+
+  return results.hits.map((result) => {
+    return items[result.index as number]
+  })
 }
 
 // @ts-expect-error

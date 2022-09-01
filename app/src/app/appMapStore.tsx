@@ -369,6 +369,10 @@ class AppMapStore extends Store {
   static levels: {
     [key in MapZoomLevel]: LngLat
   } = {
+    closest: {
+      lng: 0.01,
+      lat: 0.005,
+    },
     close: {
       lng: 0.03,
       lat: 0.01,

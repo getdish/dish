@@ -2,9 +2,11 @@ import { tagDefaultAutocomplete } from '../constants/localTags'
 import { isTouchDevice } from '../constants/platforms'
 import { AutocompleteItemFull, createAutocomplete } from '../helpers/createAutocomplete'
 import { getFuzzyMatchQuery } from '../helpers/getFuzzyMatchQuery'
+import { locationToAutocomplete, searchLocations } from '../helpers/searchLocations'
 import { searchRestaurants } from '../helpers/searchRestaurants'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { LngLat } from '../types/homeTypes'
+import { NavigableTag } from '../types/tagTypes'
 import { AutocompleteFrame } from './AutocompleteFrame'
 import { AutocompleteResults } from './AutocompleteResults'
 import { AutocompleteStore, autocompleteSearchStore } from './AutocompletesStore'
@@ -33,6 +35,7 @@ export const AppAutocompleteSearch = memo(() => {
     query && store.setIsLoading(true)
   }, [query])
 
+  // 🔍 SEARCH
   useSearchQueryEffect(query, store, activeTags)
 
   return (
@@ -83,106 +86,104 @@ const homeDefaultResults = tagDefaultAutocomplete.map((tag) => {
 function useSearchQueryEffect(
   query: string,
   store: AutocompleteStore,
-  activeTags: import('/Users/n8/dish/app/src/types/tagTypes').NavigableTag[]
+  activeTags: NavigableTag[]
 ) {
   useEffect(() => {
     if (!query) {
       store.setResults(homeDefaultResults)
       return
     }
-    let results: AutocompleteItemFull[] = []
-    const postion = appMapStore.position
+
+    const position = appMapStore.position
     const tags = filterToNavigable(activeTags)
     const countryTag = tags.length === 2 ? tags.find((x) => x.type === 'country') : null
     const cuisineName = countryTag?.name
 
-    return series([
-      async () => {
-        if (cuisineName) {
-          results = await resolved(() => {
+    async function searchThings() {
+      if (cuisineName) {
+        return await resolved(() => {
+          return [
+            ...searchTags(query, cuisineName),
+            ...searchRestaurants(query, position.center, position.span, cuisineName),
+          ]
+        })
+      } else {
+        try {
+          return []
+          return await resolved(() => {
             return [
-              ...searchTags(query, cuisineName),
-              ...searchRestaurants(query, postion.center, postion.span, cuisineName),
+              ...searchTags(query),
+              ...searchRestaurants(query, position.center, position.span),
+              ...searchCuisines(query),
+              ...searchUsers(query),
             ]
           })
-        } else {
-          try {
-            results = await searchAutocomplete(query, postion.center, postion.span)
-          } catch (err) {
-            Toast.error(`Error searching ${err.message}`)
-            console.error(err)
+        } catch (err) {
+          Toast.error(`Error searching ${err.message}`)
+          console.error(err)
+        }
+      }
+    }
+
+    return series([
+      async (): Promise<AutocompleteItemFull[]> => {
+        console.warn('🔍 Searching', query)
+        return await Promise.all([
+          searchLocations(query, position.center).then((res) =>
+            res.map(locationToAutocomplete)
+          ),
+          searchThings(),
+        ]).then(([locations, things]) => [locations, things].flat())
+      },
+      async (results) => {
+        return await filterAutocompletes(query, results)
+      },
+      (results) => {
+        // add in a deduped entry
+        // if multiple countries have "steak" we show a single "generic steak" entry at top
+        const dishes = results.filter((x) => x.type === 'dish')
+        const groupedDishes = groupBy(dishes, (x) => x.name)
+        const groupedItems = Object.keys(groupedDishes).map(
+          (x) => [x, groupedDishes[x]] as const
+        )
+        for (const [name, group] of groupedItems) {
+          // more than one cuisine with same dish name, lets make a generic entry
+          if (group.length > 1) {
+            const firstIndexOfGroup = results.findIndex((x) => x.name === name)
+            results.splice(
+              firstIndexOfGroup,
+              0,
+              createAutocomplete({
+                name,
+                type: 'dish',
+                icon: group.find((x) => x.icon)?.icon ?? '',
+                slug: group[0]?.['slug'] ?? '',
+              })
+            )
           }
         }
-        console.log('searched for', results, query)
+        // countries that match name startsWith go to top
+        const sqlower = query.toLowerCase()
+        const partialCountryMatches = results
+          .map((item, index) => {
+            return item.type === 'country' && item.name.toLowerCase().startsWith(sqlower)
+              ? index
+              : -1
+          })
+          .filter((x) => x > 0)
+        for (const index of partialCountryMatches) {
+          const countryTag = results[index]
+          results.splice(index, 1) // remove from cur pos
+          results.splice(0, 0, countryTag) // insert into higher place
+        }
+
+        store.setResults(results)
       },
-      // allow cancel
-      () => sleep(1),
-      async () => {
-        results = await filterAutocompletes(query, results)
-      },
-      setResults,
       () => {
         store.setIsLoading(false)
       },
     ])
-
-    function setResults() {
-      // add in a deduped entry
-      // if multiple countries have "steak" we show a single "generic steak" entry at top
-      const dishes = results.filter((x) => x.type === 'dish')
-      const groupedDishes = groupBy(dishes, (x) => x.name)
-      for (const [name, group] of Object.keys(groupedDishes).map(
-        (x) => [x, groupedDishes[x]] as const
-      )) {
-        // more than one cuisine with same dish name, lets make a generic entry
-        if (group.length > 1) {
-          const firstIndexOfGroup = results.findIndex((x) => x.name === name)
-          results.splice(
-            firstIndexOfGroup,
-            0,
-            createAutocomplete({
-              name,
-              type: 'dish',
-              icon: group.find((x) => x.icon)?.icon ?? '',
-              slug: group[0]?.['slug'] ?? '',
-            })
-          )
-        }
-      }
-
-      // countries that match name startsWith go to top
-      const sqlower = query.toLowerCase()
-      const partialCountryMatches = results
-        .map((item, index) => {
-          return item.type === 'country' && item.name.toLowerCase().startsWith(sqlower)
-            ? index
-            : -1
-        })
-        .filter((x) => x > 0)
-      for (const index of partialCountryMatches) {
-        const countryTag = results[index]
-        results.splice(index, 1) // remove from cur pos
-        results.splice(0, 0, countryTag) // insert into higher place
-      }
-
-      store.setResults(results)
-    }
   }, [query])
-}
-
-function searchAutocomplete(
-  searchQuery: string,
-  center: LngLat,
-  span: LngLat
-): Promise<AutocompleteItemFull[]> {
-  return resolved(() => {
-    return [
-      ...searchTags(searchQuery),
-      ...searchRestaurants(searchQuery, center, span),
-      ...searchCuisines(searchQuery),
-      ...searchUsers(searchQuery),
-    ]
-  })
 }
 
 function searchUsers(searchQuery: string) {

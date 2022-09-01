@@ -1930,6 +1930,7 @@ __metadata:
     "@expo-google-fonts/inter": ^0.2.2
     "@graphql-tools/wrap": ^8.1.1
     "@loadable/component": ^5.14.1
+    "@lyrasearch/lyra": ^0.2.0
     "@mdx-js/react": ^1.6.22
     "@react-native-community/blur": ^4.2.0
     "@react-native-community/geolocation": ^2.1.0
@@ -1998,8 +1999,6 @@ __metadata:
     expo-splash-screen: ^0.16.1
     expo-status-bar: ^1.4.0
     express: ^4.18.1
-    fast-levenshtein: ^3.0.0
-    flexsearch: ^0.6.32
     form-data: ^4.0.0
     fs-extra: ^10.1.0
     gqty: ^2.2.0
@@ -3868,6 +3867,13 @@ __metadata:
   peerDependencies:
     webpack: ">=4.6.0"
   checksum: fee31c7f8c158c1cf987dee57e1a8e7b822decd004fd3c00895e30c6780584410d0199e44d10e7bf225ea30bed439404755272396d515d51a65f02e8e3ae1db0
+  languageName: node
+  linkType: hard
+
+"@lyrasearch/lyra@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@lyrasearch/lyra@npm:0.2.0"
+  checksum: 1715f1f9fb61d9f0a03a4590390f5fa0895fae30155abcda254316bb7f76a48f78db5a8535e57337d57ff7f434ab09597e938c00b37c2910f14d83e2236d0bc5
   languageName: node
   linkType: hard
 
@@ -13541,22 +13547,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-levenshtein@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "fast-levenshtein@npm:3.0.0"
-  dependencies:
-    fastest-levenshtein: ^1.0.7
-  checksum: 02732ba6c656797ca7e987c25f3e53718c8fcc39a4bfab46def78eef7a8729eb629632d4a7eca4c27a33e10deabffa9984839557e18a96e91ecf7ccaeedb9890
-  languageName: node
-  linkType: hard
-
-"fastest-levenshtein@npm:^1.0.7":
-  version: 1.0.12
-  resolution: "fastest-levenshtein@npm:1.0.12"
-  checksum: e1a013698dd1d302c7a78150130c7d50bb678c2c2f8839842a796d66cc7cdf50ea6b3d7ca930b0c8e7e8c2cd84fea8ab831023b382f7aab6922c318c1451beab
-  languageName: node
-  linkType: hard
-
 "fastq@npm:^1.6.0":
   version: 1.13.0
   resolution: "fastq@npm:1.13.0"
@@ -13859,13 +13849,6 @@ __metadata:
   version: 3.2.5
   resolution: "flatted@npm:3.2.5"
   checksum: 3c436e9695ccca29620b4be5671dd72e5dd0a7500e0856611b7ca9bd8169f177f408c3b9abfa78dfe1493ee2d873e2c119080a8a9bee4e1a186a9e60ca6c89f1
-  languageName: node
-  linkType: hard
-
-"flexsearch@npm:^0.6.32":
-  version: 0.6.32
-  resolution: "flexsearch@npm:0.6.32"
-  checksum: a46f833365174ce279d55a7dfa150e450934e52c086a3759f17b90784a7018bcec524ca8e88dca24ffa6ef17f1130d56fbb84b49c19d6f58363dac0713bf1909
   languageName: node
   linkType: hard
 

@@ -1,9 +1,12 @@
-import { LngLat } from '@dish/graph'
-import { isPresent } from '@dish/helpers'
-
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { GeocodePlace } from '../types/homeTypes'
 import { AutocompleteItemFull, createAutocomplete } from './createAutocomplete'
+import { LngLat } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
+
+// could switch to the free:
+// fetch('https://nominatim.openstreetmap.org/?addressdetails=1&q=bakery+in+berlin+wedding&format=json&limit=1').then(res => res.json()).then(console.log.bind(console))
+// and eventually self host it
 
 const baseUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places`
 
