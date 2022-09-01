@@ -2,7 +2,12 @@ import { isLngLatParam } from '../app/home/search/urlSerializers'
 import { regionPositions } from '../app/home/search/useLocationFromRoute'
 import { homeStore } from '../app/homeStore'
 import { getInitialHomeState } from '../constants/initialHomeState'
-import { HomeStateItem, HomeStateNav, HomeStateTagNavigable } from '../types/homeTypes'
+import {
+  HomeStateItem,
+  HomeStateItemHome,
+  HomeStateNav,
+  HomeStateTagNavigable,
+} from '../types/homeTypes'
 import { allTags, allTagsNameToSlug, tagNameKey } from './allTags'
 import { getActiveTagSlugs } from './getActiveTagSlugs'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
@@ -25,12 +30,16 @@ const isOffRegion = (state: HomeStateTagNavigable) => {
   return !isEqual(regionPosition, { center: state.center, span: state.span })
 }
 
-export const getNextHomeState = async (navState: HomeStateNav): Promise<HomeStateItem> => {
+let initialHomeState: HomeStateItemHome
+getInitialHomeState().then((res) => {
+  initialHomeState = res.initialHomeState
+})
+
+export const getNextHomeState = (navState: HomeStateNav): HomeStateItem => {
   const { tags = [], disallowDisableWhenActive = false, replaceSearch = false } = navState
   let { state } = navState
   if (!state) {
-    const res = await getInitialHomeState()
-    state = res.initialHomeState
+    state = initialHomeState
   }
   const curActive = 'activeTags' in state ? state.activeTags ?? {} : {}
   const existing = new Set(

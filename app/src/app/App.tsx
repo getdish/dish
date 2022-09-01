@@ -51,6 +51,7 @@ export function App() {
 }
 
 function PublicContent(props: { children?: any }) {
+  console.log('wtf', RestaurantReviewPage)
   return (
     <>
       {/* background */}
@@ -80,15 +81,11 @@ function PublicContent(props: { children?: any }) {
       </Suspense>
 
       {/* Modals outside the above YStack to stay above */}
-      <Suspense fallback={null}>
-        <UserEditPage />
-      </Suspense>
+      <Suspense fallback={null}>{/* <UserEditPage /> */}</Suspense>
       <Suspense fallback={null}>
         <GalleryPage />
       </Suspense>
-      <Suspense fallback={null}>
-        <RestaurantReviewPage />
-      </Suspense>
+      <Suspense fallback={null}>{/* <RestaurantReviewPage /> */}</Suspense>
       <Suspense fallback={null}>
         <Route name="restaurantHours">
           <RestaurantHoursPage />
@@ -119,3 +116,5 @@ const RestaurantHoursPage =
   process.env.TARGET === 'ssr' || process.env.NODE_ENV === 'development'
     ? require('./home/restaurantHours/RestaurantHoursPage').default
     : loadable(() => import('./home/restaurantHours/RestaurantHoursPage'))
+
+console.log('GalleryPage', GalleryPage, RestaurantReviewPage)

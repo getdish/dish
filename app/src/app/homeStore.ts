@@ -539,9 +539,9 @@ class HomeStore extends Store {
   // we definitely can clean up / name better some of this once things settle
   private lastNav = Date.now()
 
-  async getShouldNavigate({ state, ...rest }: HomeStateNav) {
+  getShouldNavigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
-    const nextState = await getNextHomeState(navState)
+    const nextState = getNextHomeState(navState)
     const navItem = getNavigateItemForState(nextState, this.currentState)
     return getShouldNavigate(navItem)
   }
@@ -549,7 +549,7 @@ class HomeStore extends Store {
   async navigate({ state, ...rest }: HomeStateNav) {
     const curState = this.currentState
     const navState = { state: state ?? curState, ...rest }
-    const nextState = await getNextHomeState(navState)
+    const nextState = getNextHomeState(navState)
     const navItem = getNavigateItemForState(nextState, curState)
     const shouldNav = getShouldNavigate(navItem)
     if (!shouldNav) {
