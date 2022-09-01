@@ -1,13 +1,12 @@
-import { isEqual } from '@dish/fast-compare'
-
 import { isLngLatParam } from '../app/home/search/urlSerializers'
 import { regionPositions } from '../app/home/search/useLocationFromRoute'
 import { homeStore } from '../app/homeStore'
-import { initialHomeState } from '../constants/initialHomeState'
+import { getInitialHomeState } from '../constants/initialHomeState'
 import { HomeStateItem, HomeStateNav, HomeStateTagNavigable } from '../types/homeTypes'
 import { allTags, allTagsNameToSlug, tagNameKey } from './allTags'
 import { getActiveTagSlugs } from './getActiveTagSlugs'
 import { shouldBeOnSearch } from './shouldBeOnSearch'
+import { isEqual } from '@dish/fast-compare'
 
 const ensureUnique = new Set(['lense', 'country', 'dish'])
 
@@ -26,11 +25,12 @@ const isOffRegion = (state: HomeStateTagNavigable) => {
   return !isEqual(regionPosition, { center: state.center, span: state.span })
 }
 
-export const getNextHomeState = (navState: HomeStateNav): HomeStateItem => {
+export const getNextHomeState = async (navState: HomeStateNav): Promise<HomeStateItem> => {
   const { tags = [], disallowDisableWhenActive = false, replaceSearch = false } = navState
   let { state } = navState
   if (!state) {
-    state = initialHomeState
+    const res = await getInitialHomeState()
+    state = res.initialHomeState
   }
   const curActive = 'activeTags' in state ? state.activeTags ?? {} : {}
   const existing = new Set(

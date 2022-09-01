@@ -1,10 +1,8 @@
+import { Auth, getAuthHeaders } from '../Auth'
+import { GRAPH_API } from '../constants'
+import { fetchLog } from './fetchLog'
 import { isSafari } from '@dish/helpers'
 import { QueryFetcher } from 'gqty'
-
-import { Auth } from '../Auth'
-import { GRAPH_API } from '../constants'
-import { getAuthHeaders } from '../getAuth'
-import { fetchLog } from './fetchLog'
 
 export const queryFetcher: QueryFetcher = async function (query, variables) {
   if (process.env.NODE_ENV !== 'test') {
@@ -20,7 +18,7 @@ export const queryFetcher: QueryFetcher = async function (query, variables) {
   const headers = {
     'content-type': 'application/json',
     'x-user-is-logged-in': `${Auth.isLoggedIn}`,
-    ...getAuthHeaders(Auth.isAdmin),
+    ...(await getAuthHeaders(Auth.isAdmin)),
   }
   const body = JSON.stringify({
     query,

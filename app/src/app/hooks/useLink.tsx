@@ -10,12 +10,17 @@ import { LinkButtonProps, LinkProps } from '../views/LinkProps'
 import { series, sleep } from '@dish/async'
 import { SizableText, useEvent, useForceUpdate } from '@dish/ui'
 import { isEqual, omit } from 'lodash'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Pressable } from 'react-native'
 
 export const useLink = (props: LinkProps<any, any>, styleProps?: any, asChild?: boolean) => {
   const forceUpdate = useForceUpdate()
-  const linkProps = getNormalizeLinkProps(props as any, forceUpdate)
+  const [linkProps, setLinkProps] = useState<any>()
+  useEffect(() => {
+    getNormalizeLinkProps(props as any, forceUpdate).then((res) => {
+      setLinkProps(res as any)
+    })
+  }, [])
   const cancel = useRef<Function | null>(null)
   const navItem: NavigateItem = {
     name: linkProps.name,
@@ -127,17 +132,17 @@ export const useLink = (props: LinkProps<any, any>, styleProps?: any, asChild?: 
 }
 
 // dont memoize relies on homeStore.currentState
-const getNormalizeLinkProps = (
+const getNormalizeLinkProps = async (
   props: Partial<LinkButtonProps>,
   forceUpdate: Function
-): LinkButtonProps & { params?: Object; onMouseEnter?: any } => {
-  const linkProps = getNormalizedLink(props)
+): Promise<LinkButtonProps & { params?: Object; onMouseEnter?: any }> => {
+  const linkProps = await getNormalizedLink(props)
   const next = {
     ...props,
     ...linkProps,
     // get latest on mouseenter, lets you update tags without re-rendering every link
-    onMouseEnter(e) {
-      const next = getNormalizedLink(props)
+    async onMouseEnter(e) {
+      const next = await getNormalizedLink(props)
       if (!isEqual(omit(next, 'onPress'), omit(linkProps, 'onPress'))) {
         forceUpdate()
       }
@@ -152,7 +157,7 @@ const getNormalizeLinkProps = (
 }
 
 // dont memoize relies on homeStore.currentState
-const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
+const getNormalizedLink = async (props: Partial<LinkButtonProps>) => {
   if (props.tags || props.tag) {
     const tags = filterToNavigable(props.tags ?? (props.tag ? [props.tag] : [])).map((tag) => {
       // TEMP bugfix, until we do new home, we need to fallback to getFullTagFromNameAndType
@@ -173,7 +178,7 @@ const getNormalizedLink = (props: Partial<LinkButtonProps>) => {
     // add to cache
     addTagsToCache(tags)
 
-    const nextState = getNextHomeState({
+    const nextState = await getNextHomeState({
       ...props,
       state: homeStore.currentState,
       tags,

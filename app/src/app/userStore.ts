@@ -20,13 +20,13 @@ import {
   useStoreInstance,
   useStoreInstanceSelector,
 } from '@dish/use-store'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type ThemeName = 'dark' | 'light' | 'auto'
 
-const hasLoggedInBefore = !!localStorage.getItem('has-logged-in')
-
+const hasLoggedInBefore = Boolean(await AsyncStorage.getItem('has-logged-in'))
 const THEME_KEY = 'user-theme'
-const currentTheme = localStorage.getItem(THEME_KEY) as ThemeName
+const currentTheme = (await AsyncStorage.getItem(THEME_KEY)) as ThemeName
 
 class UserStore extends Store {
   user: Partial<User> | null = null
@@ -48,9 +48,9 @@ class UserStore extends Store {
     return this.user?.username === 'admin'
   }
 
-  setTheme(theme: ThemeName) {
+  async setTheme(theme: ThemeName) {
     if (theme) {
-      localStorage.setItem(THEME_KEY, theme)
+      await AsyncStorage.setItem(THEME_KEY, theme)
     }
     this.theme = theme
   }
@@ -128,8 +128,8 @@ class UserStore extends Store {
     Toast.show('Logged out')
   }
 
-  checkForExistingLogin() {
-    Auth.checkForExistingLogin()
+  async checkForExistingLogin() {
+    await Auth.checkForExistingLogin()
     if (Auth.has_been_logged_out) {
       Toast.show('Session expired: logged out')
     }

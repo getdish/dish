@@ -173,6 +173,9 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
             ? [hotEntry, polyFillPath, entry].filter(isPresent)
             : [hotEntry, entry].filter(isPresent),
       },
+      experiments: {
+        topLevelAwait: true,
+      },
       output: {
         path: path.join(cwd, 'build', 'web'),
         filename: `static/js/app.${hashFileNamePart}.js`,
@@ -313,7 +316,7 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
                     loader: require.resolve('esbuild-loader'),
                     options: {
                       loader: 'tsx',
-                      target: 'es2021',
+                      target: 'es2022',
                       implementation: require('esbuild'),
                       jsx: 'automatic',
                       tsconfigRaw: {
@@ -385,7 +388,7 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
                     loader: require.resolve('esbuild-loader'),
                     options: {
                       loader: 'tsx',
-                      target: 'es2019',
+                      target: 'esnext',
                     },
                   },
                   {

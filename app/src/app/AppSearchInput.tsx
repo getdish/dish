@@ -132,8 +132,9 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
           placeholderTextColor="#777"
           flex={1}
           height={searchBarHeight}
-          floating={floating}
+          // floating={floating}
           ref={(view) => {
+            // @ts-ignore
             textInput$.current = view
             setInputNode(view)
           }}

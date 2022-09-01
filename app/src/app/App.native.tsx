@@ -24,7 +24,11 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 
+// LogBox.uninstall()
 LogBox.ignoreAllLogs(true)
+LogBox.ignoreLogs([
+  "No native splash screen registered for given view controller. Call 'SplashScreen.show' for given view controller first.",
+])
 Location.installWebGeolocationPolyfill()
 
 export const App = memo(() => {
@@ -155,9 +159,9 @@ const MyLists = () => {
 
   return (
     <YStack py="$13" px="$3">
-      {user.lists({ limit: 20 }).map((list) => {
+      {user.lists({ limit: 20 }).map((list, index) => {
         return (
-          <H2 key={list.name} ff="$stylish">
+          <H2 key={list.name ?? index} ff="$stylish">
             {list.name}
           </H2>
         )

@@ -1,7 +1,6 @@
-import { isSafari } from '@dish/helpers'
-
 import { DISH_API_ENDPOINT, isNode } from './constants'
-import { HAS_LOGGED_IN_BEFORE, LOGIN_KEY, getAuthHeaders } from './getAuth'
+import { isSafari } from '@dish/helpers'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // TODO next gen!! remove all cruft!!
 
@@ -46,7 +45,7 @@ export async function userFetchSimple(
     method,
     headers: {
       ...headers,
-      ...getAuthHeaders(isAdmin),
+      ...(await getAuthHeaders(isAdmin)),
       ...(!rawData && {
         'Content-Type': 'application/json',
       }),
@@ -78,17 +77,15 @@ class AuthModel {
       : `${DISH_API_ENDPOINT}/user/appleAuthorizeChrome`
   }
 
-  hasEverLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem(HAS_LOGGED_IN_BEFORE)
-
-  constructor() {
+  constructor(public hasEverLoggedIn: boolean) {
     if (isNode) {
       this.isLoggedIn = true
       this.isAdmin = true
     }
   }
 
-  checkForExistingLogin() {
-    const json = localStorage.getItem(LOGIN_KEY)
+  async checkForExistingLogin() {
+    const json = await AsyncStorage.getItem(LOGIN_KEY)
     if (json != null) {
       const auth = JSON.parse(json)
       this.jwt = auth.token
@@ -132,7 +129,7 @@ class AuthModel {
       const data = await response.json()
       return [response.status, data] as const
     } else {
-      localStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
+      await AsyncStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
     }
     return [response.status, response.statusText] as const
   }
@@ -154,15 +151,15 @@ class AuthModel {
     return [response.status, data.user] as const
   }
 
-  setLoginData(data: { user: any; token: string }) {
+  async setLoginData(data: { user: any; token: string }) {
     if (!data.token) {
       throw new Error(`INVALID NO TOKEN`)
     }
     this.isLoggedIn = true
     this.jwt = data.token
     this.user = data.user
-    localStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
-    localStorage.setItem(LOGIN_KEY, JSON.stringify(data))
+    await AsyncStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
+    await AsyncStorage.setItem(LOGIN_KEY, JSON.stringify(data))
     this.has_been_logged_out = false
   }
 
@@ -186,12 +183,47 @@ class AuthModel {
     this.isLoggedIn = false
     this.jwt = ''
     this.user = null
-    localStorage.removeItem(LOGIN_KEY)
+    await AsyncStorage.removeItem(LOGIN_KEY)
   }
 }
 
-export const Auth = new AuthModel()
+export let Auth: AuthModel
+
+export function getAuth() {
+  if (!Auth) throw new Error(`Must call createAuth() first`)
+  return Auth
+}
+
+export async function createAuth() {
+  const hasEverLoggedIn = Boolean(await AsyncStorage.getItem(HAS_LOGGED_IN_BEFORE))
+  Auth = new AuthModel(hasEverLoggedIn)
+}
 
 if (typeof window !== 'undefined') {
+  // @ts-ignore
   window['Auth'] = Auth
+}
+
+export const LOGIN_KEY = 'auth'
+export const HAS_LOGGED_IN_BEFORE = 'HAS_LOGGED_IN_BEFORE'
+
+export async function getAuthInfo(): Promise<null | {
+  user: Object
+  token: string
+  admin?: boolean
+}> {
+  const json = await AsyncStorage.getItem(LOGIN_KEY)
+  if (json != null) {
+    return JSON.parse(json)
+  }
+  return null
+}
+
+export async function getAuthHeaders(isAdmin?: boolean) {
+  const auth = await getAuthInfo()
+  return {
+    ...(auth && {
+      Authorization: `Bearer ${auth.token}`,
+    }),
+  }
 }

@@ -49,7 +49,7 @@
     "docker:logs:web": "docker logs -f app",
     "docker:stop:web": "docker rm -f app || true",
     "validate:tsc": "tsc --noEmit",
-    "ts:check": "tsc -w --preserveWatchOutput --noEmit --project tsconfig.build.json",
+    "ts:check": "tsc -b tsconfig.build.json -w --preserveWatchOutput",
     "watch:ts:check": "yarn ts:check -w",
     "watch:ts": "SKIP_TYPES_INITIAL=1 ultra -r --no-pretty --concurrency 100 watch",
     "build:ordered": "ultra -r --no-pretty --build",

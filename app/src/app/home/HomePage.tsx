@@ -16,7 +16,7 @@ import { homePageStore } from './homePageStore'
 import { RestaurantListItem } from './restaurant/RestaurantListItem'
 import { useTopCuisines } from './useTopCuisines'
 import { series, sleep } from '@dish/async'
-import { RestaurantOnlyIds, graphql, order_by, query, useRefetch } from '@dish/graph'
+import { RestaurantOnlyIds, graphql, order_by, useQuery, useRefetch } from '@dish/graph'
 import {
   LoadingItems,
   Spacer,
@@ -184,7 +184,6 @@ const underlaySize = 75
 
 function UnderlayLeft() {
   const { item, percentOpen } = useSwipeableItemParams()
-  console.log('percentOpen.value', percentOpen.value, item)
   const styles = useAnimatedStyle(() => ({
     opacity: percentOpen.value,
     left: -50 + percentOpen.value * 50,
@@ -206,84 +205,82 @@ function UnderlayLeft() {
 }
 
 export const HomePageFeed = memo(
-  graphql(
-    ({ region, center, ...useSetAppMapProps }: UseSetAppMapProps & { region: string }) => {
-      const [hovered, setHovered] = useState<null | RestaurantOnlyIds[]>(null)
-      const refetch = useRefetch()
-      const setHoveredDbc = useDebounce(setHovered, 400)
-      const homeStore = useHomeStore()
-      const topCuisines = useTopCuisines(homeStore.currentState.center)
-      const user = useCurrentUserQuery()
-      const restaurants = query.restaurant({
-        limit: 10,
-        order_by: [
-          {
-            created_at: order_by.desc,
-          },
-        ],
-      })
-      const setHoverCancel = () => {
-        setHoveredDbc.cancel()
-      }
+  ({ region, center, ...useSetAppMapProps }: UseSetAppMapProps & { region: string }) => {
+    const query = useQuery()
+    const [hovered, setHovered] = useState<null | RestaurantOnlyIds[]>(null)
+    const refetch = useRefetch()
+    const setHoveredDbc = useDebounce(setHovered, 400)
+    const homeStore = useHomeStore()
+    const topCuisines = useTopCuisines(homeStore.currentState.center)
+    const user = useCurrentUserQuery()
+    const restaurants = query.restaurant({
+      limit: 10,
+      order_by: [
+        {
+          created_at: order_by.desc,
+        },
+      ],
+    })
+    const setHoverCancel = () => {
+      setHoveredDbc.cancel()
+    }
 
-      console.log('topCuisines', topCuisines.data, restaurants, center)
+    useSetAppMap({
+      showRank: !!hovered,
+      center,
+      ...useSetAppMapProps,
+      fitToResults: true,
+      // zoomOnHover: true,
+      hideRegions: false,
+      results: hovered ?? restaurants,
+    })
 
-      useSetAppMap({
-        showRank: !!hovered,
-        center,
-        ...useSetAppMapProps,
-        fitToResults: true,
-        // zoomOnHover: true,
-        hideRegions: false,
-        results: hovered ?? restaurants,
-      })
-
-      return (
-        <>
-          {restaurants.map((item, index) => {
-            return (
-              // touchable actually fixes swipable
-              // <TouchableWithoutFeedback key={item.id}>
-              <>
-                <SwipeableItem
-                  item={item}
-                  snapPointsRight={[underlaySize]}
-                  overSwipe={overSwipe}
-                  renderUnderlayRight={() => (
-                    <UnderlayLeft
-                    // drag={drag}
-                    />
-                  )}
-                  activationThreshold={0}
-                  onChange={({ open }) => {
-                    console.log('is open', open)
-                    // router.navigate({
-                    //   name: 'list',
-                    //   params: {
-                    //     userSlug: 'nate',
-                    //     slug: 'create',
-                    //   },
-                    // })
-                  }}
-                  swipeEnabled
-                >
-                  <RestaurantListItem
-                    // list={list
-                    curLocInfo={null}
-                    rank={0}
-                    restaurant={item}
+    return (
+      <>
+        {restaurants.map((item, index) => {
+          return (
+            // touchable actually fixes swipable
+            // <TouchableWithoutFeedback key={item.id}>
+            <React.Fragment key={item.id ?? index}>
+              <SwipeableItem
+                item={item}
+                snapPointsRight={[underlaySize]}
+                overSwipe={overSwipe}
+                renderUnderlayRight={() => (
+                  <UnderlayLeft
+                  // drag={drag}
                   />
-                </SwipeableItem>
-              </>
-              // </TouchableWithoutFeedback>
-            )
-          })}
-        </>
-      )
+                )}
+                activationThreshold={0}
+                onChange={({ open }) => {
+                  console.log('is open', open)
+                  // router.navigate({
+                  //   name: 'list',
+                  //   params: {
+                  //     userSlug: 'nate',
+                  //     slug: 'create',
+                  //   },
+                  // })
+                }}
+                swipeEnabled
+              >
+                <RestaurantListItem
+                  // list={list
+                  curLocInfo={null}
+                  rank={0}
+                  restaurant={item}
+                />
+              </SwipeableItem>
+            </React.Fragment>
+            // </TouchableWithoutFeedback>
+          )
+        })}
+      </>
+    )
 
-      return (
-        <>
-          {/* <ContentScrollViewHorizontal>
+    return (
+      <>
+        {/* <ContentScrollViewHorizontal>
             <XStack pe="auto" ai="center" space="$5" py="$2" px="$4">
               {topCuisines.data?.map((cuisine, i) => {
                 return (
@@ -305,7 +302,7 @@ export const HomePageFeed = memo(
             </XStack>
           </ContentScrollViewHorizontal> */}
 
-          {/* <DraggableFlatList
+        {/* <DraggableFlatList
             keyExtractor={(item, index) => `draggable-item-${item?.name}`}
             data={restaurants}
             renderItem={useCallback(
@@ -366,21 +363,17 @@ export const HomePageFeed = memo(
             }}
           /> */}
 
-          {/* <HomeTagLenses /> */}
-          {/* <HomeNearbyRegions lng={center?.lng} lat={center?.lat} /> */}
-          {/* <Spacer size="$6" /> */}
+        {/* <HomeTagLenses /> */}
+        {/* <HomeNearbyRegions lng={center?.lng} lat={center?.lat} /> */}
+        {/* <Spacer size="$6" /> */}
 
-          <YStack paddingHorizontal="$4" position="relative">
-            <Spacer size="$8" />
-            {/* <HomeTrendingSpots region={region} /> */}
-          </YStack>
-        </>
-      )
-    },
-    {
-      suspense: false,
-    }
-  )
+        <YStack paddingHorizontal="$4" position="relative">
+          <Spacer size="$8" />
+          {/* <HomeTrendingSpots region={region} /> */}
+        </YStack>
+      </>
+    )
+  }
 )
 
 // const HomeTrendingSpots = memo(({ region }: { region: string }) => {

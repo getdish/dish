@@ -269,7 +269,7 @@ function formatRelationData<T>(
   inputType: '_set_input' | '_insert_input'
 ) {
   return objects.map((cur) => {
-    return Object.keys(cur).reduce((acc, key) => {
+    return Object.keys(cur as any).reduce((acc, key) => {
       const schemaType = generatedSchema[table][key]['__type']
       const { pureType: typeName, isArray } = parseSchemaType(schemaType)
       const inputKeys = Object.keys(generatedSchema[table + inputType])

@@ -4,13 +4,13 @@ import { App } from './app/App'
 import { homeStore } from './app/homeStore'
 import { useUserStore, userStore } from './app/userStore'
 import { showRadar } from './constants/constants'
-import { initialHomeState } from './constants/initialHomeState'
+import { getInitialHomeState } from './constants/initialHomeState'
 import { tagDefaultAutocomplete, tagFilters, tagLenses } from './constants/localTags'
 import './globals'
 import { addTagsToCache } from './helpers/allTags'
 import { DRoutesTable, router, routes } from './router'
 import config from './tamagui.config'
-import { useHydrateCache } from '@dish/graph'
+import { createAuth, useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
 import { PortalProvider, TamaguiProvider, Toast, isWeb } from '@dish/ui'
@@ -21,8 +21,6 @@ import * as Font from 'expo-font'
 import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Appearance, useColorScheme } from 'react-native'
-
-console.log('Appearance', Appearance.getColorScheme())
 
 declare module '@dish/router' {
   interface RoutesTable extends DRoutesTable {}
@@ -45,16 +43,19 @@ async function start() {
     })
   }
 
-  await new Promise<void>((res) => {
+  await new Promise<void>(async (res) => {
     addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
-    userStore.checkForExistingLogin()
+
+    await createAuth()
+    await userStore.checkForExistingLogin()
+    const initialHomeState = await getInitialHomeState()
 
     // if coming in fresh, redirect to our initial region
     if (router.curPage.name === 'home' && !router.curPage.params.region) {
       router.navigate({
         name: 'homeRegion',
         params: {
-          region: initialHomeState.region,
+          region: initialHomeState.initialHomeState.region,
         },
         replace: true,
       })

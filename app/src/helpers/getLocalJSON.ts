@@ -1,17 +1,19 @@
-export const getLocalJSON = (key: string, defaultValue?: any) => {
-  const item = localStorage.getItem(key)
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+export const getLocalJSON = async (key: string, defaultValue?: any) => {
+  const item = await AsyncStorage.getItem(key)
   if (item) {
     try {
       return JSON.parse(item)
     } catch (err) {
       console.warn('Invalid storage value', err)
-      localStorage.removeItem(key)
+      await AsyncStorage.removeItem(key)
       return defaultValue
     }
   }
   return defaultValue
 }
 
-export const setLocalJSON = (key: string, value: any) => {
-  localStorage.setItem(key, JSON.stringify(value))
+export const setLocalJSON = async (key: string, value: any) => {
+  await AsyncStorage.setItem(key, JSON.stringify(value))
 }

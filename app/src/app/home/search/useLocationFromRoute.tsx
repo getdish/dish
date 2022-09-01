@@ -1,7 +1,4 @@
-import { LngLat, MapPosition } from '@dish/graph'
-import { HistoryItem } from '@dish/router'
-
-import { initialPosition } from '../../../constants/initialHomeState'
+import { getInitialHomeState } from '../../../constants/initialHomeState'
 import { fetchRegion } from '../../../helpers/fetchRegion'
 import { bboxToLngLat } from '../../../helpers/mapHelpers'
 import { searchLocations } from '../../../helpers/searchLocations'
@@ -9,6 +6,8 @@ import { useQueryLoud } from '../../../helpers/useQueryLoud'
 import { SearchRouteParams } from '../../../router'
 import { RegionNormalized } from '../../../types/homeTypes'
 import { urlSerializers } from './urlSerializers'
+import { LngLat, MapPosition } from '@dish/graph'
+import { HistoryItem } from '@dish/router'
 
 export function useLocationFromRoute(route: HistoryItem<'search'>) {
   const key = `location-${route.name + route.params.region}`
@@ -63,5 +62,5 @@ export async function getLocationFromRoute(
     }
   }
 
-  return initialPosition
+  return (await getInitialHomeState()).initialPosition
 }

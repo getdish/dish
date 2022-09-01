@@ -13,7 +13,7 @@ import React, { memo, useLayoutEffect } from 'react'
 
 export const AppIntroLetter = memo(() => {
   const userStore = useUserStore()
-  const [closes, setCloses] = useLocalStorageState('modal-intro-closes', 0)
+  const [closes = 0 as number, setCloses] = useLocalStorageState('modal-intro-closes', 0)
   const hasOnboarded = userStore.user?.has_onboarded
   const isLoggedIn = userStore.isLoggedIn
   const store = useStore(IntroModalStore)

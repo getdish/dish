@@ -1,9 +1,7 @@
-import '@dish/helpers/polyfill'
-
-import { inspectWriteGenerate } from '@gqty/cli'
-
+import { getAuthHeaders } from './Auth'
 import { GRAPH_API_INTERNAL } from './constants'
-import { getAuthHeaders } from './getAuth'
+import '@dish/helpers/polyfill'
+import { inspectWriteGenerate } from '@gqty/cli'
 
 const run = async () => {
   await inspectWriteGenerate({
@@ -11,7 +9,7 @@ const run = async () => {
     // @ts-ignore
     introspection: {
       endpoint: GRAPH_API_INTERNAL,
-      headers: getAuthHeaders(true),
+      headers: await getAuthHeaders(true),
     },
     generateOptions: {},
     transformSchemaOptions: {

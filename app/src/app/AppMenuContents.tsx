@@ -20,7 +20,8 @@ import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@tamagui/fea
 import { capitalize } from 'lodash'
 import React, { forwardRef, memo, useState } from 'react'
 import { ScrollView, useColorScheme } from 'react-native'
-import useTilg from 'tilg'
+
+// import useTilg from 'tilg'
 
 export const AppMenuContents = memo(
   forwardRef(({ hideUserMenu, ...props }: { hideUserMenu: Function } & YStackProps, ref) => {
@@ -28,8 +29,6 @@ export const AppMenuContents = memo(
     const { isLoggedIn, user, logout } = userStore
     const [showContents, setShowContents] = useState(false)
     const colorScheme = useColorScheme()
-
-    useTilg()
 
     // dirty web autofocus fix
     useDebounceEffect(

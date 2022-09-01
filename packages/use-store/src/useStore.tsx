@@ -44,7 +44,7 @@ import { useSyncExternalStore } from 'use-sync-external-store/shim'
 const idFn = (_) => _
 
 // no singleton, just react
-export function useStore<A extends Store<B>, B>(
+export function useStore<A extends Store<B>, B extends Object>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B,
   options: UseStoreOptions<A, any> = defaultOptions
@@ -68,7 +68,7 @@ export function useStore<A extends Store<B>, B>(
   return useStoreFromInfo(info, selector)
 }
 
-export function useStoreDebug<A extends Store<B>, B>(
+export function useStoreDebug<A extends Store<B>, B extends Object>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B,
   selector?: any
@@ -78,7 +78,7 @@ export function useStoreDebug<A extends Store<B>, B>(
 }
 
 // singleton
-export function createStore<A extends Store<B>, B>(
+export function createStore<A extends Store<B>, B extends Object>(
   StoreKlass: new (props: B) => A | (new () => A),
   props?: B
 ): A {
@@ -87,7 +87,10 @@ export function createStore<A extends Store<B>, B>(
 // use singleton with react
 // TODO selector support with types...
 
-export function useStoreInstance<A extends Store<B>, B>(instance: A, debug?: boolean): A {
+export function useStoreInstance<A extends Store<B>, B extends Object>(
+  instance: A,
+  debug?: boolean
+): A {
   const store = instance[UNWRAP_PROXY]
   const uid = getStoreUid(store.constructor, store.props)
   const info = cache.get(uid)
@@ -102,7 +105,7 @@ export function useStoreInstance<A extends Store<B>, B>(instance: A, debug?: boo
 
 export function useStoreInstanceSelector<
   A extends Store<B>,
-  B,
+  B extends Object,
   Selector extends (store: A) => any
 >(
   instance: A,
@@ -125,17 +128,17 @@ export function useStoreInstanceSelector<
 export function createUseStore<Props, Store>(
   StoreKlass: (new (props: Props) => Store) | (new () => Store)
 ) {
-  return function <Res, C extends Selector<Store, Res>>(
+  return function <Res, C extends Selector<Store, Res>, Props extends Object>(
     props?: Props,
     options?: UseStoreOptions
     // super hacky workaround for now, ts is unknown to me tbh
   ): C extends Selector<any, infer B> ? (B extends Object ? B : Store) : Store {
-    return useStore(StoreKlass, props, options)
+    return useStore(StoreKlass as any, props, options)
   }
 }
 
 // for creating a usable selector hook
-export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(
+export function createUseStoreSelector<A extends Store<Props>, Props extends Object, Selected>(
   StoreKlass: (new (props: Props) => A) | (new () => A),
   selector: Selector<A, Selected>
 ): (props?: Props) => Selected {
@@ -147,7 +150,7 @@ export function createUseStoreSelector<A extends Store<Props>, Props, Selected>(
 // selector hook
 export function useStoreSelector<
   A extends Store<B>,
-  B,
+  B extends Object,
   S extends Selector<any, Selected>,
   Selected
 >(StoreKlass: (new (props: B) => A) | (new () => A), selector: S, props?: B): Selected {
@@ -165,7 +168,7 @@ export function trackStoresAccess(cb: StoreAccessTracker) {
 
 // TODO deprecate and replace with usePortal
 // for ephemeral stores (alpha, not working correctly yet)
-export function useStoreOnce<A extends Store<B>, B>(
+export function useStoreOnce<A extends Store<B>, B extends Object>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B,
   selector?: any
@@ -174,7 +177,7 @@ export function useStoreOnce<A extends Store<B>, B>(
 }
 
 // get non-singleton outside react (weird)
-export function getStore<A extends Store<B>, B>(
+export function getStore<A extends Store<B>, B extends Object>(
   StoreKlass: (new (props: B) => A) | (new () => A),
   props?: B
 ): A {

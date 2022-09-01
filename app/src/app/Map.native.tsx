@@ -58,7 +58,7 @@ export default function Map({
 
   // const pointColor = theme.name === 'dark' ? '#000' : 'rgba(20,30,240,0.5)'
 
-  console.log('map', { showUserLocation })
+  // console.log('map', { showUserLocation })
 
   return (
     <MapboxGL.MapView
@@ -74,10 +74,10 @@ export default function Map({
       onDidFinishLoadingMap={() => {
         setIsLoaded(1)
       }}
-      onDidFailLoadingMap={() => {
-        console.warn('FAIL LOADING MAP!!!!!!!')
-        setIsLoaded(1)
-      }}
+      // onDidFailLoadingMap={() => {
+      //   console.warn('FAIL LOADING MAP!!!!!!!')
+      //   setIsLoaded(1)
+      // }}
       onTouchStart={onMoveStart}
       onPress={async (e) => {
         console.log('pressing', e)

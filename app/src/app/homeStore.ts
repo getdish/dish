@@ -1,4 +1,4 @@
-import { initialHomeState } from '../constants/initialHomeState'
+import { getInitialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
 import { addTagsToCache, allTags } from '../helpers/allTags'
 import { getActiveTags } from '../helpers/getActiveTags'
@@ -37,10 +37,17 @@ class HomeStore extends Store {
   stateIds = ['0']
   allStates: {
     [key: string]: HomeStateItem
-  } = {
-    '0': initialHomeState,
-  }
+  } = {}
   loading = false
+  initialHomeState: HomeStateItem | null = null
+
+  async mount() {
+    const { initialHomeState } = await getInitialHomeState()
+    this.initialHomeState = initialHomeState
+    this.allStates = {
+      '0': initialHomeState,
+    }
+  }
 
   get lastHomeState() {
     return findLast(this.states, isHomeState)!
@@ -138,7 +145,8 @@ class HomeStore extends Store {
         return state.region
       }
     }
-    return initialHomeState.region
+    // @ts-ignore
+    return this.initialHomeState!.region
   }
 
   private tm: any = null
@@ -299,7 +307,8 @@ class HomeStore extends Store {
         let region = item.params.region ?? prev?.region
         if (!region || region == 'false') {
           debugger
-          region = initialHomeState.region
+          // @ts-ignore
+          region = this.initialHomeState!.region
         }
         nextState = {
           type: 'home', // region ? 'homeRegion' : 'home',region && prev?.type === 'homeRegion' ? 'homeRegion' : 'home', // region ? 'homeRegion' : 'home',
@@ -530,9 +539,9 @@ class HomeStore extends Store {
   // we definitely can clean up / name better some of this once things settle
   private lastNav = Date.now()
 
-  getShouldNavigate({ state, ...rest }: HomeStateNav) {
+  async getShouldNavigate({ state, ...rest }: HomeStateNav) {
     const navState = { state: state ?? this.currentState, ...rest }
-    const nextState = getNextHomeState(navState)
+    const nextState = await getNextHomeState(navState)
     const navItem = getNavigateItemForState(nextState, this.currentState)
     return getShouldNavigate(navItem)
   }
@@ -540,7 +549,7 @@ class HomeStore extends Store {
   async navigate({ state, ...rest }: HomeStateNav) {
     const curState = this.currentState
     const navState = { state: state ?? curState, ...rest }
-    const nextState = getNextHomeState(navState)
+    const nextState = await getNextHomeState(navState)
     const navItem = getNavigateItemForState(nextState, curState)
     const shouldNav = getShouldNavigate(navItem)
     if (!shouldNav) {

@@ -1,7 +1,6 @@
 import { isLngLatParam, urlSerializers } from '../app/home/search/urlSerializers'
 import { homeStore } from '../app/homeStore'
 import { SPLIT_TAG } from '../constants/SPLIT_TAG'
-import { initialHomeState } from '../constants/initialHomeState'
 import { tagLenses } from '../constants/localTags'
 import { NavigateItem, SearchRouteParams, router } from '../router'
 import { HomeStateItem, HomeStateTagNavigable } from '../types/homeTypes'
@@ -29,11 +28,7 @@ export const getNavigateItemForState = (
 
   const state = {
     ...inState,
-    region:
-      inState.region ??
-      currentState['region'] ??
-      homeStore.lastHomeOrSearchState.region ??
-      initialHomeState.region,
+    region: inState.region ?? currentState['region'] ?? homeStore.lastHomeOrSearchState.region,
   }
 
   const params = getParamsForState(state)

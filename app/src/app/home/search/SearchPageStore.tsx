@@ -1,3 +1,9 @@
+import { getInitialHomeState } from '../../../constants/initialHomeState'
+import { allTags } from '../../../helpers/allTags'
+import { getActiveTags } from '../../../helpers/getActiveTags'
+import { HomeStateNav } from '../../../types/homeTypes'
+import { appMapStore } from '../../appMapStore'
+import { homeStore } from '../../homeStore'
 import { fullyIdle, sleep } from '@dish/async'
 import { isEqual } from '@dish/fast-compare'
 import {
@@ -11,13 +17,6 @@ import {
 import { isPresent } from '@dish/helpers'
 import { Store, createStore, createUseStore, useStoreInstance } from '@dish/use-store'
 
-import { initialPosition } from '../../../constants/initialHomeState'
-import { allTags } from '../../../helpers/allTags'
-import { getActiveTags } from '../../../helpers/getActiveTags'
-import { HomeStateNav } from '../../../types/homeTypes'
-import { appMapStore } from '../../appMapStore'
-import { homeStore } from '../../homeStore'
-
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 
 type RunSearchProps = {
@@ -25,13 +24,15 @@ type RunSearchProps = {
   force?: boolean
 }
 
+const homeState = await getInitialHomeState()
+
 class SearchPageStore extends Store<{ id: string }> {
   index = -1
   event: ActiveEvent = null
   status: 'loading' | 'complete' = 'loading'
   results: RestaurantSearchItem[] = []
   meta: HomeMeta | null = null
-  searchPosition = initialPosition
+  searchPosition = homeState.initialPosition
   searchRegion = false
   private lastSearchArgs: RestaurantSearchArgs | null = null
 
