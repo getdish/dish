@@ -134,6 +134,12 @@ function clean_build() {
   wait
 }
 
+function clean_misbuilt() {
+  find $PROJECT_ROOT/packages/**/src -name "*.d.ts" -prune -exec rm -rf '{}' \; &
+  find $PROJECT_ROOT/packages/**/src -name "*.js" -prune -exec rm -rf '{}' \; &
+  find $PROJECT_ROOT/packages/**/src -name "*.jsx" -prune -exec rm -rf '{}' \; &
+}
+
 function clean() {
   clean_build
   find $PROJECT_ROOT -name "node_modules" -type d -prune -exec rm -rf '{}' \;

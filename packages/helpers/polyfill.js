@@ -1,4 +1,4 @@
-require('./dist/cjs/polyfill-localStorage')
+// require('./dist/cjs/polyfill-localStorage')
 
 String.prototype.replaceAll = function (search, replacement) {
   var target = this

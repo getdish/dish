@@ -19,7 +19,6 @@
   "dependencies": {
     "@dish/fast-compare": "*",
     "lodash": "*",
-    "node-localstorage": "^2.2.1",
     "react": "*",
     "undici": "^5.8.0"
   },
