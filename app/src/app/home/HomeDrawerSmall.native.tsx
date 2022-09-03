@@ -1,27 +1,17 @@
-import { AppMapHeader } from '../AppMapHeader'
 import { AppSearchBarInline } from '../AppSearchBarInline'
 import { autocompletesStore } from '../AutocompletesStore'
 import { drawerStore } from '../drawerStore'
 import { StackDrawerControlsPortal } from '../views/StackDrawer'
 import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
-import { Spacer, Square, YStack, useThemeName } from '@dish/ui'
+import { Spacer, YStack, useThemeName } from '@dish/ui'
 import { useReaction, useStoreInstance } from '@dish/use-store'
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { BlurView } from '@react-native-community/blur'
-import {
-  Blur,
-  Canvas,
-  Circle,
-  Group,
-  Mask,
-  Rect,
-  RoundedRect,
-  Shadow,
-  Skia,
-} from '@shopify/react-native-skia'
-import React, { useEffect, useMemo, useState } from 'react'
-import { Keyboard, MaskedViewIOS, StyleSheet, useWindowDimensions } from 'react-native'
+import { Blur, Canvas, Group, RoundedRect, Skia } from '@shopify/react-native-skia'
+import React, { useEffect, useState } from 'react'
+import { Keyboard, StyleSheet, useWindowDimensions } from 'react-native'
+import { useSharedValue } from 'react-native-reanimated'
 
 let hasOpened = false
 
@@ -59,6 +49,11 @@ export const HomeDrawerSmall = (props: any) => {
   const themeName = useThemeName()
   const isDark = themeName === 'dark'
   const drawerOffsetY = 50
+  const animatedPosition = useSharedValue(0)
+
+  useEffect(() => {
+    drawerStore.position = animatedPosition
+  }, [])
 
   return (
     <>
@@ -86,6 +81,7 @@ export const HomeDrawerSmall = (props: any) => {
         onChange={setIndex}
         enableDismissOnClose={false}
         enablePanDownToClose={false}
+        animatedPosition={animatedPosition}
       >
         <YStack pos="absolute" t={-10}>
           <AppFloatingTagMenuBar />

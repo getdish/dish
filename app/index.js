@@ -4,7 +4,22 @@
 import '@dish/helpers/polyfill'
 import 'expo-asset'
 // import * as Sentry from '@sentry/react-native'
-import { AppRegistry } from 'react-native'
+import { AppRegistry, LogBox } from 'react-native'
+
+// stupid fucking thing doesnt uninstall even w this
+LogBox.uninstall()
+// delete console.warn
+// NOTE this is because I CANNOT UNSINSTALL the console.warn shim and it adds a massive uncessary stack trace to everything
+// plus expo splash screen throwing huge console warn that seems unfixed for now
+// https://github.com/expo/expo/issues/14824
+// leads to madness, so best i can do is this...
+const log = console.log.bind(console)
+console.warn = (...args) => console.table({ '⛔️': args })
+// LogBox.ignoreAllLogs(true)
+LogBox.ignoreLogs([
+  "No native splash screen registered for given view controller. Call 'SplashScreen.show' for given view controller first.",
+])
+// Location.installWebGeolocationPolyfill()
 
 // if (process.env.NODE_ENV === 'production') {
 //   Sentry.init({

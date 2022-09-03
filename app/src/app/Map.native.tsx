@@ -44,6 +44,12 @@ export default function Map({
     paddingBottom: paddingVertical,
   }
 
+  if (process.env.NODE_ENV === 'development') {
+    useEffect(() => {
+      console.log('🗺', bounds)
+    }, [JSON.stringify(bounds)])
+  }
+
   useEffect(() => {
     const { ne, sw, paddingTop, paddingBottom } = bounds
     cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0], 500)

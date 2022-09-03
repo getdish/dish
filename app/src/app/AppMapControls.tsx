@@ -1,11 +1,10 @@
-import { zIndexDrawer } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
 import { appMapStore } from './appMapStore'
 import { getSearchPageStore } from './home/search/SearchPageStore'
 import { homeStore } from './homeStore'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
-import { AbsoluteXStack, AbsoluteYStack, Spacer, XStack } from '@dish/ui'
+import { Spacer, XStack } from '@dish/ui'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import { Minus, Plus, RefreshCcw, ZoomOut } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
@@ -85,7 +84,7 @@ function useShowSearchHere() {
     const sp = searchPageStore.searchPosition
     const { center, span } = appMapStore.nextPosition
     if (searchPageStore.status === 'loading') return false
-    if (!isOnSearch) return false
+    if (!isOnSearch || !sp) return false
     const hasMoved = hasMovedAtLeast(sp, { center, span }, 0.001)
     return hasMoved
   })

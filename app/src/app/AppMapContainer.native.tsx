@@ -8,19 +8,40 @@ import { useStoreInstance } from '@dish/use-store'
 import { Navigation } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 import { Alert, SafeAreaView } from 'react-native'
+import Animated, {
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 
 export default memo(function AppMapContainer(props: { children: React.ReactNode }) {
   const drawer = useStoreInstance(drawerStore)
   const theme = useTheme()
-  const y = -300 + drawer.mapHeight / 2
-  // const safeArea = useSafeAreaFrame
+  const y = useSharedValue(getY())
+
+  function getY() {
+    if (!drawer.position) return 0
+    const next = Math.min(0, -300 + drawer.position.value / 2)
+    return next
+  }
+
+  useAnimatedReaction(
+    () => drawer.position,
+    () => {
+      y.value = getY()
+    }
+  )
+
+  const mapFrameStyle = useAnimatedStyle(() => {
+    return { flex: 1, transform: [{ translateY: y.value }] }
+  })
 
   return (
     <YStack bc={theme.background} fullscreen>
       <AppMapSpotlight />
 
-      <YStack fullscreen y={y}>
-        {props.children}
+      <YStack fullscreen>
+        <Animated.View style={mapFrameStyle}>{props.children}</Animated.View>
       </YStack>
 
       {/* GPS */}

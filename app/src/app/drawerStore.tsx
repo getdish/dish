@@ -2,6 +2,7 @@ import { getWindowHeight } from '../helpers/getWindow'
 import { autocompletesStore } from './AutocompletesStore'
 import { Store, createStore } from '@dish/use-store'
 import { Animated } from 'react-native'
+import { SharedValue } from 'react-native-reanimated'
 
 const positionNames = ['bottom', 'middle', 'top'] as const
 
@@ -10,7 +11,7 @@ class DrawerStore extends Store {
   snapIndex = 1
   isDragging = false
   spring: Animated.CompositeAnimation | null = null
-  private lastSnapAt = Date.now()
+  position: SharedValue<number> | null = null
 
   private getHeightAt(index = this.snapIndex) {
     return this.snapPoints[index] * getWindowHeight()
@@ -38,7 +39,6 @@ class DrawerStore extends Store {
 
   setSnapIndex(point: number) {
     this.snapIndex = point
-    this.lastSnapAt = Date.now()
   }
 }
 

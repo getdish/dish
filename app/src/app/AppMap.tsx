@@ -22,8 +22,11 @@ import { resolved } from '@dish/graph'
 import {
   AbsoluteYStack,
   Circle,
+  Separator,
+  Square,
   XStack,
   YStack,
+  ZStack,
   useDebounceValue,
   useGet,
   useMedia,
@@ -269,16 +272,17 @@ export default memo(function AppMap() {
         width="100%"
         maxWidth="100%"
         overflow="hidden"
-        {...(isTouchDevice && {
-          onTouchMove: () => {
-            if (!isWeb || supportsTouchWeb) {
-              // if (drawerStore.snapIndex !== 2) {
-              //   drawerStore.setSnapIndex(2)
-              // }
-            }
-          },
-        })}
+        // {...(isTouchDevice && {
+        //   onTouchMove: () => {
+        //     if (!isWeb || supportsTouchWeb) {
+        //       // if (drawerStore.snapIndex !== 2) {
+        //       //   drawerStore.setSnapIndex(2)
+        //       // }
+        //     }
+        //   },
+        // })}
       >
+        <Crosshairs />
         <Map
           center={center}
           span={span}
@@ -302,6 +306,17 @@ export default memo(function AppMap() {
     </XStack>
   )
 })
+
+const Crosshairs = () => {
+  return (
+    <ZStack fullscreen zi={100000000000} o={0.1}>
+      <XStack fullscreen ai="center" jc="center">
+        <Separator borderColor="red" />
+        <Separator pos="absolute" vertical h="100%" borderColor="red" />
+      </XStack>
+    </ZStack>
+  )
+}
 
 const AppMapBottomFade = memo(() => {
   const isPhone = useIsMobileDevice()

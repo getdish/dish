@@ -10,8 +10,6 @@ import {
 import React, { memo, useRef } from 'react'
 import { Defs, Ellipse, G, Mask, Path, Svg, Use } from 'react-native-svg'
 
-console.log({ Defs, Ellipse, G, Mask, Path, Svg, Use })
-
 export const LogoColor = ({ scale = 1, color }: { scale?: number; color?: string }) => {
   return (
     <Svg

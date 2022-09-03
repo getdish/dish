@@ -72,8 +72,6 @@ export function RouteSwitch(props: { children: any }) {
   //  we could have the stratey here of first hiding the prev route, then later
   //  on requestIdle unmounting things... but concurrent should sovle for us right?
 
-  console.log('children', children)
-
   return (
     <>
       {children.map((child, index) => {
@@ -131,8 +129,6 @@ export function Route(props: { name: string; exact?: boolean; children: any }) {
 
     return null
   }, [props.exact, props.children, isMatched, isExactMatching, isParentMatching])
-
-  console.log('curPage', curPage, props, content)
 
   const children = (() => {
     const state = stateRef.current
