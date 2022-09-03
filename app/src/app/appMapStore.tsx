@@ -122,14 +122,15 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
                   const [r] = queryRestaurant(slug)
                   if (!r) return null
                   const coords = r?.location?.coordinates
-                  return {
+                  const item: MapResultItem = {
                     id: id || r.id,
                     slug,
-                    name: r.name,
+                    name: r.name || '',
                     location: {
                       coordinates: [coords?.[0], coords?.[1]],
                     },
                   }
+                  return item
                 })
                 .filter(isPresent),
               (x) => `${x.location.coordinates[0]}${x.location.coordinates[1]}`
@@ -140,6 +141,7 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
         })
       },
       (results) => {
+        if (!results) return
         const features = appMapStore.getMapFeatures(results)
         const state = {
           results,
@@ -396,7 +398,6 @@ class AppMapStore extends Store {
 
   getUserPosition = () => {
     return new Promise<any>((res, rej) => {
-      console.log('getting position...')
       navigator.geolocation.getCurrentPosition(res, rej)
     })
   }

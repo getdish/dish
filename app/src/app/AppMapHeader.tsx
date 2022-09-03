@@ -10,7 +10,7 @@ export const AppMapHeader = () => {
     <YStack pe="none" fullscreen ai="center" jc="center" h="100%" zi={10000000000}>
       <ThemeInverse>
         <SlantedTitle elevation="$1" size="$2" als="center">
-          {state?.curLocName ?? 'Kailua'}
+          {state?.curLocName || '...'}
         </SlantedTitle>
       </ThemeInverse>
     </YStack>

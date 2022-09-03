@@ -155,7 +155,7 @@ const RestaurantPage = memo(
         return series([
           () => fullyIdle({ checks: 3, min: 50 }),
           () => {
-            return new Promise((res) => {
+            return new Promise<number>((res) => {
               // @ts-expect-error
               view.measure((_x, _y, _w, _h, _pX, pY) => {
                 const y = pY - drawerStore.mapHeight - searchBarHeight

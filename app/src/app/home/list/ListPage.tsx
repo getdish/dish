@@ -11,22 +11,19 @@ import { useListColor } from '../../hooks/useListColor'
 import { useStateSynced } from '../../hooks/useStateSynced'
 import { useUserStore, userStore } from '../../userStore'
 import { BottomFloatingArea } from '../../views/BottomFloatingArea'
-import { CloseButton } from '../../views/CloseButton'
 import { CommentBubble } from '../../views/CommentBubble'
 import { FavoriteButton } from '../../views/FavoriteButton'
 import { PageHead } from '../../views/PageHead'
-import { PaneControlButtons, PaneControlButtonsLeft } from '../../views/PaneControlButtons'
+import { PaneControlButtonsLeft } from '../../views/PaneControlButtons'
 import { SmallButton } from '../../views/SmallButton'
 import { StackDrawer } from '../../views/StackDrawer'
 import { SuspenseFallback } from '../../views/SuspenseFallback'
 import { TagButton, getTagButtonProps } from '../../views/TagButton'
-import { getListFontFamily } from '../../views/TitleStyled'
 import { useListFavorite } from '../../views/list/useList'
 import { StackItemProps } from '../HomeStackView'
 import { RestaurantListItem } from '../restaurant/RestaurantListItem'
 import { ColorPicker } from './ColorPicker'
 import { ListAddRestuarant } from './ListAddRestuarant'
-import { ListItem } from './ListItem'
 import { useListItems } from './useListItems'
 import { series } from '@dish/async'
 import {
@@ -35,7 +32,6 @@ import {
   getUserName,
   graphql,
   listInsert,
-  listUpdate,
   mutate,
   slugify,
 } from '@dish/graph'
@@ -46,19 +42,17 @@ import {
   Input,
   Modal,
   Paragraph,
-  SizableStack,
   Spacer,
   Switch,
   Text,
   Theme,
   Toast,
-  XGroup,
   XStack,
   YStack,
   useForceUpdate,
   useMedia,
 } from '@dish/ui'
-import { List as ListIcon, Move, Plus, Trash, X } from '@tamagui/feather-icons'
+import { List as ListIcon, Move, Plus, Trash } from '@tamagui/feather-icons'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Pressable } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'
@@ -114,7 +108,7 @@ export default function ListPage(props: Props) {
           replace: true,
           params: {
             userSlug: slugify(username),
-            slug: list.slug,
+            slug: list.slug || '',
             state: 'edit',
           },
         })

@@ -136,9 +136,11 @@ function useSearchQueryEffect(
         ]).then(([locations, things]) => [locations, things].flat())
       },
       async (results) => {
+        if (!results) return
         return await filterAutocompletes(query, results)
       },
       (results) => {
+        if (!results) return
         // add in a deduped entry
         // if multiple countries have "steak" we show a single "generic steak" entry at top
         const dishes = results.filter((x) => x.type === 'dish')

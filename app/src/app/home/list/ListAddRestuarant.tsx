@@ -18,7 +18,10 @@ import { debounce, uniqBy } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 
-const searchRestaurantsInBBox = async (bbox: RegionApiResponse['bbox'], searchQuery: string) => {
+const searchRestaurantsInBBox = async (
+  bbox: RegionApiResponse['bbox'],
+  searchQuery: string
+) => {
   return await resolved(() => {
     return query
       .restaurant({
@@ -69,7 +72,9 @@ export const ListAddRestuarant = graphql(
     const [addedState, setAddedState] = useState({})
 
     const added = {
-      ...Object.fromEntries(list.restaurants({ limit: 300 }).map((x) => [x.restaurant.id, true])),
+      ...Object.fromEntries(
+        list.restaurants({ limit: 300 }).map((x) => [x.restaurant.id, true])
+      ),
       ...addedState,
     }
 
@@ -92,7 +97,11 @@ export const ListAddRestuarant = graphql(
             bbox ? searchRestaurantsInBBox(bbox, searchQuery) : null,
             searchRestaurantsNearby(searchQuery),
           ]),
-        async ([appleSearch = [], boxRes = [], nearbyRes = []]) => {
+        async (results) => {
+          if (!results) return
+          const [appleSearch = [], boxRes = [], nearbyRes = []] = results
+          if (!boxRes) return
+
           // @ts-ignore
           const appleNormalized = (appleSearch.places || []).map((place) => {
             return {
@@ -110,7 +119,10 @@ export const ListAddRestuarant = graphql(
               data: place,
             }
           })
-          const uniqueResults = uniqBy([...boxRes, ...nearbyRes, ...appleNormalized], (x) => x.key)
+          const uniqueResults = uniqBy(
+            [...boxRes, ...nearbyRes, ...appleNormalized],
+            (x) => x.key
+          )
           return await fuzzySearch({
             items: uniqueResults,
             query: searchQuery,
@@ -118,6 +130,7 @@ export const ListAddRestuarant = graphql(
           })
         },
         async (results) => {
+          if (!results) return
           setResults(results)
           setIsSearching(false)
         },

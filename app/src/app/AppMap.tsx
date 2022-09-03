@@ -2,6 +2,7 @@ import { isWeb, mapWidths, searchBarHeight, zIndexMap } from '../constants/const
 import { isTouchDevice, supportsTouchWeb } from '../constants/platforms'
 import { getWindowHeight } from '../helpers/getWindow'
 import { coordsToLngLat, getMinLngLat } from '../helpers/mapHelpers'
+import { reverseGeocode } from '../helpers/reverseGeocode'
 import { queryRestaurant } from '../queries/queryRestaurant'
 import { router } from '../router'
 import { MapRegionEvent } from '../types/homeTypes'
@@ -54,6 +55,21 @@ export default memo(function AppMap() {
   const show = true //useAppShouldShow('map')
   const position = appMap.currentPosition
   const { center, span } = position
+
+  if (process.env.NODE_ENV === 'development') {
+    // log map position
+    useEffect(() => {
+      return series([
+        () => reverseGeocode(center, span),
+        (geocode) => {
+          console.groupCollapsed('🗺')
+          console.log(geocode)
+          console.log('center', center, 'span', span)
+          console.groupEnd()
+        },
+      ])
+    }, [JSON.stringify(position)])
+  }
 
   // react to homestore
   useEffect(() => {
@@ -309,7 +325,7 @@ export default memo(function AppMap() {
 
 const Crosshairs = () => {
   return (
-    <ZStack fullscreen zi={100000000000} o={0.1}>
+    <ZStack pe="none" fullscreen zi={100000000000} o={0.1}>
       <XStack fullscreen ai="center" jc="center">
         <Separator borderColor="red" />
         <Separator pos="absolute" vertical h="100%" borderColor="red" />

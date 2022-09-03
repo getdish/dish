@@ -13,11 +13,11 @@ LogBox.uninstall()
 // plus expo splash screen throwing huge console warn that seems unfixed for now
 // https://github.com/expo/expo/issues/14824
 // leads to madness, so best i can do is this...
-const log = console.log.bind(console)
 console.warn = (...args) => console.table({ '⛔️': args })
 // LogBox.ignoreAllLogs(true)
 LogBox.ignoreLogs([
   "No native splash screen registered for given view controller. Call 'SplashScreen.show' for given view controller first.",
+  /^\(ADVICE\).*/g,
 ])
 // Location.installWebGeolocationPolyfill()
 

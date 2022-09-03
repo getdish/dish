@@ -605,9 +605,12 @@ export const useHomeStoreSelector = <A extends (store: HomeStore) => any>(
 }
 
 export const useLastHomeState = <Type extends HomeStateItem['type']>(...types: Type[]) => {
-  return useStoreInstanceSelector(homeStore, (x) =>
-    _.findLast(x.states, (s) => types.includes(s.type as any))
-  )
+  return useStoreInstanceSelector(homeStore, (x) => {
+    if (!types.length) {
+      return x.states[x.states.length - 1]
+    }
+    return _.findLast(x.states, (s) => types.includes(s.type as any))
+  })
 }
 
 export const useHomeCurrentHomeType = () => {

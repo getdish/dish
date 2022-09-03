@@ -1,5 +1,6 @@
 import { MAPBOX_ACCESS_TOKEN } from '../constants/constants'
 import { hasMovedAtLeast } from '../helpers/mapHelpers'
+import { reverseGeocode } from '../helpers/reverseGeocode'
 import { MapProps } from './MapProps'
 import { drawerStore } from './drawerStore'
 import { setMap } from './getMap'
@@ -42,12 +43,6 @@ export default function Map({
     sw: [center.lng + span.lng, center.lat + span.lat],
     paddingTop: paddingVertical,
     paddingBottom: paddingVertical,
-  }
-
-  if (process.env.NODE_ENV === 'development') {
-    useEffect(() => {
-      console.log('🗺', bounds)
-    }, [JSON.stringify(bounds)])
   }
 
   useEffect(() => {
