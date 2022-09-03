@@ -1,4 +1,6 @@
-import { route, runMiddleware, useRouteBodyParser } from '@dish/api'
+import { ensureBucket, uploadMultipartFiles } from '../_s3'
+import { ensureSecureRoute, getUserFromRoute } from './_user'
+import { route, useRouteBodyParser } from '@dish/api'
 import {
   PhotoQueryHelpers,
   PhotoXrefQueryHelpers,
@@ -12,28 +14,25 @@ import {
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { selectFields } from 'gqty'
-
-import { createMulterUploader, ensureBucket } from './_multerUploader'
-import { ensureSecureRoute, getUserFromRoute } from './_user'
+import { extname } from 'path'
+import { v4 } from 'uuid'
 
 const BUCKET_NAME = 'review-image'
 ensureBucket(BUCKET_NAME)
-const upload = createMulterUploader(BUCKET_NAME).array(BUCKET_NAME, 1)
 
 export default route(async (req, res) => {
   try {
     await useRouteBodyParser(req, res, { raw: { limit: '62mb' } })
     await ensureSecureRoute(req, res, 'user')
-    await runMiddleware(req, res, upload)
     const user = await getUserFromRoute(req)
-    if (!user) {
+    if (!user || !user.id) {
       res.json({
         error: 'no user',
       })
       return
     }
 
-    const { files, headers } = req
+    const { headers } = req
 
     // headers come lowercased
     const restaurant_slug = `${headers.restaurantslug}`
@@ -51,22 +50,29 @@ export default route(async (req, res) => {
         )
       : null
 
-    if (!Array.isArray(files) || !files.length || !user.id) {
-      console.error(`error with upload`, { files, restaurant_slug, restaurant_id })
-      res.status(500).json({
+    const uploadResponses = await uploadMultipartFiles(req, BUCKET_NAME, (name) => {
+      const extension = extname(name)
+      return `${v4()}${extension}`
+    })
+
+    const failedResponse = uploadResponses.find((r) => r.httpStatusCode !== 200)
+    if (failedResponse) {
+      console.error(`error with upload`, { restaurant_slug, restaurant_id })
+      res.status(failedResponse.httpStatusCode || 500).json({
         error: 'no files / restuarant',
       })
       return
     }
 
-    const photos = files
-      .map((x) => x['location'])
-      .filter(isPresent)
-      .map((url) => ({ url, user_id: user.id }))
+    const photos = uploadResponses.map((x) => x.url).map((url) => ({ url, user_id: user.id }))
 
-    const insertedPhotos = await PhotoQueryHelpers.upsert(photos, photo_constraint.photo_url_key, {
-      select: (v: photo[]) => v.map((p) => selectFields(p, '*', 1)),
-    })
+    const insertedPhotos = await PhotoQueryHelpers.upsert(
+      photos,
+      photo_constraint.photo_url_key,
+      {
+        select: (v: photo[]) => v.map((p) => selectFields(p, '*', 1)),
+      }
+    )
 
     // set into photo_xref
     const photoXrefs = insertedPhotos.map(({ id }) => {

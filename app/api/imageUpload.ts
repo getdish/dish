@@ -1,11 +1,6 @@
+import { s3 } from './_s3'
+import { Upload } from '@aws-sdk/lib-storage'
 import { route } from '@dish/api'
-import AWS from 'aws-sdk'
-
-const s3 = new AWS.S3({
-  endpoint: 'sfo2.digitaloceanspaces.com',
-  accessKeyId: process.env.DO_SPACES_ID,
-  secretAccessKey: process.env.DO_SPACES_SECRET,
-})
 
 export default route(async (req, res) => {
   try {
@@ -17,24 +12,17 @@ export default route(async (req, res) => {
       return
     }
     const contents = await fetch(payload.photo_url).then((res) => res.blob())
-    await new Promise((res, rej) => {
-      s3.upload(
-        {
-          Bucket: 'dish-images',
-          Body: contents,
-          Key: payload.photo_id,
-          ACL: 'public-read',
-          ContentType: payload.content_type,
-        },
-        {},
-        (err, data) => {
-          if (err) {
-            return rej(err)
-          }
-          res(data)
-        }
-      )
+    const upload = new Upload({
+      client: s3,
+      params: {
+        Bucket: 'dish-images',
+        Body: contents,
+        Key: payload.photo_id,
+        ACL: 'public-read',
+        ContentType: payload.content_type,
+      },
     })
+    await upload.done()
     console.log('Uploaded', payload.photo_id)
     res.send('OK')
   } catch (error) {

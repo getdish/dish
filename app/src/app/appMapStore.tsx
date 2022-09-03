@@ -30,7 +30,7 @@ import {
 } from '@dish/use-store'
 import bbox from '@turf/bbox'
 import getCenter from '@turf/center'
-import { featureCollection } from '@turf/helpers'
+import { GeoJSONObject, Geometries, featureCollection } from '@turf/helpers'
 import { findLast, uniqBy } from 'lodash'
 import { useEffect } from 'react'
 
@@ -397,7 +397,7 @@ class AppMapStore extends Store {
   }
 
   getUserPosition = () => {
-    return new Promise<any>((res, rej) => {
+    return new Promise<GeolocationPosition>((res, rej) => {
       navigator.geolocation.getCurrentPosition(res, rej)
     })
   }

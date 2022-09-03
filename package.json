@@ -103,7 +103,6 @@
     "fs-extra": "10.1.0",
     "react-native": "0.69.4",
     "typescript": "4.8.1-rc",
-    "aws-sdk": "2.762.0",
     "lodash": "4.17.21",
     "resolve": "1.17.0",
     "tslib": "2.4.0",
