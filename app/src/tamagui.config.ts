@@ -61,7 +61,7 @@ const tamaConf = createTamagui({
     },
     light: {
       ...config.themes.light,
-      backgroundDrawer: 'rgba(255,255,255,0.2)',
+      backgroundDrawer: 'rgba(255,255,255,0.1)',
     },
   },
   fonts: {

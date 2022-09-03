@@ -78,9 +78,10 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
   useEffect(() => {
     if (!isActive) return
     if (!center || !span) return
+    if (!results?.length) return
     if (fitToResults) return
     setToPosition({ center, span, via: 'useSetAppMap' })
-  }, [fitToResults, isActive, center?.lat, center?.lng, span?.lat, span?.lng])
+  }, [fitToResults, isActive, results])
 
   useEffect(() => {
     if (!isActive) return
@@ -152,8 +153,6 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
           features,
         }
 
-        console.warn('📍', state)
-
         appMapStore.setState(state)
 
         if (fitToResults && features.length) {
@@ -174,6 +173,9 @@ export const useSetAppMap = (props: UseSetAppMapProps) => {
               center,
               span,
             }
+            console.log('📍 FIT TO RESULTS', results)
+            console.log('bbox to lnglat', resultsBbox, bboxToLngLat(resultsBbox))
+            console.table([state])
             setToPosition({
               via: 'results',
               ...position,
@@ -325,12 +327,27 @@ class AppMapStore extends Store {
     }
     try {
       const position = await this.getUserPosition()
-      console.log('position', position)
+      console.log(
+        'position',
+        position.coords,
+        await reverseGeocode(
+          { lng: position.coords.longitude, lat: position.coords.latitude },
+          {
+            lng: 0.001,
+            lat: 0.001,
+          }
+        )
+      )
       if (position) {
         const positionLngLat = positionToLngLat(position)
         this.userLocation = positionLngLat
         const state = homeStore.currentState
         appMapStore.setPosition({
+          // want to always zoom near teme
+          span: {
+            lng: 0.02,
+            lat: 0.02,
+          },
           center: positionLngLat,
         })
         // watching actually is anti-pattern, just move where they are once

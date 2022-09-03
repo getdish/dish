@@ -2013,7 +2013,6 @@ const name2 = [
   'exchange',
   'eye',
   'fire',
-  'position',
   'pressure',
   'stress',
   'advantage',

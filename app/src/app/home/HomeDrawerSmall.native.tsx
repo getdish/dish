@@ -126,7 +126,7 @@ export const HomeDrawerSmall = (props: any) => {
                 x={0}
                 y={80}
                 r={20}
-                color="rgba(0,0,0,0.75)"
+                color="rgba(0,0,0,0.35)"
               >
                 <Blur blur={15} />
               </RoundedRect>

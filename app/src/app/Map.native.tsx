@@ -32,11 +32,10 @@ export default function Map({
   // const isDrawerAtTop = useStoreInstanceSelector(drawerStore, (x) => x.snapIndexName === 'top')
   const drawerHeight = drawerStore.heights[2]
   const [isLoaded, setIsLoaded] = useState(0)
-  const paddingVertical = isLoaded ? drawerHeight / 2 : 0
+  const paddingVertical = isLoaded ? drawerHeight / 3 : 0
   const cameraRef = useRef<MapboxGL.Camera>(null)
   const mapRef = useRef<MapboxGL.MapView>(null)
   const onMoveEndDelayed = useDebounce(onMoveEnd ?? idFn, 250)
-  const theme = useTheme()
 
   const bounds = {
     ne: [center.lng - span.lng, center.lat - span.lat],
@@ -47,6 +46,10 @@ export default function Map({
 
   useEffect(() => {
     const { ne, sw, paddingTop, paddingBottom } = bounds
+    console.groupCollapsed('🗺 fitBounds')
+    console.table([bounds])
+    console.log('span', span)
+    console.groupEnd()
     cameraRef.current?.fitBounds(ne, sw, [paddingTop, 0, paddingBottom, 0], 500)
   }, [JSON.stringify(bounds)])
 
@@ -130,8 +133,14 @@ export default function Map({
     >
       {showUserLocation && (
         <MapboxGL.UserLocation
-          onUpdate={(location) => {
-            console.log('got location', location)
+          onUpdate={async (location) => {
+            console.log(
+              '🗺 did move',
+              await reverseGeocode({
+                lng: location.coords.longitude,
+                lat: location.coords.latitude,
+              })
+            )
           }}
           animated
           renderMode="native"

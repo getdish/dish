@@ -1,9 +1,9 @@
 import { drawerWidthMax } from '../../constants/constants'
 import { YStack } from '@dish/ui'
-import { styled } from '@tamagui/core'
+import { isWeb, styled } from '@tamagui/core'
 
 export const DrawerFrameBg = styled(YStack, {
-  opacity: 0.2,
+  opacity: isWeb ? 0.2 : 0,
   zi: -1,
   fullscreen: true,
   br: '$6',

@@ -6,7 +6,7 @@ const cache = {}
 
 export async function reverseGeocode(
   center: LngLat,
-  span: LngLat
+  span: LngLat = { lng: 0.001, lat: 0.001 }
 ): Promise<GeocodePlace | null> {
   const key = JSON.stringify({ center, span })
   if (cache[key]) {

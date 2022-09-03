@@ -213,14 +213,31 @@ export const HomePageFeed = memo(
     const homeStore = useHomeStore()
     const topCuisines = useTopCuisines(homeStore.currentState.center)
     const user = useCurrentUserQuery()
+
     const restaurants = query.restaurant({
       limit: 10,
+      where: {
+        location: {
+          _st_d_within: {
+            // search outside current bounds a bit
+            distance: 1,
+            from: {
+              type: 'Point',
+              coordinates: [
+                homeStore.currentState.center?.lng,
+                homeStore.currentState.center?.lat,
+              ],
+            },
+          },
+        },
+      },
       order_by: [
         {
           created_at: order_by.desc,
         },
       ],
     })
+
     const setHoverCancel = () => {
       setHoveredDbc.cancel()
     }
