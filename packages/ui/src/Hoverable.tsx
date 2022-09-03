@@ -36,10 +36,6 @@ export const Hoverable = forwardRef<HoverableHandle, HoverableProps>(
     }: HoverableProps,
     ref
   ) => {
-    if (!isWeb) {
-      return children
-    }
-
     const [isActive, set] = useState(false)
     const setOffSlow = useDebounce(() => set(false), hoverDelay / 2) // math.min(a bit less than in)
     const setOnSlow = useDebounce(() => set(true), hoverDelay)

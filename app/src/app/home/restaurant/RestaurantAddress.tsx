@@ -1,12 +1,11 @@
-import { useMedia, useTheme } from '@dish/ui'
-import { MapPin } from '@tamagui/feather-icons'
-import React from 'react'
-
 import { GeocodePlace } from '../../../types/homeTypes'
 import { homeStore } from '../../homeStore'
 import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
+import { useMedia, useTheme } from '@dish/ui'
+import { MapPin } from '@tamagui/feather-icons'
+import React from 'react'
 
 export const RestaurantAddress = ({
   address,
@@ -22,7 +21,6 @@ export const RestaurantAddress = ({
   return (
     <Link href={`https://www.google.com/maps/search/?q=${encodeURIComponent(address)}`}>
       <SmallButton
-        borderWidth={0}
         tooltip={
           size.endsWith('xs') || size === 'sm'
             ? getAddressText(curLocInfo || null, address, 'lg')
@@ -40,8 +38,8 @@ export const RestaurantAddress = ({
         }
         // iconAfter={<ExternalLink style={{ opacity: 0.5 }} color={theme.color} size={10} />}
         textProps={{
-          maxWidth: media.sm ? 100 : 140,
-          opacity: 0.45,
+          maxWidth: media.sm ? 140 : 140,
+          opacity: 0.7,
         }}
       >
         {size !== 'xxs' && getAddressText(curLocInfo || null, address, size)}
