@@ -9,6 +9,7 @@ import { Navigation } from '@tamagui/feather-icons'
 import React, { memo } from 'react'
 import { Alert, SafeAreaView } from 'react-native'
 import Animated, {
+  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -17,22 +18,20 @@ import Animated, {
 export default memo(function AppMapContainer(props: { children: React.ReactNode }) {
   const drawer = useStoreInstance(drawerStore)
   const theme = useTheme()
-  const y = useSharedValue(getY())
-
-  function getY() {
-    if (!drawer.position) return 0
-    const next = Math.min(0, -300 + drawer.position.value / 2)
-    return next
-  }
+  const y = useSharedValue(0)
 
   useAnimatedReaction(
     () => drawer.position,
     () => {
-      y.value = getY()
+      'worklet'
+      if (!drawer.position) return 0
+      const next = Math.min(0, -300 + drawer.position.value / 2)
+      y.value = next
     }
   )
 
   const mapFrameStyle = useAnimatedStyle(() => {
+    'worklet'
     return { flex: 1, transform: [{ translateY: y.value }] }
   })
 
