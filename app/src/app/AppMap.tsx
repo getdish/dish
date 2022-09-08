@@ -326,7 +326,7 @@ export default memo(function AppMap() {
 const Crosshairs = () => {
   return (
     <ZStack pe="none" fullscreen zi={100000000000} o={0.1}>
-      <XStack fullscreen ai="center" jc="center">
+      <XStack pe="none" fullscreen ai="center" jc="center">
         <Separator borderColor="red" />
         <Separator pos="absolute" vertical h="100%" borderColor="red" />
       </XStack>

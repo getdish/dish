@@ -175,7 +175,7 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
             setSearch(text)
           }}
           placeholder={
-            isEditingList ? 'Add restaurant to list...' : isSearchingCuisine ? '...' : `Kailua`
+            isEditingList ? 'Add restaurant to list...' : isSearchingCuisine ? '...' : `...`
           }
         />
       </XStack>

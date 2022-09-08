@@ -36,7 +36,16 @@ export default memo(function AppMapContainer(props: { children: React.ReactNode 
         <Circle className="map-spotlight map-spotlight-large" size={1200} bc="transparent" />
       </YStack>
 
-      <XStack fullscreen top={8} left="60%" zi={300} px="$4" h={searchBarHeight} ai="center">
+      <XStack
+        pe="box-none"
+        fullscreen
+        top={8}
+        left="60%"
+        zi={300}
+        px="$4"
+        h={searchBarHeight}
+        ai="center"
+      >
         <AppMapHeader />
         <AppMapControls />
       </XStack>

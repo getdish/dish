@@ -20,12 +20,12 @@
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.4.3",
     "@react-native-community/blur": "^4.2.0",
-    "@tamagui/use-debounce": "^1.0.1-beta.160",
-    "@tamagui/use-force-update": "^1.0.1-beta.160",
-    "@tamagui/use-window-size": "^1.0.1-beta.160",
-    "tamagui": "^1.0.1-beta.160"
+    "@tamagui/use-debounce": "^1.0.1-beta.161",
+    "@tamagui/use-force-update": "^1.0.1-beta.161",
+    "@tamagui/use-window-size": "^1.0.1-beta.161",
+    "tamagui": "^1.0.1-beta.161"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.0.1-beta.160"
+    "@tamagui/build": "^1.0.1-beta.161"
   }
 }
