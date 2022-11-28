@@ -28,7 +28,7 @@ import {
   useTheme,
   useThemeName,
 } from '@dish/ui'
-import { PenTool, X } from '@tamagui/feather-icons'
+import { PenTool, X } from '@tamagui/lucide-icons'
 import React, { Suspense, memo, useState } from 'react'
 
 export const ListItemContentMinimal = (props: ListItemContentProps) => {

@@ -82,7 +82,7 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
     'process.env.IS_STATIC': false,
     'process.env.DISABLE_CACHE': false,
     'process.env.IS_LIVE': JSON.stringify(process.env.IS_LIVE ?? (isProduction ? '1' : '0')),
-    'process.env.DEBUG': JSON.stringify(process.env.DEBUG || false),
+    'process.env.DEBUG': JSON.stringify(process.env.DEBUG || ''),
     'process.env.LOG_LEVEL': JSON.stringify(process.env.LOG_LEVEL || 0),
     'process.env.DEBUG_ASSERT': JSON.stringify(process.env.DEBUG_ASSERT || false),
     'process.env.TAMAGUI_TARGET': '"web"',

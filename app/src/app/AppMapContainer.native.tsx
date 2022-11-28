@@ -5,7 +5,7 @@ import { appMapStore } from './appMapStore'
 import { drawerStore } from './drawerStore'
 import { Button, Spacer, XStack, YStack, useTheme } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
-import { Navigation } from '@tamagui/feather-icons'
+import { Navigation } from '@tamagui/lucide-icons'
 import React, { memo } from 'react'
 import { Alert, SafeAreaView } from 'react-native'
 import Animated, {

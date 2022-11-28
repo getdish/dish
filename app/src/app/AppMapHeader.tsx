@@ -1,6 +1,6 @@
 import { useLastHomeState } from './homeStore'
 import { SlantedTitle } from './views/SlantedTitle'
-import { ThemeInverse, YStack, isWeb } from '@dish/ui'
+import { Theme, YStack, isWeb } from '@dish/ui'
 import React from 'react'
 
 export const AppMapHeader = () => {
@@ -8,11 +8,11 @@ export const AppMapHeader = () => {
 
   return (
     <YStack pe="none" fullscreen ai="center" jc="center" h="100%" zi={10000000000}>
-      <ThemeInverse>
+      <Theme inverse>
         <SlantedTitle elevation="$1" size="$2" als="center">
           {state?.curLocName || '...'}
         </SlantedTitle>
-      </ThemeInverse>
+      </Theme>
     </YStack>
   )
 }

@@ -82,7 +82,7 @@
     "timescale:psql": "psql -d postgres -U postgres -p 5432 -h localhost"
   },
   "resolutions": {
-    "react-native-svg": "13.0.0",
+    "react-native-svg": "13.5.0",
     "jest-haste-map": "28.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",

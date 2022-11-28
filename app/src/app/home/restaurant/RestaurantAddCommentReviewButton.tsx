@@ -3,7 +3,7 @@ import { Link } from '../../views/Link'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 import { graphql } from '@dish/graph'
 import { Theme } from '@dish/ui'
-import { Edit } from '@tamagui/feather-icons'
+import { Edit } from '@tamagui/lucide-icons'
 import React from 'react'
 
 export const RestaurantAddCommentButton = graphql(

@@ -44,7 +44,7 @@ import {
   useDebounceEffect,
 } from '@dish/ui'
 import { reaction } from '@dish/use-store'
-import { ArrowUp } from '@tamagui/feather-icons'
+import { ArrowUp } from '@tamagui/lucide-icons'
 import React, {
   Suspense,
   forwardRef,

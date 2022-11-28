@@ -24,7 +24,7 @@ import {
   XStack,
   YStack,
 } from '@dish/ui'
-import { Plus, X } from '@tamagui/feather-icons'
+import { Plus, X } from '@tamagui/lucide-icons'
 import React from 'react'
 import { ScrollView } from 'react-native'
 

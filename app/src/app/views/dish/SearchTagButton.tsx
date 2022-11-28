@@ -1,7 +1,7 @@
 import { NavigableTag } from '../../../types/tagTypes'
 import { Link } from '../Link'
 import { YStack } from '@dish/ui'
-import { Search } from '@tamagui/feather-icons'
+import { Search } from '@tamagui/lucide-icons'
 import React from 'react'
 
 export const SearchTagButton = ({ tag, color }: { tag: NavigableTag; color?: string }) => {

@@ -1,7 +1,7 @@
 import { userStore } from '../../userStore'
 import { SmallButton, SmallButtonProps } from '../../views/SmallButton'
 import { RestaurantAddToListModal } from './RestaurantAddToListModal'
-import { Plus } from '@tamagui/feather-icons'
+import { Plus } from '@tamagui/lucide-icons'
 import React, { Suspense, useState } from 'react'
 
 export const RestaurantAddToListButton = ({

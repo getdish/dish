@@ -5,7 +5,7 @@ import { MenuLinkButton } from './MenuLinkButton'
 import { useUserStore } from './userStore'
 import { slugify } from '@dish/graph'
 import { Card, Popover, YStack } from '@dish/ui'
-import { Plus } from '@tamagui/feather-icons'
+import { Plus } from '@tamagui/lucide-icons'
 import React from 'react'
 import { GestureResponderEvent } from 'react-native'
 

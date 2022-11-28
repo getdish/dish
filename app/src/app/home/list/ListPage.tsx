@@ -52,7 +52,7 @@ import {
   useForceUpdate,
   useMedia,
 } from '@dish/ui'
-import { List as ListIcon, Move, Plus, Trash } from '@tamagui/feather-icons'
+import { List as ListIcon, Move, Plus, Trash } from '@tamagui/lucide-icons'
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { Pressable } from 'react-native'
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist'

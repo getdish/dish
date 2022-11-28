@@ -3,7 +3,7 @@ import { LinkButton } from './LinkButton'
 import { LinkButtonProps } from './LinkProps'
 import { RoutesTable } from '@dish/router'
 import { Text, XStack } from '@dish/ui'
-import { ChevronDown, ChevronUp } from '@tamagui/feather-icons'
+import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 import React from 'react'
 
 export const TrendingButton = <

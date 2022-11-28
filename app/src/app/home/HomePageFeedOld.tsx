@@ -24,7 +24,7 @@ import {
   useDebounce,
   useDebounceEffect,
 } from '@dish/ui'
-import { Plus } from '@tamagui/feather-icons'
+import { Plus } from '@tamagui/lucide-icons'
 import getCenter from '@turf/center'
 import { capitalize } from 'lodash'
 import React, { memo, useState } from 'react'

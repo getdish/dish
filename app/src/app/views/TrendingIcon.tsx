@@ -1,5 +1,5 @@
 import { YStack, YStackProps } from '@dish/ui'
-import { ChevronDown, ChevronUp, Minus } from '@tamagui/feather-icons'
+import { ChevronDown, ChevronUp, Minus } from '@tamagui/lucide-icons'
 import React from 'react'
 
 export const TrendingIcon = ({

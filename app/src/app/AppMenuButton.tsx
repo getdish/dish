@@ -3,7 +3,7 @@ import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { appMenuStore } from './AppMenuStore'
 import { Popover, YStack } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
-import { Menu } from '@tamagui/feather-icons'
+import { Menu } from '@tamagui/lucide-icons'
 import React, { memo } from 'react'
 
 export const AppMenuButton = memo(() => {

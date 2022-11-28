@@ -8,7 +8,7 @@ import { ReviewImagesRow } from './ReviewImagesRow'
 import { ReviewTagsRow } from './ReviewTagsRow'
 import { getUserName, graphql, list, review } from '@dish/graph'
 import { Input, Spacer, Text, XStack, YStack } from '@dish/ui'
-import { Trash } from '@tamagui/feather-icons'
+import { Trash } from '@tamagui/lucide-icons'
 import { default as React, memo, useEffect, useState } from 'react'
 
 export type RestaurantReviewProps = Partial<CommentBubbleProps> & {
@@ -93,7 +93,10 @@ export const RestaurantReview = memo(
                 {...(!hideRestaurantName && {
                   title: (
                     <Text fontWeight="800">
-                      <Link name="restaurant" params={{ slug: review?.restaurant?.slug || '' }}>
+                      <Link
+                        name="restaurant"
+                        params={{ slug: review?.restaurant?.slug || '' }}
+                      >
                         {review?.restaurant?.name ?? ''}
                       </Link>
                     </Text>

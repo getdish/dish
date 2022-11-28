@@ -1,5 +1,5 @@
 import { Button, ButtonProps } from '@dish/ui'
-import { CornerLeftUp, X } from '@tamagui/feather-icons'
+import { CornerLeftUp, X } from '@tamagui/lucide-icons'
 import React, { forwardRef, memo } from 'react'
 
 export const CloseButton = (props: ButtonProps) => {

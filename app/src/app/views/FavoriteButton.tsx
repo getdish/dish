@@ -1,6 +1,6 @@
 import { SmallButton } from './SmallButton'
 import { ButtonProps, Paragraph, Text, getFontSize, getFontSizeToken, prevent } from '@dish/ui'
-import { Heart } from '@tamagui/feather-icons'
+import { Heart } from '@tamagui/lucide-icons'
 import React from 'react'
 
 export type FavoriteButtonProps = ButtonProps & {

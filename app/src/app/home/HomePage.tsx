@@ -28,7 +28,7 @@ import {
   useMedia,
 } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
-import { Heart } from '@tamagui/feather-icons'
+import { Heart } from '@tamagui/lucide-icons'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import SwipeableItem, { useSwipeableItemParams } from 'react-native-swipeable-item'

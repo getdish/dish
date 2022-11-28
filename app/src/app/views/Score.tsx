@@ -16,7 +16,7 @@ import {
   YStackProps,
   useTheme,
 } from '@dish/ui'
-import { ArrowDown, ArrowUp } from '@tamagui/feather-icons'
+import { ArrowDown, ArrowUp } from '@tamagui/lucide-icons'
 import React, { memo } from 'react'
 
 export type ScoreProps = YStackProps & {

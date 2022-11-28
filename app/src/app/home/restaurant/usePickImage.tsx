@@ -1,12 +1,11 @@
+import { useIsMountedRef } from '../../../helpers/useIsMountedRef'
+import { createImageFormData } from './createImageFormData'
 import { uploadFile, useRefetch } from '@dish/graph'
 import { supportsTouchWeb } from '@dish/helpers'
 import { Text, Toast, XStack, YStack } from '@dish/ui'
-import { Loader } from '@tamagui/feather-icons'
+import { Loader } from '@tamagui/lucide-icons'
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react'
-
-import { useIsMountedRef } from '../../../helpers/useIsMountedRef'
-import { createImageFormData } from './createImageFormData'
 
 export const usePickImage = ({
   query,

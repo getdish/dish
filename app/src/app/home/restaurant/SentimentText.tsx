@@ -1,5 +1,5 @@
 import { Spacer, Text, TextProps, XStack } from '@dish/ui'
-import { ThumbsDown, ThumbsUp } from '@tamagui/feather-icons'
+import { ThumbsDown, ThumbsUp } from '@tamagui/lucide-icons'
 import React from 'react'
 
 export const SentimentText = ({

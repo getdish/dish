@@ -1,4 +1,4 @@
-import { X } from '@tamagui/feather-icons'
+import { X } from '@tamagui/lucide-icons'
 import React from 'react'
 import { Button, Dialog, DialogContentProps, Unspaced, withStaticProperties } from 'tamagui'
 

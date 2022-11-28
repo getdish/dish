@@ -7,7 +7,7 @@ import { usePickImage } from './usePickImage'
 import { useRestaurantPhotos } from './useRestaurantPhotos'
 import { useRefetch } from '@dish/graph'
 import { AbsoluteYStack, Button, Toast, XStack, YStack, YStackProps } from '@dish/ui'
-import { Camera } from '@tamagui/feather-icons'
+import { Camera } from '@tamagui/lucide-icons'
 import React, { useEffect } from 'react'
 
 export const ReviewImagesRow = ({

@@ -22,5 +22,5 @@ export function getGroupedButtonProps({
   if (hasNext) {
     extraProps.marginRight = 0
   }
-  return extraProps
+  return extraProps as any
 }

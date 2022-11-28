@@ -1,3 +1,5 @@
+import { useMemo, useRef } from 'react'
+
 export * from 'tamagui'
 export { useWindowSize } from '@tamagui/use-window-size'
 
@@ -17,3 +19,11 @@ export * from './useOnMount'
 export * from './useComposeRefs'
 export * from './useDebounceEffect'
 export * from './useLazyEffect'
+
+export const useConstant = <Val>(val: () => Val): Val => {
+  const state = useRef<any>()
+  if (!state.current) {
+    state.current = val()
+  }
+  return state.current
+}

@@ -8,7 +8,7 @@ import { styles } from './styles'
 import { fullyIdle, series } from '@dish/async'
 import { Text, XStack, YStack } from '@dish/ui'
 import { useStoreSelector } from '@dish/use-store'
-import { X } from '@tamagui/feather-icons'
+import { X } from '@tamagui/lucide-icons'
 import React, { memo, useEffect, useRef, useState } from 'react'
 import { TextInput } from 'react-native'
 

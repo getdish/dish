@@ -2,7 +2,7 @@ import { LenseButtonBar } from '../../views/LenseButtonBar'
 import { LinkButton } from '../../views/LinkButton'
 import { Restaurant } from '@dish/graph'
 import { Card, Popover } from '@dish/ui'
-import { Plus } from '@tamagui/feather-icons'
+import { Plus } from '@tamagui/lucide-icons'
 import React from 'react'
 
 export const RestaurantAddTagButton = ({ restaurant }: { restaurant: Restaurant }) => {

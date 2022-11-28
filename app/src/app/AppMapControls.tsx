@@ -6,7 +6,7 @@ import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
 import { Spacer, XStack } from '@dish/ui'
 import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
-import { Minus, Plus, RefreshCcw, ZoomOut } from '@tamagui/feather-icons'
+import { Minus, Plus, RefreshCcw, ZoomOut } from '@tamagui/lucide-icons'
 import React, { memo } from 'react'
 
 // import { useSafeAreaInsets } from 'react-native-safe-area-context'

@@ -1,11 +1,3 @@
-import { order_by, photo, useLazyQuery, useQuery, useTransactionQuery } from '@dish/graph'
-import { isPresent } from '@dish/helpers'
-import { AbsoluteYStack, LoadingItems, XStack, YStack, useWindowSize } from '@dish/ui'
-import { ChevronLeft, ChevronRight } from '@tamagui/feather-icons'
-import { last, orderBy, uniqBy } from 'lodash'
-import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
-import { ScrollView } from 'react-native'
-
 import { isWeb } from '../../../constants/constants'
 import { getImageUrl } from '../../../helpers/getImageUrl'
 import { getWindowHeight, getWindowWidth } from '../../../helpers/getWindow'
@@ -14,6 +6,13 @@ import { router, useIsRouteActive } from '../../../router'
 import { Image } from '../../views/Image'
 import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { useRestaurantPhotos } from '../restaurant/useRestaurantPhotos'
+import { order_by, photo, useLazyQuery, useQuery, useTransactionQuery } from '@dish/graph'
+import { isPresent } from '@dish/helpers'
+import { AbsoluteYStack, LoadingItems, XStack, YStack, useWindowSize } from '@dish/ui'
+import { ChevronLeft, ChevronRight } from '@tamagui/lucide-icons'
+import { last, orderBy, uniqBy } from 'lodash'
+import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
+import { ScrollView } from 'react-native'
 
 export default memo(function GalleryPage() {
   const isActive = useIsRouteActive('gallery')
@@ -47,7 +46,13 @@ export default memo(function GalleryPage() {
 const ThumbnailSize = 150
 
 export const GalleryLightbox = memo(
-  ({ restaurantSlug, index: defaultIndex = 0 }: { restaurantSlug: string; index?: number }) => {
+  ({
+    restaurantSlug,
+    index: defaultIndex = 0,
+  }: {
+    restaurantSlug: string
+    index?: number
+  }) => {
     const [activeImage, setActiveImage] = useState<{
       index: number
       url: string

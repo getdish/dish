@@ -16,7 +16,7 @@ import {
   YStack,
   useTheme,
 } from '@dish/ui'
-import { ChevronDown, ChevronUp, Edit, Plus, X } from '@tamagui/feather-icons'
+import { ChevronDown, ChevronUp, Edit, Plus, X } from '@tamagui/lucide-icons'
 import { sortBy } from 'lodash'
 import React, { memo, useEffect, useState } from 'react'
 import { Image, ScrollView } from 'react-native'

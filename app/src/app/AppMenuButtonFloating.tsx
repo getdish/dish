@@ -1,9 +1,9 @@
 import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
-import { AbsoluteYStack, Button, ThemeInverse, useMedia } from '@dish/ui'
+import { AbsoluteYStack, Button, Theme, useMedia } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
-import { Menu } from '@tamagui/feather-icons'
+import { Menu } from '@tamagui/lucide-icons'
 import { Sheet } from '@tamagui/sheet'
 import React, { memo } from 'react'
 
@@ -26,7 +26,7 @@ export const AppMenuButtonFloating = memo(() => {
         modal
         open={appMenu.isVisible}
         position={0}
-        onChangeOpen={(open) => {
+        onOpenChange={(open) => {
           console.log('changed open', open)
           appMenu.setIsVisible(open)
         }}
@@ -51,7 +51,7 @@ export const AppMenuButtonFloating = memo(() => {
         right={10}
         zIndex={zIndexDrawer - 1}
       >
-        <ThemeInverse>
+        <Theme inverse>
           <Button
             pointerEvents="auto"
             elevation="$3"
@@ -63,7 +63,7 @@ export const AppMenuButtonFloating = memo(() => {
             overflow="visible"
             onPress={appMenu.toggle}
           />
-        </ThemeInverse>
+        </Theme>
       </AbsoluteYStack>
     </>
   )

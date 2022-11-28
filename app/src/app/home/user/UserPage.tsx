@@ -42,7 +42,7 @@ import {
   useMedia,
   useTheme,
 } from '@dish/ui'
-import { Plus } from '@tamagui/feather-icons'
+import { Plus } from '@tamagui/lucide-icons'
 import React, { Suspense, memo, useState } from 'react'
 
 type UserPane = 'vote' | 'review' | '' | 'favorite'

@@ -16,7 +16,7 @@ import {
   YStackProps,
   useDebounceEffect,
 } from '@dish/ui'
-import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@tamagui/feather-icons'
+import { Coffee, HelpCircle, LogOut, Plus, Sun, Truck, User } from '@tamagui/lucide-icons'
 import { capitalize } from 'lodash'
 import React, { forwardRef, memo, useState } from 'react'
 import { ScrollView, useColorScheme } from 'react-native'

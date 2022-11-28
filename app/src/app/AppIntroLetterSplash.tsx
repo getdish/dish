@@ -25,7 +25,7 @@ import {
   useTheme,
 } from '@dish/ui'
 import { useStore } from '@dish/use-store'
-import { Home } from '@tamagui/feather-icons'
+import { Home } from '@tamagui/lucide-icons'
 import React, { memo, useLayoutEffect, useMemo, useState } from 'react'
 
 export const AppIntroLetter = memo(() => {

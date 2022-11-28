@@ -7,7 +7,7 @@ import { TextSuperScript } from '../TextSuperScript'
 import { VoteButton } from '../VoteButton'
 import { graphql, restaurant, tagSlug } from '@dish/graph'
 import { Text, TooltipSimple, XStack, YStack, useTheme } from '@dish/ui'
-import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@tamagui/feather-icons'
+import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from '@tamagui/lucide-icons'
 import React, { Suspense, memo } from 'react'
 import { GestureResponderEvent } from 'react-native'
 

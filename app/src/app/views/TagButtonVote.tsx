@@ -2,7 +2,7 @@ import { TagButtonProps } from './TagButton'
 import { TagVotePopover } from './TagVotePopover'
 import { graphql } from '@dish/graph'
 import { Text, YStack, useTheme } from '@dish/ui'
-import { Circle } from '@tamagui/feather-icons'
+import { Circle } from '@tamagui/lucide-icons'
 import React from 'react'
 
 export const TagButtonVote = graphql(

@@ -8,7 +8,7 @@ import { StackItemProps } from '../HomeStackView'
 import { PageContent } from '../PageContent'
 import { OneUUID, ZeroUUID, order_by, review, useQuery, useRefetch } from '@dish/graph'
 import { Button, Input, Paragraph, Spacer, XGroup, XStack, YStack } from '@dish/ui'
-import { ChevronDown, ChevronUp } from '@tamagui/feather-icons'
+import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 import React, { useCallback, useState } from 'react'
 import { FlatList } from 'react-native'
 

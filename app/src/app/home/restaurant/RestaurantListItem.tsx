@@ -42,7 +42,7 @@ import {
   useMedia,
 } from '@dish/ui'
 import { useStoreInstanceSelector } from '@dish/use-store'
-import { Heart, MessageCircle, MessageSquare, Tag } from '@tamagui/feather-icons'
+import { Heart, MessageCircle, MessageSquare, Tag } from '@tamagui/lucide-icons'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 

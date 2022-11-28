@@ -8,7 +8,7 @@ import React from 'react'
 export const HomeDrawerSmall = (props: any) => {
   return (
     <YStack pe="none" pos="relative" zi={100000000000}>
-      <Spacer pe="none" size={400} />
+      <Spacer pointerEvents="none" size={400} />
       <DrawerFrame>
         <YStack pos="relative" top={searchBarHeight}>
           <StackDrawerControlsPortal />

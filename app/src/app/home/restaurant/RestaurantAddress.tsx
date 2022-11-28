@@ -4,7 +4,7 @@ import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { AddressSize, getAddressText } from './RestaurantAddressLinksRow'
 import { useMedia, useTheme } from '@dish/ui'
-import { MapPin } from '@tamagui/feather-icons'
+import { MapPin } from '@tamagui/lucide-icons'
 import React from 'react'
 
 export const RestaurantAddress = ({

@@ -39,7 +39,7 @@ import { useSelectedDish } from './useSelectedDish'
 import { fullyIdle, series, sleep } from '@dish/async'
 import { graphql } from '@dish/graph'
 import { H1, LoadingItems, Spacer, Theme, XStack, YStack, useThemeName } from '@dish/ui'
-import { Clock } from '@tamagui/feather-icons'
+import { Clock } from '@tamagui/lucide-icons'
 import React, { Suspense, memo, useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 

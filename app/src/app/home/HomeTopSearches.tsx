@@ -2,8 +2,7 @@ import { tagLenses } from '../../constants/localTags'
 import { NavigableTag } from '../../types/tagTypes'
 import { useHomeStoreSelector } from '../homeStore'
 import { Link } from '../views/Link'
-import { TagsText } from './TagsText'
-import { Button, Theme, ThemeInverse, XStack, YStack } from '@dish/ui'
+import { Button, Theme, XStack } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const HomeTopSearches = memo(() => {
@@ -44,7 +43,7 @@ export const HomeTopSearches = memo(() => {
 
         const contents = (
           <Link key={index} tags={search.tags} asyncClick>
-            {index === 0 ? <ThemeInverse>{inner}</ThemeInverse> : inner}
+            {index === 0 ? <Theme inverse>{inner}</Theme> : inner}
           </Link>
         )
         if (activeTags[search.tags[0]?.slug || '']) {

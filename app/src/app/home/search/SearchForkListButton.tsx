@@ -15,7 +15,7 @@ import { listFindOne, listInsert, mutate, slugify } from '@dish/graph'
 import { assertPresent } from '@dish/helpers'
 import { HistoryItem } from '@dish/router'
 import { Toast, TooltipSimple } from '@dish/ui'
-import { Edit2 } from '@tamagui/feather-icons'
+import { Edit2 } from '@tamagui/lucide-icons'
 import React, { memo, useContext } from 'react'
 
 export const SearchForkListButton = memo(

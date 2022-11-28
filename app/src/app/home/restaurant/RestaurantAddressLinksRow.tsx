@@ -5,7 +5,7 @@ import { Link } from '../../views/Link'
 import { SmallButton } from '../../views/SmallButton'
 import { graphql } from '@dish/graph'
 import { Card, Paragraph, TooltipSimple, XStack, YStack, useTheme } from '@dish/ui'
-import { ExternalLink, Link2, PhoneCall } from '@tamagui/feather-icons'
+import { ExternalLink, Link2, PhoneCall } from '@tamagui/lucide-icons'
 import React, { memo } from 'react'
 
 export type AddressSize = 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
@@ -60,7 +60,10 @@ export const RestaurantAddressLinksRow = memo(
 
           {size === 'sm' ||
             (size === 'xs' && (
-              <TooltipSimple placement="right" label={<Card padding={10}>{linkElements}</Card>}>
+              <TooltipSimple
+                placement="right"
+                label={<Card padding={10}>{linkElements}</Card>}
+              >
                 <SmallCircleButton icon={ExternalLink} />
               </TooltipSimple>
             ))}

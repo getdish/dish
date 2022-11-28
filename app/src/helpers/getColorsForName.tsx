@@ -1,13 +1,13 @@
-import * as Colors from '@tamagui/theme-base'
+import { colorNames } from '../app/hooks/useListColor'
 
 export const getColorsForName = (name?: string | null) => {
   const charCode = name && name.length > 0 ? name.charCodeAt(0) : 0
-  const index = charCode % Colors.colorNames.length
+  const index = charCode % colorNames.length
   return getColorsForIndex(index)
 }
 
 const getColorsForIndex = (index = 0) => {
-  return Colors.colorNames[index]
+  return colorNames[index]
 }
 
 export type ColorShades = ReturnType<typeof getColorsForIndex>

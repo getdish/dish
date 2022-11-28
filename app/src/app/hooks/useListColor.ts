@@ -1,4 +1,7 @@
-import { colorNames } from '@tamagui/theme-base'
+import { ThemeName } from '@tamagui/core'
+import { colorTokens } from '@tamagui/theme-base'
+
+export const colorNames = Object.keys(colorTokens.light) as ThemeName[]
 
 export const useListColor = (color: number | undefined | null = 0) => {
   return colorNames[(color || 0) % colorNames.length]

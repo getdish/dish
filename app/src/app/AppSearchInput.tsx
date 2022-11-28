@@ -35,7 +35,7 @@ import {
   useTheme,
 } from '@dish/ui'
 import { getStore, selector, useReaction } from '@dish/use-store'
-import { Loader, Search, X } from '@tamagui/feather-icons'
+import { Loader, Search, X } from '@tamagui/lucide-icons'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { ScrollView, TextInput, View } from 'react-native'
 

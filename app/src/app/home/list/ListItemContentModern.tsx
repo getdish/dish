@@ -18,7 +18,7 @@ import { ListItemContentProps } from './ListItemProps'
 import { useRestaurantReviewListProps } from './useRestaurantReviewListProps'
 import { graphql } from '@dish/graph'
 import { Circle, Spacer, Text, XStack, YStack, useMedia } from '@dish/ui'
-import { MessageSquare } from '@tamagui/feather-icons'
+import { MessageSquare } from '@tamagui/lucide-icons'
 import React, { Suspense, memo } from 'react'
 
 export const ListItemContentModern = memo(

@@ -1,11 +1,10 @@
 import { tagDisplayNames } from '../../constants/tagMeta'
 import { NavigableTag } from '../../types/tagTypes'
 import { resetResults } from '../home/search/SearchPageStore'
-import { useCurrentLenseColor } from '../hooks/useCurrentLenseColor'
 import { Link } from './Link'
-import { SmallButton, SmallButtonProps } from './SmallButton'
+import { SmallButtonProps } from './SmallButton'
 import { Button } from '@dish/ui'
-import { Clock, ShoppingBag } from '@tamagui/feather-icons'
+import { Clock, ShoppingBag } from '@tamagui/lucide-icons'
 import React, { useEffect, useState } from 'react'
 
 type FilterButtonProps = Omit<SmallButtonProps, 'tag'> & {

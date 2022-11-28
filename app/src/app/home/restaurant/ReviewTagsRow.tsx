@@ -10,7 +10,7 @@ import { RestaurantReviewProps } from './RestaurantReview'
 import { ZeroUUID, graphql, order_by, query, resolved, useRefetch } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
 import { Input, XStack, useDebounce, useLazyEffect } from '@dish/ui'
-import { Search, X } from '@tamagui/feather-icons'
+import { Search, X } from '@tamagui/lucide-icons'
 import { sortBy, uniqBy } from 'lodash'
 import React, { memo, useState } from 'react'
 

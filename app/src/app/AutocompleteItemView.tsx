@@ -16,7 +16,7 @@ import {
   useDebounce,
   useTheme,
 } from '@dish/ui'
-import { Plus } from '@tamagui/feather-icons'
+import { Plus } from '@tamagui/lucide-icons'
 import React, { memo } from 'react'
 import { Keyboard } from 'react-native'
 

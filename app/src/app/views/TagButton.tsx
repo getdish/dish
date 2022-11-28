@@ -28,7 +28,7 @@ import {
   useTheme,
 } from '@dish/ui'
 import '@tamagui/colors'
-import { X } from '@tamagui/feather-icons'
+import { X } from '@tamagui/lucide-icons'
 import React, { memo } from 'react'
 
 type TagLike = TagButtonTagProps | NavigableTag | TagQuery

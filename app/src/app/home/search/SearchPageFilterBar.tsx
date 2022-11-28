@@ -20,7 +20,7 @@ import {
   useMedia,
   useTheme,
 } from '@dish/ui'
-import { Filter } from '@tamagui/feather-icons'
+import { Filter } from '@tamagui/lucide-icons'
 import { groupBy, sortBy } from 'lodash'
 import React, { memo, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'

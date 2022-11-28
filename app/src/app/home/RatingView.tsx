@@ -1,4 +1,4 @@
-import { Card, Paragraph, Text, Theme, ThemeInverse } from '@dish/ui'
+import { Card, Paragraph } from '@dish/ui'
 import React, { forwardRef } from 'react'
 
 export type RatingViewProps = {

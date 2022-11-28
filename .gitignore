@@ -1,5 +1,7 @@
 data/**
 
+.tamagui
+
 .watchman-cookie*
 
 app/ios/assets/**/*

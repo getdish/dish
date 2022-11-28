@@ -4,7 +4,7 @@ import { autocompletesStore } from '../AutocompletesStore'
 import { useLastHomeState } from '../homeStore'
 import { Link } from '../views/Link'
 import { SlantedTitle } from '../views/SlantedTitle'
-import { ThemeInverse } from '@dish/ui'
+import { Theme } from '@dish/ui'
 import React, { memo } from 'react'
 
 export const HomeRegionTitle = memo(() => {
@@ -21,11 +21,11 @@ export const HomeRegionTitle = memo(() => {
 
   return (
     <Link onPress={() => autocompletesStore.setTarget('location')}>
-      <ThemeInverse>
+      <Theme inverse>
         <SlantedTitle alignSelf="center" fontWeight="900" size="$2">
           {regionName}
         </SlantedTitle>
-      </ThemeInverse>
+      </Theme>
     </Link>
   )
 })

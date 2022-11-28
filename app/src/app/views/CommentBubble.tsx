@@ -19,7 +19,7 @@ import {
   YStackProps,
   useTheme,
 } from '@dish/ui'
-import { User } from '@tamagui/feather-icons'
+import { User } from '@tamagui/lucide-icons'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 
