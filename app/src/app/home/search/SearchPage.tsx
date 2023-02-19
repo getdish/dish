@@ -361,7 +361,7 @@ const SearchEmptyResults = () => {
     <>
       <SearchHeader />
       <YStack paddingVertical={100} alignItems="center" space>
-        <Paragraph fontSize={22}>No results</Paragraph>
+        {/* <Paragraph fontSize={22}>No results</Paragraph> */}
         <Text fontSize={32}>😞</Text>
       </YStack>
     </>

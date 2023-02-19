@@ -1,15 +1,14 @@
-import { getAuthHeaders } from './Auth'
 import { GRAPH_API_INTERNAL } from './constants'
 import '@dish/helpers/polyfill'
 import { inspectWriteGenerate } from '@gqty/cli'
+import 'localstorage-polyfill'
 
 const run = async () => {
   await inspectWriteGenerate({
     destination: 'src/graphql/schema.generated.ts',
-    // @ts-ignore
-    introspection: {
-      endpoint: GRAPH_API_INTERNAL,
-      headers: await getAuthHeaders(true),
+    endpoint: GRAPH_API_INTERNAL,
+    headers: {
+      'x-hasura-admin-secret': 'password',
     },
     generateOptions: {},
     transformSchemaOptions: {

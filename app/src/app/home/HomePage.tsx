@@ -211,8 +211,8 @@ export const HomePageFeed = memo(
     const refetch = useRefetch()
     const setHoveredDbc = useDebounce(setHovered, 400)
     const homeStore = useHomeStore()
-    const topCuisines = useTopCuisines(homeStore.currentState.center)
-    const user = useCurrentUserQuery()
+    // const topCuisines = useTopCuisines(homeStore.currentState.center)
+    // const user = useCurrentUserQuery()
 
     const restaurants = query.restaurant({
       limit: 10,

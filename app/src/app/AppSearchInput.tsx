@@ -1,5 +1,5 @@
+// debug
 import { isWeb, searchBarHeight } from '../constants/constants'
-import { isTouchDevice } from '../constants/platforms'
 import { filterToNavigable } from '../helpers/tagHelpers'
 import { router } from '../router'
 import { AppSearchInputTagsRow } from './AppSearchInputTagsRow'
@@ -8,25 +8,18 @@ import {
   autocompleteSearchStore,
   autocompletesStore,
 } from './AutocompletesStore'
-import { SearchInputNativeDragFix } from './SearchInputNativeDragFix'
 import { drawerStore } from './drawerStore'
 import { runSearch } from './home/search/SearchPageStore'
 import { homeStore, useHomeStoreSelector } from './homeStore'
 import { InputStore, setNodeOnInputStore, useInputStoreSearch } from './inputStore'
-import {
-  focusSearchInput,
-  setAvoidNextAutocompleteShowOnFocus,
-  setSearchBar,
-} from './searchInputActions'
+import { focusSearchInput, setSearchBar } from './searchInputActions'
 import { useAutocompleteFocusWebNonTouch } from './useAutocompleteFocusWeb'
-import { SquareDebug } from './views/SquareDebug'
 import { fullyIdle, idle, series } from '@dish/async'
 import { supportsTouchWeb } from '@dish/helpers'
 import {
   Button,
   SearchInput,
   Spacer,
-  Square,
   XStack,
   YStack,
   getMedia,
@@ -34,10 +27,10 @@ import {
   useOnMount,
   useTheme,
 } from '@dish/ui'
-import { getStore, selector, useReaction } from '@dish/use-store'
-import { Loader, Search, X } from '@tamagui/lucide-icons'
+import { getStore, selector } from '@dish/use-store'
+import { Loader, X } from '@tamagui/lucide-icons'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
-import { ScrollView, TextInput, View } from 'react-native'
+import { TextInput } from 'react-native'
 
 const isWebTouch = isWeb && supportsTouchWeb
 
@@ -70,7 +63,8 @@ export const AppSearchInput = memo(({ floating }: { floating?: boolean }) => {
     return series([
       () => fullyIdle({ checks: 3, max: 100 }),
       () => {
-        if (!getMedia().$sm) {
+        // @ts-ignore
+        if (!getMedia().sm) {
           focusSearchInput()
         }
       },

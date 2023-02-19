@@ -1,6 +1,6 @@
 import { CircularProgress } from './CircularProgress'
 import { Text, XStack } from '@dish/ui'
-import { lightColors } from '@tamagui/theme-base'
+import { lightColors } from '@tamagui/themes'
 import React, { memo } from 'react'
 
 const sentiments = {

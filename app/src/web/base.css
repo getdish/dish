@@ -9,12 +9,20 @@ body {
   max-height: max-content;
 }
 
-:root body, :root #root {
+:root body {
   display: block;
   flex-direction: column;
   min-height: auto;
   min-width: auto;
   overflow: hidden;
+}
+
+#root {
+  display: flex;
+  z-index: 0;
+  position: relative;
+  pointer-events: auto;
+  min-height: 100vh;
 }
 
 input, textarea, select, button, p {
@@ -42,13 +50,6 @@ body {
   display: flex;
   overscroll-behavior-y: none;
   -ms-overflow-style: scrollbar;
-}
-
-#root {
-  display: flex;
-  z-index: 0;
-  position: relative;
-  pointer-events: auto;
 }
 
 body,

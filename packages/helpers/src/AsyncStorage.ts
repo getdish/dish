@@ -1,4 +1,4 @@
-export { default as AsyncStorage } from '@react-native-async-storage/async-storage'
+// export { default as AsyncStorage } from '@react-native-async-storage/async-storage'
 
 // import localStorage from 'react-native-sync-localstorage'
 

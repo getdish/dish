@@ -1,4 +1,4 @@
-import { getSize } from '@tamagui/core'
+import { getSize } from '@tamagui/get-size'
 import { YStack, styled } from 'tamagui'
 
 export const SlantedYStack = styled(YStack, {
@@ -14,9 +14,9 @@ export const SlantedYStack = styled(YStack, {
           // elevation: val,
           borderRadius: val,
           px: val,
-          py: getSize(val, -2)
+          py: getSize(val, -2),
         }
-      }
-    }
-  }
+      },
+    },
+  },
 })

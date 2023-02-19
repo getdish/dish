@@ -1,6 +1,6 @@
 import { DISH_API_ENDPOINT, isNode } from './constants'
 import { isSafari } from '@dish/helpers'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { crossLocalStorage } from 'cross-local-storage'
 
 // TODO next gen!! remove all cruft!!
 
@@ -86,7 +86,7 @@ class AuthModel {
   }
 
   async checkForExistingLogin() {
-    const json = await AsyncStorage.getItem(LOGIN_KEY)
+    const json = await crossLocalStorage.getItem(LOGIN_KEY as never)
     if (json != null) {
       const auth = JSON.parse(json)
       this.jwt = auth.token
@@ -130,7 +130,7 @@ class AuthModel {
       const data = await response.json()
       return [response.status, data] as const
     } else {
-      await AsyncStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
+      await crossLocalStorage.setItem(HAS_LOGGED_IN_BEFORE as never, 'true')
     }
     return [response.status, response.statusText] as const
   }
@@ -159,8 +159,8 @@ class AuthModel {
     this.isLoggedIn = true
     this.jwt = data.token
     this.user = data.user
-    await AsyncStorage.setItem(HAS_LOGGED_IN_BEFORE, 'true')
-    await AsyncStorage.setItem(LOGIN_KEY, JSON.stringify(data))
+    await crossLocalStorage.setItem(HAS_LOGGED_IN_BEFORE as never, 'true')
+    await crossLocalStorage.setItem(LOGIN_KEY as never, JSON.stringify(data))
     this.has_been_logged_out = false
   }
 
@@ -184,7 +184,7 @@ class AuthModel {
     this.isLoggedIn = false
     this.jwt = ''
     this.user = null
-    await AsyncStorage.removeItem(LOGIN_KEY)
+    await crossLocalStorage.removeItem(LOGIN_KEY as never)
   }
 }
 
@@ -196,7 +196,9 @@ export function getAuth() {
 }
 
 export async function createAuth() {
-  const hasEverLoggedIn = Boolean(await AsyncStorage.getItem(HAS_LOGGED_IN_BEFORE))
+  const hasEverLoggedIn = Boolean(
+    await crossLocalStorage.getItem(HAS_LOGGED_IN_BEFORE as never)
+  )
   Auth = new AuthModel(hasEverLoggedIn)
 }
 
@@ -213,7 +215,7 @@ export async function getAuthInfo(): Promise<null | {
   token: string
   admin?: boolean
 }> {
-  const json = await AsyncStorage.getItem(LOGIN_KEY)
+  const json = await crossLocalStorage.getItem(LOGIN_KEY as never)
   if (json != null) {
     return JSON.parse(json)
   }

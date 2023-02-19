@@ -20,7 +20,7 @@
     "trim-package": "yes | npx json-filter-cli --from=package.json --to=package.json --exclude=scripts",
     "trim-packages": "yarn trim-package && npx yarn workspaces foreach run yes | npx json-filter-cli --confirm --from=package.json --to=package.json --exclude=scripts",
     "bootstrap": "docker-compose build base",
-    "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader",
+    "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader && manypkg upgrade react-native-web-lite",
     "link:tamagui": "yarn link ~/tamagui --all",
     "dsh": "node -r esbuild-register dsh.ts",
     "d": "yarn dev:local",
@@ -168,5 +168,5 @@
     }
   },
   "version": "0.0.0",
-  "packageManager": "yarn@3.1.1"
+  "packageManager": "yarn@3.3.0"
 }

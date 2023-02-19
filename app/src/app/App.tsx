@@ -1,3 +1,4 @@
+// debug
 import { isSSR } from '../constants/constants'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'
@@ -51,7 +52,6 @@ export function App() {
 }
 
 function PublicContent(props: { children?: any }) {
-  console.warn('??')
   return (
     <>
       {/* background */}

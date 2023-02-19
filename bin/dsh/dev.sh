@@ -24,7 +24,7 @@ function dev() {
 
     # hasura
     echo "running hasura server"
-    HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL} HASURA_GRAPHQL_ENABLE_CONSOLE=false ./services/hasura/bin/graphql-engine serve  --server-port 8091 &
+    HASURA_GRAPHQL_DATABASE_URL=${HASURA_GRAPHQL_DATABASE_URL} HASURA_GRAPHQL_ENABLE_CONSOLE=false graphql-engine serve  --server-port 8091 &
     PID1=$!
 
     # tileserver

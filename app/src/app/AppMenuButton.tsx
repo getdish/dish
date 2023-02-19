@@ -1,7 +1,7 @@
 import { AppMenuContents } from './AppMenuContents'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { appMenuStore } from './AppMenuStore'
-import { Popover, YStack } from '@dish/ui'
+import { Adapt, Popover, YStack } from '@dish/ui'
 import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/lucide-icons'
 import React, { memo } from 'react'
@@ -11,12 +11,7 @@ export const AppMenuButton = memo(() => {
   const showUserMenu = appMenu.isVisible
 
   return (
-    <Popover
-      sheetBreakpoint="md"
-      placement="bottom"
-      open={showUserMenu}
-      onOpenChange={appMenu.setIsVisible}
-    >
+    <Popover placement="bottom" open={showUserMenu} onOpenChange={appMenu.setIsVisible}>
       <Popover.Trigger>
         <AppMenuLinkButton
           size="$6"
@@ -26,14 +21,16 @@ export const AppMenuButton = memo(() => {
         ></AppMenuLinkButton>
       </Popover.Trigger>
 
-      <Popover.Sheet dismissOnSnapToBottom modal>
-        <Popover.Sheet.Overlay />
-        <Popover.Sheet.Frame>
-          <Popover.Sheet.ScrollView contentContainerStyle={{ height: 1200 }}>
-            <Popover.SheetContents />
-          </Popover.Sheet.ScrollView>
-        </Popover.Sheet.Frame>
-      </Popover.Sheet>
+      <Adapt when="sm" platform="touch">
+        <Popover.Sheet dismissOnSnapToBottom modal>
+          <Popover.Sheet.Overlay />
+          <Popover.Sheet.Frame>
+            <Popover.Sheet.ScrollView contentContainerStyle={{ height: 1200 }}>
+              <Adapt.Contents />
+            </Popover.Sheet.ScrollView>
+          </Popover.Sheet.Frame>
+        </Popover.Sheet>
+      </Adapt>
 
       <Popover.Content
         backgroundColor="$backgroundTransparent"

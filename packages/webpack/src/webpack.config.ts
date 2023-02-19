@@ -99,7 +99,7 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
     ${resetCache ? Math.random() : ''}
   `)
 
-  console.log(' [webpack]', { cacheName, minimize })
+  console.log(' [webpack]', { cacheName, minimize, isStaticExtracted })
 
   function getConfig() {
     // i had to manually create the webpack cache folder or else it didnt work!
@@ -295,7 +295,10 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
               },
 
               {
-                test: /\.[jt]sx?$/,
+                test: /\.m?[jt]sx?$/,
+                resolve: {
+                  fullySpecified: false,
+                },
                 include: (file) => {
                   const res = (tamaguiInclude ?? defaultTamaguiInclude)(file)
                   // console.log('including', res, file)
@@ -317,15 +320,14 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
                     options: {
                       loader: 'tsx',
                       target: 'es2022',
+                      keepNames: true,
                       implementation: require('esbuild'),
                       jsx: 'automatic',
                       tsconfigRaw: {
                         compilerOptions: {
                           jsx: 'react-jsx',
-                          jsxFactory: 'React.createElement',
                         },
                       },
-                      keepNames: true,
                     },
                   },
 

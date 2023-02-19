@@ -1,5 +1,5 @@
 import { ThemeName } from '@tamagui/core'
-import { colorTokens } from '@tamagui/theme-base'
+import { colorTokens } from '@tamagui/themes'
 
 export const colorNames = Object.keys(colorTokens.light) as ThemeName[]
 

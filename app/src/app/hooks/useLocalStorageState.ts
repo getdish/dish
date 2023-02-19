@@ -1,5 +1,5 @@
 import { series } from '@dish/async'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { crossLocalStorage } from 'cross-local-storage'
 import { useEffect, useState } from 'react'
 
 export function useLocalStorageState<A>(key: string, initialValue: A) {
@@ -8,7 +8,7 @@ export function useLocalStorageState<A>(key: string, initialValue: A) {
   useEffect(() => {
     return series([
       async () => {
-        const item = await AsyncStorage.getItem(key)
+        const item = await crossLocalStorage.getItem(key as never)
         if (item !== null) {
           return JSON.parse((item as any) ?? null)
         }
@@ -24,8 +24,8 @@ export function useLocalStorageState<A>(key: string, initialValue: A) {
     state,
     async (next: A) => {
       setState(next)
-      await AsyncStorage.setItem(
-        key,
+      await crossLocalStorage.setItem(
+        key as never,
         typeof next === 'object' ? JSON.stringify(next) : `${next}`
       )
     },

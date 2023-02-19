@@ -60,7 +60,7 @@ export function series(fns: (Function | ((x?: any) => any))[], options?: SeriesO
 // simple sanity test
 if (process.env.NODE_ENV === 'development') {
   const cancel = series([
-    () => sleep(1000),
+    () => sleep(2000),
     () => {
       throw new Error('Should not reach')
     },

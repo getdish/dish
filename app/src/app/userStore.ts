@@ -20,7 +20,7 @@ import {
   useStoreInstance,
   useStoreInstanceSelector,
 } from '@dish/use-store'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { crossLocalStorage } from 'cross-local-storage'
 
 type ThemeName = 'dark' | 'light' | 'auto'
 
@@ -35,8 +35,8 @@ class UserStore extends Store {
   hasLoggedInBefore = false
 
   async mount() {
-    this.theme = (await AsyncStorage.getItem(THEME_KEY)) as ThemeName
-    this.hasLoggedInBefore = Boolean(await AsyncStorage.getItem('has-logged-in'))
+    this.theme = (await crossLocalStorage.getItem(THEME_KEY as never)) as ThemeName
+    this.hasLoggedInBefore = Boolean(await crossLocalStorage.getItem('has-logged-in' as never))
   }
 
   get isLoggedIn() {
@@ -50,7 +50,7 @@ class UserStore extends Store {
 
   async setTheme(theme: ThemeName) {
     if (theme) {
-      await AsyncStorage.setItem(THEME_KEY, theme)
+      await crossLocalStorage.setItem(THEME_KEY as never, theme)
     }
     this.theme = theme
   }

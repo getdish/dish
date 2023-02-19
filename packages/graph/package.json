@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tamagui-build",
     "watch": "tamagui-build --watch",
-    "generate": "DISH_ENV=development ../../dsh run 'node ./dist/generate.js'",
+    "generate": "DISH_ENV=development ../../dsh run 'node ./dist/cjs/generate.js'",
     "test": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
     "test:only": "NODE_ENV=test TARGET=node ava test/* --verbose --serial",
     "test:debug": "NODE_ENV=test TARGET=node DEBUG=1 ava test/* --verbose --serial",
@@ -29,9 +29,9 @@
     "@dish/use-store": "*",
     "@gqty/logger": "^2.0.2",
     "@gqty/react": "^2.1.0",
-    "@react-native-async-storage/async-storage": "^1.17.10",
+    "cross-local-storage": "^0.0.5",
     "esbuild-register": "^3.3.3",
-    "gqty": "^2.2.0",
+    "gqty": "^2.4.0-alpha-c5b89dbd.0",
     "graphql": "^15.5.0",
     "lodash": "*",
     "moment": "^2.29.1",
@@ -41,8 +41,9 @@
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
     "@gqty/cli": "^3.1.0",
-    "@tamagui/build": "^1.0.1-beta.221",
+    "@tamagui/build": "^1.5.11",
     "@types/node": "^16.11.10",
-    "ava": "^3.15.0"
+    "ava": "^3.15.0",
+    "localstorage-polyfill": "^1.0.1"
   }
 }

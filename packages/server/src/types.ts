@@ -33,14 +33,7 @@ export type CreateWebpackConfig = {
   env: 'development' | 'production'
   cwd?: string
   tamaguiInclude?: (path: string) => boolean
-  tamaguiOptions: {
-    // user options
-    themesFile?: string
-    evaluateVars?: boolean
-    evaluateImportsWhitelist?: string[]
-    exclude?: RegExp
-    mediaQueries?: any
-  }
+  tamaguiOptions: any
   resolve?: Webpack.ResolveOptions
   htmlOptions?: Object
   // pwaOptions?: WebpackPwaManifest.ManifestOptions

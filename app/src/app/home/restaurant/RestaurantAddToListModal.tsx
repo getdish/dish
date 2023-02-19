@@ -8,6 +8,7 @@ import { SlantedTitle } from '../../views/SlantedTitle'
 import { graphql, order_by, query, useMutation } from '@dish/graph'
 import {
   AbsoluteYStack,
+  Adapt,
   Button,
   Card,
   Dialog,
@@ -65,17 +66,19 @@ export const RestaurantAddToListModal = graphql(
     console.log('mutation', status)
 
     return (
-      <Dialog sheetBreakpoint="sm" modal>
+      <Dialog modal>
         <Dialog.Trigger asChild>
           <Button>Edit Profile</Button>
         </Dialog.Trigger>
 
-        <Dialog.Sheet modal dismissOnSnapToBottom>
-          <Dialog.Sheet.Frame padding="$4">
-            <Dialog.SheetContents />
-          </Dialog.Sheet.Frame>
-          <Dialog.Sheet.Overlay />
-        </Dialog.Sheet>
+        <Adapt when="sm" platform="touch">
+          <Dialog.Sheet modal dismissOnSnapToBottom>
+            <Dialog.Sheet.Frame padding="$4">
+              <Adapt.Contents />
+            </Dialog.Sheet.Frame>
+            <Dialog.Sheet.Overlay />
+          </Dialog.Sheet>
+        </Adapt>
 
         <Dialog.Portal>
           <Dialog.Overlay
