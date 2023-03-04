@@ -20,7 +20,7 @@ export const RestaurantPeekDishes = memo(
     onChangeTags?: (slugs: string[]) => void
   }) {
     const media = getMedia()
-    const showInitial = media.$xs ? 1 : media.$sm ? 2 : 3
+    const showInitial = media.xs ? 1 : media.sm ? 2 : 3
 
     const { isLoaded, size = 'md' } = props
     const restaurant = queryRestaurant(props.restaurantSlug)[0]

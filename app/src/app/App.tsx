@@ -1,4 +1,3 @@
-// debug
 import { isSSR } from '../constants/constants'
 import { AppIntroLetter } from './AppIntroLetter'
 import AppMap from './AppMap'

@@ -1,4 +1,5 @@
 import { useMemo, useRef } from 'react'
+import { LinearGradient as TLG } from 'tamagui/linear-gradient'
 
 export * from 'tamagui'
 export { useWindowSize } from '@tamagui/use-window-size'
@@ -27,3 +28,5 @@ export const useConstant = <Val>(val: () => Val): Val => {
   }
   return state.current
 }
+
+export const LinearGradient = TLG

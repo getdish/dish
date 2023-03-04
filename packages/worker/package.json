@@ -30,7 +30,7 @@
     "redis": "^3.1.2"
   },
   "devDependencies": {
-    "@tamagui/build": "^1.5.11",
+    "@tamagui/build": "^1.6.3",
     "ava": "^3.15.0"
   }
 }

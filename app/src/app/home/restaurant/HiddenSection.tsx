@@ -1,6 +1,5 @@
 import { AbsoluteXStack, Button, LinearGradient, YStack } from '@dish/ui'
 import React, { useState } from 'react'
-import { StyleSheet } from 'react-native'
 
 export const HiddenSection = (props: {
   children: any

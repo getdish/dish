@@ -41,7 +41,7 @@
     "@dish/helpers-node": "*",
     "@dish/react-test-env": "*",
     "@gqty/cli": "^3.1.0",
-    "@tamagui/build": "^1.5.11",
+    "@tamagui/build": "^1.6.3",
     "@types/node": "^16.11.10",
     "ava": "^3.15.0",
     "localstorage-polyfill": "^1.0.1"
