@@ -296,9 +296,6 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
 
               {
                 test: /\.m?[jt]sx?$/,
-                resolve: {
-                  fullySpecified: false,
-                },
                 include: (file) => {
                   const res = (tamaguiInclude ?? defaultTamaguiInclude)(file)
                   // console.log('including', res, file)
@@ -408,6 +405,13 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
                 exclude: [/\.(mjs|[jt]sx?)$/, /\.html$/, /\.json$/],
                 options: {
                   name: `static/media/[name].${hashFileNamePart}.[ext]`,
+                },
+              },
+
+              {
+                test: /\.m?[jt]sx?$/,
+                resolve: {
+                  fullySpecified: false,
                 },
               },
             ],
