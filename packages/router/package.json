@@ -20,7 +20,7 @@
     "parallel": true
   },
   "dependencies": {
-    "@dish/use-store": "*",
+    "@tamagui/use-store": "^1.26.0",
     "history": "^5.0.0",
     "react": "*",
     "tiny-request-router": "^1.2.2"

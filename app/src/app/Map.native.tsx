@@ -29,7 +29,7 @@ export default function Map({
   showUserLocation,
 }: MapProps) {
   const height = useWindowDimensions().height
-  // const isDrawerAtTop = useStoreInstanceSelector(drawerStore, (x) => x.snapIndexName === 'top')
+  // const isDrawerAtTop = useGlobalStoreSelector(drawerStore, (x) => x.snapIndexName === 'top')
   const drawerHeight = drawerStore.heights[2]
   const [isLoaded, setIsLoaded] = useState(0)
   const paddingVertical = isLoaded ? drawerHeight / 3 : 0

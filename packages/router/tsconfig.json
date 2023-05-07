@@ -7,8 +7,5 @@
     "src"
   ],
   "references": [
-    {
-      "path": "../use-store"
-    }
   ]
 }

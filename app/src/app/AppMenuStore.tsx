@@ -1,4 +1,4 @@
-import { Store, createStore } from '@dish/use-store'
+import { Store, createStore } from '@tamagui/use-store'
 
 class AppMenuStore extends Store {
   isVisible = false

@@ -5,7 +5,7 @@ import { userStore } from './userStore'
 import { LinkButton } from './views/LinkButton'
 import { LogoColor } from './views/Logo'
 import { Spacer, YStack, useTheme } from '@dish/ui'
-import { useStore } from '@dish/use-store'
+import { useStore } from '@tamagui/use-store'
 import React, { memo } from 'react'
 
 export const AppIntroLogin = memo(() => {

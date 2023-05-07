@@ -33,8 +33,8 @@ import {
   useMedia,
   useThemeName,
 } from '@dish/ui'
-import { reaction, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import loadable from '@loadable/component'
+import { reaction, useGlobalStore, useGlobalStoreSelector } from '@tamagui/use-store'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 
 export const useAppMapVerticalPad = () => {
@@ -45,13 +45,13 @@ export const useAppMapVerticalPad = () => {
 export default memo(function AppMap() {
   const appMapStore = useAppMapStore()
   const { features, results, showRank, region, hovered, zoomOnHover } = appMapStore
-  const isOnHome = useStoreInstanceSelector(homeStore, (x) => x.currentStateType === 'home')
+  const isOnHome = useGlobalStoreSelector(homeStore, (x) => x.currentStateType === 'home')
   const hideRegions = !isOnHome || appMapStore.hideRegions
   const media = useMedia()
   const mapSize = useMapSize(media.sm)
   const { paddingLeft } = useDebounceValue(mapSize, 100)
-  const showUserLocation = useStoreInstanceSelector(appMapStore, (x) => !!x.userLocation)
-  const appMap = useStoreInstance(appMapStore)
+  const showUserLocation = useGlobalStoreSelector(appMapStore, (x) => !!x.userLocation)
+  const appMap = useGlobalStore(appMapStore)
   const show = true //useAppShouldShow('map')
   const position = appMap.currentPosition
   const { center, span } = position

@@ -1,9 +1,8 @@
-import { Store, createStore, useStoreInstance } from '@dish/use-store'
-import { debounce } from 'lodash'
-
 import { inputClearSelection, inputGetNode, inputIsTextSelected } from '../helpers/input'
 import { autocompletesStore } from './AutocompletesStore'
 import { getSearchPageStore } from './home/search/SearchPageStore'
+import { Store, createStore, useGlobalStore } from '@tamagui/use-store'
+import { debounce } from 'lodash'
 
 export class InputStore extends Store<{ name: 'location' | 'search' }> {
   node: HTMLInputElement | null = null
@@ -50,9 +49,9 @@ export class InputStore extends Store<{ name: 'location' | 'search' }> {
 }
 
 export const inputStoreLocation = createStore(InputStore, { name: 'location' })
-export const useInputStoreLocation = () => useStoreInstance(inputStoreLocation)
+export const useInputStoreLocation = () => useGlobalStore(inputStoreLocation)
 export const inputStoreSearch = createStore(InputStore, { name: 'search' })
-export const useInputStoreSearch = () => useStoreInstance(inputStoreSearch)
+export const useInputStoreSearch = () => useGlobalStore(inputStoreSearch)
 
 const setNodeDebounced = debounce((inputStore, view: any) => {
   if (!view) return

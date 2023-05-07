@@ -1,8 +1,7 @@
-import { UNWRAP_PROXY, reaction } from '@dish/use-store'
-import { useEffect } from 'react'
-
 import { autocompletesStore } from './AutocompletesStore'
 import { InputStore } from './inputStore'
+import { UNWRAP_PROXY, reaction } from '@tamagui/use-store'
+import { useEffect } from 'react'
 
 export const useAutocompleteFocusWebNonTouch = (inputStore: InputStore) => {
   useEffect(() => {

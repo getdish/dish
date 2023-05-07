@@ -5,7 +5,7 @@ import { Image } from './views/Image'
 import { LinkButton } from './views/LinkButton'
 import { graphql } from '@dish/graph'
 import { Card, Spacer, Text, XStack, YStack } from '@dish/ui'
-import { useStoreInstanceSelector } from '@dish/use-store'
+import { useGlobalStoreSelector } from '@tamagui/use-store'
 import React, { memo, useEffect, useState } from 'react'
 
 export const AppMapRestaurantPeek = memo(
@@ -15,7 +15,7 @@ export const AppMapRestaurantPeek = memo(
 
     // const home = useHomeStore()
     // const [slug, setSlug] = useState('')
-    // const { selectedSlug, hoveredSlug } = useStoreInstanceSelector(appMapStore, (x) => ({
+    // const { selectedSlug, hoveredSlug } = useGlobalStoreSelector(appMapStore, (x) => ({
     //   selectedSlug: x.selected?.slug || '',
     //   hoveredSlug: x.hovered?.slug || '',
     // }))

@@ -1,13 +1,12 @@
-import { series, sleep } from '@dish/async'
-import { isSafari } from '@dish/helpers'
-import { YStack, useConstant, useGet } from '@dish/ui'
-import { useSelector } from '@dish/use-store'
-import React from 'react'
-import { PanResponder, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
-
 import { autocompletesStore } from './AutocompletesStore'
 import { drawerStore } from './drawerStore'
 import { inputStoreLocation, inputStoreSearch } from './inputStore'
+import { series, sleep } from '@dish/async'
+import { isSafari } from '@dish/helpers'
+import { YStack, useConstant, useGet } from '@dish/ui'
+import { useSelector } from '@tamagui/use-store'
+import React from 'react'
+import { PanResponder, StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
 
 export let isTouchingSearchBar = false
 

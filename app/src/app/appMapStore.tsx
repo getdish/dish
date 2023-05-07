@@ -22,12 +22,7 @@ import {
   resolved,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import {
-  Store,
-  createStore,
-  useStoreInstance,
-  useStoreInstanceSelector,
-} from '@dish/use-store'
+import { Store, createStore, useGlobalStore, useGlobalStoreSelector } from '@tamagui/use-store'
 import bbox from '@turf/bbox'
 import getCenter from '@turf/center'
 import { GeoJSONObject, Geometries, featureCollection } from '@turf/helpers'
@@ -464,9 +459,9 @@ export type MapHoveredRestaurant = RestaurantOnlyIds & {
   via: 'map' | 'list'
 }
 
-export const useAppMapStore = () => useStoreInstance(appMapStore)
+export const useAppMapStore = () => useGlobalStore(appMapStore)
 export const useAppMapKey = <A extends keyof AppMapStore>(key: A) =>
-  useStoreInstanceSelector(appMapStore, (x) => x[key])
+  useGlobalStoreSelector(appMapStore, (x) => x[key])
 
 export const useZoomLevel = () => {
   const position = useAppMapKey('position')

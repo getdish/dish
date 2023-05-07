@@ -14,12 +14,7 @@ import {
   userFetchSimple,
 } from '@dish/graph'
 import { Toast } from '@dish/ui'
-import {
-  Store,
-  createStore,
-  useStoreInstance,
-  useStoreInstanceSelector,
-} from '@dish/use-store'
+import { Store, createStore, useGlobalStore, useGlobalStoreSelector } from '@tamagui/use-store'
 import { crossLocalStorage } from 'cross-local-storage'
 
 type ThemeName = 'dark' | 'light' | 'auto'
@@ -218,9 +213,9 @@ class UserStore extends Store {
 export const userStore = createStore(UserStore)
 window['userStore'] = userStore
 export const useUserStore = () => {
-  return useStoreInstance(userStore)
+  return useGlobalStore(userStore)
 }
 
 export const useUsername = () => {
-  return useStoreInstanceSelector(userStore, (x) => x.user?.username)
+  return useGlobalStoreSelector(userStore, (x) => x.user?.username)
 }

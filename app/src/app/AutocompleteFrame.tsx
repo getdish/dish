@@ -2,12 +2,12 @@ import { AutocompleteTarget, autocompletesStore } from './AutocompletesStore'
 import { StackDrawer } from './views/StackDrawer'
 import { isSafari } from '@dish/helpers'
 import { YStack, useDebounceValue, useIsTouchDevice } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
+import { useGlobalStore } from '@tamagui/use-store'
 import React, { memo } from 'react'
 
 export const AutocompleteFrame = memo(
   ({ children, target }: { children: any; target: AutocompleteTarget }) => {
-    const autocompletes = useStoreInstance(autocompletesStore)
+    const autocompletes = useGlobalStore(autocompletesStore)
     const isShowing = autocompletes.visible && autocompletes.target === target
     // const media = useMedia()
 

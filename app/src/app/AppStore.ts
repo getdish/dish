@@ -1,4 +1,4 @@
-import { Store, createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import { Store, createStore, useGlobalStore, useGlobalStoreSelector } from '@tamagui/use-store'
 
 class AppStore extends Store {
   show = {
@@ -13,6 +13,6 @@ class AppStore extends Store {
 }
 
 export const appStore = createStore(AppStore)
-export const useAppStore = () => useStoreInstance(appStore)
+export const useAppStore = () => useGlobalStore(appStore)
 export const useAppShouldShow = (key: keyof AppStore['show']) =>
-  useStoreInstanceSelector(appStore, (x) => x.show[key])
+  useGlobalStoreSelector(appStore, (x) => x.show[key])

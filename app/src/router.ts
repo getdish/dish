@@ -1,5 +1,5 @@
 import { HistoryItem, NavigateItem as RNavigateItem, Route, Router } from '@dish/router'
-import { createStore, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
+import { createStore, useGlobalStore, useGlobalStoreSelector } from '@tamagui/use-store'
 
 export type DRoutesTable = typeof routes
 export type DRouteName = keyof DRoutesTable
@@ -63,19 +63,19 @@ export const router = createStore(Router, { routes })
 global['router'] = router
 
 export const useRouter = () => {
-  return useStoreInstance(router)
+  return useGlobalStore(router)
 }
 
 export const useRouterCurPage = () => {
-  return useStoreInstanceSelector(router, (router) => router.curPage)
+  return useGlobalStoreSelector(router, (router) => router.curPage)
 }
 
 export const useIsRouteActive = (...names: DRouteName[]) => {
-  return useStoreInstanceSelector(router, (router) => names.includes(router.curPage.name as any))
+  return useGlobalStoreSelector(router, (router) => names.includes(router.curPage.name as any))
 }
 
 export const useRoute = <N extends DRouteName>(name: N): HistoryItem<N> => {
-  return useStoreInstanceSelector(
+  return useGlobalStoreSelector(
     router,
     (router) => (router.curPage.name === name ? router.curPage : null) as HistoryItem<N>
   )

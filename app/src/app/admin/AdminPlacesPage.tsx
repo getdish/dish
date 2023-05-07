@@ -8,7 +8,7 @@ import { VerticalColumn } from './VerticalColumn'
 import { graphql, order_by, query } from '@dish/graph'
 import { fetchBertSentiment } from '@dish/helpers'
 import { Separator, Text, XStack, YStack, useDebounceValue } from '@dish/ui'
-import { Store, useStore } from '@dish/use-store'
+import { Store, useStore } from '@tamagui/use-store'
 import React, { useEffect, useState } from 'react'
 import { ScrollView, TextInput } from 'react-native'
 
@@ -128,13 +128,19 @@ const Restaurantentiment = (props: { text: string }) => {
     <YStack space="$6">
       <SmallTitle>Sentiment</SmallTitle>
 
-      <TextInput style={{ borderWidth: 1, padding: 5 }} onChangeText={(text) => setAspect(text)} />
+      <TextInput
+        style={{ borderWidth: 1, padding: 5 }}
+        onChangeText={(text) => setAspect(text)}
+      />
 
       <Separator />
 
       {sentiments.map(({ sentiment, sentence }) => {
         return (
-          <Text backgroundColor={sentiment === 'Negative' ? '$red10' : '$green10'} key={sentence}>
+          <Text
+            backgroundColor={sentiment === 'Negative' ? '$red10' : '$green10'}
+            key={sentence}
+          >
             {sentence} <strong>({sentiment})</strong>.
           </Text>
         )
@@ -211,76 +217,78 @@ const RestaurantList = () => {
   )
 }
 
-const RestaurantsListContent = graphql(({ search, column }: { search: string; column: number }) => {
-  const adminStore = useStore(AdminRestaurantStore)
-  const { selectedCity } = adminStore
-  const limit = 200
-  const [page, setPage] = useState(1)
-  const results = query.restaurant({
-    where: {
-      name: {
-        ...(!!search && {
-          _ilike: `%${search}%`,
-        }),
-        _neq: '',
-      },
-      ...(selectedCity &&
-        'center' in selectedCity && {
-          location: {
-            _st_d_within: {
-              // search outside current bounds a bit
-              distance: 1,
-              from: {
-                type: 'Point',
-                coordinates: [selectedCity.center?.lng, selectedCity.center?.lat],
+const RestaurantsListContent = graphql(
+  ({ search, column }: { search: string; column: number }) => {
+    const adminStore = useStore(AdminRestaurantStore)
+    const { selectedCity } = adminStore
+    const limit = 200
+    const [page, setPage] = useState(1)
+    const results = query.restaurant({
+      where: {
+        name: {
+          ...(!!search && {
+            _ilike: `%${search}%`,
+          }),
+          _neq: '',
+        },
+        ...(selectedCity &&
+          'center' in selectedCity && {
+            location: {
+              _st_d_within: {
+                // search outside current bounds a bit
+                distance: 1,
+                from: {
+                  type: 'Point',
+                  coordinates: [selectedCity.center?.lng, selectedCity.center?.lat],
+                },
               },
             },
-          },
-        }),
-    },
-    limit: limit,
-    offset: (page - 1) * limit,
-    order_by: [
-      {
-        name: order_by.asc,
+          }),
       },
-    ],
-  })
+      limit: limit,
+      offset: (page - 1) * limit,
+      order_by: [
+        {
+          name: order_by.asc,
+        },
+      ],
+    })
 
-  return (
-    <ScrollView style={{ paddingBottom: 100 }}>
-      {results.map((item, index) => {
-        return (
-          <AdminListItem
-            key={item.id}
-            text={item.name ?? 'no name'}
-            id="restaurant"
-            row={index}
-            column={column}
-            onSelect={() => {
-              adminStore.setSelectedRestaurantId(item.id)
+    return (
+      <ScrollView style={{ paddingBottom: 100 }}>
+        {results.map((item, index) => {
+          return (
+            <AdminListItem
+              key={item.id}
+              text={item.name ?? 'no name'}
+              id="restaurant"
+              row={index}
+              column={column}
+              onSelect={() => {
+                adminStore.setSelectedRestaurantId(item.id)
+              }}
+            />
+          )
+        })}
+
+        {results.length === limit && (
+          <XStack
+            height={32}
+            padding={6}
+            hoverStyle={{
+              backgroundColor: '#f2f2f2',
             }}
-          />
-        )
-      })}
-
-      {results.length === limit && (
-        <XStack
-          height={32}
-          padding={6}
-          hoverStyle={{
-            backgroundColor: '#f2f2f2',
-          }}
-          onPress={() => {
-            setPage((x) => x + 1)
-          }}
-        >
-          <Text>Next page</Text>
-        </XStack>
-      )}
-    </ScrollView>
-  )
-})
+            onPress={() => {
+              setPage((x) => x + 1)
+            }}
+          >
+            <Text>Next page</Text>
+          </XStack>
+        )}
+      </ScrollView>
+    )
+  }
+)
 
 const PlaceList = () => {
   const [searchRaw, setSearch] = useState('')

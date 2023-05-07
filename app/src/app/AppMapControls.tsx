@@ -5,17 +5,17 @@ import { homeStore } from './homeStore'
 import { pagesStore } from './pagesStore'
 import { OverlayLinkButton } from './views/OverlayLinkButton'
 import { Spacer, XStack } from '@dish/ui'
-import { useSelector, useStoreInstance, useStoreInstanceSelector } from '@dish/use-store'
 import { Minus, Plus, RefreshCcw, ZoomOut } from '@tamagui/lucide-icons'
+import { useGlobalStore, useGlobalStoreSelector, useSelector } from '@tamagui/use-store'
 import React, { memo } from 'react'
 
 // import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const AppMapControls = memo(() => {
   const showSearchHere = useShowSearchHere()
-  const appMap = useStoreInstance(appMapStore)
+  const appMap = useGlobalStore(appMapStore)
   // const safeArea = useSafeAreaInsets()
-  const isHoverZoomed = useStoreInstanceSelector(
+  const isHoverZoomed = useGlobalStoreSelector(
     appMapStore,
     (x) => x.hovered?.via === 'list' && x.zoomOnHover
   )

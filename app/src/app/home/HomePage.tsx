@@ -27,8 +27,8 @@ import {
   useDebounce,
   useMedia,
 } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
 import { Heart } from '@tamagui/lucide-icons'
+import { useGlobalStore } from '@tamagui/use-store'
 import React, { Suspense, memo, useEffect, useState } from 'react'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import SwipeableItem, { useSwipeableItemParams } from 'react-native-swipeable-item'
@@ -67,7 +67,7 @@ const HomePageContent = (props: Props) => {
   const region = regionResponse.data
 
   // const [position, setPosition] = useState<MapPosition>(initialPosition)
-  const { results } = useStoreInstance(homePageStore)
+  const { results } = useGlobalStore(homePageStore)
 
   // useEffect(() => {
   //   return series([

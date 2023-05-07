@@ -22,12 +22,7 @@ import {
 import { NavigableTag } from '../types/tagTypes'
 import { appMapStore } from './appMapStore'
 import { HistoryItem } from '@dish/router'
-import {
-  Store,
-  createStore,
-  useStoreInstance,
-  useStoreInstanceSelector,
-} from '@dish/use-store'
+import { Store, createStore, useGlobalStore, useGlobalStoreSelector } from '@tamagui/use-store'
 import _, { clamp, findLast } from 'lodash'
 import { Keyboard } from 'react-native'
 
@@ -594,18 +589,18 @@ export const useHomeStore = (debug?: boolean): HomeStore => {
   if (debug) {
     debugger
   }
-  return useStoreInstance(homeStore, debug)
+  return useGlobalStore(homeStore, debug)
 }
 
 export const useHomeStoreSelector = <A extends (store: HomeStore) => any>(
   selector: A,
   debug?: boolean
 ): A extends (store: HomeStore) => infer B ? B : unknown => {
-  return useStoreInstanceSelector(homeStore, selector, debug)
+  return useGlobalStoreSelector(homeStore, selector, debug)
 }
 
 export const useLastHomeState = <Type extends HomeStateItem['type']>(...types: Type[]) => {
-  return useStoreInstanceSelector(homeStore, (x) => {
+  return useGlobalStoreSelector(homeStore, (x) => {
     if (!types.length) {
       return x.states[x.states.length - 1]
     }
@@ -614,15 +609,15 @@ export const useLastHomeState = <Type extends HomeStateItem['type']>(...types: T
 }
 
 export const useHomeCurrentHomeType = () => {
-  return useStoreInstanceSelector(homeStore, (x) => x.currentState.type)
+  return useGlobalStoreSelector(homeStore, (x) => x.currentState.type)
 }
 
 export const useIsHomeTypeActive = (type?: HomeStateItem['type']) => {
-  return useStoreInstanceSelector(homeStore, (x) => x.currentState.type === type)
+  return useGlobalStoreSelector(homeStore, (x) => x.currentState.type === type)
 }
 
 export const useHomeStateById = <Type extends HomeStateItem>(id: string) => {
-  return useStoreInstanceSelector(homeStore, (x) => x.allStates[id]) as Type
+  return useGlobalStoreSelector(homeStore, (x) => x.allStates[id]) as Type
 }
 
 const uid = () => `${Math.random()}`.replace('.', '')

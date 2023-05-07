@@ -1,4 +1,4 @@
-import { Store, useStore, useStoreSelector } from '@dish/use-store'
+import { Store, useStore, useStoreSelector } from '@tamagui/use-store'
 import { createBrowserHistory, createMemoryHistory } from 'history'
 import * as React from 'react'
 import { createContext, useContext } from 'react'
@@ -361,7 +361,10 @@ export function getPathFromParams(
   }
 
   if (replaceSplatParams.length) {
-    path = path.replace('*', replaceSplatParams.map((key) => `${key}/${params[key]}`).join('/'))
+    path = path.replace(
+      '*',
+      replaceSplatParams.map((key) => `${key}/${params[key]}`).join('/')
+    )
   }
 
   return path
@@ -403,7 +406,9 @@ export type ProvideRouterProps = {
 
 export function ProvideRouter(props: ProvideRouterProps) {
   return (
-    <RouterPropsContext.Provider value={props.routes}>{props.children}</RouterPropsContext.Provider>
+    <RouterPropsContext.Provider value={props.routes}>
+      {props.children}
+    </RouterPropsContext.Provider>
   )
 }
 

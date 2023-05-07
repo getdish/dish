@@ -5,10 +5,10 @@ import { StackDrawerControlsPortal } from '../views/StackDrawer'
 import { AppFloatingTagMenuBar } from './AppFloatingTagMenuBar'
 import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
 import { Spacer, Square, YStack, useThemeName } from '@dish/ui'
-import { useReaction, useStoreInstance } from '@dish/use-store'
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { BlurView } from '@react-native-community/blur'
 import { Blur, Canvas, Group, RoundedRect, Skia } from '@shopify/react-native-skia'
+import { useGlobalStore, useReaction } from '@tamagui/use-store'
 import React, { useEffect, useState } from 'react'
 import { Keyboard, StyleSheet, useWindowDimensions } from 'react-native'
 import { useSharedValue } from 'react-native-reanimated'
@@ -19,7 +19,7 @@ let hasOpened = false
 const isRemoteDebugging = typeof DedicatedWorkerGlobalScope !== 'undefined'
 
 export const HomeDrawerSmall = (props: any) => {
-  const { visible: autocompleteVisible } = useStoreInstance(autocompletesStore)
+  const { visible: autocompleteVisible } = useGlobalStore(autocompletesStore)
   const [index, setIndex] = useState(1)
   const [bottomSheet, setBottomSheet] = useState<BottomSheetModal>()
   const dimensions = useWindowDimensions()

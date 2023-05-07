@@ -78,6 +78,8 @@ export const StackDrawer = ({
         justifyContent="flex-end"
         shadowRadius={9}
         shadowColor="$shadowColor"
+        bc="$background"
+        pos="relative"
       >
         {disabled ? null : (
           <PortalItem hostName="stack-drawer-controls">{controls}</PortalItem>
@@ -94,8 +96,8 @@ export const StackDrawer = ({
           overflow="hidden"
           {...props}
         >
-          <YStack fullscreen backgroundColor="$colorMid" o={isSafari ? 0.5 : 0.9} />
-          <YStack fullscreen backgroundColor="$backgroundSoft" o={isSafari ? 0.5 : 0.9} />
+          <YStack fullscreen backgroundColor="$color6" o={isSafari ? 0.5 : 0.9} />
+          <YStack fullscreen backgroundColor="$color2" o={isSafari ? 0.5 : 0.9} />
           <YStack zi={100}>
             <HomeSuspense fallback={fallback ?? <LoadingItems />}>
               {isLoaded ? children : null}

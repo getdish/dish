@@ -4,8 +4,8 @@ import { AppMapSpotlight } from './AppMapSpotlight'
 import { appMapStore } from './appMapStore'
 import { drawerStore } from './drawerStore'
 import { Button, Spacer, XStack, YStack, useTheme } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
 import { Navigation } from '@tamagui/lucide-icons'
+import { useGlobalStore } from '@tamagui/use-store'
 import React, { memo } from 'react'
 import { Alert, SafeAreaView } from 'react-native'
 import Animated, {
@@ -16,7 +16,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 export default memo(function AppMapContainer(props: { children: React.ReactNode }) {
-  const drawer = useStoreInstance(drawerStore)
+  const drawer = useGlobalStore(drawerStore)
   const theme = useTheme()
   const y = useSharedValue(0)
 

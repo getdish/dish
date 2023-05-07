@@ -15,7 +15,7 @@ import {
   search,
 } from '@dish/graph'
 import { isPresent } from '@dish/helpers'
-import { Store, createStore, createUseStore, useStoreInstance } from '@dish/use-store'
+import { Store, createStore, createUseStore, useGlobalStore } from '@tamagui/use-store'
 
 export type ActiveEvent = 'key' | 'pin' | 'hover' | null
 

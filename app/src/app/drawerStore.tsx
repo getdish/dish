@@ -1,6 +1,6 @@
 import { getWindowHeight } from '../helpers/getWindow'
 import { autocompletesStore } from './AutocompletesStore'
-import { Store, createStore } from '@dish/use-store'
+import { Store, createStore } from '@tamagui/use-store'
 import { Animated } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 

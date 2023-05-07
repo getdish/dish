@@ -16,13 +16,13 @@ import { useHomeStore } from './homeStore'
 import { series, sleep } from '@dish/async'
 import { order_by, query, resolved } from '@dish/graph'
 import { Theme, Toast, useDebounceValue, useGet } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
+import { useGlobalStore } from '@tamagui/use-store'
 import { groupBy } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useMemo } from 'react'
 
 export const AppAutocompleteSearch = memo(() => {
   const home = useHomeStore()
-  const store = useStoreInstance(autocompleteSearchStore)
+  const store = useGlobalStore(autocompleteSearchStore)
   const { lastActiveTags, currentSearchQuery } = home
   const searchState = useMemo(
     () => [store.query.trim(), lastActiveTags] as const,

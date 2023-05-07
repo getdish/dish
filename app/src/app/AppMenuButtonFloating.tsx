@@ -2,16 +2,16 @@ import { zIndexDrawer } from '../constants/constants'
 import { AppMenuContents } from './AppMenuContents'
 import { appMenuStore } from './AppMenuStore'
 import { AbsoluteYStack, Button, Theme, useMedia } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/lucide-icons'
 import { Sheet } from '@tamagui/sheet'
+import { useGlobalStore } from '@tamagui/use-store'
 import React, { memo } from 'react'
 
 // import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const AppMenuButtonFloating = memo(() => {
   const media = useMedia()
-  const appMenu = useStoreInstance(appMenuStore)
+  const appMenu = useGlobalStore(appMenuStore)
   // const safeArea = useSafeAreaInsets()
 
   if (!(media.sm || media.xs)) {

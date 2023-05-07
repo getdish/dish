@@ -206,7 +206,6 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
         <>
           <SmallButton
             theme="red"
-            accessible
             accessibilityRole="button"
             icon={<Trash color="red" size={16} />}
             onPress={() => {
@@ -218,7 +217,6 @@ export const RestaurantReviewEdit = graphql((props: RestaurantReviewProps) => {
           <Spacer size="$2" />
           <SmallButton
             theme="active"
-            accessible
             accessibilityRole="button"
             disabled={isSaved}
             alignSelf="center"

@@ -2,12 +2,12 @@ import { AppMenuContents } from './AppMenuContents'
 import { AppMenuLinkButton } from './AppMenuLinkButton'
 import { appMenuStore } from './AppMenuStore'
 import { Adapt, Popover, YStack } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
 import { Menu } from '@tamagui/lucide-icons'
+import { useGlobalStore } from '@tamagui/use-store'
 import React, { memo } from 'react'
 
 export const AppMenuButton = memo(() => {
-  const appMenu = useStoreInstance(appMenuStore)
+  const appMenu = useGlobalStore(appMenuStore)
   const showUserMenu = appMenu.isVisible
 
   return (

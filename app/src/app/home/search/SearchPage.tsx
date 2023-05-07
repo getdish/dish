@@ -43,8 +43,8 @@ import {
   YStackProps,
   useDebounceEffect,
 } from '@dish/ui'
-import { reaction } from '@dish/use-store'
 import { ArrowUp } from '@tamagui/lucide-icons'
+import { reaction } from '@tamagui/use-store'
 import React, {
   Suspense,
   forwardRef,

@@ -26,9 +26,9 @@
   },
   "dependencies": {
     "@dish/helpers": "*",
-    "@dish/use-store": "*",
     "@gqty/logger": "^2.0.2",
     "@gqty/react": "^2.1.0",
+    "@tamagui/use-store": "^1.26.0",
     "cross-local-storage": "^0.0.5",
     "esbuild-register": "^3.3.3",
     "gqty": "^2.4.0-alpha-c5b89dbd.0",

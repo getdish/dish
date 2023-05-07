@@ -9,7 +9,7 @@ import { StackViewCloseButton } from '../../views/StackViewCloseButton'
 import { RestaurantReviewEdit } from '../restaurant/RestaurantReview'
 import { graphql } from '@dish/graph'
 import { LoadingItems, Modal, Text, Toast, YStack } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
+import { useGlobalStore } from '@tamagui/use-store'
 import React, { Suspense, memo } from 'react'
 import { ScrollView } from 'react-native'
 
@@ -20,7 +20,7 @@ export default memo(function RestaurantReviewPage() {
 })
 
 function RestaurantReviewPageContent() {
-  const store = useStoreInstance(homeStore)
+  const store = useGlobalStore(homeStore)
   const state = store.getLastStateByType('restaurantReview')
   return (
     <Modal width="98%" maxHeight="100%" maxWidth={720} open>

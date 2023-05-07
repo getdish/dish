@@ -1,4 +1,4 @@
-import { Store, createUseStore } from '@dish/use-store'
+import { Store, createUseStore } from '@tamagui/use-store'
 
 export class ColumnSelectionStore extends Store<{ id: string }> {
   column = 0

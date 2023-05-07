@@ -27,8 +27,8 @@ import {
   useOnMount,
   useTheme,
 } from '@dish/ui'
-import { getStore, selector } from '@dish/use-store'
 import { Loader, X } from '@tamagui/lucide-icons'
+import { getStore, selector } from '@tamagui/use-store'
 import React, { memo, useCallback, useEffect, useRef } from 'react'
 import { TextInput } from 'react-native'
 

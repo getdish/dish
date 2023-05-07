@@ -93,7 +93,6 @@ export const RestaurantOverview = memo(
               <Paragraph
                 className="break-word"
                 display="flex"
-                selectable
                 pointerEvents="auto"
                 size={size}
               >

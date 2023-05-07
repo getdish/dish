@@ -1,4 +1,4 @@
-import { Store } from '@dish/use-store'
+import { Store } from '@tamagui/use-store'
 
 export class IntroModalStore extends Store {
   hidden = true

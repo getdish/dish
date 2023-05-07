@@ -1,14 +1,13 @@
-import { graphql, order_by, query } from '@dish/graph'
-import { Text, XStack, YStack, useDebounceValue } from '@dish/ui'
-import { Store, useStore } from '@dish/use-store'
-import React, { useState } from 'react'
-import { ScrollView } from 'react-native'
-
 import { useQueryPaginated } from '../hooks/useQueryPaginated'
 import { PaginationNav } from '../views/PaginationNav'
 import { AdminListItem } from './AdminListItem'
 import { AdminSearchableColumn } from './AdminSearchableColumn'
 import { VerticalColumn } from './VerticalColumn'
+import { graphql, order_by, query } from '@dish/graph'
+import { Text, XStack, YStack, useDebounceValue } from '@dish/ui'
+import { Store, useStore } from '@tamagui/use-store'
+import React, { useState } from 'react'
+import { ScrollView } from 'react-native'
 
 export class AdminUsersStore extends Store {
   selectedUserId = ''

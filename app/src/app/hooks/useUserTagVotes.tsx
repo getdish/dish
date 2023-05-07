@@ -1,3 +1,5 @@
+import { getFullTags } from '../../helpers/getFullTags'
+import { useUserStore, userStore } from '../userStore'
 import {
   Review,
   order_by,
@@ -7,12 +9,14 @@ import {
   useRefetch,
 } from '@dish/graph'
 import { Toast, useLazyEffect } from '@dish/ui'
-import { Store, createStore, useStoreInstanceSelector, useStoreSelector } from '@dish/use-store'
+import {
+  Store,
+  createStore,
+  useGlobalStoreSelector,
+  useStoreSelector,
+} from '@tamagui/use-store'
 import { debounce } from 'lodash'
 import { useCallback, useEffect } from 'react'
-
-import { getFullTags } from '../../helpers/getFullTags'
-import { useUserStore, userStore } from '../userStore'
 
 export type VoteNumber = -1 | 0 | 1 | 2 | 3 | 4 | 5
 
@@ -68,7 +72,10 @@ const writeVote = debounce(async (tagSlug: string, restaurantId: string, vote: V
 })
 
 const upsertReview = async (review: Partial<Review>) => {
-  await reviewUpsert([review], review_constraint.review_username_restauarant_id_tag_id_type_key)
+  await reviewUpsert(
+    [review],
+    review_constraint.review_username_restauarant_id_tag_id_type_key
+  )
 }
 
 export type UserTagVotesProps = {
@@ -78,7 +85,7 @@ export type UserTagVotesProps = {
 }
 
 const useTagVotes = (rid: string, tagSlugs: string[]) => {
-  return useStoreInstanceSelector(tagVotesStore, (s) => {
+  return useGlobalStoreSelector(tagVotesStore, (s) => {
     for (const slug of tagSlugs) {
       if (s.votesByRestaurant[rid]?.[slug]) {
         return s.votesByRestaurant[rid][slug]

@@ -198,7 +198,7 @@ const TagButtonInner = (props: TagButtonProps) => {
         }}
       />
     ) : (
-      <Paragraph selectable={false} pointerEvents="none" fontSize={fontSize}>
+      <Paragraph userSelect="none" pointerEvents="none" fontSize={fontSize}>
         {icon}
       </Paragraph>
     )
@@ -275,7 +275,7 @@ const TagButtonInner = (props: TagButtonProps) => {
           fontWeight={fontWeight || '400'}
           // color={color || theme.color}
           pointerEvents="none"
-          selectable={false}
+          userSelect="none"
           o={0.6}
         >
           {tagDisplayName(name)}

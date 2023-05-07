@@ -1,13 +1,13 @@
 import { autocompletesStore } from '../AutocompletesStore'
 import { HomeTopSearches } from './HomeTopSearches'
 import { XStack, useMedia } from '@dish/ui'
-import { useStoreInstanceSelector } from '@dish/use-store'
+import { useGlobalStoreSelector } from '@tamagui/use-store'
 import React, { memo } from 'react'
 import { ScrollView } from 'react-native'
 
 export const AppFloatingTagMenuBar = memo(() => {
   const media = useMedia()
-  const isShowingLocationAutocomplete = useStoreInstanceSelector(
+  const isShowingLocationAutocomplete = useGlobalStoreSelector(
     autocompletesStore,
     (x) => x.visible && x.target === 'location'
   )

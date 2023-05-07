@@ -7,8 +7,8 @@ import { useUserStore } from './userStore'
 import { SmallCircleButton } from './views/CloseButton'
 import { DarkModal } from './views/DarkModal'
 import { AbsoluteYStack, Text } from '@dish/ui'
-import { useStore } from '@dish/use-store'
 import { Home } from '@tamagui/lucide-icons'
+import { useStore } from '@tamagui/use-store'
 import React, { memo, useLayoutEffect } from 'react'
 
 export const AppIntroLetter = memo(() => {

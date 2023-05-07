@@ -1,5 +1,5 @@
 import { RestaurantOnlyIdsPartial } from '@dish/graph'
-import { Store, createStore } from '@dish/use-store'
+import { Store, createStore } from '@tamagui/use-store'
 
 class HomePageStore extends Store {
   results: RestaurantOnlyIdsPartial[] = []

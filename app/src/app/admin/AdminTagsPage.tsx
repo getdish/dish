@@ -1,3 +1,10 @@
+import { queryTag } from '../../queries/queryTag'
+import { useQueryPaginated } from '../hooks/useQueryPaginated'
+import { PaginationNav } from '../views/PaginationNav'
+import { SmallButton } from '../views/SmallButton'
+import { AdminListItem, AdminListItemProps } from './AdminListItem'
+import { ColumnHeader } from './ColumnHeader'
+import { VerticalColumn } from './VerticalColumn'
 import {
   Tag,
   TagRecord,
@@ -12,19 +19,19 @@ import {
   tagUpsert,
   useRefetch,
 } from '@dish/graph'
-import { LoadingItems, Text, Toast, XStack, YStack, useDebounce, useDebounceValue } from '@dish/ui'
-import { Store, useStore, useStoreSelector } from '@dish/use-store'
+import {
+  LoadingItems,
+  Text,
+  Toast,
+  XStack,
+  YStack,
+  useDebounce,
+  useDebounceValue,
+} from '@dish/ui'
+import { Store, useStore, useStoreSelector } from '@tamagui/use-store'
 import { capitalize } from 'lodash'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { ScrollView, StyleSheet, TextInput } from 'react-native'
-
-import { queryTag } from '../../queries/queryTag'
-import { useQueryPaginated } from '../hooks/useQueryPaginated'
-import { PaginationNav } from '../views/PaginationNav'
-import { SmallButton } from '../views/SmallButton'
-import { AdminListItem, AdminListItemProps } from './AdminListItem'
-import { ColumnHeader } from './ColumnHeader'
-import { VerticalColumn } from './VerticalColumn'
 
 const allTagsTag = { id: '', name: 'all', type: 'lense' } as const
 
@@ -50,7 +57,17 @@ class AdminTagStore extends Store {
     this.draft = { ...this.draft, ...next }
   }
 
-  setSelected({ id, col, name, type }: { id: string; col: number; name: string; type: TagType }) {
+  setSelected({
+    id,
+    col,
+    name,
+    type,
+  }: {
+    id: string
+    col: number
+    name: string
+    type: TagType
+  }) {
     console.log('setting selected', name, type, id)
     this.selectedId = id
     this.selectedByColumn[col] = { name, type }
@@ -509,7 +526,9 @@ const TagCRUDContent = graphql(({ tag, onChange }: TagCRUDProps) => {
           description,
         })),
         ...(subNames.length > 1
-          ? subNames.map((name) => getWikiInfo(name).then((description) => ({ name, description })))
+          ? subNames.map((name) =>
+              getWikiInfo(name).then((description) => ({ name, description }))
+            )
           : []),
       ]).then((results) => {
         if (!unmounted) {

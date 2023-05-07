@@ -13,9 +13,6 @@
       "path": "../helpers"
     },
     {
-      "path": "../use-store"
-    },
-    {
       "path": "../helpers-node"
     },
     {

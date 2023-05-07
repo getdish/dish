@@ -68,9 +68,6 @@
       "path": "../packages/server"
     },
     {
-      "path": "../packages/use-store"
-    },
-    {
       "path": "../packages/ui"
     },
     {

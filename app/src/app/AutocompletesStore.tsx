@@ -1,6 +1,6 @@
 import { AutocompleteItem } from '../helpers/createAutocomplete'
 import { useRouterCurPage } from '../router'
-import { Store, createStore, useStoreInstance } from '@dish/use-store'
+import { Store, createStore, useGlobalStore } from '@tamagui/use-store'
 import { clamp } from 'lodash'
 import { useEffect } from 'react'
 import { Keyboard } from 'react-native'
@@ -77,7 +77,7 @@ export function AutocompleteEffects() {
 }
 
 export const useAppAutocompleteEffects = () => {
-  const autocompletes = useStoreInstance(autocompletesStore)
+  const autocompletes = useGlobalStore(autocompletesStore)
 
   useEffect(() => {
     // debounce to go after press event

@@ -7,11 +7,11 @@ import { HomeDrawer } from './HomeDrawer'
 import { HomeStackView } from './HomeStackView'
 import { HomeStackViewPages } from './HomeStackViewPages'
 import { YStack, isWeb } from '@dish/ui'
-import { useReaction, useStoreInstance } from '@dish/use-store'
+import { useGlobalStore, useReaction } from '@tamagui/use-store'
 import React, { Suspense, memo, useEffect } from 'react'
 
 export const Home = memo(() => {
-  const { visible: autocompleteVisible } = useStoreInstance(autocompletesStore)
+  const { visible: autocompleteVisible } = useGlobalStore(autocompletesStore)
   if (process.env.NODE_ENV === 'development') {
     useEffect(
       () => () => {

@@ -1,6 +1,6 @@
 import { isSSR } from './constants/constants'
 import { client, mutation, query, resolved } from '@dish/graph'
-import * as UseStore from '@dish/use-store'
+import * as UseStore from '@tamagui/use-store'
 import React from 'react'
 
 Error.stackTraceLimit = Infinity

@@ -17,7 +17,7 @@ import {
   YStack,
   useTheme,
 } from '@dish/ui'
-import { Store, useStore } from '@dish/use-store'
+import { Store, useStore } from '@tamagui/use-store'
 import React, { Suspense, memo } from 'react'
 import { StyleSheet } from 'react-native'
 
@@ -101,7 +101,8 @@ const Content = memo(
               })[0]?.source_breakdown,
               restaurant.sources
             )
-          : getSourceBreakdowns(restaurant.source_breakdown?.sources, restaurant.sources)) ?? []
+          : getSourceBreakdowns(restaurant.source_breakdown?.sources, restaurant.sources)) ??
+        []
       ).filter(isPresent)
 
       const imgSizes = {
@@ -132,7 +133,11 @@ const Content = memo(
                     }}
                   />
 
-                  <Text letterSpacing={-1} fontSize={ratingFontSizes[size]} color={theme.color}>
+                  <Text
+                    letterSpacing={-1}
+                    fontSize={ratingFontSizes[size]}
+                    color={theme.color}
+                  >
                     {rating}
                   </Text>
                 </XStack>
@@ -353,7 +358,10 @@ type TagSourceBreakdown = {
 
 const rankingKeys = ['_1', '_2', '_3', '_4', '_5'] as const
 
-function getSourceBreakdowns(sourceBreakdowns?: SourceBreakdowns, sources?: RestaurantSources) {
+function getSourceBreakdowns(
+  sourceBreakdowns?: SourceBreakdowns,
+  sources?: RestaurantSources
+) {
   if (!sourceBreakdowns) {
     return null
   }
@@ -384,7 +392,9 @@ function getSourceBreakdowns(sourceBreakdowns?: SourceBreakdowns, sources?: Rest
         }
       }
       const summary =
-        positive > negative ? breakdown.summaries.reviews.best : breakdown.summaries.reviews.worst
+        positive > negative
+          ? breakdown.summaries.reviews.best
+          : breakdown.summaries.reviews.worst
       const sentence = summary
         ? ellipseText(summary, {
             maxLength: 115,

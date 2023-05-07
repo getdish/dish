@@ -3,14 +3,14 @@ import { autocompletesStore } from './AutocompletesStore'
 import { homeStore, useHomeStoreSelector } from './homeStore'
 import { Link } from './views/Link'
 import { YStack, useTheme } from '@dish/ui'
-import { useStoreInstance } from '@dish/use-store'
 import { ArrowUp, ChevronLeft } from '@tamagui/lucide-icons'
+import { useGlobalStore } from '@tamagui/use-store'
 import React, { memo } from 'react'
 
 export const SearchBarActionButton = memo(() => {
   const upRoute = useHomeStoreSelector((x) => x.upRoute)
   const isOnHome = useHomeStoreSelector((x) => x.currentStateType === 'home')
-  const autocompletes = useStoreInstance(autocompletesStore)
+  const autocompletes = useGlobalStore(autocompletesStore)
   const showAutocomplete = autocompletes.visible
   const isDisabled = !showAutocomplete && isOnHome
   const Icon = (() => {

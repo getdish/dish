@@ -4,7 +4,7 @@ import { AutocompleteItemView } from './AutocompleteItemView'
 import { AutocompleteStore, AutocompleteTarget } from './AutocompletesStore'
 import { usePageFinishedLoading } from './usePageFinishedLoading'
 import { Spacer, Theme, YStack, useMedia } from '@dish/ui'
-import { useStore } from '@dish/use-store'
+import { useStore } from '@tamagui/use-store'
 import React, { memo } from 'react'
 
 export const AutocompleteResults = memo(

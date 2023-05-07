@@ -41,8 +41,8 @@ import {
   YStackProps,
   useMedia,
 } from '@dish/ui'
-import { useStoreInstanceSelector } from '@dish/use-store'
 import { Heart, MessageCircle, MessageSquare, Tag } from '@tamagui/lucide-icons'
+import { useGlobalStoreSelector } from '@tamagui/use-store'
 import React, { Suspense, memo, useCallback, useEffect, useState } from 'react'
 import { Dimensions } from 'react-native'
 
@@ -106,7 +106,7 @@ export const RestaurantListItem = memo(
       description: null as null | string,
     })
     // const handleChangeDishes = useCallback(onChangeDishes as any, [])
-    // const isActive = useStoreInstanceSelector(
+    // const isActive = useGlobalStoreSelector(
     //   getSearchPageStore(),
     //   (x) => x.index === rank - 1
     // )

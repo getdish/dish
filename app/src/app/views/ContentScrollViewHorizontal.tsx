@@ -38,6 +38,7 @@ export const ContentScrollViewHorizontal = (props: ContentScrollViewHorizontalPr
     <YStack
       overflow="hidden"
       width="100%"
+      // @ts-ignore
       onTouchStart={() => {
         isTouching.current = true
       }}

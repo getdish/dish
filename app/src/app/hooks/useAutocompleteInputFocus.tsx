@@ -1,10 +1,9 @@
-import { series, sleep } from '@dish/async'
-import { reaction } from '@dish/use-store'
-import { useEffect } from 'react'
-
 import { isWeb } from '../../constants/constants'
 import { autocompletesStore } from '../AutocompletesStore'
 import { InputStore } from '../inputStore'
+import { series, sleep } from '@dish/async'
+import { reaction } from '@tamagui/use-store'
+import { useEffect } from 'react'
 
 export function useAutocompleteInputFocus(inputStore: InputStore) {
   useEffect(() => {
