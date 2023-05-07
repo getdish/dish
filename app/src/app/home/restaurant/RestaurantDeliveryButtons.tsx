@@ -29,7 +29,7 @@ export const RestaurantDeliveryButtons = memo(
     return (
       <XStack flexWrap="wrap" alignItems="center" space="$1" {...props}>
         {!!label && (
-          <Paragraph selectable={false} size="$3" marginRight={8} y={-1}>
+          <Paragraph userSelect="none" size="$3" marginRight={8} y={-1}>
             {label}
           </Paragraph>
         )}
@@ -47,7 +47,7 @@ export const RestaurantDeliveryButtons = memo(
           )
         })}
         {!sources.length && label !== false && (
-          <Paragraph selectable={false} textAlign="center" size="$3">
+          <Paragraph userSelect="none" textAlign="center" size="$3">
             No delivery
           </Paragraph>
         )}

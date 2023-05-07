@@ -51,7 +51,7 @@ function BlogPageIndex() {
           {allPosts.map((post, index) => (
             <YStack key={index} borderRadius={10} padding={10}>
               <Link name="blog" params={{ slug: post.id }}>
-                <Heading selectable={false} textAlign="left" size="$4">
+                <Heading userSelect="none" textAlign="left" size="$4">
                   {post.title}
                 </Heading>
               </Link>

@@ -1,16 +1,15 @@
-import { graphql, useRefetch } from '@dish/graph'
-import { Input, Paragraph, Spacer, Text, TextArea, Toast, XStack, YStack } from '@dish/ui'
-import React, { useEffect, useRef } from 'react'
-
 import { isWeb } from '../constants/constants'
 import { queryUser } from '../queries/queryUser'
-import { characters } from './home/user/characters'
 import { UserAvatar } from './home/user/UserAvatar'
+import { characters } from './home/user/characters'
 import { useStateSynced } from './hooks/useStateSynced'
 import { useImageUploadForm } from './useImageUploadForm'
 import { useUserStore } from './userStore'
 import { LogoColor } from './views/Logo'
 import { SmallButton } from './views/SmallButton'
+import { graphql, useRefetch } from '@dish/graph'
+import { Input, Paragraph, Spacer, Text, TextArea, Toast, XStack, YStack } from '@dish/ui'
+import React, { useEffect, useRef } from 'react'
 
 export const UserOnboard = graphql(
   ({ hideLogo, onFinish }: { hideLogo?: boolean; onFinish?: Function }) => {
@@ -182,7 +181,7 @@ export const UserOnboard = graphql(
 
           <SmallButton
             // accessibilityComponentType="button"
-            accessible
+            // @ts-ignore
             accessibilityRole="button"
             alignSelf="center"
             onPress={async () => {

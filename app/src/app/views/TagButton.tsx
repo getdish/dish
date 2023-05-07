@@ -168,11 +168,11 @@ const TagButtonInner = (props: TagButtonProps) => {
       flexShrink={0}
       opacity={rank && rank < 100 ? 0.5 : 0}
     >
-      <Paragraph selectable={false} pointerEvents="none" fontSize={smallerFontSize}>
+      <Paragraph userSelect="none" pointerEvents="none" fontSize={smallerFontSize}>
         #
       </Paragraph>
       <Paragraph
-        selectable={false}
+        userSelect="none"
         pointerEvents="none"
         fontSize={smallerFontSize}
         alignContent="center"

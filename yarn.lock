@@ -3079,7 +3079,7 @@ __metadata:
     "@types/multer-s3": ^2.7.10
     "@types/puppeteer": ^5.4.6
     "@types/react": "*"
-    "@types/react-native": "*"
+    "@types/react-native": ^0.71.6
     "@types/redis": ^2.8.28
     "@types/requestidlecallback": 0.3.1
     "@types/uuid": ^8.3.1
@@ -3144,7 +3144,7 @@ __metadata:
     react-helmet: ^6.1.0
     react-hook-form: ^6.13.0
     react-lag-radar: ^1.0.0
-    react-native: ^0.69.3
+    react-native: ^0.71.7
     react-native-clean-project: ^4.0.1
     react-native-draggable-flatlist: 4.0.0-beta.6
     react-native-fast-image: ^8.5.11
@@ -3341,7 +3341,7 @@ __metadata:
     "@testing-library/react": 13.0.0-alpha.4
     "@types/react": "*"
     "@types/react-dom": "*"
-    "@types/react-native": "*"
+    "@types/react-native": ^0.71.6
     "@types/react-test-renderer": "*"
     debug-http: ^1.1.0
     happy-dom: ^2.24.4
@@ -13294,7 +13294,7 @@ __metadata:
     import-sort-style-module: ^6.0.0
     npm-run-all: ^4.1.5
     prettier: ^2.6.2
-    react-native: ^0.69.3
+    react-native: ^0.71.7
     react-native-web: ^0.18.7
     react-test-renderer: 18.2.0
     typescript: "*"

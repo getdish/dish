@@ -111,7 +111,7 @@ const Header = memo(
                       }}
                       fontWeight="200"
                       maxWidth="100%"
-                      selectable={false}
+                      userSelect="none"
                     >
                       {restaurantName}
                     </H3>

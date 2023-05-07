@@ -49,7 +49,7 @@ export const RestaurantAddressLinksRow = memo(
       return (
         <YStack>
           {!!(curLocInfo && showAddress) && size !== 'xs' && (
-            <Paragraph color={theme.color} selectable ellipse fontSize={12} maxWidth={240}>
+            <Paragraph color={theme.color} ellipse fontSize={12} maxWidth={240}>
               {getAddressText(
                 curLocInfo,
                 restaurant.address ?? '',

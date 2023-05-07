@@ -8,7 +8,7 @@ import { tiles } from './tiles'
 import { series, sleep } from '@dish/async'
 import { DISH_API_ENDPOINT } from '@dish/graph'
 import { useDebounce, useTheme } from '@dish/ui'
-import MapboxGL from '@rnmapbox/maps'
+import MapboxGL, { UserLocationRenderMode } from '@rnmapbox/maps'
 import { lightColors } from '@tamagui/themes'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, useWindowDimensions } from 'react-native'
@@ -143,7 +143,7 @@ export default function Map({
             )
           }}
           animated
-          renderMode="native"
+          renderMode={UserLocationRenderMode.Native}
         />
       )}
 

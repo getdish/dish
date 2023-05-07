@@ -184,7 +184,7 @@ export const RestaurantListItem = memo(
                 {/* SECOND LINK WITH actual <a /> */}
                 <H2
                   fontFamily="$stylish"
-                  selectable={false}
+                  userSelect="none"
                   size="$9"
                   $md={{ fontFamily: '$silkscreen', size: '$7' }}
                   ellipse
@@ -237,7 +237,7 @@ export const RestaurantListItem = memo(
                       width={42}
                       textAlign="center"
                       fontWeight="500"
-                      selectable={false}
+                      userSelect="none"
                     >
                       {price_range ?? '-'}
                     </Paragraph>

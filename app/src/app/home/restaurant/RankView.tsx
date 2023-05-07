@@ -22,9 +22,9 @@ export const RankView = memo(({ rank }: { rank: number }) => {
       justifyContent="center"
     >
       <AbsoluteYStack borderRadius={1000} fullscreen zIndex={-1} />
-      <Paragraph selectable={false} textAlign="center" lineHeight={38}>
+      <Paragraph userSelect="none" textAlign="center" lineHeight={38}>
         <Paragraph
-          selectable={false}
+          userSelect="none"
           opacity={0.5}
           color="$colorFocus"
           y={-5}
@@ -34,7 +34,7 @@ export const RankView = memo(({ rank }: { rank: number }) => {
           #
         </Paragraph>
         <Paragraph
-          selectable={false}
+          userSelect="none"
           letterSpacing={-1}
           fontSize={+rank > 9 ? 18 : 22}
           fontWeight="500"

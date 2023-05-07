@@ -26,7 +26,7 @@
     "@tamagui/build": "^1.26.0",
     "@types/react": "*",
     "@types/react-dom": "*",
-    "@types/react-native": "*",
+    "@types/react-native": "^0.71.6",
     "@types/react-test-renderer": "*"
   }
 }
