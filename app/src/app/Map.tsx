@@ -1019,7 +1019,6 @@ export default function Map(props: MapProps) {
         },
         () => fullyIdle({ checks: 1, max: 50 }),
         () => {
-          console.warn('fit bounds to', next)
           map!.fitBounds(next, {
             duration,
             padding,

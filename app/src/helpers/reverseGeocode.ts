@@ -19,8 +19,6 @@ export async function reverseGeocode(
   )}.json?access_token=${MAPBOX_ACCESS_TOKEN}`
   const res = await fetch(url).then((res) => res.json())
 
-  console.log('res', res)
-
   if (res.features?.length) {
     const { features } = res
     const scope = spanToScope(span)

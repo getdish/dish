@@ -1,5 +1,6 @@
-import { pageWidthMax, zIndexDrawer } from '../../constants/constants'
+import { pageWidthMax, searchBarHeight, zIndexDrawer } from '../../constants/constants'
 import { AppSearchBarInline } from '../AppSearchBarInline'
+import { StackDrawerControlsPortal } from '../views/StackDrawer'
 import { DrawerFrame, DrawerFrameBg } from './HomeDrawerFrame'
 import { HomeDrawerSmall } from './HomeDrawerSmall'
 import { XStack, YStack, useMedia } from '@dish/ui'
@@ -30,6 +31,9 @@ export const HomeDrawer = (props: {
     >
       <YStack f={1} w="100%" h="100%" maxWidth="60%">
         <DrawerFrame>
+          <YStack pos="relative" t={searchBarHeight}>
+            <StackDrawerControlsPortal />
+          </YStack>
           <DrawerFrameBg />
           <AppSearchBarInline />
           {props.children}
