@@ -20,6 +20,7 @@ module.exports = {
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     'import/named': 'off',
+    'react/react-in-jsx-scope': 'off',
     'react/no-unescaped-entities': 'off',
     'react/prop-types': 'off',
     'react/display-name': 'off',

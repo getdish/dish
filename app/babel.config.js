@@ -1,8 +1,5 @@
-const useOurBabel = process.env.TAMAGUI_TARGET === 'web' || process.env.TAMAGUI_TARGET === 'node'
-
 if (process.env.DEBUG) {
   console.log('env is', {
-    useOurBabel,
     TAMAGUI_TARGET: process.env.TAMAGUI_TARGET,
     BABEL_ENV: process.env.BABEL_ENV,
     NODE_ENV: process.env.NODE_ENV,
@@ -26,19 +23,12 @@ module.exports = function (api) {
     return {}
   }
 
-  if (useOurBabel) {
-    return {
-      presets: ['@dish/babel-preset'],
-    }
-  }
-
   // really helpful to log this in case you accidently use wrong config
   console.log('⚙️ metro/babel', process.env.TAMAGUI_TARGET)
 
   return {
     presets: [
-      ['module:metro-react-native-babel-preset'],
-      // ['@rnx-kit/babel-preset-metro-react-native', { disableImportExportTransform: true }]
+      ['babel-preset-expo'],
     ],
     plugins: [
       // for aliases
@@ -53,20 +43,19 @@ module.exports = function (api) {
       //     // },
       //   },
       // ],
-      '@babel/plugin-transform-flow-strip-types',
-      '@babel/plugin-transform-react-jsx',
+      // '@babel/plugin-transform-flow-strip-types',
+      // '@babel/plugin-transform-react-jsx',
       'react-native-reanimated/plugin',
-      ['@babel/plugin-proposal-decorators', { decoratorsBeforeExport: true }],
-      [
-        '@tamagui/babel-plugin',
-        {
-          exclude: /node_modules/,
-          disableExtraction: true,
-          components: ['@dish/ui'],
-          config: './src/tamagui.config.ts',
-        },
-      ],
-      '@dish/babel-plugin-inline-env',
+      // [
+      //   '@tamagui/babel-plugin',
+      //   {
+      //     exclude: /node_modules/,
+      //     disableExtraction: false,
+      //     components: ['@dish/ui'],
+      //     config: './src/tamagui.config.ts',
+      //   },
+      // ],
+      'transform-inline-environment-variables',
     ],
   }
 }

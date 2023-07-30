@@ -4,7 +4,6 @@ import LoadablePlugin from '@loadable/webpack-plugin'
 import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import CircularDependencyPlugin from 'circular-dependency-plugin'
 // import esbuild from 'esbuild'
-import { ESBuildMinifyPlugin } from 'esbuild-loader'
 import { ensureDirSync, readFileSync } from 'fs-extra'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
 import { DuplicatesPlugin } from 'inspectpack/plugin'
@@ -267,12 +266,12 @@ export function createWebpackConfig(config: CreateWebpackConfig): Webpack.Config
           ? []
           : [
               new CssMinimizerPlugin(),
-              new ESBuildMinifyPlugin({
-                target: 'es2020',
-                treeShaking: true,
-                css: false,
-                // implementation: esbuild,
-              }),
+              // new ESBuildMinifyPlugin({
+              //   target: 'es2020',
+              //   treeShaking: true,
+              //   css: false,
+              //   // implementation: esbuild,
+              // }),
             ],
       },
       module: {

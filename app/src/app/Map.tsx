@@ -137,11 +137,11 @@ export default function Map(props: MapProps) {
       handleResize.cancel()
       handleResize()
     }
-    Dimensions.addEventListener('change', handleResizeOuter)
+    const subscriber = Dimensions.addEventListener('change', handleResizeOuter)
     return () => {
       cancel?.()
       handleResize.cancel()
-      Dimensions.removeEventListener('change', handleResizeOuter)
+      subscriber.remove()
     }
   }, [map])
 
@@ -786,7 +786,7 @@ export default function Map(props: MapProps) {
               mapSetFeature(map, hoverIdInt, { hover: false })
               hoverIdInt = null
             }
-            const id = e.features?.[0].id ?? -1
+            const id = +(e.features?.[0].id ?? -1)
             if (id > -1 && hoverIdInt != id) {
               if (hover) {
                 hoverIdInt = +id

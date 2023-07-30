@@ -113,14 +113,19 @@ export class Router<
 
     // initial entry
     if (!this.props.skipInitial) {
-      const pathname = (window.location?.pathname ?? '')
-        // temp bugfix: react native has debugger-ui as window.location
+      const location =
+        typeof window === 'undefined'
+          ? { hash: '', search: '', pathname: '/' }
+          : window.location
+
+      const pathname = (location?.pathname ?? '')
+        // temp bugfix: react native has debugger-ui as location
         .replace(/\/debugger-ui.*/g, '/')
       history.push(
         {
           pathname,
-          search: window.location?.search ?? '',
-          hash: window.location?.hash ?? '',
+          search: location?.search ?? '',
+          hash: location?.hash ?? '',
         },
         {
           id: uid(),

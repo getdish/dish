@@ -1,19 +1,30 @@
 {
   "name": "dish",
-  "displayName": "dish",
-  "expo": {
-    "name": "dish",
-    "slug": "dish",
-    "sdkVersion": "42.0.0",
-    "android": {
-      "package": "com.dish.app"
-    },
-    "ios": {
-      "bundleIdentifier": "com.dish.app"
-    },
-    "splash": {
-      "image": "./src/assets/slash.png",
-      "backgroundColor": "#000000"
+  "slug": "dish",
+  "version": "1.0.0",
+  "android": {
+    "package": "com.dish.app"
+  },
+  "ios": {
+    "bundleIdentifier": "com.dish.app"
+  },
+  "splash": {
+    "image": "./assets/splash.png",
+    "backgroundColor": "#000000"
+  },
+  "plugins": [
+    [
+      "@rnmapbox/maps",
+      {
+        "RNMapboxMapsImpl": "maplibre"
+      }
+    ]
+  ],
+  "extra": {
+    "eas": {
+      "projectId": "0ab14292-efa4-4b48-b757-12da6732343d"
     }
-  }
+  },
+  "sdkVersion": "49.0.0",
+  "platforms": ["ios"]
 }

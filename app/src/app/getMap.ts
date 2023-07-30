@@ -8,7 +8,7 @@ import type MapboxNativeGL from '@rnmapbox/maps'
 
 // only export functions that are on both
 
-let map: mapboxgl.Map | MapboxNativeGL.MapView | null = null
+let map: MapboxNativeGL.MapView | null = null
 
 export function setMap(x: any) {
   map = x

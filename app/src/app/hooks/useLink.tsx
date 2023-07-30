@@ -11,7 +11,6 @@ import { series, sleep } from '@dish/async'
 import { SizableText, XStack, useEvent, useForceUpdate } from '@dish/ui'
 import { isEqual, omit } from 'lodash'
 import React, { useEffect, useRef } from 'react'
-import { Pressable } from 'react-native'
 
 export const useLink = (props: LinkProps<any, any>, styleProps?: any, asChild?: boolean) => {
   const forceUpdate = useForceUpdate()

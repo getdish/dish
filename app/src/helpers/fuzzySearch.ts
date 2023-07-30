@@ -1,4 +1,4 @@
-import { create, insertBatch, search } from '@lyrasearch/lyra'
+import { create, insertMultiple, search } from '@orama/orama'
 
 export async function fuzzySearch<A extends { [key: string]: any }>({
   items,
@@ -11,30 +11,22 @@ export async function fuzzySearch<A extends { [key: string]: any }>({
   keys?: (keyof A)[]
   limit?: number
 }): Promise<A[]> {
-  const db = create({
+  const db = await create({
     schema: {
       ...(Object.fromEntries(keys.map((key) => [key, 'string'])) as A),
       index: 'number',
     },
   })
 
-  await insertBatch(
-    db,
-    items.map((item, index) => ({
-      index,
-      ...(Object.fromEntries(keys.map((key) => [key, item[key]])) as A),
-    }))
-  )
+  await insertMultiple(db, items)
 
-  const results = search(db, {
+  const results = await search(db, {
     term: query,
     // @ts-ignore
     properties: keys,
   })
 
-  return results.hits.map((result) => {
-    return items[result.index as number]
-  })
+  return results.hits.map((r) => r.document as A)
 }
 
 // @ts-expect-error

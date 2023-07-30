@@ -77,9 +77,7 @@ export default memo(
                         backgroundColor={isToday ? '$backgroundHover' : 'transparent'}
                         key={i}
                       >
-                        <TableCell fontWeight="600" {...col0Props}>
-                          {hour.hoursInfo.day}
-                        </TableCell>
+                        <TableCell {...col0Props}>{hour.hoursInfo.day}</TableCell>
                         <TableCell {...col1Props}>
                           <YStack>
                             {hour.hoursInfo.hours.map((text, i) => {

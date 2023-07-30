@@ -1,6 +1,7 @@
-import { DebugHUD } from './DebugHUD'
-import { Radar } from './Radar'
-import { App } from './app/App'
+import './_polyfill'
+// import { DebugHUD } from './DebugHUD'
+// import { Radar } from './Radar'
+import { App, useLoadApp } from './app/App'
 import { homeStore } from './app/homeStore'
 import { useUserStore, userStore } from './app/userStore'
 import { showRadar } from './constants/constants'
@@ -13,13 +14,10 @@ import config from './tamagui.config'
 import { createAuth, useHydrateCache } from '@dish/graph'
 import { configureAssertHelpers } from '@dish/helpers'
 import { ProvideRouter } from '@dish/router'
-import { PortalProvider, Square, TamaguiProvider, Toast, isWeb } from '@dish/ui'
-import { Inter_400Regular, Inter_800ExtraBold } from '@expo-google-fonts/inter'
+import { PortalProvider, TamaguiProvider, Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@tamagui/use-store'
-import * as Font from 'expo-font'
-import * as SplashScreen from 'expo-splash-screen'
 import React, { Suspense, useEffect, useState } from 'react'
-import { useColorScheme } from 'react-native'
+import { View, useColorScheme } from 'react-native'
 
 declare module '@dish/router' {
   interface RoutesTable extends DRoutesTable {}
@@ -33,12 +31,6 @@ async function start() {
   }
 
   if (process.env.TAMAGUI_TARGET === 'native') {
-    // todo move to hook in app.native https://docs.expo.dev/guides/using-custom-fonts/
-    await Font.loadAsync({
-      Cardinal: require('../assets/fonts/cardinal-trial.otf'),
-      Inter: Inter_400Regular,
-      InterBold: Inter_800ExtraBold,
-    })
   }
 
   addTagsToCache([...tagDefaultAutocomplete, ...tagFilters, ...tagLenses])
@@ -96,7 +88,9 @@ if (process.env.NODE_ENV === 'development') {
 const cacheSnapshot = global.__CACHE_SNAPSHOT
 
 export function Root() {
-  const [isLoaded, setIsLoaded] = useState(false)
+  // console.log('loading root')
+  const [stateLoaded, setStateLoaded] = useState(false)
+  const appLoaded = useLoadApp()
   const userStore = useUserStore()
   const colorScheme = useColorScheme()
 
@@ -107,37 +101,36 @@ export function Root() {
   }
 
   useEffect(() => {
-    if (isLoaded) {
-      SplashScreen.hideAsync()
-    }
-  }, [isLoaded])
-
-  useEffect(() => {
     start().then(() => {
-      setIsLoaded(true)
+      setStateLoaded(true)
     })
   }, [])
+
+  const isLoaded = stateLoaded && appLoaded
 
   const defaultTheme =
     (!userStore.theme || userStore.theme === 'auto' ? colorScheme : userStore.theme) ??
     colorScheme ??
     'dark'
 
+  // return <View style={{ width: 100, height: 100, backgroundColor: 'red' }} />
+
   return (
     <TamaguiProvider config={config} defaultTheme={defaultTheme}>
       <ProvideRouter routes={routes}>
         <PortalProvider>
           <Suspense fallback={null}>
+            {/* <View style={{ width: 100, height: 100, backgroundColor: 'red' }} /> */}
             {isLoaded ? (
               <>
                 <App />
-                {process.env.NODE_ENV === 'development' && <DebugHUD />}
+                {/* {process.env.NODE_ENV === 'development' && <DebugHUD />} */}
                 {isWeb && <div id="before-bottom-sheet-temp" />}
               </>
             ) : null}
           </Suspense>
         </PortalProvider>
-        {showRadar && <Radar />}
+        {/* {showRadar && <Radar />} */}
       </ProvideRouter>
     </TamaguiProvider>
   )

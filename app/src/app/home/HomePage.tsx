@@ -269,8 +269,8 @@ export const HomePageFeed = memo(
                   />
                 )}
                 activationThreshold={0}
-                onChange={({ open }) => {
-                  console.log('is open', open)
+                onChange={({ openDirection }) => {
+                  console.log('is open', openDirection)
                   // router.navigate({
                   //   name: 'list',
                   //   params: {

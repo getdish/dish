@@ -190,8 +190,8 @@ const TagButtonInner = (props: TagButtonProps) => {
       <Image
         source={{ uri: icon }}
         style={{
-          width: fontSize.toString(),
-          height: fontSize.toString(),
+          width: fontSize,
+          height: fontSize,
           borderRadius: 1000,
           display: isWeb ? ('inline-flex' as any) : 'flex',
           marginVertical: -2,

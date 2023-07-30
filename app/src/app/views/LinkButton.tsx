@@ -35,7 +35,7 @@ export const LinkButton = forwardRef(function LinkButtonContent<
         {...restProps}
         ref={ref}
         theme={isActive ? 'active' : null}
-        textProps={isActive ? props.activeTextStyle : textProps}
+        textProps={isActive ? (props.activeTextStyle as any) : textProps}
       >
         {getChildren(props, isActive)}
       </Button>

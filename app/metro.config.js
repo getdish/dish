@@ -1,4 +1,5 @@
-// Learn more https://docs.expo.io/guides/customizing-metro
+// https://docs.expo.dev/guides/monorepos/
+
 const { getDefaultConfig } = require('expo/metro-config')
 const path = require('path')
 
@@ -14,6 +15,7 @@ config.resolver.nodeModulesPath = [
   path.resolve(workspaceRoot, 'node_modules'),
 ]
 
+config.resolver.disableHierarchicalLookup = true
 config.resolver.resolverMainFields = ['module:jsx', 'react-native', 'browser', 'main']
 
 module.exports = {

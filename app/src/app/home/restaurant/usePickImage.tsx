@@ -33,10 +33,12 @@ export const usePickImage = ({
       Toast.show(`No images selected`)
       return
     }
-    if (!result.cancelled) {
-      setPhotos(result.selected.map((x) => x.uri))
+    const selected = result.selected as any[]
+
+    if (!result.canceled) {
+      setPhotos(selected.map((x) => x.uri))
     }
-    for (const [index, { uri, height, width }] of result.selected.entries()) {
+    for (const [index, { uri, height, width }] of selected.entries()) {
       const formData = createImageFormData(`image-${index}`, uri)
       Toast.show(
         <XStack>

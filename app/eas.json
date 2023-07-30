@@ -2,16 +2,23 @@
   "build": {
     "release": {},
     "development": {
+      "developmentClient": true,
       "distribution": "internal",
       "android": {
         "gradleCommand": ":app:assembleDebug"
       },
       "ios": {
-        "buildConfiguration": "Debug"
+        "simulator": true,
+        "buildConfiguration": "Debug",
+        "resourceClass": "m-medium"
       }
-    }
+    },
+    "production": {}
   },
   "submit": {
     "release": {}
+  },
+  "cli": {
+    "promptToConfigurePushNotifications": false
   }
 }

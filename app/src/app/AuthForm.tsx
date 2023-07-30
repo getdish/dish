@@ -82,7 +82,7 @@ export const AuthForm = memo(
             textProps={{
               opacity: formPage === 'login' ? 1 : 0.5,
             }}
-            active={formPage == 'login'}
+            theme={formPage == 'login' ? 'active' : null}
             onPress={() => setFormPage('login')}
           >
             Login
@@ -94,7 +94,7 @@ export const AuthForm = memo(
               fontWeight: formPage == 'signup' ? '800' : '500',
               opacity: formPage === 'signup' ? 1 : 0.5,
             }}
-            active={formPage == 'signup'}
+            theme={formPage == 'signup' ? 'active' : null}
             onPress={() => setFormPage('signup')}
           >
             Signup

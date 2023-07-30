@@ -35,7 +35,7 @@ export const Link = forwardRef(function Link<Name extends DRouteName = DRouteNam
     size,
     ...styleProps
   } = allProps
-  const { wrapWithLinkElement } = useLink(allProps, styleProps, asChild)
+  const { wrapWithLinkElement } = useLink(allProps, styleProps, Boolean(asChild))
   const isInParagraph = useContext(TextAncestorContext)
   return wrapWithLinkElement(
     isStringChild(children) && !noWrapText ? (

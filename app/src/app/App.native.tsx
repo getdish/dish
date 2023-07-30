@@ -8,15 +8,38 @@ import GalleryPage from './home/gallery/GalleryPage'
 import RestaurantHoursPage from './home/restaurantHours/RestaurantHoursPage'
 import RestaurantReviewPage from './home/restaurantReview/RestaurantReviewPage'
 import { useCurrentUserQuery } from './hooks/useUserReview'
-import { H2, Theme, XStack, YStack, useTheme, useThemeName } from '@dish/ui'
+import { H2, TestSquare, Theme, XStack, YStack, useTheme, useThemeName } from '@dish/ui'
+import { Inter_400Regular, Inter_800ExtraBold } from '@expo-google-fonts/inter'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import * as Font from 'expo-font'
+import * as SplashScreen from 'expo-splash-screen'
 // import { StatusBar } from 'expo-status-bar'
-import React, { Suspense, memo } from 'react'
+import React, { Suspense, memo, useEffect, useState } from 'react'
 import { StatusBar, useWindowDimensions } from 'react-native'
 import { Gesture } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
+export function useLoadApp() {
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    // todo move to hook in app.native https://docs.expo.dev/guides/using-custom-fonts/
+    Font.loadAsync({
+      Cardinal: require('../assets/fonts/cardinal-trial.otf'),
+      Inter: Inter_400Regular,
+      InterBold: Inter_800ExtraBold,
+    })
+
+    SplashScreen.hideAsync()
+    setLoaded(true)
+  }, [])
+
+  return loaded
+}
+
 export const App = memo(() => {
+  return <TestSquare />
+
   const theme = useTheme()
   const windowDimensions = useWindowDimensions()
   const offset = useSharedValue({ x: 0 })
@@ -69,6 +92,8 @@ export const App = memo(() => {
     .onFinalize(() => {
       // isPressed.value = false;
     })
+
+  return <TestSquare />
 
   return (
     <>

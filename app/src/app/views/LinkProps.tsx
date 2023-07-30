@@ -1,6 +1,6 @@
 import { DRouteName } from '../../router'
 import { NavigableTag } from '../../types/tagTypes'
-import { ButtonProps, SizableTextProps, TextProps, YStackProps } from '@dish/ui'
+import { ButtonProps, SizableTextProps } from '@dish/ui'
 import React from 'react'
 import { TextStyle } from 'react-native'
 
@@ -44,8 +44,7 @@ export type LinkButtonNamedProps<A = any, B = any> = {
   onPress?: Function
 }
 
-export type LinkButtonProps<Name extends DRouteName = any, Params = any> = YStackProps &
-  ButtonProps &
+export type LinkButtonProps<Name extends DRouteName = any, Params = any> = ButtonProps &
   LinkSharedProps & {
     tooltip?: string
     isActive?: boolean

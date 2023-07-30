@@ -14,6 +14,10 @@ import { AbsoluteYStack, LoadingItems, ToastRoot, YStack } from '@dish/ui'
 import loadable from '@loadable/component'
 import React, { Suspense, useEffect } from 'react'
 
+export function useLoadApp() {
+  return true
+}
+
 export function App() {
   // helper that warns on root level unmounts (uncaught suspense)
   if (process.env.NODE_ENV === 'development') {

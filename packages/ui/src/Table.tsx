@@ -1,4 +1,5 @@
 import { Stack, StackProps, Text, TextProps, isWeb, styled } from '@tamagui/core'
+import { GetProps, SizableText } from 'tamagui'
 
 export const Table = styled(Stack, {
   name: 'Table',
@@ -42,9 +43,9 @@ export const TableHeadText = styled(Text, {
   fontSize: 12,
 })
 
-export type TableCellProps = StackProps & TextProps
+export type TableCellProps = GetProps<typeof TableCell>
 
-export const TableCell = styled(Stack, {
+export const TableCell = styled(SizableText, {
   name: 'TableCell',
   flex: 1,
   alignSelf: 'stretch',

@@ -16,15 +16,12 @@ function sync() {
 
   # special case (non @tamagui/*)
   rsync -a --delete "$FROM/packages/tamagui/" "$TO/tamagui" &
-  rm -rf node_modules/react-native-web-lite || true
-  rsync -a --delete "$FROM/packages/react-native-web-lite/" "$TO/react-native-web-lite" &
   rsync -a --delete "$FROM/packages/loader/" "$TO/tamagui-loader" &
 
   # all @tamagui/*
   rsync -a \
     --exclude="$FROM/packages/loader/" \
     --exclude="$FROM/packages/tamagui/" \
-    --exclude="$FROM/packages/react-native-web-lite/" \
      "$FROM/packages/" "$TO/@tamagui" &
   
   wait

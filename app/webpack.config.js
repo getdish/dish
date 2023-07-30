@@ -20,8 +20,7 @@ module.exports = (opts) => {
       alias: {
         react$: require.resolve('react'),
         'react-dom$': require.resolve('react-dom'),
-        'react-native': 'react-native-web-lite',
-        'react-native-web$': 'react-native-web-lite',
+        'react-native': 'react-native-web',
         'react-native-svg$': '@tamagui/react-native-svg',
         'react-native-safe-area-context': require.resolve('react-native-safe-area-context'),
         'react-native-reanimated': require.resolve('react-native-reanimated'),
