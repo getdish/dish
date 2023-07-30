@@ -23,9 +23,8 @@ export function useLoadApp() {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
-    // todo move to hook in app.native https://docs.expo.dev/guides/using-custom-fonts/
     Font.loadAsync({
-      Cardinal: require('../assets/fonts/cardinal-trial.otf'),
+      Cardinal: require('../../assets/fonts/cardinal-trial.otf'),
       Inter: Inter_400Regular,
       InterBold: Inter_800ExtraBold,
     })
@@ -38,8 +37,6 @@ export function useLoadApp() {
 }
 
 export const App = memo(() => {
-  return <TestSquare />
-
   const theme = useTheme()
   const windowDimensions = useWindowDimensions()
   const offset = useSharedValue({ x: 0 })
@@ -92,8 +89,6 @@ export const App = memo(() => {
     .onFinalize(() => {
       // isPressed.value = false;
     })
-
-  return <TestSquare />
 
   return (
     <>

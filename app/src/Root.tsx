@@ -18,6 +18,7 @@ import { PortalProvider, TamaguiProvider, Toast, isWeb } from '@dish/ui'
 import { configureUseStore } from '@tamagui/use-store'
 import React, { Suspense, useEffect, useState } from 'react'
 import { View, useColorScheme } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 declare module '@dish/router' {
   interface RoutesTable extends DRoutesTable {}
@@ -119,16 +120,18 @@ export function Root() {
     <TamaguiProvider config={config} defaultTheme={defaultTheme}>
       <ProvideRouter routes={routes}>
         <PortalProvider>
-          <Suspense fallback={null}>
-            {/* <View style={{ width: 100, height: 100, backgroundColor: 'red' }} /> */}
-            {isLoaded ? (
-              <>
-                <App />
-                {/* {process.env.NODE_ENV === 'development' && <DebugHUD />} */}
-                {isWeb && <div id="before-bottom-sheet-temp" />}
-              </>
-            ) : null}
-          </Suspense>
+          <GestureHandlerRootView>
+            <Suspense fallback={null}>
+              {/* <View style={{ width: 100, height: 100, backgroundColor: 'red' }} /> */}
+              {isLoaded ? (
+                <>
+                  <App />
+                  {/* {process.env.NODE_ENV === 'development' && <DebugHUD />} */}
+                  {isWeb && <div id="before-bottom-sheet-temp" />}
+                </>
+              ) : null}
+            </Suspense>
+          </GestureHandlerRootView>
         </PortalProvider>
         {/* {showRadar && <Radar />} */}
       </ProvideRouter>
