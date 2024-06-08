@@ -39,8 +39,13 @@ export function ErrorBoundary({ children, name }: { children: any; name: string 
             backgroundColor="#000"
             padding={15}
             overflow="hidden"
+            minHeight={250}
+            minWidth={200}
+            zIndex={10000000000000}
           >
-            {process.env.NODE_ENV === 'production' && <Paragraph size="$8">😭😭😭 err</Paragraph>}
+            {process.env.NODE_ENV === 'production' && (
+              <Paragraph size="$8">😭😭😭 err</Paragraph>
+            )}
 
             {process.env.NODE_ENV === 'development' && (
               <YStack maxWidth="100%" flex={1} overflow="hidden">
